@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import Link from 'next/link';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
@@ -155,7 +155,7 @@ const Provenance: FC<ProvenanceProps> = ({
             {!!user && user.isCurationAllowed && (
                 <div className="text-center">
                     <Button size="sm" className="mt-2 mb-2" onClick={() => setShowAssignObservatory(true)}>
-                        <Icon icon={faPen} /> {observatoryInfo ? 'Edit' : 'Assign to observatory'}
+                        <FontAwesomeIcon icon={faPen} /> {observatoryInfo ? 'Edit' : 'Assign to observatory'}
                     </Button>
                 </div>
             )}

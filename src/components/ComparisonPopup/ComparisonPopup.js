@@ -3,7 +3,7 @@ import { createRef, Component } from 'react';
 import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
 import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes';
@@ -161,7 +161,7 @@ class ComparisonPopup extends Component {
                                 <Badge color="primary-darker" className="ps-2 pe-2">
                                     {contributionAmount}
                                 </Badge>{' '}
-                                Compare contributions <Icon icon={faChevronUp} />
+                                Compare contributions <FontAwesomeIcon icon={faChevronUp} />
                             </ComparisonBoxButton>
                         ) : (
                             <ComparisonBox className="ms-auto">
@@ -196,7 +196,7 @@ class ComparisonPopup extends Component {
                                                                 color="danger"
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
-                                                                <Icon icon={faCheck} className="me-1" />
+                                                                <FontAwesomeIcon icon={faCheck} className="me-1" />
                                                                 Remove
                                                             </Button>
                                                             <Button
@@ -208,18 +208,23 @@ class ComparisonPopup extends Component {
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
                                                                 {' '}
-                                                                <Icon icon={faTimes} className="me-1" /> Cancel
+                                                                <FontAwesomeIcon icon={faTimes} className="me-1" /> Cancel
                                                             </Button>
                                                         </ButtonGroup>
                                                     </div>
                                                 }
                                             >
                                                 <span>
-                                                    <Icon className="ms-2 me-2" size="sm" onClick={(e) => e.stopPropagation()} icon={faTrash} />
+                                                    <FontAwesomeIcon
+                                                        className="ms-2 me-2"
+                                                        size="sm"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        icon={faTrash}
+                                                    />
                                                 </span>
                                             </Tippy>
                                         </Tippy>
-                                        <Icon icon={faChevronDown} />
+                                        <FontAwesomeIcon icon={faChevronDown} />
                                     </div>
                                 </Header>
                                 <List>
@@ -227,7 +232,7 @@ class ComparisonPopup extends Component {
                                         <ContributionItem key={contributionId}>
                                             <div className="d-flex">
                                                 <div className="pe-3">
-                                                    <Icon icon={faFile} />
+                                                    <FontAwesomeIcon icon={faFile} />
                                                 </div>
                                                 <div className="flex-grow-1 text-break">
                                                     <Title
@@ -243,7 +248,10 @@ class ComparisonPopup extends Component {
                                                 <Tippy content="Remove from comparison">
                                                     <span>
                                                         <Remove>
-                                                            <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                            <FontAwesomeIcon
+                                                                icon={faTimes}
+                                                                onClick={() => this.removeFromComparison(contributionId)}
+                                                            />
                                                         </Remove>
                                                     </span>
                                                 </Tippy>

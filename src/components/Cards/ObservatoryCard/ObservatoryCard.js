@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -55,8 +55,8 @@ function ObservatoryCard(props) {
                             <div className="observatoryName">{props.observatory.name}</div>
 
                             <div className="observatoryStats text-muted">
-                                Papers: <b>{!isLoadingStats ? stats.papers : <Icon icon={faSpinner} spin size="sm" />}</b> <br />
-                                Comparisons: <b>{!isLoadingStats ? stats.comparisons : <Icon icon={faSpinner} spin size="xs" />}</b>
+                                Papers: <b>{!isLoadingStats ? stats.papers : <FontAwesomeIcon icon={faSpinner} spin size="sm" />}</b> <br />
+                                Comparisons: <b>{!isLoadingStats ? stats.comparisons : <FontAwesomeIcon icon={faSpinner} spin size="xs" />}</b>
                             </div>
                         </div>
                     </CardBody>

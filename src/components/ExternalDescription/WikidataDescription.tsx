@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import WIKIDATA_LOGO from 'assets/img/sameas/wikidatawiki.png';
 import { wikidataSparql } from 'services/wikidata/index';
 import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/StatementBrowser/styled';
@@ -78,7 +78,7 @@ const WikidataDescription: FC<WikidataDescriptionProp> = ({ externalResource }) 
 
             {isLoading && (
                 <div className="text-center">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                 </div>
             )}
             {hasFailed && <p className="text-center">Failed loading Wikidata statements</p>}

@@ -1,7 +1,7 @@
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useContributors from 'components/TopContributors/hooks/useContributors';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <Icon icon={faAward} className="text-primary" /> Top Contributors
+                <FontAwesomeIcon icon={faAward} className="text-primary" /> Top Contributors
                 <div style={{ display: 'inline-block', marginLeft: '20px' }}>
                     <ContributorsDropdownFilter
                         sort={sort}

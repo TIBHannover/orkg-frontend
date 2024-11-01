@@ -1,5 +1,5 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import { FC, useContext, useState } from 'react';
@@ -97,9 +97,9 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
                     className={`me-2 mb-2 position-relative px-3 rounded-pill ${!isSmart && 'border-0'}`}
                 >
                     <IconWrapper $wrappercolor={wrapperColor} $wrapperbackgroundcolor={wrapperBackgroundColor}>
-                        {!isSaving && addMode && <Icon size="sm" icon={faPlus} />}
-                        {!isSaving && !addMode && <Icon size="sm" icon={faTimes} />}
-                        {isSaving && <Icon icon={faSpinner} spin />}
+                        {!isSaving && addMode && <FontAwesomeIcon size="sm" icon={faPlus} />}
+                        {!isSaving && !addMode && <FontAwesomeIcon size="sm" icon={faTimes} />}
+                        {isSaving && <FontAwesomeIcon icon={faSpinner} spin />}
                     </IconWrapper>
                     <Label>{template.label}</Label>
                 </ButtonWithLoading>

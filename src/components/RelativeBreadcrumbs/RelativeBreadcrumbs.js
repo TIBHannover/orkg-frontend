@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faSpinner, faHome, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { getParentResearchFields } from 'services/backend/statements';
 import PropTypes from 'prop-types';
@@ -144,20 +144,22 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                                                         : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
                                                 }
                                             >
-                                                {index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label}
+                                                {index === 0 ? <FontAwesomeIcon className="me-1" icon={faHome} /> : field.label}
                                             </Link>
-                                            {index !== parentResearchFields.length - 1 && <Icon className="me-1 ms-1" icon={faAngleDoubleRight} />}
+                                            {index !== parentResearchFields.length - 1 && (
+                                                <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                            )}
                                         </span>
                                     ))}
                                 </small>
                             ) : (
-                                <Icon icon={faSpinner} spin />
+                                <FontAwesomeIcon icon={faSpinner} spin />
                             )}
                         </TippyContentStyled>
                     }
                 >
                     <Link href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
-                        <Icon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
+                        <FontAwesomeIcon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
                     </Link>
                 </Tippy>
             </li>

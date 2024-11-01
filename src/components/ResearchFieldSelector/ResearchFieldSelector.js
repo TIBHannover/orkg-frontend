@@ -1,5 +1,5 @@
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import PreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
@@ -197,7 +197,11 @@ const ResearchFieldSelector = ({
                         <div className="flex-grow-1 d-flex">
                             <IndicatorContainer onClick={(e) => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
-                                    <Icon icon={icon} spin={_isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
+                                    <FontAwesomeIcon
+                                        icon={icon}
+                                        spin={_isLoading}
+                                        className={selectedResearchField !== field.id ? 'text-secondary' : ''}
+                                    />
                                 )}
                             </IndicatorContainer>
                             {find(parents, (p) => p.id === field.id) ? <b>{field.label}</b> : field.label}
@@ -275,7 +279,7 @@ const ResearchFieldSelector = ({
                                 });
                             }}
                         >
-                            <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
+                            <FontAwesomeIcon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
                         </CollapseButton>
                     </div>
                     {isLoading && (

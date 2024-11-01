@@ -1,7 +1,7 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
@@ -147,7 +147,7 @@ function Publish(props) {
                                 }}
                             >
                                 <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                    <Icon icon={faClipboard} />
+                                    <FontAwesomeIcon icon={faClipboard} />
                                 </Button>
                             </CopyToClipboard>
                         </InputGroup>
@@ -166,7 +166,7 @@ function Publish(props) {
                                 }}
                             >
                                 <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                    <Icon icon={faClipboard} />
+                                    <FontAwesomeIcon icon={faClipboard} />
                                 </Button>
                             </CopyToClipboard>
                         </InputGroup>
@@ -262,7 +262,7 @@ function Publish(props) {
                                     <AuthorTag key={`creator${index}`}>
                                         <div className="name">
                                             {creator.label}
-                                            {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                                            {creator.orcid && <FontAwesomeIcon style={{ margin: '4px' }} icon={faOrcid} />}
                                         </div>
                                     </AuthorTag>
                                 ))}
@@ -317,7 +317,7 @@ function Publish(props) {
                                                                 className="ps-3 pe-3"
                                                                 style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                                                             >
-                                                                <Icon icon={faTrash} />
+                                                                <FontAwesomeIcon icon={faTrash} />
                                                             </Button>
                                                         )}
                                                         {references.length - 1 === i && (
@@ -326,7 +326,7 @@ function Publish(props) {
                                                                 onClick={() => setReferences([...references, ''])}
                                                                 style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                                                             >
-                                                                <Icon icon={faPlus} /> Add
+                                                                <FontAwesomeIcon icon={faPlus} /> Add
                                                             </Button>
                                                         )}
                                                     </>

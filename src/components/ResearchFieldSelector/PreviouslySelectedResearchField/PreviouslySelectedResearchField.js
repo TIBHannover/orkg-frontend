@@ -1,5 +1,5 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
@@ -15,7 +15,7 @@ const PreviouslySelectedResearchField = (props) => {
                     <h3 className="fw-bold h6 mt-1">
                         <Tippy content="Based on your 8 most recently added papers">
                             <span>
-                                Recent fields <Icon icon={faQuestionCircle} className="text-primary" />
+                                Recent fields <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
                             </span>
                         </Tippy>
                     </h3>

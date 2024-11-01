@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody, Button, Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faGitlab, faFirefox } from '@fortawesome/free-brands-svg-icons';
 
 function getCodeIconByURL(url) {
@@ -23,7 +23,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
     if (urls?.length === 1) {
         return (
             <a href={urls[0] ?? '-'} rel="noreferrer" target="_blank">
-                <Icon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ms-2 me-2" />
+                <FontAwesomeIcon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ms-2 me-2" />
             </a>
         );
     }
@@ -48,7 +48,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                                 <tr key={index}>
                                     <td>
                                         <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-dark">
-                                            <Icon icon={getCodeIconByURL(url)} className="icon ms-2 me-2" /> {url}
+                                            <FontAwesomeIcon icon={getCodeIconByURL(url)} className="icon ms-2 me-2" /> {url}
                                         </a>
                                     </td>
                                 </tr>
@@ -58,7 +58,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                 </ModalBody>
             </Modal>
             <Button className="p-0" color="link" onClick={() => setShowModal((v) => !v)}>
-                <Icon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
+                <FontAwesomeIcon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
             </Button>
         </>
     );

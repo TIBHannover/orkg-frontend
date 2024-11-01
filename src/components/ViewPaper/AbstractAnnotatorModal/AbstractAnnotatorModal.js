@@ -1,5 +1,5 @@
 import { faMagic, faSpinner, faThList } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AbstractAnnotatorView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
 import AbstractInputView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
 import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
@@ -246,7 +246,7 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                     {(isAbstractLoading || isAnnotationLoading) && (
                         <div className="text-center text-primary">
                             <span style={{ fontSize: 80 }}>
-                                <Icon icon={faSpinner} spin />
+                                <FontAwesomeIcon icon={faSpinner} spin />
                             </span>
                             <br />
                             <h2 className="h5">{isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
@@ -265,7 +265,7 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                 {abstractDialogView === 'list' ? (
                     <>
                         <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('annotator')}>
-                            <Icon icon={faMagic} /> Annotator
+                            <FontAwesomeIcon icon={faMagic} /> Annotator
                         </Button>
 
                         <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>
@@ -279,7 +279,7 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                 ) : (
                     <>
                         <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('list')}>
-                            <Icon icon={faThList} /> List of annotations
+                            <FontAwesomeIcon icon={faThList} /> List of annotations
                         </Button>
                         {abstractDialogView !== 'input' && (
                             <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>

@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuthorWorks from 'components/Author/hooks/useAuthorWorks';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
@@ -67,7 +67,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
                 titleSize="h5"
                 titleAddition={
                     <div className="text-muted">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} items
+                        {totalElements === 0 && isNextPageLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items
                     </div>
                 }
             >
@@ -83,7 +83,7 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
                     )}
                     {isNextPageLoading && (
                         <ListGroupItem tag="div" className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
                         </ListGroupItem>
                     )}
                     {!isNextPageLoading && hasNextPage && (

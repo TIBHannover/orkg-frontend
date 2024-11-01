@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListCard from 'components/Cards/ListCard/ListCard';
 import ListPage from 'components/ListPage/ListPage';
 import Link from 'next/link';
@@ -63,7 +63,7 @@ const Lists = () => {
     const buttons = (
         <>
             <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.LIST_NEW}>
-                <Icon icon={faPlus} /> Create list
+                <FontAwesomeIcon icon={faPlus} /> Create list
             </RequireAuthentication>
             {!!user && (
                 <RequireAuthentication

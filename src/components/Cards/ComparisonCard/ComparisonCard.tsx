@@ -1,5 +1,5 @@
 import { faCalendar, faChartBar, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
 import Versions from 'components/Cards/ComparisonCard/Versions';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -81,17 +81,18 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
 
                     <div className="mb-1">
                         <small>
-                            <Icon size="sm" icon={faFile} className="me-1" /> {comparison.contributions?.length} Contributions
-                            <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {comparison.visualizations?.length} Visualizations
+                            <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {comparison.contributions?.length} Contributions
+                            <FontAwesomeIcon size="sm" icon={faChartBar} className="ms-2 me-1" /> {comparison.visualizations?.length} Visualizations
                             {(comparison.related_resources?.length > 0 || comparison.related_figures?.length > 0) && (
                                 <>
-                                    <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
+                                    <FontAwesomeIcon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
                                     {comparison.related_resources.length + comparison.related_resources.length} attachments
                                 </>
                             )}
                             {comparison.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(comparison.created_at).format('DD-MM-YYYY')}
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
+                                    {moment(comparison.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

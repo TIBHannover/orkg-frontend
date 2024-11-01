@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { faArrowRight, faCalendar, faTags, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CopyId from 'components/CopyId/CopyId';
 import ProvenanceBox from 'components/Resource/ProvenanceBox';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -40,13 +40,13 @@ const ItemMetadata = ({
             <div className="flex-grow-1">
                 {showCreatedAt && (
                     <Badge color="light" className="me-2">
-                        <Icon size="sm" icon={faCalendar} className="me-1" /> {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
                     </Badge>
                 )}
                 {item.shared > 0 && (
                     <Badge color="light" className="me-2">
                         <span>
-                            <Icon icon={faArrowRight} />
+                            <FontAwesomeIcon icon={faArrowRight} />
                         </span>
                         {` Referred ${pluralize('time', item.shared, true)}`}
                     </Badge>
@@ -54,14 +54,14 @@ const ItemMetadata = ({
                 {showClasses && item.classes?.length > 0 && (
                     <Badge color="light" className="me-2">
                         <span>
-                            <Icon icon={faTags} /> {' Instance of '}
+                            <FontAwesomeIcon icon={faTags} /> {' Instance of '}
                         </span>
                         {item.classes.join(', ')}
                     </Badge>
                 )}
                 {showCreatedBy && item.created_by !== MISC.UNKNOWN_ID && (
                     <Badge color="light" className="me-2">
-                        <Icon icon={faUser} /> Created by{' '}
+                        <FontAwesomeIcon icon={faUser} /> Created by{' '}
                         <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
                             <UserAvatar size={20} userId={item.created_by} showDisplayName />
                         </span>
@@ -69,7 +69,7 @@ const ItemMetadata = ({
                 )}
                 {showExtractionMethod && (
                     <Badge color="light" className="me-2">
-                        <Icon icon={faSearch} /> Extraction:{' '}
+                        <FontAwesomeIcon icon={faSearch} /> Extraction:{' '}
                         {editMode ? (
                             <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
                                 <Input

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -53,7 +53,7 @@ const ContributionCell = ({ contribution }) => {
                             className="text-white"
                         >
                             <div className="d-flex justify-content-center align-items-center h-100">
-                                <Icon icon={faFile} />
+                                <FontAwesomeIcon icon={faFile} />
                             </div>
                         </Link>
                     </span>
@@ -76,7 +76,7 @@ const ContributionCell = ({ contribution }) => {
             )}
             {isEditing && !isEmbeddedMode && contributions.filter((_contribution) => _contribution.active).length > 2 && (
                 <Delete onClick={() => dispatch(removeContribution(contribution.id))}>
-                    <Icon icon={faTimes} />
+                    <FontAwesomeIcon icon={faTimes} />
                 </Delete>
             )}
         </>

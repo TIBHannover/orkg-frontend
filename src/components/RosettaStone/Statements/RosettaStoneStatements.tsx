@@ -1,5 +1,5 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddStatement from 'components/RosettaStone/AddStatement/AddStatement';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -60,7 +60,7 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
         <div>
             <div className="text-end mb-1">
                 <Link target="_blank" className="btn btn-sm btn-outline-secondary" href="https://orkg.org/help-center/article/59/Statements">
-                    <Icon className="me-1" icon={faQuestionCircle} /> Help
+                    <FontAwesomeIcon className="me-1" icon={faQuestionCircle} /> Help
                 </Link>
             </div>
             {isLoading && 'Loading...'}

@@ -1,5 +1,5 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { stringifyType } from 'components/Comparison/Filters/helpers';
 import { Badge, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
@@ -29,7 +29,7 @@ const AppliedRule = (props) => {
             &nbsp;
             {value.toString()}
             <DeleteButton color="link" className="ms-2">
-                <Icon icon={faTimes} onClick={removeRule} />
+                <FontAwesomeIcon icon={faTimes} onClick={removeRule} />
             </DeleteButton>
         </Badge>
     );

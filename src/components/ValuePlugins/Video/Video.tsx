@@ -1,5 +1,5 @@
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import { FC, ReactElement, useState } from 'react';
@@ -80,7 +80,7 @@ const Video: FC<ValuePluginsProps> = ({ children, type, options = { inModal: fal
                     role="button"
                     tabIndex={0}
                 >
-                    {labelToText} <Icon icon={faVideo} />
+                    {labelToText} <FontAwesomeIcon icon={faVideo} />
                 </span>
                 <Modal isOpen={showVideoDialog} toggle={() => setShowVideoDialog((v) => !v)} size="lg">
                     <ModalHeader toggle={() => setShowVideoDialog((v) => !v)}>Video Preview</ModalHeader>

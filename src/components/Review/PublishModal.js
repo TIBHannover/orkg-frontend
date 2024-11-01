@@ -1,5 +1,5 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import Link from 'next/link';
@@ -175,7 +175,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                                         <Input id="doi_link" value={`https://doi.org/${doi}`} disabled />
                                         <CopyToClipboard text={`https://doi.org/${doi}`} onCopy={() => toast.success('DOI link copied')}>
                                             <Button color="primary" className="px-3">
-                                                <Icon icon={faClipboard} />
+                                                <FontAwesomeIcon icon={faClipboard} />
                                             </Button>
                                         </CopyToClipboard>
                                     </InputGroup>

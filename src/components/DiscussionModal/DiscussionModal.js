@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import Comment from 'components/DiscussionModal/Comment';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -101,7 +101,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
                                 'Load more'
                             ) : (
                                 <>
-                                    <Icon icon={faSpinner} spin /> Loading
+                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                                 </>
                             )}
                         </Button>

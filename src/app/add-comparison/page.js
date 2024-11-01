@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import comparisonPublishImg from 'assets/img/AddComparison/comparison-publish-preview.png';
 import contributionEditorPreview from 'assets/img/AddComparison/contribution-editor-preview.png';
 import csvImportPreview from 'assets/img/AddComparison/csv-import-preview.png';
@@ -38,7 +38,7 @@ const AddComparison = () => {
                         Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic. Comparisons are dynamic and
                         FAIR. A comparison is created from contributions,{' '}
                         <a href="https://www.orkg.org/comparison/R44930" target="_blank" rel="noreferrer">
-                            view example of comparison <Icon icon={faExternalLinkAlt} />
+                            view example of comparison <FontAwesomeIcon icon={faExternalLinkAlt} />
                         </a>
                         . To create your own comparisons in ORKG, you can either import existing data (via CSV import) or start from scratch by adding
                         your own contributions. This page guides you in creating new comparisons.

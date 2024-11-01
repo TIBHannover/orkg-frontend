@@ -1,7 +1,7 @@
 'use client';
 
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
@@ -39,7 +39,7 @@ const Benchmarks = () => {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        on {benchmarks.length === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} research{' '}
+                        on {benchmarks.length === 0 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} research{' '}
                         {pluralize('problem', totalElements, false)}
                     </div>
                 }

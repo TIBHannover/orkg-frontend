@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import hideOnEsc from 'components/Tippy/hideOnEsc';
@@ -65,7 +65,7 @@ const UserAvatar = ({ userId, size = 28, appendToTooltip = '', showDisplayName =
                             )}
                             {userId && isLoadingContributor && (
                                 <StyledSpinnerGravatar className="rounded-circle" size={size}>
-                                    <Icon icon={faSpinner} spin />
+                                    <FontAwesomeIcon icon={faSpinner} spin />
                                 </StyledSpinnerGravatar>
                             )}
                         </Link>

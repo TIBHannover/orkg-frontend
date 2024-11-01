@@ -1,5 +1,5 @@
 import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
 import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -72,12 +72,13 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                         <small>
                             {visualization.authors && visualization.authors.length > 0 && (
                                 <>
-                                    <Icon size="sm" icon={faUser} /> {visualization.authors.map((a) => a.name).join(', ')}
+                                    <FontAwesomeIcon size="sm" icon={faUser} /> {visualization.authors.map((a) => a.name).join(', ')}
                                 </>
                             )}
                             {visualization.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(visualization.created_at).format('DD-MM-YYYY')}
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
+                                    {moment(visualization.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

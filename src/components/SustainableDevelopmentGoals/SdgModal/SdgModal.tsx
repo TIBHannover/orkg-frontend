@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { GlobalStyle } from 'components/Input/AuthorsInput/styled';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
@@ -85,7 +85,7 @@ const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing 
 
                 {isEditing && !isAdding && (
                     <Button color="light" onClick={() => setIsAdding(true)} className="w-100">
-                        <Icon icon={faPlus} /> Add goal
+                        <FontAwesomeIcon icon={faPlus} /> Add goal
                     </Button>
                 )}
                 {isAdding && (

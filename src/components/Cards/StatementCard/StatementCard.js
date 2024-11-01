@@ -4,7 +4,7 @@ import { getLinkByEntityType } from 'utils';
 import ROUTES from 'constants/routes';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo, faClock } from '@fortawesome/free-solid-svg-icons';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Tippy from '@tippyjs/react';
@@ -42,7 +42,7 @@ function StatementCard({ statement }) {
                                     <li className="mb-1">
                                         Created:{' '}
                                         <span title={statement.created_at}>
-                                            <Icon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                            <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
                                         </span>
                                     </li>
                                     {statement.created_by && (

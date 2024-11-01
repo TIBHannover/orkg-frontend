@@ -15,7 +15,7 @@ import HelpModal from 'components/DiagramEditor/HelpModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import StyledReactFlow from 'components/DiagramEditor/styled';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPen, faSave, faRefresh, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -100,11 +100,11 @@ function Diagram() {
                             >
                                 {!editMode ? (
                                     <>
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </>
                                 ) : (
                                     <>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </>
                                 )}
                             </RequireAuthentication>
@@ -120,19 +120,19 @@ function Diagram() {
                                 style={{ marginLeft: 1 }}
                             >
                                 <>
-                                    <Icon icon={faSave} /> Save
+                                    <FontAwesomeIcon icon={faSave} /> Save
                                 </>
                             </RequireAuthentication>
                         )}
                         {!id && nodes.length > 0 && (
                             <Button style={{ marginLeft: 2 }} size="sm" onClick={handleResetDiagram}>
-                                <Icon icon={faRefresh} /> Reset
+                                <FontAwesomeIcon icon={faRefresh} /> Reset
                             </Button>
                         )}
                         {id && (
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
+                                    <FontAwesomeIcon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
                                     <DropdownItem onClick={() => setIsExportDiagramModalOpen(true)}>Export diagram</DropdownItem>
@@ -151,7 +151,7 @@ function Diagram() {
                         <span className="ml-3">
                             <Button color="link" size="sm" className="p-0 m-0" style={{ fontSize: '22px' }} onClick={() => setIsHelpModalOpen(true)}>
                                 <span className="text-primary">
-                                    <Icon icon={faQuestionCircle} />
+                                    <FontAwesomeIcon icon={faQuestionCircle} />
                                 </span>
                             </Button>
                         </span>

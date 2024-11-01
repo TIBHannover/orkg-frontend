@@ -1,5 +1,5 @@
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -13,7 +13,7 @@ const InviteResearchersButton = ({ comparisonId }) => {
 
     return (
         <Button tag="a" href={emailLink} color="secondary" size="sm">
-            <Icon icon={faEnvelope} className="me-2" />
+            <FontAwesomeIcon icon={faEnvelope} className="me-2" />
             Invite researchers
         </Button>
     );

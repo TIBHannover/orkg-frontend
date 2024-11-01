@@ -1,5 +1,5 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import useList from 'components/List/hooks/useList';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
@@ -30,7 +30,7 @@ const EditResearchField = () => {
                         onClick={() => setIsOpenResearchFieldModal(true)}
                         aria-label={`Selected research field: ${list.research_fields[0]?.label ?? 'none'}`}
                     >
-                        <Icon icon={faBars} className="text-secondary" /> {list.research_fields[0]?.label ?? 'Research field'}
+                        <FontAwesomeIcon icon={faBars} className="text-secondary" /> {list.research_fields[0]?.label ?? 'Research field'}
                     </Button>
                 </span>
             </Tippy>

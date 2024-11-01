@@ -1,5 +1,5 @@
 import { faArrowRight, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import InfoBox from 'components/Autocomplete/CustomComponents/InfoBox';
 import { SourceBadge } from 'components/Autocomplete/styled';
@@ -37,7 +37,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                         {children}{' '}
                         {data.isRecommended && (
                             <span style={{ color: '#E8AD15' }}>
-                                <Icon icon={faStar} /> Recommended
+                                <FontAwesomeIcon icon={faStar} /> Recommended
                             </span>
                         )}
                     </div>
@@ -45,14 +45,14 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                         {truncatedDescription && <div className={`small ${textClassName}`}>{truncatedDescription}</div>}
                         {!data.external && !!data.shared && data.shared > 0 && (
                             <span className="small">
-                                <Icon icon={faArrowRight} color={iconColor} />{' '}
+                                <FontAwesomeIcon icon={faArrowRight} color={iconColor} />{' '}
                                 <i className={textClassName}>{` Referred: ${pluralize('time', data.shared, true)}`}</i>
                             </span>
                         )}
                         {!data.external && data.classes && data.classes?.length > 0 && (
                             <span className="small">
                                 {' '}
-                                <Icon icon={faTags} color={iconColor} /> {' Instance of: '}
+                                <FontAwesomeIcon icon={faTags} color={iconColor} /> {' Instance of: '}
                                 <i className={textClassName}>{data.classes.join(', ')}</i>
                             </span>
                         )}
@@ -80,7 +80,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                                         }}
                                     >
                                         <Button className="py-0 border border-light-darker px-2 ms-2" size="sm" color="light">
-                                            <Icon icon={faClipboard} color={theme?.dark} size="xs" />
+                                            <FontAwesomeIcon icon={faClipboard} color={theme?.dark} size="xs" />
                                         </Button>
                                     </CopyToClipboard>
                                 </div>
@@ -93,7 +93,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                                 rel="noreferrer"
                                 className="d-flex align-items-center px-2 py-1 flex-shrink-0"
                             >
-                                {data.ontology ?? 'ORKG'} <Icon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
+                                {data.ontology ?? 'ORKG'} <FontAwesomeIcon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
                             </SourceBadge>
                         </Tippy>
                     </div>

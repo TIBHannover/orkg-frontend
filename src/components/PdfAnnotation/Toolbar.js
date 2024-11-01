@@ -1,5 +1,5 @@
 import { Button, ButtonGroup } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,7 +49,7 @@ const Toolbar = (props) => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, color: '#fff' }} className="p-0" />
+                        <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, color: '#fff' }} className="p-0" />
                     </a>
                 </span>
             </Tippy>
@@ -62,7 +62,7 @@ const Toolbar = (props) => {
                         style={{ marginRight: 2 }}
                         onClick={() => props.changeZoom(props.zoom - 0.2)}
                     >
-                        <Icon icon={faSearchMinus} />
+                        <FontAwesomeIcon icon={faSearchMinus} />
                     </Button>
                     <Button
                         color="secondary-darker"
@@ -71,15 +71,15 @@ const Toolbar = (props) => {
                         style={{ marginRight: 2 }}
                         onClick={() => props.changeZoom(props.zoom + 0.2)}
                     >
-                        <Icon icon={faSearchPlus} />
+                        <FontAwesomeIcon icon={faSearchPlus} />
                     </Button>
                     <Button color="secondary-darker" disabled={!pdf} size="sm" onClick={() => props.changeZoom()}>
-                        <Icon icon={faExpandArrowsAlt} />
+                        <FontAwesomeIcon icon={faExpandArrowsAlt} />
                     </Button>
                 </ButtonGroup>
                 {pdf && (
                     <Button className="me-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
-                        <Icon icon={faTimesCircle} className="me-1" /> Discard PDF
+                        <FontAwesomeIcon icon={faTimesCircle} className="me-1" /> Discard PDF
                     </Button>
                 )}
             </div>

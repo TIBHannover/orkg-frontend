@@ -1,5 +1,5 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -76,7 +76,7 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
                     <hr />
                     {isLoading && (
                         <div className="ms-2 mb-2">
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </div>
                     )}
                     {!isLoading && !isFailed && recommendedProperties.length > 0 && (
@@ -117,7 +117,7 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
         >
             <Tippy content="Get suggestions for new properties">
                 <button className="btn btn-smart px-3 btn-sm" style={{ marginLeft: 1 }} onClick={() => setIsOpenSmartTooltip((v) => !v)}>
-                    <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
+                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>
         </SmartSuggestions>

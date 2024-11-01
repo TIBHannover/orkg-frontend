@@ -1,7 +1,7 @@
 import { Row, Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
 import { Component } from 'react';
 import { updateUserPassword } from 'services/backend/users';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getErrorMessage } from 'utils';
 import { toast } from 'react-toastify';
@@ -137,7 +137,7 @@ class Password extends Component {
                             'Save changes'
                         ) : (
                             <span>
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </span>
                         )}
                     </Button>

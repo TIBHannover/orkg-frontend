@@ -1,5 +1,5 @@
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RelatedFigure from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedFigure';
 import RelatedResource from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResource';
 import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/useRelatedResources';
@@ -42,8 +42,8 @@ function ComparisonCarousel() {
         slidesToShow: 5,
         centerMode: false,
         slidesToScroll: 5,
-        nextArrow: <Icon icon={faArrowCircleRight} />,
-        prevArrow: <Icon icon={faArrowCircleLeft} />,
+        nextArrow: <FontAwesomeIcon icon={faArrowCircleRight} />,
+        prevArrow: <FontAwesomeIcon icon={faArrowCircleLeft} />,
         rows: 1,
         responsive: [
             {

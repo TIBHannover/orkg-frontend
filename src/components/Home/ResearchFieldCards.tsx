@@ -1,5 +1,5 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
@@ -131,7 +131,7 @@ const ResearchFieldCards = ({
         <>
             <div className="row" style={{ position: 'relative' }}>
                 <h1 className="col-md-8 h5 flex-shrink-0 mb-0">
-                    <Icon icon={faStream} className="text-primary" /> Browse by research field
+                    <FontAwesomeIcon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
                 <div className="col-md-4 mt-2 mt-md-0 flex-row-reverse d-flex">
                     <div style={{ minWidth: 300 }} id="tour-research-field-bar">

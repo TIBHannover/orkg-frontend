@@ -1,5 +1,5 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
@@ -23,7 +23,7 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <Icon icon={faAward} className="text-primary ms-2" /> Top authors
+                <FontAwesomeIcon icon={faAward} className="text-primary ms-2" /> Top authors
             </ModalHeader>
             <ModalBody className="p-0">
                 <Alert color="info" className="m-3">

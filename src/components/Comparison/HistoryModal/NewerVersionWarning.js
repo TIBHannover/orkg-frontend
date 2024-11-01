@@ -1,5 +1,5 @@
 import { faHistory } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import Link from 'next/link';
 import { reverse } from 'named-urls';
@@ -29,7 +29,7 @@ const NewerVersionWarning = ({ versions, showViewHistory = true, comparisonId })
                         className="text-primary justify-content-end"
                         onClick={() => setIsOpenHistoryModal(true)}
                     >
-                        <Icon icon={faHistory} /> View History
+                        <FontAwesomeIcon icon={faHistory} /> View History
                     </div>
                     {isOpenHistoryModal && (
                         <HistoryModal comparisonId={comparisonId} toggle={() => setIsOpenHistoryModal((v) => !v)} showDialog={isOpenHistoryModal} />

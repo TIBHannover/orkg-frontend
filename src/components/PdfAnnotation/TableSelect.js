@@ -2,7 +2,7 @@ import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import ExtractionModal from 'components/PdfAnnotation/ExtractionModal';
 import useTableSelect from 'components/PdfAnnotation/hooks/useTableSelect';
@@ -67,7 +67,7 @@ const TableSelect = (props) => {
                             return (
                                 <SelectHelper style={{ top: region.y, left: region.x, width: region.w, height: region.h }} key={key}>
                                     <RemoveTableButton color="secondary-darker" size="sm" className="p-0" onMouseDown={(e) => deleteRegion(e, key)}>
-                                        <Icon icon={faTimes} />
+                                        <FontAwesomeIcon icon={faTimes} />
                                     </RemoveTableButton>
                                     <Button
                                         style={{ pointerEvents: 'all' }}

@@ -1,7 +1,7 @@
 'use client';
 
 import { faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
@@ -103,7 +103,7 @@ const RSTemplatePage = () => {
                                         href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
                                         disabled={!canEditTemplate}
                                     >
-                                        <Icon icon={faPen} /> Edit statement type
+                                        <FontAwesomeIcon icon={faPen} /> Edit statement type
                                     </Button>
                                 </span>
                             </Tippy>
@@ -131,7 +131,7 @@ const RSTemplatePage = () => {
                                         onClick={handleDeleteTemplate}
                                         disabled={!canDeleteTemplate}
                                     >
-                                        <Icon icon={faTrash} /> Delete statement type
+                                        <FontAwesomeIcon icon={faTrash} /> Delete statement type
                                     </Button>
                                 </span>
                             </Tippy>
@@ -171,7 +171,7 @@ const RSTemplatePage = () => {
                                         <>
                                             Instances{' '}
                                             {isLoadingStatements ? (
-                                                <Icon icon={faSpinner} className="me-2" spin />
+                                                <FontAwesomeIcon icon={faSpinner} className="me-2" spin />
                                             ) : (
                                                 <Badge pill>{totalElements}</Badge>
                                             )}

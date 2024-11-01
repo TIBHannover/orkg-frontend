@@ -1,5 +1,5 @@
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SubtitleSeparator } from 'components/styled';
 import { FC, useState, ReactNode } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
@@ -91,7 +91,7 @@ const TitleBar: FC<TitleBarProps> = ({ buttonGroup = null, titleAddition = null,
                     color={!isMenuOpen ? 'secondary' : 'secondary-darker'}
                     onClick={() => setIsMenuOpen((v) => !v)}
                 >
-                    <Icon icon={faEllipsisV} />
+                    <FontAwesomeIcon icon={faEllipsisV} />
                 </MenuButton>
             )}
             {buttonGroup && (

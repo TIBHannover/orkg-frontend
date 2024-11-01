@@ -1,5 +1,5 @@
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SlotForms from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
 import {
     useRosettaTemplateEditorDispatch,
@@ -75,8 +75,8 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
             <AccordionHeader innerRef={ref} data-handler-id={handlerId} targetId={property?.id ?? i.toString()} className="d-flex">
                 {i !== 0 && i !== 1 && !isLocked && (
                     <div className="me-1 d-flex flex-column" style={{ marginLeft: '-15px', cursor: 'move' }}>
-                        <Icon icon={faGripVertical} className="text-secondary" />
-                        <Icon icon={faGripVertical} className="text-secondary" style={{ marginTop: '-1.4px' }} />
+                        <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />
+                        <FontAwesomeIcon icon={faGripVertical} className="text-secondary" style={{ marginTop: '-1.4px' }} />
                     </div>
                 )}
                 <div className="flex-grow-1">

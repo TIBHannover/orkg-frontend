@@ -2,7 +2,7 @@ import { Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { getUserInformation, updateUserInformation } from 'services/backend/users';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { updateAuth } from 'slices/authSlice';
@@ -122,7 +122,7 @@ class GeneralSettings extends Component {
                             <p className="m-0">
                                 We use Gravatar, a service that associates an avatar image with your primary email address.
                                 <a className="ms-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
-                                    Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
+                                    Change your avatar image at gravatar.com <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                                 </a>
                             </p>
                         </Alert>

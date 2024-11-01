@@ -1,5 +1,5 @@
 import { faExpand, faSortDown, faSortUp, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     ColumnDef,
     flexRender,
@@ -92,7 +92,7 @@ const CSVWTable: FC<CSVWTableProps> = ({ id }) => {
                         <div className="d-flex justify-content-end">
                             <ButtonGroup className="mb-3" size="sm">
                                 <Button style={{ marginRight: '2px' }} size="sm" onClick={toggleModal}>
-                                    <Icon icon={faExpand} className="me-1" /> {isCSVWModelOpen ? 'Close full screen' : 'Full screen'}
+                                    <FontAwesomeIcon icon={faExpand} className="me-1" /> {isCSVWModelOpen ? 'Close full screen' : 'Full screen'}
                                 </Button>
                                 {table.getRowModel().rows?.length > 0 && (
                                     <CSVLink
@@ -126,8 +126,8 @@ const CSVWTable: FC<CSVWTableProps> = ({ id }) => {
                                                             >
                                                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                                                 {{
-                                                                    asc: <Icon icon={faSortUp} className="ms-1" />,
-                                                                    desc: <Icon icon={faSortDown} className="ms-1" />,
+                                                                    asc: <FontAwesomeIcon icon={faSortUp} className="ms-1" />,
+                                                                    desc: <FontAwesomeIcon icon={faSortDown} className="ms-1" />,
                                                                 }[header.column.getIsSorted() as string] ?? null}
                                                             </div>
                                                         )}
@@ -214,7 +214,7 @@ const CSVWTable: FC<CSVWTableProps> = ({ id }) => {
                 )}
                 {isLoading && (
                     <div className="text-center text-primary mt-4 mb-4">
-                        <Icon icon={faSpinner} spin size="5x" />
+                        <FontAwesomeIcon icon={faSpinner} spin size="5x" />
                         <h2 className="h5 mt-3">Loading table...</h2>
                     </div>
                 )}

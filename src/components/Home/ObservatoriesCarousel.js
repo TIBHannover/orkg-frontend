@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import Dotdotdot from 'react-dotdotdot';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
 import { CarouselIndicatorsStyled } from 'components/styled';
 import Tippy from '@tippyjs/react';
@@ -112,8 +112,8 @@ function ObservatoriesCarousel(props) {
                         </div>
                         <CardFooterStyled className="text-muted">
                             <small>
-                                <Icon icon={faCubes} className="me-1" /> {observatory.comparisons} comparisons
-                                <Icon icon={faFile} className="me-1 ms-2" />
+                                <FontAwesomeIcon icon={faCubes} className="me-1" /> {observatory.comparisons} comparisons
+                                <FontAwesomeIcon icon={faFile} className="me-1 ms-2" />
                                 {observatory.resources} papers
                             </small>
                             <div className="float-end" style={{ height: '25px' }}>

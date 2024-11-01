@@ -1,5 +1,5 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
@@ -88,7 +88,7 @@ const Contributions = (props) => {
             <Row>
                 <Col md="9">
                     <Tabs
-                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                        moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
                         activeKey={selectedTab}
                         destroyInactiveTabPane
                         onChange={onTabChange}
@@ -110,7 +110,7 @@ const Contributions = (props) => {
                                                         />
                                                     ) : null
                                                 }
-                                                moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                                                moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
                                                 activeKey={contributionId}
                                                 destroyInactiveTabPane
                                                 onChange={onTabChange}

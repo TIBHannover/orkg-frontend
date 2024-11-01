@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Table, Collapse } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getLinkByEntityType } from 'utils';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -18,7 +18,7 @@ const PropertyStatements = ({ propertyId }) => {
 
     const loadingIndicator = (
         <div className="text-center mt-3 mb-4">
-            <Icon icon={faSpinner} spin /> Loading
+            <FontAwesomeIcon icon={faSpinner} spin /> Loading
         </div>
     );
 

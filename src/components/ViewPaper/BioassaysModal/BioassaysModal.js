@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BioassaySelectItem from 'components/ViewPaper/BioassaysModal/BioassaySelectItem';
 import useBioassays from 'components/ViewPaper/hooks/useBioassays';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
@@ -112,7 +112,7 @@ const BioassaysModal = ({ selectedResource, toggle, showDialog }) => {
                 {isLoadingData && (
                     <div className="text-center text-primary">
                         <span style={{ fontSize: 80 }}>
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </span>
                         <br />
                         <h2 className="h5">Loading...</h2> <br />

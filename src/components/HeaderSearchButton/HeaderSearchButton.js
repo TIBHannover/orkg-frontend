@@ -1,5 +1,5 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -58,12 +58,12 @@ const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
                 maxLength={MAX_LENGTH_INPUT}
             />
             <SearchButtonStyled size="sm" className="px-3" color="link" onClick={() => (isSearchOpen ? goToResults() : setIsSearchOpen(true))}>
-                <Icon icon={faSearch} />
+                <FontAwesomeIcon icon={faSearch} />
             </SearchButtonStyled>
         </SearchStyled>
     ) : (
         <Button size="sm" color="secondary" style={{ marginLeft: 1 }} className="px-3" onClick={() => setIsSearchOpen(true)}>
-            <Icon icon={faSearch} />
+            <FontAwesomeIcon icon={faSearch} />
         </Button>
     );
 };

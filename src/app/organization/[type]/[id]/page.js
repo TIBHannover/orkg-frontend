@@ -7,7 +7,7 @@ import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organi
 import InternalServerError from 'app/error';
 import Members from 'components/Organization/Members';
 import Observatories from 'components/Organization/Observatories';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import useParams from 'components/useParams/useParams';
 import { useSelector } from 'react-redux';
@@ -110,10 +110,10 @@ const Organization = () => {
                                         })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference event'}
+                                        <FontAwesomeIcon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference event'}
                                     </Button>
                                     <Button color="secondary" size="sm" onClick={() => setShowEditDialog((v) => !v)}>
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </Button>
                                 </>
                             )
@@ -127,7 +127,8 @@ const Organization = () => {
                             <Row>
                                 <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
                                     <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
-                                        <Icon size="sm" icon={faGlobe} /> {url} {url && <Icon size="sm" icon={faExternalLinkAlt} />}
+                                        <FontAwesomeIcon size="sm" icon={faGlobe} /> {url}{' '}
+                                        {url && <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />}
                                     </a>
                                 </Col>
                                 {logo && (

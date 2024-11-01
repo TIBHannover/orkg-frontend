@@ -1,5 +1,5 @@
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toInteger } from 'lodash';
 import { FC } from 'react';
@@ -29,7 +29,7 @@ const SelectOption: FC<OptionProps<RosettaStoneTemplate, false>> = ({ children, 
                 {!data.__isNew__ && (
                     <Tippy appendTo={document.body} interactive content={<div className="text-start">{data.description}</div>}>
                         <span>
-                            <Icon icon={faInfoCircle} />
+                            <FontAwesomeIcon icon={faInfoCircle} />
                         </span>
                     </Tippy>
                 )}

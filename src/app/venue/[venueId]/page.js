@@ -1,7 +1,7 @@
 'use client';
 
 import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ const VenuePage = () => {
         <>
             {loading && (
                 <div className="text-center mt-4 mb-4">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                 </div>
             )}
             {!loading && (
@@ -52,7 +52,7 @@ const VenuePage = () => {
                         buttonGroup={
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
+                                    <FontAwesomeIcon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
                                     <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: params.venueId })}?noRedirect`}>
@@ -80,7 +80,7 @@ const VenuePage = () => {
                         )}
                         {isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </ListGroupItem>
                         )}
                         {!isNextPageLoading && hasNextPage && (
@@ -91,7 +91,7 @@ const VenuePage = () => {
                                 tag="div"
                                 onClick={!isNextPageLoading ? handleLoadMore : undefined}
                             >
-                                <Icon icon={faAngleDoubleDown} /> Load more paper
+                                <FontAwesomeIcon icon={faAngleDoubleDown} /> Load more paper
                             </ListGroupItem>
                         )}
                         {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (

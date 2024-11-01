@@ -1,10 +1,10 @@
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert } from 'reactstrap';
 
 const NotFound = () => (
     <Alert color="danger" className="mb-0 rounded d-flex">
-        <Icon icon={faExclamation} className="text-primary my-4 mx-4 h4" />
+        <FontAwesomeIcon icon={faExclamation} className="text-primary my-4 mx-4 h4" />
         <div>
             The entity you are looking for was not found.
             <br />

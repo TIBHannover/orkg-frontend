@@ -1,5 +1,5 @@
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useBreadcrumbs from 'components/DataBrowser/hooks/useBreadcrumbs';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
 import Skeleton from 'react-loading-skeleton';
@@ -52,7 +52,7 @@ const Breadcrumbs = () => {
     return (
         <div className="flex-grow-1 d-flex flex-shrink-0 col-md-10">
             <Button title="Back" color="primary" size="sm" outline className="px-2 me-2" onClick={handleBackClick}>
-                <Icon icon={faArrowLeft} />
+                <FontAwesomeIcon icon={faArrowLeft} />
             </Button>
             <ul className="list-unstyled p-0 d-flex w-75 m-0">
                 <BreadcrumbItem className="text-nowrap overflow-hidden d-flex px-3 py-1" onClick={() => selectResource(history[0])}>
@@ -74,7 +74,7 @@ const Breadcrumbs = () => {
                                 <div title={`${propertyLabel ? `${propertyLabel} → ` : ''}${resourceLabel}`}>
                                     {propertyLabel ? (
                                         <>
-                                            <i>{propertyLabel}</i> <Icon icon={faArrowRight} /> {resourceLabel}
+                                            <i>{propertyLabel}</i> <FontAwesomeIcon icon={faArrowRight} /> {resourceLabel}
                                         </>
                                     ) : (
                                         resourceLabel

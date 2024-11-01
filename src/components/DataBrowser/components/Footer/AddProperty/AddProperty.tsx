@@ -1,5 +1,5 @@
 import { faClose, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -59,7 +59,7 @@ const AddProperty = () => {
                 {!showAdd ? (
                     <ButtonGroup size="sm">
                         <ButtonWithLoading isDisabled={!canAddProperty} color="secondary" onClick={() => setShowAdd(true)}>
-                            <Icon className="icon" icon={faPlus} /> Add property
+                            <FontAwesomeIcon className="icon" icon={faPlus} /> Add property
                         </ButtonWithLoading>
                         {canAddProperty && (
                             <SmartPropertySuggestions properties={propertyLabels} handleCreate={(predicate) => addProperty(predicate as Predicate)} />
@@ -68,7 +68,7 @@ const AddProperty = () => {
                 ) : (
                     <InputGroup size="sm">
                         <span className="input-group-text">
-                            <Icon className="icon" icon={faPlus} />
+                            <FontAwesomeIcon className="icon" icon={faPlus} />
                         </span>
 
                         <Autocomplete
@@ -101,7 +101,7 @@ const AddProperty = () => {
                         />
                         <SmartPropertyGuidelinesCheck label={inputValue} />
                         <Button color="secondary" title="Cancel" className="w-auto" onClick={() => setShowAdd(false)}>
-                            <Icon icon={faClose} />
+                            <FontAwesomeIcon icon={faClose} />
                         </Button>
                     </InputGroup>
                 )}

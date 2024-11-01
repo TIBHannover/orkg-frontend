@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { upperFirst, filter } from 'lodash';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
@@ -19,7 +19,7 @@ const Container = styled.div`
     margin-top: 20px;
 `;
 
-const QuestionIcon = styled(Icon)`
+const QuestionIcon = styled(FontAwesomeIcon)`
     opacity: 0.6;
     font-size: 15px;
 `;
@@ -37,13 +37,13 @@ const AnnotationItem = styled.div`
     cursor: pointer;
 `;
 
-const Quote = styled(Icon)`
+const Quote = styled(FontAwesomeIcon)`
     opacity: 0.6;
     font-size: 28px;
     padding-right: 6px;
 `;
 
-const SentenceWarning = styled(Icon)`
+const SentenceWarning = styled(FontAwesomeIcon)`
     font-size: 28px;
     padding-right: 6px;
     animation: blink 1s linear;
@@ -96,7 +96,7 @@ const AnnotationCategory = (props) => {
                 </Tippy>
                 <Tippy content="It is recommended to have maximum 3 annotated sentences per type">
                     <AnnotationAmount>
-                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {pluralize('annotation', amount, true)}
+                        {amount > 3 ? <FontAwesomeIcon icon={faExclamationTriangle} /> : ''} {pluralize('annotation', amount, true)}
                     </AnnotationAmount>
                 </Tippy>
             </h2>
@@ -123,14 +123,14 @@ const AnnotationCategory = (props) => {
                             <Tippy content="Edit annotation text">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={(e) => handleEditClick(e, annotation.id)}>
-                                        <Icon icon={faPen} />
+                                        <FontAwesomeIcon icon={faPen} />
                                     </Button>
                                 </span>
                             </Tippy>{' '}
                             <Tippy content="Delete this annotation">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={(e) => handleDeleteClick(e, annotation.id)}>
-                                        <Icon icon={faTrash} />
+                                        <FontAwesomeIcon icon={faTrash} />
                                     </Button>
                                 </span>
                             </Tippy>

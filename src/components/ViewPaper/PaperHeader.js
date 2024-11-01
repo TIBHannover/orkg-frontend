@@ -1,5 +1,5 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
@@ -89,7 +89,7 @@ const PaperHeader = (props) => {
             <div className="clearfix" />
             {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} />{' '}
+                    <FontAwesomeIcon icon={faCalendar} />{' '}
                     {viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>
@@ -142,7 +142,7 @@ const PaperHeader = (props) => {
                                     className="mt-2 me-2"
                                     onClick={() => setIsOpenEditModal(true)}
                                 >
-                                    <Icon icon={faPen} /> Edit metadata
+                                    <FontAwesomeIcon icon={faPen} /> Edit metadata
                                 </Button>
                             </div>
                         </ConditionalWrapper>
@@ -150,7 +150,7 @@ const PaperHeader = (props) => {
 
                     {showDeleteButton && (
                         <Button color="danger" size="sm" className="mt-2" onClick={deletePapers}>
-                            <Icon icon={faTrash} /> Delete paper
+                            <FontAwesomeIcon icon={faTrash} /> Delete paper
                         </Button>
                     )}
                 </div>
@@ -158,7 +158,7 @@ const PaperHeader = (props) => {
                 {viewPaper.verified && (
                     <Tippy content="The paper metadata was verified by an ORKG curator">
                         <div className="mt-3 justify-content-end">
-                            <Icon icon={faCheckCircle} className="mt-1 me-1 text-success" />
+                            <FontAwesomeIcon icon={faCheckCircle} className="mt-1 me-1 text-success" />
                             Verified
                         </div>
                     </Tippy>

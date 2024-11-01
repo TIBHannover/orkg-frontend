@@ -1,5 +1,5 @@
 import { faLightbulb, faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import Tippy from '@tippyjs/react';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
@@ -103,7 +103,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                         {!abstract ? (
                             <Tippy content="The abstract is not found. To improve the suggestions, add the abstract in the 'Suggestions' box on the right">
                                 <span>
-                                    abstract (<Icon icon={faWarning} className="text-warning" />){' '}
+                                    abstract (<FontAwesomeIcon icon={faWarning} className="text-warning" />){' '}
                                 </span>
                             </Tippy>
                         ) : (
@@ -114,7 +114,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                     <hr />
                     {isLoading && (
                         <div className="ms-2 mb-2">
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </div>
                     )}
                     {!isLoading && !isFailed && recommendedValues.length > 0 && (
@@ -152,7 +152,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
         >
             <Tippy content="Get value suggestions">
                 <button className="btn btn-smart px-3 btn-sm" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
-                    <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
+                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>
         </SmartSuggestions>

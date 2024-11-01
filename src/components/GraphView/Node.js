@@ -2,7 +2,7 @@ import { Ring, Sphere } from 'reagraph';
 import PropTypes from 'prop-types';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Html } from '@react-three/drei';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { memo } from 'react';
 import { functions, isEqual, omit } from 'lodash';
 
@@ -23,7 +23,7 @@ const Node = ({ renderedNode, toggleExpandNode, collapsed }) => (
                 collapsed.includes(renderedNode.id)) && <Ring opacity={0.4} size={renderedNode.size - 4} color={renderedNode.color} animated />}
             {renderedNode.node.data.isLoading && (
                 <Html distanceFactor={180} position={[0, 0, 0]} transform>
-                    <Icon icon={faSpinner} spin className="text-white" style={{}} />
+                    <FontAwesomeIcon icon={faSpinner} spin className="text-white" style={{}} />
                 </Html>
             )}
         </mesh>

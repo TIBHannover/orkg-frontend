@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 import TitleBar from 'components/TitleBar/TitleBar';
 import usePaginate from 'components/hooks/usePaginate';
@@ -36,7 +36,7 @@ const ListPage = ({
                 <TitleBar
                     titleAddition={
                         <div className="text-muted mt-1">
-                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} items
+                            {totalElements === 0 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items
                         </div>
                     }
                     buttonGroup={
@@ -73,7 +73,7 @@ const ListPage = ({
 
                         {isLoading && page !== 0 && (
                             <div className="list-group-item text-center" aria-live="polite" aria-busy="true">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </div>
                         )}
                     </ListGroup>

@@ -1,5 +1,5 @@
 import { faCode, faUpload } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useOverwriteValuesModal from 'components/PaperForm/hooks/useOverwriteValuesModal';
 import BibTexModal from 'components/ViewPaper/BibTexModal/BibTexModal';
 import UploadPdfModal from 'components/ViewPaper/UploadPdfModal/UploadPdfModal';
@@ -93,11 +93,11 @@ const AddPaperAdditionalButtons = ({
     return (
         <ButtonGroup>
             <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenPdfModal(true)}>
-                <Icon icon={faUpload} className="me-1" /> Upload PDF
+                <FontAwesomeIcon icon={faUpload} className="me-1" /> Upload PDF
             </Button>
 
             <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenBibTexModal(true)}>
-                <Icon icon={faCode} /> Enter BibTeX
+                <FontAwesomeIcon icon={faCode} /> Enter BibTeX
             </Button>
 
             {isOpenPdfModal && <UploadPdfModal toggle={() => setIsOpenPdfModal((v) => !v)} onUpdateData={handleUpdateDataFromPdf} />}

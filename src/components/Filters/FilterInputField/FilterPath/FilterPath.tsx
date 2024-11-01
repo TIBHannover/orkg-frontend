@@ -1,5 +1,5 @@
 import { faAngleDoubleRight, faEllipsis, faRoute, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Link from 'next/link';
@@ -33,12 +33,12 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                                 {filter.exact ? (
                                     <>
                                         This filter is applied on this path: <br /> Contribution{' '}
-                                        <Icon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                        <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
                                     </>
                                 ) : (
                                     <>
                                         This filter search for the following path anywhere within the subgraph of the contribution nodes: <br />{' '}
-                                        <Icon className="me-1 ms-1" icon={faEllipsis} />
+                                        <FontAwesomeIcon className="me-1 ms-1" icon={faEllipsis} />
                                     </>
                                 )}
                                 {path &&
@@ -49,18 +49,18 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                                                     {property.label}
                                                 </Link>
                                             </DescriptionTooltip>
-                                            {index !== path.length - 1 && <Icon className="me-1 ms-1" icon={faAngleDoubleRight} />}
+                                            {index !== path.length - 1 && <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />}
                                         </span>
                                     ))}
                             </small>
                         ) : (
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         )}
                     </TippyContentStyled>
                 }
             >
                 <span>
-                    <Icon size="sm" icon={faRoute} />
+                    <FontAwesomeIcon size="sm" icon={faRoute} />
                 </span>
             </Tippy>
         </BreadcrumbStyled>

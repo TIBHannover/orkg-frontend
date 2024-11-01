@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Sidebar from 'components/PdfTextAnnotation/SideBar';
@@ -119,7 +119,7 @@ const PdfTextAnnotation = () => {
 
             <Main>
                 {pdf ? (
-                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />} workerSrc={pdfjsWorker}>
+                    <PdfLoader url={pdf} beforeLoad={<FontAwesomeIcon icon={faSpinner} />} workerSrc={pdfjsWorker}>
                         {(pdfDocument) => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}

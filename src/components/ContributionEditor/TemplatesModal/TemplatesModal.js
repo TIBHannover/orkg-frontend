@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import { setIsTemplateModalOpen } from 'slices/contributionEditorSlice';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Tippy, { useSingleton } from '@tippyjs/react';
@@ -231,13 +231,13 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                 action
                                 onClick={!isNextPageLoading ? () => loadMoreTemplates(selectedFilter, targetFilter, labelFilter) : undefined}
                             >
-                                <Icon icon={faAngleDoubleDown} /> Load more templates
+                                <FontAwesomeIcon icon={faAngleDoubleDown} /> Load more templates
                             </ListGroupItem>
                         )}
 
                         {isNextPageLoading && hasNextPage && (
                             <ListGroupItem className="action text-center rounded p-1">
-                                <Icon icon={faSpinner} spin /> Loading...
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                             </ListGroupItem>
                         )}
                     </div>

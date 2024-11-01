@@ -4,7 +4,7 @@ import { BaseEditorComponent } from '@handsontable/react';
 import { InputGroup, DropdownMenu, Dropdown, Input } from 'reactstrap';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'slices/pdfAnnotationSlice';
 import Tippy from '@tippyjs/react';
@@ -289,7 +289,7 @@ class EditorComponent extends BaseEditorComponent {
                             <Dropdown isOpen={this.state.dropdownValueTypeOpen} toggle={() => this.toggle('dropdownValueTypeOpen')}>
                                 <StyledDropdownToggle disableBorderRadiusLeft>
                                     <small>{`${this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)} `}</small>
-                                    <Icon size="xs" icon={faBars} />
+                                    <FontAwesomeIcon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
                                     <StyledDropdownItem onClick={() => this.setState({ valueType: 'resource' })}>

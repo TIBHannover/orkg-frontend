@@ -1,5 +1,5 @@
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -36,7 +36,7 @@ const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
     return (
         <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen((v) => !v)}>
             <DropdownToggle style={{ marginRight: 2 }} size="sm" color="secondary" className="px-3 d-flex align-items-center">
-                Access paper <Icon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
+                Access paper <FontAwesomeIcon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
             </DropdownToggle>
             <DropdownMenu>
                 {paperLink && (

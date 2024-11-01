@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -68,7 +68,7 @@ function ContentTypes() {
             className="btn btn-secondary btn-sm flex-shrink-0"
             href={reverse(ROUTES.CONTENT_TYPE_NEW, { type })}
         >
-            <Icon icon={faPlus} /> Create new
+            <FontAwesomeIcon icon={faPlus} /> Create new
         </RequireAuthentication>
     );
 

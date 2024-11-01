@@ -1,5 +1,5 @@
 import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import AddProperty from 'components/DataBrowser/components/Footer/AddProperty/AddProperty';
 import PropertySuggestions from 'components/DataBrowser/components/Footer/PropertySuggestions/PropertySuggestions';
@@ -30,7 +30,7 @@ const Footer = () => {
                             <>
                                 <TemplatesModal isOpen={isOpen} toggle={toggle} />
                                 <Button className="ms-1" color="secondary" size="sm" onClick={() => setIsOpen(true)}>
-                                    <Icon className="me-1" icon={faPuzzlePiece} /> Templates
+                                    <FontAwesomeIcon className="me-1" icon={faPuzzlePiece} /> Templates
                                 </Button>
                             </>
                         )}

@@ -1,5 +1,5 @@
 import { faPen, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createReference as createReferenceAction, deleteReference, updateReference as updateReferenceAction } from 'slices/reviewSlice';
 import { Cite } from '@citation-js/core';
 import ReferenceModal from 'components/Review/References/ReferenceModal';
@@ -159,7 +159,7 @@ const ReferencesModal = ({ show, toggle }) => {
                             </div>
                             <div className="d-flex flex-shrink-0">
                                 <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
-                                    <Icon icon={faPen} />
+                                    <FontAwesomeIcon icon={faPen} />
                                 </Button>
                                 <Button
                                     color="link"
@@ -168,7 +168,11 @@ const ReferencesModal = ({ show, toggle }) => {
                                     style={{ fontSize: '120%' }}
                                     onClick={() => handleDelete(reference.statementId)}
                                 >
-                                    {isDeletingIDs?.includes(reference.statementId) ? <Icon icon={faSpinner} spin /> : <Icon icon={faTimes} />}
+                                    {isDeletingIDs?.includes(reference.statementId) ? (
+                                        <FontAwesomeIcon icon={faSpinner} spin />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    )}
                                 </Button>
                             </div>
                         </ListGroupItem>

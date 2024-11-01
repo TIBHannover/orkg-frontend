@@ -1,5 +1,5 @@
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { AnimationContainer, PropertyItem, ValueItem } from 'components/ViewPaper/SmartSuggestions/styled';
 import useEntityRecognition from 'components/ViewPaper/hooks/useEntityRecognition';
@@ -112,7 +112,7 @@ function NERSuggestions({ title = '', abstract = '', resourceId }) {
                                             _class={ENTITIES.RESOURCE}
                                             showURL={item.isExistingValue}
                                         >
-                                            <Icon icon={faAngleDoubleLeft} className="text-smart me-2" /> {item.label}
+                                            <FontAwesomeIcon icon={faAngleDoubleLeft} className="text-smart me-2" /> {item.label}
                                         </DescriptionTooltip>
                                     </ValueItem>
                                 </AnimationContainer>

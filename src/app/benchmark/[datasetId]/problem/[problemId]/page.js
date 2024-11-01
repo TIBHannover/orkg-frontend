@@ -1,7 +1,7 @@
 'use client';
 
 import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
@@ -218,11 +218,11 @@ function Benchmark() {
                                     className="float-end"
                                     onClick={() => setEditMode((v) => !v)}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                        <Icon icon={faEllipsisV} />
+                                        <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
                                         <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: datasetId })}?noRedirect`}>
@@ -396,9 +396,11 @@ function Benchmark() {
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
                                                         <div className="ms-1">
-                                                            {column.isSorted && column.isSortedDesc && <Icon icon={faSortUp} className="ms-1" />}
+                                                            {column.isSorted && column.isSortedDesc && (
+                                                                <FontAwesomeIcon icon={faSortUp} className="ms-1" />
+                                                            )}
 
-                                                            {column.isSorted && !column.isSortedDesc && <Icon icon={faSortDown} />}
+                                                            {column.isSorted && !column.isSortedDesc && <FontAwesomeIcon icon={faSortDown} />}
                                                         </div>
                                                     </div>
                                                 </th>

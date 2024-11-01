@@ -1,5 +1,5 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { env } from 'next-runtime-env';
@@ -48,7 +48,7 @@ const Preferences: FC<PreferencesProps> = ({ closeTippy }) => {
                         dispatch({ type: 'SET_IS_HELP_MODAL_OPEN', payload: { isOpen: true, articleId: HELP_CENTER_ARTICLES.PREFERENCES } });
                     }}
                 >
-                    <Icon size="sm" icon={faQuestionCircle} />
+                    <FontAwesomeIcon size="sm" icon={faQuestionCircle} />
                 </Button>
             </h5>
 

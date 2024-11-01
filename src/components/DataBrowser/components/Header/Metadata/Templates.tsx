@@ -1,5 +1,5 @@
 import { faPen, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import { BadgeTagsStyle } from 'components/DataBrowser/components/Header/Metadata/Classes';
@@ -29,7 +29,7 @@ const Templates = () => {
     return (
         <div className="d-flex align-items-center">
             <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
-                <Icon icon={faPuzzlePiece} className="me-1" />
+                <FontAwesomeIcon icon={faPuzzlePiece} className="me-1" />
                 <span className="text-secondary-darker flex-shrink-0"> Applied {pluralize('template', templates?.length ?? 0, false)}: </span>
                 <div className="mx-1" style={{ padding: '3.5px 0' }}>
                     {!isLoading &&

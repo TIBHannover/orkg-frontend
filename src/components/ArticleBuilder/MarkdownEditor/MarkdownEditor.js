@@ -12,7 +12,7 @@ import {
     faExternalLinkAlt,
     faStrikethrough,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
@@ -211,36 +211,36 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add bold text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '**', '**')}>
-                                    <Icon icon={faBold} />
+                                    <FontAwesomeIcon icon={faBold} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add italic text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '*', '*')}>
-                                    <Icon icon={faItalic} />
+                                    <FontAwesomeIcon icon={faItalic} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add strikethrough text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '~~', '~~')}>
-                                    <Icon icon={faStrikethrough} />
+                                    <FontAwesomeIcon icon={faStrikethrough} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add bullet list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '* ')}>
-                                    <Icon icon={faList} />
+                                    <FontAwesomeIcon icon={faList} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add numbered list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '1. ')}>
-                                    <Icon icon={faListOl} />
+                                    <FontAwesomeIcon icon={faListOl} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add link">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[', '](url)')}>
-                                    <Icon icon={faLink} />
+                                    <FontAwesomeIcon icon={faLink} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add image">
@@ -250,7 +250,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     className="btn btn-dark"
                                     onMouseDown={(e) => wrapText(e, '![', '](https://example.com/img.png)')}
                                 >
-                                    <Icon icon={faImage} />
+                                    <FontAwesomeIcon icon={faImage} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add video">
@@ -260,7 +260,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     className="btn btn-dark"
                                     onMouseDown={(e) => wrapText(e, '![', '](https://av.tib.eu/media/16120 =500x300)')}
                                 >
-                                    <Icon icon={faVideo} />
+                                    <FontAwesomeIcon icon={faVideo} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
@@ -269,13 +269,13 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                 <>
                                     <Tippy content="Add citation">
                                         <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[@', ']')}>
-                                            <Icon icon={faQuoteLeft} />
+                                            <FontAwesomeIcon icon={faQuoteLeft} />
                                         </div>
                                     </Tippy>
 
                                     <Tippy content="Add ORKG resource">
                                         <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[!', ']')}>
-                                            <Icon icon={faExternalLinkAlt} />
+                                            <FontAwesomeIcon icon={faExternalLinkAlt} />
                                         </div>
                                     </Tippy>
                                 </>
@@ -289,12 +289,12 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                         wrapText(e, '| Header 1 | Header 2 |\n| ------ | ------ |\n| Item   | Item   |\n| Item   | Item   |')
                                     }
                                 >
-                                    <Icon icon={faTable} />
+                                    <FontAwesomeIcon icon={faTable} />
                                 </div>
                             </Tippy>
                             <Tippy content="Add code">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '`', '`')}>
-                                    <Icon icon={faCode} />
+                                    <FontAwesomeIcon icon={faCode} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>

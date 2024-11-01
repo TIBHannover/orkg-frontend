@@ -1,5 +1,5 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, createRef, forwardRef, useEffect, useImperativeHandle, useRef, RefObject } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
@@ -88,7 +88,7 @@ const ConfirmationTooltip = forwardRef<ConfirmationTooltipHandle, ConfirmationTo
                         key={i}
                         color={button.color}
                     >
-                        <Icon icon={button.icon} className="me-1" />
+                        <FontAwesomeIcon icon={button.icon} className="me-1" />
                         {button.title}
                     </Button>
                 ))}

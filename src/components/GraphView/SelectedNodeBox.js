@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
@@ -32,7 +32,7 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 {selectedNode.data._class === ENTITIES.RESOURCE && (
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: selectedNode.id })}?noRedirect`} target="_blank">
                         <Tippy content="View resource">
-                            <Icon icon={faExternalLinkAlt} />
+                            <FontAwesomeIcon icon={faExternalLinkAlt} />
                         </Tippy>
                     </Link>
                 )}

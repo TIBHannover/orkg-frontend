@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import moment from 'moment';
@@ -126,7 +126,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff, showF
                                             className="px-2"
                                             onClick={handleCompare}
                                         >
-                                            <Icon icon={faSearch} />
+                                            <FontAwesomeIcon icon={faSearch} />
                                         </Button>
                                     </div>
                                     <hr />

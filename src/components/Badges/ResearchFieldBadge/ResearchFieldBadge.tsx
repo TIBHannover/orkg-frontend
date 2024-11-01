@@ -1,5 +1,5 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -19,7 +19,7 @@ const ResearchFieldBadge: FC<ResearchFieldBadgeProps> = ({ researchField = null 
             aria-label={`Visit research field page of ${researchField.label}`}
         >
             <Badge color="light" className="me-2 mb-2">
-                <Icon icon={faBars} className="text-primary" /> {researchField.label}
+                <FontAwesomeIcon icon={faBars} className="text-primary" /> {researchField.label}
             </Badge>
         </Link>
     ) : null;

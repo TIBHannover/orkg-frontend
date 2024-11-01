@@ -1,5 +1,5 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ const LinkButton: FC<LinkButtonProps> = ({ value }) => {
         >
             <Tippy content={`Go to ${value._class ?? 'class'} page`}>
                 <span>
-                    <Icon icon={faLink} size="sm" />
+                    <FontAwesomeIcon icon={faLink} size="sm" />
                 </span>
             </Tippy>
         </Link>

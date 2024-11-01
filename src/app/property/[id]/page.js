@@ -1,7 +1,7 @@
 'use client';
 
 import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import DataBrowser from 'components/DataBrowser/DataBrowser';
@@ -64,11 +64,11 @@ function Property() {
                                     size="sm"
                                     onClick={() => toggleIsEditMode()}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             ) : (
                                 <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
-                                    <Icon icon={faTimes} /> Stop editing
+                                    <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             )
                         }
@@ -96,7 +96,7 @@ function Property() {
                                 />
                                 {isDeletionAllowed && (
                                     <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteProperty}>
-                                        <Icon icon={faTrash} /> Delete property
+                                        <FontAwesomeIcon icon={faTrash} /> Delete property
                                     </Button>
                                 )}
                             </>

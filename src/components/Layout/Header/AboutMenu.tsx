@@ -1,5 +1,5 @@
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ROUTES from 'constants/routes';
@@ -81,7 +81,7 @@ const AboutMenu = (closeMenu: () => void) => {
                                 className="dropdown-item w-100"
                             >
                                 {category.attributes.label}{' '}
-                                {subItems.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
+                                {subItems.length > 0 && <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
                             </DropdownToggle>
                             {subItems.length > 0 && (
                                 <DropdownMenu>

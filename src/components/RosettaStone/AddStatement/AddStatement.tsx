@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SelectGlobalStyle, customClassNames, customStyles } from 'components/Autocomplete/styled';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import SelectOption from 'components/RosettaStone/AddStatement/SelectOption';
@@ -78,13 +78,13 @@ const AddStatement: FC<AddStatementProps> = ({ handleAddStatement }) => {
             {!showAdd ? (
                 <ButtonGroup>
                     <ButtonWithLoading color="secondary" onClick={() => setShowAdd(true)}>
-                        <Icon className="icon" icon={faPlus} /> Add statement
+                        <FontAwesomeIcon className="icon" icon={faPlus} /> Add statement
                     </ButtonWithLoading>
                 </ButtonGroup>
             ) : (
                 <InputGroup>
                     <span className="input-group-text">
-                        <Icon className="icon" icon={faPlus} />
+                        <FontAwesomeIcon className="icon" icon={faPlus} />
                     </span>
 
                     <SelectGlobalStyle />

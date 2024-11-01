@@ -1,5 +1,5 @@
 import { faPlusCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
@@ -50,13 +50,13 @@ export const CreateProperty = () => {
                 <>
                     <ButtonGroup>
                         <Button color="secondary" size="sm" onClick={() => setIsCreating(true)}>
-                            <Icon icon={faPlusCircle} /> Add property
+                            <FontAwesomeIcon icon={faPlusCircle} /> Add property
                         </Button>
                         <SmartPropertySuggestions properties={propertyLabels} handleCreate={handleCreate} />
                     </ButtonGroup>
 
                     <Button color="secondary" size="sm" onClick={() => setIsTemplatesModalOpen(true)} className="ms-1">
-                        <Icon className="me-1" icon={faPuzzlePiece} /> Templates
+                        <FontAwesomeIcon className="me-1" icon={faPuzzlePiece} /> Templates
                     </Button>
                     {isTemplatesModalOpen && (
                         <TemplatesModal syncBackend setIsTemplatesModalOpen={setIsTemplatesModalOpen} isTemplatesModalOpen={isTemplatesModalOpen} />

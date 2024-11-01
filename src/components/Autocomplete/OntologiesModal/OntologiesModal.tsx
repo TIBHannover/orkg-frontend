@@ -1,5 +1,5 @@
 import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAutocompleteDispatch, useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
 import { CustomOption } from 'components/Autocomplete/OntologiesModal/CustomOption';
 import { AdditionalType, Ontology } from 'components/Autocomplete/types';
@@ -55,7 +55,7 @@ const OntologiesModal = () => {
                         Select search sources from below
                     </Label>
                     <Button color="light" onClick={handleReset} size="sm" className="mt-2" disabled={isEqual(value, defaultSelection)}>
-                        <Icon icon={faArrowRotateLeft} /> Reset
+                        <FontAwesomeIcon icon={faArrowRotateLeft} /> Reset
                     </Button>
                 </div>
                 <div className="mb-3 mt-1">

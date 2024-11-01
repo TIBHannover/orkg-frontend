@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faEllipsisV, faExternalLinkAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PropTypes from 'prop-types';
@@ -30,7 +30,7 @@ function PaperMenuBar(props) {
         <>
             <AccessPaperButton paperLink={paperLink} doi={doi} title={title} />
             <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenDiscussionModal(true)}>
-                <Icon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Discussion{' '}
+                <FontAwesomeIcon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Discussion{' '}
                 {!isLoading && discussionCount !== null && `(${discussionCount})`}
             </Button>
             {!props.editMode && (
@@ -42,7 +42,7 @@ function PaperMenuBar(props) {
                     size="sm"
                     onClick={() => (!props.disableEdit ? props.toggle('editMode') : setIsOpenPWCModal(true))}
                 >
-                    <Icon icon={faPen} /> Edit
+                    <FontAwesomeIcon icon={faPen} /> Edit
                 </RequireAuthentication>
             )}
             {props.editMode && (
@@ -54,12 +54,12 @@ function PaperMenuBar(props) {
                     disabled={props.disableEdit}
                     onClick={() => props.toggle('editMode')}
                 >
-                    <Icon icon={faTimes} /> Stop editing
+                    <FontAwesomeIcon icon={faTimes} /> Stop editing
                 </Button>
             )}
             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
-                    <Icon icon={faEllipsisV} />
+                    <FontAwesomeIcon icon={faEllipsisV} />
                 </DropdownToggle>
                 <DropdownMenu>
                     <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog((v) => !v)}>
@@ -86,7 +86,7 @@ function PaperMenuBar(props) {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
+                            paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                         </a>{' '}
                         website to suggest changes.
                     </>

@@ -1,5 +1,5 @@
 import { faCaretDown, faCaretRight, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Alert, Card, CardBody, Collapse, Table } from 'reactstrap';
@@ -20,11 +20,11 @@ const Recommendation = ({ type, title, info, evaluation, solution }) => {
             >
                 <span>
                     <span className="d-inline-block" style={{ width: 20 }}>
-                        <Icon icon={isOpen ? faCaretDown : faCaretRight} />
+                        <FontAwesomeIcon icon={isOpen ? faCaretDown : faCaretRight} />
                     </span>
                     {title}
                 </span>
-                <Icon icon={type === 'issue' ? faTimes : faCheck} style={{ fontSize: `${type === 'issue' ? 150 : 130}%` }} />
+                <FontAwesomeIcon icon={type === 'issue' ? faTimes : faCheck} style={{ fontSize: `${type === 'issue' ? 150 : 130}%` }} />
             </Alert>
             <Collapse isOpen={isOpen}>
                 <Card className="mb-2">

@@ -1,7 +1,7 @@
 'use client';
 
 import { faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
 import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
@@ -64,7 +64,7 @@ const ResearchFields = () => {
                 buttonGroup={
                     <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                         <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                            <Icon icon={faEllipsisV} />
+                            <FontAwesomeIcon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu end>
                             <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}>

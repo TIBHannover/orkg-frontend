@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { upperFirst } from 'lodash';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const IconWrapper = styled.span`
     padding: 0 10px;
 `;
 
-const DeleteIcon = styled(Icon)`
+const DeleteIcon = styled(FontAwesomeIcon)`
     color: #f87474;
 `;
 

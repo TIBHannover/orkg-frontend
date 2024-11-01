@@ -1,5 +1,5 @@
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -120,7 +120,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                                 color="link"
                                                 style={{ verticalAlign: 'middle' }}
                                             >
-                                                <Icon icon={faClipboard} size="xs" />
+                                                <FontAwesomeIcon icon={faClipboard} size="xs" />
                                             </Button>
                                         </CopyToClipboard>
                                     )}
@@ -129,7 +129,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                     <div>
                                         <Tippy content={`Go to ${renderTypeLabel()} page`}>
                                             <Link href={getLinkByEntityType(_class, id)} target="_blank">
-                                                <Icon icon={faLink} size="xs" />
+                                                <FontAwesomeIcon icon={faLink} size="xs" />
                                             </Link>
                                         </Tippy>
                                     </div>
@@ -165,7 +165,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                             )}
                                         </>
                                     ) : (
-                                        <Icon icon={faSpinner} spin />
+                                        <FontAwesomeIcon icon={faSpinner} spin />
                                     )}
                                 </td>
                             </tr>

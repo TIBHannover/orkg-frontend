@@ -1,5 +1,5 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
 import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAuthorsModal';
 import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
@@ -20,7 +20,7 @@ const AuthorsBox = ({ researchProblemId }: AuthorsBoxProps) => {
     return (
         <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>
-                <Icon icon={faAward} className="text-primary" /> Top authors
+                <FontAwesomeIcon icon={faAward} className="text-primary" /> Top authors
             </h5>
             <div className="flex-grow-1">
                 {!isLoading && authors && authors.length > 0 && (

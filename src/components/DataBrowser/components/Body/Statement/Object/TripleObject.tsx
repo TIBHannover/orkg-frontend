@@ -1,5 +1,5 @@
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LayoutTripleObject from 'components/DataBrowser/components/Body/Statement/Object/LayoutTripleObject';
 import SortableValueItem from 'components/DataBrowser/components/Body/Statement/SortableValueItem/SortableValueItem';
 import ValueDatatype from 'components/DataBrowser/components/Body/Statement/ValueDatatype/ValueDatatype';
@@ -104,7 +104,7 @@ const TripleObject: FC<SingleStatementProps> = ({
                                 onClick={() => setShowSubLevel((v) => !v)}
                                 aria-label={`${showSubLevel ? 'collapse' : 'expand'} nested statements`}
                             >
-                                <Icon color="rgb(128, 134, 155)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
+                                <FontAwesomeIcon color="rgb(128, 134, 155)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
                             </Button>
                         )}
                         <ValueOptions

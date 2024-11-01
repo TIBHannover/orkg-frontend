@@ -1,5 +1,5 @@
 import { faCheck, faClose } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
@@ -68,10 +68,10 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                     inputId="classes-autocomplete"
                 />
                 <Button type="submit" color="secondary" onClick={() => setIsEditing(false)}>
-                    <Icon icon={faClose} />
+                    <FontAwesomeIcon icon={faClose} />
                 </Button>
                 <Button disabled={isUpdating} title="Save" type="submit" color="primary" onClick={submitChanges}>
-                    <Icon icon={faCheck} />
+                    <FontAwesomeIcon icon={faCheck} />
                 </Button>
             </InputGroup>
         </div>

@@ -6,7 +6,7 @@ import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import { faPlus, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
@@ -33,7 +33,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                 {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
                     <>
                         <Button outline size="sm" className="d-inline-block" onClick={() => setShowAddResearchProblemDialog((v) => !v)}>
-                            <Icon icon={faPlus} /> Add
+                            <FontAwesomeIcon icon={faPlus} /> Add
                         </Button>
                         <AddResearchProblem
                             showDialog={showAddResearchProblemDialog}

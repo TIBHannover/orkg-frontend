@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Container } from 'reactstrap';
 import { StoryFn } from '@storybook/react';
 
@@ -35,7 +35,7 @@ WithButtonGroup.args = {
     ...Default.args,
     buttonGroup: (
         <Button component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm flex-shrink-0" href="https://orkg.org">
-            <Icon icon={faPlus} /> Create paper
+            <FontAwesomeIcon icon={faPlus} /> Create paper
         </Button>
     ),
 };

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
 import PropertySuggestions from 'components/ContributionEditor/PropertySuggestions/PropertySuggestions';
@@ -112,7 +112,7 @@ const ContributionEditor = () => {
                             View comparison
                         </Button>
                         <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
-                            <Icon icon={faPlusCircle} /> Add contribution
+                            <FontAwesomeIcon icon={faPlusCircle} /> Add contribution
                         </Button>
                     </>
                 }
@@ -131,7 +131,7 @@ const ContributionEditor = () => {
                         contributions cannot be edited. <br />
                         Meanwhile, you can visit{' '}
                         <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
-                            paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
+                            paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                         </a>{' '}
                         website to suggest changes.
                     </Alert>

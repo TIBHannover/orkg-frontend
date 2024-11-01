@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Alert } from 'reactstrap';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +12,7 @@ const AutomaticContributionWarning = (props) => {
             The information of this contribution are automatically extracted.
             {props.enableEdit && (
                 <Button color="smart" size="sm" style={{ float: 'right' }} onClick={handleVerify}>
-                    <Icon icon={faCheck} /> Verify
+                    <FontAwesomeIcon icon={faCheck} /> Verify
                 </Button>
             )}
         </Alert>

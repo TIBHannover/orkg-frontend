@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GEONAMES_LOGO from 'assets/img/sameas/geonames.png';
 import { CoordinatesDisplay } from 'components/ExternalDescription/CoordinatesDisplay';
 import Image from 'next/image';
@@ -25,7 +25,7 @@ const GeonameDescription: FC<GeonameDescriptionProps> = ({ externalResourceUrl }
             </div>
             {isLoading && (
                 <div className="text-center">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                 </div>
             )}
             {error && <p className="text-center">Failed loading Geonames statements</p>}

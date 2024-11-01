@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ListPage from 'components/ListPage/ListPage';
@@ -48,7 +48,7 @@ const Comparisons = () => {
                 className="btn btn-secondary btn-sm flex-shrink-0"
                 href={ROUTES.ADD_COMPARISON}
             >
-                <Icon icon={faPlus} /> Create comparison
+                <FontAwesomeIcon icon={faPlus} /> Create comparison
             </RequireAuthentication>
             <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" href={ROUTES.FEATURED_COMPARISONS}>
                 Featured comparisons

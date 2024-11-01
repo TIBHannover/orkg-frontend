@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Component } from 'react';
 import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -56,7 +56,7 @@ class FeaturedComparisonsItem extends Component {
                         <ComparisonBody>
                             <Row>
                                 <ImageCol sm="3" className="d-flex justify-content-center align-items-center">
-                                    <Icon icon={icon} />
+                                    <FontAwesomeIcon icon={icon} />
                                 </ImageCol>
                                 <Col sm="9">
                                     <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>

@@ -1,5 +1,5 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getImage, getSdgNumber } from 'components/SustainableDevelopmentGoals/helpers';
@@ -38,7 +38,7 @@ const Sdg: FC<SdgProps> = ({ sdg, label, onDelete, isEditing = false }) => (
         </div>
         {isEditing && (
             <Button color="link" className="p-0 me-2 text-grey" style={{ fontSize: '130%' }} onClick={() => onDelete(sdg.id)}>
-                <Icon icon={faTimes} />
+                <FontAwesomeIcon icon={faTimes} />
             </Button>
         )}
     </SdgStyled>

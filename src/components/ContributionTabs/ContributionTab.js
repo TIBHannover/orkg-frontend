@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Input } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -101,7 +101,10 @@ const ContributionTab = (props) => {
                                             props.toggleDeleteContribution(props.contribution.id);
                                         }}
                                     >
-                                        <Icon icon={!props.contribution.isDeleting ? faTrash : faSpinner} spin={props.contribution.isDeleting} />
+                                        <FontAwesomeIcon
+                                            icon={!props.contribution.isDeleting ? faTrash : faSpinner}
+                                            spin={props.contribution.isDeleting}
+                                        />
                                     </ActionButton>
                                 </span>
                             </Tippy>
@@ -119,7 +122,7 @@ const ContributionTab = (props) => {
                                             toggleEditLabelContribution(props.contribution.id, e);
                                         }}
                                     >
-                                        <Icon icon={!props.contribution.isSaving ? faPen : faSpinner} spin={props.contribution.isSaving} />
+                                        <FontAwesomeIcon icon={!props.contribution.isSaving ? faPen : faSpinner} spin={props.contribution.isSaving} />
                                     </ActionButton>
                                 </span>
                             </Tippy>

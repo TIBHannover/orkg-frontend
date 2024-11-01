@@ -1,5 +1,5 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -136,7 +136,7 @@ const ViewArticle = () => {
                                                             comparisonId: section.contentLink.objectId,
                                                         })}
                                                     >
-                                                        <Icon icon={faLink} size="xs" />
+                                                        <FontAwesomeIcon icon={faLink} size="xs" />
                                                     </Link>
                                                 </Tippy>
                                             )}

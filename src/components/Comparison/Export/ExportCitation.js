@@ -2,7 +2,7 @@ import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Ta
 import { Component } from 'react';
 import { getCitationByDOI } from 'services/datacite/index';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { toast } from 'react-toastify';
@@ -105,7 +105,7 @@ class ExportCitation extends Component {
                                     }}
                                 >
                                     <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                        <Icon icon={faClipboard} /> Copy to clipboard
+                                        <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
                                     </Button>
                                 </CopyToClipboard>
                             </TabPane>

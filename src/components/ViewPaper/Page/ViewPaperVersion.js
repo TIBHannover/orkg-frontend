@@ -1,6 +1,6 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
@@ -62,7 +62,7 @@ const ViewPaperVersion = () => {
                                 </Button>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                        <Icon icon={faEllipsisV} />
+                                        <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem onClick={() => setShowPublishDialog((v) => !v)}>Publish</DropdownItem>
@@ -136,7 +136,7 @@ const ViewPaperVersion = () => {
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <Icon icon={faClipboard} />
+                                            <FontAwesomeIcon icon={faClipboard} />
                                         </Button>
                                     </CopyToClipboard>
                                 </InputGroup>
@@ -153,7 +153,7 @@ const ViewPaperVersion = () => {
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <Icon icon={faClipboard} />
+                                            <FontAwesomeIcon icon={faClipboard} />
                                         </Button>
                                     </CopyToClipboard>
                                 </InputGroup>

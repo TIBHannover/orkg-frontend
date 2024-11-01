@@ -1,5 +1,5 @@
 import { faCheck, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import { memo } from 'react';
@@ -16,12 +16,12 @@ const TableHeaderColumnFirst = () => {
                     <div>
                         {isLoading && (
                             <div className="rounded">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </div>
                         )}
                         {!isLoading && (
                             <div className="rounded" style={{ color: 'rgb(228, 228, 228)' }}>
-                                <Icon icon={faCheck} /> Saved
+                                <FontAwesomeIcon icon={faCheck} /> Saved
                             </div>
                         )}
                     </div>

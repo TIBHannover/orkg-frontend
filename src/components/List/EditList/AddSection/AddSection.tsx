@@ -1,5 +1,5 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useList from 'components/List/hooks/useList';
 import { uniqueId } from 'lodash';
 import { FC, useRef, useState } from 'react';
@@ -76,7 +76,7 @@ const AddSection: FC<AddSectionProps> = ({ index }) => {
     return (
         <div className="d-flex align-items-center justify-content-center add position-relative">
             <AddSectionStyled color="link" className="p-0" onClick={() => setIsToolbarVisible((v) => !v)} aria-label="Add section">
-                <Icon icon={faPlusCircle} />
+                <FontAwesomeIcon icon={faPlusCircle} />
             </AddSectionStyled>
             <AnimationContainer in={isToolbarVisible} unmountOnExit classNames="opacity" timeout={{ enter: 800, exit: 800 }}>
                 <Toolbar ref={refToolbar}>

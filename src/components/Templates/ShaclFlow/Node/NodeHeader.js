@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
@@ -23,7 +23,7 @@ function NodeHeader({ label, id }) {
             </ConditionalWrapper>{' '}
             <Tippy content="Go to template page">
                 <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id })}>
-                    <Icon icon={faLink} color="#fff" />
+                    <FontAwesomeIcon icon={faLink} color="#fff" />
                 </Link>
             </Tippy>
         </NodeHeaderStyled>

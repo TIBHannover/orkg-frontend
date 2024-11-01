@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Row, Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import useCreator from 'components/Comparison/hooks/useCreator';
@@ -76,7 +76,7 @@ function ProvenanceBox() {
                                     Belongs to observatory:
                                     {!!user && user.isCurationAllowed && (
                                         <Button className="ms-2 p-0" size="sm" onClick={() => setShowAssignObservatory(true)} color="link">
-                                            <Icon icon={faPen} /> Edit
+                                            <FontAwesomeIcon icon={faPen} /> Edit
                                         </Button>
                                     )}
                                 </p>

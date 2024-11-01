@@ -2,7 +2,7 @@ import { ButtonGroup, Button } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeZoom } from 'slices/pdfTextAnnotationSlice';
 import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
@@ -27,10 +27,10 @@ const ZoomBar = () => {
         <Container>
             <ButtonGroup className="rounded-pill">
                 <Button color="secondary" onClick={handleZoomIn} size="lg">
-                    <Icon icon={faSearchPlus} />
+                    <FontAwesomeIcon icon={faSearchPlus} />
                 </Button>
                 <Button color="secondary" onClick={handleZoomOut} size="lg">
-                    <Icon icon={faSearchMinus} />
+                    <FontAwesomeIcon icon={faSearchMinus} />
                 </Button>
             </ButtonGroup>
         </Container>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { useDropzone } from 'react-dropzone';
@@ -31,7 +31,7 @@ const DragPdf = styled.div`
     }
 `;
 
-const FilePlaceholder = styled(Icon)`
+const FilePlaceholder = styled(FontAwesomeIcon)`
     margin-bottom: 15px;
     color: inherit;
 `;

@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
 import ContentTypeSubFieldsFilter from 'components/ContentTypeList/ContentTypeSubFieldsFilter';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -28,7 +28,7 @@ const ContentTypeListHeader = ({
                 <SubtitleSeparator />
                 <SubTitle>
                     <small className="text-muted text-small mt-1">
-                        {page === 1 && isLoading ? <Icon icon={faSpinner} spin /> : `${totalElements} items`}
+                        {page === 1 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `${totalElements} items`}
                     </small>
                 </SubTitle>
             </div>

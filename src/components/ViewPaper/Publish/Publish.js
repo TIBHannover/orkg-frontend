@@ -1,5 +1,5 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
@@ -207,7 +207,7 @@ function Publish(props) {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                    <Icon icon={faClipboard} />
+                                    <FontAwesomeIcon icon={faClipboard} />
                                 </Button>
                             </CopyToClipboard>
                         </InputGroup>

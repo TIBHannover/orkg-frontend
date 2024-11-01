@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
 import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
@@ -23,7 +23,7 @@ const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
 const ContentTypesMenu = ({ closeMenu }) => (
     <StyledButtonDropdown direction="right" className="w-100 nav inNavbar">
         <DropdownToggle tag="button" className="dropdown-item w-100">
-            More <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+            More <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
         </DropdownToggle>
         <DropdownMenu>
             {supportedContentTypes.map(({ id, label }) => (

@@ -1,5 +1,5 @@
 import { faCheck, faClose, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
@@ -56,17 +56,17 @@ const Label = () => {
                         {entity?.label || (!entity ? <Skeleton width={100} /> : <i>No label</i>)}
                     </Link>
                     {canEdit && isEditMode && <ActionButton title="Edit" icon={faPen} action={handleEditClick} />}
-                    {isValidating && <Icon spin className="ms-2 text-primary" icon={faSpinner} />}
+                    {isValidating && <FontAwesomeIcon spin className="ms-2 text-primary" icon={faSpinner} />}
                 </>
             )}
             {isEditing && (
                 <InputGroup size="sm">
                     <Input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
                     <Button type="submit" color="secondary" onClick={() => setIsEditing(false)}>
-                        <Icon icon={faClose} />
+                        <FontAwesomeIcon icon={faClose} />
                     </Button>
                     <Button type="submit" color="primary" onClick={handleUpdateLabel}>
-                        <Icon icon={faCheck} />
+                        <FontAwesomeIcon icon={faCheck} />
                     </Button>
                 </InputGroup>
             )}

@@ -1,5 +1,5 @@
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BioassaysModal from 'components/ViewPaper/BioassaysModal/BioassaysModal';
 import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ const Bioassays = ({ resourceId }) => {
     return isBioassayField ? (
         <>
             <Button onClick={() => setIsOpenBioassays((v) => !v)} outline size="sm" color="smart">
-                <Icon icon={faFlask} /> Add Bioassay
+                <FontAwesomeIcon icon={faFlask} /> Add Bioassay
             </Button>
             <BioassaysModal selectedResource={resourceId} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays((v) => !v)} />
         </>

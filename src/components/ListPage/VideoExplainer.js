@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 
 const VideoExplainer = ({ previewStyle = {}, video }) => {
@@ -19,7 +19,7 @@ const VideoExplainer = ({ previewStyle = {}, video }) => {
                     className="border border-secondary d-flex justify-content-center align-items-center flex-column me-2 rounded"
                     style={previewStyle}
                 >
-                    <Icon icon={faPlayCircle} className="shadow" style={{ fontSize: '120%' }} />
+                    <FontAwesomeIcon icon={faPlayCircle} className="shadow" style={{ fontSize: '120%' }} />
                 </span>
             </Button>
 

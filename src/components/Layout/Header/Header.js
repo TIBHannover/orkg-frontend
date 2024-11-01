@@ -345,7 +345,7 @@ const Header = () => {
                                 setIsExploding(true);
                             }}
                         >
-                            <Icon icon={faGift} size="sm" /> 5 years
+                            <FontAwesomeIcon icon={faGift} size="sm" /> 5 years
                         </div>
                     }
                 </Link>
@@ -535,7 +535,7 @@ const Header = () => {
                                     href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
                                     onClick={closeMenu}
                                 >
-                                    GitLab <Icon size="sm" icon={faExternalLinkAlt} />
+                                    GitLab <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem tag={Link} href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS}>

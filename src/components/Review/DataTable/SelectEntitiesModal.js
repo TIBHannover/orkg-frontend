@@ -1,5 +1,5 @@
 import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { saveEntities, saveShowProperties } from 'slices/reviewSlice';
 import arrayMove from 'array-move';
 import capitalize from 'capitalize';
@@ -87,7 +87,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
 
     const SortableHandle = sortableHandle(() => (
         <DragHandle>
-            <Icon icon={faSort} />
+            <FontAwesomeIcon icon={faSort} />
         </DragHandle>
     ));
 
@@ -98,7 +98,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                 {capitalize(entity.label)}
             </div>
             <Button color="link" className="p-0 ms-2" onClick={() => handleRemoveEntity(entity.id)}>
-                <Icon icon={faMinusCircle} />
+                <FontAwesomeIcon icon={faMinusCircle} />
             </Button>
         </ListGroupItemStyled>
     ));
@@ -204,7 +204,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                             {entities.map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
                                     <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
-                                        <Icon icon={faPlusCircle} />
+                                        <FontAwesomeIcon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}
                                 </ListGroupItem>
@@ -221,7 +221,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                             .map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
                                     <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
-                                        <Icon icon={faPlusCircle} />
+                                        <FontAwesomeIcon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}
                                 </ListGroupItem>

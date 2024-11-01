@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { CardTitle } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import useContributors from 'components/TopContributors/hooks/useContributors';
 import ROUTES from 'constants/routes';
@@ -80,7 +80,7 @@ const Contributors = ({ researchFieldId }) => {
                     {contributors.length > 18 && (
                         <Tippy key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
-                                <Icon icon={faEllipsisH} />
+                                <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
                         </Tippy>
                     )}

@@ -1,5 +1,5 @@
 import { faCheck, faClock, faClose, faInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
 import Link from 'next/link';
@@ -100,7 +100,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                         <li className="mb-1">
                             Created:{' '}
                             <span title={statement.created_at}>
-                                <Icon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
                             </span>
                         </li>
                         {statement.created_by && (
@@ -132,12 +132,12 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                             Is editable:{' '}
                             {statement.modifiable && (
                                 <span title="This statement can be edited">
-                                    <Icon icon={faCheck} />
+                                    <FontAwesomeIcon icon={faCheck} />
                                 </span>
                             )}
                             {!statement.modifiable && (
                                 <span title="This statement can not be edited">
-                                    <Icon icon={faClose} />
+                                    <FontAwesomeIcon icon={faClose} />
                                 </span>
                             )}
                         </li>

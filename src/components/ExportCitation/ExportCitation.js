@@ -1,7 +1,7 @@
 import { env } from 'next-runtime-env';
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -49,7 +49,7 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
                     }}
                 >
                     <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                        <Icon icon={faClipboard} /> Copy to clipboard
+                        <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
                     </Button>
                 </CopyToClipboard>
             </ModalBody>

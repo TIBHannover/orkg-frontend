@@ -1,5 +1,5 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useRef, useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
@@ -62,7 +62,7 @@ const AddSection = (props) => {
     return (
         <InvisibleByDefault className="d-flex align-items-center justify-content-center add position-relative">
             <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar} aria-label="Add section">
-                <Icon icon={faPlusCircle} />
+                <FontAwesomeIcon icon={faPlusCircle} />
             </AddSectionStyled>
             {isToolbarVisible && (
                 <Toolbar ref={refToolbar}>

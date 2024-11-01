@@ -1,7 +1,7 @@
 'use client';
 
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ResearchFieldObservatories from 'components/Observatory/ResearchFieldObservatories/ResearchFieldObservatories';
 import usePaginate from 'components/hooks/usePaginate';
 import { getResearchFieldOfObservatories } from 'services/backend/observatories';
@@ -104,7 +104,7 @@ const Observatories = () => {
                 {researchFields.length === 0 && isLastPageReached && <div className="text-center mt-4 mb-4">No observatories yet</div>}
                 {page === 0 && isLoading && (
                     <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                     </div>
                 )}
             </Container>

@@ -1,5 +1,5 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
@@ -61,7 +61,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
                 />
 
                 <Button id="button-main-search" className="ps-2 pe-2 search-icon" type="submit">
-                    <Icon icon={faSearch} />
+                    <FontAwesomeIcon icon={faSearch} />
                 </Button>
             </InputGroup>
         </Form>

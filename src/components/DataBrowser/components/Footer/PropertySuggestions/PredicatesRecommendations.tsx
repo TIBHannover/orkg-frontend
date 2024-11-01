@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import usePredicatesRecommendation from 'components/DataBrowser/hooks/usePredicatesRecommendation';
@@ -64,7 +64,7 @@ const PredicatesRecommendations = () => {
                         >
                             <ValueItem action style={{ fontSize: '90%', cursor: 'pointer' }} onClick={() => handlePropertyClick(p)}>
                                 <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE} showURL>
-                                    <Icon icon={faPlus} className="text-smart me-2" /> {p.label}
+                                    <FontAwesomeIcon icon={faPlus} className="text-smart me-2" /> {p.label}
                                 </DescriptionTooltip>
                             </ValueItem>
                         </AnimationContainer>

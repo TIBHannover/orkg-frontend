@@ -1,5 +1,5 @@
 import { faSpinner, faStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useQualityReport from 'components/Comparison/QualityReportModal/hooks/useQualityReport';
 import Recommendation from 'components/Comparison/QualityReportModal/Recommendation';
 import Feedback from 'components/Comparison/QualityReportModal/Feedback';
@@ -53,11 +53,11 @@ const QualityReportModal = ({ toggle }) => {
                             <div className="w-50 px-3">
                                 <h6 className="h5">User feedback</h6>
                                 <div className="d-flex align-items-center">
-                                    <Icon icon={faStar} className={stars >= 1 ? 'text-primary' : 'text-light'} />
-                                    <Icon icon={faStar} className={stars >= 2 ? 'text-primary' : 'text-light'} />
-                                    <Icon icon={faStar} className={stars >= 3 ? 'text-primary' : 'text-light'} />
-                                    <Icon icon={faStar} className={stars >= 4 ? 'text-primary' : 'text-light'} />
-                                    <Icon icon={faStar} className={stars >= 5 ? 'text-primary' : 'text-light'} />
+                                    <FontAwesomeIcon icon={faStar} className={stars >= 1 ? 'text-primary' : 'text-light'} />
+                                    <FontAwesomeIcon icon={faStar} className={stars >= 2 ? 'text-primary' : 'text-light'} />
+                                    <FontAwesomeIcon icon={faStar} className={stars >= 3 ? 'text-primary' : 'text-light'} />
+                                    <FontAwesomeIcon icon={faStar} className={stars >= 4 ? 'text-primary' : 'text-light'} />
+                                    <FontAwesomeIcon icon={faStar} className={stars >= 5 ? 'text-primary' : 'text-light'} />
                                     <span className="ms-2">Based on {feedbacks.length} evaluations</span>
                                 </div>
                                 <RequireAuthentication
@@ -126,7 +126,7 @@ const QualityReportModal = ({ toggle }) => {
                     </>
                 ) : (
                     <div className="m-5 text-center">
-                        <Icon icon={faSpinner} spin /> Loading...
+                        <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                     </div>
                 )}
             </ModalBody>

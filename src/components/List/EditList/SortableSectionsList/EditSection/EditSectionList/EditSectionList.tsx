@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
 import AddEntryModal from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/AddEntryModal';
 import EditSectionListItem from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionListItem/EditSectionListItem';
@@ -67,7 +67,7 @@ const EditSectionList: FC<EditSectionListProps> = ({ section }) => {
                 </div>
             )}
             <Button color="secondary" size="sm" className="mb-2" onClick={() => setIsOpenAddEntryModal(true)}>
-                <Icon icon={faPlus} className="me-2" />
+                <FontAwesomeIcon icon={faPlus} className="me-2" />
                 Add entries
             </Button>
 

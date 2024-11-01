@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { DropdownMenu, DropdownItem, FormGroup, Label, Input, UncontrolledButtonDropdown, DropdownToggle, Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { RESOURCES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
@@ -72,7 +72,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                 >
                     <span>
                         <Button color="light" className="flex-shrink-0 ps-3 pe-3" style={{ marginLeft: 'auto' }} size="sm">
-                            {stringifySort(sort)} <Icon icon={faChevronDown} />
+                            {stringifySort(sort)} <FontAwesomeIcon icon={faChevronDown} />
                         </Button>
                     </span>
                 </Tippy>

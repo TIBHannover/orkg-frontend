@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash as faEmptyEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-const StyledIcon = styled(Icon)`
+const StyledIcon = styled(FontAwesomeIcon)`
     cursor: ${(props) => (props.$isButton ? 'pointer' : 'initial')};
 `;
 

@@ -1,6 +1,6 @@
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import Link from 'next/link';
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
@@ -208,7 +208,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                                             disabled={doiIsFetching}
                                             data-test="lookupDoi"
                                         >
-                                            {!doiIsFetching ? 'Lookup' : <Icon icon={faSpinner} spin />}
+                                            {!doiIsFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                                         </Button>
                                     </InputGroup>
                                 </FormGroup>

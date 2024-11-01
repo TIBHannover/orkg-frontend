@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CardFactory from 'components/Cards/CardFactory/CardFactoryOldFormat';
 import { useSearchParams } from 'next/navigation';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
@@ -61,7 +61,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                     <SubtitleSeparator />
                     <SubTitle>
                         <small className="text-muted text-small mt-1">
-                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : `${totalElements} items`}
+                            {totalElements === 0 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `${totalElements} items`}
                         </small>
                     </SubTitle>
                 </div>
@@ -143,7 +143,7 @@ const IntegratedList = ({ id, slug, boxShadow = false }) => {
                     <div className={`mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
                         {page !== 0 && (
                             <div className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </div>
                         )}
                         {page === 0 && (

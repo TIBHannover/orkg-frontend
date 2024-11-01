@@ -1,5 +1,5 @@
 import { faCheck, faGripVertical, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActionButton from 'components/ActionButton/ActionButton';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
@@ -40,7 +40,7 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
         <PropertyStyle className="col-4">
             {isEditMode && (
                 <DragHandler ref={dragRef}>
-                    <Icon icon={faGripVertical} />
+                    <FontAwesomeIcon icon={faGripVertical} />
                 </DragHandler>
             )}
             {!isEditing ? (

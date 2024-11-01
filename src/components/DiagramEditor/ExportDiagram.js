@@ -1,6 +1,6 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { generateGraphMLFile, generateJSONFile } from 'components/DiagramEditor/helpers';
 
@@ -13,10 +13,10 @@ function ExportDiagram({ isExportDiagramModalOpen, setIsExportDiagramModalOpen, 
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={() => generateGraphMLFile(diagram, diagramResource)}>
-                    <Icon icon={faDownload} /> GraphML
+                    <FontAwesomeIcon icon={faDownload} /> GraphML
                 </Button>
                 <Button color="secondary-darker" onClick={() => generateJSONFile(diagram, diagramResource)}>
-                    <Icon icon={faDownload} /> JSON
+                    <FontAwesomeIcon icon={faDownload} /> JSON
                 </Button>
                 <Button color="secondary" onClick={setIsExportDiagramModalOpen}>
                     Close

@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import OntologyItem from 'components/Review/DataTable/OntologyItem';
 import SelectEntitiesModal from 'components/Review/DataTable/SelectEntitiesModal';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
@@ -58,7 +58,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                             <span>Label</span>
                             {isEditable && (
                                 <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')} aria-label="Edit labels">
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </Button>
                             )}
                         </div>
@@ -68,7 +68,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                             <span>Property</span>
                             {isEditable && (
                                 <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')} aria-label="Edit properties">
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </Button>
                             )}
                         </div>

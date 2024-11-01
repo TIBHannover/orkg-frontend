@@ -1,5 +1,5 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataBrowser from 'components/DataBrowser/DataBrowser';
 import Link from 'next/link';
 import { ENTITIES } from 'constants/graphSettings';
@@ -73,7 +73,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
                     rel="noopener noreferrer"
                 >
                     <Button color="link" className="p-0">
-                        Open {type} <Icon icon={faExternalLinkAlt} className="me-1" />
+                        Open {type} <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                     </Button>
                 </Link>
             </ModalHeader>

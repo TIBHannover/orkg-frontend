@@ -1,7 +1,7 @@
 'use client';
 
 import { faQuestionCircle, faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import Tippy from '@tippyjs/react';
 import Feedback from 'components/SmartSuggestions/Feedback';
@@ -45,7 +45,7 @@ const SmartSuggestions = ({ children, tooltipContent, isOpenSmartTooltip, setIsO
                                 Smart suggestions{' '}
                                 <Tippy content="More information">
                                     <a href="https://orkg.org/help-center/article/53/Smart_suggestions" target="_blank" rel="noopener noreferrer">
-                                        <Icon icon={faQuestionCircle} className="text-white ms-2 opacity-75" />
+                                        <FontAwesomeIcon icon={faQuestionCircle} className="text-white ms-2 opacity-75" />
                                     </a>
                                 </Tippy>
                                 <Tippy content="Reload suggestions">
@@ -55,7 +55,7 @@ const SmartSuggestions = ({ children, tooltipContent, isOpenSmartTooltip, setIsO
                                             color="link"
                                             className="ms-1 text-white opacity-75 py-0 px-1 border-0 align-baseline"
                                         >
-                                            <Icon icon={faRotateRight} />
+                                            <FontAwesomeIcon icon={faRotateRight} />
                                         </Button>
                                     </span>
                                 </Tippy>

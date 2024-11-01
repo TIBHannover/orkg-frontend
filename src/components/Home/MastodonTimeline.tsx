@@ -1,5 +1,5 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
 import { sanitize } from 'isomorphic-dompurify';
 import moment from 'moment';
@@ -50,7 +50,7 @@ const MastodonTimeline = () => {
     return !isVisible ? (
         <div className="mt-3 box rounded overflow-hidden p-3 d-flex align-items-center">
             <Button className="flex-shrink-0 px-2 border-0" onClick={handleLoadTimeline}>
-                <Icon icon={faMastodon} /> Load Toots
+                <FontAwesomeIcon icon={faMastodon} /> Load Toots
             </Button>
             <small className="ps-3">
                 By loading the Mastodon widget, you agree with the{' '}
@@ -104,7 +104,7 @@ const MastodonTimeline = () => {
                                     <div className="d-flex justify-content-between align-items-center">
                                         <a href={message.url} target="_blank" rel="noopener noreferrer">
                                             <Button color="link" size="sm" className="p-0">
-                                                <Icon icon={faMastodon} className="text-primary me-2" />
+                                                <FontAwesomeIcon icon={faMastodon} className="text-primary me-2" />
                                                 View on Mastodon
                                             </Button>
                                         </a>

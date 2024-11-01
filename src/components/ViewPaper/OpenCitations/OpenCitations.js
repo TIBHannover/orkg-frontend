@@ -1,6 +1,6 @@
 import { Badge } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { isNaN } from 'lodash';
@@ -34,7 +34,7 @@ function OpenCitations({ doi }) {
             >
                 <span className="me-2 mb-2">
                     <Badge color="light">
-                        <Icon icon={faComment} /> {pluralize('citation', citationCount, true)}
+                        <FontAwesomeIcon icon={faComment} /> {pluralize('citation', citationCount, true)}
                     </Badge>
                 </span>
             </Tippy>
