@@ -7,10 +7,11 @@ import { Node } from 'services/backend/types';
 type ListInputFieldProps = {
     value: Node[];
     inputFormType: string;
+    placeholder?: string;
     updateValue: (value: Node[]) => void;
 };
 
-const ListInputField: FC<ListInputFieldProps> = ({ value, updateValue, inputFormType }) => {
+const ListInputField: FC<ListInputFieldProps> = ({ value, updateValue, inputFormType, placeholder }) => {
     // eslint-disable-next-line react/no-unstable-nested-components
     const Input = (props: InputProps<Node, true>) => {
         return <components.Input {...props} type={inputFormType} />;
@@ -34,7 +35,7 @@ const ListInputField: FC<ListInputFieldProps> = ({ value, updateValue, inputForm
                     updateValue((selected as Node[]) ?? []);
                 }
             }}
-            placeholder={inputFormType === 'date' ? '' : 'Add a value'}
+            placeholder={inputFormType === 'date' ? '' : placeholder ?? 'Add a value'}
             value={value}
             components={{
                 Input,
