@@ -198,6 +198,7 @@
         "msw": "^2.4.9",
         "next-router-mock": "^0.9.13",
         "prettier": "^2.8.7",
+        "raw-loader": "^4.0.2",
         "react-select-event": "^5.5.1",
         "sass": "^1.62.0",
         "storybook": "^8.0.9",
