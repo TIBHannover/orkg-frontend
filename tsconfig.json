@@ -23,6 +23,6 @@
             }
         ]
     },
-    "include": ["jest.config.ts", "src", ".next/types/**/*.ts"],
+    "include": ["commitlint.config.ts", "jest.config.ts", "src", ".next/types/**/*.ts"],
     "exclude": ["node_modules"]
 }

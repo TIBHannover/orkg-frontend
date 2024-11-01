@@ -108,7 +108,7 @@ Please feel free to contribute to our code. In case you found any bugs, please [
 
 We use [React](https://reactjs.org/) as frontend framework. Additionally, we use [Redux](https://redux.js.org/) for state management (but we prefer a local state when possible). For styling we use [Bootstrap](https://getbootstrap.com/) with the package [Reactstrap](https://reactstrap.github.io/). We maintain the following code conventions:
 
--   Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and use [Angular commit types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type)
+-   Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and use [Angular commit types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type). Linting is applied on the commit message (i.e., you cannot commit if the message is not correctly formatted). You can use the [Commitizen](https://commitizen-tools.github.io/commitizen/) CLI to create a correctly formatted message via: `npm run commit`
 -   Running lint on commit (you cannot commit when your code contains lint errors)
 -   Run Prettier rules on commit for coding style consistency
 -   The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
