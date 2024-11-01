@@ -1,6 +1,6 @@
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
 import MetadataTable from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/MetadataTable/MetadataTable';
 import useList from 'components/List/hooks/useList';
@@ -276,7 +276,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                                 onChange={(e) => setDoi(e.target.value)}
                             />
                             <Button outline color="primary" style={{ minWidth: 130 }} disabled={isLoadingCite} onClick={() => handleParse(doi)}>
-                                {!isLoadingCite ? 'Lookup' : <Icon icon={faSpinner} spin />}
+                                {!isLoadingCite ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                             </Button>
                         </InputGroup>
                     </FormGroup>
@@ -295,7 +295,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                             />
                         </InputGroup>
                         <Button color="secondary" size="sm" className="mt-2" disabled={isLoadingCite} onClick={() => handleParse(bibTex)}>
-                            {!isLoadingCite ? 'Parse' : <Icon icon={faSpinner} spin />}
+                            {!isLoadingCite ? 'Parse' : <FontAwesomeIcon icon={faSpinner} spin />}
                         </Button>
                     </FormGroup>
                 )}
@@ -318,7 +318,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                     </Link>
                 </div>
                 <Button color="primary" className="float-end" onClick={handleAdd} disabled={results.length === 0}>
-                    {!isLoading ? `Add${results.length > 1 ? ` (${results.length})` : ''}` : <Icon icon={faSpinner} spin />}
+                    {!isLoading ? `Add${results.length > 1 ? ` (${results.length})` : ''}` : <FontAwesomeIcon icon={faSpinner} spin />}
                 </Button>
             </ModalFooter>
         </Modal>

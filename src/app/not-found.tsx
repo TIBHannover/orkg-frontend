@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -20,7 +20,7 @@ const NotFound = () => {
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
                             <span className="display-1 d-block">404</span>
-                            <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
+                            <FontAwesomeIcon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
                             <div className="mb-4 lead">The page you are looking for was not found.</div>
                             <Link href={ROUTES.HOME}>
                                 <Button color="primary" className="me-3">

@@ -1,5 +1,5 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
 import { CLASSES } from 'constants/graphSettings';
 import { Alert } from 'reactstrap';
@@ -21,7 +21,7 @@ const PREVENT_EDIT_CASES = [
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
+                        paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                     </a>{' '}
                     website to suggest changes.
                 </>

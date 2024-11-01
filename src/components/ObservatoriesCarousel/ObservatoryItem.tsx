@@ -1,5 +1,5 @@
 import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -75,8 +75,8 @@ const ObservatoryItem = ({ observatory, onExiting, onExited, active }: Observato
                 </CardBody>
                 <CardFooterStyled className="text-muted">
                     <small>
-                        <Icon icon={faCubes} className="me-1" /> {!isLoadingStats && pluralize('comparison', stats.comparisons, true)}
-                        <Icon icon={faFile} className="me-1 ms-2" />
+                        <FontAwesomeIcon icon={faCubes} className="me-1" /> {!isLoadingStats && pluralize('comparison', stats.comparisons, true)}
+                        <FontAwesomeIcon icon={faFile} className="me-1 ms-2" />
                         {!isLoadingStats && pluralize('paper', stats.papers, true)}
                     </small>
                     <div className="float-end" style={{ height: '25px' }}>

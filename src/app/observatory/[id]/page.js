@@ -1,7 +1,7 @@
 'use client';
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
@@ -103,11 +103,11 @@ const Observatory = () => {
                             >
                                 {isEditMode ? (
                                     <>
-                                        <Icon icon={faTimes} /> Stop Editing
+                                        <FontAwesomeIcon icon={faTimes} /> Stop Editing
                                     </>
                                 ) : (
                                     <>
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </>
                                 )}
                             </RequireAuthentication>
@@ -149,7 +149,7 @@ const Observatory = () => {
                                         style={{ marginLeft: 'auto' }}
                                         onClick={() => setShowEditDialog((v) => !v)}
                                     >
-                                        <Icon icon={faPen} /> Edit data
+                                        <FontAwesomeIcon icon={faPen} /> Edit data
                                     </Button>
                                 </div>
                             )}

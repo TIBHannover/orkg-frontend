@@ -3,7 +3,7 @@ import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { useState } from 'react';
 import { useMeasure } from 'react-use';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
@@ -38,7 +38,7 @@ const TableCellLiteral = ({ entity }) => {
                 <Tippy content={entity.label} disabled={isExpanded}>
                     <span>
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
-                            {isExpanded ? 'Hide more' : 'Show more'} <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                            {isExpanded ? 'Hide more' : 'Show more'} <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     </span>
                 </Tippy>

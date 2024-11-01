@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ListPage from 'components/ListPage/ListPage';
@@ -64,7 +64,7 @@ const Reviews = () => {
     const buttons = (
         <>
             <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.REVIEW_NEW}>
-                <Icon icon={faPlus} /> Create review
+                <FontAwesomeIcon icon={faPlus} /> Create review
             </RequireAuthentication>
             {!!user && (
                 <RequireAuthentication

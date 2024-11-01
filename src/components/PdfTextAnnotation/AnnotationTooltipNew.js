@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import useSuggestions from 'components/PdfTextAnnotation/hooks/useSuggestions';
 import { upperFirst, isString } from 'lodash';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
@@ -33,7 +33,7 @@ const Option = ({ children, ...props }) => (
             <span>{children}</span>
             <Tippy content={props.data.comment}>
                 <span>
-                    <Icon icon={faQuestionCircle} />
+                    <FontAwesomeIcon icon={faQuestionCircle} />
                 </span>
             </Tippy>
         </StyledSelectOption>

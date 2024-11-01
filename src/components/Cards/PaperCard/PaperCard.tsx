@@ -1,5 +1,5 @@
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import Authors from 'components/Cards/PaperCard/Authors';
 import Description from 'components/Cards/PaperCard/Description/Description';
@@ -134,13 +134,13 @@ const PaperCard: FC<PaperCardType> = ({
                         <small>
                             {showContributionCount && (
                                 <div className="d-inline-block me-1">
-                                    <Icon size="sm" icon={faFile} className="me-1" />
+                                    <FontAwesomeIcon size="sm" icon={faFile} className="me-1" />
                                     {pluralize('contribution', paper.contributions?.length, true)}
                                 </div>
                             )}
                             <Authors authors={paper.authors} />
                             {(paper.publication_info?.published_month || paper.publication_info?.published_year) && (
-                                <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />
+                                <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
                             )}
                             {paper.publication_info?.published_month && paper.publication_info?.published_month > 0
                                 ? moment(paper.publication_info?.published_month, 'M').format('MMMM')

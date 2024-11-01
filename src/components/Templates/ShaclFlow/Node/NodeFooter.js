@@ -1,5 +1,5 @@
 import { faLock, faLockOpen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -26,13 +26,13 @@ function NodeFooter({ isClosed, targetClass }) {
                             : 'This templates is open (users can add additional properties)'
                     }
                 >
-                    {isClosed ? <Icon icon={faLock} color="#505565" /> : <Icon icon={faLockOpen} color="#505565" />}
+                    {isClosed ? <FontAwesomeIcon icon={faLock} color="#505565" /> : <FontAwesomeIcon icon={faLockOpen} color="#505565" />}
                 </Tippy>
             </div>
             <div>
                 <Tippy content="Number of instances">
                     <span>
-                        <Badge pill>{!isLoadingCount ? countInstances : <Icon spin icon={faSpinner} />}</Badge>
+                        <Badge pill>{!isLoadingCount ? countInstances : <FontAwesomeIcon spin icon={faSpinner} />}</Badge>
                     </span>
                 </Tippy>
             </div>

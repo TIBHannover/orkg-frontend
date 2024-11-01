@@ -1,5 +1,5 @@
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ const Video = () => {
     return (
         <>
             <PlayButton color="link" className="p-0 m-0 d-inline" onClick={() => setIsOpen(true)}>
-                <Icon icon={faPlayCircle} /> Play video
+                <FontAwesomeIcon icon={faPlayCircle} /> Play video
             </PlayButton>
 
             <Modal isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} size="lg">

@@ -1,5 +1,5 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ const PaperVersionHeader = () => {
             <div className="clearfix" />
             {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
-                    <Icon icon={faCalendar} />{' '}
+                    <FontAwesomeIcon icon={faCalendar} />{' '}
                     {viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>

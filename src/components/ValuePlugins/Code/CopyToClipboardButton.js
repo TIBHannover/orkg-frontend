@@ -1,5 +1,5 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
@@ -15,7 +15,7 @@ const CopyToClipboardButton = ({ code, children }) => (
             }}
         >
             <Button color="primary" className="position-absolute" size="sm" style={{ right: 10, top: 10 }}>
-                <Icon icon={faClipboard} />
+                <FontAwesomeIcon icon={faClipboard} />
             </Button>
         </CopyToClipboard>
         {children}

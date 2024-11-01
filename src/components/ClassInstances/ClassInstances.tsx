@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -43,7 +43,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
 
     const loadingIndicator = (
         <div className="text-center mt-3 mb-4">
-            <Icon icon={faSpinner} spin /> Loading
+            <FontAwesomeIcon icon={faSpinner} spin /> Loading
         </div>
     );
 

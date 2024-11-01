@@ -1,6 +1,6 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPen, faSort, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthorTag, StyledDragHandle } from 'components/Input/AuthorsInput/styled';
 import ItemTypes from 'constants/dndTypes';
 import PropTypes from 'prop-types';
@@ -32,7 +32,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
     return (
         <AuthorTag ref={ref} style={{ opacity }}>
             <StyledDragHandle className="ms-2 me-2" ref={drag}>
-                <Icon icon={faSort} />
+                <FontAwesomeIcon icon={faSort} />
             </StyledDragHandle>
             <div
                 className="name"
@@ -42,7 +42,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                 tabIndex={0}
             >
                 {author.name}
-                {author.identifiers?.orcid?.[0] && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                {author.identifiers?.orcid?.[0] && <FontAwesomeIcon style={{ margin: '4px' }} icon={faOrcid} />}
             </div>
             {!isDisabled && (
                 <>
@@ -53,7 +53,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                         role="button"
                         tabIndex={0}
                     >
-                        <Icon icon={faPen} />
+                        <FontAwesomeIcon icon={faPen} />
                     </div>
                     <div
                         title={`Delete ${itemLabel}`}
@@ -63,7 +63,7 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
                         role="button"
                         tabIndex={0}
                     >
-                        <Icon icon={faTimes} />
+                        <FontAwesomeIcon icon={faTimes} />
                     </div>
                 </>
             )}

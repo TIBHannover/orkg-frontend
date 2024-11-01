@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -68,7 +68,7 @@ const Organizations = () => {
                             className="btn btn-secondary btn-sm flex-shrink-0"
                             href={reverse(ROUTES.ADD_ORGANIZATION, { type: params.id })}
                         >
-                            <Icon icon={faPlus} /> Create {typeName}
+                            <FontAwesomeIcon icon={faPlus} /> Create {typeName}
                         </RequireAuthentication>
                     )
                 }
@@ -86,7 +86,7 @@ const Organizations = () => {
                 {organizations.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No {typeName}s yet</div>}
                 {isLoading && (
                     <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                     </div>
                 )}
             </Container>

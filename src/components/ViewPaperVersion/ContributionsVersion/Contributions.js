@@ -1,5 +1,5 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import DataBrowser from 'components/DataBrowser/DataBrowser';
@@ -48,7 +48,7 @@ const Contributions = (props) => {
                     )}
 
                     <Tabs
-                        moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                        moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
                         activeKey={selectedContribution}
                         destroyInactiveTabPane
                         onChange={onTabChange}

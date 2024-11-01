@@ -2,7 +2,7 @@ import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { StyledDotGravatar } from 'components/styled';
 import { FC, useState } from 'react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 
 const PERCENTAGE_THRESHOLD = 3;
@@ -33,7 +33,7 @@ const Contributors: FC<ContributorsProps> = ({ contributors = [] }) => {
             {contributors && contributors.find(({ percentage }) => percentage <= PERCENTAGE_THRESHOLD) && (
                 <Tippy content={`${shouldShowAll ? 'Hide' : 'Show'} contributors that contributed less than ${PERCENTAGE_THRESHOLD}%`}>
                     <StyledDotGravatar size={40} onClick={() => setShouldShowAll((v) => !v)} className="rounded-circle">
-                        <Icon icon={shouldShowAll ? faClose : faEllipsisH} />
+                        <FontAwesomeIcon icon={shouldShowAll ? faClose : faEllipsisH} />
                     </StyledDotGravatar>
                 </Tippy>
             )}

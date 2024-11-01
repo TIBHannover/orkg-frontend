@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import EditAuthorsModal from 'components/List/EditList/EditMetadata/EditAuthorsModal/EditAuthorsModal';
@@ -54,7 +54,7 @@ const EditMetadata = () => {
                         onClick={() => setIsOpenAuthorsModal(true)}
                         aria-label="Edit article authors"
                     >
-                        <Icon icon={faPen} /> Edit
+                        <FontAwesomeIcon icon={faPen} /> Edit
                     </Button>
                 </div>
                 <div>

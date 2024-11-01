@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -22,7 +22,7 @@ const AuthorsSection = () => {
             </SectionTypeStyled>
             <AuthorBadges authors={convertAuthorsToNewFormat(authorResources)} />
             <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
-                <Icon icon={faPen} /> Edit authors
+                <FontAwesomeIcon icon={faPen} /> Edit authors
             </Button>
 
             <AuthorsModal show={showModal} toggle={() => setShowModal((v) => !v)} />

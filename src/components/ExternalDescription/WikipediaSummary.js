@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import WIKIPEDIA_LOGO from 'assets/img/sameas/wikipedia.png';
 import PropTypes from 'prop-types';
@@ -75,7 +75,7 @@ class WikipediaSummary extends Component {
                 <div style={{ fontSize: '90%' }}>
                     {this.state.isLoading && !this.state.loadingFailed && (
                         <div className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading summary from Wikipedia...
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading summary from Wikipedia...
                         </div>
                     )}
                     {!this.state.isLoading && this.state.loadingFailed && <div className="text-primary">Failed loading summary from Wikipedia.</div>}

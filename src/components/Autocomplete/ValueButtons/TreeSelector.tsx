@@ -1,5 +1,5 @@
 import { faSitemap } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import TreeView from 'components/Class/TreeView';
@@ -38,7 +38,7 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
             >
                 <Tippy content="Show class tree">
                     <span>
-                        <Icon icon={faSitemap} size="sm" />
+                        <FontAwesomeIcon icon={faSitemap} size="sm" />
                     </span>
                 </Tippy>
             </Button>

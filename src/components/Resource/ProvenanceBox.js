@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,7 @@ function ProvenanceBox({ item, editMode = false }) {
         <>
             {provenance?.organization?.id && organizationId !== MISC.UNKNOWN_ID && (
                 <Badge color="light" className="me-2 mt-2">
-                    <Icon icon={faUsers} /> Organization
+                    <FontAwesomeIcon icon={faUsers} /> Organization
                     <span className="ms-1">
                         <Link href={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
                     </span>
@@ -33,7 +33,7 @@ function ProvenanceBox({ item, editMode = false }) {
             )}
             {provenance?.id && observatoryId !== MISC.UNKNOWN_ID && (
                 <Badge color="light" className="me-2 mt-2">
-                    <Icon icon={faBinoculars} /> Observatory
+                    <FontAwesomeIcon icon={faBinoculars} /> Observatory
                     <span className="ms-1">
                         <Link href={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
                     </span>

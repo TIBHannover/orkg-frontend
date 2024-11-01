@@ -1,7 +1,7 @@
 'use client';
 
 import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import NotFound from 'app/not-found';
 import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
@@ -105,11 +105,11 @@ const List = () => {
                                 style={{ cursor: 'default', marginRight: 2 }}
                             >
                                 {isLoadingInline ? (
-                                    <Icon icon={faSpinner} spin className="me-2 text-secondary" />
+                                    <FontAwesomeIcon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span>
-                                            <Icon
+                                            <FontAwesomeIcon
                                                 icon={faCheckCircle}
                                                 className="text-secondary"
                                                 style={{ fontSize: '140%', verticalAlign: 'middle' }}
@@ -131,7 +131,7 @@ const List = () => {
                                     onClick={() => setIsOpenHistoryModal(true)}
                                     aria-label="View article history"
                                 >
-                                    <Icon icon={faHistory} /> History
+                                    <FontAwesomeIcon icon={faHistory} /> History
                                 </Button>
 
                                 <RequireAuthentication
@@ -142,7 +142,7 @@ const List = () => {
                                     style={{ marginRight: 2 }}
                                     onClick={handleEdit}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             </>
                         ) : (
@@ -154,7 +154,7 @@ const List = () => {
                                     style={{ marginRight: 2 }}
                                     onClick={() => setIsOpenPublishModal(true)}
                                 >
-                                    <Icon icon={faUpload} /> Publish
+                                    <FontAwesomeIcon icon={faUpload} /> Publish
                                 </Button>
                                 <Button
                                     className="flex-shrink-0"
@@ -164,13 +164,13 @@ const List = () => {
                                     style={{ marginRight: 2 }}
                                     onClick={() => toggleIsEditMode()}
                                 >
-                                    <Icon icon={faTimes} /> Stop editing
+                                    <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             </>
                         )}
                         <UncontrolledButtonDropdown>
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
-                                <Icon icon={faEllipsisV} />
+                                <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>

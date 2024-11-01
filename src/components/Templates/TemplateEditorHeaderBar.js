@@ -1,5 +1,5 @@
 import { faDiagramProject, faPen, faSave, faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Title } from 'components/EditModeHeader/EditModeHeader';
 import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
@@ -65,8 +65,8 @@ const TemplateEditorHeaderBar = () => {
                                     dispatch(saveTemplate(toggleIsEditMode));
                                 }}
                             >
-                                {isSaving && <Icon icon={faSpinner} spin />}
-                                {isEditMode && <Icon icon={faSave} />}
+                                {isSaving && <FontAwesomeIcon icon={faSpinner} spin />}
+                                {isEditMode && <FontAwesomeIcon icon={faSave} />}
                                 {!isSaving ? ' Save' : ' Saving'}
                             </Button>
                             <Button
@@ -78,13 +78,13 @@ const TemplateEditorHeaderBar = () => {
                                     toggleIsEditMode(false);
                                 }}
                             >
-                                <Icon icon={faClose} className="ms-1" /> Cancel
+                                <FontAwesomeIcon icon={faClose} className="ms-1" /> Cancel
                             </Button>
                         </ButtonGroup>
                     ) : (
                         <ButtonGroup size="sm">
                             <Button className="float-end" color="secondary" size="sm" onClick={() => toggleIsEditMode(true)}>
-                                <Icon icon={faPen} /> Edit
+                                <FontAwesomeIcon icon={faPen} /> Edit
                             </Button>
                             <Button
                                 style={{ marginLeft: 1 }}
@@ -93,7 +93,7 @@ const TemplateEditorHeaderBar = () => {
                                 size="sm"
                                 onClick={() => dispatch(setDiagramMode(true))}
                             >
-                                <Icon icon={faDiagramProject} /> View diagram
+                                <FontAwesomeIcon icon={faDiagramProject} /> View diagram
                             </Button>
                         </ButtonGroup>
                     )}

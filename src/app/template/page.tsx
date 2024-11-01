@@ -1,7 +1,7 @@
 'use client';
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
@@ -131,7 +131,7 @@ const TemplateNew = () => {
                 <FormGroup>
                     <Tippy content="Choose the name of your template. You can always update this name later">
                         <span>
-                            <Label for="templateName">Name</Label> <Icon icon={faQuestionCircle} className="text-secondary" />
+                            <Label for="templateName">Name</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
                         </span>
                     </Tippy>
 

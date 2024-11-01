@@ -1,5 +1,5 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -30,7 +30,7 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                         aria-label={`Visit the author page of ${author.name}`}
                     >
                         <Badge color="light" className="me-2 mb-2" key={index}>
-                            <Icon icon={faUser} className="text-primary" /> {author.name}
+                            <FontAwesomeIcon icon={faUser} className="text-primary" /> {author.name}
                         </Badge>
                     </Link>
                 ) : (
@@ -43,7 +43,7 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                         aria-label={`Visit the author page of ${author.name}`}
                     >
                         <Badge color="light" className="me-2 mb-2" typeof="foaf:Person">
-                            <Icon icon={faUser} aria-label="Author name" /> {author.name}
+                            <FontAwesomeIcon icon={faUser} aria-label="Author name" /> {author.name}
                         </Badge>
                     </Link>
                 ),

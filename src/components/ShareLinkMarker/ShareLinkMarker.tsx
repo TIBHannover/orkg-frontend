@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -40,17 +40,17 @@ const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: str
             </div>
             <Tippy singleton={target} content={`Share this ${typeOfLink || 'page'} on Facebook`}>
                 <a href={getFacebookSharerLink({ shareUrl })} target="_blank" className="text-secondary" rel="noopener noreferrer">
-                    <Icon icon={faFacebook} />
+                    <FontAwesomeIcon icon={faFacebook} />
                 </a>
             </Tippy>
             <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
                 <a href={getTwitterSharerLink({ shareUrl, title })} target="_blank" className="text-secondary" rel="noopener noreferrer">
-                    <Icon icon={faXTwitter} />
+                    <FontAwesomeIcon icon={faXTwitter} />
                 </a>
             </Tippy>
             <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
                 <a href={getLinkedInSharerLink({ shareUrl })} target="_blank" className="text-secondary" rel="noopener noreferrer">
-                    <Icon icon={faLinkedin} />
+                    <FontAwesomeIcon icon={faLinkedin} />
                 </a>
             </Tippy>
             <Tippy singleton={target} content="Copy link to clipboard">
@@ -66,7 +66,7 @@ const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: str
                         }}
                     >
                         <Button color="link">
-                            <Icon icon={faLink} />
+                            <FontAwesomeIcon icon={faLink} />
                         </Button>
                     </CopyToClipboard>
                 </span>

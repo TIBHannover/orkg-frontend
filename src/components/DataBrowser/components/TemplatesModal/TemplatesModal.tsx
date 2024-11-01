@@ -1,5 +1,5 @@
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from 'components/DataBrowser/hooks/useFeaturedTemplates';
@@ -136,7 +136,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                         {(isFilterApplied || !featuredTemplates || featuredTemplates?.length === 0) && (
                             <div>
                                 <div className="text-muted my-3">
-                                    {totalElements === 0 && isLoadingTemplates ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
+                                    {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                                     {isFilterApplied ? 'templates found by applying the filter' : 'templates'}
                                     {isFilterApplied && (
                                         <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
@@ -160,12 +160,12 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                         action
                                         onClick={!isLoadingTemplates ? handleLoadMore : undefined}
                                     >
-                                        <Icon icon={faAngleDoubleDown} /> Load more templates
+                                        <FontAwesomeIcon icon={faAngleDoubleDown} /> Load more templates
                                     </ListGroupItem>
                                 )}
                                 {isLoadingTemplates && (
                                     <ListGroupItem tag="div" className="text-center">
-                                        <Icon icon={faSpinner} spin /> Loading
+                                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                                     </ListGroupItem>
                                 )}
                                 {!hasNextPage && isLastPageReached && size !== 1 && (

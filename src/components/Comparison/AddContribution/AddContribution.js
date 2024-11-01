@@ -1,5 +1,5 @@
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -232,8 +232,8 @@ export default function AddContribution({
                                 Select the contributions you want to add{' '}
                                 {allowCreate && (
                                     <>
-                                        or you click on <Icon icon={faPlusCircle} className="text-primary" /> if you want to create a new contribution
-                                        for an existing paper
+                                        or you click on <FontAwesomeIcon icon={faPlusCircle} className="text-primary" /> if you want to create a new
+                                        contribution for an existing paper
                                     </>
                                 )}
                             </Alert>
@@ -249,7 +249,7 @@ export default function AddContribution({
                                                         target="_blank"
                                                         href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
                                                     >
-                                                        <Icon icon={faExternalLinkAlt} />
+                                                        <FontAwesomeIcon icon={faExternalLinkAlt} />
                                                     </Link>
                                                 </span>
                                             </Tippy>
@@ -257,7 +257,7 @@ export default function AddContribution({
                                                 <Tippy content="Create new contribution for this paper">
                                                     <span className="ms-2">
                                                         <Button color="link" className="p-0" size="lg" onClick={() => onCreateContribution(paper.id)}>
-                                                            <Icon icon={faPlusCircle} />
+                                                            <FontAwesomeIcon icon={faPlusCircle} />
                                                         </Button>
                                                     </span>
                                                 </Tippy>

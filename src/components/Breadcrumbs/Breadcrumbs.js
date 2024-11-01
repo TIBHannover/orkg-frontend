@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
@@ -106,7 +106,7 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
                             parentResearchFields.map((field, index) => (
                                 <span key={field.id}>
                                     {index !== parentResearchFields.length - 1 || !disableLastField
-                                        ? renderLink(field, index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label, index)
+                                        ? renderLink(field, index === 0 ? <FontAwesomeIcon className="me-1" icon={faHome} /> : field.label, index)
                                         : field.label}
                                     {index !== parentResearchFields.length - 1 && (
                                         <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
@@ -115,7 +115,7 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
                                                 tag="span"
                                                 className="flex-1 ms-2 me-2"
                                             >
-                                                <Icon
+                                                <FontAwesomeIcon
                                                     className={isOpen[index] ? 'me-1' : ''}
                                                     icon={isOpen[index] ? faAngleDoubleDown : faAngleDoubleRight}
                                                 />
@@ -134,7 +134,7 @@ function Breadcrumbs({ disableLastField = false, backgroundWhite = false, resear
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <Icon className="ms-3" icon={faSpinner} spin />
+                                                    <FontAwesomeIcon className="ms-3" icon={faSpinner} spin />
                                                 )}
                                             </DropdownMenu>
                                         </Dropdown>

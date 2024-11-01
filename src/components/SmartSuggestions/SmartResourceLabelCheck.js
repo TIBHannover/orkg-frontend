@@ -1,5 +1,5 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
 import LLM_TASK_NAMES from 'constants/llmTasks';
@@ -50,7 +50,7 @@ const SmartResourceLabelCheck = ({ label = '' }) => {
                     <p className="m-0 mb-2">Based on the label you provided, we try to advise how your resource should be structured.</p>
                     {isLoading && (
                         <div className="ms-2 mb-2">
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </div>
                     )}
                     {!isLoading && !isFailed && (
@@ -80,7 +80,7 @@ const SmartResourceLabelCheck = ({ label = '' }) => {
         >
             <Tippy content="Check if resource is properly structured">
                 <button className="btn btn-smart btn-sm px-3 " onClick={() => setIsOpenSmartTooltip((v) => !v)}>
-                    <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
+                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>
         </SmartSuggestions>

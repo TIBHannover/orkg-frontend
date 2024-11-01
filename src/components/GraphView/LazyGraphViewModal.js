@@ -1,6 +1,6 @@
 import { useState, useId } from 'react';
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContextMenu from 'components/GraphView/ContextMenu';
 import GraphSearch from 'components/GraphView/GraphSearch';
 import Node from 'components/GraphView/Node';
@@ -81,7 +81,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                     <h1 className="h5 m-0">View graph</h1>
                     <div className="d-flex ms-3 align-items-center flex-grow-1">
                         <Button color="secondary" className="me-2" size="sm" onClick={() => graphRef.current?.centerGraph()}>
-                            <Icon icon={faHome} className="me-1" /> Center graph
+                            <FontAwesomeIcon icon={faHome} className="me-1" /> Center graph
                         </Button>
                         <Dropdown
                             color="secondary"
@@ -93,27 +93,27 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         >
                             <DropdownToggle caret color="secondary" className="me-2">
                                 Layout:
-                                <Icon icon={layoutIcon} rotation={layoutType === 'treeLr2d' ? 270 : undefined} className="mx-2" />
+                                <FontAwesomeIcon icon={layoutIcon} rotation={layoutType === 'treeLr2d' ? 270 : undefined} className="mx-2" />
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => handleLayoutChange('forceDirected2d')}>
-                                    <Icon icon={faProjectDiagram} className="mx-2" />
+                                    <FontAwesomeIcon icon={faProjectDiagram} className="mx-2" />
                                     Force directed
                                 </DropdownItem>
                                 <DropdownItem onClick={() => handleLayoutChange('treeLr2d')}>
-                                    <Icon icon={faSitemap} rotation={270} className="mx-2" />
+                                    <FontAwesomeIcon icon={faSitemap} rotation={270} className="mx-2" />
                                     Horizontal tree
                                 </DropdownItem>
                                 <DropdownItem onClick={() => handleLayoutChange('treeTd2d')}>
-                                    <Icon icon={faSitemap} className="mx-2" />
+                                    <FontAwesomeIcon icon={faSitemap} className="mx-2" />
                                     Vertical tree
                                 </DropdownItem>
                                 <DropdownItem onClick={() => handleLayoutChange('radialOut2d')}>
-                                    <Icon icon={faDharmachakra} className="mx-2" />
+                                    <FontAwesomeIcon icon={faDharmachakra} className="mx-2" />
                                     RadialOut
                                 </DropdownItem>
                                 <DropdownItem onClick={() => handleLayoutChange('circular2d')}>
-                                    <Icon icon={faSpinner} className="mx-2" />
+                                    <FontAwesomeIcon icon={faSpinner} className="mx-2" />
                                     Circular
                                 </DropdownItem>
                             </DropdownMenu>
@@ -146,7 +146,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                             >
                                 <span>
                                     <Button color="secondary" className="px-3" size="sm">
-                                        <Icon icon={faWrench} />
+                                        <FontAwesomeIcon icon={faWrench} />
                                     </Button>
                                 </span>
                             </Tippy>
@@ -246,7 +246,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                 {isLoadingStatements && (
                     <div className="text-center text-primary mt-4 mb-4">
                         <span style={{ fontSize: '200%' }}>
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </span>
                         <br />
                         <h2 className="h5">Loading graph...</h2>

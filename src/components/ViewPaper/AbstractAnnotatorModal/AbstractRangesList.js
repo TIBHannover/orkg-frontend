@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ListGroup, ListGroupItem, Badge, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'slices/viewPaperSlice';
 import Tippy from '@tippyjs/react';
@@ -126,7 +126,7 @@ function AbstractRangesList(props) {
                                             >
                                                 <Tippy content="Edit label">
                                                     <span>
-                                                        <Icon icon={faPen} /> Edit
+                                                        <FontAwesomeIcon icon={faPen} /> Edit
                                                     </span>
                                                 </Tippy>
                                             </Button>
@@ -138,7 +138,7 @@ function AbstractRangesList(props) {
                                             >
                                                 <Tippy content="Delete Annotation">
                                                     <span>
-                                                        <Icon icon={faTrash} /> Delete
+                                                        <FontAwesomeIcon icon={faTrash} /> Delete
                                                     </span>
                                                 </Tippy>
                                             </Button>

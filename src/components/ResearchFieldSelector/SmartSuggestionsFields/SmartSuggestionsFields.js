@@ -1,5 +1,5 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
@@ -49,7 +49,7 @@ const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = nu
                 <h3 className="fw-bold h6 mt-1">
                     <Tippy content="The listed smart suggestions are research fields based on the article's title and abstract (if available)">
                         <span>
-                            Smart suggested fields <Icon icon={faQuestionCircle} className="text-primary" />
+                            Smart suggested fields <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
                         </span>
                     </Tippy>
                 </h3>

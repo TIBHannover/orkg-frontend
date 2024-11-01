@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ListPage from 'components/ListPage/ListPage';
@@ -74,7 +74,7 @@ const Papers: FC = () => {
                 className="btn btn-secondary btn-sm flex-shrink-0"
                 href={ROUTES.ADD_PAPER}
             >
-                <Icon icon={faPlus} /> Create paper
+                <FontAwesomeIcon icon={faPlus} /> Create paper
             </RequireAuthentication>
         </>
     );

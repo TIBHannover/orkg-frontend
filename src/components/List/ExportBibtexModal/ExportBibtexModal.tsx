@@ -1,6 +1,6 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useList from 'components/List/hooks/useList';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useEffect, useState } from 'react';
@@ -78,7 +78,7 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
                     }}
                 >
                     <Button disabled={isLoading} color="primary" className="mt-2 float-end" size="sm">
-                        <Icon icon={faClipboard} /> Copy to clipboard
+                        <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
                     </Button>
                 </CopyToClipboard>
             </ModalBody>

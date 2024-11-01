@@ -1,5 +1,5 @@
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import Confirm from 'components/Confirmation/Confirmation';
 import { supportedContentTypes } from 'components/ContentType/types';
@@ -35,7 +35,7 @@ const Toolbar = styled.div`
     }
 `;
 
-const SortableHandleComponent = SortableHandle(() => <Icon icon={faBars} className="text-white sortable-handle" />);
+const SortableHandleComponent = SortableHandle(() => <FontAwesomeIcon icon={faBars} className="text-white sortable-handle" />);
 
 type EditSectionListItemProps = {
     entry: LiteratureListSectionListEntry;
@@ -98,12 +98,12 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section }) =
                 {isHovering && (
                     <Toolbar>
                         <Button color="secondary" className="px-2 py-0" onClick={handleDelete}>
-                            <Icon icon={faTimes} />
+                            <FontAwesomeIcon icon={faTimes} />
                         </Button>
                         <SortableHandleComponent />
                         {isPaper ? (
                             <Button color="secondary" className="px-2 py-0" onClick={handleEditPaper}>
-                                <Icon icon={faPen} />
+                                <FontAwesomeIcon icon={faPen} />
                             </Button>
                         ) : (
                             <Link
@@ -111,7 +111,7 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section }) =
                                 target="_blank"
                             >
                                 <Button color="secondary" className="px-2 py-0">
-                                    <Icon icon={faPen} />
+                                    <FontAwesomeIcon icon={faPen} />
                                 </Button>
                             </Link>
                         )}

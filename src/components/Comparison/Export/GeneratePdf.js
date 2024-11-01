@@ -4,7 +4,7 @@ import { sumBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // FIXME: svg icons look ugly while exporting, so hide them before generating the PDF
 // TODO: currently the PDF file has dimensions based on the table, it is better to
@@ -47,7 +47,7 @@ const GeneratePdf = (props) => {
 
     return (
         <DropdownItem onClick={handleExport} disabled={isLoading} toggle={false}>
-            Export as PDF {isLoading && <Icon icon={faSpinner} spin />}
+            Export as PDF {isLoading && <FontAwesomeIcon icon={faSpinner} spin />}
         </DropdownItem>
     );
 };

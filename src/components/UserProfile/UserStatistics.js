@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CLASSES } from 'constants/graphSettings';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
@@ -78,7 +78,7 @@ const UserStatistics = ({ userId }) => {
             ))}
             {isLoading && (
                 <div className="text-center py-2">
-                    <Icon icon={faSpinner} spin /> Loading...
+                    <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                 </div>
             )}
         </Row>

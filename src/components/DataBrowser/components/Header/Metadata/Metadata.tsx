@@ -1,5 +1,5 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import Classes, { BadgeTagsStyle } from 'components/DataBrowser/components/Header/Metadata/Classes';
 import Label from 'components/DataBrowser/components/Header/Metadata/Label';
@@ -47,7 +47,7 @@ const Metadata = () => {
                 <Templates />
                 {entity && 'shared' in entity && entity.shared > 1 && (
                     <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
-                        <Icon icon={faArrowRight} className="me-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
+                        <FontAwesomeIcon icon={faArrowRight} className="me-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
                     </BadgeTagsStyle>
                 )}
             </div>

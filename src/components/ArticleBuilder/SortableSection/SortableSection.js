@@ -1,5 +1,5 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ const SortableSection = ({ handleDelete, handleSort, children }) => {
 
     const SortableHandle = sortableHandle(() => (
         <MoveHandle className={isHovering ? 'hover' : ''}>
-            <Icon icon={faBars} />
+            <FontAwesomeIcon icon={faBars} />
         </MoveHandle>
     ));
 
@@ -25,14 +25,14 @@ const SortableSection = ({ handleDelete, handleSort, children }) => {
             onMouseLeave={() => setIsHovering(false)}
         >
             <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete} aria-label="Delete section">
-                <Icon icon={faTimes} />
+                <FontAwesomeIcon icon={faTimes} />
             </DeleteButton>
             <SortableHandle />
             <MoveButton className={isHovering ? 'hover up' : 'up'}>
                 <Tippy content="Move up">
                     <span>
                         <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('up')} aria-label="Move section up">
-                            <Icon icon={faArrowUp} />
+                            <FontAwesomeIcon icon={faArrowUp} />
                         </Button>
                     </span>
                 </Tippy>
@@ -41,7 +41,7 @@ const SortableSection = ({ handleDelete, handleSort, children }) => {
                 <Tippy content="Move down">
                     <span>
                         <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('down')} aria-label="Move section down">
-                            <Icon icon={faArrowDown} />
+                            <FontAwesomeIcon icon={faArrowDown} />
                         </Button>
                     </span>
                 </Tippy>

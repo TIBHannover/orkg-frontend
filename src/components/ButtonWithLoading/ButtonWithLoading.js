@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
@@ -12,7 +12,7 @@ const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Load
             children
         ) : (
             <span>
-                <Icon icon={faSpinner} spin /> {loadingMessage}
+                <FontAwesomeIcon icon={faSpinner} spin /> {loadingMessage}
             </span>
         )}
     </Button>

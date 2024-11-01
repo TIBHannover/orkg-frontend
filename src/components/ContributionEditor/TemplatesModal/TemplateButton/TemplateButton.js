@@ -1,5 +1,5 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import PropTypes from 'prop-types';
 import { useCallback, useRef, useState } from 'react';
@@ -87,9 +87,9 @@ const TemplateButton = ({ addMode = true, label = '', id, classId }) => {
                     className="me-2 mb-2 position-relative px-3 rounded-pill border-0"
                 >
                     <IconWrapper addMode={addMode}>
-                        {!isSaving && addMode && <Icon size="sm" icon={faPlus} />}
-                        {!isSaving && !addMode && <Icon size="sm" icon={faTimes} />}
-                        {isSaving && <Icon icon={faSpinner} spin />}
+                        {!isSaving && addMode && <FontAwesomeIcon size="sm" icon={faPlus} />}
+                        {!isSaving && !addMode && <FontAwesomeIcon size="sm" icon={faTimes} />}
+                        {isSaving && <FontAwesomeIcon icon={faSpinner} spin />}
                     </IconWrapper>
                     <Label>{label}</Label>
                 </Button>

@@ -1,5 +1,5 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import { FC } from 'react';
@@ -30,7 +30,7 @@ const CopyIdButton: FC<CopyIdButtonProps> = ({ value }) => {
         <Button onClick={handleCopyClick} outline className="px-2">
             <Tippy content="Copy the id to clipboard">
                 <span>
-                    <Icon icon={faClipboard} size="sm" />
+                    <FontAwesomeIcon icon={faClipboard} size="sm" />
                 </span>
             </Tippy>
         </Button>

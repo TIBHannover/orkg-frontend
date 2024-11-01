@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Input } from 'reactstrap';
 import Tippy from '@tippyjs/react';
@@ -296,7 +296,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                     disabled={!pdf || fetchFailed}
                 />
             ) : (
-                <Icon icon={faSpinner} spin />
+                <FontAwesomeIcon icon={faSpinner} spin />
             )}
 
             <GlobalStyle showHighlights={showHighlights} />

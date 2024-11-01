@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button, Input, Modal, ModalBody, ModalHeader, FormGroup, Label } from 'reactstrap';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateResource } from 'services/backend/resources';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
@@ -42,7 +42,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, show
                         rel="noopener noreferrer"
                     >
                         <Button color="link" className="p-0">
-                            Open resource <Icon icon={faExternalLinkAlt} className="me-1" />
+                            Open resource <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                         </Button>
                     </Link>
                 )}

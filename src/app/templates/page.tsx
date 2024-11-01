@@ -1,7 +1,7 @@
 'use client';
 
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
@@ -42,7 +42,7 @@ const Templates = () => {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        {totalElements === 0 && isLoadingTemplates ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
+                        {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
                             <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
@@ -60,11 +60,11 @@ const Templates = () => {
                             className="btn btn-secondary btn-sm flex-shrink-0"
                             href={reverse(ROUTES.ADD_TEMPLATE)}
                         >
-                            <Icon icon={faPlus} /> Create template
+                            <FontAwesomeIcon icon={faPlus} /> Create template
                         </RequireAuthentication>
                         <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                <Icon icon={faEllipsisV} />
+                                <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <RequireAuthentication
@@ -107,7 +107,7 @@ const Templates = () => {
                     )}
                     {isLoadingTemplates && (
                         <ListGroupItem tag="div" className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
                         </ListGroupItem>
                     )}
                     {!isLoadingTemplates && hasNextPage && (

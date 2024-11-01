@@ -1,5 +1,5 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import OrganizationBanner from 'components/Comparison/ComparisonFooter/ProvenanceBox/OrganizationBanner';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
@@ -122,7 +122,7 @@ const ComparisonMetaData = () => {
                                         <div>
                                             {comparisonResource.created_at && (
                                                 <Badge color="light" className="me-2 mb-2">
-                                                    <Icon icon={faCalendar} />{' '}
+                                                    <FontAwesomeIcon icon={faCalendar} />{' '}
                                                     {comparisonResource.created_at ? moment(comparisonResource.created_at).format('MMMM') : ''}{' '}
                                                     {comparisonResource.created_at ? moment(comparisonResource.created_at).format('YYYY') : ''}
                                                 </Badge>

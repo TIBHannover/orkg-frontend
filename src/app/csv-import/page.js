@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import StepContainer from 'components/StepContainer';
 import Tippy from '@tippyjs/react';
 import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const TableContainerStyled = styled.div`
@@ -53,7 +53,11 @@ const CsvImport = () => {
             <Tippy content="Open help center">
                 <span className="ms-3">
                     <a href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
-                        <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }} className="text-secondary p-0" />
+                        <FontAwesomeIcon
+                            icon={faQuestionCircle}
+                            style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }}
+                            className="text-secondary p-0"
+                        />
                     </a>
                 </span>
             </Tippy>

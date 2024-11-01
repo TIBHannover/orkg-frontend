@@ -1,7 +1,7 @@
 'use client';
 
 import { faBars, faComments, faFile } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supportedContentTypes } from 'components/ContentType/types';
 import Link from 'next/link';
 import useParams from 'components/useParams/useParams';
@@ -82,7 +82,7 @@ const ContentTypeNew = () => {
                         style={{ width: 80 }}
                     >
                         <div style={{ fontSize: 30 }}>
-                            <Icon icon={type.icon} className={type.id !== selectedClassId ? 'text-secondary' : ''} />
+                            <FontAwesomeIcon icon={type.icon} className={type.id !== selectedClassId ? 'text-secondary' : ''} />
                         </div>
                         {upperFirst(pluralize(type?.label || '', 0, false))}
                     </Button>

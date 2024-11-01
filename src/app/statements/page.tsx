@@ -1,7 +1,7 @@
 'use client';
 
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
@@ -49,7 +49,9 @@ const StatementsPage = () => {
         <>
             <TitleBar
                 titleAddition={
-                    <div className="text-muted mt-1">{totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} items</div>
+                    <div className="text-muted mt-1">
+                        {totalElements === 0 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items
+                    </div>
                 }
             >
                 Statements
@@ -94,7 +96,7 @@ const StatementsPage = () => {
                     <div className={`mt-4 mb-4 ${page === 1 ? 'p-5' : ''} ${boxShadow ? 'container box rounded' : ''}`}>
                         {page !== 1 && (
                             <div className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </div>
                         )}
                         {page === 1 && (

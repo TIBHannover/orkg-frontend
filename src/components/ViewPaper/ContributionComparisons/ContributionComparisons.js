@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import useContributionComparison from 'components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
 import PropTypes from 'prop-types';
@@ -83,7 +83,7 @@ function ContributionComparisons(props) {
                 {isLoadingComparisons && (
                     <StyledLoadMoreButton className="text-end action">
                         <Button color="link" size="sm" className="btn btn-link btn-sm" disabled>
-                            <Icon icon={faSpinner} spin /> Loading...
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading...
                         </Button>
                     </StyledLoadMoreButton>
                 )}

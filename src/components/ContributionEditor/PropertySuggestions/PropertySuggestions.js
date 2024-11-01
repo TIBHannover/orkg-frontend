@@ -1,6 +1,6 @@
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { createProperty, getSuggestedProperties } from 'slices/contributionEditorSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,7 +35,7 @@ const PropertySuggestions = () => {
                                 <DescriptionTooltip id={c.path.id} _class={ENTITIES.PREDICATE}>
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
-                                            <Icon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
+                                            <FontAwesomeIcon icon={faPlus} className="me-1 text-muted" /> {c.path.label}
                                         </div>
                                         <small className="float-end">
                                             <Badge pill className="ms-2">

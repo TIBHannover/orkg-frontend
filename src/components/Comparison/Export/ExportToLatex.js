@@ -3,7 +3,7 @@ import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Fo
 import { getStatementsBySubject } from 'services/backend/statements';
 import { Cite } from '@citation-js/core';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -337,7 +337,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
+                                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                         </div>
@@ -357,7 +357,7 @@ const ExportToLatex = ({ showDialog, toggle }) => {
                             }}
                         >
                             <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                <Icon icon={faClipboard} /> Copy to clipboard
+                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
                             </Button>
                         </CopyToClipboard>
                     </>

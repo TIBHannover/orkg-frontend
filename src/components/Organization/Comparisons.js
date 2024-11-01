@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import { find, flatten } from 'lodash';
 import PropTypes from 'prop-types';
@@ -101,7 +101,7 @@ const Comparisons = ({ organizationsId }) => {
                     <div className={`mt-2 mb-4 ${currentPage === 0 ? 'p-5 container box rounded' : ''}`}>
                         {currentPage !== 0 && (
                             <div className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </div>
                         )}
                         {currentPage === 0 && (

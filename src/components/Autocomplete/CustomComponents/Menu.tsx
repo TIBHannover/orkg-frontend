@@ -1,5 +1,5 @@
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { useAutocompleteDispatch, useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
 import type { GroupBase } from 'react-select';
@@ -57,7 +57,7 @@ const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends b
                             <Tippy content="Select sources">
                                 <span>
                                     <Button color="light-darker" className="px-2 py-0 ms-2" onClick={toggle} size="sm">
-                                        <Icon icon={faGear} size="sm" />
+                                        <FontAwesomeIcon icon={faGear} size="sm" />
                                     </Button>
                                 </span>
                             </Tippy>

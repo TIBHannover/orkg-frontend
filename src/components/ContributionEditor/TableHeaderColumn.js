@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
@@ -123,7 +123,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                 <Delete className="contribution-editor" onClick={() => handleRemoveContribution(contribution.id)}>
                     <Tippy content="Remove contribution from contribution editor">
                         <span>
-                            <Icon icon={faTimes} />
+                            <FontAwesomeIcon icon={faTimes} />
                         </span>
                     </Tippy>
                 </Delete>

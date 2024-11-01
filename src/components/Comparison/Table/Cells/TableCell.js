@@ -1,5 +1,5 @@
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
 import TableCellLiteral from 'components/Comparison/Table/Cells/TableCellLiteral';
 import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
@@ -125,7 +125,7 @@ const TableCell = ({ entities }) => {
                     {entities?.length > MAX_ITEMS && (
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
                             {isExpanded ? 'Hide more' : `Show ${entities.length - MAX_ITEMS} more`}{' '}
-                            <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                            <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     )}
                 </ItemInner>

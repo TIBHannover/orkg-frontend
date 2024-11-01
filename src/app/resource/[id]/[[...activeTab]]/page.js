@@ -1,7 +1,7 @@
 'use client';
 
 import { faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
@@ -125,7 +125,7 @@ function Resource() {
                                     tag={Link}
                                     href={ROUTES.ADD_RESOURCE}
                                 >
-                                    <Icon icon={faPlus} className="me-1" /> Create resource
+                                    <FontAwesomeIcon icon={faPlus} className="me-1" /> Create resource
                                 </RequireAuthentication>
                                 {dedicatedLink && (
                                     <Button
@@ -138,7 +138,7 @@ function Resource() {
                                         })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
+                                        <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
                                     </Button>
                                 )}
                                 {!isEditMode && (
@@ -149,17 +149,17 @@ function Resource() {
                                         size="sm"
                                         onClick={() => (!isCurationAllowed && preventEditCase ? setIsOpenPreventModal(true) : toggleIsEditMode())}
                                     >
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 )}
                                 {isEditMode && (
                                     <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                                 <UncontrolledButtonDropdown>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                        <Icon icon={faEllipsisV} />
+                                        <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
                                         <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
@@ -203,7 +203,7 @@ function Resource() {
                                             onClick={deleteResource}
                                             disabled={!isDeletionAllowed}
                                         >
-                                            <Icon icon={faTrash} /> Delete resource
+                                            <FontAwesomeIcon icon={faTrash} /> Delete resource
                                         </Button>
                                     </span>
                                 </Tippy>

@@ -1,6 +1,6 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
@@ -139,7 +139,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                         setShowAuthorForm((v) => !v);
                     }}
                 >
-                    <Icon icon={faPlus} className="me-2" /> Add {itemLabel}
+                    <FontAwesomeIcon icon={faPlus} className="me-2" /> Add {itemLabel}
                 </AddAuthor>
             </div>
             <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm((v) => !v)}>
@@ -148,7 +148,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                     <ModalBody>
                         <FormGroup>
                             <Label for="authorInput">
-                                Enter {itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                                Enter {itemLabel} name <b>or</b> ORCID <FontAwesomeIcon color="#A6CE39" icon={faOrcid} />
                             </Label>
                             <Autocomplete
                                 entityType={ENTITIES.RESOURCE}

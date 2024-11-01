@@ -1,5 +1,5 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
@@ -17,7 +17,7 @@ const Doi = (props) => {
     if (props.type === ENTITIES.LITERAL && labelToText.trim().match(supportedValues)) {
         return (
             <a href={`https://doi.org/${labelToText}`} target="_blank" rel="noopener noreferrer">
-                {labelToText} <Icon icon={faExternalLinkAlt} />
+                {labelToText} <FontAwesomeIcon icon={faExternalLinkAlt} />
             </a>
         );
     }

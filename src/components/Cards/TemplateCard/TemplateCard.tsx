@@ -1,5 +1,5 @@
 import { faCalendar, faLock, faShapes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -29,13 +29,13 @@ const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) =>
                 </div>
                 <div className="mb-1">
                     <small>
-                        <Icon size="sm" icon={faShapes} className="me-1" /> {template.properties?.length} Properties
+                        <FontAwesomeIcon size="sm" icon={faShapes} className="me-1" /> {template.properties?.length} Properties
                         {template.is_closed && (
                             <>
-                                <Icon size="sm" icon={faLock} className="ms-2 me-1" /> Closed
+                                <FontAwesomeIcon size="sm" icon={faLock} className="ms-2 me-1" /> Closed
                             </>
                         )}
-                        <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(template.created_at).format('DD-MM-YYYY')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(template.created_at).format('DD-MM-YYYY')}
                     </small>
                 </div>
                 <div className="mb-1">

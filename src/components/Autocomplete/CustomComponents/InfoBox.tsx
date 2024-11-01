@@ -1,5 +1,5 @@
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import { truncate } from 'lodash';
@@ -80,14 +80,14 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
                         </>
                     ) : (
                         <>
-                            <Icon icon={faSpinner} spin /> Preview of statements
+                            <FontAwesomeIcon icon={faSpinner} spin /> Preview of statements
                         </>
                     )}
                 </div>
             }
         >
             <span>
-                <Icon icon={faInfoCircle} color={iconColor} />
+                <FontAwesomeIcon icon={faInfoCircle} color={iconColor} />
             </span>
         </Tippy>
     );

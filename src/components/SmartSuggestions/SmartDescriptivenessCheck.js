@@ -1,5 +1,5 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
 import LLM_TASK_NAMES from 'constants/llmTasks';
@@ -51,7 +51,7 @@ export const SmartDescriptivenessCheck = ({ value = '' }) => {
                     <p className="m-0 mb-2">Based on the description you provided, we provide feedback on how to improve it</p>
                     {isLoading && (
                         <div className="ms-2 mb-2">
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </div>
                     )}
                     {!isLoading && !isFailed && (
@@ -85,7 +85,7 @@ export const SmartDescriptivenessCheck = ({ value = '' }) => {
                     style={{ right: 5, top: 5 }}
                     onClick={() => setIsOpenSmartTooltip((v) => !v)}
                 >
-                    <Icon icon={faLightbulb} style={{ fontSize: '120%' }} />
+                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </Tippy>
         </SmartSuggestions>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button, Container, Collapse, Card, CardBody } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import Logo from 'assets/img/logo.svg';
 import { detect } from 'detect-browser';
@@ -28,7 +28,7 @@ const ErrorFallback = (props) => {
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
                             <h1 className="display-6 d-block">Something went wrong!</h1>
-                            <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 30 }} />
+                            <FontAwesomeIcon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 30 }} />
                             <div className="mb-4 lead">We're sorry about this! Please try again or report an issue to help fix this problem</div>
                             <Button tag={Link} href={ROUTES.HOME} color="primary" className="me-3 mb-1">
                                 Back to home

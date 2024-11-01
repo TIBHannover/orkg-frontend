@@ -1,5 +1,5 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
@@ -62,7 +62,7 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                                             <Tippy content="The provided datatype does not seem to match the cell value">
                                                 <span>
                                                     <Badge color="warning" className="ms-2">
-                                                        <Icon icon={faExclamationTriangle} className="text-white" /> Warning
+                                                        <FontAwesomeIcon icon={faExclamationTriangle} className="text-white" /> Warning
                                                     </Badge>
                                                 </span>
                                             </Tippy>

@@ -1,5 +1,5 @@
 import { faQuestionCircle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import Breadcrumbs from 'components/DataBrowser/components/Header/Breadcrumbs/Breadcrumbs';
@@ -63,12 +63,12 @@ const Header = () => {
                             onKeyDown={(e) => (e.code === 'Enter' ? showPreferences() : undefined)}
                         >
                             <div className="flex-grow-1">
-                                <Icon fixedWidth icon={faSlidersH} />
+                                <FontAwesomeIcon fixedWidth icon={faSlidersH} />
                             </div>
                         </div>
                     </Tippy>
                     <Button outline size="sm" onClick={() => dispatch({ type: 'SET_IS_HELP_MODAL_OPEN', payload: { isOpen: true } })}>
-                        <Icon fixedWidth icon={faQuestionCircle} />
+                        <FontAwesomeIcon fixedWidth icon={faQuestionCircle} />
                     </Button>
                 </ButtonGroup>
             </div>
@@ -82,7 +82,11 @@ const Header = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }} className="text-secondary p-0" />
+                                <FontAwesomeIcon
+                                    icon={faQuestionCircle}
+                                    style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }}
+                                    className="text-secondary p-0"
+                                />
                             </a>
                         </span>
                     </Tippy>

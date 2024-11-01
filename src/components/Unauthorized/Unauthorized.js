@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,7 +35,7 @@ const Unauthorized = () => {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
-                            <Icon icon={faLock} className="text-primary mt-3 mb-3" style={{ fontSize: 45 }} />
+                            <FontAwesomeIcon icon={faLock} className="text-primary mt-3 mb-3" style={{ fontSize: 45 }} />
                             {user ? (
                                 <div className="mb-4 lead">You need to be signed in to use this functionality</div>
                             ) : (

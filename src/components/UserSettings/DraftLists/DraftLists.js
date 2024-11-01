@@ -1,5 +1,5 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -22,7 +22,8 @@ const DraftLists = () => {
     const renderListItem = (list) => (
         <ShortRecord key={list.id} header={list.label} href={reverse(ROUTES.LIST, { id: list.id })}>
             <div className="time">
-                <Icon size="sm" icon={faCalendar} className="me-1" /> {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
+                <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" />{' '}
+                {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
             </div>
         </ShortRecord>
     );

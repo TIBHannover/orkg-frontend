@@ -1,5 +1,5 @@
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
@@ -34,14 +34,14 @@ const Boolean = (props) => {
     if (trueValues.indexOf(labelToText.toLowerCase()) !== -1) {
         return (
             <Check>
-                <Icon icon={faCheck} aria-label="Check mark" />
+                <FontAwesomeIcon icon={faCheck} aria-label="Check mark" />
             </Check>
         );
     }
     if (falseValues.indexOf(labelToText.toLowerCase()) !== -1) {
         return (
             <Cross>
-                <Icon icon={faTimes} aria-label="Cross mark" />
+                <FontAwesomeIcon icon={faTimes} aria-label="Cross mark" />
             </Cross>
         );
     }

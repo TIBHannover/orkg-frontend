@@ -1,5 +1,5 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ const CopyId = ({ id, text = 'ID' }) => (
             }}
         >
             <Button className="py-0 border border-light-darker d-flex align-items-center" size="sm" color="light">
-                <Icon icon={faClipboard} color="#6c757d" size="xs" />
+                <FontAwesomeIcon icon={faClipboard} color="#6c757d" size="xs" />
             </Button>
         </CopyToClipboard>
     </InputGroup>

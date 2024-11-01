@@ -1,7 +1,7 @@
 'use client';
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import { supportedContentTypes } from 'components/ContentType/types';
@@ -80,11 +80,11 @@ function ContentType() {
                                         size="sm"
                                         onClick={() => toggleIsEditMode()}
                                     >
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
                                     <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                             </>

@@ -1,5 +1,5 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
@@ -88,7 +88,7 @@ function ShaclFlowModal() {
                 <Tippy content="Open help center">
                     <span>
                         <a href="https://orkg.org/help-center/article/50/Template_Visualization_Diagram" target="_blank" rel="noopener noreferrer">
-                            <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
+                            <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
                         </a>
                     </span>
                 </Tippy>

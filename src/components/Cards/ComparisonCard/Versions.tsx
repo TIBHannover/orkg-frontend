@@ -1,7 +1,7 @@
 import { useState, FC } from 'react';
 import Link from 'next/link';
 import { reverse } from 'named-urls';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
@@ -39,18 +39,19 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
                             <div className="flex-grow-1">
                                 {_data?.contributions?.length && (
                                     <>
-                                        <Icon size="sm" icon={faFile} className="me-1" /> {_data?.contributions?.length} Contributions
+                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {_data?.contributions?.length} Contributions
                                     </>
                                 )}
                                 {_data.visualizations && (
                                     <>
-                                        <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {_data.visualizations?.length} Visualizations
+                                        <FontAwesomeIcon size="sm" icon={faChartBar} className="ms-2 me-1" /> {_data.visualizations?.length}{' '}
+                                        Visualizations
                                     </>
                                 )}
                                 {(_data.resources?.length > 0 || _data.figures?.length > 0) && (
                                     <>
-                                        <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" /> {_data.resources.length + _data.resources.length}{' '}
-                                        attachments
+                                        <FontAwesomeIcon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
+                                        {_data.resources.length + _data.resources.length} attachments
                                     </>
                                 )}
                             </div>
@@ -80,7 +81,7 @@ const Versions = ({ versions }: VersionsProps) => {
 
     return (
         <small>
-            <Icon size="sm" icon={faCodeBranch} className="me-1" /> Versions:{' '}
+            <FontAwesomeIcon size="sm" icon={faCodeBranch} className="me-1" /> Versions:{' '}
             {_versions.map((version, index) => (
                 <span key={version.id}>
                     <VersionTooltip version={version} />

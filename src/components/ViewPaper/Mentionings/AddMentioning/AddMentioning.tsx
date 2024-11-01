@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { OptionType } from 'components/Autocomplete/types';
@@ -38,13 +38,13 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
             {!isVisibleAutocomplete ? (
                 <ButtonGroup>
                     <ButtonWithLoading color="secondary" onClick={() => setIsVisibleAutocomplete(true)}>
-                        <Icon className="icon" icon={faPlus} /> Add item
+                        <FontAwesomeIcon className="icon" icon={faPlus} /> Add item
                     </ButtonWithLoading>
                 </ButtonGroup>
             ) : (
                 <InputGroup>
                     <span className="input-group-text">
-                        <Icon className="icon" icon={faPlus} />
+                        <FontAwesomeIcon className="icon" icon={faPlus} />
                     </span>
 
                     <SelectGlobalStyle />

@@ -1,5 +1,5 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString } from 'lodash';
 import { MouseEvent, ReactNode, forwardRef } from 'react';
 import { Button } from 'reactstrap';
@@ -80,7 +80,7 @@ const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
                 data-testid={testId}
             >
                 <span className="icon-wrapper">
-                    <Icon size={size} icon={icon} spin={iconSpin} />
+                    <FontAwesomeIcon size={size} icon={icon} spin={iconSpin} />
                 </span>
             </OptionButtonStyled>
         </span>

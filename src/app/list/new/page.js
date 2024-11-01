@@ -1,7 +1,7 @@
 'use client';
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { useRouter } from 'next/navigation';
@@ -55,7 +55,7 @@ const ListNew = () => {
                     <FormGroup>
                         <Tippy content="Choose the title of your list. You can always update the title later">
                             <span>
-                                <Label for="articleTitle">Title</Label> <Icon icon={faQuestionCircle} className="text-secondary" />
+                                <Label for="articleTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
                             </span>
                         </Tippy>
 

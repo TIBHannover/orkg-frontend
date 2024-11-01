@@ -1,7 +1,7 @@
 'use client';
 
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import 'assets/scss/DefaultLayout.scss';
 import Footer from 'components/Layout/Footer';
@@ -90,7 +90,7 @@ const CloseToastButton = ({ closeToast }) => (
         role="button"
         tabIndex={0}
     >
-        <Icon icon={faTimes} />
+        <FontAwesomeIcon icon={faTimes} />
     </span>
 );
 

@@ -1,5 +1,5 @@
 import { faFilter, faLevelUpAlt, faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
@@ -101,7 +101,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                             }
                         >
                             <div className={grouped ? 'ms-2' : ''}>
-                                {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}
+                                {grouped && <FontAwesomeIcon icon={faLevelUpAlt} rotation={90} className="me-2" />}
                                 {columnWidth && columnWidth < 100 && transpose ? truncate(label, { length: 10 }) : label}
                                 {similar && similar.length > 0 && '*'}
                             </div>
@@ -121,7 +121,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                                     onClick={() => setShowFilterDialog((v) => !v)}
                                     className={filterButtonClasses}
                                 >
-                                    <Icon size="xs" icon={faFilter} />
+                                    <FontAwesomeIcon size="xs" icon={faFilter} />
                                     {getValuesNr() <= 1 && <div className="cross" />}
                                 </FilterButton>
                             </FilterWrapper>
@@ -146,7 +146,7 @@ const PropertyCell = ({ id, label, property, similar, group, grouped = false, gr
                         dispatch(handleToggleGroupVisibility?.(groupId));
                     }}
                 >
-                    <Icon icon={hiddenGroups.includes(groupId) ? faPlusSquare : faMinusSquare} />
+                    <FontAwesomeIcon icon={hiddenGroups.includes(groupId) ? faPlusSquare : faMinusSquare} />
                 </Button>
             )}
             {showStatementBrowser && (

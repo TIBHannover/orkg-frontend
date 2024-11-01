@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, Table } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import moment from 'moment';
@@ -37,7 +37,7 @@ const MetadataTable: FC<MetadataTableProps> = ({
                             {id ? (
                                 <Tippy content="Entry will be linked to ORKG resource">
                                     <Link target="_blank" href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
-                                        <PaperTitle title={title} /> <Icon icon={faExternalLinkAlt} />
+                                        <PaperTitle title={title} /> <FontAwesomeIcon icon={faExternalLinkAlt} />
                                     </Link>
                                 </Tippy>
                             ) : (

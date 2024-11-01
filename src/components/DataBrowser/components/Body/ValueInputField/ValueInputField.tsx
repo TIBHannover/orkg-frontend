@@ -1,5 +1,5 @@
 import { faCheck, faClose, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ConfirmationTooltip from 'components/ActionButton/ConfirmationTooltip/ConfirmationTooltip';
 import DatatypeSelector from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
@@ -92,7 +92,7 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                     }}
                     title="Cancel"
                 >
-                    <Icon icon={faClose} />
+                    <FontAwesomeIcon icon={faClose} />
                 </Button>
                 <Button
                     className="px-2"
@@ -137,7 +137,7 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                         trigger="manual"
                         placement="top"
                     >
-                        <span>{editMode ? <Icon icon={faCheck} /> : 'Create'}</span>
+                        <span>{editMode ? <FontAwesomeIcon icon={faCheck} /> : 'Create'}</span>
                     </Tippy>
                 </Button>
             </InputGroup>

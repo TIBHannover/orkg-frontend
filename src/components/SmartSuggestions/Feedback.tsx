@@ -1,5 +1,5 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
@@ -107,7 +107,8 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                         </>
                     ) : (
                         <p className="d-flex align-items-center mb-1">
-                            <Icon icon={faCheck} className="me-2" style={{ color: '#C1F8C0', fontSize: '160%' }} /> Successfully saved, thank you!
+                            <FontAwesomeIcon icon={faCheck} className="me-2" style={{ color: '#C1F8C0', fontSize: '160%' }} /> Successfully saved,
+                            thank you!
                         </p>
                     )}
                 </div>

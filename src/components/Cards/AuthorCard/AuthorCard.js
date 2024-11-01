@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
@@ -77,7 +77,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                 {isVisibleGoogleScholar && (
                     <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="me-1">
                         <Badge color="light" size="sm">
-                            <Icon icon={faGraduationCap} className="text-primary" /> <span>Google Scholar</span>
+                            <FontAwesomeIcon icon={faGraduationCap} className="text-primary" /> <span>Google Scholar</span>
                         </Badge>
                     </a>
                 )}
@@ -86,7 +86,8 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                     papers.map((paper, index) => (
                         <Link key={index} href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
                             <Badge color="light" size="sm" className="ms-1">
-                                <Icon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)} author
+                                <FontAwesomeIcon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)}{' '}
+                                author
                                 {paper.paper_year ? ` - ${paper.paper_year}` : ''}
                             </Badge>
                         </Link>
@@ -106,7 +107,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                         {isLoadedSemanticScholar && semanticScholarAuthors.length === 0 && <ListGroupItem>Author not found</ListGroupItem>}
                         {isLoadingSemanticScholar && (
                             <ListGroupItem>
-                                <Icon icon={faSpinner} spin /> Loading
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading
                             </ListGroupItem>
                         )}
                     </ListGroup>

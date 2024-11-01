@@ -1,6 +1,6 @@
 import { faGoogle, faLinkedin, faOrcid, faResearchgate } from '@fortawesome/free-brands-svg-icons';
 import { faEllipsisV, faExternalLinkAlt, faGlobe, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NotFound from 'app/not-found';
 import useAuthor from 'components/Author/hooks/useAuthor';
 import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
@@ -26,7 +26,7 @@ const AuthorHeader = ({ authorId }) => {
         <>
             {isLoading && (
                 <div className="text-center mt-4 mb-4">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                 </div>
             )}
             {!isLoading && isFailedLoading && <NotFound />}
@@ -42,11 +42,11 @@ const AuthorHeader = ({ authorId }) => {
                                     className="float-end"
                                     onClick={() => setEditMode((v) => !v)}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                        <Icon icon={faEllipsisV} />
+                                        <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
                                         <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
@@ -77,11 +77,11 @@ const AuthorHeader = ({ authorId }) => {
                                 {author.orcid && (
                                     <div className="col-md-3 col-sm-6">
                                         <div>
-                                            ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                                            ORCID <FontAwesomeIcon color="#A6CE39" icon={faOrcid} />
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a href={`https://orcid.org/${author.orcid.label}`} target="_blank" rel="noopener noreferrer">
-                                                {author.orcid.label} <Icon icon={faExternalLinkAlt} />
+                                                {author.orcid.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>
@@ -89,11 +89,11 @@ const AuthorHeader = ({ authorId }) => {
                                 {author.website && (
                                     <div className="col-md-3 col-sm-6">
                                         <div>
-                                            Website <Icon icon={faGlobe} />
+                                            Website <FontAwesomeIcon icon={faGlobe} />
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a href={author.website.label} target="_blank" rel="noopener noreferrer">
-                                                {author.website.label} <Icon icon={faExternalLinkAlt} />
+                                                {author.website.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@ const AuthorHeader = ({ authorId }) => {
                                 {author.googleScholar && (
                                     <div className="col-md-3 col-sm-6">
                                         <div>
-                                            Google Scholar <Icon icon={faGoogle} />
+                                            Google Scholar <FontAwesomeIcon icon={faGoogle} />
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a
@@ -109,7 +109,7 @@ const AuthorHeader = ({ authorId }) => {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                {author.googleScholar.label} <Icon icon={faExternalLinkAlt} />
+                                                {author.googleScholar.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@ const AuthorHeader = ({ authorId }) => {
                                 {author.researchGate && (
                                     <div className="col-md-3 col-sm-6">
                                         <div>
-                                            ResearchGate <Icon icon={faResearchgate} />
+                                            ResearchGate <FontAwesomeIcon icon={faResearchgate} />
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a
@@ -125,7 +125,7 @@ const AuthorHeader = ({ authorId }) => {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                {author.researchGate.label} <Icon icon={faExternalLinkAlt} />
+                                                {author.researchGate.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@ const AuthorHeader = ({ authorId }) => {
                                 {author.linkedIn && (
                                     <div className="col-md-3 col-sm-6">
                                         <div>
-                                            Linkedin <Icon icon={faLinkedin} />
+                                            Linkedin <FontAwesomeIcon icon={faLinkedin} />
                                         </div>
                                         <div className="mb-3 text-wrap">
                                             <a
@@ -141,7 +141,7 @@ const AuthorHeader = ({ authorId }) => {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                {author.linkedIn.label} <Icon icon={faExternalLinkAlt} />
+                                                {author.linkedIn.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@ const AuthorHeader = ({ authorId }) => {
                                         <div>DBLP</div>
                                         <div className="mb-3 text-wrap">
                                             <a href={`https://dblp.org/pid/${author.dblp}`} target="_blank" rel="noopener noreferrer">
-                                                {author.dblp} <Icon icon={faExternalLinkAlt} />
+                                                {author.dblp} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                             </a>
                                         </div>
                                     </div>

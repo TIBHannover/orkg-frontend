@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -82,7 +82,7 @@ const Templates = () => {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        {totalElements === 0 && isLoadingTemplates ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
+                        {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
                             <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
@@ -99,7 +99,7 @@ const Templates = () => {
                         className="btn btn-secondary btn-sm flex-shrink-0"
                         href={reverse(ROUTES.RS_ADD_TEMPLATE)}
                     >
-                        <Icon icon={faPlus} /> Create statement type
+                        <FontAwesomeIcon icon={faPlus} /> Create statement type
                     </RequireAuthentication>
                 }
             >
@@ -136,7 +136,7 @@ const Templates = () => {
                     )}
                     {isLoadingTemplates && (
                         <ListGroupItem tag="div" className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
                         </ListGroupItem>
                     )}
                     {!isLoadingTemplates && hasNextPage && (

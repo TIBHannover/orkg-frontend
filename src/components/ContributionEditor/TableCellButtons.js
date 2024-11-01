@@ -1,5 +1,5 @@
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import ActionButton from 'components/ActionButton/ActionButton';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
@@ -47,7 +47,7 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                                 className="p-0"
                                 onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.RESOURCE_SHARED }))}
                             >
-                                <Icon icon={faQuestionCircle} />
+                                <FontAwesomeIcon icon={faQuestionCircle} />
                             </Button>
                         </>
                     }

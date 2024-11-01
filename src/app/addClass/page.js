@@ -1,7 +1,7 @@
 'use client';
 
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
@@ -100,11 +100,11 @@ const AddClass = () => {
                         root class, which is the highest-level class in the hierarchy. Alternatively, you can also suggest to include a new ontology
                         to the{' '}
                         <a href="https://service.tib.eu/ts4tib/index" target="_blank" rel="noopener noreferrer">
-                            TIB Terminology Service <Icon size="sm" icon={faExternalLinkAlt} />
+                            TIB Terminology Service <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                         </a>{' '}
                         by creating an issue at the{' '}
                         <a href="https://github.com/TIBHannover/OLS/issues" target="_blank" rel="noopener noreferrer">
-                            issue tracker <Icon size="sm" icon={faExternalLinkAlt} />
+                            issue tracker <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                         </a>{' '}
                         .
                     </p>

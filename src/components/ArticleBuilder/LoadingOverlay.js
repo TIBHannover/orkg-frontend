@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ const LoadingOverlay = ({ isLoading = false }) => (
     <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
         <div>
             <Overlay className="text-secondary">
-                <Icon icon={faSpinner} className="me-2" spin />
+                <FontAwesomeIcon icon={faSpinner} className="me-2" spin />
                 Loading...
             </Overlay>
         </div>

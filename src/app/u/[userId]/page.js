@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
@@ -148,7 +148,7 @@ const UserProfile = (props) => {
                                 <div>
                                     <h2 className="h3 flex-grow-1 m-0">{userData.display_name}</h2>
                                     <div className="text-muted" title={userData.joined_at}>
-                                        <Icon icon={faCakeCandles} /> Member for {moment(userData.joined_at).fromNow(true)}
+                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {moment(userData.joined_at).fromNow(true)}
                                     </div>
                                 </div>
                                 {observatoryData && (

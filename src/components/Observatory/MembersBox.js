@@ -1,5 +1,5 @@
 import { faPlus, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import AddMember from 'components/Observatory/AddMember';
 import usePaginate from 'components/hooks/usePaginate';
@@ -62,7 +62,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
             <h5>Members</h5>
             {isEditMode && !!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog((v) => !v)}>
-                    <Icon icon={faPlus} /> Add
+                    <FontAwesomeIcon icon={faPlus} /> Add
                 </Button>
             )}
             <div className="flex-grow-1">
@@ -150,7 +150,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }) => {
                                 )}
                                 {isLoading && page !== 0 && (
                                     <div className="list-group-item text-center" aria-live="polite" aria-busy="true">
-                                        <Icon icon={faSpinner} spin /> Loading
+                                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                                     </div>
                                 )}
                             </div>

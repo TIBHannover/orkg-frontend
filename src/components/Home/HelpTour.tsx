@@ -1,6 +1,6 @@
 import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'reactstrap';
 import Tippy from '@tippyjs/react';
@@ -40,7 +40,7 @@ const HelpButton = styled.div<HelpButtonProps>`
     }
 `;
 
-const HelpIcon = styled(Icon)`
+const HelpIcon = styled(FontAwesomeIcon)`
     vertical-align: middle;
     height: 28px;
     width: 28px !important;

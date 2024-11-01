@@ -1,7 +1,7 @@
 'use client';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { MAX_DESCRIPTION_LENGTH } from 'components/Observatory/EditObservatory';
 import Tooltip from 'components/Utils/Tooltip';
@@ -197,7 +197,7 @@ const AddObservatory = () => {
                         )}
                         {(!user || !user.isCurationAllowed) && (
                             <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
-                                <Icon className="me-1" icon={faUser} /> Sign in to create an observatory
+                                <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create an observatory
                             </Button>
                         )}
                     </Container>

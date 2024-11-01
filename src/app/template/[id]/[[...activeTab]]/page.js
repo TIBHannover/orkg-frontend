@@ -1,7 +1,7 @@
 'use client';
 
 import { faClose, faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
@@ -102,7 +102,7 @@ const Template = () => {
                     <Tippy content="Open help center">
                         <span>
                             <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer">
-                                <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
+                                <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
                             </a>
                         </span>
                     </Tippy>
@@ -118,7 +118,7 @@ const Template = () => {
                                     size="sm"
                                     onClick={() => toggleIsEditMode(true)}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                                 <Button
                                     style={{ marginLeft: 1 }}
@@ -127,7 +127,7 @@ const Template = () => {
                                     size="sm"
                                     onClick={() => dispatch(setDiagramMode(true))}
                                 >
-                                    <Icon icon={faDiagramProject} /> View diagram
+                                    <FontAwesomeIcon icon={faDiagramProject} /> View diagram
                                 </Button>
                             </ButtonGroup>
                         ) : (
@@ -150,7 +150,7 @@ const Template = () => {
                                     isLoading={isSaving}
                                     loadingMessage="Saving"
                                 >
-                                    <Icon icon={faSave} className="ms-1" /> Save
+                                    <FontAwesomeIcon icon={faSave} className="ms-1" /> Save
                                 </ButtonWithLoading>
                                 <Button
                                     style={{ marginLeft: 1 }}
@@ -161,13 +161,13 @@ const Template = () => {
                                         toggleIsEditMode(false);
                                     }}
                                 >
-                                    <Icon icon={faClose} className="ms-1" /> Cancel
+                                    <FontAwesomeIcon icon={faClose} className="ms-1" /> Cancel
                                 </Button>
                             </ButtonGroup>
                         )}
                         <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                <Icon icon={faEllipsisV} />
+                                <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
@@ -181,7 +181,7 @@ const Template = () => {
                             <ModalHeader>Export as SHACL</ModalHeader>
                             <ModalBody>
                                 <div className="text-center mt-4 mb-4">
-                                    <Icon icon={faSpinner} spin /> Loading
+                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
                                 </div>
                             </ModalBody>
                         </Modal>

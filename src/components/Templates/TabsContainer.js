@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
@@ -108,7 +108,7 @@ function TabsContainer({ id }) {
                                           <>
                                               Instances{' '}
                                               {isLoadingCount ? (
-                                                  <Icon icon={faSpinner} className="me-2" spin />
+                                                  <FontAwesomeIcon icon={faSpinner} className="me-2" spin />
                                               ) : (
                                                   <Badge pill>{countInstances}</Badge>
                                               )}

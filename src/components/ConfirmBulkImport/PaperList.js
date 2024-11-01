@@ -1,5 +1,5 @@
 import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
 import Link from 'next/link';
@@ -58,11 +58,11 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
             <div className="w-100 text-end">
                 {showContributions.length === 0 ? (
                     <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
-                        <Icon icon={faArrowsAltV} /> Expand all data
+                        <FontAwesomeIcon icon={faArrowsAltV} /> Expand all data
                     </Button>
                 ) : (
                     <Button size="sm" color="secondary" className="mb-2" onClick={handleCollapseAll}>
-                        <Icon icon={faArrowsAltV} /> Collapse all data
+                        <FontAwesomeIcon icon={faArrowsAltV} /> Collapse all data
                     </Button>
                 )}
             </div>
@@ -78,11 +78,11 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 <span className="flex-grow-1">
                                     {Object.keys(paper.contents[0].statements).length === 0 && (
                                         <Alert color="danger">
-                                            <Icon icon={faExclamationCircle} className="me-2" /> Paper can't be imported because it doesn't contain
-                                            any contribution data
+                                            <FontAwesomeIcon icon={faExclamationCircle} className="me-2" /> Paper can't be imported because it doesn't
+                                            contain any contribution data
                                         </Alert>
                                     )}
-                                    {hasValidationErrorsForPaper(i) && <Icon icon={faExclamationTriangle} className="text-warning me-2" />}
+                                    {hasValidationErrorsForPaper(i) && <FontAwesomeIcon icon={faExclamationTriangle} className="text-warning me-2" />}
 
                                     {existingPaperIds[i] && (
                                         <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
@@ -108,13 +108,15 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 </div>
                             </div>
                             <small>
-                                <Icon size="sm" icon={faUser} />{' '}
+                                <FontAwesomeIcon size="sm" icon={faUser} />{' '}
                                 {paper.authors.length > 0 ? (
                                     paper.authors.map((a) => a.name).join(' • ')
                                 ) : (
                                     <i className="ms-1">No authors provided</i>
                                 )}
-                                {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
+                                {(paper.publicationMonth || paper.publicationYear) && (
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
+                                )}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
                             </small>

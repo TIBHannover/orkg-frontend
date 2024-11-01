@@ -6,7 +6,7 @@ import useParams from 'components/useParams/useParams';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
 import REGEX from 'constants/regex';
@@ -174,7 +174,7 @@ const AddOrganization = () => {
                 )}
                 {(!user || !user.isCurationAllowed) && (
                     <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
-                        <Icon className="me-1" icon={faUser} /> Sign in to create organization
+                        <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create organization
                     </Button>
                 )}
             </Container>

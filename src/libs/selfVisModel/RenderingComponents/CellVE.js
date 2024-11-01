@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
 import { usePrevious } from 'react-use';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -99,7 +99,7 @@ const CellVE = (props) => {
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
                         <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
-                            <Icon size="sm" icon={faUndo} /> Undo
+                            <FontAwesomeIcon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
                 )}
@@ -110,7 +110,7 @@ const CellVE = (props) => {
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
                         <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
-                            <Icon size="sm" icon={faUndo} /> Undo
+                            <FontAwesomeIcon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
                 )}

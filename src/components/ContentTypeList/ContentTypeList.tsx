@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ContentTypeAsResourceList from 'components/ContentTypeList/ContentTypeAsResourceList';
@@ -134,7 +134,7 @@ const ContentTypeList: FC<ContentTypeListProps> = ({
                 <div className={`mt-4 mb-4 ${page === 1 ? 'p-5' : ''} ${boxShadow ? 'container box rounded' : ''}`}>
                     {page !== 1 && (
                         <div className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
                         </div>
                     )}
                     {page === 1 && (

@@ -7,7 +7,7 @@ import ROUTES from 'constants/routes';
 import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResources } from 'services/backend/resources';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
@@ -137,7 +137,7 @@ const FeaturedComparisons = () => {
 
                 {loading ? (
                     <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                     </div>
                 ) : (
                     categories.map((category) => {
@@ -147,7 +147,7 @@ const FeaturedComparisons = () => {
                                 <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
                                     {category.label}
                                     <Link href={`#${id}`} scroll={false} className="ms-2 invisible">
-                                        <Icon icon={faLink} />
+                                        <FontAwesomeIcon icon={faLink} />
                                     </Link>
                                 </Header>
 

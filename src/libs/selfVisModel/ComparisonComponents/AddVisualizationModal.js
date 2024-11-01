@@ -11,7 +11,7 @@ import { usePrevious } from 'react-use';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
@@ -163,7 +163,7 @@ function AddVisualizationModal() {
                         setShowVideoModal(!showVideoModal);
                     }}
                 >
-                    How to use <Icon className="ms-1" icon={faQuestionCircle} />
+                    How to use <FontAwesomeIcon className="ms-1" icon={faQuestionCircle} />
                 </Button>
             </ModalHeader>
             <ModalBody id="selfVisServiceModalBody">

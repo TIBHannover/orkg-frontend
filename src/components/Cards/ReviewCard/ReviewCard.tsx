@@ -1,5 +1,5 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Authors from 'components/Cards/PaperCard/Authors';
 import useCardData from 'components/Cards/hooks/useCardData';
@@ -73,7 +73,8 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                             <Authors authors={review.authors.length > 0 ? review.authors : authors} />
                             {review.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(review.created_at).format('DD-MM-YYYY')}
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
+                                    {moment(review.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

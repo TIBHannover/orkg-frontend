@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -69,7 +69,7 @@ const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
                         <div>
                             <Tippy content="Go to template page">
                                 <Link target="_blank" className="ms-2" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
-                                    <Icon icon={faLink} />
+                                    <FontAwesomeIcon icon={faLink} />
                                 </Link>
                             </Tippy>
                         </div>

@@ -1,5 +1,5 @@
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
@@ -65,7 +65,7 @@ const SortableValueItem: FC<SortableValueItemProps> = ({ statement, children }) 
         <div ref={ref} className="d-flex align-items-center flex-grow-1 m-0 p-0" style={{ opacity }}>
             {isEditMode && (
                 <div className="px-2" ref={drag} style={{ cursor: 'move' }}>
-                    <Icon icon={faGripVertical} className="text-secondary" />
+                    <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />
                 </div>
             )}
             {children}

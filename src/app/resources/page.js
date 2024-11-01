@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
@@ -49,7 +49,7 @@ const Resources = () => {
             className="btn btn-secondary btn-sm flex-shrink-0"
             href={ROUTES.ADD_RESOURCE}
         >
-            <Icon icon={faPlus} /> Create resource
+            <FontAwesomeIcon icon={faPlus} /> Create resource
         </RequireAuthentication>
     );
 

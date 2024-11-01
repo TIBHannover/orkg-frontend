@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import TabsContainer from 'components/Class/TabsContainer';
@@ -56,7 +56,7 @@ function ClassDetails() {
                                     className="float-end btn btn-secondary flex-shrink-0 btn-sm"
                                     style={{ marginRight: 2 }}
                                 >
-                                    <Icon icon={faPlus} /> Add resource
+                                    <FontAwesomeIcon icon={faPlus} /> Add resource
                                 </RequireAuthentication>
 
                                 <RequireAuthentication
@@ -66,7 +66,7 @@ function ClassDetails() {
                                     color="secondary"
                                     onClick={() => setModalImportIsOpen(true)}
                                 >
-                                    <Icon icon={faFileCsv} /> Import instances
+                                    <FontAwesomeIcon icon={faFileCsv} /> Import instances
                                 </RequireAuthentication>
                                 {!isEditMode ? (
                                     <RequireAuthentication
@@ -77,11 +77,11 @@ function ClassDetails() {
                                         onClick={() => toggleIsEditMode()}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPen} /> Edit
+                                        <FontAwesomeIcon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
                                     <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                             </>

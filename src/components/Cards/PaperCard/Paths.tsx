@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { faRoute, faAnglesRight, faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { ENTITIES } from 'constants/graphSettings';
@@ -54,8 +54,8 @@ const Paths: FC<PathsProps> = ({ paths }) => {
             <ul className="list-unstyled d-flex flex-column justify-content-center align-items-center">
                 {data.map((path, index) => (
                     <li key={`${index}-${data.length}`}>
-                        <Icon size="sm" icon={faRoute} className="me-1 " />
-                        Path: Paper <Icon icon={faAnglesRight} className="me-1" />
+                        <FontAwesomeIcon size="sm" icon={faRoute} className="me-1 " />
+                        Path: Paper <FontAwesomeIcon icon={faAnglesRight} className="me-1" />
                         {path.slice(1).map((entity, i) => (
                             <Fragment key={i}>
                                 <DescriptionTooltip classes={entity.classes} id={entity.id} _class={entity._class}>
@@ -69,7 +69,7 @@ const Paths: FC<PathsProps> = ({ paths }) => {
                                         </div>
                                     </Link>
                                 </DescriptionTooltip>
-                                {i !== path.length - 2 && <Icon icon={faAnglesRight} className="mx-1" />}
+                                {i !== path.length - 2 && <FontAwesomeIcon icon={faAnglesRight} className="mx-1" />}
                             </Fragment>
                         ))}
                         {index + 1 < data.length && <hr className="my-1" />}
@@ -79,7 +79,7 @@ const Paths: FC<PathsProps> = ({ paths }) => {
             {paths.length > MAX_ITEMS && (
                 <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={toggleExpand}>
                     {isExpanded ? 'Hide more' : `Show ${paths.length - MAX_ITEMS} more`}{' '}
-                    <Icon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                    <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                 </Button>
             )}
         </StyledPaths>

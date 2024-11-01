@@ -1,5 +1,5 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import FilterInputField from 'components/Filters/FilterInputField/FilterInputField';
 import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
@@ -67,7 +67,7 @@ const Filters: FC<FiltersProps> = ({ id }) => {
                         {filters?.length === 0 && (
                             <Col className="text-muted">
                                 Customize your browsing experience by filtering content based on your preferences. Click{' '}
-                                <Icon size="xs" icon={faFilter} /> to explore filtering options
+                                <FontAwesomeIcon size="xs" icon={faFilter} /> to explore filtering options
                             </Col>
                         )}
                         {filters?.slice(0, 2).map((filter, index) => (

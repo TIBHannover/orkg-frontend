@@ -1,5 +1,5 @@
 import { faEllipsisV, faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
@@ -90,11 +90,11 @@ const ResearchProblemHeader = ({ id }) => {
                                     onClick={() => setEditMode((v) => !v)}
                                     style={{ marginRight: 2 }}
                                 >
-                                    <Icon icon={faPen} /> Edit
+                                    <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
-                                        <Icon icon={faEllipsisV} />
+                                        <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
                                         <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>

@@ -1,6 +1,6 @@
 import { cloneElement, useEffect, useRef, useState } from 'react';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { debounce } from 'lodash';
 import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
@@ -69,12 +69,12 @@ const TableScrollContainer = ({ children, className = '' }) => {
             <div className="clearfix">
                 {showBackButton && (
                     <ScrollButton color="link" onClick={scrollBack} className="back">
-                        <Icon icon={faArrowCircleLeft} />
+                        <FontAwesomeIcon icon={faArrowCircleLeft} />
                     </ScrollButton>
                 )}
                 {showNextButton && (
                     <ScrollButton color="link" onClick={scrollNext} className="next">
-                        <Icon icon={faArrowCircleRight} />
+                        <FontAwesomeIcon icon={faArrowCircleRight} />
                     </ScrollButton>
                 )}
             </div>

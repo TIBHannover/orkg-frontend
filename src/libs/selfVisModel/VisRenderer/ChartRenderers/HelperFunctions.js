@@ -1,5 +1,5 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
@@ -284,7 +284,7 @@ export const createValueSelectors = (ref) => {
                                     removeSelector(id, ref);
                                 }}
                             >
-                                <Icon icon={faTrash} />
+                                <FontAwesomeIcon icon={faTrash} />
                             </DeleteButton>
                         )}
                         <Dropdown
@@ -335,7 +335,7 @@ export const createValueSelectors = (ref) => {
                                                 addYAxisInterval(ref, id);
                                             }}
                                         >
-                                            <Icon icon={faPlus} />
+                                            <FontAwesomeIcon icon={faPlus} />
                                         </Button>
                                     </span>
                                 </Tippy>
@@ -390,7 +390,7 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
                         removeInterval(id, interval_id, ref);
                     }}
                 >
-                    <Icon icon={faTrash} />
+                    <FontAwesomeIcon icon={faTrash} />
                 </DeleteButton>
                 Interval {interval_id}
                 {createIntervalDropDownSelectors(ref, id, interval_id, possibleValueCandidates)}

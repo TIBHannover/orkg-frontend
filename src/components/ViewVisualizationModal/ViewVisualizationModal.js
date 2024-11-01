@@ -1,5 +1,5 @@
 import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import Link from 'next/link';
@@ -64,14 +64,15 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                     <h5>{data.label ?? 'No Title'}</h5>
                     <Tippy content="Go to resource page">
                         <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`}>
-                            <Icon icon={faLink} className="text-primary" />
+                            <FontAwesomeIcon icon={faLink} className="text-primary" />
                         </Link>
                     </Tippy>
                 </div>
                 {data.description ?? 'No Description'}
                 <div className="mt-2">
                     <Badge color="light" className="me-2">
-                        <Icon icon={faCalendar} className="text-primary" /> {data.created_at ? moment(data.created_at).format('DD MMMM YYYY') : ''}
+                        <FontAwesomeIcon icon={faCalendar} className="text-primary" />{' '}
+                        {data.created_at ? moment(data.created_at).format('DD MMMM YYYY') : ''}
                     </Badge>
                     <AuthorBadges authors={convertAuthorsToNewFormat(data.authors)} />
                 </div>

@@ -1,5 +1,5 @@
 import { faExclamationTriangle, faMagic, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import Tooltip from 'components/Utils/Tooltip';
 import AbstractAnnotatorModal from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorModal';
@@ -48,13 +48,17 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resour
                     >
                         {isLoadingAbstract && (
                             <>
-                                <Icon icon={faSpinner} spin /> Loading abstract
+                                <FontAwesomeIcon icon={faSpinner} spin /> Loading abstract
                             </>
                         )}
                         {!isLoadingAbstract && (
                             <>
-                                {!showAbstractWarning ? <Icon icon={faPen} /> : <Icon icon={faExclamationTriangle} className="text-warning" />} Paper
-                                abstract
+                                {!showAbstractWarning ? (
+                                    <FontAwesomeIcon icon={faPen} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faExclamationTriangle} className="text-warning" />
+                                )}{' '}
+                                Paper abstract
                             </>
                         )}
                     </Button>
@@ -64,7 +68,7 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resour
             <ButtonGroup vertical className="w-100 mt-2">
                 {abstract && (
                     <Button onClick={() => setIsOpenAbstractAnnotationModal(true)} outline size="sm" color="smart" className="w-100">
-                        <Icon icon={faMagic} /> Annotator
+                        <FontAwesomeIcon icon={faMagic} /> Annotator
                     </Button>
                 )}
                 <Bioassays resourceId={resourceId} />

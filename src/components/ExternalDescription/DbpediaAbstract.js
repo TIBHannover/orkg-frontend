@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
@@ -66,7 +66,7 @@ class DbpediaAbstract extends Component {
                 <div style={{ fontSize: '90%' }}>
                     {this.state.isLoading && !this.state.loadingFailed && (
                         <div className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading abstract from DBpedia...
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading abstract from DBpedia...
                         </div>
                     )}
                     {!this.state.isLoading && this.state.loadingFailed && <div className="text-primary">Failed loading abstract from DBpedia.</div>}

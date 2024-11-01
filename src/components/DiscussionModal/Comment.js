@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Confirm from 'components/Confirmation/Confirmation';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
@@ -59,7 +59,7 @@ const Comment = ({ comment, entityId, setComments, refreshCount }) => {
                     </small>
                     {(comment.created_by === userId || isCurationAllowed) && (
                         <Button color="link" className="p-0" onClick={() => handleDeleteComment(comment.id)}>
-                            <Icon icon={faTrash} className="text-secondary" />
+                            <FontAwesomeIcon icon={faTrash} className="text-secondary" />
                         </Button>
                     )}
                 </div>

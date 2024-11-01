@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HelpIcon from 'components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
 import PositionItem from 'components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
 import StatementPlaceholder from 'components/RosettaStone/RosettaTemplateEditor/StatementPlaceholder';
@@ -81,7 +81,7 @@ function StepThree() {
                 ))}
             </Accordion>
             <Button className="my-2" outline size="sm" onClick={handleAddObjectPosition}>
-                <Icon icon={faPlus} /> Add object position
+                <FontAwesomeIcon icon={faPlus} /> Add object position
             </Button>
         </div>
     );

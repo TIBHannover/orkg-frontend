@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { faPlus, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { updateObservatory } from 'services/backend/observatories';
@@ -41,7 +41,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                 Organizations{' '}
                 {isEditMode && !!user && user.isCurationAllowed && (
                     <Button outline size="sm" className="float-end" onClick={() => setShowAddOrganizationDialog((v) => !v)}>
-                        <Icon icon={faPlus} /> Add
+                        <FontAwesomeIcon icon={faPlus} /> Add
                     </Button>
                 )}
             </h5>

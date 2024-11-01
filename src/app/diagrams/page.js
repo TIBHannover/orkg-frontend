@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
@@ -54,7 +54,7 @@ const Diagrams = () => {
 
     const buttons = (
         <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.NEW_DIAGRAM}>
-            <Icon icon={faPlus} /> Create diagram
+            <FontAwesomeIcon icon={faPlus} /> Create diagram
         </RequireAuthentication>
     );
 

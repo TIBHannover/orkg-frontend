@@ -1,5 +1,5 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import L3S_LOGO from 'assets/img/poweredby/L3S.png';
@@ -127,7 +127,7 @@ const Footer = () => (
                             <li>
                                 <a href="https://mastodon.social/@orkg" target="_blank" rel="noopener noreferrer">
                                     Follow us
-                                    <Icon className="ms-2" icon={faMastodon} />
+                                    <FontAwesomeIcon className="ms-2" icon={faMastodon} />
                                 </a>
                             </li>
                             <li>

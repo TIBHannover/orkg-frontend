@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faArrowCircleLeft, faArrowCircleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -35,8 +35,8 @@ function BenchmarksCarousel(props) {
         slidesToShow: 5,
         centerMode: false,
         slidesToScroll: 5,
-        nextArrow: !props.isLoading ? <Icon icon={faArrowCircleRight} /> : <Icon icon={faSpinner} spin />,
-        prevArrow: <Icon icon={faArrowCircleLeft} />,
+        nextArrow: !props.isLoading ? <FontAwesomeIcon icon={faArrowCircleRight} /> : <FontAwesomeIcon icon={faSpinner} spin />,
+        prevArrow: <FontAwesomeIcon icon={faArrowCircleLeft} />,
         rows: 1,
         lazyLoad: true,
         onLazyLoad: (slidesLoaded) => {

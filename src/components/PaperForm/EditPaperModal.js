@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import PaperForm from 'components/PaperForm/PaperForm';
@@ -48,7 +48,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
                 {isPaperLinkVisible && (
                     <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.id })} target="_blank">
                         <Button color="link" className="p-0">
-                            Open paper <Icon icon={faExternalLinkAlt} className="me-1" />
+                            Open paper <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                         </Button>
                     </Link>
                 )}

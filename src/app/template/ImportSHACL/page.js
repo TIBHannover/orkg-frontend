@@ -2,7 +2,7 @@
 
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import StepContainer from 'components/StepContainer';
@@ -39,7 +39,7 @@ const DragRDF = styled.div`
     }
 `;
 
-const FilePlaceholder = styled(Icon)`
+const FilePlaceholder = styled(FontAwesomeIcon)`
     margin-bottom: 15px;
     color: inherit;
 `;
@@ -108,7 +108,7 @@ function ImportSHACL() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <Icon
+                                    <FontAwesomeIcon
                                         icon={faQuestionCircle}
                                         style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }}
                                         className="text-secondary p-0"

@@ -1,7 +1,7 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import Link from 'next/link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -50,7 +50,7 @@ const Classes = () => {
             className="btn btn-secondary btn-sm flex-shrink-0"
             href={ROUTES.ADD_CLASS}
         >
-            <Icon icon={faPlus} /> Create class
+            <FontAwesomeIcon icon={faPlus} /> Create class
         </RequireAuthentication>
     );
 

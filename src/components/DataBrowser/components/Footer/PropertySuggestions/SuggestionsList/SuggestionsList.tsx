@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
@@ -50,7 +50,7 @@ const SuggestionsList: FC<SuggestionsListProps> = ({ template }) => {
                     <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE}>
                         <div className="d-flex">
                             <div className="flex-grow-1">
-                                <Icon icon={faPlus} className="me-1 text-muted" /> {p.label}
+                                <FontAwesomeIcon icon={faPlus} className="me-1 text-muted" /> {p.label}
                             </div>
                         </div>
                     </DescriptionTooltip>

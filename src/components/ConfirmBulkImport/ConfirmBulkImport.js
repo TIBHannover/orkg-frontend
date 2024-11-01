@@ -1,5 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperList from 'components/ConfirmBulkImport/PaperList';
 import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
 import Link from 'next/link';
@@ -48,7 +48,7 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
                 {isLoading && (
                     <div className="text-center text-primary">
                         <span style={{ fontSize: 80 }}>
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </span>
                         {createdContributions.length > 0 && (
                             <div className="w-100 text-dark d-flex align-items-center flex-column mb-4">

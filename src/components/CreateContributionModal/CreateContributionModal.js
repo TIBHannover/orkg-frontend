@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faExternalLinkAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useCreateContribution from 'components/CreateContributionModal/hooks/useCreateContribution';
 import Tooltip from 'components/Utils/Tooltip';
@@ -37,7 +37,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                             <Alert color="info" fade={false}>
                                 You are about to add a contribution to the paper{' '}
                                 <Link target="_blank" href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>
-                                    {paperTitle} <Icon icon={faExternalLinkAlt} />
+                                    {paperTitle} <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </Link>
                             </Alert>
                         )}
@@ -50,7 +50,7 @@ const CreateContributionModal = ({ isOpen, toggle, paperId, onCreateContribution
                     </FormGroup>
                 ) : (
                     <div className="text-center mt-3 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
                     </div>
                 )}
             </ModalBody>

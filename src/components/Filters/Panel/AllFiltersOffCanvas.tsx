@@ -1,5 +1,5 @@
 import { faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FilterInputField from 'components/Filters/FilterInputField/FilterInputField';
 import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
 import FilterCurationForm from 'components/Filters/Panel/FilterCurationForm';
@@ -91,7 +91,7 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
                         <Alert color="light">
                             No filters on this page yet! <br />
                             <small>
-                                Click on <Icon size="xs" icon={faPlus} /> to add a filter
+                                Click on <FontAwesomeIcon size="xs" icon={faPlus} /> to add a filter
                             </small>
                         </Alert>
                     )}

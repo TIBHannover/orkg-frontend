@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faTrash, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
@@ -68,11 +68,11 @@ const SideBar = () => {
                     <DropdownToggle caret color="primary" className="ps-1 pe-2" />
                     <DropdownMenu end>
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
-                            <Icon icon={faQuestionCircle} className="me-2 text-secondary" />
+                            <FontAwesomeIcon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour
                         </DropdownItem>
                         <DropdownItem onClick={handleDiscardChanges}>
-                            <Icon icon={faTrash} className="me-2 text-secondary" />
+                            <FontAwesomeIcon icon={faTrash} className="me-2 text-secondary" />
                             Discard changes
                         </DropdownItem>
                     </DropdownMenu>
@@ -96,7 +96,7 @@ const SideBar = () => {
             ))}
 
             <HeartsAreRed className="text-center pt-3">
-                Made with <Icon icon={faHeart} /> in Hannover
+                Made with <FontAwesomeIcon icon={faHeart} /> in Hannover
             </HeartsAreRed>
 
             <Help isOpen={helpIsOpen} setIsOpen={setHelpIsOpen} />

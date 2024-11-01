@@ -1,5 +1,5 @@
 import { faAngleDoubleLeft, faAngleDoubleRight, faCalendar, faClock, faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getComparisonURLFromConfig } from 'components/Comparison/hooks/helpers';
 import Confirm from 'components/Confirmation/Confirmation';
 import Link from 'next/link';
@@ -109,8 +109,8 @@ const DraftComparisons = () => {
                                 </Link>{' '}
                                 <br />
                                 <small>
-                                    <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
-                                    <Icon icon={faClock} className="ms-2 me-1" />
+                                    <FontAwesomeIcon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
+                                    <FontAwesomeIcon icon={faClock} className="ms-2 me-1" />
                                     {moment(draftComparison.created_at).format('H:mm')}
                                 </small>
                             </div>
@@ -123,7 +123,7 @@ const DraftComparisons = () => {
                                         style={{ marginRight: 2 }}
                                         onClick={() => handleEdit(draftComparison)}
                                     >
-                                        <Icon icon={faPen} />
+                                        <FontAwesomeIcon icon={faPen} />
                                     </Button>
                                     <Button
                                         color="light"
@@ -131,7 +131,7 @@ const DraftComparisons = () => {
                                         className="py-0 px-2 text-danger"
                                         onClick={() => handleDelete(draftComparison.id)}
                                     >
-                                        <Icon icon={faTrash} />
+                                        <FontAwesomeIcon icon={faTrash} />
                                     </Button>
                                 </ButtonGroup>
                             </div>
@@ -140,16 +140,16 @@ const DraftComparisons = () => {
                     {!isLoading && (page > 0 || !isLast) && (
                         <ListGroupItem className="d-flex justify-content-between">
                             <Button color="light" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
-                                <Icon icon={faAngleDoubleLeft} />
+                                <FontAwesomeIcon icon={faAngleDoubleLeft} />
                             </Button>
                             <Button color="light" size="sm" disabled={isLast} onClick={() => setPage((p) => p + 1)}>
-                                <Icon icon={faAngleDoubleRight} />
+                                <FontAwesomeIcon icon={faAngleDoubleRight} />
                             </Button>
                         </ListGroupItem>
                     )}
                     {isLoading && (
                         <ListGroupItem className="text-center">
-                            <Icon icon={faSpinner} spin /> Loading
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
                         </ListGroupItem>
                     )}
                 </ListGroup>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Component } from 'react';
 import { Button, Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -22,7 +22,7 @@ class InternalServerError extends Component {
                         <div className="row justify-content-center">
                             <div className="col-md-12 text-center">
                                 <span className="display-1 d-block">500</span>
-                                <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
+                                <FontAwesomeIcon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
                                 <div className="mb-4 lead">Internal Server Error.</div>
                                 <Link href={ROUTES.HOME}>
                                     <Button color="primary" className="me-3">

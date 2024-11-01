@@ -1,5 +1,5 @@
 import { faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import DiffTitle from 'components/DiffView/DiffTitle';
 import useDiff from 'components/DiffView/useDiff';
@@ -72,7 +72,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
             <TitleBar
                 buttonGroup={
                     <Button size="sm" color="secondary" onClick={() => setFullWidth((v) => !v)}>
-                        <Icon icon={faArrowsAltH} className="me-1" /> Full width
+                        <FontAwesomeIcon icon={faArrowsAltH} className="me-1" /> Full width
                     </Button>
                 }
             >

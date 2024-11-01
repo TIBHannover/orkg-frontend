@@ -1,7 +1,7 @@
 'use client';
 
 import { faPython } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useEffect } from 'react';
@@ -38,7 +38,7 @@ const Data = () => {
                     <Col sm="6" className="mt-4">
                         <Card body>
                             <CardTitle tag="h2" className="h5">
-                                <Icon icon={faPython} /> Python Package
+                                <FontAwesomeIcon icon={faPython} /> Python Package
                             </CardTitle>
                             <CardText>Python package wrapping the ORKG API</CardText>
                             <Button

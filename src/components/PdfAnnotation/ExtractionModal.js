@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -52,14 +52,14 @@ const ExtractionModal = (props) => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <Icon icon={faQuestionCircle} style={{ fontSize: 18, lineHeight: 1 }} className="p-0" />
+                        <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 18, lineHeight: 1 }} className="p-0" />
                     </a>
                 </ModalHeader>
 
                 {loading && (
                     <ModalBody>
                         <div className="text-center" style={{ fontSize: 40 }}>
-                            <Icon icon={faSpinner} spin />
+                            <FontAwesomeIcon icon={faSpinner} spin />
                         </div>
                     </ModalBody>
                 )}

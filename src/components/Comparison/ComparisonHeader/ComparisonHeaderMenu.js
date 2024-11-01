@@ -1,5 +1,5 @@
 import { faChartBar, faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
@@ -194,15 +194,15 @@ const ComparisonHeaderMenu = (props) => {
                         <>
                             {!isEditing ? (
                                 <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => handleEdit(true)}>
-                                    <Icon icon={faPen} className="me-1" /> Edit
+                                    <FontAwesomeIcon icon={faPen} className="me-1" /> Edit
                                 </Button>
                             ) : (
                                 <Button active color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => handleEdit(false)}>
-                                    <Icon icon={faTimes} /> Stop editing
+                                    <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             )}
                             <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={handleAddContribution}>
-                                <Icon icon={faPlus} className="me-1" /> Add contribution
+                                <FontAwesomeIcon icon={faPlus} className="me-1" /> Add contribution
                             </Button>
                             {comparisonResource.id ? (
                                 <Button
@@ -214,7 +214,7 @@ const ComparisonHeaderMenu = (props) => {
                                     }}
                                     style={{ marginRight: 2 }}
                                 >
-                                    <Icon icon={faChartBar} className="me-1" /> Visualize
+                                    <FontAwesomeIcon icon={faChartBar} className="me-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
@@ -224,19 +224,19 @@ const ComparisonHeaderMenu = (props) => {
                                     <span className="btn-group">
                                         {/* To trigger the tippy even the button is disabled */}
                                         <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
-                                            <Icon icon={faChartBar} className="me-1" /> Visualize
+                                            <FontAwesomeIcon icon={faChartBar} className="me-1" /> Visualize
                                         </span>
                                     </span>
                                 </Tippy>
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen((v) => !v)}>
                                 <DropdownToggle color="secondary" size="sm" className="rounded-end">
-                                    <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
+                                    <span className="me-2">Actions</span> <FontAwesomeIcon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end style={{ zIndex: '1031' }}>
                                     <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen((v) => !v)} direction="left">
                                         <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
-                                            View <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+                                            View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem onClick={handleFullWidth}>
@@ -283,7 +283,8 @@ const ComparisonHeaderMenu = (props) => {
                                                     style={{ cursor: 'pointer' }}
                                                     disabled={isPublished}
                                                 >
-                                                    Comparison method <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+                                                    Comparison method{' '}
+                                                    <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
                                                     <div className="d-flex px-2">
@@ -362,7 +363,7 @@ const ComparisonHeaderMenu = (props) => {
                                             rel="noopener noreferrer"
                                             href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${comparisonResource.id}%22%26autorun%3Dtrue`}
                                         >
-                                            Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
+                                            Jupyter Notebook <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>
                                     )}
                                     <DropdownItem divider />

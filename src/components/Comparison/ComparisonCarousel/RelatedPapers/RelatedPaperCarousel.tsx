@@ -1,5 +1,5 @@
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import RelatedPaperModal from 'components/Comparison/ComparisonCarousel/RelatedPapers/RelatedPaperModal';
 import AddPaperModal from 'components/PaperForm/AddPaperModal';
@@ -29,8 +29,8 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
         slidesToShow: 4,
         centerMode: false,
         slidesToScroll: 4,
-        nextArrow: <Icon icon={faArrowCircleRight} />,
-        prevArrow: <Icon icon={faArrowCircleLeft} />,
+        nextArrow: <FontAwesomeIcon icon={faArrowCircleRight} />,
+        prevArrow: <FontAwesomeIcon icon={faArrowCircleLeft} />,
         rows: 1,
         responsive: [
             {

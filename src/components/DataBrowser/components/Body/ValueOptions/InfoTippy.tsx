@@ -1,5 +1,5 @@
 import { faClock, faInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -22,7 +22,7 @@ const InfoTippy: FC<InfoTippyProps> = ({ statement }) => {
                         <li className="mb-1">
                             Created:{' '}
                             <span title={statement.created_at}>
-                                <Icon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
                             </span>
                         </li>
                         {statement.created_by && (

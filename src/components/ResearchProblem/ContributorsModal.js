@@ -1,6 +1,6 @@
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
@@ -16,7 +16,7 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <Icon icon={faAward} className="text-primary me-2" />
+                <FontAwesomeIcon icon={faAward} className="text-primary me-2" />
                 Top 30 Contributors
             </ModalHeader>
             <ModalBody>
