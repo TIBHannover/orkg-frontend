@@ -1,43 +1,42 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
-import { classifyPaper } from 'services/orkgNlp';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { getResources } from 'services/backend/resources';
-import { CLASSES } from 'constants/graphSettings';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
+import { CLASSES } from 'constants/graphSettings';
+import { FC } from 'react';
+import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
+import { getResources } from 'services/backend/resources';
+import { Node, PaginatedResponse, Resource } from 'services/backend/types';
+import { classifyPaper, nlpServiceUrl } from 'services/orkgNlp';
+import useSWR from 'swr';
 
-const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = null }) => {
-    const [fields, setFields] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+type SmartSuggestionsFieldsProps = {
+    handleFieldSelect: (selected: Node, submit?: boolean) => void;
+    title?: string | null;
+    abstract?: string | null;
+};
 
-    useEffect(() => {
-        const getSuggestions = async () => {
-            if (!title || !abstract) return;
-            setIsLoading(true);
-            const _fields = await classifyPaper({ smartSuggestionInputText: `${title} ${abstract}` });
-            setFields(_fields.annotations);
-            setIsLoading(false);
-        };
-        getSuggestions();
-    }, [title, abstract]);
+const SmartSuggestionsFields: FC<SmartSuggestionsFieldsProps> = ({ handleFieldSelect, title = null, abstract = null }) => {
+    const { data: classifiedPaper, isLoading } = useSWR(
+        title && abstract ? [{ smartSuggestionInputText: `${title} ${abstract}` }, nlpServiceUrl, 'classifyPaper'] : null,
+        ([params]) => classifyPaper(params),
+    );
+    const fields = classifiedPaper?.payload.annotations ?? [];
 
-    const handleFieldLabelSelect = async (fieldLabel) => {
-        const fieldResources = await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD], returnContent: true });
+    const handleFieldLabelSelect = async (fieldLabel: string) => {
+        const fieldResources = (await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD] })) as PaginatedResponse<Resource>;
 
-        if (fieldResources.length === 0) {
+        if (fieldResources.content.length === 0) {
             toast.error('The selected research field does not exist in the ORKG. Please select a different field');
             return;
         }
 
         handleFieldSelect(
             {
-                id: fieldResources[0]?.id,
-                label: fieldResources[0]?.label,
+                id: fieldResources.content[0]?.id,
+                label: fieldResources.content[0]?.label,
             },
             true,
         );
@@ -80,12 +79,6 @@ const SmartSuggestionsFields = ({ handleFieldSelect, title = null, abstract = nu
             </SuggestionsBox>
         )
     );
-};
-
-SmartSuggestionsFields.propTypes = {
-    handleFieldSelect: PropTypes.func.isRequired,
-    title: PropTypes.string,
-    abstract: PropTypes.string,
 };
 
 export default SmartSuggestionsFields;

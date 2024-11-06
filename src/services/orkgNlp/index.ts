@@ -345,8 +345,8 @@ export const classifyPaper = async ({
 }: {
     smartSuggestionInputText: string;
     topN?: number;
-}): Promise<NlpResponse<ClassifyResponse>> => {
-    const { payload } = await submitPostRequest(
+}): Promise<NlpResponse<ClassifyResponse>> =>
+    submitPostRequest(
         `${nlpServiceUrl}annotation/rfclf`,
         {
             'Content-Type': 'application/json',
@@ -356,8 +356,6 @@ export const classifyPaper = async ({
             top_n: topN,
         },
     );
-    return payload;
-};
 
 export const getLlmResponse = async ({
     taskName,

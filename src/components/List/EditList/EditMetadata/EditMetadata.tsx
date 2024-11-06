@@ -1,68 +1,49 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
+import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import EditAuthorsModal from 'components/List/EditList/EditMetadata/EditAuthorsModal/EditAuthorsModal';
-import EditResearchField from 'components/List/EditList/EditMetadata/EditResearchField/EditResearchField';
+import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import EditMetadataModal from 'components/List/EditList/EditMetadata/EditMetadataModal/EditMetadataModal';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
 import SustainableDevelopmentGoals from 'components/List/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import useList from 'components/List/hooks/useList';
-import { FocusEvent, useEffect, useState } from 'react';
+import ObservatoryBox from 'components/ObservatoryBox/ObservatoryBox';
+import { useState } from 'react';
 import { Button } from 'reactstrap';
 
 const EditMetadata = () => {
-    const { list, updateList, isValidating } = useList();
-    const [title, setTitle] = useState('');
-    const [isOpenAuthorsModal, setIsOpenAuthorsModal] = useState(false);
-
-    useEffect(() => {
-        setTitle(list?.title || '');
-    }, [list?.title]);
+    const { list, observatory, organization, mutate } = useList();
+    const [isOpenEditMetadataModal, setIsOpenEditMetadataModal] = useState(false);
 
     if (!list) {
         return null;
     }
 
-    const handleBlur = async (e: FocusEvent<HTMLInputElement>) => {
-        if (list?.title !== e.target.value) {
-            updateList({ title: e.target.value });
-        }
-    };
-
     return (
         <SectionStyled className="box rounded-bottom">
-            <h1 className="py-2 m-0">
-                <EditableTitle
-                    className="focus-primary"
-                    value={title}
-                    onBlur={handleBlur}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Enter a title..."
-                />
-            </h1>
-
             <div className="d-flex justify-content-between">
                 <div>
-                    <EditResearchField />
+                    <h1 className="py-2 m-0">{list.title || <em>No title</em>}</h1>
+
+                    {list.research_fields?.[0] && <ResearchFieldBadge researchField={list.research_fields[0]} />}
 
                     <ListEntryAmount />
                     <AuthorBadges authors={list.authors} />
-                    <Button
-                        size="sm"
-                        color="secondary"
-                        className="ms-2"
-                        onClick={() => setIsOpenAuthorsModal(true)}
-                        aria-label="Edit article authors"
-                    >
-                        <FontAwesomeIcon icon={faPen} /> Edit
-                    </Button>
+                    <div>
+                        <Button color="secondary" size="sm" className="mt-2 me-2" onClick={() => setIsOpenEditMetadataModal(true)}>
+                            <FontAwesomeIcon icon={faPen} /> Edit metadata
+                        </Button>
+                    </div>
                 </div>
-                <div>
-                    <SustainableDevelopmentGoals isEditable />
+                <div className="d-flex flex-column align-items-end gap-2 mt-2 border-start border-light ps-4">
+                    <ObservatoryBox resourceId={list.id} observatory={observatory} organization={organization} mutate={mutate} />
+                    <div style={{ marginRight: -25 }}>
+                        <SustainableDevelopmentGoals isEditable />
+                    </div>
                 </div>
             </div>
 
-            {isOpenAuthorsModal && <EditAuthorsModal toggle={() => setIsOpenAuthorsModal((v) => !v)} />}
+            {isOpenEditMetadataModal && <EditMetadataModal toggle={() => setIsOpenEditMetadataModal((v) => !v)} />}
         </SectionStyled>
     );
 };

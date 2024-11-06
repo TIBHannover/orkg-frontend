@@ -14,6 +14,19 @@ const nextConfig = {
     compiler: {
         styledComponents: true, // to fix issue where class names on server and client don't match: https://github.com/vercel/next.js/issues/46605#issuecomment-1489135397
     },
+    images: {
+        // set allowed hosts for the <Image /> component
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**.orkg.org',
+            },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+            },
+        ],
+    },
     webpack(config) {
         config.resolve.fallback = {
             // if you miss it, all the other options in fallback, specified

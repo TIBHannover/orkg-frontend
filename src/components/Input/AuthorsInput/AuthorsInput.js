@@ -143,7 +143,12 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                 </AddAuthor>
             </div>
             <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm((v) => !v)}>
-                <Form onSubmit={(e) => e.preventDefault()}>
+                <Form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // in case this is a nested modal, stop the submit event propagation to the parent form
+                    }}
+                >
                     <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
                     <ModalBody>
                         <FormGroup>

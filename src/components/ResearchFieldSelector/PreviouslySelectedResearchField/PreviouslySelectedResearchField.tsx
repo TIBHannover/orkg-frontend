@@ -1,11 +1,16 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import usePreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
+import { FC } from 'react';
+import { Button } from 'reactstrap';
+import { Node } from 'services/backend/types';
 
-const PreviouslySelectedResearchField = (props) => {
+type PreviouslySelectedResearchFieldProps = {
+    handleFieldSelect: (selected: Node, submit: boolean) => void;
+    selectedResearchField: string;
+};
+const PreviouslySelectedResearchField: FC<PreviouslySelectedResearchFieldProps> = ({ handleFieldSelect, selectedResearchField }) => {
     const { researchFields } = usePreviouslySelectedResearchField();
 
     return (
@@ -25,8 +30,8 @@ const PreviouslySelectedResearchField = (props) => {
                             <Button
                                 key={rf.id}
                                 color="light"
-                                onClick={() => props.handleFieldSelect(rf, true)}
-                                className={`me-2 mb-2 text-start rounded-pill ${props.selectedResearchField === rf.id ? 'active' : ''}`}
+                                onClick={() => handleFieldSelect(rf, true)}
+                                className={`me-2 mb-2 text-start rounded-pill ${selectedResearchField === rf.id ? 'active' : ''}`}
                                 size="sm"
                             >
                                 {rf.label}
@@ -37,11 +42,6 @@ const PreviouslySelectedResearchField = (props) => {
             )}
         </div>
     );
-};
-
-PreviouslySelectedResearchField.propTypes = {
-    handleFieldSelect: PropTypes.func,
-    selectedResearchField: PropTypes.string,
 };
 
 export default PreviouslySelectedResearchField;

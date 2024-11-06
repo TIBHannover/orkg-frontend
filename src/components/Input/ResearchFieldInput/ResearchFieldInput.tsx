@@ -1,19 +1,23 @@
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { OptionType } from 'components/Autocomplete/types';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { useState } from 'react';
+import { FC, useState } from 'react';
+import { SingleValue } from 'react-select';
 import { Button, InputGroup } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { Node } from 'services/backend/types';
 
-const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = false, title = '', abstract = '' }) => {
+type ResearchFieldInputProps = {
+    onChange: (field: Node) => void;
+    value: SingleValue<OptionType>;
+    inputId?: string;
+    isDisabled?: boolean;
+    title?: string;
+    abstract?: string;
+};
+
+const ResearchFieldInput: FC<ResearchFieldInputProps> = ({ onChange, value = null, inputId = '', isDisabled = false, title = '', abstract = '' }) => {
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-
-    const handleSelectField = ({ id, label }) => {
-        onChange({
-            id,
-            label,
-        });
-    };
 
     return (
         <InputGroup>
@@ -22,11 +26,16 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
                 enableExternalSources={false}
                 entityType={ENTITIES.RESOURCE}
                 includeClasses={[CLASSES.RESEARCH_FIELD]}
-                onChange={onChange}
-                cacheOptions
+                onChange={(selected) => {
+                    onChange({
+                        id: (selected as SingleValue<OptionType>)?.id ?? '',
+                        label: (selected as SingleValue<OptionType>)?.label ?? '',
+                    });
+                }}
                 value={value || null}
                 isClearable={false}
                 isDisabled={isDisabled}
+                allowCreate={false}
             />
 
             <Button disabled={isDisabled} color="primary" outline onClick={() => setIsOpenResearchFieldModal(true)}>
@@ -37,22 +46,13 @@ const ResearchFieldInput = ({ value = '', onChange, inputId = '', isDisabled = f
                 <ResearchFieldSelectorModal
                     isOpen
                     toggle={() => setIsOpenResearchFieldModal((v) => !v)}
-                    onSelectField={handleSelectField}
+                    onSelectField={onChange}
                     title={title}
                     abstract={abstract}
                 />
             )}
         </InputGroup>
     );
-};
-
-ResearchFieldInput.propTypes = {
-    inputId: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    onChange: PropTypes.func,
-    isDisabled: PropTypes.bool,
-    title: PropTypes.string,
-    abstract: PropTypes.string,
 };
 
 export default ResearchFieldInput;

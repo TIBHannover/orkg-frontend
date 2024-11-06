@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
 
 export default {
@@ -5,12 +6,12 @@ export default {
     component: ResearchFieldInput,
 };
 
-const Template = (args) => <ResearchFieldInput {...args} />;
+const Template: StoryFn<typeof ResearchFieldInput> = (args) => <ResearchFieldInput {...args} />;
 
 export const Default = Template.bind({});
 
 Default.args = {
-    value: '',
+    value: null,
     onChange: () => {},
     inputId: '',
 };
