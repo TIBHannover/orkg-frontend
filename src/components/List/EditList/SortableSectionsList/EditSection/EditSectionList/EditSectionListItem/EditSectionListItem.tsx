@@ -43,7 +43,7 @@ type EditSectionListItemProps = {
 };
 
 const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section }) => {
-    const { updateListSection, getPaperById, mutatePapers } = useList();
+    const { updateSection, getPaperById, mutatePapers } = useList();
     const [isHovering, setIsHovering] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const isPaper = entry.value?.classes?.includes(CLASSES.PAPER);
@@ -56,14 +56,14 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section }) =
         });
 
         if (confirm) {
-            updateListSection(section.id, {
+            updateSection(section.id, {
                 entries: section.entries.filter((e) => e.value?.id !== entry.value?.id),
             });
         }
     };
 
     const handleUpdateDescription = async (description: string) => {
-        updateListSection(section.id, {
+        updateSection(section.id, {
             entries: section.entries.map((e) => {
                 if (e.value?.id === entry.value?.id) {
                     return {

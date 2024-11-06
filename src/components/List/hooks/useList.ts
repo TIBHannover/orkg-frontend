@@ -6,7 +6,17 @@ import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
 import { toast } from 'react-toastify';
 import { createLiteral } from 'services/backend/literals';
-import { getLiteratureList, getLiteratureListPublishedContentById, listsUrl, updateLiteratureList } from 'services/backend/literatureLists';
+import {
+    createLiteratureListSection,
+    deleteLiteratureListSection,
+    getLiteratureList,
+    getLiteratureListPublishedContentById,
+    listsUrl,
+    updateLiteratureList,
+    updateLiteratureListSection,
+    UpdateLiteratureListSectionList,
+    UpdateLiteratureListSectionText,
+} from 'services/backend/literatureLists';
 import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
 import { getOrganization, organizationsUrl } from 'services/backend/organizations';
 import { getPaper, papersUrl } from 'services/backend/papers';
@@ -39,72 +49,102 @@ const useList = (listId?: string) => {
         isValidating,
     } = useSWR(id ? [id, listsUrl, 'getLiteratureList'] : null, ([params]) => getLiteratureList(params));
 
-    const updateList = (updatedData: Partial<LiteratureList>) => {
-        if (!list) {
-            return null;
-        }
-        return mutate(
+    const mutateListOptimistic = ({ updateFunction, optimisticData }: { updateFunction: () => Promise<null>; optimisticData: LiteratureList }) =>
+        mutate(
             async () => {
                 try {
-                    await updateLiteratureList(list.id, {
-                        ...(updatedData.research_fields &&
-                            updatedData.research_fields.length > 0 && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
-                        ...(updatedData.sdgs && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
-                        ...(updatedData.sections &&
-                            updatedData.sections.length > 0 && {
-                                sections: updatedData.sections.map((section) => {
-                                    // only provide an array with section ids
-                                    if ('entries' in section) {
-                                        return {
-                                            entries: section.entries.map((entry) => ({
-                                                id: entry.value.id,
-                                                description: entry.description,
-                                            })),
-                                        };
-                                    }
-                                    // remove id and type from section
-                                    const { id, type, ...updatedSection } = section;
-                                    return updatedSection;
-                                }),
-                            }),
-                        // remaining data without previously set fields
-                        ...(({ research_fields, sdgs, sections, ...o }) => o)(updatedData),
-                    });
+                    await updateFunction();
                 } catch (e: unknown) {
                     errorHandler({ error: e, shouldShowToast: true });
+                    throw e; // already thrown in errorHandler above, but added to be sure. Error needs to be thrown, otherwise the optimistic update won't be rolled back
                 }
-                return { ...list, ...updatedData };
+                return optimisticData;
             },
             {
-                optimisticData: { ...list, ...updatedData },
+                optimisticData,
                 rollbackOnError: true,
                 throwOnError: false,
             },
         );
+
+    const updateList = (updatedData: Partial<LiteratureList>) => {
+        if (!list) {
+            return null;
+        }
+        return mutateListOptimistic({
+            updateFunction: () =>
+                updateLiteratureList(list.id, {
+                    ...(updatedData.research_fields &&
+                        updatedData.research_fields.length > 0 && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
+                    ...(updatedData.sdgs && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
+                    ...(updatedData.sections &&
+                        updatedData.sections.length > 0 && {
+                            sections: updatedData.sections.map((section) => {
+                                // only provide an array with section ids
+                                if ('entries' in section) {
+                                    return {
+                                        entries: section.entries.map((entry) => ({
+                                            id: entry.value.id,
+                                            description: entry.description,
+                                        })),
+                                    };
+                                }
+                                // remove id and type from section
+                                const { id, type, ...updatedSection } = section;
+                                return updatedSection;
+                            }),
+                        }),
+                    // remaining data without previously set fields
+                    ...(({ research_fields, sdgs, sections, ...o }) => o)(updatedData),
+                }),
+            optimisticData: { ...list, ...updatedData },
+        });
     };
 
     const createSection = ({ sectionType, atIndex }: { sectionType: LiteratureListSectionType; atIndex: number }) => {
         if (!list) {
             return null;
         }
-        return updateList({
-            sections: [
-                ...list.sections.slice(0, atIndex),
-                sectionType === 'text'
-                    ? {
-                          id: uniqueId(),
-                          type: 'text',
-                          text: '',
-                          heading: '',
-                          heading_size: 1,
-                      }
-                    : {
-                          id: uniqueId(),
-                          type: 'list',
-                          entries: [],
-                      },
-                ...list.sections.slice(atIndex),
-            ],
+
+        const newSection =
+            sectionType === 'text'
+                ? {
+                      text: '',
+                      heading: '',
+                      heading_size: 1,
+                  }
+                : {
+                      entries: [],
+                  };
+
+        const sections = [...list.sections.slice(0, atIndex), { ...newSection, id: uniqueId(), type: sectionType }, ...list.sections.slice(atIndex)];
+
+        return mutateListOptimistic({
+            updateFunction: () => createLiteratureListSection({ listId: list.id, index: atIndex, data: newSection }),
+            optimisticData: { ...list, sections },
+        });
+    };
+
+    const updateSection = (sectionId: string, updatedData: Partial<LiteratureListSectionText | LiteratureListSectionList>) => {
+        if (!list) {
+            return null;
+        }
+        const sections = list?.sections.map((section) => (section.id === sectionId ? { ...section, ...updatedData } : section));
+
+        const updatePayload: Partial<UpdateLiteratureListSectionList | UpdateLiteratureListSectionText> =
+            'entries' in updatedData
+                ? {
+                      entries:
+                          updatedData.entries!.map((entry) => ({
+                              id: entry.value.id,
+                              description: entry.description,
+                          })) ?? [],
+                  }
+                : (({ id, type, ...rest }) => rest)(updatedData as LiteratureListSectionText);
+
+        return mutateListOptimistic({
+            updateFunction: () => updateLiteratureListSection({ listId: list.id, sectionId, data: updatePayload }),
+            optimisticData: { ...list, sections },
         });
     };
 
@@ -112,14 +152,10 @@ const useList = (listId?: string) => {
         if (!list) {
             return null;
         }
-        return updateList({
-            sections: list.sections.filter((s) => s.id !== sectionId),
-        });
-    };
-
-    const updateListSection = (sectionId: string, updatedData: Partial<LiteratureListSectionText | LiteratureListSectionList>) => {
-        return updateList({
-            sections: list?.sections.map((section) => (section.id === sectionId ? { ...section, ...updatedData } : section)),
+        const sections = list.sections.filter((s) => s.id !== sectionId);
+        return mutateListOptimistic({
+            updateFunction: () => deleteLiteratureListSection({ listId: list.id, sectionId }),
+            optimisticData: { ...list, sections },
         });
     };
 
@@ -221,7 +257,7 @@ const useList = (listId?: string) => {
         error,
         mutate,
         updateList,
-        updateListSection,
+        updateSection,
         allPapers,
         getPaperById,
         mutatePapers,
