@@ -32,14 +32,14 @@ type EditSectionListProps = {
 };
 
 const EditSectionList: FC<EditSectionListProps> = ({ section }) => {
-    const { updateListSection } = useList();
+    const { updateSection } = useList();
     const [isOpenAddEntryModal, setIsOpenAddEntryModal] = useState(false);
     const [isSorting, setIsSorting] = useState(false);
 
     const handleSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
         setIsSorting(false);
         if (oldIndex !== newIndex) {
-            updateListSection(section.id, {
+            updateSection(section.id, {
                 entries: arrayMove(section.entries, oldIndex, newIndex),
             });
         }

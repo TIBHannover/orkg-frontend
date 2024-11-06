@@ -37,7 +37,7 @@ type Result = {
 };
 
 const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
-    const { updateListSection } = useList();
+    const { updateSection } = useList();
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingCite, setIsLoadingCite] = useState(false);
     const [contentType, setContentType] = useState('all');
@@ -88,7 +88,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                 toast.error('Entry is already in list');
                 return;
             }
-            updateListSection(section.id, {
+            updateSection(section.id, {
                 entries: [
                     ...section.entries,
                     {

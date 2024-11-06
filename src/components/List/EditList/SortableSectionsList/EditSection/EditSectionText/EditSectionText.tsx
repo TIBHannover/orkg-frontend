@@ -11,7 +11,7 @@ type EditSectionTextProps = {
 
 const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
     const [title, setTitle] = useState(section.heading);
-    const { list, updateListSection } = useList();
+    const { list, updateSection } = useList();
 
     if (!list) {
         return null;
@@ -19,7 +19,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
 
     const handleBlurTitle = (e: FocusEvent<HTMLInputElement>) => {
         if (e.target.value !== section.heading) {
-            updateListSection(section.id, {
+            updateSection(section.id, {
                 heading: e.target.value,
                 heading_size: section.heading_size,
                 text: section.text,
@@ -28,7 +28,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
     };
 
     const handleUpdateMarkdown = (markdown: string) => {
-        updateListSection(section.id, {
+        updateSection(section.id, {
             heading: section.heading,
             heading_size: section.heading_size,
             text: markdown,
@@ -36,7 +36,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
     };
 
     const handleUpdateHeadingLevel = (level: string) => {
-        updateListSection(section.id, {
+        updateSection(section.id, {
             heading: section.heading,
             heading_size: parseInt(level, 10),
             text: section.text,
