@@ -14,6 +14,7 @@ import useList from 'components/List/hooks/useList';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import ObservatoryBox from 'components/ObservatoryBox/ObservatoryBox';
 import useParams from 'components/useParams/useParams';
 import { VISIBILITY } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
@@ -30,7 +31,7 @@ type ListProps = {
 
 const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
     const { id } = useParams();
-    const { list, getPaperById } = useList();
+    const { list, getPaperById, observatory, organization } = useList();
     const latestVersionId = list?.versions?.published?.[0]?.id;
     const newVersionAvailable = list?.published && latestVersionId !== id;
 
@@ -63,27 +64,34 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
             )}
             <main>
                 <SectionStyled className="box rounded">
-                    <header className="border-bottom">
+                    <header className="border-bottom pb-2">
                         <div className="d-flex justify-content-between">
-                            <div className="d-flex mb-2 mt-4">
-                                <h1 style={{ whiteSpace: 'pre-line' }}>{list.title}</h1>
-                                {list.published && (
-                                    <h2 className="h4 ms-2 mt-2">
-                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                        <div className="d-inline-block ms-1">
-                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                        </div>
-                                    </h2>
-                                )}
+                            <div>
+                                <div className="d-flex mb-2 mt-4">
+                                    <h1 style={{ whiteSpace: 'pre-line' }}>{list.title}</h1>
+                                    {list.published && (
+                                        <h2 className="h4 ms-2 mt-2">
+                                            <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                            <div className="d-inline-block ms-1">
+                                                <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                            </div>
+                                        </h2>
+                                    )}
+                                </div>
+                                <div className="my-3">
+                                    <ResearchFieldBadge researchField={list.research_fields?.[0]} />
+                                    <ListEntryAmount />
+                                    <AuthorBadges authors={list.authors} />
+                                </div>
                             </div>
                             <div>
-                                <SustainableDevelopmentGoals />
+                                <div className="d-flex flex-column align-items-end gap-2 mt-2 border-start border-light ps-4">
+                                    <ObservatoryBox resourceId={list.id} observatory={observatory} organization={organization} />
+                                    <div style={{ marginRight: -25 }}>
+                                        <SustainableDevelopmentGoals />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div className="my-3">
-                            <ResearchFieldBadge researchField={list.research_fields?.[0]} />
-                            <ListEntryAmount />
-                            <AuthorBadges authors={list.authors} />
                         </div>
                     </header>
 

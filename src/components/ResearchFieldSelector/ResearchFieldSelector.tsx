@@ -2,15 +2,15 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import PreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from 'components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
 import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
 import { cloneDeep, find, set, sortBy } from 'lodash';
-import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
 import { Badge, Button } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
+import { Node } from 'services/backend/types';
 import styled from 'styled-components';
 
 const FieldItem = styled(Button)`
@@ -56,7 +56,35 @@ const CollapseButton = styled(Button)`
     }
 `;
 
-const ResearchFieldSelector = ({
+export type ResearchField = {
+    label: string;
+    id: string;
+    parent: string;
+    hasChildren: boolean | null;
+    isExpanded: boolean;
+};
+
+type ResearchFieldSelectorProps = {
+    selectedResearchField: string;
+    researchFields: ResearchField[];
+    updateResearchField: (
+        data: {
+            researchFields: ResearchField[];
+            selectedResearchField?: string;
+            selectedResearchFieldLabel?: string;
+        },
+        submit?: boolean,
+    ) => void;
+    researchFieldStats?: {
+        [key: string]: number;
+    };
+    insideModal?: boolean;
+    showPreviouslySelected?: boolean;
+    title?: string | null;
+    abstract?: string | null;
+};
+
+const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
     selectedResearchField,
     researchFields,
     updateResearchField,
@@ -67,9 +95,9 @@ const ResearchFieldSelector = ({
     abstract = '',
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [loadingId, setLoadingId] = useState(null);
+    const [loadingId, setLoadingId] = useState<string | null>(null);
 
-    const handleFieldSelect = (selected, submit = false) => {
+    const handleFieldSelect = (selected: Node, submit = false) => {
         setIsLoading(true);
         getParentResearchFields(selected.id).then(async (_parents) => {
             const parents = _parents.reverse();
@@ -91,7 +119,7 @@ const ResearchFieldSelector = ({
         });
     };
 
-    const handleFieldClick = async (e, fieldId, shouldSetActive = true) => {
+    const handleFieldClick = async (e: MouseEvent, fieldId: string, shouldSetActive = true) => {
         // prevent triggering outer handler when the icon is pressed
         e.stopPropagation();
         setLoadingId(fieldId);
@@ -106,15 +134,18 @@ const ResearchFieldSelector = ({
         updateResearchField(payload);
     };
 
-    const getFieldsByIds = useCallback(async (ids, previousFields = []) => {
+    const getFieldsByIds = useCallback(async (ids: string[], previousFields: ResearchField[] = []) => {
         const fields = cloneDeep(previousFields);
-        const subfieldStatements = await getStatementsBySubjects({ ids });
+        const subfieldStatements = await getStatementsBySubjects({ ids }); // TODO: replace with getFieldChildren
 
         for (const { id, statements } of subfieldStatements) {
             const hasChildren = statements.length > 0;
             if (hasChildren) {
                 statements.map((statement) =>
-                    statement.object.classes && statement.object.classes.length && statement.object.classes.includes(CLASSES.RESEARCH_FIELD) // Make sure that the object is research field
+                    statement.object._class === 'resource' &&
+                    statement.object.classes &&
+                    statement.object.classes.length &&
+                    statement.object.classes.includes(CLASSES.RESEARCH_FIELD) // Make sure that the object is research field
                         ? fields.push({
                               label: statement.object.label,
                               id: statement.object.id,
@@ -135,7 +166,7 @@ const ResearchFieldSelector = ({
     }, []);
 
     const getChildFields = useCallback(
-        async (fieldId, previousFields, toggleExpand = false) => {
+        async (fieldId: string, previousFields: ResearchField[], toggleExpand = false) => {
             const fields = cloneDeep(previousFields);
             const fieldIndex = fields.findIndex((field) => field.id === fieldId);
 
@@ -175,7 +206,26 @@ const ResearchFieldSelector = ({
         }
     }, [getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
 
-    const fieldList = (selectedField) => {
+    const getParents = (field: ResearchField, parents: ResearchField[]): ResearchField[] => {
+        const f = field ? find(researchFields, (_f) => _f.id === field.parent) : null;
+        if (f) {
+            parents.push(f);
+            return getParents(f, parents);
+        }
+        return parents;
+    };
+
+    let researchFieldLabel;
+    let parents: ResearchField[] = [];
+    if (researchFields && researchFields.length > 0) {
+        const field = researchFields.find((rf) => rf.id === selectedResearchField);
+        researchFieldLabel = field ? field.label : selectedResearchField;
+        if (field) {
+            parents = getParents(field, []);
+        }
+    }
+
+    const fieldList = (selectedField: string) => {
         const subFields = researchFields.filter((field) => field.parent === selectedField);
         if (subFields.length === 0) {
             return null;
@@ -193,7 +243,11 @@ const ResearchFieldSelector = ({
 
             return (
                 <li key={field.id}>
-                    <FieldItem onClick={(e) => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
+                    <FieldItem
+                        onClick={(e) => handleFieldClick(e, field.id)}
+                        color="link"
+                        className={selectedResearchField === field.id ? 'active' : ''}
+                    >
                         <div className="flex-grow-1 d-flex">
                             <IndicatorContainer onClick={(e) => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
@@ -222,23 +276,6 @@ const ResearchFieldSelector = ({
         });
     };
 
-    const getParents = (field, parents) => {
-        const f = field ? find(researchFields, (_f) => _f.id === field.parent) : null;
-        if (f) {
-            parents.push(f);
-            return getParents(f, parents);
-        }
-        return parents;
-    };
-
-    let researchFieldLabel;
-    let parents = [];
-    if (researchFields && researchFields.length > 0) {
-        const field = researchFields.find((rf) => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field.label : selectedResearchField;
-        parents = getParents(field, []);
-    }
-
     return (
         <>
             <div className="mb-3">
@@ -248,11 +285,19 @@ const ResearchFieldSelector = ({
                     placeholder="Search for fields..."
                     onChange={(value, { action }) => {
                         if (action === 'select-option') {
-                            handleFieldSelect(value);
+                            handleFieldSelect({
+                                id: value?.id ?? '',
+                                label: value?.label ?? '',
+                            });
                         }
                     }}
-                    value={selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
+                    value={
+                        selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN
+                            ? { id: selectedResearchField, label: researchFieldLabel ?? '' }
+                            : null
+                    }
                     enableExternalSources={false}
+                    allowCreate={false}
                 />
             </div>
 
@@ -298,17 +343,6 @@ const ResearchFieldSelector = ({
             </div>
         </>
     );
-};
-
-ResearchFieldSelector.propTypes = {
-    selectedResearchField: PropTypes.string,
-    researchFields: PropTypes.array,
-    updateResearchField: PropTypes.func,
-    researchFieldStats: PropTypes.object,
-    insideModal: PropTypes.bool,
-    showPreviouslySelected: PropTypes.bool,
-    title: PropTypes.string,
-    abstract: PropTypes.string,
 };
 
 export default ResearchFieldSelector;

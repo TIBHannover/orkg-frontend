@@ -704,10 +704,12 @@ export type LiteratureList = {
 
 export type Verified = boolean | null;
 
+export type PaginationDirection = 'asc' | 'desc';
+
 export type PaginationParams = {
     page?: number;
     size?: number;
-    sortBy?: { property: string; direction: 'asc' | 'desc' }[];
+    sortBy?: { property: string; direction: PaginationDirection }[];
 };
 
 export type VerifiedParam = {

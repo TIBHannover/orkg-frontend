@@ -1,18 +1,28 @@
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import useParams from 'components/useParams/useParams';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import THING_TYPES from 'constants/thingTypes';
 import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
 import { toast } from 'react-toastify';
 import { createLiteral } from 'services/backend/literals';
 import { getLiteratureList, getLiteratureListPublishedContentById, listsUrl, updateLiteratureList } from 'services/backend/literatureLists';
+import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
+import { getOrganization, organizationsUrl } from 'services/backend/organizations';
 import { getPaper, papersUrl } from 'services/backend/papers';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
-import { LiteratureList, LiteratureListSectionList, LiteratureListSectionText, LiteratureListSectionType, Paper } from 'services/backend/types';
+import {
+    LiteratureList,
+    LiteratureListSectionList,
+    LiteratureListSectionText,
+    LiteratureListSectionType,
+    Organization,
+    Paper,
+} from 'services/backend/types';
 import { createThing } from 'services/similarity';
 import useSWR from 'swr';
+import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
 import { convertAuthorsToOldFormat } from 'utils';
 
 const useList = (listId?: string) => {
@@ -39,7 +49,7 @@ const useList = (listId?: string) => {
                     await updateLiteratureList(list.id, {
                         ...(updatedData.research_fields &&
                             updatedData.research_fields.length > 0 && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
-                        ...(updatedData.sdgs && updatedData.sdgs.length > 0 && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
+                        ...(updatedData.sdgs && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
                         ...(updatedData.sections &&
                             updatedData.sections.length > 0 && {
                                 sections: updatedData.sections.map((section) => {
@@ -179,6 +189,32 @@ const useList = (listId?: string) => {
         }
     };
 
+    const { onErrorRetry } = useSWRConfig();
+
+    const { data: organization } = useSWR(
+        list?.organizations?.[0] && list?.organizations?.[0] !== MISC.UNKNOWN_ID
+            ? [list?.organizations?.[0], organizationsUrl, 'getOrganization']
+            : null,
+        ([params]) => getOrganization(params),
+        {
+            // since organizations and conferenceSeries share the same attribute (i.e., list?.organizations),
+            // a 404 will be returned if either one of them is set. This prevent useSWR from retrying in case there is a 404
+            // typing doesn't work nicely when overwriting this setting, see: https://github.com/vercel/swr/discussions/1574#discussioncomment-4982649
+            onErrorRetry(err, key, config, revalidate, revalidateOpts) {
+                const configForDelegate = config as Readonly<PublicConfiguration<Organization, unknown, (path: string) => unknown>>;
+                if (err.status === 404) return;
+                onErrorRetry(err, key, configForDelegate, revalidate, revalidateOpts);
+            },
+        },
+    );
+
+    const { data: observatory } = useSWR(
+        list?.observatories?.[0] && list?.observatories?.[0] !== MISC.UNKNOWN_ID
+            ? [list?.observatories?.[0], observatoriesUrl, 'getObservatoryById']
+            : null,
+        ([params]) => getObservatoryById(params),
+    );
+
     return {
         list,
         isLoading,
@@ -193,6 +229,8 @@ const useList = (listId?: string) => {
         createSection,
         deleteSection,
         isValidating,
+        observatory,
+        organization,
     };
 };
 
