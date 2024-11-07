@@ -1,17 +1,18 @@
 import { faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from 'components/Comparison/styled';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import DiffTitle from 'components/DiffView/DiffTitle';
-import useDiff from 'components/DiffView/useDiff';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
 import { reverse } from 'named-urls';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ReactDiffViewer from 'react-diff-viewer-continued';
-import { useRouter, useSearchParams } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
 import { Alert, Button } from 'reactstrap';
+import { getResource, resourcesUrl } from 'services/backend/resources';
+import useSWR from 'swr';
 
 const DiffView = ({ type, diffRoute, getData }) => {
     const { oldId, newId } = useParams();
@@ -22,10 +23,21 @@ const DiffView = ({ type, diffRoute, getData }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fullWidth, setFullWidth] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
-    const { isOldIdHigherThanNewId } = useDiff();
+
+    const { data: oldResource, isLoading: isOldResourceLoading } = useSWR(oldId ? [oldId, resourcesUrl, 'getResource'] : null, ([params]) =>
+        getResource(params),
+    );
+    const { data: newResource, isLoading: isNewResourceLoading } = useSWR(newId ? [newId, resourcesUrl, 'getResource'] : null, ([params]) =>
+        getResource(params),
+    );
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const switchedVersions = searchParams.get('switchedVersions');
+
+    if (!isOldResourceLoading && !isNewResourceLoading && oldResource.created_at > newResource.created_at) {
+        router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
+    }
 
     useEffect(() => {
         document.title = `Compare ${type} versions - ORKG`;
@@ -33,11 +45,6 @@ const DiffView = ({ type, diffRoute, getData }) => {
 
     useEffect(() => {
         if (!oldId || !newId) {
-            return;
-        }
-
-        if (isOldIdHigherThanNewId({ oldId, newId })) {
-            router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
             return;
         }
 
@@ -58,7 +65,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
         };
 
         getContent();
-    }, [oldId, newId, isOldIdHigherThanNewId, diffRoute, getData]);
+    }, [oldId, newId, diffRoute, getData]);
 
     const handleDismiss = () => {
         router.push(reverse(diffRoute, { oldId, newId }));

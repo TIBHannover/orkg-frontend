@@ -2,8 +2,9 @@ import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-sol
 import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'next/link';
+import removeEmptySegments from 'components/RosettaStone/SingleStatement/hooks/helpers';
 import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useEditStatement';
+import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import InfoBox from 'components/RosettaStone/SingleStatement/InfoBox';
 import StatementInputField from 'components/RosettaStone/SingleStatement/StatementInputField';
 import StatementValue from 'components/RosettaStone/SingleStatement/StatementValue';
@@ -12,12 +13,12 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
 import { Badge, FormGroup, Input, Label, ListGroupItem } from 'reactstrap';
 import { getPaper, papersUrl } from 'services/backend/papers';
-import { getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { RosettaStoneStatement } from 'services/backend/types';
 import { isCurationAllowed } from 'slices/authSlice';
 import { RootStore } from 'slices/types';
@@ -54,11 +55,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
         getPaper(params),
     );
 
-    // Template
-    const { data: template, isLoading: isLoadingTemplate } = useSWR(
-        statement.template_id ? [statement.template_id, rosettaStoneUrl, 'getRSTemplate'] : null,
-        ([params]) => getRSTemplate(params),
-    );
+    const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement.template_id ?? '' });
 
     if (isLoadingTemplate) {
         return 'Loading...';
@@ -83,21 +80,10 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
         return <StatementValue key={i} propertyShape={template.properties[i]} value={value} />;
     };
 
-    const removeEmptySegments = (label: string) => {
-        return label
-            .replace(/\[([^\]]*?{(\d+)}[^\]]*?)\]/g, (match, p1, p2) => {
-                // p2 is the index
-                const i = parseInt(p2, 10);
-                const value = i === 0 ? statement.subjects : statement.objects[i - 1];
-                return !value || value.length === 0 ? '' : match;
-            })
-            .replace(/\[\]/g, '') // This part will clean up any leftover empty square brackets if any.
-            .replaceAll(']', ' ')
-            .replaceAll('[', ' ');
-    };
-
     const formattedLabelWithInputs = ReactStringReplace(
-        isEditing ? template?.formatted_label.replaceAll(']', ' ').replaceAll('[', ' ') : removeEmptySegments(template?.formatted_label ?? ''),
+        isEditing
+            ? template?.formatted_label.replaceAll(']', ' ').replaceAll('[', ' ')
+            : removeEmptySegments(template?.formatted_label ?? '', statement),
         /{(.*?)}/,
         replacementFunction,
     );
