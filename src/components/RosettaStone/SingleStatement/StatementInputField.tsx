@@ -100,7 +100,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
             <span>
                 {(!isMulti || inputFormType === 'autocomplete') && (Forms[inputFormType] || Forms.default)}
                 {isMulti && inputFormType !== 'autocomplete' && (
-                    <ListInputField value={value} updateValue={updateValue} inputFormType={inputFormType} />
+                    <ListInputField value={value} updateValue={updateValue} inputFormType={inputFormType} placeholder={propertyShape.placeholder} />
                 )}
             </span>
         </Tippy>
