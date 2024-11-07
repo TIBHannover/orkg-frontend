@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.150.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.149.0...v0.150.0) - 2024-11-07
+
+### Changes
+
+- feat: Compare Rosetta statement versions [`#1404`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1404)
+- fix(Rosetta statement editor): placeholder not displayed for multiple literals [`#1407`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1407)
+- refactor: use list section endpoints for creation, updating and deletion of sections [`#1406`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1406)
+- refactor: consolidate metadata editing of Lists [`#1411`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1411)
+- chore: lint commit message and install Commitizen [`#1409`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1409)
+- fix: issue with loading changelog for dev server [`#1410`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1410)
+- refactor: remove alias for FontAwesomeIcon import [`#1408`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1408)
+
+---
 ## [v0.149.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.148.0...v0.149.0) - 2024-10-30
 
 ### Changes
