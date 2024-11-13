@@ -741,8 +741,11 @@ export const getResourceLink = (classId, id) => {
 export const getLinkByEntityType = (_class, id) => {
     const links = {
         [ENTITIES.RESOURCE]: ROUTES.RESOURCE,
+        [`${ENTITIES.RESOURCE}_ref`]: ROUTES.RESOURCE,
         [ENTITIES.CLASS]: ROUTES.CLASS,
+        [`${ENTITIES.CLASS}_ref`]: ROUTES.CLASS,
         [ENTITIES.PREDICATE]: ROUTES.PROPERTY,
+        [`${ENTITIES.PREDICATE}_ref`]: ROUTES.PROPERTY,
     };
     return links[_class] ? `${reverse(links[_class], { id })}?noRedirect` : '';
 };
