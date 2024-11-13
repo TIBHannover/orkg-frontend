@@ -4,7 +4,7 @@ import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
 import { ENTITIES } from 'constants/graphSettings';
-import { groupBy } from 'lodash';
+import { groupBy, uniqWith, isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 import { deleteStatementById, getStatements, statementsUrl } from 'services/backend/statements';
 import { Statement } from 'services/backend/types';
@@ -33,7 +33,8 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
 
     let objectStatements: Statement[] = [];
     if (isUsingSnapshot && config.statementsSnapshot && statement.object._class !== ENTITIES.LITERAL) {
-        objectStatements = getStatementsBySubjectId(statement.object.id, config.statementsSnapshot);
+        // remove duplicate statements: snapshot example id thing_key=R661500
+        objectStatements = uniqWith(getStatementsBySubjectId(statement.object.id, config.statementsSnapshot), isEqual);
     }
 
     const { data: statements, isLoading: isLoadingObjectStatements } = useSWR(

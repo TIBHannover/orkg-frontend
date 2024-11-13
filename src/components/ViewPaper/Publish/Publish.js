@@ -10,7 +10,7 @@ import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
-import { flatten } from 'lodash';
+import { flatten, isEqual, uniqWith } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -58,7 +58,7 @@ function Publish(props) {
             getStatementsBundleBySubject({ id: contribution.id, maxLevel: 10, blacklist: [CLASSES.RESEARCH_FIELD] }),
         );
         const statements = await Promise.all(contributionAPIcalls).then((r) => flatten(r.map((c) => c.statements)));
-        return statements;
+        return uniqWith(statements, isEqual);
     };
 
     const publishDOI = async (paperId) => {

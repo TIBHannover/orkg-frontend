@@ -8,6 +8,7 @@ import { resourcesUrl } from 'services/backend/resources';
 import { getStatements, statementsUrl } from 'services/backend/statements';
 import { Class, Literal, Predicate, Resource, Statement } from 'services/backend/types';
 import useSWR from 'swr';
+import { isEqual, uniqWith } from 'lodash';
 
 const useEntity = () => {
     const { currentId } = useHistory();
@@ -35,7 +36,7 @@ const useEntity = () => {
     let _statements;
 
     if (isUsingSnapshot && config.statementsSnapshot) {
-        _statements = getStatementsBySubjectId(currentId, config.statementsSnapshot);
+        _statements = uniqWith(getStatementsBySubjectId(currentId, config.statementsSnapshot), isEqual);
     }
 
     const {
