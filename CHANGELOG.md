@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.150.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.0...v0.150.1) - 2024-11-13
+
+### Changes
+
+- fix(DataBrowser): remove duplicate statements in the paper version snapshot [`#1413`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1413)
+- fix: adapt LinkButton component to backend _class values [`#1414`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1414)
+
+---
 ## [v0.150.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.149.0...v0.150.0) - 2024-11-07
 
 ### Changes
