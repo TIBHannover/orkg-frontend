@@ -9,13 +9,10 @@ import styled from 'styled-components';
 
 const VideoContainer = styled.div`
     position: relative;
-    padding-top: 56.25%;
 `;
 
 const IframeFullWidth = styled.iframe`
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: block;
     width: 100%;
     height: 100%;
     border: 0;
