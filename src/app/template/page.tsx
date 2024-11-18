@@ -122,7 +122,7 @@ const TemplateNew = () => {
                 <hr className="mt-3 mb-3" />
                 {searchParams.get('classID') && targetClass?.id && (
                     <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                        You are creating a template for the class
+                        You are creating a template for the class{' '}
                         <Link target="_blank" href={reverse(ROUTES.CLASS, { id: targetClass.id })}>
                             {targetClass.label}
                         </Link>
