@@ -3,16 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
-import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
+import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useCanAddProperty from 'components/DataBrowser/hooks/useCanAddProperty';
+import useDefaultProperties from 'components/DataBrowser/hooks/useDefaultProperties';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useTemplates from 'components/DataBrowser/hooks/useTemplates';
+import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ENTITIES } from 'constants/graphSettings';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { uniq } from 'lodash';
 import { ReactElement, useState } from 'react';
 import { Button, ButtonGroup, InputGroup } from 'reactstrap';
@@ -27,6 +28,8 @@ const AddProperty = () => {
     const { newProperties } = useDataBrowserState();
     const { entity, statements } = useEntity();
     const { templates } = useTemplates();
+
+    const { predicates: _defaultProperties } = useDefaultProperties({ ids: [PREDICATES.SAME_AS, PREDICATES.URL] });
 
     const scopedNewProperties = entity?.id && entity.id in newProperties ? newProperties[entity.id] : [];
     const allRequiredProperties = templates?.map((t) => getListPropertiesFromTemplate(t, true))?.flat() ?? [];
@@ -44,6 +47,14 @@ const AddProperty = () => {
         ...scopedNewProperties.map((p) => p.label),
         ...(statements?.map((s) => s.predicate.label) ?? []),
     ]);
+
+    // Filter out the already existing default properties
+    const propertyIds = uniq([
+        ...allRequiredProperties.map((p) => p.id),
+        ...scopedNewProperties.map((p) => p.id),
+        ...(statements?.map((s) => s.predicate.id) ?? []),
+    ]);
+    const defaultProperties = _defaultProperties?.filter((p) => !propertyIds.includes(p.id));
 
     return (
         <div className={showAdd ? 'flex-grow-1' : ''}>
@@ -91,7 +102,7 @@ const AddProperty = () => {
                             }}
                             allowCreate
                             autoFocus
-                            defaultOptions={[]}
+                            defaultOptions={defaultProperties ?? []}
                             inputId="addProperty"
                             onInputChange={(newValue, actionMeta) => {
                                 if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
