@@ -1,21 +1,21 @@
-import Joi from 'joi';
-import REGEX from 'constants/regex';
-import moment from 'moment';
+import { preprocessNumber } from 'constants/DataTypes';
 import { EXTRACTION_METHODS } from 'constants/misc';
+import REGEX from 'constants/regex';
+import { z } from 'zod';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];
     const values = data && data.slice(1).map((r) => r.map((s) => (s ? s.trim() : '')));
 
     // Check if paper:title or paper:doi column exists
-    const columns = Joi.array()
-        .has(Joi.string().valid('paper:title', 'paper:doi'))
-        .message('Missing required column <em>paper:title</em> or <em>paper:doi</em>');
+    const columns = z.array(z.string()).refine((arr) => arr.includes('paper:title') || arr.includes('paper:doi'), {
+        message: 'Missing required column <em>paper:title</em> or <em>paper:doi</em>',
+    });
 
-    const { error } = columns.validate(header);
+    const { error } = columns.safeParse(header);
 
     if (error) {
-        return `${error.message}`;
+        return `${error.errors?.[0]?.message}`;
     }
 
     if (values.length === 0) {
@@ -36,51 +36,66 @@ export default function checkDataValidation(data) {
                     : EXTRACTION_METHODS.UNKNOWN
                 : EXTRACTION_METHODS.UNKNOWN,
     }));
-
-    const paperSchema = Joi.object({
-        title: Joi.when('doi', { is: Joi.valid(), then: Joi.optional(), otherwise: Joi.string().required() })
-            .concat(Joi.when('doi', { is: '', then: Joi.string().required() }))
-            .messages({
-                'string.empty': 'DOI or Title is a required column.',
-            }),
-        publication_month: Joi.number().integer().max(12).min(1).allow('').messages({
-            'number.max': 'Publication month must be less than or equal to 12',
-            'number.min': 'Publication month must be larger than or equal to 1',
-            'number.base': 'Publication month must be a number',
-        }),
-        publication_year: Joi.number()
-            .integer()
-            .max(moment().year())
-            .min(1900)
-            .allow('')
-            .messages({
-                'number.max': `Publication year must be less than or equal to ${moment().year()}`,
-                'number.min': 'Publication year must be larger than or equal to 1900',
-                'number.base': 'Publication year must be a number',
-            }),
-        research_field: Joi.string().pattern(new RegExp('^(orkg:)?R([0-9])+$')).allow('').messages({
-            'string.base': "Research field ID should be a type of 'text'",
-            'string.pattern.base': "doesn't have a valid research field ID",
-        }),
-        doi: Joi.string().pattern(new RegExp(REGEX.DOI_ID)).allow('').messages({
-            'string.pattern.base': 'Doi must be a valid and without the resolver (e.g. 10.1145/3360901.3364435)',
-        }),
-        url: Joi.string().pattern(new RegExp(REGEX.URL)).allow('').messages({
-            'string.pattern.base': 'URL must be a valid',
-        }),
-        extraction_method: Joi.string()
-            .valid(EXTRACTION_METHODS.UNKNOWN, EXTRACTION_METHODS.MANUAL, EXTRACTION_METHODS.AUTOMATIC)
-            .required()
-            .messages({
-                'any.only':
-                    'The extraction method can be empty, or if a value is given, it must be one of the following: UNKNOWN, MANUAL, AUTOMATIC.',
-            }),
-    });
-
+    const currentYear = new Date().getFullYear();
+    const paperSchema = z
+        .object({
+            title: z.string().optional(),
+            publication_month: z
+                .preprocess(preprocessNumber, z.number().int().min(1).max(12))
+                .refine((value) => typeof value === 'string' || value >= 1, {
+                    message: 'Publication month must be larger than or equal to 1',
+                })
+                .refine((value) => typeof value === 'string' || value <= 12, {
+                    message: 'Publication month must be less than or equal to 12',
+                })
+                .or(z.literal('')),
+            publication_year: z
+                .preprocess(preprocessNumber, z.number().int().min(1900).max(currentYear))
+                .refine((value) => typeof value === 'string' || value >= 1900, {
+                    message: 'Publication year must be larger than or equal to 1900',
+                })
+                .refine((value) => typeof value === 'string' || value <= currentYear, {
+                    message: `Publication year must be less than or equal to ${currentYear}`,
+                })
+                .or(z.literal('')),
+            research_field: z
+                .string()
+                .regex(/^(orkg:)?R([0-9])+$|^$/, {
+                    message: "doesn't have a valid research field ID",
+                })
+                .optional(),
+            doi: z
+                .string()
+                .regex(REGEX.DOI_ID, {
+                    message: 'Doi must be valid and without the resolver (e.g. 10.1145/3360901.3364435)',
+                })
+                .optional()
+                .or(z.literal('')),
+            url: z.string().regex(REGEX.URL, { message: 'URL must be valid' }).optional().or(z.literal('')),
+            extraction_method: z
+                .enum([EXTRACTION_METHODS.UNKNOWN, EXTRACTION_METHODS.MANUAL, EXTRACTION_METHODS.AUTOMATIC])
+                .optional()
+                .refine((value) => value, {
+                    message:
+                        'The extraction method can be empty, or if a value is given, it must be one of the following: UNKNOWN, MANUAL, AUTOMATIC.',
+                }),
+        })
+        .superRefine((_data, ctx) => {
+            if (!_data.title && !_data.doi) {
+                ctx.addIssue({
+                    path: ['title'], // You can associate the error with the `title` field
+                    message: 'DOI or Title is a required column.',
+                });
+            }
+        });
     for (let i = 0; i < papersObjects.length; i++) {
-        const { error } = paperSchema.validate(papersObjects[i]);
-        if (error) {
-            return `<b>Paper #${i + 1}</b>: ${error.message}`;
+        const { error: _error } = paperSchema.safeParse(papersObjects[i]);
+        if (_error) {
+            const formattedErrors = _error.errors.map((err) => {
+                const path = err.path.join(' > '); // Path to the invalid field
+                return `${path}: ${err.message}`;
+            });
+            return `<b>Paper #${i + 1}</b>: ${formattedErrors.join('<br />')}`;
         }
     }
     return null;

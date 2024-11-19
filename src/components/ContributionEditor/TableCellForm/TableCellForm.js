@@ -80,24 +80,24 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const onSubmit = () => {
         let error;
         if (schema) {
-            error = schema.validate(inputValue).error;
+            error = schema.safeParse(inputValue.trim()).error;
         }
         if (error) {
-            setFormFeedback(error.message);
+            setFormFeedback(error.errors?.[0]?.message);
             setIsValid(false);
         } else {
             setFormFeedback(null);
             setIsValid(true);
             // Check for a possible conversion possible
-            const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue);
+            const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue.trim());
             if (suggestions.length > 0 && !valueClass) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else if (!editMode) {
-                dispatch(addValue(entityType, { label: inputValue, datatype: getDataType() }, valueClass, contributionId, propertyId));
+                dispatch(addValue(entityType, { label: inputValue.trim(), datatype: getDataType() }, valueClass, contributionId, propertyId));
                 closeForm?.(false);
             } else {
-                commitChangeLabel(inputValue, getDataType(inputDataType));
+                commitChangeLabel(inputValue.trim(), getDataType(inputDataType));
                 closeForm();
             }
         }
@@ -105,12 +105,14 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
 
     const acceptSuggestion = () => {
         if (!editMode) {
-            dispatch(addValue(suggestionType._class, { label: inputValue, datatype: suggestionType.type }, valueClass, contributionId, propertyId));
+            dispatch(
+                addValue(suggestionType._class, { label: inputValue.trim(), datatype: suggestionType.type }, valueClass, contributionId, propertyId),
+            );
             setInputDataType(suggestionType.type);
             closeForm?.(false);
         } else {
             confirmConversion.current.hide();
-            commitChangeLabel(inputValue, suggestionType.type);
+            commitChangeLabel(inputValue.trim(), suggestionType.type);
             setInputDataType(suggestionType.type);
             closeForm();
         }
@@ -118,10 +120,10 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
 
     const rejectSuggestion = () => {
         if (!editMode) {
-            dispatch(addValue(entityType, { label: inputValue, datatype: getDataType() }, valueClass, contributionId, propertyId));
+            dispatch(addValue(entityType, { label: inputValue.trim(), datatype: getDataType() }, valueClass, contributionId, propertyId));
             closeForm?.(false);
         } else {
-            commitChangeLabel(inputValue, getDataType(inputDataType));
+            commitChangeLabel(inputValue.trim(), getDataType(inputDataType));
             closeForm();
         }
     };

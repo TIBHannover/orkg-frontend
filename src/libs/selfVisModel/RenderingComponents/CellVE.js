@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
+import { validateCellMapping } from 'libs/selfVisModel/validateCellMapping';
 import { usePrevious } from 'react-use';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';

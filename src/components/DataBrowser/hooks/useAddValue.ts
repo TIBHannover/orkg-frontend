@@ -97,19 +97,19 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
     const onSubmit = () => {
         let error;
         if (schema) {
-            error = schema.validate(inputValue).error;
+            error = schema.safeParse(inputValue.trim()).error;
         }
         if (error) {
-            setFormFeedback(error.message);
+            setFormFeedback(error.errors?.[0]?.message);
         } else {
             setFormFeedback(null);
             // Check for a possible conversion possible
-            const suggestions = getSuggestionByTypeAndValue(dataType, inputValue);
+            const suggestions = getSuggestionByTypeAndValue(dataType, inputValue.trim());
             if (suggestions.length > 0 && !range) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion?.current?.show();
             } else {
-                handleSubmitValue(_class, { label: inputValue, datatype: dataType });
+                handleSubmitValue(_class, { label: inputValue.trim(), datatype: dataType });
                 toggleShowInput();
             }
         }
@@ -118,14 +118,14 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
     const acceptSuggestion = () => {
         if (suggestionType) {
             confirmConversion?.current?.hide();
-            handleSubmitValue(suggestionType?._class, { label: inputValue, datatype: suggestionType?.type });
+            handleSubmitValue(suggestionType?._class, { label: inputValue.trim(), datatype: suggestionType?.type });
             setDataType(suggestionType?.type ?? dataType);
             toggleShowInput();
         }
     };
 
     const rejectSuggestion = () => {
-        handleSubmitValue(_class, { label: inputValue, datatype: dataType });
+        handleSubmitValue(_class, { label: inputValue.trim(), datatype: dataType });
         toggleShowInput();
     };
 

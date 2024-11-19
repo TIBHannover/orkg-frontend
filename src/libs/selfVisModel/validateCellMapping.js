@@ -1,4 +1,5 @@
-import Joi from 'joi';
+import { z } from 'zod';
+import { preprocessNumber } from 'constants/DataTypes';
 
 export const validateCellMapping = (mapper, cellValue) => {
     if (mapper === undefined) {
@@ -10,19 +11,21 @@ export const validateCellMapping = (mapper, cellValue) => {
         return { error: null, value: cellValue };
     }
     if (mapper === 'Number') {
-        const validationSchema = Joi.number().required();
-        return validationSchema.validate(cellValue);
+        const validationSchema = z.preprocess(preprocessNumber, z.number());
+        return validationSchema.safeParse(cellValue);
     }
     if (mapper === 'Date') {
         // if this validates to number return false;
-        const numValidationSchema = Joi.number().required();
-        const { error } = numValidationSchema.validate(cellValue);
+        const numValidationSchema = z.preprocess(preprocessNumber, z.number());
+        const { error } = numValidationSchema.safeParse(cellValue);
         if (!error) {
             return { error: { message: 'Value must be a valid data (YYYY-MM-DD) ' }, value: cellValue };
         }
-        const validationSchema = Joi.date().required();
-        return validationSchema.validate(cellValue);
+        const validationSchema = z.string().date();
+        return validationSchema.safeParse(cellValue);
     }
 
     return { error: null, value: cellValue };
 };
+
+export default validateCellMapping;
