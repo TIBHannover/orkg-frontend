@@ -142,7 +142,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
             }
         >
             <div className="mx-2 mb-2 mb-md-0 flex-shrink-0" id="tour-add-paper">
-                <Button color={!isHomePageStyle ? 'primary' : 'light'}>
+                <Button color={!isHomePageStyle ? 'primary' : 'light'} className="px-3">
                     <FontAwesomeIcon className="me-1" icon={faPlus} />
                     <LabelStyled>Add new</LabelStyled>
                 </Button>
