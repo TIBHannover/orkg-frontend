@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import useFilters from 'components/Search/hooks/useFilters';
+import OrkgAskBanner from 'components/Search/OrkgAskBanner/OrkgAskBanner';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
@@ -58,6 +59,8 @@ const Filters = () => {
                 </>
             )}
 
+            <hr className="mt-3 mb-3" />
+            <OrkgAskBanner />
             <hr className="mt-3 mb-3" />
 
             <Label>Filter by type</Label>
