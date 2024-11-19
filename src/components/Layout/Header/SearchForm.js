@@ -9,8 +9,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, InputGroup } from 'reactstrap';
+import styled from 'styled-components';
 import { getEntityTypeByID, getLinkByEntityType } from 'utils';
 
+const InputStyled = styled(Input)`
+    max-width: 120px;
+    width: 100%;
+    transition: max-width 0.3s ease-in-out;
+
+    &:focus {
+        max-width: 250px;
+    }
+`;
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
 
@@ -48,9 +58,9 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
     };
 
     return (
-        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} style={{ minWidth: 57 }} id="tour-search-bar">
+        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} id="tour-search-bar">
             <InputGroup>
-                <Input
+                <InputStyled
                     placeholder={placeholder}
                     value={value}
                     onChange={handleChange}

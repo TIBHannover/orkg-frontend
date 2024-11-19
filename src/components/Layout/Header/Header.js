@@ -35,6 +35,8 @@ import {
     Nav,
     Navbar,
     NavbarToggler,
+    NavItem,
+    NavLink,
 } from 'reactstrap';
 import { getUserInformation } from 'services/backend/users';
 import { openAuthDialog, resetAuth, updateAuth } from 'slices/authSlice';
@@ -70,6 +72,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StyledTopBar = styled.div`
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.xl}) {
+        .navlink-ask {
+            display: none;
+        }
+    }
     @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
         .navbar-collapse {
             margin-top: 0.4rem;
@@ -543,6 +550,11 @@ const Header = () => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
+                        <NavItem>
+                            <NavLink active href="https://ask.orkg.org" rel="noreferrer" target="_blank" className="navlink-ask">
+                                ORKG Ask <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" />
+                            </NavLink>
+                        </NavItem>
                         <Nfdi4dsButton />
                         {isExploding && (
                             <ConfettiExplosion
@@ -564,7 +576,7 @@ const Header = () => {
                         <Button
                             id="sign-in"
                             color="secondary"
-                            className="ps-4 pe-4 flex-shrink-0 sign-in"
+                            className="px-3 flex-shrink-0 sign-in"
                             outline
                             onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}
                         >
