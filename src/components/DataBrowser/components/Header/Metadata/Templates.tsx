@@ -9,7 +9,7 @@ import useTemplates from 'components/DataBrowser/hooks/useTemplates';
 import TemplatesModal from 'components/DataBrowser/components/TemplatesModal/TemplatesModal';
 import Link from 'next/link';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import pluralize from 'pluralize';
@@ -20,7 +20,9 @@ const Templates = () => {
     const { config } = useDataBrowserState();
     const { isEditMode } = config;
     const { entity } = useEntity();
-    const { templates, isLoading } = useTemplates();
+    const { templates: _templates, isLoading } = useTemplates();
+    // Filter out resource templates
+    const templates = _templates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
     const { canEdit } = useCanEdit();
     const [isOpen, setIsOpen] = useState(false);
 

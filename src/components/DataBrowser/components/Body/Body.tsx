@@ -6,9 +6,10 @@ import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserC
 import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
+import { getListPropertiesFromTemplate, prioritizeDescriptionStatements } from 'components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { groupBy, sortBy } from 'lodash';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { groupBy, sortBy, uniqBy } from 'lodash';
 import { Fragment, ReactElement } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Predicate, Resource, Statement } from 'services/backend/types';
@@ -24,7 +25,11 @@ const Body = () => {
 
     existingProperties = [...existingProperties, ...scopedNewProperties.map((p) => p.id)];
     const allRequiredProperties = templates?.map((t) => getListPropertiesFromTemplate(t, true))?.flat() ?? [];
-    const requiredProperties = allRequiredProperties.filter((p) => !existingProperties.includes(p.id));
+
+    const requiredProperties = uniqBy(
+        allRequiredProperties.filter((p) => !existingProperties.includes(p.id)),
+        'id',
+    );
 
     const _statements2 = groupBy(sortBy(statements, 'predicate.label'), 'predicate.label');
 
@@ -42,8 +47,14 @@ const Body = () => {
 
     return (
         <div>
+            {/* for resource entity show only description property if in edit mode and can edit */}
+            {((entity?._class === ENTITIES.RESOURCE && isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE) &&
+                requiredProperties
+                    // Show only description property
+                    .filter((p) => p.id === PREDICATES.DESCRIPTION)
+                    .map((p) => <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />)}
             <ConditionalWrapper condition={entity && !config.valuesAsLinks && 'classes' in entity} wrapper={valueWrapper}>
-                {Object.keys(_statements2).map((g) => (
+                {prioritizeDescriptionStatements(_statements2).map((g) => (
                     <Fragment key={g}>
                         {entity && _statements2[g].map((s: Statement) => <SingleStatement level={0} key={s.id} statement={s} path={[entity.id]} />)}
                         {canEdit && isEditMode && (
@@ -52,13 +63,18 @@ const Body = () => {
                     </Fragment>
                 ))}
             </ConditionalWrapper>
-            {requiredProperties.map((p) => (
-                <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />
-            ))}
+            {requiredProperties
+                // Show all properties except description
+                .filter((p) => p.id !== PREDICATES.DESCRIPTION)
+                .map((p) => (
+                    <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />
+                ))}
 
             {canEdit && _newProperties.map((p) => <AddStatement key={p.id} predicate={p} canDelete />)}
 
-            {Object.keys(_statements2).length === 0 && Object.keys(requiredProperties).length === 0 && scopedNewProperties.length === 0 && <NoData />}
+            {Object.keys(_statements2).length === 0 &&
+                Object.keys(requiredProperties.filter((p) => p.id !== PREDICATES.DESCRIPTION || isEditMode)).length === 0 &&
+                scopedNewProperties.length === 0 && <NoData />}
         </div>
     );
 };

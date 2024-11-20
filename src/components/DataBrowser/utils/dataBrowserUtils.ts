@@ -9,6 +9,17 @@ import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement,
 
 const cookies = new Cookies();
 
+export const prioritizeDescriptionStatements = (_statements: Record<string, Statement[]>) => {
+    const orderedKeys = Object.keys(_statements).sort((a, b) => {
+        // Put description predicates first
+        if (a.toLowerCase().includes('description')) return -1;
+        if (b.toLowerCase().includes('description')) return 1;
+        // Then sort alphabetically
+        return a.localeCompare(b);
+    });
+    return orderedKeys;
+};
+
 export const getPreferenceFromCookies = (p: string) => {
     const cookieName = `preferences.${p}`;
     return cookies.get(cookieName) ?? undefined;

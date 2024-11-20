@@ -11,6 +11,8 @@ const useTemplates = () => {
         classes = [CLASSES.CLASS];
     } else if (entity?._class === ENTITIES.PREDICATE) {
         classes = [CLASSES.PREDICATE];
+    } else if (entity?._class === ENTITIES.RESOURCE) {
+        classes = [CLASSES.RESOURCE, ...classes];
     }
     const { data: templates, isLoading } = useSWR(classes.length > 0 ? [classes, templatesUrl, 'getTemplates'] : null, ([params]) =>
         Promise.all(params.map((id: string) => getTemplates({ targetClass: id }))),

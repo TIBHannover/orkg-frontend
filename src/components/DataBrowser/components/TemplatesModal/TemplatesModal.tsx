@@ -1,14 +1,15 @@
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { useSingleton } from '@tippyjs/react';
+import TemplateButton from 'components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from 'components/DataBrowser/hooks/useFeaturedTemplates';
 import useRecommendedTemplates from 'components/DataBrowser/hooks/useRecommendedTemplates';
 import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import TemplateButton from 'components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
 import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
 import Tooltip from 'components/Utils/Tooltip';
+import { CLASSES } from 'constants/graphSettings';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
@@ -65,7 +66,9 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const [source, target] = useSingleton();
 
     const { entity } = useEntity();
-    const { templates: usedTemplates } = useTemplates();
+    const { templates: _usedTemplates } = useTemplates();
+    // Filter out resource templates
+    const usedTemplates = _usedTemplates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
 
     return (
         <div>
