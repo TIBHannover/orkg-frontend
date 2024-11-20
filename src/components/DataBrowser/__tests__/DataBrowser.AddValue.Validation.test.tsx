@@ -39,7 +39,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should validate Decimal datatype', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Decimal');
-        await waitFor(() => expect(screen.getByText(/must be a number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Expected number, received nan/i)).toBeInTheDocument());
     });
 });
 
@@ -47,7 +47,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should validate Integer datatype', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Integer');
-        await waitFor(() => expect(screen.getByText(/must be a number/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Expected number, received nan/i)).toBeInTheDocument());
     });
 });
 
@@ -55,7 +55,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should not accept Integer datatype when the value is decimal', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Integer', '1.5');
-        await waitFor(() => expect(screen.getByText(/must be an integer/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Expected integer, received float/i)).toBeInTheDocument());
     });
 });
 
@@ -63,7 +63,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should validate Date datatype', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Date');
-        await waitFor(() => expect(screen.getByText(/must be in ISO 8601 date format/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Invalid date/i)).toBeInTheDocument());
     });
 });
 
@@ -71,6 +71,6 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should validate URL datatype', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'URL');
-        await waitFor(() => expect(screen.getByText(/must be a valid URL/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Invalid url/i)).toBeInTheDocument());
     });
 });

@@ -1,28 +1,28 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import { CLASSES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
+import { preprocessNumber, preprocessBoolean } from 'constants/DataTypes';
 
 export default function validationSchema(propertyShape) {
     let schema;
     if (propertyShape.datatype) {
         switch (propertyShape.datatype.id) {
             case CLASSES.DATE:
-                schema = Joi.date().iso();
+                schema = z.string().date();
                 break;
             case CLASSES.DECIMAL:
-                schema = Joi.number();
+                schema = z.preprocess(preprocessNumber, z.number());
                 break;
             case CLASSES.STRING:
-                schema = Joi.string();
+                schema = z.string();
                 break;
             case CLASSES.INTEGER:
-                schema = Joi.number().integer();
+                schema = z.preprocess(preprocessNumber, z.number()).int();
                 break;
             case CLASSES.BOOLEAN:
-                schema = Joi.boolean();
+                schema = z.preprocess(preprocessBoolean, z.boolean());
                 break;
             case CLASSES.URI:
-                schema = Joi.string().regex(REGEX.URL).message('"value" must be a valid URL');
+                schema = z.string().url();
                 break;
             default:
                 break;
@@ -37,5 +37,5 @@ export default function validationSchema(propertyShape) {
             schema = schema.regex(new RegExp(propertyShape.pattern));
         }
     }
-    return schema.label(propertyShape.path.label);
+    return schema.describe(propertyShape.path.label);
 }

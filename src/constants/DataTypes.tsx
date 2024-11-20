@@ -1,5 +1,5 @@
 import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
-import Joi, { AnySchema } from 'joi';
+import { z, ZodType } from 'zod';
 import { orderBy } from 'lodash';
 import { EntityType } from 'services/backend/types';
 // https://www.w3.org/TR/xmlschema-2
@@ -40,9 +40,31 @@ export type DataType = {
     type: string;
     _class: EntityType | 'empty';
     classId: string;
-    schema: AnySchema | null;
+    schema: ZodType | null;
     inputFormType: InputType;
     weight: number;
+};
+
+export const preprocessNumber = (value: unknown) => {
+    if (typeof value === 'string') {
+        // Check if the string is purely numeric
+        const trimmed = value.trim();
+        if (!/^\d+(\.\d+)?$/.test(trimmed)) {
+            return NaN; // Return NaN for invalid inputs
+        }
+        return parseFloat(trimmed); // Coerce valid numeric strings
+    }
+    return value; // Pass non-strings as is
+};
+
+export const preprocessBoolean = (value: unknown) => {
+    if (typeof value === 'string') {
+        const lowercaseValue = value.toLowerCase();
+        if (lowercaseValue === 'true') return true;
+        if (lowercaseValue === 'false') return false;
+        return undefined; // Invalid case
+    }
+    return value; // Pass non-strings as is
 };
 
 const DATA_TYPES: DataType[] = [
@@ -57,7 +79,7 @@ const DATA_TYPES: DataType[] = [
         type: ENTITIES.RESOURCE,
         _class: ENTITIES.RESOURCE,
         classId: CLASSES.RESOURCE,
-        schema: Joi.string(),
+        schema: z.string(),
         inputFormType: 'autocomplete',
         weight: 0,
     },
@@ -67,7 +89,7 @@ const DATA_TYPES: DataType[] = [
         type: MISC.DEFAULT_LITERAL_DATATYPE,
         _class: ENTITIES.LITERAL,
         classId: CLASSES.STRING,
-        schema: Joi.string(),
+        schema: z.string(),
         inputFormType: 'textarea',
         weight: 0,
     },
@@ -76,7 +98,10 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:decimal',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.DECIMAL,
-        schema: Joi.number().unsafe(),
+        schema: z.preprocess(preprocessNumber, z.number()).refine(
+            (value) => !Number.isNaN(value), // Reject NaN values
+            { message: 'Invalid input: must be a valid number' },
+        ),
         inputFormType: 'text',
         weight: 2,
     },
@@ -85,7 +110,10 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:integer',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.INTEGER,
-        schema: Joi.number().integer().unsafe(),
+        schema: z.preprocess(preprocessNumber, z.number().int()).refine(
+            (value) => !Number.isNaN(value), // Reject NaN values
+            { message: 'Invalid input: must be a valid integer' },
+        ),
         inputFormType: 'text',
         weight: 3,
     },
@@ -95,7 +123,7 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:boolean',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.BOOLEAN,
-        schema: Joi.boolean(),
+        schema: z.preprocess(preprocessBoolean, z.boolean()),
         inputFormType: 'boolean',
         weight: 1,
     },
@@ -104,7 +132,7 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:date',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.DATE,
-        schema: Joi.date().iso(),
+        schema: z.string().date(),
         inputFormType: 'date',
         weight: 1,
     },
@@ -113,7 +141,7 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:anyURI',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.URI,
-        schema: Joi.string().uri().message('"value" must be a valid URL'),
+        schema: z.string().url(),
         inputFormType: 'text',
         weight: 1,
     },
@@ -133,7 +161,7 @@ const DATA_TYPES: DataType[] = [
         type: 'list',
         _class: ENTITIES.RESOURCE,
         classId: CLASSES.LIST,
-        schema: Joi.string(),
+        schema: z.string(),
         inputFormType: 'autocomplete',
         weight: 0,
     },
@@ -144,7 +172,7 @@ const DATA_TYPES: DataType[] = [
     type: ENTITIES.CLASS,
     _class: ENTITIES.CLASS,
     classId: CLASSES.CLASS,
-    schema: Joi.string(),
+    schema: z.string(),
     inputFormType: 'autocomplete',
     weight: 0
 },
@@ -153,7 +181,7 @@ const DATA_TYPES: DataType[] = [
     type: ENTITIES.PREDICATE,
     _class: ENTITIES.PREDICATE,
     classId: CLASSES.PREDICATE,
-    schema: Joi.string(),
+    schema: z.string(),
     inputFormType: 'autocomplete',
     weight: 0
 } */
@@ -167,7 +195,7 @@ export const getConfigByClassId = (classId: string) =>
         type: ENTITIES.RESOURCE,
         _class: ENTITIES.RESOURCE,
         classId,
-        schema: Joi.string(),
+        schema: z.string(),
         inputFormType: 'autocomplete',
         weight: 0,
     };
@@ -177,9 +205,9 @@ export const getSuggestionByTypeAndValue = (type: string, value: string) => {
         .filter((dt) => {
             let error;
             if (dt.schema) {
-                error = dt.schema.validate(value).error;
+                error = dt.schema.safeParse(value).error;
             }
-            return !error;
+            return !error || error.errors.length === 0;
         })
         .filter((dt) => getConfigByType(type).weight < dt.weight);
 
@@ -188,7 +216,7 @@ export const getSuggestionByTypeAndValue = (type: string, value: string) => {
 
 export const getSuggestionByValue = (value: string) =>
     orderBy(
-        DATA_TYPES.filter((dataType) => dataType.type !== ENTITIES.RESOURCE).filter((dataType) => !dataType.schema?.validate(value)?.error),
+        DATA_TYPES.filter((dataType) => dataType.type !== ENTITIES.RESOURCE).filter((dataType) => !dataType.schema?.safeParse(value).error),
         ['weight'],
         ['desc'],
     );
@@ -198,7 +226,7 @@ type CheckDataType = {
     dataType: string; // Change string to a more specific type if applicable
 };
 
-export const checkDataTypeIsInValid = ({ value, dataType }: CheckDataType) => !!getConfigByType(dataType).schema?.validate(value)?.error;
+export const checkDataTypeIsInValid = ({ value, dataType }: CheckDataType) => !!getConfigByType(dataType).schema?.safeParse(value).error;
 
 export const LITERAL_DATA_TYPES_CLASS_IDS = DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL).map((t) => t.classId);
 

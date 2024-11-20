@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { z } from 'zod';
 import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import PropTypes from 'prop-types';
@@ -34,11 +34,8 @@ const OrdinalFilterRule = (props) => {
     const invalidText = typeIsDate ? 'Should match the format: yyyy-mm-dd' : 'Should be Number';
     const validateFunc = (str) => (typeIsDate ? isDate(str) : isNum(str));
     const isDate = (str) => {
-        const { error } = Joi.date()
-
-            .required()
-            .validate(str);
-        return !error;
+        const { error } = z.string().date().safeParse(str);
+        return !error || error.errors.length === 0;
     };
 
     const isNum = (str) => !isNaN(str) && !isNaN(parseFloat(str));

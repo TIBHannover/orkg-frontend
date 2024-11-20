@@ -1,6 +1,6 @@
 import { Modal, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
-import Joi from 'joi';
+import { z } from 'zod';
 import CategoricalFilterRule from 'components/Comparison/Filters/CategoricalFilterRule.js';
 import OrdinalFilterRule from 'components/Comparison/Filters/OrdinalFilterRule.js';
 import TextFilterRule from 'components/Comparison/Filters/TextFilterRule.js';
@@ -15,7 +15,7 @@ function FilterModal(props) {
     const isDate = () =>
         Object.keys(values).length ===
         Object.keys(values).filter((value) => {
-            const { error } = Joi.date().required().validate(value);
+            const { error } = z.string().date().safeParse(value);
             return !error;
         }).length;
     const isText = () =>
