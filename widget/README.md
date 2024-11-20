@@ -1,6 +1,6 @@
 # ORKG Widget Documentation
 
-bundle size: **9.08 kB**
+bundle size: **8.97 kB**
 
 ### How to use:
 
@@ -54,7 +54,7 @@ The orkg widget uses this following html template to render the widget:
 
 ### Building
 
-minimum supported Node.js version is `14.15.0`
+minimum supported Node.js version is `18.12.0`
 
 ```
 npm run build
