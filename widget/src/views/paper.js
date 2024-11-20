@@ -17,12 +17,12 @@ const dictionary = {
     },
 };
 
-export const getItemByDoi = doi => {
+export const getItemByDoi = (doi) => {
     // http://localhost:8000/api/widgets/?doi=10.1007/s00799-015-0158-y
-    const url = `${process.env.BACKEND_URL}widgets/?doi=${encodeURIComponent(doi)}`;
+    const url = `${process.env.BACKEND_URL}widgets/?doi=${encodeURIComponent(decodeURIComponent(doi))}`;
     return new Promise((resolve, reject) => {
         fetch(url)
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     const error = new Error(`Error response. (${response.status}) ${response.statusText}`);
                     error.statusCode = response.status;
@@ -33,7 +33,7 @@ export const getItemByDoi = doi => {
                     jsonPromise.then(resolve).catch(reject); // Resolving or rejecting based on the promise
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 reject(error); // Rejecting with the caught error
             });
     });
@@ -57,7 +57,7 @@ export function show(params) {
         // Paper DOI
         const doi = ORKGWidget.getAttribute('data-doi');
         getItemByDoi(doi)
-            .then(result => {
+            .then((result) => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.open[language];
                 temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary.numStatements[language];
                 let url = `${process.env.FRONTEND_SERVER_URL}paper/${result.id}`;
