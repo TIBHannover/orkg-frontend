@@ -20,3 +20,4 @@ public/__ENV.js
 public/storybook
 .next
 tsconfig.tsbuildinfo
+next-env.d.ts
