@@ -7,4 +7,4 @@ export const contributorsUrl = `${url}contributors/`;
 export const authenticationUrl = env('NEXT_PUBLIC_BACKEND_URL');
 
 export const getContributorInformationById = (contributorsId: string): Promise<Contributor> =>
-    submitGetRequest(`${contributorsUrl}${contributorsId}`, {}, true);
+    submitGetRequest(`${contributorsUrl}${contributorsId}`);

@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { createConference } from 'services/backend/conferences-series';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'slices/authSlice';
 import REGEX from 'constants/regex';
 import { reverse } from 'named-urls';
 import { getPublicUrl } from 'utils';
@@ -20,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { login } from 'services/keycloak';
 
 const AddConference = () => {
     const params = useParams();
@@ -191,7 +191,7 @@ const AddConference = () => {
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
-                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
+                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login()}>
                         <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create conference event
                     </Button>
                 )}

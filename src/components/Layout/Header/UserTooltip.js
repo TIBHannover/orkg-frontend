@@ -1,18 +1,16 @@
-import Link from 'next/link';
-import { env } from 'next-runtime-env';
 import ROUTES from 'constants/routes';
+import { AnimatePresence, motion } from 'framer-motion';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row } from 'reactstrap';
+import { accountManagement, logout } from 'services/keycloak';
 import { resetAuth } from 'slices/authSlice';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-toastify';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};
@@ -26,7 +24,7 @@ const StyledAuthTooltip = styled(motion.div)`
     border-radius: ${(props) => props.theme.borderRadius};
     font-size: 16px;
     background-color: ${(props) => props.theme.secondary};
-    max-width: 430px;
+    max-width: 550px;
     width: max-content;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
     color: #fff;
@@ -67,12 +65,11 @@ const StyledAuthTooltip = styled(motion.div)`
 `;
 
 const UserTooltip = () => {
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useSelector((state) => state.auth);
     const email = user && user.email ? user.email : 'example@example.com';
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
     const userPopup = useRef(null);
     const dispatch = useDispatch();
-    const router = useRouter();
     const greeting = greetingTime(new Date());
 
     useEffect(() => {
@@ -97,12 +94,9 @@ const UserTooltip = () => {
 
     const handleSignOut = () => {
         dispatch(resetAuth());
-        const cookies = new Cookies();
-        cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
-        cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
         setIsVisibleTooltip(false);
         toast.success('You have been signed out successfully');
-        router.push('/');
+        logout();
     };
 
     return (
@@ -163,6 +157,9 @@ const UserTooltip = () => {
                                     >
                                         Profile
                                     </Button>
+                                    <Button color="secondary" onClick={() => accountManagement()}>
+                                        Settings
+                                    </Button>
                                     <Button
                                         color="secondary"
                                         className="text-nowrap"
@@ -170,7 +167,7 @@ const UserTooltip = () => {
                                         tag={Link}
                                         href={reverse(ROUTES.USER_SETTINGS_DEFAULT)}
                                     >
-                                        My account
+                                        My drafts
                                     </Button>
                                     <Button onClick={handleSignOut} className="text-nowrap">
                                         Sign out

@@ -117,6 +117,7 @@ const UserProfile = (props) => {
                     document.title = `${userData.display_name} - ORKG`;
                 })
                 .catch((e) => {
+                    console.error(e);
                     document.title = 'User profile - ORKG';
                     setNotFound(true);
                 });

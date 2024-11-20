@@ -39,7 +39,6 @@ import { useCookies } from 'react-cookie';
 import { CSVLink } from 'react-csv';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { openAuthDialog } from 'slices/authSlice';
 import {
     getMatrixOfComparison,
     setConfigurationAttribute,
@@ -49,6 +48,7 @@ import {
     setUseReconstructedDataInVisualization,
 } from 'slices/comparisonSlice';
 import ColumnWidth from 'components/Comparison/ComparisonHeader/ColumnWidth';
+import { login } from 'services/keycloak';
 
 const ComparisonHeaderMenu = (props) => {
     const dispatch = useDispatch();
@@ -389,7 +389,7 @@ const ComparisonHeaderMenu = (props) => {
                                             <DropdownItem
                                                 onClick={() => {
                                                     if (!user) {
-                                                        dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
+                                                        login();
                                                     } else {
                                                         setShowSaveDraftDialog(true);
                                                     }
@@ -403,7 +403,7 @@ const ComparisonHeaderMenu = (props) => {
                                     <DropdownItem
                                         onClick={() => {
                                             if (!user) {
-                                                dispatch(openAuthDialog({ action: 'signin', signInRequired: true }));
+                                                login();
                                             } else {
                                                 setShowPublishDialog((v) => !v);
                                             }

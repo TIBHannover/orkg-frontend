@@ -1,17 +1,17 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Comment from 'components/DiscussionModal/Comment';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createComment, getDiscussionsByEntityId } from 'services/backend/discussions';
-import { openAuthDialog } from 'slices/authSlice';
+import { login } from 'services/keycloak';
 
 const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
     const [comments, setComments] = useState([]);
@@ -70,7 +70,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
     };
 
     const handleSignIn = () => {
-        dispatch(openAuthDialog({ action: 'signin' }));
+        login();
     };
 
     return (

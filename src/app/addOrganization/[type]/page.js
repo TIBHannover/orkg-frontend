@@ -1,25 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
-import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
-import { toast } from 'react-toastify';
-import { createOrganization } from 'services/backend/organizations';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'slices/authSlice';
-import REGEX from 'constants/regex';
-import { reverse } from 'named-urls';
-import { getPublicUrl } from 'utils';
-import slugify from 'slugify';
-import ROUTES from 'constants/routes';
-import Tooltip from 'components/Utils/Tooltip';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
+import Tooltip from 'components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { createOrganization } from 'services/backend/organizations';
+import { login } from 'services/keycloak';
+import slugify from 'slugify';
+import { getPublicUrl } from 'utils';
 
 const AddOrganization = () => {
     const params = useParams();
@@ -31,7 +31,6 @@ const AddOrganization = () => {
     const organizationType = ORGANIZATIONS_TYPES.find((t) => t.label === params.type);
     const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
     const user = useSelector((state) => state.auth.user);
-    const dispatch = useDispatch();
     const router = useRouter();
 
     useEffect(() => {
@@ -173,7 +172,7 @@ const AddOrganization = () => {
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
-                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
+                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login()}>
                         <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create organization
                     </Button>
                 )}
