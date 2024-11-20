@@ -1,21 +1,16 @@
+import type { AppStore } from 'store';
+
 export type AuthSliceType = {
-    dialogIsOpen: boolean;
-    action: string;
-    user:
-        | 0
-        | null
-        | {
-              displayName: string;
-              id: string;
-              token: string;
-              tokenExpire: string;
-              email: string;
-              isCurationAllowed: boolean;
-              organization_id: string;
-              observatory_id: string;
-          };
-    signInRequired: null | string;
-    redirectRoute: null | string;
+    user: null | {
+        displayName: string;
+        id: string;
+        email: string;
+        isCurationAllowed: boolean;
+        organization_id: string;
+        observatory_id: string;
+    };
+    initialized: boolean;
+    authenticated: boolean;
 };
 
 // TODO: not complete yet
@@ -29,3 +24,5 @@ export type RootStore = {
     auth: AuthSliceType;
     contributionEditor: ContributionEditor;
 };
+
+export type AppDispatch = AppStore['store']['dispatch'];

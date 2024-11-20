@@ -31,6 +31,10 @@ jest.mock('components/UserAvatar/UserAvatar', () => () => null);
 
 jest.mock('next/router', () => nextRouterMock);
 
+jest.mock('services/keycloak', () => ({
+    getToken: jest.fn().mockResolvedValue('test-token'),
+}));
+
 jest.mock('next/navigation', () => {
     const usePathname = () => {
         const router = useRouter();

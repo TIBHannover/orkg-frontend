@@ -23,7 +23,7 @@ const DraftComparisons = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [editDraftComparison, setEditDraftComparison] = useState(null);
     const [isOpenEditModal, setIsOpenEditModal] = useState(null);
-    const userId = useSelector((state) => state.auth.user.id);
+    const userId = useSelector((state) => state.auth.user?.id);
 
     useEffect(() => {
         document.title = 'Draft comparisons - ORKG';

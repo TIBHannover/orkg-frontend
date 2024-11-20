@@ -9,20 +9,21 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import theme from 'assets/scss/ThemeVariables';
 import { MathJaxContext } from 'better-react-mathjax';
+import AuthProvider from 'components/Authentication/AuthProvider';
 import DefaultLayout from 'components/Layout/DefaultLayout';
-import { env } from 'next-runtime-env';
 import ResetStoreOnNavigate from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';
 import StyledComponentsRegistry from 'lib/registry';
+import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { CookiesProvider } from 'react-cookie';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
+import SWR_CONFIG from 'services/SWRConfig';
 import { setupStore } from 'store';
 import { ThemeProvider } from 'styled-components';
-import SWR_CONFIG from 'services/SWRConfig';
 import { SWRConfig } from 'swr';
 
 config.autoAddCss = false;
@@ -69,17 +70,19 @@ const Providers = ({ children }) => (
         <DndProvider backend={HTML5Backend}>
             <CookiesProvider>
                 <Provider store={store}>
-                    <ResetStoreOnNavigate>
-                        <ThemeProvider theme={theme}>
-                            <SWRConfig value={SWR_CONFIG}>
-                                <MathJaxContext config={MATH_JAX_CONFIG}>
-                                    <MatomoProvider value={matomoInstance}>
-                                        <DefaultLayout>{children}</DefaultLayout>
-                                    </MatomoProvider>
-                                </MathJaxContext>
-                            </SWRConfig>
-                        </ThemeProvider>
-                    </ResetStoreOnNavigate>
+                    <AuthProvider>
+                        <ResetStoreOnNavigate>
+                            <ThemeProvider theme={theme}>
+                                <SWRConfig value={SWR_CONFIG}>
+                                    <MathJaxContext config={MATH_JAX_CONFIG}>
+                                        <MatomoProvider value={matomoInstance}>
+                                            <DefaultLayout>{children}</DefaultLayout>
+                                        </MatomoProvider>
+                                    </MathJaxContext>
+                                </SWRConfig>
+                            </ThemeProvider>
+                        </ResetStoreOnNavigate>
+                    </AuthProvider>
                 </Provider>
             </CookiesProvider>
         </DndProvider>

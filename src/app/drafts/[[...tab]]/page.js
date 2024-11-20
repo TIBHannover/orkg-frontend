@@ -1,19 +1,17 @@
 'use client';
 
-import Link from 'next/link';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
 import DraftLists from 'components/UserSettings/DraftLists/DraftLists';
 import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import useParams from 'components/useParams/useParams';
 import { Container, Row } from 'reactstrap';
-import styled from 'styled-components';
-import GeneralSettings from 'components/UserSettings/GeneralSettings';
-import Password from 'components/UserSettings/Password';
 import requireAuthentication from 'requireAuthentication';
+import styled from 'styled-components';
 
 const StyledSettingsMenu = styled.div`
     padding: 0;
@@ -42,42 +40,27 @@ const StyledSettingsMenu = styled.div`
 `;
 
 const TABS = {
-    GENERAL: 'general',
-    PASSWORD: 'password',
     DRAFT_COMPARISONS: 'draft-comparisons',
     DRAFT_REVIEWS: 'draft-reviews',
     DRAFT_LISTS: 'draft-lists',
 };
 
 const UserSettings = () => {
-    const [activeTab, setActiveTab] = useState('general');
+    const [activeTab, setActiveTab] = useState('draft-comparisons');
     const { tab } = useParams();
 
     useEffect(() => {
-        setActiveTab(tab || 'general');
+        setActiveTab(tab || 'draft-comparisons');
     }, [tab]);
 
     return (
         <>
-            <TitleBar>My account</TitleBar>
+            <TitleBar>My drafts</TitleBar>
             <Container className="p-0">
                 <Row>
                     <div className="col-md-3 mb-sm-2 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
-                                <Link
-                                    href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.GENERAL })}
-                                    className={activeTab === TABS.GENERAL ? 'active' : ''}
-                                >
-                                    General settings
-                                </Link>
-                                <Link
-                                    href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.PASSWORD })}
-                                    className={activeTab === TABS.PASSWORD ? 'active' : ''}
-                                >
-                                    Password
-                                </Link>
-                                <hr />
                                 <Link
                                     href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_COMPARISONS })}
                                     className={activeTab === TABS.DRAFT_COMPARISONS ? 'active' : ''}
@@ -100,17 +83,6 @@ const UserSettings = () => {
                         </Container>
                     </div>
                     <div className="col-md-9 justify-content-center">
-                        {activeTab === TABS.GENERAL && (
-                            <div className="box rounded pt-4 pb-3 px-4">
-                                <GeneralSettings />
-                            </div>
-                        )}
-                        {activeTab === TABS.PASSWORD && (
-                            <div className="box rounded pt-4 pb-3 px-4">
-                                <Password />
-                            </div>
-                        )}
-
                         {activeTab === TABS.DRAFT_COMPARISONS && <DraftComparisons />}
 
                         {activeTab === TABS.DRAFT_REVIEWS && <DraftReviews />}

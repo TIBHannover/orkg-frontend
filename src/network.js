@@ -1,13 +1,12 @@
-import { Cookies } from 'react-cookie';
+import { getToken } from 'services/keycloak';
 
-export const submitGetRequest = (url, headers, send_token = false) => {
+export const submitGetRequest = async (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
     const myHeaders = headers ? new Headers(headers) : {};
     if (send_token) {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
+        const token = await getToken();
         if (token) {
             myHeaders.append('Authorization', `Bearer ${token}`);
         }
@@ -42,7 +41,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-export const submitPostRequest = (
+export const submitPostRequest = async (
     url,
     headers,
     data,
@@ -58,8 +57,7 @@ export const submitPostRequest = (
     const myHeaders = new Headers(headers);
 
     if (send_token) {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
+        const token = await getToken();
         if (token) {
             myHeaders.append('Authorization', `Bearer ${token}`);
         }
@@ -101,7 +99,7 @@ export const submitPostRequest = (
     });
 };
 
-export const submitPutRequest = (
+export const submitPutRequest = async (
     url,
     headers,
     data,
@@ -117,8 +115,7 @@ export const submitPutRequest = (
     const myHeaders = new Headers(headers);
 
     if (send_token) {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
+        const token = await getToken();
         if (token) {
             myHeaders.append('Authorization', `Bearer ${token}`);
         }
@@ -160,13 +157,12 @@ export const submitPutRequest = (
     });
 };
 
-export const submitPatchRequest = (url, headers, data, jsonStringify = true) => {
+export const submitPatchRequest = async (url, headers, data, jsonStringify = true) => {
     if (!url) {
         throw new Error('Cannot submit PATCH request. URL is null or undefined.');
     }
 
-    const cookies = new Cookies();
-    const token = cookies.get('token') ? cookies.get('token') : null;
+    const token = await getToken();
     const myHeaders = new Headers(headers);
     if (token) {
         myHeaders.append('Authorization', `Bearer ${token}`);
@@ -205,13 +201,12 @@ export const submitPatchRequest = (url, headers, data, jsonStringify = true) => 
     });
 };
 
-export const submitDeleteRequest = (url, headers, data) => {
+export const submitDeleteRequest = async (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit DELETE request. URL is null or undefined.');
     }
 
-    const cookies = new Cookies();
-    const token = cookies.get('token') ? cookies.get('token') : null;
+    const token = await getToken();
     const myHeaders = new Headers(headers);
     if (token) {
         myHeaders.append('Authorization', `Bearer ${token}`);

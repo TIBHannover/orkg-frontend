@@ -1,31 +1,31 @@
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TitleBar from 'components/TitleBar/TitleBar';
+import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Button, Container } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import TitleBar from 'components/TitleBar/TitleBar';
+import { login, register } from 'services/keycloak';
+import { RootStore } from 'slices/types';
 
 /**
  * Unauthorized can mean both unauthenticated and unauthorized. So when a user is not signed in,
  * a sign in button is displayed, otherwise just a general unauthorized message is shown
  */
 const Unauthorized = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state: RootStore) => state.auth.user);
 
     useEffect(() => {
         document.title = 'Unauthorized - ORKG';
     }, []);
 
     const handleSignIn = () => {
-        dispatch(openAuthDialog({ action: 'signin' }));
+        login();
     };
 
     const handleSignUp = () => {
-        dispatch(openAuthDialog({ action: 'signup' }));
+        register();
     };
 
     return (
@@ -60,7 +60,7 @@ const Unauthorized = () => {
                                         textDecoration: 'underline',
                                     }}
                                     onClick={handleSignUp}
-                                    onKeyDown={(e) => (e.keyCode === 13 ? handleSignUp : undefined)}
+                                    onKeyDown={(e) => (e.key === 'Enter' ? handleSignUp : undefined)}
                                     role="button"
                                     tabIndex={0}
                                 >

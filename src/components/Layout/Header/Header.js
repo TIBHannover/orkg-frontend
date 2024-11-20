@@ -1,10 +1,9 @@
-import { faChevronDown, faExternalLinkAlt, faGift, faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon, FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faExternalLinkAlt, faGift, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
-import HomeBannerBg from 'assets/img/graph-background.svg';
 import Logo from 'assets/img/birthday/logo.svg';
 import LogoWhite from 'assets/img/birthday/logo_white.svg';
-import Authentication from 'components/Authentication/Authentication';
+import HomeBannerBg from 'assets/img/graph-background.svg';
 import Jumbotron from 'components/Home/Jumbotron';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import AddNew from 'components/Layout/Header/AddNew';
@@ -12,18 +11,17 @@ import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
 import SearchForm from 'components/Layout/Header/SearchForm';
 import UserTooltip from 'components/Layout/Header/UserTooltip';
-import Image from 'next/image';
-import Link from 'next/link';
-import { env } from 'next-runtime-env';
-import { usePathname } from 'next/navigation';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
 import { useEffect, useState } from 'react';
+import ConfettiExplosion from 'react-confetti-explosion';
 import { Cookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import {
     Badge,
     Button,
@@ -38,10 +36,8 @@ import {
     NavItem,
     NavLink,
 } from 'reactstrap';
-import { getUserInformation } from 'services/backend/users';
-import { openAuthDialog, resetAuth, updateAuth } from 'slices/authSlice';
+import { login } from 'services/keycloak';
 import styled, { createGlobalStyle } from 'styled-components';
-import ConfettiExplosion from 'react-confetti-explosion';
 
 const cookies = new Cookies();
 
@@ -189,14 +185,13 @@ const Header = () => {
     const [isOpenNavBar, setIsOpenNavBar] = useState(false);
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
-    const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
     const [isExploding, setIsExploding] = useState(false);
 
     const pathname = usePathname();
     const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
-    const user = useSelector((state) => state.auth.user);
+    const { user, initialized, authenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -205,36 +200,6 @@ const Header = () => {
     }, [isHomePath]);
 
     useEffect(() => {
-        const userInformation = () => {
-            const _cookies = new Cookies();
-            const token = _cookies.get('token') ? _cookies.get('token') : null;
-            const tokenExpiresIn = _cookies.get('token_expires_in') ? _cookies.get('token_expires_in') : null;
-            if (token && !user) {
-                getUserInformation()
-                    .then((userData) => {
-                        dispatch(
-                            updateAuth({
-                                user: {
-                                    displayName: userData.display_name,
-                                    id: userData.id,
-                                    token,
-                                    tokenExpire: tokenExpiresIn,
-                                    email: userData.email,
-                                    isCurationAllowed: userData.is_curation_allowed,
-                                    organization_id: userData.organization_id,
-                                    observatory_id: userData.observatory_id,
-                                },
-                            }),
-                        );
-                    })
-                    .catch(() => {
-                        _cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
-                        _cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
-                        dispatch(resetAuth());
-                    });
-            }
-        };
-
         const handleScroll = () => {
             if (window.scrollY > 0) {
                 if (isTransparentNavbar) {
@@ -246,34 +211,11 @@ const Header = () => {
         };
 
         window.addEventListener('scroll', handleScroll);
-        userInformation();
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            if (logoutTimeoutId) {
-                clearTimeout(logoutTimeoutId); // clear timeout
-                setLogoutTimeoutId(null);
-            }
         };
-    }, [dispatch, isTransparentNavbar, pathname, logoutTimeoutId, user]);
-
-    useEffect(() => {
-        const tokenExpired = () => {
-            toast.warn('User session expired, please sign in again!');
-            cookies.remove('token', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
-            cookies.remove('token_expires_in', { path: env('NEXT_PUBLIC_PUBLIC_URL') });
-            dispatch(resetAuth());
-            dispatch(openAuthDialog({ action: 'signin' }));
-            // logoutTimeoutId = null;
-        };
-        if (!logoutTimeoutId && user && cookies.get('token_expires_in')) {
-            const tokenExpiresIn = cookies.get('token_expires_in');
-            // Get the difference between token expiration time and now
-            const diff = new Date(tokenExpiresIn) - Date.now();
-            // set timeout to auto logout
-            setLogoutTimeoutId(setTimeout(tokenExpired, diff));
-        }
-    }, [dispatch, logoutTimeoutId, user]);
+    }, [dispatch, isTransparentNavbar, pathname]);
 
     const toggleNavBar = () => {
         setIsOpenNavBar(!isOpenNavBar);
@@ -294,8 +236,8 @@ const Header = () => {
     };
 
     const requireAuthentication = (e, redirectRoute) => {
-        if (!user) {
-            dispatch(openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute }));
+        if (!authenticated) {
+            login({ redirectUri: redirectRoute });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
         } else {
@@ -420,7 +362,7 @@ const Header = () => {
                                     Sustainable <br />
                                     development goals
                                 </DropdownItem>
-                                {/** <DropdownItem tag={Link} to={ROUTES.DIAGRAMS} onClick={closeMenu}>
+                                {/** <DropdownItem tag={Link} href={ROUTES.DIAGRAMS} onClick={closeMenu}>
                                     Diagrams
                                 </DropdownItem> */}
                                 <ContentTypesMenu closeMenu={closeMenu} />
@@ -570,22 +512,20 @@ const Header = () => {
 
                     <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
 
-                    {!!user && <UserTooltip />}
+                    {initialized && authenticated && !!user && <UserTooltip />}
 
-                    {!user && (
-                        <Button
-                            id="sign-in"
-                            color="secondary"
-                            className="px-3 flex-shrink-0 sign-in"
-                            outline
-                            onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}
-                        >
+                    {initialized && !authenticated && (
+                        <Button id="sign-in" color="secondary" className="px-3 flex-shrink-0 sign-in" outline onClick={() => login()}>
                             <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
                         </Button>
                     )}
-                </Collapse>
 
-                <Authentication />
+                    {(!initialized || (authenticated && !user)) && (
+                        <div className="ms-2 me-1 position-relative">
+                            <FontAwesomeIcon {...(isTransparentNavbar ? { color: 'white' } : {})} size="xl" icon={faSpinner} spin />
+                        </div>
+                    )}
+                </Collapse>
             </StyledNavbar>
 
             {isHomePage && <Jumbotron />}

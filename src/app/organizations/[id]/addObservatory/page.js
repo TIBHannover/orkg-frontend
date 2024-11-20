@@ -3,7 +3,6 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { MAX_DESCRIPTION_LENGTH } from 'components/Observatory/EditObservatory';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
@@ -19,10 +18,10 @@ import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createObservatory } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
-import { openAuthDialog } from 'slices/authSlice';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { login } from 'services/keycloak';
 
 const AddObservatory = () => {
     const params = useParams();
@@ -184,10 +183,10 @@ const AddObservatory = () => {
                                         value={description}
                                         id="ObservatoryDescription"
                                         disabled={loading}
-                                        maxLength={MAX_DESCRIPTION_LENGTH}
+                                        maxLength={MAX_LENGTH_INPUT}
                                     />
                                     <div className="text-muted text-end">
-                                        {description?.length}/{MAX_DESCRIPTION_LENGTH}
+                                        {description?.length}/{MAX_LENGTH_INPUT}
                                     </div>
                                 </FormGroup>
                                 <Button color="primary" onClick={createNewObservatory} className="mt-4 mb-2" isLoading={loading}>
@@ -196,7 +195,7 @@ const AddObservatory = () => {
                             </div>
                         )}
                         {(!user || !user.isCurationAllowed) && (
-                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}>
+                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login()}>
                                 <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create an observatory
                             </Button>
                         )}

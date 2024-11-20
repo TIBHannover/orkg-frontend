@@ -57,6 +57,7 @@ const RootLayout = ({ children }) => (
                           https://cdnjs.cloudflare.com
                       ;
                       frame-src 'self'
+                          localhost:*
                           https://orkg.org
                           https://*.orkg.org
                           https://av.tib.eu
@@ -66,7 +67,7 @@ const RootLayout = ({ children }) => (
                           https://www.youtube.com
                           https://time.graphics
                           https://app.chatwoot.com
-                          https://support.tib.eu
+                          https://support.tib.eu   
                       ;
                       connect-src 'self'
                           blob:

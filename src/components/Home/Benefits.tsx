@@ -1,4 +1,3 @@
-import { openAuthDialog } from 'slices/authSlice';
 import IconCited from 'assets/img/benefits/cited.svg';
 import IconCommunity from 'assets/img/benefits/community.svg';
 import IconContribute from 'assets/img/benefits/contribute.svg';
@@ -13,6 +12,7 @@ import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 import Image from 'next/image';
 import { RootStore } from 'slices/types';
+import { login } from 'services/keycloak';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -121,13 +121,7 @@ export default function Benefits() {
                 </div>
                 <div className="flex-shrink-0">
                     {!user && (
-                        <Button
-                            color="secondary"
-                            size="sm"
-                            onClick={() => {
-                                dispatch(openAuthDialog({ action: 'signup' }));
-                            }}
-                        >
+                        <Button color="secondary" size="sm" onClick={() => login()}>
                             <span>Sign up</span>
                         </Button>
                     )}
