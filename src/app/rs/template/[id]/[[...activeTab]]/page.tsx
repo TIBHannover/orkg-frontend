@@ -6,17 +6,18 @@ import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import Confirm from 'components/Confirmation/Confirmation';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
+import { SlotTooltip } from 'components/RosettaStone/SlotTooltip/SlotTooltip';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
@@ -53,7 +54,14 @@ const RSTemplatePage = () => {
 
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
-        return <i key={i}>{template?.properties[i].placeholder}</i>;
+        if (template?.properties[i]) {
+            return (
+                <SlotTooltip key={i} slot={template?.properties[i]}>
+                    <i style={{ textDecoration: 'underline' }}>{template?.properties[i].placeholder}</i>
+                </SlotTooltip>
+            );
+        }
+        return match;
     };
 
     const handleDeleteTemplate = async () => {
