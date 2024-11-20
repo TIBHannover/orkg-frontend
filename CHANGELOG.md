@@ -3,6 +3,21 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.151.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.1...v0.151.0) - 2024-11-20
+
+### Changes
+
+- feat: migrate to Keycloak [`#1415`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1415)
+- fix(widget): support encoded doi and update dependencies [`#1416`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1416)
+- feat(DataBrowser): trim values when making suggestions and migrate from Joi to Zod for validation [`#1424`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1424)
+- feat: display slot details when hovering over Rosetta statement type placeholders [`#1421`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1421)
+- chore: remove files related to Create React App [`#1422`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1422)
+- fix: ensure there is a space after the verb in a Rosetta statement [`#1420`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1420)
+- feat: make descriptions easier to fill and always display them at the top [`#1419`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1419)
+- fix: embedding videos [`#1417`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1417)
+- feat(Header): add link to ORKG Ask [`#1423`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1423)
+
+---
 ## [v0.150.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.0...v0.150.1) - 2024-11-13
 
 ### Changes
