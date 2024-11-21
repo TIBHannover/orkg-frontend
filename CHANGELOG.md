@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.151.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.151.0...v0.151.1) - 2024-11-21
+
+### Changes
+
+- fix: add frame-ancestors CSP rule for accounts.orkg.org [`#1426`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1426)
+
+---
 ## [v0.151.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.1...v0.151.0) - 2024-11-20
 
 ### Changes
