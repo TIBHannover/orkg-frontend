@@ -4,8 +4,95 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 });
 
+const cspHeader = `default-src 'self' ;
+                      img-src 'self'
+                          *
+                          data:
+                      ;
+                      script-src 'self' 'unsafe-inline' 'unsafe-eval'
+                          blob:
+                          https://orkg.org
+                          https://*.orkg.org
+                          https://support.tib.eu
+                          https://tibhannover.gitlab.io
+                          https://www.gstatic.com
+                          https://platform.twitter.com
+                          https://cdn.syndication.twimg.com
+                          https://cdnjs.cloudflare.com
+                          https://app.chatwoot.com
+                      ;
+                      style-src 'self' 'unsafe-inline'
+                          https://orkg.org
+                          https://*.orkg.org
+                          https://maxcdn.bootstrapcdn.com
+                          https://www.gstatic.com
+                          https://platform.twitter.com
+                          https://*.twimg.com
+                          https://unpkg.com/leaflet@1.9.4/dist/leaflet.css 
+                      ;
+                      font-src 'self'
+                          data:
+                          https://orkg.org
+                          https://*.orkg.org
+                          https://maxcdn.bootstrapcdn.com
+                          https://cdnjs.cloudflare.com
+                      ;
+                      frame-src 'self'
+                          localhost:*
+                          https://orkg.org
+                          https://*.orkg.org
+                          https://av.tib.eu
+                          http://av.tib.eu
+                          https://platform.twitter.com
+                          https://syndication.twitter.com
+                          https://www.youtube.com
+                          https://time.graphics
+                          https://app.chatwoot.com
+                          https://support.tib.eu   
+                      ;
+                      frame-ancestors 'self' https://accounts.orkg.org;
+                      connect-src 'self'
+                          blob:
+                          localhost:*
+                          127.0.0.1:*
+                          https://orkg.org
+                          https://*.orkg.org
+                          https://support.tib.eu
+                          https://api.altmetric.com
+                          https://doi.org
+                          https://data.crosscite.org
+                          https://secure.geonames.org
+                          https://service.tib.eu
+                          https://pub.orcid.org
+                          https://api.semanticscholar.org
+                          https://api.datacite.org
+                          https://api.crossref.org
+                          https://app.chatwoot.com
+                          https://opencitations.net
+                          https://*.wikidata.org
+                          https://*.wikipedia.org/api/
+                          https://dbpedia.org/sparql
+                          https://api.unpaywall.org
+                          https://raw.githubusercontent.com
+                          https://fonts.gstatic.com
+                          https://mastodon.social
+                      ;`;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    async headers() {
+        return [
+            {
+                source: '/(.*)',
+                headers: [
+                    {
+                        key: 'Content-Security-Policy',
+                        value: cspHeader.replace(/\n/g, ''),
+                    },
+                ],
+            },
+        ];
+    },
     swcMinify: true, // different minification, speeds up compiling in dev mode
     reactStrictMode: false, // otherwise, list items are rendered twice (e.g. /resources, /paper etc. ): https://github.com/vercel/next.js/issues/35822
     eslint: {
