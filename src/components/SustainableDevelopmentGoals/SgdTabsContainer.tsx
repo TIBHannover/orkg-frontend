@@ -1,11 +1,16 @@
-import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import useSdgContent from 'components/SustainableDevelopmentGoals/hooks/useSdgContent';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
 import { Container } from 'reactstrap';
+import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
+import { Item, VisibilityOptions } from 'services/backend/types';
 
 type SgdTabsContainerProps = {
     sdgId: string;
@@ -14,7 +19,8 @@ type SgdTabsContainerProps = {
 export const SDG_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons' },
     { id: CLASSES.PAPER, label: 'Papers' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
+    // visualizations can't be associated with sdg
+    // { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
 ];
@@ -22,17 +28,46 @@ export const SDG_CONTENT_TABS = [
 const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: CLASSES.COMPARISON });
 
-    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore } = useSdgContent({
-        sdgId,
+    const renderListItem = (item: Item) => (
+        <CardFactory showBadge={contentType === ALL_CONTENT_TYPES_ID} showCurationFlags showAddToComparison key={item.id} item={item} />
+    );
+
+    const [sort] = useQueryState<VisibilityOptions>('sort', {
+        defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
+        parse: (value) => value as VisibilityOptions,
+    });
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getContentTypes',
+        fetchExtraParams: {
+            sdg: sdgId,
+            visibility: sort,
+            contentType,
+            published: true,
+        },
     });
 
     const onTabChange = (tab: string) => {
         setContentType(tab, { scroll: false, history: 'push' });
+        setPage(0);
     };
 
     return (
         <Container className="mt-4 p-0">
-            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} page={page} />
+            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
 
             <Tabs
                 className="box rounded"
@@ -43,16 +78,20 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
                     label: tab.label,
                     key: tab.id,
                     children: (
-                        <ContentTypeList
-                            contentType={tab.id}
-                            pageLabel="SDG"
+                        <ListPaginatedContent<Item>
+                            renderListItem={renderListItem}
+                            pageSize={pageSize}
+                            label="SDG"
                             isLoading={isLoading}
                             items={items ?? []}
                             hasNextPage={hasNextPage}
-                            isLastPageReached={isLastPageReached}
-                            totalElements={totalElements}
                             page={page}
-                            handleLoadMore={handleLoadMore}
+                            setPage={setPage}
+                            setPageSize={setPageSize}
+                            totalElements={totalElements}
+                            error={error}
+                            totalPages={totalPages}
+                            boxShadow={false}
                         />
                     ),
                 }))}

@@ -7,17 +7,16 @@ import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkD
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
-import usePaginate from 'components/hooks/usePaginate';
 import { SubTitle } from 'components/styled';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import Chart from 'react-google-charts';
 import { useSortBy, useTable } from 'react-table';
@@ -32,7 +31,8 @@ import {
     Table,
     UncontrolledButtonDropdown,
 } from 'reactstrap';
-import { getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
+import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
+import useSWRInfinite from 'swr/infinite';
 import { reverseWithSlug } from 'utils';
 
 function getTicksAxisH(data) {
@@ -77,20 +77,17 @@ function Benchmark() {
         problemId,
     });
 
-    const fetchItems = async ({ id, page, pageSize }) => {
-        const { content: items, last, totalElements } = await getDatasetsBenchmarksByResearchProblemId({ id, page, size: pageSize });
-        return {
-            items,
-            last,
-            totalElements,
-        };
-    };
-
-    const { results: datasets, isLoading: isLoadingDatasets } = usePaginate({
-        fetchItems,
-        fetchItemsExtraParams: { id: problemId },
-        pageSize: 9999,
+    const getKey = (pageIndex) => ({
+        id: problemId,
+        page: pageIndex,
+        size: 9999,
     });
+
+    const { data: datasets, isLoading: isLoadingDatasets } = useSWRInfinite(
+        (pageIndex) => [getKey(pageIndex), datasetsUrl, 'getDatasetsBenchmarksByResearchProblemId'],
+        ([params]) => getDatasetsBenchmarksByResearchProblemId(params),
+        { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
+    );
 
     const columns = useMemo(
         () => [

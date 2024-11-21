@@ -51,7 +51,7 @@ const useEntity = () => {
                       subjectId: currentId,
                       returnContent: true,
                       returnFormattedLabels: true,
-                      ...(isList && { sortBy: 'index', desc: false }),
+                      ...(isList && { sortBy: [{ property: 'index', direction: 'asc' as const }] }),
                   },
                   statementsUrl,
                   'getStatements',

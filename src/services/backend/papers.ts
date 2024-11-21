@@ -85,26 +85,21 @@ export const getPapersLinkedToResource = async ({
     id,
     page = 0,
     size = 9999,
-    sortBy = 'paper.created_at',
-    desc = true,
+    sortBy = [{ property: 'paper.created_at', direction: 'desc' }],
     returnContent = false,
 }: {
     id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
     returnContent?: boolean;
-}): Promise<
+} & PaginationParams): Promise<
     PaginatedResponse<
         Resource & {
             path: Resource[][];
         }
     >
 > => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const params = qs.stringify(
-        { linkedTo: id, page, size, sort, desc },
+        { linkedTo: id, page, size },
         {
             skipNulls: true,
         },

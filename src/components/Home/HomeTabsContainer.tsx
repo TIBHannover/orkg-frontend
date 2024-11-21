@@ -1,14 +1,17 @@
-import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
-import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { Button } from 'reactstrap';
-import { VisibilityOptions } from 'services/backend/types';
+import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
+import { Item, VisibilityOptions } from 'services/backend/types';
 import { reverseWithSlug } from 'utils';
 
 export const HOME_CONTENT_TABS = [
@@ -35,9 +38,32 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
         setContentType(tab, { scroll: false, history: 'push' });
     };
 
-    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore } = useResearchFieldContent({
-        researchFieldId,
-        pageSize: 10,
+    const renderListItem = (item: Item) => (
+        <CardFactory showBadge={contentType === ALL_CONTENT_TYPES_ID} showCurationFlags showAddToComparison key={item.id} item={item} />
+    );
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getContentTypes',
+        fetchExtraParams: {
+            research_field: researchFieldId,
+            include_subfields: includeSubFields,
+            visibility: sort,
+            contentType,
+        },
+        defaultPageSize: 10,
     });
 
     const contentTypeLink = {
@@ -64,17 +90,21 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                                 <ContentTypeVisibilityFilter isLoading={isLoading} />
                             </div>
                             <hr className="my-0" />
-                            <ContentTypeList
-                                contentType={tab.id}
-                                pageLabel="featured"
+                            <ListPaginatedContent<Item>
+                                renderListItem={renderListItem}
+                                pageSize={pageSize}
+                                label="research field"
                                 isLoading={isLoading}
                                 items={items ?? []}
                                 hasNextPage={hasNextPage}
-                                isLastPageReached={isLastPageReached}
-                                totalElements={totalElements}
                                 page={page}
-                                handleLoadMore={handleLoadMore}
-                                showLoadMore={false}
+                                setPage={setPage}
+                                setPageSize={setPageSize}
+                                totalElements={totalElements}
+                                error={error}
+                                totalPages={totalPages}
+                                boxShadow={false}
+                                showPagination={false}
                             />
                         </>
                     ),

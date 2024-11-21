@@ -113,7 +113,7 @@ export const mergePaginateResponses = (
     ...response1,
     content: mergeAlternate(response1.content, response2.content),
     totalElements: response1.totalElements + response2.totalElements,
-    totalPages: response1.totalPages + response2.totalPages,
+    totalPages: Math.max(response1.totalPages, response2.totalPages),
     last: response1.last && response2.last,
 });
 

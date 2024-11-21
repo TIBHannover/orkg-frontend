@@ -4,7 +4,7 @@ import { ORKGTabsStyle } from 'components/Tabs/styled';
 
 type ORKGTabsProps = TabsProps &
     React.RefAttributes<HTMLDivElement> & {
-        className: string;
+        className?: string;
         style?: React.CSSProperties;
         activeKey?: string;
     };

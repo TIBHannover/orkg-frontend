@@ -1,14 +1,13 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
 import ContentTypeSubFieldsFilter from 'components/ContentTypeList/ContentTypeSubFieldsFilter';
+import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 
 type ContentTypeListHeaderProps = {
     label?: string;
     isLoading: boolean;
     totalElements: number | undefined;
-    page: number;
     showVisibilityFilter?: boolean;
     showSubFieldsFilter?: boolean;
 };
@@ -17,7 +16,6 @@ const ContentTypeListHeader = ({
     label = 'Content',
     isLoading,
     totalElements,
-    page,
     showVisibilityFilter = true,
     showSubFieldsFilter = false,
 }: ContentTypeListHeaderProps) => {
@@ -28,7 +26,7 @@ const ContentTypeListHeader = ({
                 <SubtitleSeparator />
                 <SubTitle>
                     <small className="text-muted text-small mt-1">
-                        {page === 1 && isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `${totalElements} items`}
+                        {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `${totalElements} items`}
                     </small>
                 </SubTitle>
             </div>

@@ -27,7 +27,7 @@ import useSWR from 'swr';
 type SingleStatementProps = {
     statement: RosettaStoneStatement;
     setNewStatements?: Dispatch<SetStateAction<RosettaStoneStatement[]>>;
-    reloadStatements: () => void;
+    reloadStatements?: () => void;
     showContext?: boolean;
 };
 

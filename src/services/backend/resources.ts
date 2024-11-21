@@ -43,7 +43,7 @@ export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise
 
 export const deleteResource = (id: string): Promise<null> => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 
-export type getResourcesParams = {
+export type GetResourcesParams<T extends boolean = false> = {
     q?: string | null;
     exact?: boolean;
     filters?: FilterConfig[];
@@ -53,7 +53,7 @@ export type getResourcesParams = {
     include?: string[];
     exclude?: string[];
     baseClass?: string | null;
-    returnContent?: boolean;
+    returnContent?: T;
 } & PaginationParams &
     VisibilityParam &
     VerifiedParam &
@@ -75,7 +75,7 @@ export type getResourcesParams = {
  * @param {boolean} [params.returnContent=false] - Flag to return only content field in response.
  * @returns {Promise<PaginatedResponse<Resource> | Resource[]>} A promise to the resource data.
  */
-export const getResources = ({
+export const getResources = <T extends boolean = false>({
     q = null,
     exact = false,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
@@ -95,8 +95,8 @@ export const getResources = ({
         },
     ],
     baseClass = null,
-    returnContent = false,
-}: getResourcesParams): Promise<PaginatedResponse<Resource> | Resource[]> => {
+    returnContent = false as T,
+}: GetResourcesParams<T>): Promise<T extends true ? Resource[] : PaginatedResponse<Resource>> => {
     const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
     const params = qs.stringify(
         {
@@ -115,9 +115,12 @@ export const getResources = ({
         },
         {
             skipNulls: true,
+            arrayFormat: 'repeat',
         },
     );
-    return submitGetRequest(`${resourcesUrl}?${params}`).then((res) => (returnContent ? res.content : res));
+    return submitGetRequest(`${resourcesUrl}?${params}`).then((res) => (returnContent ? res.content : res)) as Promise<
+        T extends true ? Resource[] : PaginatedResponse<Resource>
+    >;
 };
 
 export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
