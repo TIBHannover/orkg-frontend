@@ -1,7 +1,7 @@
 import { url } from 'constants/misc';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { PaginatedResponse, Predicate } from 'services/backend/types';
+import { PaginatedResponse, PaginationParams, Predicate } from 'services/backend/types';
 
 export const predicatesUrl = `${url}predicates/`;
 
@@ -17,28 +17,26 @@ export const updatePredicate = (id: string, label: string): Promise<Predicate> =
 
 export const deletePredicate = (id: string): Promise<null> => submitDeleteRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' });
 
-export const getPredicates = ({
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    q = null,
-    exact = false,
-    returnContent = false,
-}: {
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
+export type GetPredicatesParams<T extends boolean = false> = {
     q?: string | null;
     exact?: boolean;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Predicate> | Predicate[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    returnContent?: T;
+} & PaginationParams;
+
+export const getPredicates = <T extends boolean = false>({
+    page = 0,
+    size = 9999,
+    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    q = null,
+    exact = false,
+    returnContent = false as T,
+}: GetPredicatesParams<T>): Promise<T extends true ? Predicate[] : PaginatedResponse<Predicate>> => {
+    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const params = qs.stringify(
         { page, size, exact, ...(q ? { q } : { sort }) },
         {
             skipNulls: true,
+            arrayFormat: 'repeat',
         },
     );
 

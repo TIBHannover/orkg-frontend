@@ -1,12 +1,16 @@
-import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
 import Filters from 'components/Filters/Filters';
-import useObservatoryContent from 'components/Observatory/hooks/useObservatoryContent';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { parseAsJson, useQueryState } from 'nuqs';
-import { FilterConfig } from 'services/backend/types';
+import { toast } from 'react-toastify';
+import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
+import { FilterConfig, Item, VisibilityOptions } from 'services/backend/types';
 
 export const OBSERVATORY_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },
@@ -20,20 +24,56 @@ export const OBSERVATORY_CONTENT_TABS = [
 
 function ObservatoryTabsContainer({ id }: { id: string }) {
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: ALL_CONTENT_TYPES_ID });
-    const [, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+    const [sort] = useQueryState<VisibilityOptions>('sort', {
+        defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
+        parse: (value) => value as VisibilityOptions,
+    });
+
+    // Set Default filters
+    if (filterConfig && contentType !== CLASSES.PAPER) {
+        toast.dismiss();
+        toast.info('Filters are only available on the paper type');
+        setContentType(CLASSES.PAPER, { scroll: false });
+    }
+
+    const renderListItem = (item: Item) => (
+        <CardFactory showBadge={contentType === ALL_CONTENT_TYPES_ID} showCurationFlags showAddToComparison key={item.id} item={item} />
+    );
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getContentTypes',
+        fetchExtraParams: {
+            observatory_id: id,
+            visibility: sort,
+            contentType,
+            // ignore the label while requesting the result from the backend
+            filter_config: filterConfig?.map(({ label, ...restConfig }) => restConfig),
+        },
+    });
 
     const onTabChange = (tab: string) => {
         setFilterConfig(null);
         setContentType(tab, { scroll: false, history: 'push' });
+        setPage(0);
     };
-
-    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore } = useObservatoryContent({
-        observatory_id: id,
-    });
 
     return (
         <>
-            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} page={page} />
+            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
 
             <Tabs
                 className="box rounded mt-2"
@@ -46,16 +86,20 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
                     children: (
                         <>
                             {contentType === CLASSES.PAPER && <Filters id={id} />}
-                            <ContentTypeList
-                                contentType={tab.id}
-                                pageLabel="observatory"
+                            <ListPaginatedContent<Item>
+                                renderListItem={renderListItem}
+                                pageSize={pageSize}
+                                label="observatory"
                                 isLoading={isLoading}
                                 items={items ?? []}
                                 hasNextPage={hasNextPage}
-                                isLastPageReached={isLastPageReached}
-                                totalElements={totalElements}
                                 page={page}
-                                handleLoadMore={handleLoadMore}
+                                setPage={setPage}
+                                setPageSize={setPageSize}
+                                totalElements={totalElements}
+                                error={error}
+                                totalPages={totalPages}
+                                boxShadow={false}
                             />
                         </>
                     ),

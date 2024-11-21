@@ -1,11 +1,21 @@
-import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
-import useUserProfileContent from 'components/UserProfile/hooks/useUserProfileContent';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
-import { parseAsJson, useQueryState } from 'nuqs';
-import { FilterConfig } from 'services/backend/types';
+import { flatten } from 'lodash';
+import { useQueryState } from 'nuqs';
+import { Button } from 'reactstrap';
+import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
+import { Item, Paper, VisibilityOptions } from 'services/backend/types';
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import ROUTES from 'constants/routes';
 
 export const USER_PROFILE_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },
@@ -19,21 +29,87 @@ export const USER_PROFILE_CONTENT_TABS = [
 ];
 
 function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUserId: string }) {
-    const [contentType, setContentType] = useQueryState('contentType', { defaultValue: ALL_CONTENT_TYPES_ID });
-    const [, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+    const router = useRouter();
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-    const onTabChange = (tab: string) => {
-        setFilterConfig(null);
-        setContentType(tab, { scroll: false, history: 'push' });
+    const [contentType, setContentType] = useQueryState('contentType', { defaultValue: ALL_CONTENT_TYPES_ID });
+
+    const [sort] = useQueryState<VisibilityOptions>('sort', {
+        defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
+        parse: (value) => value as VisibilityOptions,
+    });
+
+    const handleSelect = (paperId: string) => {
+        if (selectedItems.includes(paperId)) {
+            setSelectedItems(selectedItems.filter((id) => id !== paperId));
+        } else {
+            setSelectedItems([...selectedItems, paperId]);
+        }
     };
 
-    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore, mutate } = useUserProfileContent({
-        userId: id,
+    const renderListItem = (item: Item) => (
+        <CardFactory
+            showBadge={contentType === ALL_CONTENT_TYPES_ID}
+            showCurationFlags
+            showAddToComparison
+            key={item.id}
+            item={item}
+            selectable={id === currentUserId}
+            selected={selectedItems.includes(item.id)}
+            onSelect={() => handleSelect(item.id)}
+        />
+    );
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+        mutate,
+    } = usePaginate({
+        fetchFunction: getContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getContentTypes',
+        fetchExtraParams: {
+            created_by: id,
+            visibility: sort,
+            contentType,
+        },
     });
+
+    const onTabChange = (tab: string) => {
+        setContentType(tab, { scroll: false, history: 'push' });
+        setPage(0);
+    };
+
+    const { deletePapers, isLoading: loadingDeletePapers } = useDeletePapers({
+        paperIds: selectedItems,
+        finishLoadingCallback: mutate,
+    });
+
+    const comparePapers = () => {
+        const contributionIds = flatten(
+            (flatten(items).filter((r) => selectedItems.includes(r.id)) as Paper[])?.map((c) => c.contributions?.map((ctrId) => ctrId.id)),
+        );
+        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
+    };
+
+    useEffect(() => {
+        if (loadingDeletePapers) {
+            mutate?.();
+            setSelectedItems([]);
+        }
+    }, [loadingDeletePapers, mutate]);
 
     return (
         <>
-            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} page={page} />
+            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
 
             <Tabs
                 className="box rounded mt-2"
@@ -44,19 +120,34 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                     label: tab.label,
                     key: tab.id,
                     children: (
-                        <ContentTypeList
-                            contentType={tab.id}
-                            pageLabel="user"
-                            isLoading={isLoading}
-                            items={items ?? []}
-                            hasNextPage={hasNextPage}
-                            isLastPageReached={isLastPageReached}
-                            totalElements={totalElements}
-                            page={page}
-                            handleLoadMore={handleLoadMore}
-                            mutate={mutate}
-                            showDelete={id === currentUserId}
-                        />
+                        <>
+                            <ListPaginatedContent<Item>
+                                renderListItem={renderListItem}
+                                pageSize={pageSize}
+                                label="user"
+                                isLoading={isLoading}
+                                items={items ?? []}
+                                hasNextPage={hasNextPage}
+                                page={page}
+                                setPage={setPage}
+                                setPageSize={setPageSize}
+                                totalElements={totalElements}
+                                error={error}
+                                totalPages={totalPages}
+                                boxShadow={false}
+                            />
+                            {contentType === CLASSES.PAPER && selectedItems.length > 0 && (
+                                <div className="mx-2 my-2">
+                                    <Button size="sm" color="secondary" className="mt-2 me-2" onClick={comparePapers}>
+                                        Compare selected papers({selectedItems.length})
+                                    </Button>
+
+                                    <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
+                                        Delete selected papers ({selectedItems.length})
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     ),
                 }))}
             />

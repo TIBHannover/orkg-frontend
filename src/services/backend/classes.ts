@@ -3,7 +3,7 @@
 import { url } from 'constants/misc';
 import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { Class, PaginatedResponse } from 'services/backend/types';
+import { Class, PaginatedResponse, PaginationParams } from 'services/backend/types';
 
 export const classesUrl = `${url}classes/`;
 
@@ -15,34 +15,37 @@ export const createClass = (label: string, uri: string | null = null, id: string
 export const updateClass = (id: string, label: string): Promise<Class> =>
     submitPutRequest(`${classesUrl}${id}`, { 'Content-Type': 'application/json' }, { label });
 
-export const getClasses = ({
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    q = null,
-    exact = false,
-    uri = null,
-    returnContent = false,
-}: {
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
+export type GetClassesParams<T extends boolean = false, U extends string | null = null> = {
     q?: string | null;
     exact?: boolean;
-    uri?: string | null;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Class> | Class[] | Class> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    returnContent?: T;
+    uri?: U;
+} & PaginationParams;
+
+export const getClasses = <T extends boolean = false, U extends string | null = null>({
+    page = 0,
+    size = 9999,
+    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    q = null,
+    exact = false,
+    uri = null as U,
+    returnContent = false as T,
+}: GetClassesParams<T, U>): Promise<U extends string ? Class : T extends true ? Class[] : PaginatedResponse<Class>> => {
+    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const params = qs.stringify(
         { page, size, exact, ...(q ? { q } : { sort }), uri },
         {
             skipNulls: true,
+            arrayFormat: 'repeat',
         },
     );
 
-    return submitGetRequest(`${classesUrl}?${params}`).then((res) => (returnContent ? res.content : res));
+    return submitGetRequest(`${classesUrl}?${params}`).then((res) => {
+        if (uri) {
+            return res as Class;
+        }
+        return (returnContent ? res.content : res) as any;
+    });
 };
 
 /**

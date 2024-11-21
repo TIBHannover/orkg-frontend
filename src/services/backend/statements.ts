@@ -2,12 +2,12 @@ import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { PaginatedResponse, PropertyShapeResourceType, Resource, Statement } from 'services/backend/types';
+import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from 'services/backend/types';
 import { getTemplate } from 'services/backend/templates';
 
 export const statementsUrl = `${url}statements/`;
 
-type GetStatementsParams = {
+export type GetStatementsParams<T extends boolean = true> = {
     subjectClasses?: string[];
     subjectId?: string;
     subjectLabel?: string;
@@ -18,15 +18,11 @@ type GetStatementsParams = {
     objectClasses?: string[];
     objectId?: string;
     objectLabel?: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    returnContent?: boolean;
     returnFormattedLabels?: boolean;
-};
+    returnContent?: T;
+} & PaginationParams;
 
-export const getStatements = ({
+export const getStatements = <T extends boolean = true>({
     subjectClasses = [],
     subjectId = undefined,
     subjectLabel = undefined,
@@ -39,11 +35,10 @@ export const getStatements = ({
     objectLabel = undefined,
     page = 0,
     size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    returnContent = true,
+    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    returnContent = true as T,
     returnFormattedLabels = false,
-}: GetStatementsParams): Promise<PaginatedResponse<Statement> | Statement[]> => {
+}: GetStatementsParams<T>): Promise<T extends true ? Statement[] : PaginatedResponse<Statement>> => {
     let headers;
     if (returnFormattedLabels) {
         headers = {
@@ -51,7 +46,7 @@ export const getStatements = ({
             Accept: 'application/json;formatted-labels=V1',
         };
     }
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const params = qs.stringify(
         {
             subject_classes: subjectClasses.length > 0 ? subjectClasses.join(',') : undefined,
@@ -73,7 +68,9 @@ export const getStatements = ({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}?${params}`, headers).then((res: PaginatedResponse<Statement>) => (returnContent ? res.content : res));
+    return submitGetRequest(`${statementsUrl}?${params}`, headers).then((res) => (returnContent ? res.content : res)) as Promise<
+        T extends true ? Statement[] : PaginatedResponse<Statement>
+    >;
 };
 
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string): Promise<Statement> =>
@@ -155,7 +152,13 @@ export const getStatementsBySubject = ({
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
-    return getStatements({ subjectId: id, page, size, sortBy, desc, returnContent: true }) as Promise<Statement[]>;
+    return getStatements({
+        subjectId: id,
+        page,
+        size,
+        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
+        returnContent: true,
+    }) as Promise<Statement[]>;
 };
 
 /**
@@ -235,7 +238,7 @@ export const getStatementsByObject = async ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({ objectId: id, page, size, sortBy, desc, returnContent });
+    return getStatements({ objectId: id, page, size, sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }], returnContent });
 };
 
 /**
@@ -257,7 +260,7 @@ export const getStatementsByPredicate = ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({ predicateId: id, page, size, sortBy, desc, returnContent });
+    return getStatements({ predicateId: id, page, size, sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }], returnContent });
 };
 
 /**
@@ -279,7 +282,14 @@ export const getStatementsBySubjectAndPredicate = ({
     sortBy?: string;
     desc?: boolean;
 }): Promise<Statement[]> => {
-    return getStatements({ subjectId, predicateId, page, size, sortBy, desc, returnContent: true }) as Promise<Statement[]>;
+    return getStatements({
+        subjectId,
+        predicateId,
+        page,
+        size,
+        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
+        returnContent: true,
+    }) as Promise<Statement[]>;
 };
 
 /**
@@ -303,7 +313,14 @@ export const getStatementsByObjectAndPredicate = ({
     desc?: boolean;
     returnContent?: boolean;
 }): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({ objectId, predicateId, page, size, sortBy, desc, returnContent });
+    return getStatements({
+        objectId,
+        predicateId,
+        page,
+        size,
+        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
+        returnContent,
+    });
 };
 
 /**
@@ -336,8 +353,8 @@ export const getStatementsByPredicateAndLiteral = ({
         predicateId,
         page,
         size,
-        sortBy,
-        desc,
+        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
+
         returnContent,
     });
 };
@@ -418,7 +435,7 @@ export const getTemplatesByClass = (classID: string): Promise<string[]> =>
     })
         .then((statements) =>
             (statements as Statement[])
-                .filter((statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
+                .filter((statement: Statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
                 .map((st) => st.subject.id)
                 .filter((c) => c),
         )

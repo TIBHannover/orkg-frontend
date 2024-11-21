@@ -4,8 +4,10 @@ import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { Contributor, Organization } from 'services/backend/types';
+import { observatoriesUrl } from 'services/backend/observatories';
+import { Organization } from 'services/backend/types';
 import { addUserToObservatory } from 'services/backend/users';
+import { mutate } from 'swr';
 import { getErrorMessage } from 'utils';
 
 type AddMemberProps = {
@@ -13,10 +15,9 @@ type AddMemberProps = {
     toggle: () => void;
     observatoryId: string;
     organizationsList: Organization[];
-    updateObservatoryMembers: (member: Contributor) => void;
 };
 
-const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, organizationsList, updateObservatoryMembers }) => {
+const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, organizationsList }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrganization, setSelectedOrganization] = useState(organizationsList.length === 1 ? organizationsList[0] : null);
     const [contributorId, setContributorId] = useState('');
@@ -25,9 +26,9 @@ const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, orga
         setIsLoading(true);
         if (selectedOrganization && contributorId.length > 0) {
             await addUserToObservatory(contributorId, observatoryId, selectedOrganization.id)
-                .then((member) => {
+                .then(() => {
                     toast.success('Member added successfully');
-                    updateObservatoryMembers(member);
+                    mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
                     setIsLoading(false);
                     setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
                     setContributorId('');

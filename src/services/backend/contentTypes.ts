@@ -7,7 +7,7 @@ import { getComparisons } from 'services/backend/comparisons';
 import { getLiteratureLists } from 'services/backend/literatureLists';
 import { mergePaginateResponses, prepareParams } from 'services/backend/misc';
 import { observatoriesUrl } from 'services/backend/observatories';
-import { getPapers } from 'services/backend/papers';
+import { getPaper, getPapers } from 'services/backend/papers';
 import { getResources } from 'services/backend/resources';
 import { getReviews } from 'services/backend/reviews';
 import { getRSTemplates } from 'services/backend/rosettaStone';
@@ -80,7 +80,7 @@ export const getGenericContentTypes = ({
     });
 };
 
-const getAPIFunction = (cType: string, paramsObj: Omit<GetContentParams, 'contentType'>) => {
+const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, 'contentType'>) => {
     switch (cType) {
         case ALL_CONTENT_TYPES_ID:
             return getGenericContentTypes({
@@ -92,12 +92,14 @@ const getAPIFunction = (cType: string, paramsObj: Omit<GetContentParams, 'conten
                 return getPapers(paramsObj);
             }
             if (paramsObj.observatory_id) {
-                return submitGetRequest(
+                const result = await submitGetRequest(
                     `${observatoriesUrl}${encodeURIComponent(paramsObj.observatory_id)}/papers?${qs.stringify(
                         { ...paramsObj, filter_config: JSON.stringify(paramsObj.filter_config) },
                         { skipNulls: true },
                     )}`,
                 );
+                const papers = await Promise.all(result.content.map((p: Resource) => getPaper(p.id)));
+                return { ...result, content: papers };
             }
             return getGenericContentTypes({ ...paramsObj, classes: ['PAPER'] });
         case CLASSES.COMPARISON:

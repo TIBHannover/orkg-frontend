@@ -1,9 +1,14 @@
-import ContentTypeList from 'components/ContentTypeList/ContentTypeList';
+import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { useQueryState } from 'nuqs';
+import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
+import { Item, VisibilityOptions } from 'services/backend/types';
 
 export const RESEARCH_FIELD_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons' },
@@ -15,18 +20,50 @@ export const RESEARCH_FIELD_CONTENT_TABS = [
 
 function ResearchFieldTabsContainer({ id }: { id: string }) {
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: CLASSES.COMPARISON });
+    const [sort] = useQueryState<VisibilityOptions>('sort', {
+        defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
+        parse: (value) => value as VisibilityOptions,
+    });
+    const [includeSubFields] = useQueryState('include_subfields', {
+        defaultValue: true,
+        parse: (value) => value === 'true',
+    });
+
+    const renderListItem = (item: Item) => (
+        <CardFactory showBadge={contentType === ALL_CONTENT_TYPES_ID} showCurationFlags showAddToComparison key={item.id} item={item} />
+    );
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getContentTypes',
+        fetchExtraParams: {
+            research_field: id,
+            include_subfields: includeSubFields,
+            visibility: sort,
+            contentType,
+        },
+    });
 
     const onTabChange = (tab: string) => {
         setContentType(tab, { scroll: false, history: 'push' });
+        setPage(0);
     };
-
-    const { items, isLoading, hasNextPage, isLastPageReached, totalElements, page, handleLoadMore } = useResearchFieldContent({
-        researchFieldId: id,
-    });
 
     return (
         <>
-            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} page={page} showSubFieldsFilter />
+            <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} showSubFieldsFilter />
 
             <Tabs
                 className="box rounded mt-2"
@@ -37,16 +74,20 @@ function ResearchFieldTabsContainer({ id }: { id: string }) {
                     label: tab.label,
                     key: tab.id,
                     children: (
-                        <ContentTypeList
-                            contentType={tab.id}
-                            pageLabel="research field"
+                        <ListPaginatedContent<Item>
+                            renderListItem={renderListItem}
+                            pageSize={pageSize}
+                            label="Research Field"
                             isLoading={isLoading}
                             items={items ?? []}
                             hasNextPage={hasNextPage}
-                            isLastPageReached={isLastPageReached}
-                            totalElements={totalElements}
                             page={page}
-                            handleLoadMore={handleLoadMore}
+                            setPage={setPage}
+                            setPageSize={setPageSize}
+                            totalElements={totalElements}
+                            error={error}
+                            totalPages={totalPages}
+                            boxShadow={false}
                         />
                     ),
                 }))}

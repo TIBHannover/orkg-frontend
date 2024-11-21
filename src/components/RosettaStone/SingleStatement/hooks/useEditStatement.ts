@@ -15,7 +15,7 @@ import { guid } from 'utils';
 type UseEditStatementProps = {
     statement: RosettaStoneStatement;
     setNewStatements?: Dispatch<SetStateAction<RosettaStoneStatement[]>>;
-    reloadStatements: () => void;
+    reloadStatements?: () => void;
 };
 
 const useEditStatement = ({ statement, setNewStatements, reloadStatements }: UseEditStatementProps) => {
@@ -57,7 +57,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     const handleDeleteStatement = async () => {
         if (statement.latest_version_id) {
             await deleteRSStatement(statement.id);
-            reloadStatements();
+            reloadStatements?.();
         } else if (setNewStatements) {
             setNewStatements((prev) => prev.filter((s) => s.id !== statement.id));
         }
@@ -65,7 +65,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
 
     const handleDeleteStatementPermanently = async () => {
         await fullyDeleteRSStatement(statement.id);
-        reloadStatements();
+        reloadStatements?.();
     };
 
     const onSave = async () => {
@@ -162,7 +162,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
                 handleDeleteStatement();
             }
             setIsEditing(false);
-            reloadStatements();
+            reloadStatements?.();
         } catch (e: unknown) {
             errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
         } finally {

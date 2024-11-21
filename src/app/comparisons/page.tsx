@@ -4,14 +4,14 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import ListPage from 'components/ListPage/ListPage';
-import VideoExplainer from 'components/ListPage/VideoExplainer';
+import ListPage from 'components/PaginatedContent/ListPage';
+import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
 import Link from 'next/link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { useEffect } from 'react';
-import { getComparisons } from 'services/backend/comparisons';
+import { getComparisons, comparisonUrl } from 'services/backend/comparisons';
 import { Comparison } from 'services/backend/types';
 
 const Comparisons = () => {
@@ -20,24 +20,6 @@ const Comparisons = () => {
     });
 
     const renderListItem = (comparison: Comparison) => <ComparisonCard comparison={comparison} key={comparison.id} />;
-
-    const fetchItems = async ({ page, pageSize }: { page: number; pageSize: number }) => {
-        const {
-            content: items,
-            last,
-            totalElements,
-        } = await getComparisons({
-            page,
-            size: pageSize,
-            sortBy: [{ property: 'created_at', direction: 'desc' }],
-        });
-
-        return {
-            items,
-            last,
-            totalElements,
-        };
-    };
 
     const buttons = (
         <>
@@ -89,12 +71,12 @@ const Comparisons = () => {
         <ListPage
             label="comparisons"
             resourceClass={CLASSES.COMPARISON}
+            fetchFunction={getComparisons}
+            fetchUrl={comparisonUrl}
+            fetchFunctionName="getComparisons"
+            fetchExtraParams={{}}
             renderListItem={renderListItem}
-            fetchItems={fetchItems}
-            // @ts-expect-error
             buttons={buttons}
-            pageSize={15}
-            // @ts-expect-error
             infoContainerText={infoContainerText}
         />
     );

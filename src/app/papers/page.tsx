@@ -4,52 +4,33 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ListPage from 'components/ListPage/ListPage';
-import Link from 'next/link';
+import ListPage from 'components/PaginatedContent/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { FC, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useQueryState, parseAsInteger } from 'nuqs';
+import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getPapers } from 'services/backend/papers';
+import { getPapers, papersUrl } from 'services/backend/papers';
 import { Paper } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 
 const Papers: FC = () => {
-    const [verified, setVerified] = useState<boolean | null>(null);
-    const [reset, setReset] = useState(false);
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const [verified, setVerified] = useQueryState<boolean | null>('verified', {
+        defaultValue: null,
+        // eslint-disable-next-line no-nested-ternary
+        parse: (value) => (value === 'true' ? true : value === 'false' ? false : null),
+    });
 
     useEffect(() => {
         document.title = 'Papers list - ORKG';
-    });
+    }, []);
+
+    const user = useSelector((state: RootStore) => state.auth.user);
 
     const renderListItem = (paper: Paper) => <PaperCard paper={paper} key={paper.id} />;
-
-    const fetchItems = async ({ page, pageSize }: { page: number; pageSize: number }) => {
-        const {
-            content: items,
-            last,
-            totalElements,
-        } = await getPapers({
-            page,
-            size: pageSize,
-            sortBy: [{ property: 'created_at', direction: 'desc' }],
-            verified,
-        });
-
-        return {
-            items,
-            last,
-            totalElements,
-        };
-    };
-
-    const changeFilter = (filter: boolean | null) => {
-        setVerified(filter);
-        setReset(true);
-    };
 
     const buttons = (
         <>
@@ -61,9 +42,9 @@ const Papers: FC = () => {
                         {verified === null && 'All'}
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem onClick={() => changeFilter(null)}>All</DropdownItem>
-                        <DropdownItem onClick={() => changeFilter(true)}>Verified</DropdownItem>
-                        <DropdownItem onClick={() => changeFilter(false)}>Unverified</DropdownItem>
+                        <DropdownItem onClick={() => setVerified(null, { scroll: false, history: 'push' })}>All</DropdownItem>
+                        <DropdownItem onClick={() => setVerified(true, { scroll: false, history: 'push' })}>Verified</DropdownItem>
+                        <DropdownItem onClick={() => setVerified(false, { scroll: false, history: 'push' })}>Unverified</DropdownItem>
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
             )}
@@ -97,16 +78,14 @@ const Papers: FC = () => {
         <>
             <ListPage
                 label="papers"
-                resourceClass={CLASSES.PAPER}
+                fetchFunction={getPapers}
+                fetchFunctionName="getPapers"
+                fetchUrl={papersUrl}
+                fetchExtraParams={{ verified }}
                 renderListItem={renderListItem}
-                fetchItems={fetchItems}
-                /* @ts-expect-error */
+                resourceClass={CLASSES.PAPER}
                 buttons={buttons}
                 disableSearch={verified !== null}
-                reset={reset}
-                /* @ts-expect-error */
-                setReset={setReset}
-                /* @ts-expect-error */
                 infoContainerText={infoContainerText}
             />
 
