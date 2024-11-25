@@ -1,78 +1,88 @@
-import { useRef } from 'react';
-import PropTypes from 'prop-types';
-import rangy from 'rangy';
-import { useSelector, useDispatch } from 'react-redux';
-import { createAnnotation } from 'slices/viewPaperSlice';
+import { OptionType } from 'components/Autocomplete/types';
 import AnnotationTooltip from 'components/ViewPaper/AbstractAnnotatorModal/AnnotationTooltip';
+import rangy from 'rangy';
+import { FC, ReactElement, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Range, RootStore } from 'slices/types';
+import { createAnnotation } from 'slices/viewPaperSlice';
 
-function getAllIndexes(arr, val) {
+function getAllIndexes(arr: string, val: string) {
     const indexes = [];
     let i = -1;
-    while ((i = arr.indexOf(val, i + 1)) !== -1) {
-        indexes.push(i);
+    let nextIndex = arr.indexOf(val, i + 1);
+    while (nextIndex !== -1) {
+        indexes.push(nextIndex);
+        i = nextIndex;
+        nextIndex = arr.indexOf(val, i + 1);
     }
     return indexes;
 }
 
-function AbstractAnnotator(props) {
-    const annotatorRef = useRef(null);
+type AbstractAnnotatorProps = {
+    predicateOptions: OptionType[];
+    getPredicateColor: (id: string) => string;
+};
+
+const AbstractAnnotator: FC<AbstractAnnotatorProps> = ({ predicateOptions, getPredicateColor }) => {
+    const annotatorRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch();
 
-    const abstract = useSelector((state) => state.viewPaper.abstract);
-    const ranges = useSelector((state) => state.viewPaper.ranges);
+    const { abstract, ranges } = useSelector((state: RootStore) => state.viewPaper);
 
-    const renderCharNode = (charIndex) => (
+    const renderCharNode = (charIndex: number) => (
         <span key={`c${charIndex}`} data-position={charIndex}>
             {abstract[charIndex]}
         </span>
     );
 
-    const getRange = (charPosition) =>
-        ranges &&
-        Object.values(ranges).find(
-            (range) => charPosition >= range.start && charPosition <= range.end && range.certainty >= props.certaintyThreshold,
-        );
+    const getRange = (charPosition: number) =>
+        ranges && Object.values(ranges).find((range) => charPosition >= range.start && charPosition <= range.end);
 
-    const tooltipRenderer = (lettersNode, range) => (
+    const tooltipRenderer = (lettersNode: ReactElement[], range: Range) => (
         <AnnotationTooltip
             key={`${range.id}`}
             range={range}
             lettersNode={lettersNode}
-            classOptions={props.classOptions}
-            getClassColor={props.getClassColor}
+            predicateOptions={predicateOptions}
+            getPredicateColor={getPredicateColor}
         />
     );
 
     const getAnnotatedText = () => {
         const annotatedText = [];
-        for (let charPosition = 0; charPosition < abstract.length; charPosition++) {
+        for (let charPosition = 0; charPosition < abstract.length; charPosition += 1) {
             const range = getRange(charPosition);
             const charNode = renderCharNode(charPosition);
-            if (!range) {
+            if (range) {
+                const annotationGroup = [charNode];
+                let rangeCharPosition = charPosition + 1;
+                for (; rangeCharPosition < range.end + 1; rangeCharPosition += 1) {
+                    annotationGroup.push(renderCharNode(rangeCharPosition));
+                    charPosition = rangeCharPosition;
+                }
+                annotatedText.push(tooltipRenderer(annotationGroup, range));
+            } else {
                 annotatedText.push(charNode);
-                continue;
             }
-            const annotationGroup = [charNode];
-            let rangeCharPosition = charPosition + 1;
-            for (; rangeCharPosition < parseInt(range.end) + 1; rangeCharPosition++) {
-                annotationGroup.push(renderCharNode(rangeCharPosition));
-                charPosition = rangeCharPosition;
-            }
-            annotatedText.push(tooltipRenderer(annotationGroup, range));
         }
         return annotatedText;
     };
 
     const handleMouseUp = () => {
+        if (!annotatorRef.current) {
+            return null;
+        }
+        // Get the selection
+        // @ts-expect-error: rangy is not typed
         const sel = rangy.getSelection(annotatorRef.current);
         if (sel.isCollapsed) {
             return null;
         }
         // Get position of the node at which the user started selecting
-        let start = parseInt(sel.anchorNode.parentNode.dataset.position);
+        let start = parseInt((sel.anchorNode?.parentNode as HTMLElement)?.dataset.position ?? '', 10);
         // Get position of the node at which the user stopped selecting
-        let end = parseInt(sel.focusNode.parentNode.dataset.position);
+        let end = parseInt((sel.focusNode?.parentNode as HTMLElement)?.dataset.position ?? '', 10);
         // Get the text within the selection
         const text = sel.toString();
         if (!text.length) {
@@ -97,12 +107,13 @@ function AbstractAnnotator(props) {
             start,
             end,
             text,
-            class: { id: null, label: null },
+            predicate: { id: null, label: null },
             certainty: 1,
             isEditing: false,
         };
         dispatch(createAnnotation(range));
-        window.getSelection().empty();
+        window?.getSelection()?.empty();
+        return null;
     };
 
     const annotatedText = getAnnotatedText();
@@ -110,7 +121,7 @@ function AbstractAnnotator(props) {
         <div>
             <div
                 role="textbox"
-                tabIndex="0"
+                tabIndex={0}
                 onMouseUp={handleMouseUp}
                 id="annotatedText"
                 className="mt-4"
@@ -121,12 +132,6 @@ function AbstractAnnotator(props) {
             </div>
         </div>
     );
-}
+};
 
 export default AbstractAnnotator;
-
-AbstractAnnotator.propTypes = {
-    certaintyThreshold: PropTypes.number,
-    classOptions: PropTypes.array.isRequired,
-    getClassColor: PropTypes.func.isRequired,
-};

@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAbstractByDoi, getAbstractByTitle } from 'services/semanticScholar';
-import { setAbstract, setFetchAbstractTitle, setIsAbstractFetched } from 'slices/viewPaperSlice';
+import { setAbstract, setFetchAbstractTitle, setIsAbstractFetched, setIsAbstractFailedFetching, setIsAbstractLoading } from 'slices/viewPaperSlice';
 
 const removeLineBreaks = (text) => text.replace(/(\r\n|\n|\r)/gm, ' ');
 
@@ -10,7 +9,7 @@ const useFetchAbstract = () => {
     const isAbstractFetched = useSelector((state) => state.viewPaper.isAbstractFetched);
     const title = useSelector((state) => state.viewPaper.paper.title);
     const doi = useSelector((state) => state.viewPaper.paper?.identifiers?.doi);
-    const [isLoading, setIsLoading] = useState(false);
+    const isAbstractLoading = useSelector((state) => state.viewPaper.isAbstractLoading);
     const dispatch = useDispatch();
 
     const fetchAbstract = async () => {
@@ -27,7 +26,7 @@ const useFetchAbstract = () => {
                 return;
             }
 
-            setIsLoading(true);
+            dispatch(setIsAbstractLoading(true));
             let _abstract = null;
 
             // try to fetch abstract by DOI
@@ -52,13 +51,15 @@ const useFetchAbstract = () => {
 
             if (_abstract) {
                 dispatch(setAbstract(removeLineBreaks(_abstract)));
+            } else {
+                dispatch(setIsAbstractFailedFetching(true));
             }
 
-            setIsLoading(false);
+            dispatch(setIsAbstractLoading(false));
         }
     };
 
-    return { isLoading, fetchAbstract, abstract, isAbstractFetched };
+    return { isLoading: isAbstractLoading, fetchAbstract, abstract, isAbstractFetched };
 };
 
 export default useFetchAbstract;
