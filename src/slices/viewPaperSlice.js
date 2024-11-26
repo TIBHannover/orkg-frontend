@@ -30,7 +30,9 @@ const initialState = {
     },
     contributions: [],
     abstract: '',
+    isAbstractLoading: false,
     isAbstractFetched: false,
+    isAbstractFailedFetching: false,
     fetchAbstractTitle: '',
     isAddingContribution: false,
     nerResources: [],
@@ -108,8 +110,14 @@ export const viewPaperSlice = createSlice({
         setAbstract: (state, { payload }) => {
             state.abstract = payload;
         },
+        setIsAbstractLoading: (state, { payload }) => {
+            state.isAbstractLoading = payload;
+        },
         setIsAbstractFetched: (state, { payload }) => {
             state.isAbstractFetched = payload;
+        },
+        setIsAbstractFailedFetching: (state, { payload }) => {
+            state.isAbstractFailedFetching = payload;
         },
         setFetchAbstractTitle: (state, { payload }) => {
             state.fetchAbstractTitle = payload;
@@ -145,15 +153,11 @@ export const viewPaperSlice = createSlice({
         toggleEditAnnotation: (state, { payload }) => {
             state.ranges[payload].isEditing = !state.ranges[payload].isEditing;
         },
-        validateAnnotation: (state, { payload }) => {
-            state.ranges[payload].certainty = 1;
-        },
-        updateAnnotationClass: (state, { payload }) => {
-            state.ranges[payload.range.id].class = {
+        updateAnnotationPredicate: (state, { payload }) => {
+            state.ranges[payload.range.id].predicate = {
                 id: payload.selectedOption.id,
                 label: payload.selectedOption.label,
             };
-            state.ranges[payload.range.id].certainty = 1;
         },
         clearAnnotations: (state) => {
             state.ranges = {};
@@ -196,7 +200,9 @@ export const {
     addToComparison,
     removeFromComparison,
     setAbstract,
+    setIsAbstractLoading,
     setIsAbstractFetched,
+    setIsAbstractFailedFetching,
     setFetchAbstractTitle,
     setNerResources,
     setNerProperties,
@@ -207,8 +213,7 @@ export const {
     createAnnotation,
     removeAnnotation,
     toggleEditAnnotation,
-    validateAnnotation,
-    updateAnnotationClass,
+    updateAnnotationPredicate,
     clearAnnotations,
     setAbstractDialogView,
     setContributionExtractionMethod,

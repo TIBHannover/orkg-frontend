@@ -1,15 +1,19 @@
 import Tooltip from 'components/Utils/Tooltip';
 import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { ClipboardEvent, FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { Alert, Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { RootStore } from 'slices/types';
 import { setAbstract as setAbstractStore } from 'slices/viewPaperSlice';
 
-const AbstractModal = ({ toggle }) => {
+type AbstractModalProps = {
+    toggle: () => void;
+};
+
+const AbstractModal: FC<AbstractModalProps> = ({ toggle }) => {
     const [abstract, setAbstract] = useState('');
-    const abstractStore = useSelector((state) => state.viewPaper.abstract);
+    const abstractStore = useSelector((state: RootStore) => state.viewPaper.abstract);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,16 +25,9 @@ const AbstractModal = ({ toggle }) => {
         toggle();
     };
 
-    const stripLineBreaks = (event) => {
+    const stripLineBreaks = (event: ClipboardEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
-        let text = '';
-        if (event.clipboardData || event.originalEvent.clipboardData) {
-            text = (event.originalEvent || event).clipboardData.getData('text/plain');
-        } else if (window.clipboardData) {
-            text = window.clipboardData.getData('Text');
-        }
-        // strip line breaks
-        text = text.replace(/\r?\n|\r/g, ' ');
+        const text = event.clipboardData.getData('text/plain').replace(/\r?\n|\r/g, ' ');
         setAbstract(abstract + text);
     };
 
@@ -62,10 +59,6 @@ const AbstractModal = ({ toggle }) => {
             </ModalFooter>
         </Modal>
     );
-};
-
-AbstractModal.propTypes = {
-    toggle: PropTypes.func.isRequired,
 };
 
 export default AbstractModal;

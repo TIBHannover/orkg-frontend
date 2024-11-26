@@ -3,19 +3,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AbstractAnnotatorView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
 import AbstractInputView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
 import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import LLM_TASK_NAMES from 'constants/llmTasks';
 import toArray from 'lodash/toArray';
-import PropTypes from 'prop-types';
 import randomcolor from 'randomcolor';
-import { useCallback, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getAnnotations } from 'services/annotation/index';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement, statementsUrl } from 'services/backend/statements';
+import { getLlmResponse, nlpServiceUrl } from 'services/orkgNlp';
+import { Range, RootStore } from 'slices/types';
 import { clearAnnotations, createAnnotation, setAbstractDialogView, setAbstract as setAbstractGlobal } from 'slices/viewPaperSlice';
 import styled from 'styled-components';
-import { mutate } from 'swr';
+import useSWR, { mutate } from 'swr';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -28,114 +30,116 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const CLASS_OPTIONS = [
+const PREDICATE_OPTIONS = [
     {
-        id: 'PROCESS',
-        label: 'Process',
-        description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).',
+        id: PREDICATES.HAS_RESEARCH_PROBLEM,
+        service_id: 'RESEARCH_PROBLEM',
+        label: 'Research Problem',
+        description: 'The research problem that the work addresses',
+        color: '#DAA520',
     },
     {
-        id: 'DATA',
-        label: 'Data',
+        id: PREDICATES.LANGUAGE,
+        service_id: 'LANGUAGE',
+        label: 'Language',
+        description: 'The natural language focus of the work',
+        color: '#D2B8E5',
+    },
+    {
+        id: PREDICATES.HAS_DATASET,
+        service_id: 'DATASET',
+        label: 'Dataset',
         description:
             'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).',
+        color: '#9df28a',
     },
     {
-        id: 'MATERIAL',
-        label: 'Material',
-        description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).',
+        id: PREDICATES.TOOL,
+        service_id: 'TOOL',
+        label: 'Tool',
+        description: 'Tools used in the research',
+        color: '#EAB0A2',
     },
     {
-        id: 'METHOD',
+        id: PREDICATES.METHOD,
+        service_id: 'METHOD',
         label: 'Method',
         description:
             'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).',
+        color: '#7fa2ff',
     },
 ];
 
-const CLASS_COLORS = {
-    process: '#7fa2ff',
-    data: '#9df28a',
-    material: '#EAB0A2',
-    method: '#D2B8E5',
+type AbstractAnnotatorModalProps = {
+    toggle: () => void;
+    resourceId: string;
 };
 
-function AbstractAnnotatorModal({ toggle, resourceId }) {
-    const [isAbstractLoading, setIsAbstractLoading] = useState(false);
-    const [isAbstractFailedLoading, setIsAbstractFailedLoading] = useState(false);
-    const [isAnnotationLoading, setIsAnnotationLoading] = useState(false);
-    const [isAnnotationFailedLoading, setIsAnnotationFailedLoading] = useState(false);
-    const [annotationError, setAnnotationError] = useState(null);
-    const [certaintyThreshold, setCertaintyThreshold] = useState([0.5]);
-    const [validation, setValidation] = useState(true);
-    const [classColors, setClassColors] = useState(CLASS_COLORS);
-
-    const abstractGlobal = useSelector((state) => state.viewPaper.abstract);
-
-    const [abstract, setAbstract] = useState(abstractGlobal);
+const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resourceId }) => {
+    const { abstract: abstractGlobal, abstractDialogView, ranges, isAbstractLoading } = useSelector((state: RootStore) => state.viewPaper);
     const dispatch = useDispatch();
 
-    const abstractDialogView = useSelector((state) => state.viewPaper.abstractDialogView);
-    const ranges = useSelector((state) => state.viewPaper.ranges);
+    const [validation, setValidation] = useState(true);
 
-    const getAnnotation = useCallback(() => {
-        if (!abstract) {
-            return Promise.resolve();
-        }
-        setIsAnnotationLoading(true);
+    const [predicateColors, setPredicateColors] = useState<Record<string, string>>(
+        PREDICATE_OPTIONS.reduce((acc, p) => ({ ...acc, [p.id]: p.color }), {}),
+    );
 
-        return getAnnotations(abstract)
-            .then((data) => {
-                const annotated = [];
-                const nRanges = {};
-                if (data && data.entities) {
-                    data.entities
-                        .map((entity) => {
-                            const text = data.text.substring(entity[2][0][0], entity[2][0][1]);
-                            if (annotated.indexOf(text.toLowerCase()) < 0) {
-                                annotated.push(text.toLowerCase());
-                                // Predicate label entity[1]
-                                let rangeClass = CLASS_OPTIONS.filter((c) => c.label.toLowerCase() === entity[1].toLowerCase());
-                                if (rangeClass.length > 0) {
-                                    [rangeClass] = rangeClass;
-                                } else {
-                                    rangeClass = { id: entity[1], label: entity[1] };
-                                }
-                                nRanges[entity[0]] = {
+    const [abstract, setAbstract] = useState(abstractGlobal);
+
+    const { isLoading: isAnnotationLoading, error: _annotationError } = useSWR(
+        abstractGlobal
+            ? [
+                  {
+                      taskName: LLM_TASK_NAMES.RECOMMEND_ANNOTATION,
+                      placeholders: { text: abstractGlobal },
+                  },
+                  nlpServiceUrl,
+                  'getLlmResponse',
+              ]
+            : null,
+        ([params]) =>
+            getLlmResponse(params).then((data) => {
+                const annotated: string[] = [];
+                const nRanges: Range[] = [];
+                if (data && data.values) {
+                    data.values.map((entity: { span: [number, number]; id: string; class: string }) => {
+                        const text = abstractGlobal.substring(entity.span[0], entity.span[1]);
+                        if (annotated.indexOf(text.toLowerCase()) < 0) {
+                            annotated.push(text.toLowerCase());
+                            let rangePredicate: { id: string; label: string } | null = null;
+                            if (PREDICATE_OPTIONS.filter((c) => c.service_id === entity.class).length > 0) {
+                                [rangePredicate] = PREDICATE_OPTIONS.filter((c) => c.service_id === entity.class);
+                                nRanges.push({
+                                    id: entity.id,
                                     text,
-                                    start: entity[2][0][0],
-                                    end: entity[2][0][1] - 1,
-                                    certainty: entity[3],
-                                    class: rangeClass,
+                                    start: entity.span[0],
+                                    end: entity.span[1],
+                                    predicate: rangePredicate,
                                     isEditing: false,
-                                };
-                                return nRanges[entity[0]];
+                                });
                             }
-                            return null;
-                        })
-                        .filter((r) => r);
+                        }
+                        return null;
+                    });
                 }
                 // Clear annotations
                 dispatch(clearAnnotations());
-                toArray(nRanges).map((range) => dispatch(createAnnotation(range)));
-                setIsAnnotationLoading(false);
-                setIsAnnotationFailedLoading(false);
-                setIsAbstractLoading(false);
-                setIsAbstractFailedLoading(false);
-            })
-            .catch((e) => {
-                if (e.statusCode === 422) {
-                    setAnnotationError('Failed to annotate the abstract, please change the abstract and try again');
-                    setIsAnnotationLoading(false);
-                    setIsAnnotationFailedLoading(true);
-                } else {
-                    setAnnotationError(null);
-                    setIsAnnotationLoading(false);
-                    setIsAnnotationFailedLoading(true);
-                }
-                return null;
-            });
-    }, [abstract, dispatch]);
+                nRanges.map((range) => dispatch(createAnnotation(range)));
+                return nRanges;
+            }),
+    );
+
+    const isAnnotationFailedLoading = _annotationError !== undefined;
+
+    let annotationError = '';
+    if (_annotationError) {
+        if (_annotationError.statusCode === 422) {
+            annotationError = 'Failed to annotate the abstract, please change the abstract and try again';
+        } else {
+            annotationError = '';
+        }
+    }
 
     const handleChangeAbstract = () => {
         if (abstractDialogView === 'input') {
@@ -143,39 +147,32 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                 setValidation(false);
                 return;
             }
-            getAnnotation();
         }
         dispatch(setAbstractGlobal(abstract));
         dispatch(setAbstractDialogView(abstractDialogView === 'input' ? 'annotator' : 'input'));
         setValidation(true);
     };
 
-    useEffect(() => {
-        if (abstractDialogView !== 'input') {
-            getAnnotation();
-        }
-    }, [abstract, getAnnotation]);
-
-    const getClassColor = (rangeClass) => {
-        if (!rangeClass) {
+    const getPredicateColor = (rangePredicateId: string) => {
+        if (!rangePredicateId) {
             return '#ffb7b7';
         }
-        if (classColors[rangeClass.toLowerCase()]) {
-            return classColors[rangeClass.toLowerCase()];
+        if (predicateColors[rangePredicateId]) {
+            return predicateColors[rangePredicateId];
         }
-        const newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
-        setClassColors({ ...classColors, [rangeClass.toLowerCase()]: newColor });
+        const newColor = randomcolor({ luminosity: 'light', seed: rangePredicateId.toLowerCase() });
+        setPredicateColors({ ...predicateColors, [rangePredicateId]: newColor });
         return newColor;
     };
 
     const handleInsertData = async () => {
-        const rangesArray = toArray(ranges).filter((r) => r.certainty >= certaintyThreshold);
+        const rangesArray = toArray(ranges);
         if (rangesArray.length > 0) {
             await Promise.all(
                 rangesArray.map(async (range) => {
-                    const object = await createResource(range.text);
+                    const object = await createResource(range.text, range.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []);
                     // Add the statements to the selected contribution
-                    return createResourceStatement(resourceId, range.class.id, object.id);
+                    return createResourceStatement(resourceId, range.predicate.id, object.id);
                 }),
             );
         }
@@ -193,21 +190,18 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
         toggle();
     };
 
-    const handleChangeView = (view) => {
+    const handleChangeView = (view: 'input' | 'annotator' | 'list') => {
         dispatch(setAbstractDialogView(view));
     };
 
     let currentStepDetails = (
         <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
             <AbstractAnnotatorView
-                certaintyThreshold={certaintyThreshold}
-                isAbstractLoading={isAbstractLoading}
                 isAnnotationLoading={isAnnotationLoading}
                 isAnnotationFailedLoading={isAnnotationFailedLoading}
-                handleChangeCertaintyThreshold={(v) => setCertaintyThreshold(v)}
-                classOptions={CLASS_OPTIONS}
+                predicateOptions={PREDICATE_OPTIONS}
                 annotationError={annotationError}
-                getClassColor={getClassColor}
+                getPredicateColor={getPredicateColor}
             />
         </AnimationContainer>
     );
@@ -216,21 +210,14 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
         case 'input':
             currentStepDetails = (
                 <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                    <AbstractInputView
-                        validation={validation}
-                        classOptions={CLASS_OPTIONS}
-                        isAbstractLoading={isAbstractLoading}
-                        isAbstractFailedLoading={isAbstractFailedLoading}
-                        abstract={abstract}
-                        setAbstract={setAbstract}
-                    />
+                    <AbstractInputView validation={validation} abstract={abstract} setAbstract={setAbstract} />
                 </AnimationContainer>
             );
             break;
         case 'list':
             currentStepDetails = (
                 <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                    <AbstractRangesList certaintyThreshold={certaintyThreshold} classOptions={CLASS_OPTIONS} getClassColor={getClassColor} />
+                    <AbstractRangesList predicateOptions={PREDICATE_OPTIONS} getPredicateColor={getPredicateColor} />
                 </AnimationContainer>
             );
             break;
@@ -239,7 +226,7 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
     }
 
     return (
-        <Modal isOpen toggle={toggle} size="lg">
+        <Modal isOpen toggle={toggle} size="xl">
             <ModalHeader toggle={toggle}>Abstract annotator</ModalHeader>
             <ModalBody>
                 <div className="clearfix">
@@ -262,7 +249,7 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                         Annotate Abstract
                     </Button>
                 )}
-                {abstractDialogView === 'list' ? (
+                {abstractDialogView === 'list' && (
                     <>
                         <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('annotator')}>
                             <FontAwesomeIcon icon={faMagic} /> Annotator
@@ -276,7 +263,8 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
                             Insert Data
                         </Button>
                     </>
-                ) : (
+                )}
+                {abstractDialogView !== 'list' && (
                     <>
                         <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('list')}>
                             <FontAwesomeIcon icon={faThList} /> List of annotations
@@ -294,11 +282,6 @@ function AbstractAnnotatorModal({ toggle, resourceId }) {
             </ModalFooter>
         </Modal>
     );
-}
-
-AbstractAnnotatorModal.propTypes = {
-    toggle: PropTypes.func.isRequired,
-    resourceId: PropTypes.string.isRequired,
 };
 
 export default AbstractAnnotatorModal;
