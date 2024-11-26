@@ -1,11 +1,13 @@
 'use client';
 
-import { faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import Confirm from 'components/Confirmation/Confirmation';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 import { SlotTooltip } from 'components/RosettaStone/SlotTooltip/SlotTooltip';
 import ItemMetadata from 'components/Search/ItemMetadata';
@@ -13,6 +15,7 @@ import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
@@ -30,7 +33,7 @@ import useSWR from 'swr';
 
 const RSTemplatePage = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
-    const { isEditMode } = useIsEditMode();
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const user = useSelector((state: RootStore) => state.auth.user);
     const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
 
@@ -102,39 +105,58 @@ const RSTemplatePage = () => {
                 <>
                     <TitleBar
                         buttonGroup={
-                            <Tippy content={preventEditTooltipText} disabled={canEditTemplate}>
-                                <span>
-                                    <Button
+                            <>
+                                {!isEditMode && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-end"
                                         color="secondary"
+                                        style={{ marginRight: 2 }}
                                         size="sm"
-                                        tag={Link}
-                                        href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
-                                        disabled={!canEditTemplate}
+                                        onClick={() => toggleIsEditMode()}
                                     >
-                                        <FontAwesomeIcon icon={faPen} /> Edit statement type
+                                        <FontAwesomeIcon icon={faPen} /> Edit metadata
+                                    </RequireAuthentication>
+                                )}
+                                {isEditMode && (
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </Button>
-                                </span>
-                            </Tippy>
+                                )}
+                                <Button
+                                    color="secondary"
+                                    size="sm"
+                                    tag={Link}
+                                    href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
+                                    disabled={!canEditTemplate}
+                                >
+                                    <Tippy content={preventEditTooltipText} disabled={canEditTemplate}>
+                                        <span>
+                                            <FontAwesomeIcon icon={faPen} /> Edit statement type
+                                        </span>
+                                    </Tippy>
+                                </Button>
+                            </>
                         }
                     >
                         Statement type
                     </TitleBar>
-
+                    <EditModeHeader isVisible={isEditMode} />
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                        <h3 className="mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                             {template?.label || (
                                 <i>
                                     <small>No label</small>
                                 </i>
                             )}
                         </h3>
-                        {!!user && (
+                        {isEditMode && !!user && (
                             <Tippy content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
                                 <span>
                                     <Button
                                         color="danger"
                                         size="sm"
-                                        className="mt-2 mb-3"
+                                        className="mb-3"
                                         style={{ marginLeft: 'auto' }}
                                         onClick={handleDeleteTemplate}
                                         disabled={!canDeleteTemplate}
@@ -145,7 +167,17 @@ const RSTemplatePage = () => {
                             </Tippy>
                         )}
 
-                        <ItemMetadata item={template} showCreatedAt showCreatedBy editMode={isEditMode} />
+                        <ItemMetadata
+                            item={{
+                                ...template,
+                                observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
+                                organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
+                            }}
+                            showCreatedAt
+                            showCreatedBy
+                            showProvenance
+                            editMode={isEditMode}
+                        />
                     </Container>
                     <Container className="mt-3 p-0">
                         <Tabs
