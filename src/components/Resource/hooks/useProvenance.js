@@ -1,3 +1,4 @@
+import { MISC } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 
@@ -11,7 +12,7 @@ function useProvenance({ orgId, obsId }) {
          * Load Provenance data
          */
         const loadProvenanceInfos = () => {
-            if (observatoryId && observatoryId) {
+            if (observatoryId && observatoryId !== MISC.UNKNOWN_ID && organizationId && organizationId !== MISC.UNKNOWN_ID) {
                 getObservatoryAndOrganizationInformation(observatoryId, organizationId).then((p) => {
                     setProvenance(p);
                 });
