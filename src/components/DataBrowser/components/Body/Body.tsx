@@ -73,7 +73,8 @@ const Body = () => {
             {canEdit && _newProperties.map((p) => <AddStatement key={p.id} predicate={p} canDelete />)}
 
             {Object.keys(_statements2).length === 0 &&
-                Object.keys(requiredProperties.filter((p) => p.id !== PREDICATES.DESCRIPTION || isEditMode)).length === 0 &&
+                Object.keys(requiredProperties.filter((p) => p.id !== PREDICATES.DESCRIPTION || isEditMode || entity?._class !== ENTITIES.RESOURCE))
+                    .length === 0 &&
                 scopedNewProperties.length === 0 && <NoData />}
         </div>
     );
