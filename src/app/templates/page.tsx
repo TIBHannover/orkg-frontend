@@ -3,6 +3,7 @@
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
@@ -11,15 +12,31 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle, ListGroup, ListGroupItem } from 'reactstrap';
+import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Template } from 'services/backend/types';
 
 const Templates = () => {
-    const { key, data, isLoadingTemplates, totalElements, isLastPageReached, hasNextPage, size, handleLoadMore, isFilterApplied, resetFilters } =
-        useTemplateGallery({});
+    const {
+        key,
+        items,
+        isLoading,
+        totalElements,
+        hasNextPage,
+        page,
+        totalPages,
+        setPage,
+        error,
+        pageSize,
+        isFilterApplied,
+        resetFilters,
+        setPageSize,
+    } = useTemplateGallery({});
 
     useEffect(() => {
         document.title = 'Templates - ORKG';
     }, []);
+
+    const renderListItem = (template: Template) => <TemplateCard template={template} key={template.id} />;
 
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -42,7 +59,7 @@ const Templates = () => {
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
+                        {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
                             <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
@@ -87,46 +104,31 @@ const Templates = () => {
             >
                 Templates
             </TitleBar>
-            {infoContainerText && (
-                <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                    {infoContainerText}
-                </Container>
-            )}
-            <Container className="box rounded pt-4 pb-3 ps-4 pe-4 clearfix">
-                <TemplatesFilters isLoading={isLoadingTemplates} key={key} />
-            </Container>
-            <Container className="p-0 mt-4">
-                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                    {data?.map((_templates) => _templates.content.map((template) => <TemplateCard key={template.id} template={template} />))}
 
-                    {totalElements === 0 && !isLoadingTemplates && (
-                        <ListGroupItem tag="div" className="text-center p-5">
-                            No templates
-                            {isFilterApplied && ' match this filter'}.
-                        </ListGroupItem>
-                    )}
-                    {isLoadingTemplates && (
-                        <ListGroupItem tag="div" className="text-center">
-                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                        </ListGroupItem>
-                    )}
-                    {!isLoadingTemplates && hasNextPage && (
-                        <ListGroupItem
-                            style={{ cursor: 'pointer' }}
-                            className="text-center"
-                            action
-                            onClick={!isLoadingTemplates ? handleLoadMore : undefined}
-                        >
-                            Load more templates
-                        </ListGroupItem>
-                    )}
-                    {!hasNextPage && isLastPageReached && size !== 1 && (
-                        <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page
-                        </ListGroupItem>
-                    )}
-                </ListGroup>
+            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                {infoContainerText}
             </Container>
+
+            <Container className="box rounded pt-4 pb-3 ps-4 pe-4 clearfix mb-3">
+                <TemplatesFilters isLoading={isLoading} key={key} />
+            </Container>
+
+            <ListPaginatedContent<Template>
+                renderListItem={renderListItem}
+                pageSize={pageSize}
+                label="templates"
+                isLoading={isLoading}
+                items={items ?? []}
+                hasNextPage={hasNextPage}
+                page={page}
+                setPage={setPage}
+                setPageSize={setPageSize}
+                totalElements={totalElements}
+                error={error}
+                totalPages={totalPages}
+                boxShadow
+                flush={false}
+            />
         </>
     );
 };

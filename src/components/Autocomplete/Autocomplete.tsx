@@ -73,7 +73,9 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 setValue(null);
             }
         };
-        if (!defaultValue) {
+
+        if (defaultValueId && (!defaultValue || (!isMulti && defaultValueId !== (defaultValue as OptionType)?.id))) {
+            setValue(null);
             loadNode();
         }
     }, [defaultValue, defaultValueId, entityType, isMulti, value]);

@@ -1,4 +1,4 @@
-import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import TemplateButton from 'components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
@@ -6,6 +6,7 @@ import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from 'components/DataBrowser/hooks/useFeaturedTemplates';
 import useRecommendedTemplates from 'components/DataBrowser/hooks/useRecommendedTemplates';
 import useTemplates from 'components/DataBrowser/hooks/useTemplates';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
 import Tooltip from 'components/Utils/Tooltip';
@@ -13,7 +14,8 @@ import { CLASSES } from 'constants/graphSettings';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { Alert, Button, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Template } from 'services/backend/types';
 import styled from 'styled-components';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -40,6 +42,8 @@ const FiltersWrapperStyled = styled.div`
     background: ${(props) => props.theme.light};
 `;
 
+const ListWrapperStyled = styled.div``;
+
 type TemplatesModalProps = {
     isOpen: boolean;
     toggle: () => void;
@@ -48,16 +52,18 @@ type TemplatesModalProps = {
 const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const {
         key,
-        data,
-        isLoadingTemplates,
+        items,
+        isLoading,
         totalElements,
-        isLastPageReached,
         hasNextPage,
-        size,
-        setSize,
-        handleLoadMore,
+        page,
+        totalPages,
+        setPage,
+        error,
+        pageSize,
         isFilterApplied,
         resetFilters,
+        setPageSize,
     } = useTemplateGallery({ pageSize: 15 });
 
     const { featuredTemplates } = useFeaturedTemplates();
@@ -70,6 +76,14 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     // Filter out resource templates
     const usedTemplates = _usedTemplates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
 
+    const renderListItem = (template: Template) => (
+        <TemplateButton
+            isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+            template={template}
+            key={`tr${template.id}`}
+        />
+    );
+
     return (
         <div>
             <Tippy singleton={source} delay={500} />
@@ -79,7 +93,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                 toggle={toggle}
                 onClosed={() => {
                     // reset the page size to the default value for the next time the modal is opened with just one page loaded
-                    setSize(1);
+                    setPage(0);
                 }}
             >
                 <ModalHeader toggle={toggle}>Template gallery</ModalHeader>
@@ -99,7 +113,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                             </Alert>
                         )}
                         <FiltersWrapperStyled className="mt-2 p-3 rounded border border-light">
-                            <TemplatesFilters isLoading={isLoadingTemplates} size="sm" key={key} />
+                            <TemplatesFilters isLoading={isLoading} size="sm" key={key} />
                         </FiltersWrapperStyled>
 
                         {!isFilterApplied && recommendedTemplates && recommendedTemplates.length > 0 && (
@@ -139,7 +153,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                         {(isFilterApplied || !featuredTemplates || featuredTemplates?.length === 0) && (
                             <div>
                                 <div className="text-muted my-3">
-                                    {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
+                                    {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                                     {isFilterApplied ? 'templates found by applying the filter' : 'templates'}
                                     {isFilterApplied && (
                                         <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
@@ -147,35 +161,23 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                         </Button>
                                     )}
                                 </div>
-                                {data?.map((_templates) =>
-                                    _templates.content?.map((template) => (
-                                        <TemplateButton
-                                            isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
-                                            template={template}
-                                            key={`tr${template.id}`}
-                                        />
-                                    )),
-                                )}
-                                {!isLoadingTemplates && hasNextPage && (
-                                    <ListGroupItem
-                                        style={{ cursor: 'pointer' }}
-                                        className="text-center rounded p-1"
-                                        action
-                                        onClick={!isLoadingTemplates ? handleLoadMore : undefined}
-                                    >
-                                        <FontAwesomeIcon icon={faAngleDoubleDown} /> Load more templates
-                                    </ListGroupItem>
-                                )}
-                                {isLoadingTemplates && (
-                                    <ListGroupItem tag="div" className="text-center">
-                                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                                    </ListGroupItem>
-                                )}
-                                {!hasNextPage && isLastPageReached && size !== 1 && (
-                                    <ListGroupItem tag="div" className="text-center">
-                                        You have reached the last page
-                                    </ListGroupItem>
-                                )}
+                                <ListPaginatedContent<Template>
+                                    renderListItem={renderListItem}
+                                    pageSize={pageSize}
+                                    label="templates"
+                                    isLoading={isLoading}
+                                    items={items ?? []}
+                                    hasNextPage={hasNextPage}
+                                    page={page}
+                                    setPage={setPage}
+                                    setPageSize={setPageSize}
+                                    totalElements={totalElements}
+                                    error={error}
+                                    totalPages={totalPages}
+                                    boxShadow={false}
+                                    flush={false}
+                                    ListGroupComponent={ListWrapperStyled}
+                                />
                             </div>
                         )}
                     </div>
