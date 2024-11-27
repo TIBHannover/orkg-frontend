@@ -99,15 +99,17 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
                                     action={handleAddValue}
                                     testId={`add-value-${predicate.id}-${Boolean(isBlankNode)}`}
                                 />
-                                {[PREDICATES.HAS_RESEARCH_PROBLEM, PREDICATES.METHOD, PREDICATES.MATERIAL].includes(predicate.id) && title && (
-                                    <SmartValueSuggestions
-                                        paperTitle={title}
-                                        abstract={abstract}
-                                        predicateId={predicate.id}
-                                        resourceId={currentId}
-                                        classId={range ? range?.id : undefined}
-                                    />
-                                )}
+                                {canAddValue &&
+                                    [PREDICATES.HAS_RESEARCH_PROBLEM, PREDICATES.METHOD, PREDICATES.MATERIAL].includes(predicate.id) &&
+                                    title && (
+                                        <SmartValueSuggestions
+                                            paperTitle={title}
+                                            abstract={abstract}
+                                            predicateId={predicate.id}
+                                            resourceId={currentId}
+                                            classId={range ? range?.id : undefined}
+                                        />
+                                    )}
                             </div>
                         )}
                         {canEdit && isEditMode && showAdd && <ValueInputField predicate={predicate} toggleShowInput={() => setShowAdd((v) => !v)} />}
