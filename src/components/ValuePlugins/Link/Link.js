@@ -1,9 +1,11 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import Linkify from 'linkify-react';
 import * as linkify from 'linkifyjs';
-import PropTypes from 'prop-types';
 import { isString } from 'lodash';
+import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
 
 const Link = (props) => {
@@ -32,7 +34,7 @@ const Link = (props) => {
                 options={{
                     render: ({ attributes: { href, ...otherProps }, content }) => (
                         <a href={href} {...otherProps} target="_blank" rel="noopener noreferrer">
-                            {content}
+                            {content} <FontAwesomeIcon icon={faExternalLinkAlt} />
                         </a>
                     ),
                     validate: {
