@@ -3,6 +3,24 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.153.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.152.0...v0.153.0) - 2024-12-03
+
+### Changes
+
+- feat: Quick action button to create a statement of the same type, using a resource as the subject [`#1405`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1405)
+- refactor: top contributors dialog [`#1438`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1438)
+- fix: responsiveness of pagination control [`#1436`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1436)
+- fix: set 'view' as the text for the target class link [`#1435`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1435)
+- fix: inconsistent URL highlighting in data browser [`#1437`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1437)
+- feat: allow curators to create new observatories through the UI [`#1433`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1433)
+- fix: smart suggestion icon shown for add value button that cannot be added [`#1434`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1434)
+- feat: add pagination to the templates pages [`#1432`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1432)
+- refactor: replace annotation service with nlp service [`#1427`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1427)
+- feat: allow associating Rosetta Statement Types with observatories [`#1429`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1429)
+- chore: set the env variable's default value for the public URL to localhost [`#1430`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1430)
+- fix: hide "No Data" component in predicate DataBrowser [`#1431`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1431)
+
+---
 ## [v0.152.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.151.1...v0.152.0) - 2024-11-21
 
 ### Changes
