@@ -67,13 +67,14 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }: MembersBox
                                     <ContributorCard
                                         contributor={{
                                             ...member,
+                                            contributor: member.id,
                                             subTitle: organizationsList.find((o) => o.id.includes(member.organization_id))?.name,
                                         }}
                                         options={
                                             !!user && user.isCurationAllowed
                                                 ? [
                                                       {
-                                                          label: 'Delete this member from the observatory',
+                                                          title: 'Delete this member from the observatory',
                                                           action: () => deleteObservatoryMember(member),
                                                           icon: faTrash,
                                                           requireConfirmation: true,

@@ -1,25 +1,28 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { CardTitle } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
+import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
+import ContributorsModal from 'components/TopContributors/ContributorsModal';
 import useContributors from 'components/TopContributors/hooks/useContributors';
 import ROUTES from 'constants/routes';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
-import Tippy from '@tippyjs/react';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import Link from 'next/link';
 import pluralize from 'pluralize';
-import ContributorsModal from 'components/TopContributors/ContributorsModal';
-import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
+import { FC, useState } from 'react';
+import { CardTitle } from 'reactstrap';
 
-const Contributors = ({ researchFieldId }) => {
+type ContributorsProps = {
+    researchFieldId: string;
+};
+
+const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
         researchFieldId,
         pageSize: 19,
         initialSort: 'all',
-        includeSubFields: true,
+        initialIncludeSubFields: true,
     });
     const [openModal, setOpenModal] = useState(false);
 
@@ -39,9 +42,9 @@ const Contributors = ({ researchFieldId }) => {
                     />
                 </div>
             </div>
-            {!isLoading && contributors && contributors.length > 0 && (
+            {!isLoading && contributors && contributors?.length > 0 && (
                 <ContributorsAvatars>
-                    {contributors.slice(0, 18).map((contributor /* 18 perfect for the container width */) => (
+                    {contributors?.slice(0, 18).map((contributor) => (
                         <div key={`contributor${contributor.id}`}>
                             <Tippy
                                 offset={[0, 20]}
@@ -77,7 +80,7 @@ const Contributors = ({ researchFieldId }) => {
                             </Tippy>
                         </div>
                     ))}
-                    {contributors.length > 18 && (
+                    {contributors?.length > 18 && (
                         <Tippy key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
                                 <FontAwesomeIcon icon={faEllipsisH} />
@@ -92,7 +95,7 @@ const Contributors = ({ researchFieldId }) => {
                     <i> Be the first contributor!</i>
                 </div>
             )}
-            {contributors.length > 18 && openModal && (
+            {contributors && contributors?.length > 18 && openModal && (
                 <ContributorsModal
                     initialSort={sort}
                     initialIncludeSubFields={includeSubFields}
@@ -114,10 +117,6 @@ const Contributors = ({ researchFieldId }) => {
             )}
         </div>
     );
-};
-
-Contributors.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
 };
 
 export default Contributors;

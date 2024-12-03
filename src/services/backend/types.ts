@@ -747,13 +747,13 @@ export type PublishedParam = {
 
 export type TopContributor = {
     contributor: string;
-    comparisons: number;
-    papers: number;
-    contributions: number;
-    problems: number;
-    visualizations: number;
-    total: number;
-};
+    comparisons?: number;
+    papers?: number;
+    contributions?: number;
+    problems?: number;
+    visualizations?: number;
+    total?: number;
+} & Contributor;
 
 export type Activity = {
     id: string;

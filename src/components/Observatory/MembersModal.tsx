@@ -46,13 +46,14 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
             <ContributorCard
                 contributor={{
                     ...member,
+                    contributor: member.id,
                     subTitle: organizationsList.find((o) => o.id.includes(member.organization_id))?.name,
                 }}
                 options={
                     isEditMode && !!user && user.isCurationAllowed
                         ? [
                               {
-                                  label: 'Delete this member from the observatory',
+                                  title: 'Delete this member from the observatory',
                                   action: () => deleteObservatoryMember(member),
                                   icon: faTrash,
                                   requireConfirmation: true,
