@@ -24,7 +24,20 @@ const PaginationStyle = styled(Pagination)`
     ul {
         display: flex;
         flex-grow: 1;
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
         margin: 0;
+    }
+    @media (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {
+        & {
+            box-shadow: none;
+        }
+        ul {
+            li:last-child .input-group > .input-group-text:first-child {
+                border-top-left-radius: ${(props) => props.theme.borderRadius} !important;
+                border-bottom-left-radius: ${(props) => props.theme.borderRadius} !important;
+            }
+        }
     }
 `;
 
@@ -137,7 +150,7 @@ const PaginationControl: FC<PaginationProps> = ({
                 <PaginationLink next />
             </PaginationItem>
             <PaginationItem className="flex-grow-1 flex-shrink-0" disabled>
-                <PaginationLink tag="div" className="ps-3 border-end-0">
+                <PaginationLink tag="div" className="ps-3">
                     {page * pageSize + 1}-{Math.min(page * pageSize + pageSize, totalElements)} of {totalElements}
                 </PaginationLink>
             </PaginationItem>
