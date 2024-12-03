@@ -96,7 +96,13 @@ const ActionButton: FC<ActionButtonProps> = ({
                 trigger="click"
                 appendTo={appendTo}
                 content={
-                    <ConfirmationTooltip message={confirmationMessage} closeTippy={closeTippy} ref={confirmButtonRef} buttons={confirmationButtons} />
+                    <ConfirmationTooltip
+                        tippy={tippy}
+                        message={confirmationMessage}
+                        closeTippy={closeTippy}
+                        ref={confirmButtonRef}
+                        buttons={confirmationButtons}
+                    />
                 }
             >
                 {tippyChildren}

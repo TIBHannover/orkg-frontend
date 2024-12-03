@@ -1,8 +1,9 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, createRef, forwardRef, useEffect, useImperativeHandle, useRef, RefObject } from 'react';
+import { MutableRefObject, ReactNode, RefObject, createRef, forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
+import type { Instance } from 'tippy.js';
 
 const ConfirmationTooltipStyled = styled.div`
     color: #fff;
@@ -27,13 +28,14 @@ type ConfirmationTooltipProps = {
         icon: IconDefinition;
         action?: () => void;
     }[];
+    tippy?: MutableRefObject<Instance | null>;
 };
 
 /**
  * This component is made to be a content for a tippy
  * Make sure to use ref props when you use this component
  */
-const ConfirmationTooltip = forwardRef<ConfirmationTooltipHandle, ConfirmationTooltipProps>(({ message, closeTippy, buttons }, ref) => {
+const ConfirmationTooltip = forwardRef<ConfirmationTooltipHandle, ConfirmationTooltipProps>(({ message, closeTippy, buttons, tippy }, ref) => {
     const buttonsRef = useRef<RefObject<HTMLButtonElement>[]>([]);
 
     if (buttonsRef.current.length !== buttons.length) {
@@ -53,7 +55,7 @@ const ConfirmationTooltip = forwardRef<ConfirmationTooltipHandle, ConfirmationTo
             if (e.code === 'Escape') {
                 closeTippy();
             }
-            if (e.code === 'Tab') {
+            if (e.code === 'Tab' && tippy?.current?.state.isShown) {
                 e.preventDefault();
                 e.stopPropagation();
                 // focus on next button
@@ -71,7 +73,7 @@ const ConfirmationTooltip = forwardRef<ConfirmationTooltipHandle, ConfirmationTo
         return () => {
             document.removeEventListener('keydown', onKeyPressed);
         };
-    }, [closeTippy, buttons.length]);
+    }, [closeTippy, buttons.length, tippy?.current?.state.isShown, tippy]);
 
     return (
         <ConfirmationTooltipStyled className="text-center p-1">

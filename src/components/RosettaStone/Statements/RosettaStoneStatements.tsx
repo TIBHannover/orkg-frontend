@@ -1,6 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { OptionType } from 'components/Autocomplete/types';
 import AddStatement from 'components/RosettaStone/AddStatement/AddStatement';
+import useStatements from 'components/RosettaStone/hooks/useStatements';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { CERTAINTY, VISIBILITY } from 'constants/contentTypes';
@@ -10,10 +12,8 @@ import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { RosettaStoneStatement } from 'services/backend/types';
 import { RootStore } from 'slices/types';
-import useSWR from 'swr';
 import { guid } from 'utils';
 
 type RosettaStoneStatementsProps = { context: string };
@@ -23,15 +23,11 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
     const { isEditMode } = useIsEditMode();
     const user = useSelector((state: RootStore) => state.auth.user);
 
-    const {
-        data: statements,
-        isLoading,
-        mutate,
-    } = useSWR(context ? [{ context }, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements(params));
+    const { statements, isLoading, mutate } = useStatements({ context });
 
     const allStatements = [...(statements?.content ?? []), ...newStatements];
 
-    const handleAddStatement = async (templateId: string) => {
+    const handleAddStatement = async (templateId: string, subjects: OptionType[] = []) => {
         setNewStatements((prev) => [
             ...prev,
             {
@@ -40,7 +36,7 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
                 latest_version_id: undefined,
                 is_latest_version: true,
                 context: context as string,
-                subjects: [],
+                subjects,
                 objects: [],
                 created_at: new Date().toString(),
                 created_by: ((user && 'id' in user && user?.id) as string) ?? MISC.UNKNOWN_ID,
@@ -69,7 +65,13 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
                 <ListGroup tag="div" className="mb-2">
                     {context &&
                         allStatements.map((s) => (
-                            <SingleStatement key={s.id} statement={s} setNewStatements={setNewStatements} reloadStatements={mutate} />
+                            <SingleStatement
+                                key={s.id}
+                                statement={s}
+                                setNewStatements={setNewStatements}
+                                reloadStatements={mutate}
+                                handleAddStatement={handleAddStatement}
+                            />
                         ))}
                 </ListGroup>
             )}
@@ -89,7 +91,7 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
                 </ListGroup>
             )}
 
-            {isEditMode && <AddStatement handleAddStatement={handleAddStatement} />}
+            {isEditMode && <AddStatement handleAddStatement={handleAddStatement} context={context} />}
         </div>
     );
 };

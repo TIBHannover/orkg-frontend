@@ -29,9 +29,10 @@ type SingleStatementProps = {
     setNewStatements?: Dispatch<SetStateAction<RosettaStoneStatement[]>>;
     reloadStatements?: () => void;
     showContext?: boolean;
+    handleAddStatement?: (templateId: string, subjects: OptionType[]) => void;
 };
 
-const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = false, setNewStatements, reloadStatements }) => {
+const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = false, setNewStatements, reloadStatements, handleAddStatement }) => {
     const { isEditMode } = useIsEditMode();
 
     const {
@@ -77,7 +78,17 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 />
             );
         }
-        return <StatementValue key={i} propertyShape={template.properties[i]} value={value} />;
+        return (
+            <StatementValue
+                key={i}
+                template={template}
+                propertyShape={template.properties[i]}
+                value={value}
+                isEditMode={isEditMode}
+                handleAddStatement={handleAddStatement}
+                context={statement.context}
+            />
+        );
     };
 
     const formattedLabelWithInputs = ReactStringReplace(
@@ -140,7 +151,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
 
                 <InfoBox statement={statement} template={template} certainty={certainty} setCertainty={setCertainty} isEditing={isEditing} />
             </div>
-            <div className="p-2">
+            <div className="p-2 pt-3">
                 <div style={{ lineHeight: isEditing ? 3 : 2 }}>
                     {!isEditing && statement.negated && (
                         <div className="d-inline-block me-2">
