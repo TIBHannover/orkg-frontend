@@ -35,7 +35,7 @@ const routes = {
     EVENT: '/event/:id',
     ADD_EVENT: '/organizations/:id/addEvent',
     EVENT_SERIES: '/event-series/:id',
-    ADD_OBSERVATORY: '/organizations/:id/addObservatory',
+    ADD_OBSERVATORY: '/observatories/create',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: '/add-paper',
     VIEW_PAPER: '/paper/:resourceId',

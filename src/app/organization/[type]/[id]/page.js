@@ -1,26 +1,26 @@
 'use client';
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
-import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
+import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
+import NotFound from 'app/not-found';
+import ConferenceEvents from 'components/ConferenceEvents/ConferenceEvents';
+import EditOrganization from 'components/Organization/EditOrganization';
 import Members from 'components/Organization/Members';
 import Observatories from 'components/Organization/Observatories';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
-import useParams from 'components/useParams/useParams';
-import { useSelector } from 'react-redux';
-import NotFound from 'app/not-found';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import EditOrganization from 'components/Organization/EditOrganization';
 import { SubTitle } from 'components/styled';
-import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ConferenceEvents from 'components/ConferenceEvents/ConferenceEvents';
+import useParams from 'components/useParams/useParams';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Button, Col, Container, Row } from 'reactstrap';
+import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -105,9 +105,13 @@ const Organization = () => {
                                         size="sm"
                                         color="secondary"
                                         tag={Link}
-                                        href={reverse(typeName === 'organization' ? ROUTES.ADD_OBSERVATORY : ROUTES.ADD_EVENT, {
-                                            id: organizationId,
-                                        })}
+                                        href={
+                                            typeName === 'organization'
+                                                ? reverse(`${ROUTES.ADD_OBSERVATORY}?organizationId=${organizationId}`)
+                                                : reverse(ROUTES.ADD_EVENT, {
+                                                      id: organizationId,
+                                                  })
+                                        }
                                         style={{ marginRight: 2 }}
                                     >
                                         <FontAwesomeIcon icon={faPlus} /> Create {typeName === 'organization' ? 'observatory' : 'conference event'}
