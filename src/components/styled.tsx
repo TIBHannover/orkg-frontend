@@ -1,6 +1,5 @@
 import { Button, CarouselIndicators } from 'reactstrap';
 import styled from 'styled-components';
-// @ts-expect-error
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`

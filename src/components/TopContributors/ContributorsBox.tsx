@@ -19,10 +19,10 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
             <h2 className="h5 mb-0">Top contributors</h2>
             <hr className="mt-2" />
             <div className="flex-grow-1">
-                {!isLoading && contributors && contributors.length > 0 && (
+                {!isLoading && contributors && contributors?.length > 0 && (
                     <div className="mt-2">
-                        {contributors.slice(0, 4).map((contributor, index: number) => (
-                            <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
+                        {contributors?.slice(0, 4).map((contributor, index) => (
+                            <div className="pt-1 ps-2 pe-2" key={`rp${contributor.id}`}>
                                 <ContributorCard
                                     contributor={{
                                         ...contributor,
@@ -34,14 +34,14 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
                         ))}
                     </div>
                 )}
-                {!isLoading && contributors?.length === 0 && (
+                {!isLoading && contributors && contributors?.length === 0 && (
                     <div className="mt-4 mb-4">
                         No contributors in this research field yet.
                         <br />
                         <i> Be the first contributor!</i>
                     </div>
                 )}
-                {!isLoading && contributors?.length > 4 && (
+                {!isLoading && contributors && contributors?.length > 4 && (
                     <div className="text-center mt-3">
                         <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                             View more

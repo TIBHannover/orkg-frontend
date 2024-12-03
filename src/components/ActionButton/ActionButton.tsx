@@ -5,7 +5,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FC, MouseEvent, ReactNode, useRef } from 'react';
 import type { Instance } from 'tippy.js';
 
-type ActionButtonProps = {
+export type ActionButtonProps = {
     title: ReactNode;
     icon: IconDefinition;
     iconSpin?: boolean;

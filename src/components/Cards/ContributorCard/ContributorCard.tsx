@@ -1,38 +1,24 @@
-import Link from 'next/link';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import ActionButton, { ActionButtonProps } from 'components/ActionButton/ActionButton';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC } from 'react';
 import Gravatar from 'react-gravatar';
+import { TopContributor } from 'services/backend/types';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import pluralize from 'pluralize';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
 
-const StyledGravatar = styled(Gravatar)`
+export const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};
     cursor: pointer;
 `;
 
-const STATS = [
-    {
-        key: 'comparisons',
-        label: 'Comparison',
-    },
-    {
-        key: 'papers',
-        label: 'Paper',
-    },
-    {
-        key: 'visualizations',
-        label: 'Visualization',
-    },
-    {
-        key: 'problems',
-        label: 'Problem',
-    },
-];
+type ContributorCardProps = {
+    contributor: TopContributor & { subTitle?: string };
+    options?: ActionButtonProps[];
+};
 
-const ContributorCard = ({ contributor, showStatsDetails = false, options }) => (
+const ContributorCard: FC<ContributorCardProps> = ({ contributor, options }) => (
     <div>
         <div className="d-flex flex-row">
             <Link className="justify-content-center align-self-center" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
@@ -50,9 +36,9 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                 <small>
                     {options?.map?.((option) => (
                         <ActionButton
-                            title={option.label}
+                            title={option.title}
                             icon={option.icon}
-                            key={`contributor-card-${contributor.id}-${option.label}`}
+                            key={`contributor-card-${contributor.id}-${option.title}`}
                             requireConfirmation={option.requireConfirmation}
                             confirmationMessage="Are you sure?"
                             confirmationButtons={[
@@ -71,24 +57,9 @@ const ContributorCard = ({ contributor, showStatsDetails = false, options }) => 
                         />
                     ))}
                 </small>
-                {showStatsDetails && (
-                    <ul className="list-group list-group-horizontal-md mt-2 d-flex text-center">
-                        {STATS.map((stat) => (
-                            <li key={stat.key} className="list-group-item p-0 px-3 d-flex flex-column align-items-center">
-                                <span className="h5 m-0"> {contributor[stat.key]}</span> <span>{pluralize(stat.label, contributor[stat.key])}</span>
-                            </li>
-                        ))}
-                    </ul>
-                )}
             </div>
         </div>
     </div>
 );
-
-ContributorCard.propTypes = {
-    contributor: PropTypes.object.isRequired,
-    showStatsDetails: PropTypes.bool,
-    options: PropTypes.array,
-};
 
 export default ContributorCard;
