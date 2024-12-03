@@ -1,3 +1,4 @@
+import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 export default {
@@ -44,4 +45,14 @@ ExtraContent.args = {
             <td>more information</td>
         </tr>
     ),
+};
+
+export const Buttons = Template.bind({});
+Buttons.args = {
+    children: 'Resource name',
+    id: 'R100',
+    buttons: [
+        { title: 'Edit', icon: faPencil, color: 'secondary', action: () => {} },
+        { title: 'Delete', icon: faTrash, color: 'danger', action: () => {} },
+    ],
 };

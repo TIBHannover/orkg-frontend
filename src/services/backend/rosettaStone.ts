@@ -113,7 +113,7 @@ export const getRSStatements = ({
     template_id,
     page = 0,
     size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
+    sortBy = [{ property: 'created_at', direction: 'asc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
 }: GetStatementsParams): Promise<PaginatedResponse<RosettaStoneStatement>> => {
     const params = qs.stringify(

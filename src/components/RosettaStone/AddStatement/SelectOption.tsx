@@ -7,7 +7,9 @@ import { OptionProps, components } from 'react-select';
 import ReactStringReplace from 'react-string-replace';
 import { RosettaStoneTemplate } from 'services/backend/types';
 
-const SelectOption: FC<OptionProps<RosettaStoneTemplate, false>> = ({ children, data, ...props }) => {
+export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used: boolean };
+
+const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ children, data, ...props }) => {
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
         return <i>{data.properties[i].placeholder}</i>;
@@ -26,6 +28,11 @@ const SelectOption: FC<OptionProps<RosettaStoneTemplate, false>> = ({ children, 
                     <span>{children}</span>
                     <div className="small text-muted">{formattedLabelWithPlaceholders}</div>
                 </div>
+                {data.used && (
+                    <small>
+                        <div className="me-2 badge bg-secondary badge-sm p-1">Used</div>
+                    </small>
+                )}
                 {!data.__isNew__ && (
                     <Tippy appendTo={document.body} interactive content={<div className="text-start">{data.description}</div>}>
                         <span>

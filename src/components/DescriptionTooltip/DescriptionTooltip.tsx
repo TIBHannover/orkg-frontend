@@ -1,16 +1,17 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import Link from 'next/link';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { truncate } from 'lodash';
-import PropTypes from 'prop-types';
-import { Fragment, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { FC, Fragment, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
-import { Button, Table } from 'reactstrap';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { Button, ButtonGroup, Table } from 'reactstrap';
+import { getStatements, statementsUrl } from 'services/backend/statements';
+import { EntityType, Statement } from 'services/backend/types';
 import styled from 'styled-components';
+import useSWR from 'swr';
 import { getLinkByEntityType, getResourceLink } from 'utils';
 
 const TippyStyle = styled(Tippy)`
@@ -32,6 +33,8 @@ const TippyStyle = styled(Tippy)`
         }
         table tr:first-child td {
             border-top: 0;
+            border-bottom: 0;
+            border-left: 0;
         }
         table tr:last-child td {
             border-bottom: 0;
@@ -47,36 +50,46 @@ const TippyStyle = styled(Tippy)`
     }
 `;
 
-const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, classes, children, extraContent, contextDescription }) => {
-    const [description, setDescription] = useState(contextDescription ?? '');
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(!!contextDescription);
+type DescriptionTooltipProps = {
+    id?: string;
+    _class: EntityType;
+    classes?: string[];
+    children: React.ReactNode;
+    extraContent?: React.ReactNode;
+    contextDescription?: string;
+    disabled?: boolean;
+    showURL?: boolean;
+    buttons?: {
+        title: string;
+        color: string;
+        icon: IconProp;
+        action?: () => void;
+    }[];
+};
 
-    const onTrigger = () => {
-        if (!isLoaded && _class !== ENTITIES.LITERAL && id && !contextDescription) {
-            setIsLoading(true);
-            getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.DESCRIPTION })
-                .then((descriptionStatement) => {
-                    if (descriptionStatement.length) {
-                        setDescription(descriptionStatement[0].object.label);
-                    }
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                });
-        }
-    };
+const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
+    id,
+    _class,
+    classes,
+    children,
+    extraContent,
+    contextDescription,
+    disabled = false,
+    showURL = false,
+    buttons,
+}) => {
+    const [isActive, setIsActive] = useState(false);
 
-    useEffect(() => {
-        setIsLoaded(false);
-    }, [id]);
+    const { data, isLoading } = useSWR(
+        isActive && id && _class !== ENTITIES.LITERAL
+            ? [{ subjectId: id, predicateId: PREDICATES.DESCRIPTION, returnContent: true }, statementsUrl, 'getStatements']
+            : null,
+        ([params]) => getStatements(params) as Promise<Statement[]>,
+    );
 
-    useEffect(() => {
-        setDescription(contextDescription);
-    }, [contextDescription]);
+    let description = !contextDescription ? data?.[0]?.object.label ?? '' : contextDescription;
+
+    description = description.length > 300 ? `${description.substring(0, 300)}...` : description;
 
     const renderTypeLabel = () => {
         switch (_class) {
@@ -95,7 +108,8 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
 
     return (
         <TippyStyle
-            onTrigger={onTrigger}
+            onTrigger={() => setIsActive(true)}
+            onHide={() => setIsActive(false)}
             content={
                 <Table className="rounded mb-0">
                     <tbody>
@@ -125,7 +139,7 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                         </CopyToClipboard>
                                     )}
                                 </div>
-                                {showURL && (
+                                {id && showURL && (
                                     <div>
                                         <Tippy content={`Go to ${renderTypeLabel()} page`}>
                                             <Link href={getLinkByEntityType(_class, id)} target="_blank">
@@ -136,12 +150,12 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                                 )}
                             </td>
                         </tr>
-                        {classes?.length > 0 && (
+                        {classes && classes?.length > 0 && (
                             <tr>
                                 <td>Instance of</td>
                                 <td>
-                                    {classes.map((c, index) => (
-                                        <Fragment key={index}>
+                                    {classes.map((c, index: number) => (
+                                        <Fragment key={c}>
                                             <Link href={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
                                                 {c}
                                             </Link>
@@ -155,22 +169,34 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
                             <tr>
                                 <td>Description</td>
                                 <td>
-                                    {' '}
-                                    {!isLoading ? (
-                                        <>
-                                            {description ? (
-                                                <> {truncate(description, { length: 300 })}</>
-                                            ) : (
-                                                <small className="font-italic"> No description yet</small>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <FontAwesomeIcon icon={faSpinner} spin />
-                                    )}
+                                    {isLoading && <FontAwesomeIcon icon={faSpinner} spin />}
+                                    {!isLoading && description && description}
+                                    {!isLoading && !description && <small className="font-italic"> No description yet</small>}
                                 </td>
                             </tr>
                         )}
                         {extraContent}
+                        {buttons && buttons.length > 0 && (
+                            <tr>
+                                <td colSpan={2}>
+                                    <ButtonGroup tabIndex={0} size="sm">
+                                        {buttons?.map((button, i) => (
+                                            <Button
+                                                onClick={() => {
+                                                    button.action?.();
+                                                }}
+                                                className="px-2 py-0"
+                                                key={i}
+                                                color={button.color}
+                                            >
+                                                <FontAwesomeIcon icon={button.icon} className="me-1" />
+                                                {button.title}
+                                            </Button>
+                                        ))}
+                                    </ButtonGroup>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             }
@@ -180,22 +206,9 @@ const DescriptionTooltip = ({ disabled = false, showURL = false, id, _class, cla
             interactive
             arrow
         >
-            <span tabIndex="0" title="">
-                {children}
-            </span>
+            <span>{children}</span>
         </TippyStyle>
     );
-};
-
-DescriptionTooltip.propTypes = {
-    children: PropTypes.node.isRequired,
-    id: PropTypes.string,
-    _class: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL, ENTITIES.CLASS, ENTITIES.PREDICATE]),
-    classes: PropTypes.array,
-    extraContent: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    disabled: PropTypes.bool,
-    showURL: PropTypes.bool,
-    contextDescription: PropTypes.string,
 };
 
 export default DescriptionTooltip;
