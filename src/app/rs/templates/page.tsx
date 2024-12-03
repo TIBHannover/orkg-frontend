@@ -3,50 +3,49 @@
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { Button, Container, Form, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
-import { getRSTemplates, GetTemplatesParams, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { VisibilityOptions } from 'services/backend/types';
-import useSWRInfinite from 'swr/infinite';
+import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { getRSTemplates, rosettaStoneUrl } from 'services/backend/rosettaStone';
+import { RosettaStoneTemplate } from 'services/backend/types';
 
 const Templates = () => {
-    const pageSize = 25;
-
-    const searchParams = useSearchParams();
-    const router = useRouter();
-
-    const getKey = (pageIndex: number): GetTemplatesParams => ({
-        page: pageIndex,
-        size: pageSize,
-        sortBy: [{ property: 'created_at', direction: 'desc' }],
-        visibility: searchParams.get('sort') as VisibilityOptions,
-        q: searchParams.get('q'),
+    const [searchTerm, setSearchTerm] = useQueryState('q', {
+        defaultValue: '',
     });
 
-    const { data, isLoading, isValidating, size, setSize } = useSWRInfinite(
-        (pageIndex) => [getKey(pageIndex), rosettaStoneUrl, 'getRSTemplates'],
-        ([params]) => getRSTemplates(params),
-        { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
-    );
+    const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(25));
+
+    const {
+        data: items,
+        isLoading,
+        totalElements,
+        hasNextPage,
+        page,
+        totalPages,
+        setPage,
+        error,
+    } = usePaginate({
+        fetchFunction: getRSTemplates,
+        fetchUrl: rosettaStoneUrl,
+        fetchFunctionName: 'getRSTemplates',
+        fetchExtraParams: { q: searchTerm },
+        defaultPageSize: pageSize,
+        defaultSortBy: 'created_at',
+    });
 
     useEffect(() => {
         document.title = 'Statement types - ORKG';
     }, []);
-
-    const totalElements = data?.[0]?.totalElements;
-    const isEmpty = totalElements === 0;
-    const isLastPageReached = isEmpty || (data && data[data.length - 1])?.last;
-    const hasNextPage = !isLastPageReached;
-    const isLoadingTemplates = isLoading || isValidating;
-    const handleLoadMore = () => setSize(size + 1);
 
     const infoContainerText = (
         <>
@@ -59,58 +58,49 @@ const Templates = () => {
     );
 
     const handleSearch = debounce((term) => {
-        const params = new URLSearchParams(searchParams);
-        if (term) {
-            params.set('q', term);
-        } else {
-            params.delete('q');
-        }
-        router.push(`?${params.toString()}`);
+        setSearchTerm(term);
     }, 500);
 
-    const isFilterApplied = searchParams.get('q')?.toString();
+    const buttons = (
+        <RequireAuthentication
+            component={Link}
+            color="secondary"
+            size="sm"
+            className="btn btn-secondary btn-sm flex-shrink-0"
+            href={reverse(ROUTES.RS_ADD_TEMPLATE)}
+        >
+            <FontAwesomeIcon icon={faPlus} /> Create statement type
+        </RequireAuthentication>
+    );
 
-    const resetFilters = () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete('sort');
-        params.delete('q');
-        router.push(`?${params.toString()}`);
-    };
+    const renderListItem = (template: RosettaStoneTemplate) => <RSTemplateCard template={template} key={template.id} />;
+
+    const isFilterApplied = searchTerm !== '';
 
     return (
         <>
             <TitleBar
                 titleAddition={
                     <div className="text-muted mt-1">
-                        {totalElements === 0 && isLoadingTemplates ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
-                        {isFilterApplied ? 'items found by applying the filter' : 'items'}
+                        {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
+                        {searchTerm !== '' ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
-                            <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
+                            <Button onClick={() => setSearchTerm('')} className="ms-1 ps-2 pe-2" size="sm">
                                 Reset
                             </Button>
                         )}
                     </div>
                 }
-                buttonGroup={
-                    <RequireAuthentication
-                        component={Link}
-                        color="secondary"
-                        size="sm"
-                        className="btn btn-secondary btn-sm flex-shrink-0"
-                        href={reverse(ROUTES.RS_ADD_TEMPLATE)}
-                    >
-                        <FontAwesomeIcon icon={faPlus} /> Create statement type
-                    </RequireAuthentication>
-                }
+                buttonGroup={buttons}
             >
                 Statement types
             </TitleBar>
-            {infoContainerText && (
-                <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                    {infoContainerText}
-                </Container>
-            )}
-            <Container className="box rounded pt-4 pb-2 ps-4 pe-4 clearfix">
+
+            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                {infoContainerText}
+            </Container>
+
+            <Container className="box rounded pt-4 pb-2 ps-4 pe-4 clearfix mb-3">
                 <Form className="mb-3">
                     <FormGroup>
                         <Label for="filter-label">Filter by label</Label>
@@ -119,43 +109,28 @@ const Templates = () => {
                             id="filter-label"
                             maxLength={MAX_LENGTH_INPUT}
                             onChange={(e) => handleSearch(e.target.value)}
-                            defaultValue={searchParams.get('q')?.toString()}
+                            defaultValue={searchTerm}
                         />
                     </FormGroup>
                 </Form>
             </Container>
-            <Container className="p-0 mt-4">
-                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                    {data?.map((_templates) => _templates.content.map((template) => <RSTemplateCard key={template.id} template={template} />))}
 
-                    {totalElements === 0 && !isLoadingTemplates && (
-                        <ListGroupItem tag="div" className="text-center p-5">
-                            No statement types
-                            {isFilterApplied && ' match this filter'}.
-                        </ListGroupItem>
-                    )}
-                    {isLoadingTemplates && (
-                        <ListGroupItem tag="div" className="text-center">
-                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                        </ListGroupItem>
-                    )}
-                    {!isLoadingTemplates && hasNextPage && (
-                        <ListGroupItem
-                            style={{ cursor: 'pointer' }}
-                            className="text-center"
-                            action
-                            onClick={!isLoadingTemplates ? handleLoadMore : undefined}
-                        >
-                            Load more statement types
-                        </ListGroupItem>
-                    )}
-                    {!hasNextPage && isLastPageReached && size !== 1 && (
-                        <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page
-                        </ListGroupItem>
-                    )}
-                </ListGroup>
-            </Container>
+            <ListPaginatedContent<RosettaStoneTemplate>
+                renderListItem={renderListItem}
+                pageSize={pageSize}
+                label="statement types"
+                isLoading={isLoading}
+                items={items ?? []}
+                hasNextPage={hasNextPage}
+                page={page}
+                setPage={setPage}
+                setPageSize={setPageSize}
+                totalElements={totalElements}
+                error={error}
+                totalPages={totalPages}
+                boxShadow
+                flush={false}
+            />
         </>
     );
 };

@@ -1,13 +1,12 @@
 'use client';
 
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
-import { debounce, isBoolean } from 'lodash';
+import { debounce } from 'lodash';
+import { parseAsInteger, useQueryState } from 'nuqs';
 import { FC } from 'react';
 import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
-import { Node } from 'services/backend/types';
 
 type TemplatesFiltersProps = {
     isLoading: boolean;
@@ -15,30 +14,28 @@ type TemplatesFiltersProps = {
 };
 
 const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
-    const searchParams = useSearchParams();
-    const router = useRouter();
+    const [, setPage] = useQueryState('page', parseAsInteger.withDefault(0));
 
-    const handleChangeFilter = (value: Node | null | boolean, filerId: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+    const [searchTerm, setSearchTerm] = useQueryState('q', {
+        defaultValue: '',
+    });
+    const [researchField, setResearchField] = useQueryState('researchField', {
+        defaultValue: '',
+    });
+    const [includeSubFields, setIncludeSubFields] = useQueryState('include_subfields', {
+        defaultValue: true,
+        parse: (value) => value === 'true',
+    });
 
-        if (value && !isBoolean(value)) {
-            params.set(filerId, value?.id);
-        } else if (isBoolean(value)) {
-            params.set(filerId, value.toString());
-        } else {
-            params.delete(filerId);
-        }
-        router.push(`?${params.toString()}`);
-    };
+    const [researchProblem, setResearchProblem] = useQueryState('researchProblem', {
+        defaultValue: '',
+    });
+    const [targetClass, setTargetClass] = useQueryState('targetClass', {
+        defaultValue: '',
+    });
 
     const handleSearch = debounce((term) => {
-        const params = new URLSearchParams(searchParams);
-        if (term) {
-            params.set('q', term);
-        } else {
-            params.delete('q');
-        }
-        router.push(`?${params.toString()}`);
+        setSearchTerm(term);
     }, 500);
 
     const filterCommonProps = {
@@ -58,8 +55,11 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                             <div className="flex-grow-1">Filter by research field</div>
                             <Label check className="mb-0 me-0">
                                 <Input
-                                    onChange={(e) => handleChangeFilter(e.target.checked, 'includeSubfields')}
-                                    defaultValue={searchParams.get('includeSubfields')?.toString()}
+                                    onChange={(e) => {
+                                        setIncludeSubFields(e.target.checked);
+                                        setPage(0);
+                                    }}
+                                    defaultValue={includeSubFields.toString()}
                                     type="checkbox"
                                     disabled={isLoading}
                                 />{' '}
@@ -70,9 +70,12 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                             entityType={ENTITIES.RESOURCE}
                             includeClasses={[CLASSES.RESEARCH_FIELD]}
                             placeholder="Select or type to enter a research field"
-                            onChange={(v) => handleChangeFilter(v as Node, 'researchField')}
+                            onChange={(v) => {
+                                setResearchField(v?.id ?? '');
+                                setPage(0);
+                            }}
                             inputId="filter-research-field"
-                            defaultValueId={searchParams.get('researchField')?.toString()}
+                            defaultValueId={researchField}
                             {...filterCommonProps}
                         />
                     </FormGroup>
@@ -84,9 +87,12 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                             entityType={ENTITIES.RESOURCE}
                             includeClasses={[CLASSES.PROBLEM]}
                             placeholder="Select or type to enter a research problem"
-                            onChange={(v) => handleChangeFilter(v as Node, 'researchProblem')}
+                            onChange={(v) => {
+                                setResearchProblem(v?.id ?? '');
+                                setPage(0);
+                            }}
                             inputId="filter-research-problem"
-                            defaultValueId={searchParams.get('researchProblem')?.toString()}
+                            defaultValueId={researchProblem}
                             {...filterCommonProps}
                         />
                     </FormGroup>
@@ -100,8 +106,11 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                             type="text"
                             id="filter-label"
                             maxLength={MAX_LENGTH_INPUT}
-                            onChange={(e) => handleSearch(e.target.value)}
-                            defaultValue={searchParams.get('q')?.toString()}
+                            onChange={(e) => {
+                                handleSearch(e.target.value);
+                                setPage(0);
+                            }}
+                            defaultValue={searchTerm}
                             bsSize={size}
                         />
                     </FormGroup>
@@ -112,9 +121,12 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                         <Autocomplete
                             entityType={ENTITIES.CLASS}
                             placeholder="Select or type to enter a class"
-                            onChange={(v) => handleChangeFilter(v as Node, 'targetClass')}
+                            onChange={(v) => {
+                                setTargetClass(v?.id ?? '');
+                                setPage(0);
+                            }}
                             inputId="filter-class"
-                            defaultValueId={searchParams.get('targetClass')?.toString()}
+                            defaultValueId={targetClass}
                             {...filterCommonProps}
                         />
                     </FormGroup>
