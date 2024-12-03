@@ -2,24 +2,29 @@
 
 import Tippy from '@tippyjs/react';
 import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import useParams from 'components/useParams/useParams';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
-import { Container, Row } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import { Button, Container, Row } from 'reactstrap';
 import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from 'services/backend/observatories';
-import { Observatory } from 'services/backend/types';
-import useSWRInfinite from 'swr/infinite';
-import useSWR from 'swr';
 import { getResource, resourcesUrl } from 'services/backend/resources';
+import { Observatory } from 'services/backend/types';
+import { isCurationAllowed } from 'slices/authSlice';
+import { RootStore } from 'slices/types';
+import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
 const Observatories = () => {
+    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
     useEffect(() => {
         document.title = 'Observatories - ORKG';
     }, []);
@@ -100,7 +105,23 @@ const Observatories = () => {
 
     return (
         <>
-            <TitleBar>Observatories</TitleBar>
+            <TitleBar
+                buttonGroup={
+                    <Tippy
+                        content="Observatories can only be created by curators. Contact the ORKG team for proposing a new observatory"
+                        disabled={isCurator}
+                        hideOnClick={false}
+                    >
+                        <span>
+                            <Button color="secondary" size="sm" tag={Link} href={reverse(ROUTES.ADD_OBSERVATORY)} disabled={!isCurator}>
+                                Create observatory
+                            </Button>
+                        </span>
+                    </Tippy>
+                }
+            >
+                Observatories
+            </TitleBar>
             <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
                 Observatories organize research contributions in a particular research field and are curated by research organizations active in the
                 respective field.{' '}

@@ -1,4 +1,5 @@
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Option from 'components/AutocompleteObservatory/CustomComponents/Option';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -6,20 +7,7 @@ import Select, { components } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { FormGroup, Label } from 'reactstrap';
 import { getObservatories } from 'services/backend/observatories';
-import { getConferences, getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
-import styled from 'styled-components';
-
-const LogoContainer = styled.div`
-    overflow: hidden;
-    width: 70px;
-    height: 32px;
-    text-align: center;
-    & img {
-        width: auto; // to maintain aspect ratio
-        height: 100%;
-        background: #fff;
-    }
-`;
+import { getConferences, getOrganization } from 'services/backend/organizations';
 
 const PAGE_SIZE = 10;
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
@@ -86,18 +74,6 @@ function AutocompleteObservatory(props) {
         </components.Option>
     );
 
-    const CustomOptionOrganization = (innerProps) => (
-        <components.Option {...innerProps}>
-            <div className="d-flex">
-                <LogoContainer className="me-2">
-                    <img alt={innerProps.data.name} src={getOrganizationLogoUrl(innerProps.data?.id)} />
-                </LogoContainer>
-
-                {innerProps.data.name}
-            </div>
-        </components.Option>
-    );
-
     return (
         <>
             <p>
@@ -125,7 +101,7 @@ function AutocompleteObservatory(props) {
                 <Label for="select-organization">Select an organization</Label>
                 <Select
                     value={props.organization}
-                    components={{ Option: CustomOptionOrganization }}
+                    components={{ Option }}
                     options={optionsOrganizations}
                     onChange={onChangeOrganization}
                     getOptionValue={({ id }) => id}

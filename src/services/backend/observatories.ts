@@ -116,13 +116,19 @@ export const getUsersByObservatoryId = ({
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
 };
 
-export const createObservatory = (
-    observatory_name: string,
-    organization_id: string,
-    description: string,
-    research_field: string,
-    display_id: string,
-): Promise<Observatory> =>
+export const createObservatory = ({
+    observatory_name,
+    organization_id,
+    description,
+    research_field,
+    display_id,
+}: {
+    observatory_name: string;
+    organization_id: string;
+    description: string;
+    research_field: string;
+    display_id: string;
+}): Promise<Observatory> =>
     submitPostRequest(
         observatoriesUrl,
         { 'Content-Type': 'application/json' },
