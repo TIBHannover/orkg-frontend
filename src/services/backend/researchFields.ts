@@ -33,5 +33,23 @@ export const getResearchProblemsByResearchFieldId = ({
     return submitGetRequest(`${researchFieldUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems?${params}`);
 };
 
-export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
+export const getFieldChildren = ({ fieldId }: { fieldId: string }): Promise<{ resource: Resource; child_count: number }[]> =>
     submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then((res) => res.content);
+
+export const getFieldParents = async ({ fieldId }: { fieldId: string }): Promise<Resource[]> => {
+    const parents: Resource[] = [];
+
+    const fetchParents = async (currentFieldId: string): Promise<void> => {
+        const response = await submitGetRequest(`${researchFieldUrl}${currentFieldId}/parents`);
+        const parentFields = response.content;
+
+        if (parentFields?.length) {
+            parents.push(parentFields[0]);
+            await fetchParents(parentFields[0].id);
+        }
+    };
+
+    await fetchParents(fieldId);
+
+    return parents;
+};

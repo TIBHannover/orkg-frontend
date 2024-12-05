@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getResource } from 'services/backend/resources';
-import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
-import { getResearchFieldsStats } from 'services/backend/stats';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { orderBy } from 'lodash';
 import useParams from 'components/useParams/useParams';
 import { PREDICATES } from 'constants/graphSettings';
+import { useCallback, useEffect, useState } from 'react';
+import { getFieldChildren } from 'services/backend/researchFields';
+import { getResource } from 'services/backend/resources';
+import { getStatements } from 'services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 
 function useResearchField(initialVal = {}) {
     const [data, setData] = useState({ initialVal });
@@ -31,22 +30,15 @@ function useResearchField(initialVal = {}) {
                 });
 
             // Get description and same as
-            getStatementsBySubject({ id: rfId }).then((statements) => {
+            getStatements({ subjectId: rfId }).then((statements) => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
                 setData((data) => ({ ...data, description: description?.label, sameAs }));
             });
 
-            getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then((result) => {
+            getFieldChildren({ fieldId: rfId }).then((result) => {
                 if (result.length > 0) {
-                    getResearchFieldsStats().then((stats) => {
-                        const orderedSubRF = orderBy(
-                            result.map((s) => ({ ...s.object, numPapers: stats[s.object.id] })),
-                            (item) => item.numPapers,
-                            ['desc'],
-                        );
-                        setSubResearchFields(orderedSubRF);
-                    });
+                    setSubResearchFields(result.map((item) => item.resource));
                 } else {
                     setSubResearchFields([]);
                 }

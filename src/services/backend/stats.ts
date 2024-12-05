@@ -36,10 +36,6 @@ export type Statistics = {
 
 export const getStats = (extra: string[] = []): Promise<Statistics> => submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
 
-export const getResearchFieldsStats = (): Promise<{
-    [key: string]: number;
-}> => submitGetRequest(`${statsUrl}fields`);
-
 export const getResearchFieldsStatsWithSubfields = (fieldId: string): Promise<ResearchFieldStat> =>
     submitGetRequest(`${statsUrl}research-fields/${fieldId}?includeSubfields=true`);
 

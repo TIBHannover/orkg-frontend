@@ -55,9 +55,6 @@ export const createPaper = (data: CreatePaperParams): Promise<string> =>
         true,
     ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header
 
-export const getIsVerified = (id: string): Promise<null> =>
-    submitGetRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
-
 export const markAsVerified = (id: string): Promise<null> =>
     submitPutRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
 
