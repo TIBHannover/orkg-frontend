@@ -44,7 +44,7 @@ const useLoadOptions = ({
             }
 
             if (page === 0 && search.startsWith('#')) {
-                const searchById = await IdMatch(search.trim(), entityType);
+                const searchById = await IdMatch(search.trim());
                 responseItems = searchById.length ? [...searchById, ...responseItems] : responseItems;
             }
 

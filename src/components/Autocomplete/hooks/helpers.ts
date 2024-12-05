@@ -4,13 +4,13 @@ import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 import { MultiValue } from 'react-select';
-import { createClass, getClasses } from 'services/backend/classes';
+import { getClasses } from 'services/backend/classes';
 import { importClassByURI, importPredicateByURI, importResourceByURI } from 'services/backend/import';
 import { createLiteral } from 'services/backend/literals';
-import { getEntities, getEntity } from 'services/backend/misc';
-import { createPredicate } from 'services/backend/predicates';
+import { getEntities } from 'services/backend/misc';
 import { createResource, getResources } from 'services/backend/resources';
 import { createLiteralStatement, getStatements } from 'services/backend/statements';
+import { getThing } from 'services/backend/things';
 import { Class, EntityType, Predicate, Resource, Statement } from 'services/backend/types';
 import getGeoNames from 'services/geoNames';
 import { getOntologyTerms, selectTerms } from 'services/ols';
@@ -80,13 +80,13 @@ export const orkgLookup = async ({
 /**
  * Get Node by ID if the value starts with '#'
  */
-export const IdMatch = async (value: string, _class: string): Promise<(Resource | Predicate | Class)[]> => {
+export const IdMatch = async (value: string): Promise<(Resource | Predicate | Class)[]> => {
     if (value.startsWith('#')) {
         const valueWithoutHashtag = value.substring(1);
         if (valueWithoutHashtag.length > 0) {
             let responseJsonExact: Resource | Predicate | Class | undefined;
             try {
-                responseJsonExact = await getEntity(_class, valueWithoutHashtag);
+                responseJsonExact = await getThing(valueWithoutHashtag);
             } catch (err) {
                 responseJsonExact = undefined;
             }

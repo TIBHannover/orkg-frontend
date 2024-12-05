@@ -8,7 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getClassById } from 'services/backend/classes';
-import { getEntityTypeByID, getLinkByEntityType } from 'utils';
+import { getThing } from 'services/backend/things';
+import { getLinkByEntityType } from 'utils';
 
 export const useFilters = () => {
     const searchParams = useSearchParams();
@@ -29,7 +30,7 @@ export const useFilters = () => {
     const [isLoadingFilterClasses, setIsLoadingFilterClasses] = useState(true);
 
     const submitSearch = useCallback(
-        (query) => {
+        async (query) => {
             let _query;
             try {
                 _query = decodeURIComponent(query);
@@ -37,9 +38,11 @@ export const useFilters = () => {
                 _query = query;
             }
 
-            if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(_query)) {
+            if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && _query.startsWith('#')) {
                 const id = _query.substring(1);
-                router.push(getLinkByEntityType(getEntityTypeByID(_query), id));
+                const entity = await getThing(id);
+                const link = getLinkByEntityType(entity?._class, id);
+                router.push(link);
             } else {
                 const _selectedFilters = createdBy
                     ? selectedFilters

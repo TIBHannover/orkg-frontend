@@ -1,9 +1,7 @@
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { getEntity } from 'services/backend/entities';
-import { getPredicate } from 'services/backend/predicates';
-import { resourcesUrl } from 'services/backend/resources';
+import { getThing, thingsUrl } from 'services/backend/things';
 import { Class, Literal, Predicate, Resource } from 'services/backend/types';
 import useSWR from 'swr';
 
@@ -14,8 +12,8 @@ const useBreadcrumbs = () => {
     let historyEntities: (Resource | Class | Predicate | Literal | undefined)[] = [];
 
     const { data: _historyEntities, isLoading } = useSWR(
-        !isUsingSnapshot && history && history.length > 0 ? [history, resourcesUrl, 'getResource'] : null,
-        ([params]) => Promise.all(params.map((id, index) => (index % 2 === 0 ? getEntity(id) : getPredicate(id)))),
+        !isUsingSnapshot && history && history.length > 0 ? [history, thingsUrl, 'getThing'] : null,
+        ([params]) => Promise.all(params.map((id) => getThing(id))),
     );
 
     if (!isUsingSnapshot && _historyEntities) {
