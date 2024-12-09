@@ -21,7 +21,7 @@ const Unauthorized = () => {
     }, []);
 
     const handleSignIn = () => {
-        login();
+        login({ redirectUri: window.location.href });
     };
 
     const handleSignUp = () => {

@@ -1,3 +1,4 @@
+import { env } from 'next-runtime-env';
 import { isLoggedIn, login } from 'services/keycloak';
 
 type RequireAuthenticationProps = {
@@ -9,7 +10,8 @@ type RequireAuthenticationProps = {
 const RequireAuthentication = ({ component: Component, ...rest }: RequireAuthenticationProps) => {
     const requireAuthentication = (e: React.MouseEvent) => {
         if (!isLoggedIn()) {
-            const redirectUri = rest.href || undefined;
+            let redirectUri = rest.href || undefined;
+            redirectUri = redirectUri ? `${env('NEXT_PUBLIC_URL')}${redirectUri}` : undefined;
             login({ redirectUri });
             // Don't follow the link when user is not authenticated
             e.preventDefault();

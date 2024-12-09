@@ -70,7 +70,7 @@ const DiscussionModal = ({ entityId, toggle, refreshCount }) => {
     };
 
     const handleSignIn = () => {
-        login();
+        login({ redirectUri: window.location.href });
     };
 
     return (

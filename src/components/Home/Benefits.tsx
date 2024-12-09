@@ -121,7 +121,7 @@ export default function Benefits() {
                 </div>
                 <div className="flex-shrink-0">
                     {!user && (
-                        <Button color="secondary" size="sm" onClick={() => login()}>
+                        <Button color="secondary" size="sm" onClick={() => login({ redirectUri: window.location.href })}>
                             <span>Sign up</span>
                         </Button>
                     )}
