@@ -18,6 +18,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
+import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
 import { Cookies } from 'react-cookie';
@@ -237,7 +238,8 @@ const Header = () => {
 
     const requireAuthentication = (e, redirectRoute) => {
         if (!authenticated) {
-            login({ redirectUri: redirectRoute });
+            const redirectUri = `${env('NEXT_PUBLIC_URL')}${redirectRoute}`;
+            login({ redirectUri });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
         } else {
@@ -515,7 +517,13 @@ const Header = () => {
                     {initialized && authenticated && !!user && <UserTooltip />}
 
                     {initialized && !authenticated && (
-                        <Button id="sign-in" color="secondary" className="px-3 flex-shrink-0 sign-in" outline onClick={() => login()}>
+                        <Button
+                            id="sign-in"
+                            color="secondary"
+                            className="px-3 flex-shrink-0 sign-in"
+                            outline
+                            onClick={() => login({ redirectUri: window.location.href })}
+                        >
                             <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
                         </Button>
                     )}

@@ -191,7 +191,7 @@ const AddConference = () => {
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
-                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login()}>
+                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login({ redirectUri: window.location.href })}>
                         <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create conference event
                     </Button>
                 )}

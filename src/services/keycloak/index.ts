@@ -1,6 +1,6 @@
 import { env } from 'next-runtime-env';
 // @ts-expect-error keycloak-js expect "Bundler" as moduleResolution in tsconfig.json
-import Keycloak, { type KeycloakInstance } from 'keycloak-js';
+import Keycloak, { type KeycloakInstance, type KeycloakLoginOptions } from 'keycloak-js';
 
 // ENV variables are not available in the build process, so we need to set default values here because the keycloak config requires them
 const keycloakConfig = {
@@ -37,7 +37,7 @@ export const initKeycloak = () => {
     return Promise.resolve(keycloak?.authenticated ?? false);
 };
 
-export const login = ({ redirectUri = '' } = {}) => keycloak?.login({ redirectUri: `${env('NEXT_PUBLIC_URL')}${redirectUri}` });
+export const login = (params: KeycloakLoginOptions) => keycloak?.login(params);
 
 export const logout = () => keycloak?.logout();
 
