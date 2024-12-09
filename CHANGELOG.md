@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.153.0...v0.154.0) - 2024-12-09
+
+### Changes
+
+- refactor: use endpoint for fetching things by id [`#1440`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1440)
+- feat: redirection after sign-in to the same page [`#1439`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1439)
+- refactor: use new backend endpoints for the research fields taxonomy [`#1441`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1441)
+- fix: multiple loading texts when viewing rosetta statements of a paper [`#1442`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1442)
+- feat: consolidate comparison editing and publishing [`#1402`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1402)
+
+---
 ## [v0.153.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.152.0...v0.153.0) - 2024-12-03
 
 ### Changes
