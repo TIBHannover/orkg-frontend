@@ -1,14 +1,13 @@
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { getResourceFromStatementsById, getStatementsBySubjectId } from 'components/DataBrowser/utils/dataBrowserUtils';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
+import { getResourceFromStatementsById, getStatementsBySubjectId } from 'components/DataBrowser/utils/dataBrowserUtils';
 import { CLASSES } from 'constants/graphSettings';
-import { getEntity } from 'services/backend/entities';
-import { resourcesUrl } from 'services/backend/resources';
+import { isEqual, uniqWith } from 'lodash';
 import { getStatements, statementsUrl } from 'services/backend/statements';
+import { getThing, thingsUrl } from 'services/backend/things';
 import { Class, Literal, Predicate, Resource, Statement } from 'services/backend/types';
 import useSWR from 'swr';
-import { isEqual, uniqWith } from 'lodash';
 
 const useEntity = () => {
     const { currentId } = useHistory();
@@ -25,7 +24,7 @@ const useEntity = () => {
         error,
         mutate: mutateEntity,
         isValidating: isValidatingEntity,
-    } = useSWR(!isUsingSnapshot ? [currentId, resourcesUrl, 'getResource'] : null, ([params]) => getEntity(params));
+    } = useSWR(!isUsingSnapshot ? [currentId, thingsUrl, 'getThing'] : null, ([params]) => getThing(params));
 
     if (!isUsingSnapshot) {
         _entity = entity;

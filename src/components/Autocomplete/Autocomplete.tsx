@@ -13,7 +13,7 @@ import type { GroupBase, OnChangeValue } from 'react-select';
 import { AsyncPaginate, ComponentProps, UseAsyncPaginateParams, withAsyncPaginate } from 'react-select-async-paginate';
 import type {} from 'react-select/base';
 import Creatable, { CreatableProps } from 'react-select/creatable';
-import { getEntity } from 'services/backend/misc';
+import { getThing } from 'services/backend/things';
 
 // This import is necessary for module augmentation.
 // It allows us to extend the 'Props' interface in the 'react-select/base' module
@@ -64,10 +64,10 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
     useEffect(() => {
         const loadNode = async () => {
             if (defaultValueId && !value && !isMulti) {
-                const node = await getEntity(entityType, defaultValueId as string);
+                const node = await getThing(defaultValueId as string);
                 setValue(node as OptionType);
             } else if (defaultValueId && defaultValueId?.length > 0 && !value && isMulti) {
-                const nodes = await Promise.all((defaultValueId as string[]).map((v) => getEntity(entityType, v) as Promise<OptionType>));
+                const nodes = await Promise.all((defaultValueId as string[]).map((v) => getThing(v) as Promise<OptionType>));
                 setValue(nodes);
             } else {
                 setValue(null);
@@ -78,7 +78,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             setValue(null);
             loadNode();
         }
-    }, [defaultValue, defaultValueId, entityType, isMulti, value]);
+    }, [defaultValue, defaultValueId, isMulti, value]);
 
     const Select = useMemo(() => (allowCreate ? AsyncPaginateCreatable : AsyncPaginate), [allowCreate]);
 

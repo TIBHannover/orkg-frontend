@@ -2,9 +2,9 @@ import { ENTITIES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import { submitPostRequest } from 'network';
 import qs from 'qs';
-import { getClassById, getClasses } from 'services/backend/classes';
-import { getPredicate, getPredicates } from 'services/backend/predicates';
-import { getResource, getResources } from 'services/backend/resources';
+import { getClasses } from 'services/backend/classes';
+import { getPredicates } from 'services/backend/predicates';
+import { getResources } from 'services/backend/resources';
 import {
     Class,
     CreatedByParam,
@@ -76,26 +76,6 @@ export const getEntities = (
             return getClasses(params);
         default:
             return getResources(params);
-    }
-};
-
-/**
- * Get entity by ID
- *
- * @param {String} entityType - Entity Type
- * @param {String} id - Entity ID
- * @return {Promise} Promise object
- */
-export const getEntity = (entityType: string = ENTITIES.RESOURCE, id: string): Promise<Resource | Predicate | Class> => {
-    switch (entityType) {
-        case ENTITIES.RESOURCE:
-            return getResource(id);
-        case ENTITIES.PREDICATE:
-            return getPredicate(id);
-        case ENTITIES.CLASS:
-            return getClassById(id);
-        default:
-            return getResource(id);
     }
 };
 

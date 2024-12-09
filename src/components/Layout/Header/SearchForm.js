@@ -9,8 +9,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Button, Form, Input, InputGroup } from 'reactstrap';
+import { getThing } from 'services/backend/things';
 import styled from 'styled-components';
-import { getEntityTypeByID, getLinkByEntityType } from 'utils';
+import { getLinkByEntityType } from 'utils';
 
 const InputStyled = styled(Input)`
     max-width: 120px;
@@ -36,14 +37,16 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         setValue(event.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let route = '';
-        if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
+        if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && value.startsWith('#')) {
             const id = value.substring(1);
+            const entity = await getThing(id);
+            const link = getLinkByEntityType(entity?._class, id);
             setValue('');
-            route = router.push(getLinkByEntityType(getEntityTypeByID(value), id));
+            route = router.push(link);
         } else if (isString(value) && value) {
             const types = searchParams.get('types')?.split(',');
             const createdBy = searchParams.get('createdBy');

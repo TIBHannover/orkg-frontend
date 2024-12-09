@@ -752,25 +752,6 @@ export const getLinkByEntityType = (_class, id) => {
 };
 
 /**
- * Get Entity Type based on ID
- * (Only works for IDs with the default pattern (#Rxxx, #Cxxx, #Pxxx)
- * @param {String} id Entity ID
- * @result {String} Entity type or false if no pattern matched
- */
-export const getEntityTypeByID = (value) => {
-    if (value.match(REGEX.RESOURCE_PATTERN)) {
-        return ENTITIES.RESOURCE;
-    }
-    if (value.match(REGEX.PROPERTY_PATTERN)) {
-        return ENTITIES.PREDICATE;
-    }
-    if (value.match(REGEX.CLASS_PATTERN)) {
-        return ENTITIES.CLASS;
-    }
-    return false;
-};
-
-/**
  * Get resource type label based on class
  *
  * @param {String} classId class ID
