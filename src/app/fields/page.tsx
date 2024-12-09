@@ -19,7 +19,6 @@ import { useQueryState } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { getResearchFieldsStats } from 'services/backend/stats';
 import { Item, VisibilityOptions } from 'services/backend/types';
 import { reverseWithSlug } from 'utils';
 
@@ -28,13 +27,8 @@ const ResearchFields = () => {
     const [selectedResearchField, setSelectedResearchField] = useState('');
     const [researchFields, setResearchFields] = useState<ResearchField[]>([]);
     const [researchFieldLabel, setResearchFieldLabel] = useState('');
-    const [researchFieldStats, setResearchFieldStats] = useState({});
 
     useEffect(() => {
-        getResearchFieldsStats().then((results) => {
-            setResearchFieldStats(results);
-        });
-
         document.title = 'Research field taxonomy browser - ORKG';
     }, []);
 
@@ -121,9 +115,9 @@ const ResearchFields = () => {
                             <ResearchFieldSelector
                                 selectedResearchField={selectedResearchField}
                                 researchFields={researchFields as ResearchField[]}
-                                researchFieldStats={researchFieldStats}
                                 updateResearchField={handleUpdate}
                                 showPreviouslySelected={false}
+                                showStatistics
                             />
                         </Col>
 

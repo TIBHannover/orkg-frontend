@@ -1,15 +1,15 @@
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import FieldStatistics from 'components/ResearchFieldSelector/FieldStatistics';
 import PreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from 'components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
 import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
 import { cloneDeep, find, set, sortBy } from 'lodash';
 import { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
-import { Badge, Button } from 'reactstrap';
-import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
+import { Button } from 'reactstrap';
+import { getFieldChildren, getFieldParents } from 'services/backend/researchFields';
 import { Node } from 'services/backend/types';
 import styled from 'styled-components';
 
@@ -75,31 +75,29 @@ type ResearchFieldSelectorProps = {
         },
         submit?: boolean,
     ) => void;
-    researchFieldStats?: {
-        [key: string]: number;
-    };
     insideModal?: boolean;
     showPreviouslySelected?: boolean;
     title?: string | null;
     abstract?: string | null;
+    showStatistics?: boolean;
 };
 
 const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
     selectedResearchField,
     researchFields,
     updateResearchField,
-    researchFieldStats,
     insideModal = false,
     showPreviouslySelected = true,
     title = '',
     abstract = '',
+    showStatistics = false,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState<string | null>(null);
 
     const handleFieldSelect = (selected: Node, submit = false) => {
         setIsLoading(true);
-        getParentResearchFields(selected.id).then(async (_parents) => {
+        getFieldParents({ fieldId: selected.id }).then(async (_parents) => {
             const parents = _parents.reverse();
             let fields = cloneDeep(researchFields);
 
@@ -119,6 +117,50 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
         });
     };
 
+    const getFieldsByIds = useCallback(async (ids: string[], previousFields: ResearchField[] = []) => {
+        const fields = cloneDeep(previousFields);
+        const subfieldStatements = await Promise.all(ids.map((id) => getFieldChildren({ fieldId: id })));
+        subfieldStatements.forEach((subfields, index) => {
+            const hasChildren = subfields.length > 0;
+            subfields.forEach((subfield) => {
+                fields.push({
+                    label: subfield.resource.label,
+                    id: subfield.resource.id,
+                    parent: ids[index],
+                    hasChildren: null,
+                    isExpanded: false,
+                });
+            });
+
+            const fieldIndex = fields.findIndex((field) => field.id === ids[index]);
+            if (fieldIndex !== -1) {
+                fields[fieldIndex].hasChildren = hasChildren;
+            }
+        });
+        return sortBy(fields, ['label']);
+    }, []);
+
+    const getChildFields = useCallback(
+        async (fieldId: string, previousFields: ResearchField[], toggleExpand = false) => {
+            const fields = cloneDeep(previousFields);
+            const fieldIndex = fields.findIndex((field) => field.id === fieldId);
+            if (fieldIndex !== -1) {
+                const field = fields[fieldIndex];
+                // don't toggle if the search input is used, always expand
+                fields[fieldIndex].isExpanded = toggleExpand ? !field.isExpanded : true;
+            }
+            const children = fields.filter((field) => field.parent === fieldId && field.hasChildren === null);
+            const childrenIds = children.map((field) => field.id);
+
+            if (!childrenIds.length) {
+                return fields;
+            }
+
+            return getFieldsByIds(childrenIds, fields);
+        },
+        [getFieldsByIds],
+    );
+
     const handleFieldClick = async (e: MouseEvent, fieldId: string, shouldSetActive = true) => {
         // prevent triggering outer handler when the icon is pressed
         e.stopPropagation();
@@ -133,60 +175,6 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
 
         updateResearchField(payload);
     };
-
-    const getFieldsByIds = useCallback(async (ids: string[], previousFields: ResearchField[] = []) => {
-        const fields = cloneDeep(previousFields);
-        const subfieldStatements = await getStatementsBySubjects({ ids }); // TODO: replace with getFieldChildren
-
-        for (const { id, statements } of subfieldStatements) {
-            const hasChildren = statements.length > 0;
-            if (hasChildren) {
-                statements.map((statement) =>
-                    statement.object._class === 'resource' &&
-                    statement.object.classes &&
-                    statement.object.classes.length &&
-                    statement.object.classes.includes(CLASSES.RESEARCH_FIELD) // Make sure that the object is research field
-                        ? fields.push({
-                              label: statement.object.label,
-                              id: statement.object.id,
-                              parent: id,
-                              hasChildren: null,
-                              isExpanded: false,
-                          })
-                        : {},
-                );
-            }
-
-            const fieldIndex = fields.findIndex((field) => field.id === id);
-            if (fieldIndex !== -1) {
-                fields[fieldIndex].hasChildren = hasChildren;
-            }
-        }
-        return sortBy(fields, ['label']);
-    }, []);
-
-    const getChildFields = useCallback(
-        async (fieldId: string, previousFields: ResearchField[], toggleExpand = false) => {
-            const fields = cloneDeep(previousFields);
-            const fieldIndex = fields.findIndex((field) => field.id === fieldId);
-
-            if (fieldIndex !== -1) {
-                const field = fields[fieldIndex];
-                // don't toggle if the search input is used, always expand
-                fields[fieldIndex].isExpanded = toggleExpand ? !field.isExpanded : true;
-            }
-
-            const children = fields.filter((field) => field.parent === fieldId && field.hasChildren === null);
-            const childrenIds = children.map((field) => field.id);
-
-            if (!childrenIds.length) {
-                return fields;
-            }
-
-            return getFieldsByIds(childrenIds, fields);
-        },
-        [getFieldsByIds],
-    );
 
     useEffect(() => {
         // select the main field is none is selected yet (i.e. first time visiting this step)
@@ -260,15 +248,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                             </IndicatorContainer>
                             {find(parents, (p) => p.id === field.id) ? <b>{field.label}</b> : field.label}
                         </div>
-                        {researchFieldStats && (
-                            <Tippy content="Number of content items in this field">
-                                <div className="justify-content-end">
-                                    <Badge color="light" pill>
-                                        {researchFieldStats[field.id]}
-                                    </Badge>
-                                </div>
-                            </Tippy>
-                        )}
+                        {showStatistics && <FieldStatistics field={field} />}
                     </FieldItem>
                     {field.isExpanded && !_isLoading && <SubList>{fieldList(field.id)}</SubList>}
                 </li>
