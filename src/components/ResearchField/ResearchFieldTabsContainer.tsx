@@ -53,6 +53,7 @@ function ResearchFieldTabsContainer({ id }: { id: string }) {
             include_subfields: includeSubFields,
             visibility: sort,
             contentType,
+            published: true,
         },
     });
 

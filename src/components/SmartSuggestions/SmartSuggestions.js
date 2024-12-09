@@ -70,7 +70,7 @@ const SmartSuggestions = ({ children, tooltipContent, isOpenSmartTooltip, setIsO
                     </>
                 ) : null
             }
-            appendTo={document.body}
+            appendTo={document?.body ?? undefined}
             interactive
             visible={isOpenSmartTooltip}
             onClickOutside={() => setIsOpenSmartTooltip(false)}

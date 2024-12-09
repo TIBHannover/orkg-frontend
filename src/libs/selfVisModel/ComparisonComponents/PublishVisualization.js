@@ -1,4 +1,5 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useComparison from 'components/Comparison/hooks/useComparison';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import Tooltip from 'components/Utils/Tooltip';
@@ -11,7 +12,9 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { createClass } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { createThing } from 'services/similarity';
@@ -20,6 +23,7 @@ import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [title, setTitle] = useState('');
+    const { mutate } = useComparison();
     const [description, setDescription] = useState('');
     const displayName = useSelector((state) => state.auth.user.displayName);
 
@@ -85,7 +89,6 @@ function PublishVisualization(props) {
                         const newResource = await createResource(title || '', [CLASSES.VISUALIZATION]);
                         // we need not to create a resource statement on the comparison;
                         backendReferenceResource = newResource.id;
-
                         await createResourceStatement(props.comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
                         const predicateId = PREDICATES.DESCRIPTION;
                         const literalDescription = await createLiteral(description || '');
@@ -95,6 +98,7 @@ function PublishVisualization(props) {
                         const reconstructionModel = createReconstructionModel(backendReferenceResource);
                         await createReconstructionModelInBackend(backendReferenceResource, reconstructionModel);
                         setIsLoading(false);
+                        mutate();
                         // close this modal
                         props.closeAllAndReloadVisualizations();
                     }

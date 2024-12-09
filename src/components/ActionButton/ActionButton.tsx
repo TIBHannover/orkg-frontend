@@ -1,3 +1,4 @@
+import { faCheck, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import ConfirmationTooltip from 'components/ActionButton/ConfirmationTooltip/ConfirmationTooltip';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
@@ -24,6 +25,7 @@ export type ActionButtonProps = {
         icon: IconDefinition;
         action?: () => void;
     }[];
+    isLoading?: boolean;
 };
 
 const ActionButton: FC<ActionButtonProps> = ({
@@ -37,9 +39,22 @@ const ActionButton: FC<ActionButtonProps> = ({
     testId,
     icon,
     isDisabled,
-    confirmationButtons,
-    confirmationMessage,
+    confirmationButtons = [
+        {
+            title: 'Delete',
+            color: 'danger',
+            icon: faCheck,
+            action,
+        },
+        {
+            title: 'Cancel',
+            color: 'secondary',
+            icon: faTimes,
+        },
+    ],
+    confirmationMessage = 'Are you sure?',
     iconSize,
+    isLoading = false,
 }) => {
     const tippy = useRef<Instance | null>(null);
     const confirmButtonRef = useRef<HTMLInputElement>(null);
@@ -74,10 +89,10 @@ const ActionButton: FC<ActionButtonProps> = ({
     const tippyChildren = (
         <ActionButtonView
             title={title}
-            icon={icon}
-            iconSpin={iconSpin}
+            icon={!isLoading ? icon : faSpinner}
+            iconSpin={!isLoading ? iconSpin : true}
             action={handleClick}
-            isDisabled={isDisabled}
+            isDisabled={!isLoading ? isDisabled : true}
             size={iconSize}
             testId={testId}
         />

@@ -108,6 +108,7 @@ export const CLASSES: {
     VENUE: 'Venue',
     COMPARISON: 'Comparison',
     COMPARISON_DRAFT: 'ComparisonDraft',
+    COMPARISON_PUBLISHED: 'ComparisonPublished',
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',

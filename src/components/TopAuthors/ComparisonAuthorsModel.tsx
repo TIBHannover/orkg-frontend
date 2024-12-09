@@ -23,7 +23,7 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }: ComparisonAuthorsModel
                     The authors listed below are engaged researchers. Each author is linked to a paper displayed in the comparison. The list can be
                     used to find suitable peer-reviewers.
                 </Alert>
-                <ListGroup flush className="overflow-hidden rounded">
+                <ListGroup flush className="overflow-hidden rounded mb-3">
                     {authors.map((author, index) => (
                         <ListGroupItem className="py-2 px-4" key={index}>
                             <AuthorCard
@@ -43,7 +43,11 @@ const ComparisonAuthorsModel = ({ comparisonId, toggle }: ComparisonAuthorsModel
                     )}
                 </ListGroup>
 
-                {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors found</div>}
+                {!isLoading && authors?.length === 0 && (
+                    <Alert color="info" className="m-3">
+                        No authors found
+                    </Alert>
+                )}
                 {isLoading && authors?.length === 0 && <AuthorsContentLoader />}
             </ModalBody>
         </Modal>

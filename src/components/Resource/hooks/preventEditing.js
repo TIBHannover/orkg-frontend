@@ -44,7 +44,7 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: (resource) => resource.classes.includes(CLASSES.COMPARISON),
+        condition: (resource) => resource.classes.includes(CLASSES.COMPARISON_PUBLISHED),
         warningOnEdit: (
             <Alert className="container" color="danger">
                 This resource should not be edited because it is published, please make sure that you know what are you doing!

@@ -135,7 +135,7 @@ const SectionContentLink = (props) => {
     let optionsClasses = [];
 
     if (props.type === 'comparison') {
-        optionsClasses = [CLASSES.COMPARISON];
+        optionsClasses = [CLASSES.COMPARISON_PUBLISHED];
     } else if (props.type === 'visualization') {
         optionsClasses = [CLASSES.VISUALIZATION];
     }

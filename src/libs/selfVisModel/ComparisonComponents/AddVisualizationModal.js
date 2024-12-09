@@ -1,23 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
-import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
-import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { setIsOpenVisualizationModal, setVisualizations } from 'slices/comparisonSlice';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { usePrevious } from 'react-use';
-import Tippy from '@tippyjs/react';
-import styled from 'styled-components';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { activatedContributionsToList } from 'components/Comparison/hooks/helpers';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import useParams from 'components/useParams/useParams';
 import HelpVideoModal from 'libs/selfVisModel/ComparisonComponents/HelpVideoModal';
 import PublishVisualization from 'libs/selfVisModel/ComparisonComponents/PublishVisualization';
+import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
+import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { usePrevious } from 'react-use';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { setIsOpenVisualizationModal } from 'slices/comparisonSlice';
+import styled from 'styled-components';
 
 const TabButtons = styled.div`
     border-bottom: 2px solid ${(props) => props.theme.lightDarker};
@@ -45,6 +42,8 @@ const TabButton = styled.div`
 `;
 
 function AddVisualizationModal() {
+    const { comparisonId } = useParams();
+
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
@@ -57,25 +56,12 @@ function AddVisualizationModal() {
     const { data } = useSelector((state) => state.comparison);
     const contributions = useSelector((state) => state.comparison.contributions.filter((c) => c.active));
     const properties = useSelector((state) => state.comparison.properties.filter((c) => c.active));
-    const comparisonResource = useSelector((state) => state.comparison.comparisonResource);
     const useReconstructedDataInVisualization = useSelector((state) => state.comparison.useReconstructedDataInVisualization);
     const isOpenVisualizationModal = useSelector((state) => state.comparison.isOpenVisualizationModal);
     const prevShowDialog = usePrevious(isOpenVisualizationModal);
 
     const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
     const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
-
-    const loadVisualizations = () => {
-        getStatementsBySubjectAndPredicate({ subjectId: comparisonResource.id, predicateId: PREDICATES.HAS_VISUALIZATION }).then((statements) => {
-            const visualizations = filterObjectOfStatementsByPredicateAndClass(
-                statements,
-                PREDICATES.HAS_VISUALIZATION,
-                false,
-                CLASSES.VISUALIZATION,
-            );
-            dispatch(setVisualizations(visualizations));
-        });
-    };
 
     const updateDimensions = () => {
         const offset = 300;
@@ -132,7 +118,6 @@ function AddVisualizationModal() {
         // check if we need to run the parser
         const mmr = new SelfVisDataModel(); // this is a singleton
         mmr.integrateInputData({
-            metaData: comparisonResource,
             contributions,
             properties,
             data,
@@ -199,9 +184,8 @@ function AddVisualizationModal() {
                     closeAllAndReloadVisualizations={() => {
                         setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
                         dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal));
-                        loadVisualizations();
                     }}
-                    comparisonId={comparisonResource.id}
+                    comparisonId={comparisonId}
                 />
             </ModalBody>
             <ModalFooter className="p-2">
@@ -231,29 +215,16 @@ function AddVisualizationModal() {
                         </Button>
                     )}
                     {processStep === 2 && (
-                        <>
-                            {comparisonResource.id && (
-                                <RequireAuthentication
-                                    component={Button}
-                                    color="primary"
-                                    className="me-2"
-                                    onClick={() => {
-                                        setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                                    }}
-                                >
-                                    Publish
-                                </RequireAuthentication>
-                            )}
-
-                            {!comparisonResource.id && (
-                                <Tippy
-                                    hideOnClick={false}
-                                    content="Cannot publish visualization to a unpublished comparison. You must publish the comparison first."
-                                >
-                                    <span className="btn btn-primary disabled">Publish</span>
-                                </Tippy>
-                            )}
-                        </>
+                        <RequireAuthentication
+                            component={Button}
+                            color="primary"
+                            className="me-2"
+                            onClick={() => {
+                                setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
+                            }}
+                        >
+                            Publish
+                        </RequireAuthentication>
                     )}
                 </div>
             </ModalFooter>

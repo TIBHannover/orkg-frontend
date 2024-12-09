@@ -80,6 +80,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
             created_by: id,
             visibility: sort,
             contentType,
+            published: true,
         },
     });
 

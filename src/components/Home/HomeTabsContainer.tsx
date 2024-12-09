@@ -62,6 +62,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
             include_subfields: includeSubFields,
             visibility: sort,
             contentType,
+            published: true,
         },
         defaultPageSize: 10,
     });

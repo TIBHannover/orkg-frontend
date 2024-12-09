@@ -5,7 +5,7 @@ const GraphViewModal = (props) => {
     const LazyGraphViewModal = lazy(() => import('components/GraphView/LazyGraphViewModal'));
 
     return (
-        <Suspense fallback={<div className="text-center my-5">Loading...</div>}>
+        <Suspense>
             <LazyGraphViewModal {...props} />
         </Suspense>
     );

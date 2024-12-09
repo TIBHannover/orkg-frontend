@@ -21,7 +21,7 @@ import { Alert, Button, Container } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
 import AddPaperModal from 'components/PaperForm/AddPaperModal';
 import { useSearchParams } from 'next/navigation';
-import RelatedPapersCarousel from 'components/Comparison/ComparisonCarousel/RelatedPapers/RelatedPaperCarousel';
+import RelatedPapersCarousel from 'components/ContributionEditor/RelatedPapers/RelatedPaperCarousel';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -42,7 +42,7 @@ const ContributionEditor = () => {
                 (statementId) => state.contributionEditor?.statements[statementId]?.created_by === env('NEXT_PUBLIC_PWC_USER_ID'),
             )?.length ?? 0,
     );
-    const hasPreviousVersion = searchParams.get('hasPreviousVersion');
+    const comparisonId = searchParams.get('comparisonId');
 
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';
@@ -101,8 +101,10 @@ const ContributionEditor = () => {
                     <>
                         <Button
                             tag={Link}
-                            href={`${reverse(routes.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}${
-                                hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
+                            href={`${
+                                comparisonId
+                                    ? reverse(routes.COMPARISON, { comparisonId })
+                                    : `${reverse(routes.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`
                             }`}
                             color="secondary"
                             size="sm"

@@ -91,8 +91,8 @@ export const viewPaperSlice = createSlice({
             state.dataCiteDoi = payload;
         },
         setPaperObservatory: (state, { payload }) => {
-            state.observatory_id = [payload.observatory_id];
-            state.organization_id = [payload.organization_id];
+            state.paper.observatories = [payload.observatory_id];
+            state.paper.organizations = [payload.organization_id];
         },
         loadComparisonFromLocalStorage: (state, { payload }) => {
             state.comparison = payload;

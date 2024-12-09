@@ -1,3 +1,5 @@
+import arrayMove from 'array-move';
+import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -6,12 +8,28 @@ import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonS
 
 const HeaderRow = ({ scrollContainerHead, headerGroups }) => {
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const { comparison, updateComparison } = useComparison();
     const dispatch = useDispatch();
 
-    const handleDragEnd = ({ source, destination }) =>
-        !transpose
-            ? dispatch(updateContributionOrder({ from: source?.index, to: destination?.index }))
-            : dispatch(updatePropertyOrder({ from: source?.index, to: destination?.index }));
+    const handleDragEnd = ({ source, destination }) => {
+        if (!transpose) {
+            dispatch(updateContributionOrder({ from: source?.index, to: destination?.index }));
+            updateComparison({
+                config: {
+                    ...comparison.config,
+                    contributions: arrayMove(comparison.config.contributions, source?.index, destination?.index),
+                },
+            });
+        } else {
+            dispatch(updatePropertyOrder({ from: source?.index, to: destination?.index }));
+            updateComparison({
+                config: {
+                    ...comparison.config,
+                    predicates: arrayMove(comparison.config.predicates, source?.index, destination?.index),
+                },
+            });
+        }
+    };
 
     return (
         <div ref={scrollContainerHead} style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">

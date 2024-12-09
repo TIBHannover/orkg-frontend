@@ -103,7 +103,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                             <small className="text-muted">{truncate(comparison.description, { length: 200 })}</small>
                         </div>
                     )}
-                    {showHistory && comparison.versions && comparison.versions.length > 1 && <Versions versions={comparison.versions} />}
+                    {showHistory && comparison.versions?.published?.length > 1 && <Versions versions={comparison.versions.published} />}
                 </div>
             </div>
             <div className="col-md-3 d-flex align-items-end flex-column p-0">

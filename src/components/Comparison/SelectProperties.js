@@ -1,6 +1,7 @@
 import Tippy from '@tippyjs/react';
 import capitalize from 'capitalize';
 import { activatedPropertiesToList } from 'components/Comparison/hooks/helpers';
+import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Badge, FormGroup, Input, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -21,6 +22,7 @@ const GlobalStyle = createGlobalStyle`
 const SelectProperties = (props) => {
     const dispatch = useDispatch();
     const properties = useSelector((state) => state.comparison.properties);
+    const { comparison, updateComparison } = useComparison();
 
     /**
      * Toggle a property from the table
@@ -31,6 +33,12 @@ const SelectProperties = (props) => {
         const newProperties = properties.map((property) => (property.id === id ? { ...property, active: !property.active } : property));
         dispatch(setProperties(newProperties));
         dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: activatedPropertiesToList(newProperties) }));
+        updateComparison({
+            config: {
+                ...comparison.config,
+                predicates: activatedPropertiesToList(newProperties),
+            },
+        });
     };
 
     return (

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Alert } from 'reactstrap';
 import { getThing } from 'services/similarity';
 
-function VisualizationPreview({ id }) {
+function VisualizationPreview({ id, height = '500px', width = '100%', className = 'p-3' }) {
     const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingFailed, setIsLoadingFailed] = useState(false);
@@ -31,12 +31,12 @@ function VisualizationPreview({ id }) {
         <div>
             {isLoading && 'Loading...'}
             {!isLoading && !isLoadingFailed && visualizationModelForGDC && (
-                <div className="p-3">
-                    <GDCVisualizationRenderer height="500px" model={visualizationModelForGDC} />
+                <div className={className}>
+                    <GDCVisualizationRenderer height={height} width={width} model={visualizationModelForGDC} />
                 </div>
             )}
             {!isLoading && isLoadingFailed && (
-                <div className="p-3">
+                <div className={className}>
                     <Alert color="warning">Error loading visualization preview</Alert>
                 </div>
             )}
@@ -46,6 +46,9 @@ function VisualizationPreview({ id }) {
 
 VisualizationPreview.propTypes = {
     id: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    height: PropTypes.string,
+    width: PropTypes.string,
 };
 
 export default VisualizationPreview;

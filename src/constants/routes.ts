@@ -75,6 +75,7 @@ const routes = {
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
+    CREATE_COMPARISON: '/comparisons/create',
     PAGE: '/page/:url',
     ABOUT: '/about/:id/:slug',
     ABOUT_NO_SLUG: '/about/:id',

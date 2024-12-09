@@ -1,3 +1,5 @@
+import arrayMove from 'array-move';
+import useComparison from 'components/Comparison/hooks/useComparison';
 import Row from 'components/Comparison/Table/Rows/Row';
 import PropTypes from 'prop-types';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -6,13 +8,29 @@ import { Scrollbar } from 'react-scrollbars-custom';
 import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonSlice';
 
 const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
+    const { comparison, updateComparison } = useComparison();
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const dispatch = useDispatch();
 
-    const handleDragEnd = ({ source, destination }) =>
-        !transpose
-            ? dispatch(updatePropertyOrder({ from: source?.index, to: destination?.index }))
-            : dispatch(updateContributionOrder({ from: source?.index, to: destination?.index }));
+    const handleDragEnd = ({ source, destination }) => {
+        if (!transpose) {
+            dispatch(updatePropertyOrder({ from: source?.index, to: destination?.index }));
+            updateComparison({
+                config: {
+                    ...comparison.config,
+                    predicates: arrayMove(comparison.config.predicates, source?.index, destination?.index),
+                },
+            });
+        } else {
+            dispatch(updateContributionOrder({ from: source?.index, to: destination?.index }));
+            updateComparison({
+                config: {
+                    ...comparison.config,
+                    contributions: arrayMove(comparison.config.contributions, source?.index, destination?.index),
+                },
+            });
+        }
+    };
 
     return (
         <Scrollbar

@@ -34,3 +34,9 @@ export const getVisualizations = ({
     const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
     return submitGetRequest(`${visualizationsUrl}?${params}`);
 };
+
+export const getVisualization = (id: string): Promise<Visualization> =>
+    submitGetRequest(`${visualizationsUrl}${encodeURIComponent(id)}`, {
+        'Content-Type': 'application/vnd.orkg.visualization.v2+json',
+        Accept: 'application/vnd.orkg.visualization.v2+json',
+    });

@@ -2,12 +2,13 @@ import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import Link from 'next/link';
 import ROUTES from 'constants/routes';
+import THING_TYPES from 'constants/thingTypes';
 import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import moment from 'moment';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import {
@@ -25,32 +26,38 @@ import {
     PopoverHeader,
     UncontrolledPopover,
 } from 'reactstrap';
-import { convertAuthorsToNewFormat } from 'utils';
+import { getVisualization, visualizationsUrl } from 'services/backend/visualizations';
+import { getThing, simCompServiceUrl } from 'services/similarity';
+import useSWR from 'swr';
 
-const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) => {
-    const handleEditVisualization = () => {
-        onEditVisualization();
-        toggle();
-    };
+const ViewVisualizationModal = ({ isOpen, toggle, id }) => {
+    const { data: visualization } = useSWR([id, visualizationsUrl, 'getVisualization'], ([id]) => getVisualization(id));
+    const { data: reconstructionModel } = useSWR([id, simCompServiceUrl, 'getVisualization'], ([id]) =>
+        getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: id }),
+    );
 
     const [chartToDownload, setChartToDownload] = useState(null);
 
     const [selectedFileFormat, setSelectedFileFormat] = useState('JPGformat');
     const [caption, enableCaption] = useState(true);
 
+    if (!visualization || !reconstructionModel) {
+        return null;
+    }
+
     const downloadChart = (chart) => {
-        if (selectedFileFormat === 'JPGformat') downloadJPG(chart, data.label);
-        else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, data.label);
+        if (selectedFileFormat === 'JPGformat') downloadJPG(chart, visualization.title);
+        else if (selectedFileFormat === 'PDFformat') downloadPDF(chart, visualization.title);
         setChartToDownload(null);
     };
 
     const initChartDownload = () => {
         setChartToDownload(
             <GDCVisualizationRenderer
-                caption={caption ? data.label : undefined}
+                caption={caption ? visualization.title : undefined}
                 width="1000px"
                 height="500px"
-                model={data.reconstructionModel}
+                model={reconstructionModel}
                 downloadChart={downloadChart}
             />,
         );
@@ -61,23 +68,23 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
             <ModalHeader toggle={toggle}>View visualization</ModalHeader>
             <ModalBody>
                 <div className="d-flex">
-                    <h5>{data.label ?? 'No Title'}</h5>
+                    <h5>{visualization.title ?? 'No Title'}</h5>
                     <Tippy content="Go to resource page">
-                        <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: data.id })}?noRedirect`}>
+                        <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: visualization.id })}?noRedirect`}>
                             <FontAwesomeIcon icon={faLink} className="text-primary" />
                         </Link>
                     </Tippy>
                 </div>
-                {data.description ?? 'No Description'}
+                {visualization.description ?? 'No Description'}
                 <div className="mt-2">
                     <Badge color="light" className="me-2">
                         <FontAwesomeIcon icon={faCalendar} className="text-primary" />{' '}
-                        {data.created_at ? moment(data.created_at).format('DD MMMM YYYY') : ''}
+                        {visualization.created_at ? moment(visualization.created_at).format('DD MMMM YYYY') : ''}
                     </Badge>
-                    <AuthorBadges authors={convertAuthorsToNewFormat(data.authors)} />
+                    <AuthorBadges authors={visualization.authors} />
                 </div>
                 <hr />
-                <GDCVisualizationRenderer height="500px" model={data.reconstructionModel} />
+                <GDCVisualizationRenderer height="500px" model={reconstructionModel} />
                 <div
                     id="google-chart-rendered"
                     className="position-absolute pe-none"
@@ -141,9 +148,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                         </Form>
                     </PopoverBody>
                 </UncontrolledPopover>
-                <Button onClick={handleEditVisualization} color="light">
-                    Edit visualization
-                </Button>
+
                 <Button onClick={toggle} color="primary">
                     Close
                 </Button>
@@ -155,8 +160,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
 ViewVisualizationModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    onEditVisualization: PropTypes.func.isRequired,
-    data: PropTypes.object,
+    id: PropTypes.string.isRequired,
 };
 
 export default ViewVisualizationModal;
