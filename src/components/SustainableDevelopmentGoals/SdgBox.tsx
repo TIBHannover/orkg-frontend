@@ -36,7 +36,7 @@ const SdgBox: FC<SdgBoxProps> = ({ handleSave, sdgs = [], maxWidth = 200, maxIte
 
     return (
         (sdgs.length > 0 || isEditable) && (
-            <Box className="p-1 pb-0 pe-0 d-flex mb-2 flex-wrap" style={{ maxWidth }}>
+            <Box className="p-1 pb-0 pe-0 d-flex mb-2" style={{ maxWidth }}>
                 {sdgs.length === 0 && <span className="text-muted ms-2 fst-italic">No SDGs assigned</span>}
                 {sortSdgs(sdgs)
                     .slice(0, maxItems)
@@ -56,12 +56,7 @@ const SdgBox: FC<SdgBoxProps> = ({ handleSave, sdgs = [], maxWidth = 200, maxIte
                     ))}
                 <div className="d-flex flex-column justify-content-around ms-2 mb-1">
                     {(sdgs.length > maxItems || isEditable) && (
-                        <ActionButtonView
-                            icon={isEditable ? faPen : faEllipsis}
-                            action={() => setIsOpenModal(true)}
-                            isDisabled={false}
-                            title="Edit"
-                        />
+                        <ActionButtonView icon={isEditable ? faPen : faEllipsis} action={() => setIsOpenModal(true)} title="Edit" />
                     )}
                 </div>
                 {isOpenModal && <SdgModal toggle={() => setIsOpenModal((v) => !v)} sdgs={sdgs} handleSave={handleSave} isEditing={isEditable} />}

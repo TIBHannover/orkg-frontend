@@ -11,14 +11,24 @@ import { memo } from 'react';
 import { isEqual } from 'lodash';
 import Tippy from '@tippyjs/react';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useComparison from 'components/Comparison/hooks/useComparison';
 
 const ContributionCell = ({ contribution }) => {
-    const dispatch = useDispatch();
-    const contributions = useSelector((state) => state.comparison.contributions);
-    const isEditing = useSelector((state) => state.comparison.isEditing);
+    const { comparison, updateComparison } = useComparison();
     const isEmbeddedMode = useSelector((state) => state.comparison.isEmbeddedMode);
     const columnWidth = useSelector((state) => state.comparison.configuration.columnWidth);
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const { isEditMode } = useIsEditMode();
+
+    const handleDelete = () =>
+        updateComparison({
+            contributions: comparison.contributions.filter(({ id }) => id !== contribution.id),
+            config: {
+                ...comparison.config,
+                contributions: comparison.config.contributions.filter((contributionId) => contributionId !== contribution.id),
+            },
+        });
 
     return (
         <>
@@ -74,8 +84,8 @@ const ContributionCell = ({ contribution }) => {
                     </Contribution>
                 </>
             )}
-            {isEditing && !isEmbeddedMode && contributions.filter((_contribution) => _contribution.active).length > 2 && (
-                <Delete onClick={() => dispatch(removeContribution(contribution.id))}>
+            {isEditMode && !isEmbeddedMode && (
+                <Delete onClick={handleDelete}>
                     <FontAwesomeIcon icon={faTimes} />
                 </Delete>
             )}

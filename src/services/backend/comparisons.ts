@@ -1,15 +1,18 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest } from 'network';
+import { getCreatedIdFromHeaders, submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { prepareParams } from 'services/backend/misc';
 import {
     Author,
     Comparison,
+    ComparisonRelatedFigure,
+    ComparisonRelatedResource,
     CreatedByParam,
     ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
+    PublishedParam,
     SdgParam,
     VerifiedParam,
     VisibilityParam,
@@ -44,6 +47,161 @@ export const getAuthorsByComparisonId = ({
 
 export const getComparison = (id: string): Promise<Comparison> => submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}`);
 
+export const getComparisonRelatedFigure = ({
+    comparisonId,
+    relatedFigureId,
+}: {
+    comparisonId: string;
+    relatedFigureId: string;
+}): Promise<ComparisonRelatedFigure> =>
+    submitGetRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`);
+
+export type UpdateComparisonRelatedFigureParams = Partial<Omit<ComparisonRelatedFigure, 'id'>>;
+
+export const updateComparisonRelatedFigure = ({
+    comparisonId,
+    relatedFigureId,
+    data,
+}: {
+    comparisonId: string;
+    relatedFigureId: string;
+    data: UpdateComparisonRelatedFigureParams;
+}): Promise<null> => {
+    return submitPutRequest(
+        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+    );
+};
+
+export const createComparisonRelatedFigure = ({
+    comparisonId,
+    data,
+}: {
+    comparisonId: string;
+    data: UpdateComparisonRelatedFigureParams;
+}): Promise<string> => {
+    return submitPostRequest(
+        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+};
+
+export const deleteComparisonRelatedFigure = ({
+    comparisonId,
+    relatedFigureId,
+}: {
+    comparisonId: string;
+    relatedFigureId: string;
+}): Promise<null> => {
+    return submitDeleteRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${relatedFigureId}`, {
+        'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+        Accept: 'application/vnd.orkg.comparison.v2+json',
+    });
+};
+
+export const getComparisonRelatedResource = ({
+    comparisonId,
+    relatedResourceId,
+}: {
+    comparisonId: string;
+    relatedResourceId: string;
+}): Promise<ComparisonRelatedResource> =>
+    submitGetRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`);
+
+export type UpdateComparisonRelatedResourceParams = Partial<Omit<ComparisonRelatedResource, 'id'>>;
+
+export const updateComparisonRelatedResource = ({
+    comparisonId,
+    relatedResourceId,
+    data,
+}: {
+    comparisonId: string;
+    relatedResourceId: string;
+    data: UpdateComparisonRelatedResourceParams;
+}): Promise<null> => {
+    return submitPutRequest(
+        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+    );
+};
+
+export const createComparisonRelatedResource = ({
+    comparisonId,
+    data,
+}: {
+    comparisonId: string;
+    data: UpdateComparisonRelatedResourceParams;
+}): Promise<string> => {
+    return submitPostRequest(
+        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+        true,
+        true,
+        true,
+        true,
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+};
+
+export const deleteComparisonRelatedResource = ({
+    comparisonId,
+    relatedResourceId,
+}: {
+    comparisonId: string;
+    relatedResourceId: string;
+}): Promise<null> => {
+    return submitDeleteRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${relatedResourceId}`, {
+        'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+        Accept: 'application/vnd.orkg.comparison.v2+json',
+    });
+};
+
+export type UpdateComparisonParams = Partial<
+    Omit<Comparison, 'id' | 'research_fields' | 'sdgs' | 'contributions'> & { research_fields: string[] } & {
+        sdgs: string[];
+        contributions: string[];
+    }
+>;
+
+export const updateComparison = (id: string, data: UpdateComparisonParams): Promise<null> => {
+    return submitPutRequest(
+        `${comparisonUrl}${encodeURIComponent(id)}`,
+        {
+            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
+            Accept: 'application/vnd.orkg.comparison.v2+json',
+        },
+        data,
+    );
+};
+
+export type GetComparisonParams = PaginationParams &
+    VerifiedParam &
+    VisibilityParam &
+    CreatedByParam &
+    SdgParam &
+    ObservatoryIdParam &
+    ResearchFieldIdParams &
+    PublishedParam;
+
 export const getComparisons = ({
     page = 0,
     size = 999,
@@ -55,14 +213,31 @@ export const getComparisons = ({
     research_field,
     include_subfields,
     sdg,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams): Promise<
-    PaginatedResponse<Comparison>
-> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
+    published,
+}: GetComparisonParams): Promise<PaginatedResponse<Comparison>> => {
+    const params = prepareParams({
+        page,
+        size,
+        sortBy,
+        verified,
+        visibility,
+        created_by,
+        observatory_id,
+        sdg,
+        research_field,
+        include_subfields,
+        published,
+    });
     return submitGetRequest(`${comparisonUrl}?${params}`);
 };
 
-export const createComparison = (data: Partial<Comparison>): Promise<string> =>
+export const createComparison = (
+    data: Partial<
+        Omit<Comparison, 'contributions'> & {
+            contributions: string[];
+        }
+    >,
+): Promise<string> =>
     submitPostRequest(
         `${comparisonUrl}`,
         {
@@ -80,37 +255,6 @@ type PublishComparisonParams = {
     subject: string;
     description: string;
     authors: Author[];
-    config: {
-        predicates: string[];
-        contributions: string[];
-        transpose: boolean;
-        type: string;
-    };
-    data: {
-        contributions: {
-            id: string;
-            label: string;
-            paper_id: string;
-            paper_label: string;
-            paper_year: number;
-            active: boolean;
-        }[];
-        predicates: {
-            id: string;
-            label: string;
-            n_contributions: number;
-            active: boolean;
-            similar_predicates: string[];
-        }[];
-        data: {
-            id: string;
-            label: string;
-            classes: string[];
-            path: string[];
-            path_labels: string[];
-            _class: string;
-        }[][];
-    };
     assign_doi: boolean;
 };
 
@@ -126,4 +270,4 @@ export const publishComparison = (comparisonId: string, data: PublishComparisonP
         true,
         true,
         true,
-    );
+    ).then(({ headers }) => getCreatedIdFromHeaders(headers));

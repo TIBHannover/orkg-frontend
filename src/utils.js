@@ -483,6 +483,7 @@ export const sortMethod = (a, b) => {
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
+ * @param {String} classID class ID
  */
 export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
@@ -1006,7 +1007,10 @@ export const convertComparisonToNewFormat = (comparison) => ({
         published_in: comparison.publishedIn?.label,
         url: comparison.url?.label,
     },
-    versions: comparison.versions,
+    versions: {
+        head: {},
+        published: comparison.versions,
+    },
     authors: comparison.authors.map((author) => convertAuthorToNewFormat(author)),
     contributions: comparison.contributions,
     visualizations: comparison.visualizations,

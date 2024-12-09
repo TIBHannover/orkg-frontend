@@ -22,7 +22,7 @@ const useContributionEditor = () => {
         return without(uniq(contributionIds), undefined, null, '') ?? [];
     }, [searchParams]);
 
-    const hasPreviousVersion = searchParams.get('hasPreviousVersion');
+    const comparisonId = searchParams.get('comparisonId');
 
     const handleAddContributions = async (ids) => {
         // get the list of current common classes
@@ -67,18 +67,14 @@ const useContributionEditor = () => {
             }
         }
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
-        router.push(
-            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
-        );
+        router.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${comparisonId ? `&comparisonId=${comparisonId}` : ''}`);
     };
 
     const handleRemoveContribution = (id) => {
         const idsQueryString = getContributionIds()
             .filter((_id) => _id !== id)
             .join(',');
-        router.push(
-            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`,
-        );
+        router.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${comparisonId ? `&comparisonId=${comparisonId}` : ''}`);
     };
 
     // make an object that supports retrieving statements by propertyId and contributionId

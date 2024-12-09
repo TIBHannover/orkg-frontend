@@ -1,14 +1,14 @@
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { useSelector } from 'react-redux';
 
 const Row = ({ row, index }) => {
-    const isEditing = useSelector((state) => state.comparison.isEditing);
+    const { isEditMode } = useIsEditMode();
 
     return (
-        <Draggable draggableId={row.id} key={row.getRowProps().key} index={index} isDragDisabled={!isEditing}>
+        <Draggable draggableId={row.id} key={row.getRowProps().key} index={index} isDragDisabled={!isEditMode}>
             {(providedDraggable) => (
                 <div
                     className="comparisonRow tr p-0"

@@ -1,6 +1,6 @@
 import { isListSection, isTextSection } from 'components/List/helpers/typeGuards';
 import { useCallback } from 'react';
-import { LiteratureList } from 'services/backend/types';
+import { Comparison, LiteratureList } from 'services/backend/types';
 
 const useDiff = () => {
     // @ts-expect-error awaiting TS migration
@@ -66,13 +66,12 @@ const useDiff = () => {
         return articleText;
     }, []);
 
-    // @ts-expect-error awaiting TS migration
-    const comparisonToPlainText = useCallback((comparison) => {
+    const comparisonToPlainText = useCallback((comparison: Comparison) => {
         let comparisonText = '';
-        comparisonText += `Title: ${comparison.label}\n\n`;
+        comparisonText += `Title: ${comparison.title}\n\n`;
 
-        if (comparison.researchField) {
-            comparisonText += `Research field: ${comparison.researchField.label}\n\n`;
+        if (comparison.research_fields?.[0]) {
+            comparisonText += `Research field: ${comparison.research_fields?.[0]?.label}\n\n`;
         }
 
         if (comparison.description) {
@@ -80,24 +79,23 @@ const useDiff = () => {
         }
 
         for (const [index, author] of comparison.authors.entries()) {
-            comparisonText += `Author ${index + 1}: ${author.label}\n`;
+            comparisonText += `Author ${index + 1}: ${author.name}\n`;
         }
 
-        if (comparison.doi) {
-            comparisonText += `DOI: ${comparison.doi}\n\n`;
+        if (comparison.identifiers?.doi?.[0]) {
+            comparisonText += `DOI: ${comparison.identifiers?.doi?.[0]}\n\n`;
         }
 
-        // @ts-expect-error awaiting TS migration
         for (const [index, contribution] of comparison.contributions.sort((a, b) => a.id.localeCompare(b.id)).entries()) {
             comparisonText += `Contribution ${index + 1}: ${contribution.label}\n`;
         }
 
         for (const [index, reference] of comparison.references.entries()) {
-            comparisonText += `Reference ${index + 1}: ${reference.label}\n`;
+            comparisonText += `Reference ${index + 1}: ${reference}\n`;
         }
-        // @ts-expect-error awaiting TS migration
-        for (const [index, property] of comparison.properties.sort((a, b) => a.id.localeCompare(b.id)).entries()) {
-            comparisonText += `Property ${index + 1}: ${property.label}\n`;
+
+        for (const [index, property] of comparison.config.predicates.entries()) {
+            comparisonText += `Property ${index + 1}: ${property}\n`;
         }
 
         return comparisonText;

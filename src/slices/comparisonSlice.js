@@ -20,35 +20,12 @@ import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNav
 const cookies = new Cookies();
 
 const initialState = {
-    comparisonResource: {
-        id: '',
-        label: '',
-        created_at: null,
-        classes: [],
-        shared: 0,
-        created_by: '00000000-0000-0000-0000-000000000000',
-        observatory_id: '00000000-0000-0000-0000-000000000000',
-        extraction_method: 'UNKNOWN',
-        organization_id: '00000000-0000-0000-0000-000000000000',
-        authors: [],
-        references: [],
-        resources: [],
-        figures: [],
-        visualizations: [],
-        contributions: [],
-        researchField: null,
-        hasPreviousVersion: null,
-        doi: null,
-        description: '',
-        properties: '',
-        sdgs: [],
-    },
+    comparisonId: null,
     configuration: {
         transpose: false,
         comparisonType: DEFAULT_COMPARISON_METHOD,
         contributionsList: [],
         predicatesList: [],
-        fullWidth: cookies.get('useFullWidthForComparisonTable') === 'true' ? cookies.get('useFullWidthForComparisonTable') : false,
         viewDensity: cookies.get('viewDensityComparisonTable') ? cookies.get('viewDensityComparisonTable') : 'spacious',
         columnWidth: cookies.get('comparisonColumnWidth') ? parseInt(cookies.get('comparisonColumnWidth'), 10) : null,
     },
@@ -64,7 +41,7 @@ const initialState = {
     researchField: null,
     isLoadingMetadata: false,
     isFailedLoadingMetadata: false,
-    isLoadingResult: true,
+    isLoadingResult: false,
     isFailedLoadingResult: false,
     isOpenVisualizationModal: false,
     isOpenFeedbackModal: false,
@@ -78,8 +55,8 @@ export const comparisonSlice = createSlice({
     name: 'comparison',
     initialState,
     reducers: {
-        setComparisonResource: (state, { payload }) => {
-            state.comparisonResource = payload;
+        setComparisonId: (state, { payload }) => {
+            state.comparisonId = payload;
         },
         setData: (state, { payload }) => {
             state.data = payload;
@@ -114,29 +91,11 @@ export const comparisonSlice = createSlice({
         setProvenance: (state, { payload }) => {
             state.observatory = payload;
         },
-        setObservatoryId: (state, { payload }) => {
-            state.comparisonResource.observatory_id = payload;
-        },
-        setOrganizationId: (state, { payload }) => {
-            state.comparisonResource.organization_id = payload;
-        },
         setCreatedBy: (state, { payload }) => {
             state.createdBy = payload;
         },
-        setVisualizations: (state, { payload }) => {
-            state.comparisonResource.visualizations = payload;
-        },
-        setDoi: (state, { payload }) => {
-            state.comparisonResource.doi = payload;
-        },
-        setHasPreviousVersion: (state, { payload }) => {
-            state.comparisonResource.hasPreviousVersion = payload;
-        },
         setConfigurationAttribute: (state, { payload }) => {
             state.configuration[payload.attribute] = payload.value;
-        },
-        setResearchField: (state, { payload }) => {
-            state.comparisonResource.researchField = payload.value;
         },
         setConfiguration: (state, { payload }) => {
             state.configuration = { ...state.configuration, ...payload };
@@ -169,7 +128,7 @@ export const comparisonSlice = createSlice({
             const parsedPayload = matchComparison(payload.location.pathname);
             const isReviewPage = !!match(ROUTES.REVIEW)(payload.location.pathname);
 
-            if ((parsedPayload && parsedPayload.params?.comparisonId === state.comparisonResource.id) || isReviewPage) {
+            if ((parsedPayload && parsedPayload.params?.comparisonId === state.comparisonId) || isReviewPage) {
                 // when it's the same comparison  (just the hash changed) do not init
                 return state;
             }
@@ -179,7 +138,7 @@ export const comparisonSlice = createSlice({
 });
 
 export const {
-    setComparisonResource,
+    setComparisonId,
     setData,
     setProperties,
     setContributions,
@@ -191,14 +150,8 @@ export const {
     setIsLoadingResult,
     setIsFailedLoadingResult,
     setProvenance,
-    setObservatoryId,
-    setOrganizationId,
     setCreatedBy,
-    setVisualizations,
-    setDoi,
-    setHasPreviousVersion,
     setConfigurationAttribute,
-    setResearchField,
     setConfiguration,
     setIsOpenVisualizationModal,
     setIsOpenFeedbackModal,

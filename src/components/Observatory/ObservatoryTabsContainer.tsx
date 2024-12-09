@@ -60,6 +60,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
             observatory_id: id,
             visibility: sort,
             contentType,
+            published: true,
             // ignore the label while requesting the result from the backend
             filter_config: filterConfig?.map(({ label, ...restConfig }) => restConfig),
         },

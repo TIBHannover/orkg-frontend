@@ -13,8 +13,13 @@ import ROUTES from 'constants/routes';
 import { useEffect } from 'react';
 import { getComparisons, comparisonUrl } from 'services/backend/comparisons';
 import { Comparison } from 'services/backend/types';
+import { reverse } from 'named-urls';
+import { useSelector } from 'react-redux';
+import { RootStore } from 'slices/types';
 
 const Comparisons = () => {
+    const user = useSelector((state: RootStore) => state.auth.user);
+
     useEffect(() => {
         document.title = 'Comparisons list - ORKG';
     });
@@ -28,13 +33,22 @@ const Comparisons = () => {
                 color="secondary"
                 size="sm"
                 className="btn btn-secondary btn-sm flex-shrink-0"
-                href={ROUTES.ADD_COMPARISON}
+                href={ROUTES.CREATE_COMPARISON}
             >
                 <FontAwesomeIcon icon={faPlus} /> Create comparison
             </RequireAuthentication>
-            <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" href={ROUTES.FEATURED_COMPARISONS}>
-                Featured comparisons
-            </Link>
+            {!!user && (
+                <RequireAuthentication
+                    component={Link}
+                    color="secondary"
+                    size="sm"
+                    className="btn btn-secondary btn-sm"
+                    href={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
+                    style={{ marginLeft: 1 }}
+                >
+                    Draft comparisons
+                </RequireAuthentication>
+            )}
         </>
     );
 
@@ -74,7 +88,9 @@ const Comparisons = () => {
             fetchFunction={getComparisons}
             fetchUrl={comparisonUrl}
             fetchFunctionName="getComparisons"
-            fetchExtraParams={{}}
+            fetchExtraParams={{
+                published: true,
+            }}
             renderListItem={renderListItem}
             buttons={buttons}
             infoContainerText={infoContainerText}

@@ -557,6 +557,7 @@ export type Visualization = {
     created_by: string;
     visibility: Visibility;
     description: string;
+    unlisted_by: string;
 };
 
 export type ComparisonVersion = {
@@ -566,6 +567,24 @@ export type ComparisonVersion = {
     label: string;
 };
 
+export type ComparisonRelatedFigure = {
+    created_at: string;
+    created_by: string;
+    description: string;
+    id: string;
+    image: string;
+    label: string;
+};
+export type ComparisonRelatedResource = {
+    created_at: string;
+    created_by: string;
+    description: string;
+    id: string;
+    image: string;
+    label: string;
+    url: string;
+};
+
 // type not complete, but part of other issue: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/1610
 export type Comparison = {
     id: string;
@@ -573,7 +592,7 @@ export type Comparison = {
     description: string;
     research_fields: Node[];
     identifiers: {
-        doi?: string;
+        doi?: string[];
     };
     publication_info: {
         published_month: number;
@@ -583,10 +602,10 @@ export type Comparison = {
     };
     authors: Author[];
     contributions: Node[];
-    visualizations: any[];
-    related_figures: any[];
-    related_resources: any[];
-    references: any[];
+    visualizations: Node[];
+    related_figures: Node[];
+    related_resources: Node[];
+    references: string[];
     observatories: string[];
     organizations: string[];
     extraction_method: string;
@@ -595,7 +614,22 @@ export type Comparison = {
     previous_version: string;
     is_anonymized: boolean;
     visibility: string;
-    versions: ComparisonVersion[];
+    versions: {
+        head: ComparisonVersion;
+        published: ComparisonVersion[];
+    };
+    sdgs: Node[];
+    config: {
+        predicates: string[];
+        contributions: string[];
+        transpose: boolean;
+        type: 'PATH' | 'MERGE';
+    };
+    data: {
+        contributions: [];
+        predicates: [];
+        data: unknown;
+    };
 };
 
 export type Review = {

@@ -1,7 +1,6 @@
-import qs from 'qs';
-import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
-import { isEmpty, uniq, without, flattenDepth, groupBy, flatten, last, find } from 'lodash';
 import { DEFAULT_COMPARISON_METHOD, LICENSE_URL } from 'constants/misc';
+import { find, flatten, flattenDepth, groupBy, isEmpty, last, uniq } from 'lodash';
+import qs from 'qs';
 import rdf from 'rdf';
 
 // returns the position of the first differing character between
@@ -16,27 +15,6 @@ export const stringComparePosition = (left, right) => {
         i++;
     }
     return i - 1;
-};
-
-/**
- * Parse comparison configuration from url
- * @param {String} id
- * @param {String } label
- * @param {Array} comparisonStatements
- */
-export const getComparisonConfiguration = (url) => {
-    const type = getParamFromQueryString(url.substring(url.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD;
-    const transpose = getParamFromQueryString(url.substring(url.indexOf('?')), 'transpose', true);
-    const predicatesList = getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'properties');
-    const contributionsList =
-        without(uniq(getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'contributions')), undefined, null, '') ?? [];
-
-    return {
-        comparisonType: type,
-        transpose,
-        predicatesList,
-        contributionsList,
-    };
 };
 
 /**
@@ -198,21 +176,6 @@ export function getComparisonURLConfigOfReduxState(comparisonState) {
     });
 }
 
-export function getComparisonConfigObject(comparisonState) {
-    return {
-        contributions: activatedContributionsToList(comparisonState.contributions),
-        predicates: comparisonState.configuration.predicatesList.map((predicate) => {
-            try {
-                return decodeURIComponent(predicate);
-            } catch (e) {
-                return predicate;
-            }
-        }),
-        type: comparisonState.configuration.comparisonType,
-        transpose: comparisonState.configuration.transpose,
-    };
-}
-
 // returns the part of the string preceding (but not including) the
 // final directory delimiter, or empty if none are found
 export const truncateToLastDir = (str) => str.substr(0, str.lastIndexOf('/')).toString();
@@ -326,7 +289,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('MeasureProperty')));
         }
         gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
-        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column.title?.toString() ?? '')));
+        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column?.label?.toString() ?? column?.title?.toString() ?? '')));
     });
     // data
     properties

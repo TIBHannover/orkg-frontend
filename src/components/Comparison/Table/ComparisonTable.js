@@ -16,6 +16,7 @@ import { useMedia } from 'react-use';
 import { Alert } from 'reactstrap';
 import { ReactTableWrapper } from 'components/Comparison/styled';
 import { DEFAULT_COLUMN_WIDTH } from 'components/Comparison/ComparisonHeader/ColumnWidth';
+import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 
 const ComparisonTable = (props) => {
     const filterControlData = useSelector((state) => state.comparison.filterControlData);
@@ -27,7 +28,7 @@ const ComparisonTable = (props) => {
     const comparisonType = useSelector((state) => state.comparison.configuration.comparisonType);
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const hiddenGroups = useSelector((state) => state.comparison.hiddenGroups ?? []);
-    const isEditing = useSelector((state) => state.comparison.isEditing);
+    const { isEditMode } = useIsEditMode();
 
     const scrollContainerHead = useRef(null);
     const smallerFontSize = viewDensity === 'compact';
@@ -55,7 +56,7 @@ const ComparisonTable = (props) => {
                           }),
                   }))),
         ];
-        if (!transpose && comparisonType === 'PATH' && !isEditing) {
+        if (!transpose && comparisonType === 'PATH' && !isEditMode) {
             let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map((dO) => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
@@ -94,7 +95,7 @@ const ComparisonTable = (props) => {
             dataFrame = dataFrame.filter((row) => !hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
-    }, [comparisonType, contributions, data, properties, hiddenGroups, transpose, isEditing]);
+    }, [comparisonType, contributions, data, properties, hiddenGroups, transpose, isEditMode]);
 
     const columns = useMemo(() => {
         if (filterControlData.length === 0) {

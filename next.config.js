@@ -106,6 +106,10 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
+                hostname: 'orkg.org',
+            },
+            {
+                protocol: 'https',
                 hostname: '**.orkg.org',
             },
             {
