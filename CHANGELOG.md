@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.0...v0.154.1) - 2024-12-10
+
+### Changes
+
+- test: mock things endpoint [`#1443`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1443)
+
+---
 ## [v0.154.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.153.0...v0.154.0) - 2024-12-09
 
 ### Changes
