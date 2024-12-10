@@ -4,6 +4,7 @@ import predicates from 'services/mocks/backend/predicates';
 import statements from 'services/mocks/backend/statements';
 import templates from 'services/mocks/backend/templates';
 import classes from 'services/mocks/backend/classes';
+import things from 'services/mocks/backend/things';
 import geonames from 'services/mocks/geonames';
 import wikidata from 'services/mocks/wikidata';
 import defaultHandlers from 'services/mocks/defaultHandlers';
@@ -15,6 +16,7 @@ export const handlers = [
     ...statements,
     ...templates,
     ...classes,
+    ...things,
     ...geonames,
     ...wikidata,
     ...defaultHandlers,
