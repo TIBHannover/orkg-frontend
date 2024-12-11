@@ -20,7 +20,7 @@ const HomeAlerts = () => {
 
     useEffect(() => {
         (async () => {
-            setAlerts((await getHomeAlerts()).data || []);
+            setAlerts((await getHomeAlerts())?.data || []);
         })();
     }, []);
 

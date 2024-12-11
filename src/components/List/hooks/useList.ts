@@ -30,7 +30,7 @@ import {
     Organization,
     Paper,
 } from 'services/backend/types';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import useSWR from 'swr';
 import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
 import { convertAuthorsToOldFormat } from 'utils';
@@ -49,7 +49,13 @@ const useList = (listId?: string) => {
         isValidating,
     } = useSWR(id ? [id, listsUrl, 'getLiteratureList'] : null, ([params]) => getLiteratureList(params));
 
-    const mutateListOptimistic = ({ updateFunction, optimisticData }: { updateFunction: () => Promise<null>; optimisticData: LiteratureList }) =>
+    const mutateListOptimistic = ({
+        updateFunction,
+        optimisticData,
+    }: {
+        updateFunction: () => Promise<null | void | string>;
+        optimisticData: LiteratureList;
+    }) =>
         mutate(
             async () => {
                 try {

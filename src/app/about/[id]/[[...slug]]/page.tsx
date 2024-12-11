@@ -45,7 +45,7 @@ const About = () => {
         const getMenu = async () => {
             setIsLoadingMenu(true);
             try {
-                setMenuItems((await getAboutPages(page?.attributes?.category?.data?.id)).data);
+                setMenuItems((await getAboutPages(page?.attributes?.category?.data?.id))?.data ?? []);
             } catch (e) {
                 console.error(e);
                 setIsFailedLoadingMenu(true);

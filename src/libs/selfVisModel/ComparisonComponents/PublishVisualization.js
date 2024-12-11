@@ -17,7 +17,7 @@ import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from 'utils';
 
 function PublishVisualization(props) {

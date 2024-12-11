@@ -3,15 +3,14 @@
  * https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api
  */
 
-import { env } from 'next-runtime-env';
 import { PREDICATES } from 'constants/graphSettings';
 import { AGRICULTURE_FIELDS_LIST, COMPUTER_SCIENCE_FIELDS_LIST } from 'constants/nlpFieldLists';
+import ky from 'ky';
 import { keyBy, mapValues, uniq } from 'lodash';
-import { submitPostRequest } from 'network';
+import { env } from 'next-runtime-env';
 import { getPredicate } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import { getParentResearchFields } from 'services/backend/statements';
-// import fetch from 'cross-fetch';
 import { Resource } from 'services/backend/types';
 
 type NlpResponse<T> = {
@@ -21,6 +20,7 @@ type NlpResponse<T> = {
 };
 
 export const nlpServiceUrl = env('NEXT_PUBLIC_NLP_SERVICE_URL');
+const nlpServiceApi = ky.create({ prefixUrl: nlpServiceUrl });
 
 // https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api/-/blob/main/app/__init__.py#L13
 export const SERVICE_MAPPING: {
@@ -65,17 +65,15 @@ type Classify = {
     sequence: string;
 };
 
-export const classifySentence = async ({ sentence, labels }: { sentence: string; labels: string[] }): Promise<NlpResponse<Classify>> => {
-    const { payload } = await submitPostRequest(
-        `${nlpServiceUrl}tools/text/classify`,
-        {
-            'Content-Type': 'application/json',
-        },
-        {
-            sentence,
-            labels,
-        },
-    );
+export const classifySentence = async ({ sentence, labels }: { sentence: string; labels: string[] }) => {
+    const { payload } = await nlpServiceApi
+        .post<NlpResponse<Classify>>('tools/text/classify', {
+            json: {
+                sentence,
+                labels,
+            },
+        })
+        .json();
     return payload;
 };
 
@@ -83,15 +81,8 @@ type Summarize = {
     summary: string;
 };
 
-export const summarizeText = async ({ text, ratio }: { text: string; ratio: number }): Promise<NlpResponse<Summarize>> => {
-    const { payload } = await submitPostRequest(
-        `${nlpServiceUrl}tools/text/summarize`,
-        {
-            'Content-Type': 'text/plain',
-        },
-        { text, ratio },
-        false,
-    );
+export const summarizeText = async ({ text, ratio }: { text: string; ratio: number }) => {
+    const { payload } = await nlpServiceApi.post<NlpResponse<Summarize>>('tools/text/summarize', { json: { text, ratio } }).json();
     return payload;
 };
 
@@ -139,11 +130,11 @@ export const getNerResults = async ({
     let titleConcepts = null;
     let abstractConcepts = null;
     if (service === SERVICE_MAPPING.CS_NER) {
-        data = await submitPostRequest(`${nlpServiceUrl}annotation/csner`, { 'Content-Type': 'application/json' }, { title, abstract });
+        data = await nlpServiceApi.post<NlpResponse<CsNerResponse>>('annotation/csner', { json: { title, abstract } }).json();
         titleConcepts = mapValues(keyBy((data!.payload as CsNerResponse).annotations.title, 'concept'), 'entities');
         abstractConcepts = mapValues(keyBy((data!.payload as CsNerResponse).annotations.abstract, 'concept'), 'entities');
     } else {
-        data = await submitPostRequest(`${nlpServiceUrl}annotation/agriner`, { 'Content-Type': 'application/json' }, { title });
+        data = await nlpServiceApi.post<NlpResponse<AgriNerResponse>>('annotation/agriner', { json: { title } }).json();
         titleConcepts = mapValues(keyBy(data!.payload.annotations, 'concept'), 'entities');
     }
 
@@ -215,11 +206,7 @@ export const saveFeedback = async ({
     response: object;
     serviceName: string;
 }): Promise<NlpResponse<FeedbackResponse>> =>
-    submitPostRequest(
-        `${nlpServiceUrl}feedback/`,
-        { 'Content-Type': 'application/json' },
-        { feedback: { request, response, service_name: serviceName } },
-    );
+    nlpServiceApi.post<NlpResponse<FeedbackResponse>>('feedback', { json: { feedback: { request, response, service_name: serviceName } } }).json();
 
 type BioassayResponse = {
     labels: {
@@ -233,8 +220,8 @@ type BioassayResponse = {
         }[];
     }[];
 };
-export const semantifyBioassays = (text: string): Promise<NlpResponse<BioassayResponse>> =>
-    submitPostRequest(`${nlpServiceUrl}clustering/bioassays/`, { 'Content-Type': 'application/json' }, { text });
+export const semantifyBioassays = (text: string) =>
+    nlpServiceApi.post<NlpResponse<BioassayResponse>>('clustering/bioassays', { json: { text } }).json();
 
 type extractTableResponse = {
     table: {
@@ -243,11 +230,10 @@ type extractTableResponse = {
 };
 
 export const extractTable = (form: FormData): Promise<NlpResponse<extractTableResponse>> =>
-    submitPostRequest(`${nlpServiceUrl}tools/pdf/table/extract`, {}, form, false, false);
+    nlpServiceApi.post<NlpResponse<extractTableResponse>>('tools/pdf/table/extract', { body: form }).json();
 
 export const convertPdf = (form: FormData): Promise<any> =>
-    fetch(`${nlpServiceUrl}tools/pdf/convert`, {
-        method: 'POST',
+    nlpServiceApi.post('tools/pdf/convert', {
         body: form,
     });
 
@@ -274,7 +260,7 @@ type extractSciKgTexResponse = {
     };
 };
 export const extractMetadataPdf = (form: FormData): Promise<NlpResponse<extractSciKgTexResponse>> =>
-    submitPostRequest(`${nlpServiceUrl}tools/pdf/sci-kg-tex/extract`, {}, form, false, false);
+    nlpServiceApi.post<NlpResponse<extractSciKgTexResponse>>('tools/pdf/sci-kg-tex/extract', { body: form }).json();
 
 type recommendedPredicatesResponse = {
     predicates: {
@@ -282,23 +268,15 @@ type recommendedPredicatesResponse = {
         label: string;
     }[];
 };
-export const getRecommendedPredicates = async ({
-    title,
-    abstract,
-}: {
-    title?: string;
-    abstract?: string;
-}): Promise<recommendedPredicatesResponse> => {
-    const { payload } = await submitPostRequest(
-        `${nlpServiceUrl}clustering/predicates`,
-        {
-            'Content-Type': 'application/json',
-        },
-        {
-            title,
-            abstract,
-        },
-    );
+export const getRecommendedPredicates = async ({ title, abstract }: { title?: string; abstract?: string }) => {
+    const { payload } = await nlpServiceApi
+        .post<NlpResponse<recommendedPredicatesResponse>>('clustering/predicates', {
+            json: {
+                title,
+                abstract,
+            },
+        })
+        .json();
     return payload;
 };
 
@@ -309,26 +287,16 @@ type recommendedTemplatesResponse = {
     }[];
 };
 
-export const getTemplateRecommendations = async ({
-    title,
-    abstract,
-    topN = 5,
-}: {
-    title: string;
-    abstract: string;
-    topN?: number;
-}): Promise<recommendedTemplatesResponse> => {
-    const { payload } = await submitPostRequest(
-        `${nlpServiceUrl}nli/templates`,
-        {
-            'Content-Type': 'application/json',
-        },
-        {
-            title,
-            abstract,
-            top_n: topN,
-        },
-    );
+export const getTemplateRecommendations = async ({ title, abstract, topN = 5 }: { title: string; abstract: string; topN?: number }) => {
+    const { payload } = await nlpServiceApi
+        .post<NlpResponse<recommendedTemplatesResponse>>('nli/templates', {
+            json: {
+                title,
+                abstract,
+                top_n: topN,
+            },
+        })
+        .json();
     return payload;
 };
 
@@ -339,23 +307,15 @@ type ClassifyResponse = {
     }[];
 };
 
-export const classifyPaper = async ({
-    smartSuggestionInputText,
-    topN = 5,
-}: {
-    smartSuggestionInputText: string;
-    topN?: number;
-}): Promise<NlpResponse<ClassifyResponse>> =>
-    submitPostRequest(
-        `${nlpServiceUrl}annotation/rfclf`,
-        {
-            'Content-Type': 'application/json',
-        },
-        {
-            raw_input: smartSuggestionInputText,
-            top_n: topN,
-        },
-    );
+export const classifyPaper = async ({ smartSuggestionInputText, topN = 5 }: { smartSuggestionInputText: string; topN?: number }) =>
+    nlpServiceApi
+        .post<NlpResponse<ClassifyResponse>>('annotation/rfclf', {
+            json: {
+                raw_input: smartSuggestionInputText,
+                top_n: topN,
+            },
+        })
+        .json();
 
 export const getLlmResponse = async ({
     taskName,
@@ -366,6 +326,8 @@ export const getLlmResponse = async ({
         [key: string]: string;
     };
 }): Promise<any> =>
-    submitPostRequest(`${nlpServiceUrl}tools/text/chatgpt`, { 'Content-Type': 'application/json' }, { task_name: taskName, placeholders }).then(
-        (response) => response?.payload.arguments,
-    );
+    nlpServiceApi
+        .post('tools/text/chatgpt', { json: { task_name: taskName, placeholders } })
+        .json()
+        /* @ts-expect-error API typing missing */
+        .then((response) => response?.payload.arguments);

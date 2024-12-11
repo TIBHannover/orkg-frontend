@@ -20,7 +20,7 @@ import { createLiteral } from 'services/backend/literals';
 import { generateDoi } from 'services/backend/misc';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import { setVersions } from 'slices/reviewSlice';
 import { getAuthorsInList } from 'utils';
 

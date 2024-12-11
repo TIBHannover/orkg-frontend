@@ -1,7 +1,7 @@
 import { ENTITIES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitPostRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { getClasses } from 'services/backend/classes';
 import { getPredicates } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
@@ -23,6 +23,7 @@ import {
 import { mergeAlternate } from 'utils';
 
 export const doisUrl = `${url}dois/`;
+export const doisApi = backendApi.extend(() => ({ prefixUrl: doisUrl }));
 
 export const generateDoi = ({
     type,
@@ -45,14 +46,11 @@ export const generateDoi = ({
     authors?: string[];
     url: string;
 }): Promise<{ doi: string }> =>
-    submitPostRequest(
-        doisUrl,
-        { 'Content-Type': 'application/json' },
-        { type, resource_type, resource_id, title, subject, description, related_resources, authors, url },
-    );
+    doisApi
+        .post<{ doi: string }>('', { json: { type, resource_type, resource_id, title, subject, description, related_resources, authors, url } })
+        .json();
 
-export const createObject = (payload: object): Promise<Resource> =>
-    submitPostRequest(`${url}objects/`, { 'Content-Type': 'application/json' }, payload);
+export const createObject = (payload: object) => backendApi.post<Resource>('objects', { json: payload }).json();
 
 export const getEntities = (
     entityType: string,
@@ -128,3 +126,28 @@ export const prepareParams = (
             arrayFormat: 'repeat',
         },
     );
+
+export const prepareParamsNoStringify = (
+    params: PaginationParams &
+        VerifiedParam &
+        VisibilityParam &
+        CreatedByParam &
+        SdgParam &
+        PublishedParam &
+        ObservatoryIdParam &
+        OrganizationIdParam &
+        ResearchFieldIdParams,
+) => ({
+    page: params.page,
+    size: params.size,
+    sort: params.sortBy?.map((p) => `${p.property},${p.direction}`),
+    verified: params.verified,
+    visibility: params.visibility,
+    created_by: params.created_by,
+    sdg: params.sdg,
+    published: params.published,
+    observatory_id: params.observatory_id,
+    organization_id: params.organization_id,
+    research_field: params.research_field,
+    include_subfields: params.include_subfields,
+});

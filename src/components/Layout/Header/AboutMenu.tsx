@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import ROUTES from 'constants/routes';
 import { get, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getAboutPageCategories, getAboutPages } from 'services/cms';
@@ -27,7 +27,11 @@ export type Items = {
     [groupId: string | number]: HelpArticle[];
 };
 
-const AboutMenu = (closeMenu: () => void) => {
+type AboutMenuProps = {
+    closeMenu: () => void;
+};
+
+const AboutMenu: FC<AboutMenuProps> = ({ closeMenu }) => {
     const [items, setItems] = useState<Items | null>({});
     const [categories, setCategories] = useState<AboutPageCategory[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +40,13 @@ const AboutMenu = (closeMenu: () => void) => {
     useEffect(() => {
         const getItems = async () => {
             setIsLoading(true);
-            setItems(groupBy((await getAboutPages()).data, (item) => get(item, 'attributes.category.data.id', 'main')) ?? {});
-            setCategories((await getAboutPageCategories()).data ?? []);
+            setItems(groupBy((await getAboutPages())?.data, (item) => get(item, 'attributes.category.data.id', 'main')) ?? {});
+            setCategories((await getAboutPageCategories())?.data ?? []);
             setIsLoading(false);
         };
         getItems();
     }, []);
+
     return (
         <>
             {isLoading && (

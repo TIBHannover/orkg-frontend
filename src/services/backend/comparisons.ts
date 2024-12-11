@@ -1,7 +1,7 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import {
     Author,
@@ -20,6 +20,8 @@ import {
 } from 'services/backend/types';
 
 export const comparisonUrl = `${url}comparisons/`;
+export const comparisonsApi = backendApi.extend(() => ({ prefixUrl: comparisonUrl }));
+const COMPARISONS_CONTENT_TYPE = 'application/vnd.orkg.comparison.v2+json';
 
 export type ComparisonTopAuthor = {
     author: {
@@ -32,29 +34,32 @@ export type ComparisonTopAuthor = {
     }[];
 };
 
-export const getAuthorsByComparisonId = ({
-    id,
-    page = 0,
-    size = 9999,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-}): Promise<PaginatedResponse<ComparisonTopAuthor>> => {
-    const params = qs.stringify({ page, size });
-    return submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}/authors?${params}`);
+export const getAuthorsByComparisonId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
+    const searchParams = qs.stringify({ page, size });
+    return comparisonsApi
+        .get<PaginatedResponse<ComparisonTopAuthor>>(`${encodeURIComponent(id)}/authors`, {
+            searchParams,
+        })
+        .json();
 };
 
-export const getComparison = (id: string): Promise<Comparison> => submitGetRequest(`${comparisonUrl}${encodeURIComponent(id)}`);
+export const getComparison = (id: string): Promise<Comparison> =>
+    comparisonsApi
+        .get<Comparison>(encodeURIComponent(id), {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 
-export const getComparisonRelatedFigure = ({
-    comparisonId,
-    relatedFigureId,
-}: {
-    comparisonId: string;
-    relatedFigureId: string;
-}): Promise<ComparisonRelatedFigure> =>
-    submitGetRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`);
+export const getComparisonRelatedFigure = ({ comparisonId, relatedFigureId }: { comparisonId: string; relatedFigureId: string }) =>
+    comparisonsApi
+        .get<ComparisonRelatedFigure>(`${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`, {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export type UpdateComparisonRelatedFigureParams = Partial<Omit<ComparisonRelatedFigure, 'id'>>;
 
@@ -66,59 +71,49 @@ export const updateComparisonRelatedFigure = ({
     comparisonId: string;
     relatedFigureId: string;
     data: UpdateComparisonRelatedFigureParams;
-}): Promise<null> => {
-    return submitPutRequest(
-        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-    );
+}) => {
+    return comparisonsApi
+        .put<void>(`${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`, {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const createComparisonRelatedFigure = ({
-    comparisonId,
-    data,
-}: {
-    comparisonId: string;
-    data: UpdateComparisonRelatedFigureParams;
-}): Promise<string> => {
-    return submitPostRequest(
-        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+export const createComparisonRelatedFigure = ({ comparisonId, data }: { comparisonId: string; data: UpdateComparisonRelatedFigureParams }) => {
+    return comparisonsApi
+        .post<void>(`${encodeURIComponent(comparisonId)}/related-figures`, {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 };
 
-export const deleteComparisonRelatedFigure = ({
-    comparisonId,
-    relatedFigureId,
-}: {
-    comparisonId: string;
-    relatedFigureId: string;
-}): Promise<null> => {
-    return submitDeleteRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-figures/${relatedFigureId}`, {
-        'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-        Accept: 'application/vnd.orkg.comparison.v2+json',
-    });
+export const deleteComparisonRelatedFigure = ({ comparisonId, relatedFigureId }: { comparisonId: string; relatedFigureId: string }) => {
+    return comparisonsApi
+        .delete<void>(`${encodeURIComponent(comparisonId)}/related-figures/${relatedFigureId}`, {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const getComparisonRelatedResource = ({
-    comparisonId,
-    relatedResourceId,
-}: {
-    comparisonId: string;
-    relatedResourceId: string;
-}): Promise<ComparisonRelatedResource> =>
-    submitGetRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`);
+export const getComparisonRelatedResource = ({ comparisonId, relatedResourceId }: { comparisonId: string; relatedResourceId: string }) =>
+    comparisonsApi
+        .get<ComparisonRelatedResource>(`${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`, {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export type UpdateComparisonRelatedResourceParams = Partial<Omit<ComparisonRelatedResource, 'id'>>;
 
@@ -130,15 +125,16 @@ export const updateComparisonRelatedResource = ({
     comparisonId: string;
     relatedResourceId: string;
     data: UpdateComparisonRelatedResourceParams;
-}): Promise<null> => {
-    return submitPutRequest(
-        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-    );
+}) => {
+    return comparisonsApi
+        .put<void>(`${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`, {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export const createComparisonRelatedResource = ({
@@ -148,31 +144,25 @@ export const createComparisonRelatedResource = ({
     comparisonId: string;
     data: UpdateComparisonRelatedResourceParams;
 }): Promise<string> => {
-    return submitPostRequest(
-        `${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+    return comparisonsApi
+        .post<void>(`${encodeURIComponent(comparisonId)}/related-resources`, {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 };
 
-export const deleteComparisonRelatedResource = ({
-    comparisonId,
-    relatedResourceId,
-}: {
-    comparisonId: string;
-    relatedResourceId: string;
-}): Promise<null> => {
-    return submitDeleteRequest(`${comparisonUrl}${encodeURIComponent(comparisonId)}/related-resources/${relatedResourceId}`, {
-        'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-        Accept: 'application/vnd.orkg.comparison.v2+json',
-    });
+export const deleteComparisonRelatedResource = ({ comparisonId, relatedResourceId }: { comparisonId: string; relatedResourceId: string }) => {
+    return comparisonsApi
+        .delete<void>(`${encodeURIComponent(comparisonId)}/related-resources/${relatedResourceId}`, {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export type UpdateComparisonParams = Partial<
@@ -182,15 +172,16 @@ export type UpdateComparisonParams = Partial<
     }
 >;
 
-export const updateComparison = (id: string, data: UpdateComparisonParams): Promise<null> => {
-    return submitPutRequest(
-        `${comparisonUrl}${encodeURIComponent(id)}`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-    );
+export const updateComparison = (id: string, data: UpdateComparisonParams) => {
+    return comparisonsApi
+        .put<void>(`${encodeURIComponent(id)}`, {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export type GetComparisonParams = PaginationParams &
@@ -215,7 +206,7 @@ export const getComparisons = ({
     sdg,
     published,
 }: GetComparisonParams): Promise<PaginatedResponse<Comparison>> => {
-    const params = prepareParams({
+    const searchParams = prepareParams({
         page,
         size,
         sortBy,
@@ -228,7 +219,14 @@ export const getComparisons = ({
         include_subfields,
         published,
     });
-    return submitGetRequest(`${comparisonUrl}?${params}`);
+    return comparisonsApi
+        .get<PaginatedResponse<Comparison>>('', {
+            searchParams,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export const createComparison = (
@@ -237,19 +235,16 @@ export const createComparison = (
             contributions: string[];
         }
     >,
-): Promise<string> =>
-    submitPostRequest(
-        `${comparisonUrl}`,
-        {
-            'Content-Type': 'application/vnd.orkg.comparison.v2+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.comparison.v2+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+) =>
+    comparisonsApi
+        .post<string>('', {
+            json: data,
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 type PublishComparisonParams = {
     subject: string;
@@ -258,16 +253,9 @@ type PublishComparisonParams = {
     assign_doi: boolean;
 };
 
-export const publishComparison = (comparisonId: string, data: PublishComparisonParams): Promise<string> =>
-    submitPostRequest(
-        `${comparisonUrl}${encodeURIComponent(comparisonId)}/publish`,
-        {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+export const publishComparison = (comparisonId: string, data: PublishComparisonParams) =>
+    comparisonsApi
+        .post<string>(`${encodeURIComponent(comparisonId)}/publish`, {
+            json: data,
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));

@@ -1,13 +1,14 @@
+import ky from 'ky';
 import { env } from 'next-runtime-env';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
 import { SimilarPaper } from 'services/orkgSimpaper/types';
 
 export const similarPaperURL = env('NEXT_PUBLIC_SIMILAR_PAPER_URL');
+const similarPaperApi = ky.create({ prefixUrl: similarPaperURL });
 
 export type GetSimilarPapersParams = { contributionIds: string[]; mode?: 'STATIC' | 'DYNAMIC' | null };
 
-export const getSimilarPapers = ({ contributionIds, mode }: GetSimilarPapersParams): Promise<SimilarPaper[]> => {
+export const getSimilarPapers = ({ contributionIds, mode }: GetSimilarPapersParams) => {
     const params: string = qs.stringify(
         {
             contribution_ids: contributionIds,
@@ -19,5 +20,12 @@ export const getSimilarPapers = ({ contributionIds, mode }: GetSimilarPapersPara
         },
     );
 
-    return submitGetRequest(`${similarPaperURL}paper/similar?${params}`).then((response) => response?.payload);
+    return similarPaperApi
+        .get<{
+            payload: SimilarPaper[];
+        }>('paper/similar', {
+            searchParams: params,
+        })
+        .json()
+        .then((response) => response?.payload);
 };

@@ -1,11 +1,12 @@
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
 import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from 'services/backend/types';
 import { getTemplate } from 'services/backend/templates';
+import backendApi from 'services/backend/backendApi';
 
 export const statementsUrl = `${url}statements/`;
+export const statementsApi = backendApi.extend(() => ({ prefixUrl: statementsUrl }));
 
 export type GetStatementsParams<T extends boolean = true> = {
     subjectClasses?: string[];
@@ -47,7 +48,7 @@ export const getStatements = <T extends boolean = true>({
         };
     }
     const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         {
             subject_classes: subjectClasses.length > 0 ? subjectClasses.join(',') : undefined,
             subject_id: subjectId,
@@ -68,32 +69,36 @@ export const getStatements = <T extends boolean = true>({
         },
     );
 
-    return submitGetRequest(`${statementsUrl}?${params}`, headers).then((res) => (returnContent ? res.content : res)) as Promise<
-        T extends true ? Statement[] : PaginatedResponse<Statement>
-    >;
+    return statementsApi
+        .get<PaginatedResponse<Statement>>('', {
+            searchParams,
+            headers,
+        })
+        .json()
+        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Statement[] : PaginatedResponse<Statement>>;
 };
 
-export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string): Promise<Statement> =>
-    submitPostRequest(
-        `${statementsUrl}`,
-        { 'Content-Type': 'application/json' },
-        {
-            subject_id: subjectId,
-            predicate_id: predicateId,
-            object_id: objectId,
-        },
-    );
+export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string) =>
+    statementsApi
+        .post<Statement>('', {
+            json: {
+                subject_id: subjectId,
+                predicate_id: predicateId,
+                object_id: objectId,
+            },
+        })
+        .json();
 
-export const createLiteralStatement = (subjectId: string, predicateId: string, literalId: string): Promise<Statement> =>
-    submitPostRequest(
-        `${statementsUrl}`,
-        { 'Content-Type': 'application/json' },
-        {
-            subject_id: subjectId,
-            predicate_id: predicateId,
-            object_id: literalId,
-        },
-    );
+export const createLiteralStatement = (subjectId: string, predicateId: string, literalId: string) =>
+    statementsApi
+        .post<Statement>('', {
+            json: {
+                subject_id: subjectId,
+                predicate_id: predicateId,
+                object_id: literalId,
+            },
+        })
+        .json();
 
 export const updateStatement = (
     id: string,
@@ -102,16 +107,16 @@ export const updateStatement = (
         predicate_id = null,
         object_id = null,
     }: { subject_id?: string | null; predicate_id?: string | null; object_id?: string | null },
-): Promise<Statement> =>
-    submitPutRequest(
-        `${statementsUrl}${id}`,
-        { 'Content-Type': 'application/json' },
-        {
-            ...(subject_id ? { subject_id } : null),
-            ...(predicate_id ? { predicate_id } : null),
-            ...(object_id ? { object_id } : null),
-        },
-    );
+) =>
+    statementsApi
+        .put<Statement>(id, {
+            json: {
+                ...(subject_id ? { subject_id } : null),
+                ...(predicate_id ? { predicate_id } : null),
+                ...(object_id ? { object_id } : null),
+            },
+        })
+        .json();
 
 export const updateStatements = (
     statementIds: string[],
@@ -120,20 +125,26 @@ export const updateStatements = (
         predicate_id = null,
         object_id = null,
     }: { subject_id?: string | null; predicate_id?: string | null; object_id?: string | null },
-): Promise<Statement[]> =>
-    submitPutRequest(
-        `${statementsUrl}?ids=${statementIds.join()}`,
-        { 'Content-Type': 'application/json' },
-        {
-            ...(subject_id ? { subject_id } : null),
-            ...(predicate_id ? { predicate_id } : null),
-            ...(object_id ? { object_id } : null),
-        },
-    );
+) =>
+    statementsApi
+        .put<Statement[]>('', {
+            searchParams: `ids=${statementIds.join()}`,
+            json: {
+                ...(subject_id ? { subject_id } : null),
+                ...(predicate_id ? { predicate_id } : null),
+                ...(object_id ? { object_id } : null),
+            },
+        })
+        .json();
 
-export const deleteStatementById = (id: string): Promise<null> => submitDeleteRequest(statementsUrl + encodeURIComponent(id));
+export const deleteStatementById = (id: string) => statementsApi.delete<void>(encodeURIComponent(id)).json();
 
-export const deleteStatementsByIds = (ids: string[]): Promise<null> => submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
+export const deleteStatementsByIds = (ids: string[]) =>
+    statementsApi
+        .delete<void>('', {
+            searchParams: `ids=${ids.join()}`,
+        })
+        .json();
 
 /**
  * @deprecated This function is deprecated. Use the getStatements function instead.
@@ -170,25 +181,21 @@ export const getStatementsBySubject = ({
  * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
  * @return {Promise} Promise object
  */
-export const getStatementsBundleBySubject = ({
-    id,
-    maxLevel = 10,
-    blacklist = [],
-}: {
-    id: string;
-    maxLevel?: number;
-    blacklist?: string[];
-}): Promise<{
-    root: string;
-    statements: Statement[];
-}> => {
-    const params = qs.stringify(
+export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }: { id: string; maxLevel?: number; blacklist?: string[] }) => {
+    const searchParams = qs.stringify(
         { maxLevel, blacklist: blacklist?.join(',') },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
+    return statementsApi
+        .get<{
+            root: string;
+            statements: Statement[];
+        }>(`${encodeURIComponent(id)}/bundle`, {
+            searchParams,
+        })
+        .json();
 };
 
 export const getStatementsBySubjects = ({
@@ -203,20 +210,25 @@ export const getStatementsBySubjects = ({
     size?: number;
     sortBy?: string;
     desc?: boolean;
-}): Promise<{ id: string; statements: Statement[] }[]> => {
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { ids: ids.join(), page, size, sort },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statementsUrl}subjects/?${params}`).then((res: { id: string; statements: PaginatedResponse<Statement> }[]) =>
-        res.map((subjectStatements) => ({
-            ...subjectStatements,
-            statements: subjectStatements.statements.content,
-        })),
-    );
+    return statementsApi
+        .get<{ id: string; statements: PaginatedResponse<Statement> }[]>('subjects', {
+            searchParams,
+        })
+        .json()
+        .then((res) =>
+            res.map((subjectStatements) => ({
+                ...subjectStatements,
+                statements: subjectStatements.statements.content,
+            })),
+        );
 };
 
 /**

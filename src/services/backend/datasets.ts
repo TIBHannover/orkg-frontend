@@ -1,10 +1,11 @@
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import { PaginatedResponse, PaginationParams } from 'services/backend/types';
 
 export const datasetsUrl = `${url}datasets/`;
+export const datasetsApi = backendApi.extend(() => ({ prefixUrl: datasetsUrl }));
 
 // The services defined here were discussed in the following issue
 // https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/263
@@ -24,53 +25,53 @@ export const getDatasetBenchmarksByDatasetId = ({
     problemId: string;
     page?: number;
     size?: number;
-}): Promise<
-    PaginatedResponse<{
-        model_name: string;
-        model_id: string;
-        score: string;
-        metric: string;
-        paper_id: string;
-        paper_title: string;
-        paper_month: number;
-        paper_year: number;
-        code_urls: string[];
-    }>
-> => {
-    const params = qs.stringify(
+}) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${datasetsUrl}${datasetId}/problem/${problemId}/summary?${params}`);
+    return datasetsApi
+        .get<
+            PaginatedResponse<{
+                model_name: string;
+                model_id: string;
+                score: string;
+                metric: string;
+                paper_id: string;
+                paper_title: string;
+                paper_month: number;
+                paper_year: number;
+                code_urls: string[];
+            }>
+        >(`${datasetId}/problem/${problemId}/summary`, {
+            searchParams,
+        })
+        .json();
 };
 
 /**
  * Get the list of research problems of a dataset
  * */
 
-export const getResearchProblemsByDatasetId = ({
-    datasetId,
-    page = 0,
-    size = 9999,
-}: {
-    datasetId: string;
-    page?: number;
-    size?: number;
-}): Promise<
-    PaginatedResponse<{
-        id: string;
-        label: string;
-    }>
-> => {
-    const params = qs.stringify(
+export const getResearchProblemsByDatasetId = ({ datasetId, page = 0, size = 9999 }: { datasetId: string; page?: number; size?: number }) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${datasetsUrl}${datasetId}/problems?${params}`);
+    return datasetsApi
+        .get<
+            PaginatedResponse<{
+                id: string;
+                label: string;
+            }>
+        >(`${datasetId}/problems`, {
+            searchParams,
+        })
+        .json();
 };
 
 /**
@@ -89,15 +90,19 @@ export const getDatasetsBenchmarksByResearchProblemId = ({
     ],
 }: PaginationParams & {
     id: string;
-}): Promise<
-    PaginatedResponse<{
-        id: string;
-        label: string;
-        total_models: number;
-        total_papers: number;
-        total_codes: number;
-    }>
-> => {
-    const params = prepareParams({ page, size, sortBy });
-    return submitGetRequest(`${datasetsUrl}research-problem/${encodeURIComponent(id)}?${params}`);
+}) => {
+    const searchParams = prepareParams({ page, size, sortBy });
+    return datasetsApi
+        .get<
+            PaginatedResponse<{
+                id: string;
+                label: string;
+                total_models: number;
+                total_papers: number;
+                total_codes: number;
+            }>
+        >(`research-problem/${encodeURIComponent(id)}`, {
+            searchParams,
+        })
+        .json();
 };

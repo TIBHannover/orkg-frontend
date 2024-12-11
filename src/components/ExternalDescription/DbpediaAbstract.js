@@ -37,7 +37,7 @@ class DbpediaAbstract extends Component {
                 this.setState({
                     abstract: _abstract,
                     isLoading: false,
-                    loadingFailed: !_abstract,
+                    loadingFailed: false,
                 });
             })
             .catch((error) => {
@@ -72,7 +72,9 @@ class DbpediaAbstract extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && <div className="text-primary">Failed loading abstract from DBpedia.</div>}
                     {!this.state.isLoading && !this.state.loadingFailed && (
                         <>
-                            {this.state.collapsed && this.state.abstract.length > 550 ? `${shortAbstract}...` : this.state.abstract}
+                            {this.state.collapsed && this.state.abstract.length > 550
+                                ? `${shortAbstract}...`
+                                : this.state.abstract || 'No abstract available'}
                             {showReadMore && (
                                 <Button color="link" className="p-0" style={{ fontSize: 'inherit' }} onClick={this.handleReadMore}>
                                     {this.state.collapsed ? 'Read more' : 'Read less'}

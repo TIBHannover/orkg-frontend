@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
+import backendApi from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import {
     CreatedByParam,
@@ -16,6 +16,8 @@ import {
 } from 'services/backend/types';
 
 export const visualizationsUrl = `${url}visualizations/`;
+export const visualizationsApi = backendApi.extend(() => ({ prefixUrl: visualizationsUrl }));
+const VISUALIZATIONS_CONTENT_TYPE = 'application/vnd.orkg.visualization.v2+json';
 
 export const getVisualizations = ({
     page = 0,
@@ -28,15 +30,34 @@ export const getVisualizations = ({
     research_field,
     include_subfields,
     sdg,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams): Promise<
-    PaginatedResponse<Visualization>
-> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
-    return submitGetRequest(`${visualizationsUrl}?${params}`);
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams) => {
+    const searchParams = prepareParams({
+        page,
+        size,
+        sortBy,
+        verified,
+        visibility,
+        created_by,
+        observatory_id,
+        sdg,
+        research_field,
+        include_subfields,
+    });
+    return visualizationsApi
+        .get<PaginatedResponse<Visualization>>('', {
+            searchParams,
+            headers: {
+                Accept: VISUALIZATIONS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const getVisualization = (id: string): Promise<Visualization> =>
-    submitGetRequest(`${visualizationsUrl}${encodeURIComponent(id)}`, {
-        'Content-Type': 'application/vnd.orkg.visualization.v2+json',
-        Accept: 'application/vnd.orkg.visualization.v2+json',
-    });
+export const getVisualization = (id: string) =>
+    visualizationsApi
+        .get<Visualization>(encodeURIComponent(id), {
+            headers: {
+                Accept: VISUALIZATIONS_CONTENT_TYPE,
+            },
+        })
+        .json();

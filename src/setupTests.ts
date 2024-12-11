@@ -33,6 +33,7 @@ jest.mock('next/router', () => nextRouterMock);
 
 jest.mock('services/keycloak', () => ({
     getToken: jest.fn().mockResolvedValue('test-token'),
+    isLoggedIn: jest.fn(() => false),
 }));
 
 jest.mock('next/navigation', () => {

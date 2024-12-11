@@ -1,10 +1,11 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { PaginatedResponse, Resource } from 'services/backend/types';
 
 export const researchFieldUrl = `${url}research-fields/`;
+export const researchFieldApi = backendApi.extend(() => ({ prefixUrl: researchFieldUrl }));
 
 export const getResearchProblemsByResearchFieldId = ({
     id,
@@ -22,25 +23,37 @@ export const getResearchProblemsByResearchFieldId = ({
     desc?: boolean;
     subfields?: boolean;
     visibility?: string;
-}): Promise<PaginatedResponse<Resource>> => {
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { page, size, sort, visibility },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${researchFieldUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems?${params}`);
+    return researchFieldApi
+        .get<PaginatedResponse<Resource>>(`${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems`, {
+            searchParams,
+        })
+        .json();
 };
 
-export const getFieldChildren = ({ fieldId }: { fieldId: string }): Promise<{ resource: Resource; child_count: number }[]> =>
-    submitGetRequest(`${researchFieldUrl}${fieldId}/children`).then((res) => res.content);
+export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
+    researchFieldApi
+        .get<
+            PaginatedResponse<{
+                child_count: number;
+                resource: Resource;
+            }>
+        >(`${fieldId}/children`)
+        .json()
+        .then((res) => res.content);
 
 export const getFieldParents = async ({ fieldId }: { fieldId: string }): Promise<Resource[]> => {
     const parents: Resource[] = [];
 
     const fetchParents = async (currentFieldId: string): Promise<void> => {
-        const response = await submitGetRequest(`${researchFieldUrl}${currentFieldId}/parents`);
+        const response = await researchFieldApi.get<any>(`${currentFieldId}/parents`).json();
         const parentFields = response.content;
 
         if (parentFields?.length) {

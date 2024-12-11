@@ -1,8 +1,8 @@
 /**
  * Services file for CMS service
  */
+import ky from 'ky';
 import { env } from 'next-runtime-env';
-import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 import {
     AboutPageCategory,
@@ -17,10 +17,16 @@ import {
 } from 'services/cms/types';
 
 export const url = env('NEXT_PUBLIC_CMS_URL');
+const cmsApi = ky.create({ prefixUrl: url });
 
-export const getPageByUrl = (_url: string): Promise<CmsResponsePaginated<HelpArticle>> => submitGetRequest(`${url}pages?filters[url]=${_url}`);
+export const getPageByUrl = (_url: string) =>
+    cmsApi
+        .get<CmsResponsePaginated<HelpArticle>>('pages', {
+            searchParams: `filters[url]=${_url}`,
+        })
+        .json();
 
-export const getAboutPage = (id: number): Promise<CmsResponseSingle<HelpArticle>> => {
+export const getAboutPage = (id: number) => {
     const query = qs.stringify(
         {
             populate: { category: { fields: ['id'] } },
@@ -29,10 +35,14 @@ export const getAboutPage = (id: number): Promise<CmsResponseSingle<HelpArticle>
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}about-pages/${id}?${query}`);
+    return cmsApi
+        .get<CmsResponseSingle<HelpArticle>>(`about-pages/${id}`, {
+            searchParams: query,
+        })
+        .json();
 };
 
-export const getAboutPageCategories = (): Promise<CmsResponsePaginated<AboutPageCategory>> => {
+export const getAboutPageCategories = () => {
     const query = qs.stringify(
         {
             sort: 'order',
@@ -42,10 +52,15 @@ export const getAboutPageCategories = (): Promise<CmsResponsePaginated<AboutPage
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}about-page-categories?${query}`).catch(() => []);
+    return cmsApi
+        .get<CmsResponsePaginated<AboutPageCategory>>(`about-page-categories`, {
+            searchParams: query,
+        })
+        .json()
+        .catch(() => {});
 };
 
-export const getAboutPages = (categoryId = null): Promise<CmsResponsePaginated<HelpArticle>> => {
+export const getAboutPages = (categoryId = null) => {
     const query = qs.stringify(
         {
             sort: 'order',
@@ -76,33 +91,50 @@ export const getAboutPages = (categoryId = null): Promise<CmsResponsePaginated<H
         },
     );
 
-    return submitGetRequest(`${url}about-pages?${query}`).catch(() => []);
+    return cmsApi
+        .get<CmsResponsePaginated<HelpArticle>>(`about-pages`, {
+            searchParams: query,
+        })
+        .json()
+        .catch(() => {});
 };
 
-export const getHelpArticle = (id: string): Promise<CmsResponseSingle<HelpArticle>> => {
+export const getHelpArticle = (id: string) => {
     const query = qs.stringify(
         { populate: { help_category: { fields: ['id', 'title'] } } },
         {
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}help-articles/${id}?${query}`);
+    return cmsApi
+        .get<CmsResponseSingle<HelpArticle>>(`help-articles/${id}`, {
+            searchParams: query,
+        })
+        .json();
 };
 
-export const getHelpArticles = ({ where }: { where: string }): Promise<CmsResponsePaginated<HelpArticle>> =>
-    submitGetRequest(`${url}help-articles?${where}`);
+export const getHelpArticles = ({ where }: { where: string }) =>
+    cmsApi
+        .get<CmsResponsePaginated<HelpArticle>>(`help-articles`, {
+            searchParams: where,
+        })
+        .json();
 
-export const getHelpCategories = (): Promise<CmsResponsePaginated<HelpArticle>> => {
+export const getHelpCategories = () => {
     const query = qs.stringify(
         { sort: 'order', populate: { help_articles: { fields: ['title', 'order'], sort: ['order'] } } },
         {
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}help-categories?${query}`);
+    return cmsApi
+        .get<CmsResponsePaginated<HelpArticle>>(`help-categories`, {
+            searchParams: query,
+        })
+        .json();
 };
 
-export const getHelpCategory = (id: string): Promise<CmsResponseSingle<HelpCategory>> => {
+export const getHelpCategory = (id: string) => {
     const query = qs.stringify(
         {
             populate: {
@@ -122,19 +154,32 @@ export const getHelpCategory = (id: string): Promise<CmsResponseSingle<HelpCateg
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}help-categories/${id}?${query}`);
+    return cmsApi
+        .get<CmsResponseSingle<HelpCategory>>(`help-categories/${id}`, {
+            searchParams: query,
+        })
+        .json();
 };
 
-export const getHomeAlerts = (): Promise<CmsResponsePaginated<Alert>> => submitGetRequest(`${url}home-alerts?sort=order`).catch(() => []);
+export const getHomeAlerts = () =>
+    cmsApi
+        .get<CmsResponsePaginated<Alert>>(`home-alerts?sort=order`)
+        .json()
+        .catch(() => {});
 
-export const getNewsCards = ({ limit = 10, sort = 'created_at' }): Promise<CmsResponsePaginated<NewsCard>> => {
+export const getNewsCards = ({ limit = 10, sort = 'created_at' }) => {
     const query = qs.stringify(
         { pagination: { pageSize: limit }, sort },
         {
             encodeValuesOnly: true,
         },
     );
-    return submitGetRequest(`${url}news-cards?${query}`).catch(() => []);
+    return cmsApi
+        .get<CmsResponsePaginated<NewsCard>>(`news-cards`, {
+            searchParams: query,
+        })
+        .json()
+        .catch(() => {});
 };
 
 export const createFeedback = ({
@@ -152,10 +197,4 @@ export const createFeedback = ({
     inputData: {};
     outputData: {};
 }): Promise<CmsResponsePaginated<Feedback>> =>
-    submitPostRequest(
-        `${url}feedbacks`,
-        { 'Content-Type': 'application/json' },
-        { data: { llmTask, type, options, comments, inputData, outputData } },
-        true,
-        false,
-    );
+    cmsApi.post<CmsResponsePaginated<Feedback>>(`feedbacks`, { json: { data: { llmTask, type, options, comments, inputData, outputData } } }).json();

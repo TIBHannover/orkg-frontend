@@ -1,7 +1,7 @@
 import { Ontology, OntologyTerm, OptionType } from 'components/Autocomplete/types';
-import { env } from 'next-runtime-env';
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
-import { submitGetRequest } from 'network';
+import ky from 'ky';
+import { env } from 'next-runtime-env';
 import qs from 'qs';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 
@@ -10,6 +10,7 @@ import type { GroupBase, OptionsOrGroups } from 'react-select';
  */
 
 export const olsBaseUrl = env('NEXT_PUBLIC_OLS_BASE_URL');
+const olsApi = ky.create({ prefixUrl: olsBaseUrl });
 
 export type AdditionalType = {
     page: number;
@@ -32,27 +33,35 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = ''
         },
     );
     const options: (Ontology | OptionType)[] = [];
-    return submitGetRequest(`${olsBaseUrl}select?${params}`).then((res) => {
-        if (res.response.numFound > 0) {
-            for (const item of res.response.docs) {
-                options.push({
-                    id: type === 'ontology' ? item.ontology_name : item.short_form,
-                    label: item.label,
-                    ...(item.iri ? { uri: item.iri } : {}),
-                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
-                    ...(type === 'ontology'
-                        ? { shortLabel: item.ontology_name }
-                        : { ontology: item.ontology_prefix, statements: [], tooltipData: [] }),
-                    external: true,
-                    source: AUTOCOMPLETE_SOURCE.OLS_API,
-                });
+    return olsApi
+        .get('select', {
+            searchParams: params,
+        })
+        .json()
+        .then((res) => {
+            /* @ts-ignore-error API typing missing */
+            if (res.response.numFound > 0) {
+                /* @ts-ignore-error API typing missing */
+                for (const item of res.response.docs) {
+                    options.push({
+                        id: type === 'ontology' ? item.ontology_name : item.short_form,
+                        label: item.label,
+                        ...(item.iri ? { uri: item.iri } : {}),
+                        ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
+                        ...(type === 'ontology'
+                            ? { shortLabel: item.ontology_name }
+                            : { ontology: item.ontology_prefix, statements: [], tooltipData: [] }),
+                        external: true,
+                        source: AUTOCOMPLETE_SOURCE.OLS_API,
+                    });
+                }
             }
-        }
-        return {
-            options,
-            hasMore: !(Math.ceil(res.response.numFound / pageSize) <= page),
-        };
-    });
+            return {
+                options,
+                /* @ts-ignore-error API typing missing */
+                hasMore: !(Math.ceil(res.response.numFound / pageSize) <= page),
+            };
+        });
 };
 
 export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
@@ -65,22 +74,30 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
 
     const options: Ontology[] = [];
 
-    return submitGetRequest(`${olsBaseUrl}ontologies?${params}`).then((res) => {
-        if (res._embedded.ontologies.length > 0) {
-            for (const item of res._embedded?.ontologies ?? []) {
-                options.push({
-                    shortLabel: item.config.preferredPrefix,
-                    id: item.ontologyId,
-                    label: item.config.title,
-                    ...(item.config.baseUris?.length > 0 ? { uri: item.config.baseUris[0] } : {}),
-                    ...(item.config.description ? { description: item.config.description } : {}),
-                    external: true,
-                    source: AUTOCOMPLETE_SOURCE.OLS_API,
-                });
+    return olsApi
+        .get('ontologies', {
+            searchParams: params,
+        })
+        .json()
+        .then((res) => {
+            /* @ts-ignore-error API typing missing */
+            if (res._embedded.ontologies.length > 0) {
+                /* @ts-ignore-error API typing missing */
+                for (const item of res._embedded?.ontologies ?? []) {
+                    options.push({
+                        shortLabel: item.config.preferredPrefix,
+                        id: item.ontologyId,
+                        label: item.config.title,
+                        ...(item.config.baseUris?.length > 0 ? { uri: item.config.baseUris[0] } : {}),
+                        ...(item.config.description ? { description: item.config.description } : {}),
+                        external: true,
+                        source: AUTOCOMPLETE_SOURCE.OLS_API,
+                    });
+                }
             }
-        }
-        return { options, hasMore: !(res.page.totalPages <= res.page.number) };
-    });
+            /* @ts-ignore-error API typing missing */
+            return { options, hasMore: !(res.page.totalPages <= res.page.number) };
+        });
 };
 
 /**
@@ -146,27 +163,35 @@ export const getOntologyTerms = ({ ontology_id = '', page = 0, pageSize = 10 }) 
     );
     const options: OntologyTerm[] = [];
 
-    return submitGetRequest(`${olsBaseUrl}ontologies/${ontology_id}/terms?${params}`).then((res) => {
-        if (res._embedded?.terms?.length > 0) {
-            for (const item of res._embedded.terms) {
-                options.push({
-                    label: item.label,
-                    id: item.short_form,
-                    ...(item.iri ? { uri: item.iri } : {}),
-                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
-                    external: true,
-                    source: 'ols-api',
-                    ontology: item.ontology_prefix,
-                    shortLabel: item.short_form,
-                    tooltipData: [],
-                });
+    return olsApi
+        .get(`ontologies/${ontology_id}/terms`, {
+            searchParams: params,
+        })
+        .json()
+        .then((res) => {
+            /* @ts-ignore-error API typing missing */
+            if (res._embedded?.terms?.length > 0) {
+                /* @ts-ignore-error API typing missing */
+                for (const item of res._embedded.terms) {
+                    options.push({
+                        label: item.label,
+                        id: item.short_form,
+                        ...(item.iri ? { uri: item.iri } : {}),
+                        ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
+                        external: true,
+                        source: 'ols-api',
+                        ontology: item.ontology_prefix,
+                        shortLabel: item.short_form,
+                        tooltipData: [],
+                    });
+                }
             }
-        }
-        return {
-            options,
-            hasMore: !(res.page.totalPages <= res.page.number),
-        };
-    });
+            return {
+                options,
+                /* @ts-ignore-error API typing missing */
+                hasMore: !(res.page.totalPages <= res.page.number),
+            };
+        });
 };
 
 export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => {
@@ -178,22 +203,30 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
     );
     const options: OntologyTerm[] = [];
 
-    return submitGetRequest(`${olsBaseUrl}terms/?${params}`).then((res) => {
-        if (res._embedded?.terms?.length > 0) {
-            for (const item of res._embedded.terms) {
-                options.push({
-                    label: item.label,
-                    id: item.id,
-                    ...(item.iri ? { uri: item.iri } : {}),
-                    ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
-                    external: true,
-                    source: 'ols-api',
-                    ontology: item.ontology_prefix,
-                    shortLabel: item.short_form,
-                    tooltipData: [],
-                });
+    return olsApi
+        .get('terms', {
+            searchParams: params,
+        })
+        .json()
+        .then((res) => {
+            /* @ts-ignore-error API typing missing */
+            if (res._embedded?.terms?.length > 0) {
+                /* @ts-ignore-error API typing missing */
+                for (const item of res._embedded.terms) {
+                    options.push({
+                        label: item.label,
+                        id: item.id,
+                        ...(item.iri ? { uri: item.iri } : {}),
+                        ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {}),
+                        external: true,
+                        source: 'ols-api',
+                        ontology: item.ontology_prefix,
+                        shortLabel: item.short_form,
+                        tooltipData: [],
+                    });
+                }
             }
-        }
-        return { content: options, last: res.page.totalPages <= res.page.number, totalElements: res.page.totalElements };
-    });
+            /* @ts-ignore-error API typing missing */
+            return { content: options, last: res.page.totalPages <= res.page.number, totalElements: res.page.totalElements };
+        });
 };

@@ -1,31 +1,14 @@
 /**
- * Services file for the similarity service
+ * Services file for the simcomp service
  * https://gitlab.com/TIBHannover/orkg/orkg-simcomp/
  */
 
+import ky from 'ky';
 import { env } from 'next-runtime-env';
-import { submitGetRequest, submitPostRequest } from 'network';
 import qs from 'qs';
 
 export const simCompServiceUrl = env('NEXT_PUBLIC_SIMILARITY_SERVICE_URL');
-
-/**
- * Queries Similar Contributions
- *
- * @param {String} contributionId Contribution id
- */
-export const getSimilarContribution = ({ contributionId, nbResults = 5 }) => {
-    const params = qs.stringify(
-        {
-            contribution_id: contributionId,
-            n_results: nbResults,
-        },
-        {
-            skipNulls: true,
-        },
-    );
-    return submitGetRequest(`${simCompServiceUrl}/contribution/similar/?${params}`).then((response) => response.payload.contributions);
-};
+const simCompServiceApi = ky.create({ prefixUrl: simCompServiceUrl });
 
 /**
  * Get comparison result
@@ -46,7 +29,12 @@ export const getComparison = ({ contributionIds = [], type = null, format = null
             arrayFormat: 'repeat',
         },
     );
-    return submitGetRequest(`${simCompServiceUrl}contribution/compare/?${params}`).then((response) => response.payload.comparison);
+    return simCompServiceApi
+        .get('contribution/compare', {
+            searchParams: params,
+        })
+        .json()
+        .then((response) => response.payload.comparison);
 };
 /**
  * Get saved thing result
@@ -64,9 +52,12 @@ export const getThing = ({ thingType, thingKey }) => {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${simCompServiceUrl}thing/?${params}`, {
-        'Content-Type': 'application/json',
-    }).then((response) => response.payload.thing);
+    return simCompServiceApi
+        .get(`thing`, {
+            searchParams: params,
+        })
+        .json()
+        .then((response) => response.payload.thing);
 };
 
 /**
@@ -76,16 +67,16 @@ export const getThing = ({ thingType, thingKey }) => {
  * @param {String} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
  */
 export const createThing = ({ thingType = 'UNKNOWN', thingKey = '', config = {}, data = {} }) =>
-    submitPostRequest(
-        `${simCompServiceUrl}thing/`,
-        { 'Content-Type': 'application/json' },
-        {
-            thing_type: thingType,
-            thing_key: thingKey,
-            config,
-            data,
-        },
-    );
+    simCompServiceApi
+        .post('thing', {
+            json: {
+                thing_type: thingType,
+                thing_key: thingKey,
+                config,
+                data,
+            },
+        })
+        .json();
 
 /**
  * Export thing result
@@ -107,7 +98,9 @@ export const exportThing = ({ thingType, thingKey, format, likeUI }) => {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${simCompServiceUrl}thing/export/?${params}`, {
-        'Content-Type': 'application/json',
-    });
+    return simCompServiceApi
+        .get('thing/export', {
+            searchParams: params,
+        })
+        .json();
 };
