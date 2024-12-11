@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import { getResource } from 'services/backend/resources';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 import { asyncLocalStorage, guid } from 'utils';
 
 function useDiagramEditor({ id }) {

@@ -1,7 +1,7 @@
-import { env } from 'next-runtime-env';
-import { submitGetRequest } from 'network';
-import { OptionType, ExternalServiceResponse } from 'components/Autocomplete/types';
+import { ExternalServiceResponse, OptionType } from 'components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
+import ky from 'ky';
+import { env } from 'next-runtime-env';
 
 export const wikidataUrl = env('NEXT_PUBLIC_WIKIDATA_URL');
 export const wikidataSparql = env('NEXT_PUBLIC_WIKIDATA_SPARQL');
@@ -22,12 +22,17 @@ export const searchEntity = async ({
     }
     const newOptions = [];
 
-    const results = await submitGetRequest(
-        `${wikidataUrl}?action=wbsearchentities&search=${encodeURIComponent(value)}&limit=${pageSize}&continue=${
-            page * pageSize
-        }&type=${type}&language=en&format=json&origin=*`,
-    );
+    // use ky directly instead of ky.create to prevent a trailing slash at the URL
+    const results = await ky
+        .get(wikidataUrl!, {
+            searchParams: `action=wbsearchentities&search=${encodeURIComponent(value)}&limit=${pageSize}&continue=${
+                page * pageSize
+            }&type=${type}&language=en&format=json&origin=*`,
+        })
+        .json();
+    /* @ts-expect-error API typing missing */
     if (results && results.search) {
+        /* @ts-expect-error API typing missing */
         for (const [index, result] of results.search.entries()) {
             // a simple heuristic to determine if something should get the "Recommended" label
             const isRecommended =
@@ -51,7 +56,7 @@ export const searchEntity = async ({
             newOptions.push(item);
         }
     }
-
+    /* @ts-expect-error API typing missing */
     return { options: newOptions, hasMore: results ? !!results['search-continue'] : false };
 };
 
@@ -64,5 +69,9 @@ export const searchAuthorOnWikidataByORCID = (orcid: string) => {
                     }
         }`;
 
-    return submitGetRequest(`${wikidataSparql}?query=${encodeURIComponent(query)}&format=json`);
+    return ky
+        .get(wikidataSparql!, {
+            searchParams: `query=${encodeURIComponent(query)}&format=json`,
+        })
+        .json();
 };

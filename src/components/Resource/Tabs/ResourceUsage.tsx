@@ -2,7 +2,7 @@ import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ListPage from 'components/PaginatedContent/ListPage';
 import { getPaper, getPapersLinkedToResource, papersUrl } from 'services/backend/papers';
-import { PaginationParams, Paper, Resource } from 'services/backend/types';
+import { PaginatedResponse, PaginationParams, Paper, Resource } from 'services/backend/types';
 
 function ResourceUsage({ id }: { id: string }) {
     const renderListItem = (object: Paper & { path: Resource[][] }) => {
@@ -16,8 +16,14 @@ function ResourceUsage({ id }: { id: string }) {
         } & PaginationParams,
     ) => {
         const result = await getPapersLinkedToResource(params);
-        const papers = await Promise.all(result.content.map((p) => getPaper(p.id)));
-        return { ...result, content: papers.map((p) => ({ ...p, path: result.content.find((rp) => rp.id === p.id)?.path })) };
+        const papers = await Promise.all((result as PaginatedResponse<Resource & { path: Resource[][] }>).content.map((p) => getPaper(p.id)));
+        return {
+            ...result,
+            content: papers.map((p) => ({
+                ...p,
+                path: (result as PaginatedResponse<Resource & { path: Resource[][] }>).content.find((rp) => rp.id === p.id)?.path,
+            })),
+        };
     };
 
     return (

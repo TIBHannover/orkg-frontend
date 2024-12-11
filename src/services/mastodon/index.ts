@@ -1,8 +1,9 @@
-import { submitGetRequest } from 'network';
+import ky from 'ky';
 import { env } from 'next-runtime-env';
 
 export const mastodonUrl = `${env('NEXT_PUBLIC_MASTODON_URL')}`;
 const accountId = env('NEXT_PUBLIC_MASTODON_ACCOUNT_ID');
+const mastodonApi = ky.create({ prefixUrl: mastodonUrl });
 
 export type Message = {
     reblog?: Message;
@@ -18,4 +19,9 @@ export type Message = {
     };
 };
 
-export const loadMastodonTimeline = (): Promise<Message[]> => submitGetRequest(`${mastodonUrl}accounts/${accountId}/statuses?limit=10`);
+export const loadMastodonTimeline = (): Promise<Message[]> =>
+    mastodonApi
+        .get<Message[]>(`accounts/${accountId}/statuses`, {
+            searchParams: 'limit=10',
+        })
+        .json();

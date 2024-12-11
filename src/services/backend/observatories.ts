@@ -1,12 +1,13 @@
 import { MISC } from 'constants/graphSettings';
 import { url as baseUrl } from 'constants/misc';
-import { submitDeleteRequest, submitGetRequest, submitPatchRequest, submitPostRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import { getResource } from 'services/backend/resources';
 import { Contributor, FilterConfig, Observatory, PaginatedResponse } from 'services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
+export const observatoriesApi = backendApi.extend(() => ({ prefixUrl: observatoriesUrl }));
 
 /**
  * Get Observatories (400 BAD REQUEST if both q and research_field are specified)
@@ -28,36 +29,38 @@ export const getObservatories = ({
     page?: number;
     size?: number;
 }): Promise<PaginatedResponse<Observatory>> => {
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${observatoriesUrl}?${params}`);
+    return observatoriesApi
+        .get<PaginatedResponse<Observatory>>('', {
+            searchParams,
+        })
+        .json();
 };
 
-export const getResearchFieldOfObservatories = ({
-    page = 0,
-    size = 9999,
-}: {
-    page?: number;
-    size?: number;
-}): Promise<PaginatedResponse<{ id: string; label: string }>> => {
-    const params = qs.stringify(
+export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }: { page?: number; size?: number }) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${observatoriesUrl}research-fields/?${params}`);
+    return observatoriesApi
+        .get<PaginatedResponse<{ id: string; label: string }>>('research-fields', {
+            searchParams,
+        })
+        .json();
 };
 
-export const getObservatoryById = async (id: string): Promise<Observatory> => {
+export const getObservatoryById = async (id: string) => {
     // the backend only returns the SDG ids, so we need to fetch the resources to get the labels
     const response: Omit<Observatory, 'sdgs'> & {
         sdgs: string[];
-    } = await submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+    } = await observatoriesApi.get<Observatory>(`${encodeURIComponent(id)}`).json();
     const sdgsPromises = response.sdgs.map((sdgId) =>
         getResource(sdgId).then((resource) => ({
             id: resource.id,
@@ -85,35 +88,31 @@ export const updateObservatory = (
         sdgs?: string[] | undefined;
         organizations?: string[] | undefined;
     },
-): Promise<null> =>
-    submitPatchRequest(
-        `${observatoriesUrl}${encodeURIComponent(id)}`,
-        { 'Content-Type': 'application/json' },
-        {
-            ...(name && { name }),
-            ...(organizations && { organizations }),
-            ...(description && { description }),
-            ...(research_field && { research_field }),
-            ...(sdgs && { sdgs }),
-        },
-    );
+) =>
+    observatoriesApi
+        .patch<void>(encodeURIComponent(id), {
+            json: {
+                ...(name && { name }),
+                ...(organizations && { organizations }),
+                ...(description && { description }),
+                ...(research_field && { research_field }),
+                ...(sdgs && { sdgs }),
+            },
+        })
+        .json();
 
-export const getUsersByObservatoryId = ({
-    id,
-    page = 0,
-    size = 9999,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-}): Promise<PaginatedResponse<Contributor>> => {
-    const params = qs.stringify(
+export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users?${params}`);
+    return observatoriesApi
+        .get<PaginatedResponse<Contributor>>(`${encodeURIComponent(id)}/users`, {
+            searchParams,
+        })
+        .json();
 };
 
 export const createObservatory = ({
@@ -128,12 +127,7 @@ export const createObservatory = ({
     description: string;
     research_field: string;
     display_id: string;
-}): Promise<Observatory> =>
-    submitPostRequest(
-        observatoriesUrl,
-        { 'Content-Type': 'application/json' },
-        { observatory_name, organization_id, description, research_field, display_id },
-    );
+}) => observatoriesApi.post<Observatory>('', { json: { observatory_name, organization_id, description, research_field, display_id } }).json();
 
 export const getObservatoryAndOrganizationInformation = (
     observatoryId: string,
@@ -208,40 +202,36 @@ export const getObservatoryAndOrganizationInformation = (
  * @param {String} id observatory id
  * @return {Array} List of filters
  */
-export const getFiltersByObservatoryId = ({ id, page = 0, items = 9999 }: { id: string; page?: number; items?: number }): Promise<FilterConfig[]> => {
+export const getFiltersByObservatoryId = ({ id, page = 0, items = 9999 }: { id: string; page?: number; items?: number }) => {
     const params = qs.stringify(
         { page, size: items },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/filters/?${params}&sort=featured,desc&sort=label,asc`).then(
-        (r) => r.content,
-    );
+    return observatoriesApi
+        .get<PaginatedResponse<FilterConfig>>(`${encodeURIComponent(id)}/filters`, {
+            searchParams: `${params}&sort=featured,desc&sort=label,asc`,
+        })
+        .json()
+        .then((r) => r.content);
 };
 
 /**
  * create filter in observatory
  */
 export const createFiltersInObservatory = (id: string, { label, path, range, featured, exact }: FilterConfig) =>
-    submitPostRequest(
-        `${observatoriesUrl}${encodeURIComponent(id)}/filters/`,
-        { 'Content-Type': 'application/json' },
-        { label, path, range, featured, exact },
-        true,
-        true,
-        false,
-    );
+    observatoriesApi.post<void>(`${encodeURIComponent(id)}/filters`, { json: { label, path, range, featured, exact } }).json();
 
 /**
  * update filter in observatory
  */
 export const updateFiltersOfObservatory = (observatoryId: string, filterId: string, { label, path, range, featured, exact }: FilterConfig) =>
-    submitPatchRequest(
-        `${observatoriesUrl}${encodeURIComponent(observatoryId)}/filters/${filterId}`,
-        { 'Content-Type': 'application/json' },
-        { label, path, range, featured, exact },
-    );
+    observatoriesApi
+        .patch<void>(`${encodeURIComponent(observatoryId)}/filters/${filterId}`, {
+            json: { label, path, range, featured, exact },
+        })
+        .json();
 
 /**
  * Delete a filter from an observatory
@@ -250,4 +240,4 @@ export const updateFiltersOfObservatory = (observatoryId: string, filterId: stri
  * @param {String} filterId filter id
  */
 export const deleteFilterOfObservatory = (observatoryId: string, filterId: string) =>
-    submitDeleteRequest(`${observatoriesUrl}${encodeURIComponent(observatoryId)}/filters/${filterId}`);
+    observatoriesApi.delete<void>(`${encodeURIComponent(observatoryId)}/filters/${filterId}`).json();

@@ -1,7 +1,7 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
 import {
     CreateRosettaStoneStatementParams,
     CreateRosettaStoneTemplateParams,
@@ -16,12 +16,18 @@ import {
 } from 'services/backend/types';
 
 export const rosettaStoneUrl = `${url}rosetta-stone/`;
+export const rosettaStoneApi = backendApi.extend(() => ({ prefixUrl: rosettaStoneUrl }));
+const ROSETTA_STONE_TEMPLATE_CONTENT_TYPE = 'application/vnd.orkg.rosetta-stone-template.v1+json';
+const ROSETTA_STONE_STATEMENT_CONTENT_TYPE = 'application/vnd.orkg.rosetta-stone-statement.v1+json';
 
-export const getRSTemplate = (id: string): Promise<RosettaStoneTemplate> =>
-    submitGetRequest(`${rosettaStoneUrl}templates/${id}`, {
-        'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
-    });
+export const getRSTemplate = (id: string) =>
+    rosettaStoneApi
+        .get<RosettaStoneTemplate>(`templates/${id}`, {
+            headers: {
+                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export type GetTemplatesParams = {
     q?: string | null;
@@ -39,8 +45,8 @@ export const getRSTemplates = ({
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
-}: GetTemplatesParams): Promise<PaginatedResponse<RosettaStoneTemplate>> => {
-    const params = qs.stringify(
+}: GetTemplatesParams) => {
+    const searchParams = qs.stringify(
         {
             page,
             size,
@@ -55,51 +61,55 @@ export const getRSTemplates = ({
         },
     );
 
-    return submitGetRequest(`${rosettaStoneUrl}templates?${params}`, {
-        'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
-    });
+    return rosettaStoneApi
+        .get<PaginatedResponse<RosettaStoneTemplate>>(`templates`, {
+            searchParams,
+            headers: {
+                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const createRSTemplate = (data: CreateRosettaStoneTemplateParams): Promise<string> =>
-    submitPostRequest(
-        `${rosettaStoneUrl}templates`,
-        {
-            'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+export const createRSTemplate = (data: CreateRosettaStoneTemplateParams) =>
+    rosettaStoneApi
+        .post<void>(`templates`, {
+            json: data,
+            headers: {
+                'Content-Type': ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const updateRSTemplate = (id: string, data: UpdateRosettaStoneTemplateParams): Promise<string> =>
-    submitPutRequest(
-        `${rosettaStoneUrl}templates/${id}`,
-        {
-            'Content-Type': 'application/vnd.orkg.rosetta-stone-template.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+export const updateRSTemplate = (id: string, data: UpdateRosettaStoneTemplateParams) =>
+    rosettaStoneApi
+        .put<void>(`templates/${id}`, {
+            json: data,
+            headers: {
+                'Content-Type': ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const deleteRSTemplate = (id: string): Promise<null> =>
-    submitDeleteRequest(`${rosettaStoneUrl}templates/${id}`, {
-        'Content-Type': 'application/json',
-        Accept: 'application/vnd.orkg.rosetta-stone-template.v1+json',
-    });
+export const deleteRSTemplate = (id: string) =>
+    rosettaStoneApi
+        .delete<void>(`templates/${id}`, {
+            headers: {
+                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export const getRSStatement = (id: string): Promise<RosettaStoneStatement> =>
-    submitGetRequest(`${rosettaStoneUrl}statements/${id}`, {
-        'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
-    });
+    rosettaStoneApi
+        .delete<void>(`statements/${id}`, {
+            headers: {
+                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export type GetStatementsParams = {
     context?: string;
@@ -115,8 +125,8 @@ export const getRSStatements = ({
     size = 999,
     sortBy = [{ property: 'created_at', direction: 'asc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: GetStatementsParams): Promise<PaginatedResponse<RosettaStoneStatement>> => {
-    const params = qs.stringify(
+}: GetStatementsParams) => {
+    const searchParams = qs.stringify(
         {
             page,
             size,
@@ -131,47 +141,48 @@ export const getRSStatements = ({
         },
     );
 
-    return submitGetRequest(`${rosettaStoneUrl}statements?${params}`, {
-        'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
-    });
+    return rosettaStoneApi
+        .get<PaginatedResponse<RosettaStoneStatement>>('statements', {
+            searchParams,
+            headers: {
+                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const getRSStatementVersions = ({ id }: { id: string }): Promise<RosettaStoneStatement[]> => {
-    return submitGetRequest(`${rosettaStoneUrl}statements/${id}/versions`, {
-        'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
-    });
+export const getRSStatementVersions = ({ id }: { id: string }) => {
+    return rosettaStoneApi
+        .get<RosettaStoneStatement[]>(`statements/${id}/versions`, {
+            headers: {
+                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const createRSStatement = (data: CreateRosettaStoneStatementParams): Promise<RosettaStoneStatement> =>
-    submitPostRequest(
-        `${rosettaStoneUrl}statements`,
-        {
-            'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+export const createRSStatement = (data: CreateRosettaStoneStatementParams) =>
+    rosettaStoneApi
+        .post<RosettaStoneStatement>(`statements`, {
+            json: data,
+            headers: {
+                'Content-Type': ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const updateRSStatement = (id: string, data: UpdateRosettaStoneStatementParams): Promise<string> =>
-    submitPostRequest(
-        `${rosettaStoneUrl}statements/${id}`,
-        {
-            'Content-Type': 'application/vnd.orkg.rosetta-stone-statement.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.rosetta-stone-statement.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+export const updateRSStatement = (id: string, data: UpdateRosettaStoneStatementParams) =>
+    rosettaStoneApi
+        .post<void>(`statements/${id}`, {
+            json: data,
+            headers: {
+                'Content-Type': ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const deleteRSStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}`);
+export const deleteRSStatement = (id: string) => rosettaStoneApi.delete<void>(`statements/${id}`).json();
 
-export const fullyDeleteRSStatement = (id: string): Promise<null> => submitDeleteRequest(`${rosettaStoneUrl}statements/${id}/versions`);
+export const fullyDeleteRSStatement = (id: string) => rosettaStoneApi.delete<void>(`statements/${id}/versions`).json();

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert } from 'reactstrap';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 
 function VisualizationPreview({ id, height = '500px', width = '100%', className = 'p-3' }) {
     const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);

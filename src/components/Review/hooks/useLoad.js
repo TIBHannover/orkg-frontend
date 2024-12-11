@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 import { load as loadArticle } from 'slices/reviewSlice';
 import { filterObjectOfStatementsByPredicateAndClass, getAuthorsInList } from 'utils';
 

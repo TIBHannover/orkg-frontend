@@ -76,6 +76,7 @@ const cspHeader = `default-src 'self' ;
                           https://raw.githubusercontent.com
                           https://fonts.gstatic.com
                           https://mastodon.social
+                          https://dbpedia.org
                       ;`;
 
 /** @type {import('next').NextConfig} */
@@ -144,6 +145,7 @@ const nextConfig = {
             },
         },
     },
+    transpilePackages: ['ky'],
     output: 'standalone',
     env: {
         version, // ensure the version is available for display in the footer

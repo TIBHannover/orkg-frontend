@@ -1,6 +1,6 @@
 import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
-import { submitPostRequest } from 'network';
+import ky from 'ky';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
@@ -53,15 +53,7 @@ const ListReferences = () => {
 
             try {
                 // by passing the full bibtex to citation-js, we get sorting and formatting of references for free
-                const _bibliography = await submitPostRequest(
-                    ROUTES.CITATIONS,
-                    { 'Content-Type': 'application/json' },
-                    { bibtex },
-                    true,
-                    false,
-                    true,
-                    false,
-                );
+                const _bibliography = await ky.post(ROUTES.CITATIONS, { json: { bibtex } }).json();
                 setBibliography(_bibliography.bibliography);
             } catch (e) {
                 console.error(e);

@@ -43,6 +43,7 @@
         "intro.js-react": "^0.7.1",
         "isomorphic-dompurify": "^1.10.0",
         "jspdf": "^2.5.1",
+        "ky": "^1.7.2",
         "keycloak-js": "^26.0.5",
         "leaflet": "^1.9.4",
         "linkify-react": "^4.1.3",

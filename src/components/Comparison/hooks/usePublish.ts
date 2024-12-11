@@ -7,7 +7,7 @@ import { FormEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { publishComparison } from 'services/backend/comparisons';
-import { getComparison } from 'services/similarity';
+import { getComparison } from 'services/simcomp';
 import { getErrorMessage } from 'utils';
 
 function usePublish() {

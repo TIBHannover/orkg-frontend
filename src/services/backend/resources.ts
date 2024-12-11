@@ -4,9 +4,8 @@ import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
 import { url } from 'constants/misc';
 import { uniq, uniqBy } from 'lodash';
-import { submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
-import { classesUrl } from 'services/backend/classes';
+import backendApi from 'services/backend/backendApi';
 import { getContributorInformationById } from 'services/backend/contributors';
 import {
     CreatedByParam,
@@ -22,26 +21,31 @@ import {
 } from 'services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
+export const resourcesApi = backendApi.extend(() => ({ prefixUrl: resourcesUrl }));
 
-export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string): Promise<Resource> =>
-    submitPutRequest(
-        `${resourcesUrl}${id}`,
-        { 'Content-Type': 'application/json' },
-        { ...(label ? { label } : null), ...(classes ? { classes } : null), ...(extractionMethod ? { extraction_method: extractionMethod } : null) },
-    );
+export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string) =>
+    resourcesApi
+        .put<Resource>(id, {
+            json: {
+                ...(label ? { label } : null),
+                ...(classes ? { classes } : null),
+                ...(extractionMethod ? { extraction_method: extractionMethod } : null),
+            },
+        })
+        .json();
 
 /* Can be replaced with updateResource */
-export const updateResourceClasses = (id: string, classes: string[] | null = null): Promise<Resource> =>
-    submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { ...(classes ? { classes } : null) });
+export const updateResourceClasses = (id: string, classes: string[] | null = null) =>
+    resourcesApi.put<Resource>(id, { json: { ...(classes ? { classes } : null) } }).json();
 
-export const createResource = (label: string, classes: string[] = [], id: string | undefined = undefined): Promise<Resource> =>
-    submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes, id });
+export const createResource = (label: string, classes: string[] = [], id: string | undefined = undefined) =>
+    resourcesApi.post<Resource>('', { json: { label, classes, id } }).json();
 
-export const getResource = (id: string): Promise<Resource> => submitGetRequest(`${resourcesUrl}${id}/`);
+export const getResource = (id: string) => resourcesApi.get<Resource>(id).json();
 
 export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map((id) => getResource(id)));
 
-export const deleteResource = (id: string): Promise<null> => submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
+export const deleteResource = (id: string) => resourcesApi.delete<void>(id).json();
 
 export type GetResourcesParams<T extends boolean = false> = {
     q?: string | null;
@@ -98,7 +102,7 @@ export const getResources = <T extends boolean = false>({
     returnContent = false as T,
 }: GetResourcesParams<T>): Promise<T extends true ? Resource[] : PaginatedResponse<Resource>> => {
     const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         {
             page,
             size,
@@ -118,20 +122,27 @@ export const getResources = <T extends boolean = false>({
             arrayFormat: 'repeat',
         },
     );
-    return submitGetRequest(`${resourcesUrl}?${params}`).then((res) => (returnContent ? res.content : res)) as Promise<
-        T extends true ? Resource[] : PaginatedResponse<Resource>
-    >;
+    return resourcesApi
+        .get<PaginatedResponse<Resource>>('', {
+            searchParams,
+        })
+        .json()
+        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Resource[] : PaginatedResponse<Resource>>;
 };
 
 export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors?${params}`).then(
-        async (contributors: PaginatedResponse<string>) => {
+    return resourcesApi
+        .get<PaginatedResponse<string>>(`${encodeURIComponent(id)}/contributors`, {
+            searchParams,
+        })
+        .json()
+        .then(async (contributors) => {
             const uniqContributors = uniq(contributors.content);
             const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
                 contributor === MISC.UNKNOWN_ID
@@ -143,19 +154,27 @@ export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id:
                 ...contributors,
                 content: contributors.content.map((u) => uniqContributorsInfos.find((i) => u === i.id)),
             };
-        },
-    );
+        });
 };
 
 export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/timeline?${params}`).then(
-        async (contributors: PaginatedResponse<{ created_by: string; created_at: string }>) => {
+    return resourcesApi
+        .get<
+            PaginatedResponse<{
+                created_by: string;
+                created_at: string;
+            }>
+        >(`${encodeURIComponent(id)}/timeline`, {
+            searchParams,
+        })
+        .json()
+        .then(async (contributors) => {
             const uniqContributors = uniqBy(contributors.content, 'created_by');
             const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
                 contributor.created_by === MISC.UNKNOWN_ID
@@ -170,56 +189,16 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
                 ...contributors,
                 content: contributors.content.map((u) => ({ ...u, created_by: uniqContributorsInfos.find((i) => u.created_by === i.id) })),
             };
-        },
-    );
+        });
 };
 
-export const addResourceToObservatory = ({
-    observatory_id,
-    organization_id,
-    id,
-}: {
-    observatory_id: string;
-    organization_id: string;
-    id: string;
-}): Promise<null> =>
-    submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
+export const addResourceToObservatory = ({ observatory_id, organization_id, id }: { observatory_id: string; organization_id: string; id: string }) =>
+    resourcesApi.put<void>(`${id}/observatory`, { json: { observatory_id, organization_id } }).json();
 
-export const getPapers = async ({
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    verified = null,
-    returnContent = false,
-}: {
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    verified?: boolean | null;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Resource> | Resource[]> => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
-        { page, size, sort, desc, verified },
-        {
-            skipNulls: true,
-        },
-    );
+export const markAsFeatured = (id: string) => resourcesApi.put<void>(`${id}/metadata/featured`).json();
 
-    const resources = await submitGetRequest(`${classesUrl}Paper/resources/?${params}`).then((res) => (returnContent ? res.content : res));
-    return resources;
-};
+export const removeFeaturedFlag = (id: string) => resourcesApi.delete<void>(`${id}/metadata/featured`).json();
 
-export const markAsFeatured = (id: string): Promise<null> =>
-    submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
+export const markAsUnlisted = (id: string) => resourcesApi.put<void>(`${id}/metadata/unlisted`).json();
 
-export const removeFeaturedFlag = (id: string): Promise<null> =>
-    submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
-
-export const markAsUnlisted = (id: string): Promise<null> =>
-    submitPutRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
-
-export const removeUnlistedFlag = (id: string): Promise<null> =>
-    submitDeleteRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
+export const removeUnlistedFlag = (id: string) => resourcesApi.delete<void>(`${id}/metadata/unlisted`).json();

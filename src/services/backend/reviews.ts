@@ -1,6 +1,6 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
+import backendApi from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import {
     CreatedByParam,
@@ -16,6 +16,8 @@ import {
 } from 'services/backend/types';
 
 export const reviewUrl = `${url}smart-reviews/`;
+export const reviewApi = backendApi.extend(() => ({ prefixUrl: reviewUrl }));
+const REVIEWS_CONTENT_TYPE = 'application/vnd.orkg.smart-review.v1+json';
 
 export const getReviews = ({
     page = 0,
@@ -29,15 +31,8 @@ export const getReviews = ({
     include_subfields,
     sdg,
     published,
-}: PaginationParams &
-    VerifiedParam &
-    VisibilityParam &
-    CreatedByParam &
-    PublishedParam &
-    SdgParam &
-    ObservatoryIdParam &
-    ResearchFieldIdParams): Promise<PaginatedResponse<Review>> => {
-    const params = prepareParams({
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & PublishedParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams) => {
+    const searchParams = prepareParams({
         page,
         size,
         sortBy,
@@ -50,5 +45,12 @@ export const getReviews = ({
         research_field,
         include_subfields,
     });
-    return submitGetRequest(`${reviewUrl}?${params}`);
+    return reviewApi
+        .get<PaginatedResponse<Review>>('', {
+            searchParams,
+            headers: {
+                Accept: REVIEWS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };

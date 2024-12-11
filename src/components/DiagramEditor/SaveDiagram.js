@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import { asyncLocalStorage } from 'utils';
 
 function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {

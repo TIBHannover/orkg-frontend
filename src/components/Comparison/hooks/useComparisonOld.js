@@ -6,7 +6,7 @@ import { isEmpty, uniq, without } from 'lodash';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getComparison, getThing } from 'services/similarity/index';
+import { getComparison, getThing } from 'services/simcomp/index';
 import {
     extendAndSortProperties,
     setComparisonId,

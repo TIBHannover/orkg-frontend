@@ -1,6 +1,6 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
+import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import {
     CreatedByParam,
@@ -19,6 +19,9 @@ import {
 } from 'services/backend/types';
 
 export const listsUrl = `${url}literature-lists/`;
+export const listsApi = backendApi.extend(() => ({ prefixUrl: listsUrl }));
+const LITERATURE_LISTS_CONTENT_TYPE = 'application/vnd.orkg.literature-list.v1+json';
+const LITERATURE_LISTS_SECTION_CONTENT_TYPE = 'application/vnd.orkg.literature-list-section.v1+json';
 
 export const getLiteratureLists = ({
     page = 0,
@@ -32,15 +35,8 @@ export const getLiteratureLists = ({
     observatory_id,
     sdg,
     published,
-}: PaginationParams &
-    VerifiedParam &
-    VisibilityParam &
-    CreatedByParam &
-    SdgParam &
-    PublishedParam &
-    ObservatoryIdParam &
-    ResearchFieldIdParams): Promise<PaginatedResponse<LiteratureList>> => {
-    const params = prepareParams({
+}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & PublishedParam & ObservatoryIdParam & ResearchFieldIdParams) => {
+    const searchParams = prepareParams({
         page,
         size,
         sortBy,
@@ -53,15 +49,28 @@ export const getLiteratureLists = ({
         research_field,
         include_subfields,
     });
-    return submitGetRequest(`${listsUrl}?${params}`);
+    return listsApi
+        .get<PaginatedResponse<LiteratureList>>('', {
+            searchParams,
+            headers: {
+                Accept: LITERATURE_LISTS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const getLiteratureListPublishedContentById = (listId: string, paperId: string): Promise<Paper | Resource> => {
-    return submitGetRequest(`${listsUrl}${listId}/published-contents/${paperId}`);
+export const getLiteratureListPublishedContentById = (listId: string, paperId: string) => {
+    return listsApi.get<Paper | Resource>(`${listId}/published-contents/${paperId}`).json();
 };
 
-export const getLiteratureList = (id: string): Promise<LiteratureList> => {
-    return submitGetRequest(`${listsUrl}${id}`);
+export const getLiteratureList = (id: string) => {
+    return listsApi
+        .get<LiteratureList>(id, {
+            headers: {
+                Accept: LITERATURE_LISTS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export type UpdateLiteratureListSectionList = {
@@ -78,22 +87,26 @@ export type UpdateLiteratureListParams = Partial<
     }
 >;
 
-export const updateLiteratureList = (id: string, data: UpdateLiteratureListParams): Promise<null> => {
-    return submitPutRequest(
-        `${listsUrl}${id}`,
-        {
-            'Content-Type': 'application/vnd.orkg.literature-list.v1+json',
-            Accept: 'application/vnd.orkg.literature-list.v1+json',
-        },
-        data,
-    );
+export const updateLiteratureList = (id: string, data: UpdateLiteratureListParams) => {
+    return listsApi
+        .put<void>(`${id}`, {
+            json: data,
+            headers: {
+                Accept: LITERATURE_LISTS_CONTENT_TYPE,
+                'Content-Type': LITERATURE_LISTS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
-export const deleteLiteratureListSection = ({ listId, sectionId }: { listId: string; sectionId: string }): Promise<null> => {
-    return submitDeleteRequest(`${listsUrl}${listId}/sections/${sectionId}`, {
-        'Content-Type': 'application/vnd.orkg.literature-list-section.v1+json',
-        Accept: 'application/vnd.orkg.literature-list-section.v1+json',
-    });
+export const deleteLiteratureListSection = ({ listId, sectionId }: { listId: string; sectionId: string }) => {
+    return listsApi
+        .delete<void>(`${listId}/sections/${sectionId}`, {
+            headers: {
+                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export const createLiteratureListSection = ({
@@ -104,19 +117,16 @@ export const createLiteratureListSection = ({
     listId: string;
     index: number;
     data: UpdateLiteratureListSectionList | UpdateLiteratureListSectionText;
-}): Promise<null> => {
-    return submitPostRequest(
-        `${listsUrl}${listId}/sections/${index}`,
-        {
-            'Content-Type': 'application/vnd.orkg.literature-list-section.v1+json',
-            Accept: 'application/vnd.orkg.literature-list-section.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+}) => {
+    return listsApi
+        .post<void>(`${listId}/sections/${index}`, {
+            json: data,
+            headers: {
+                'Content-Type': LITERATURE_LISTS_SECTION_CONTENT_TYPE,
+                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 };
 
 export const updateLiteratureListSection = ({
@@ -127,13 +137,14 @@ export const updateLiteratureListSection = ({
     listId: string;
     sectionId: string;
     data: Partial<UpdateLiteratureListSectionList | UpdateLiteratureListSectionText>;
-}): Promise<null> => {
-    return submitPutRequest(
-        `${listsUrl}${listId}/sections/${sectionId}`,
-        {
-            'Content-Type': 'application/vnd.orkg.literature-list-section.v1+json',
-            Accept: 'application/vnd.orkg.literature-list-section.v1+json',
-        },
-        data,
-    );
+}) => {
+    return listsApi
+        .put<void>(`${listId}/sections/${sectionId}`, {
+            json: data,
+            headers: {
+                'Content-Type': LITERATURE_LISTS_SECTION_CONTENT_TYPE,
+                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
+            },
+        })
+        .json();
 };

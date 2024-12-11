@@ -1,10 +1,11 @@
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { PaginatedResponse, TopContributor, Activity } from 'services/backend/types';
 
 export const statsUrl = `${url}stats/`;
+export const statsApi = backendApi.extend(() => ({ prefixUrl: statsUrl }));
 
 export type ResearchFieldStat = {
     id: string;
@@ -34,24 +35,34 @@ export type Statistics = {
     extras: { [key: string]: number };
 };
 
-export const getStats = (extra: string[] = []): Promise<Statistics> => submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
+export const getStats = (extra: string[] = []) =>
+    statsApi
+        .get<Statistics>('', {
+            searchParams: `extra=${extra.join(',')}`,
+        })
+        .json();
 
-export const getResearchFieldsStatsWithSubfields = (fieldId: string): Promise<ResearchFieldStat> =>
-    submitGetRequest(`${statsUrl}research-fields/${fieldId}?includeSubfields=true`);
+export const getResearchFieldsStatsWithSubfields = (fieldId: string) =>
+    statsApi
+        .get<ResearchFieldStat>(`research-fields/${fieldId}`, {
+            searchParams: 'includeSubfields=true',
+        })
+        .json();
 
 /**
  * Get statistics of an observatory by id
  * @param {Number} id Observatory id
  * @return {Object} Stats of observatory
  */
-export const getObservatoryStatsById = (
-    id: string,
-): Promise<{
-    observatory_id: string;
-    papers: number;
-    comparisons: number;
-    total: number;
-}> => submitGetRequest(`${statsUrl}observatories/${id}/`);
+export const getObservatoryStatsById = (id: string) =>
+    statsApi
+        .get<{
+            observatory_id: string;
+            papers: number;
+            comparisons: number;
+            total: number;
+        }>(`observatories/${id}`)
+        .json();
 
 /**
  * Get top contributors
@@ -80,9 +91,9 @@ export const getTopContributors = async ({
     sortBy?: string;
     desc?: boolean;
     subfields?: boolean;
-}): Promise<PaginatedResponse<TopContributor>> => {
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { page, size, sort, days },
         {
             skipNulls: true,
@@ -90,9 +101,17 @@ export const getTopContributors = async ({
     );
     let apiCall: PaginatedResponse<TopContributor>;
     if (researchFieldId) {
-        apiCall = await submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`);
+        apiCall = await statsApi
+            .get<PaginatedResponse<TopContributor>>(`research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors`, {
+                searchParams,
+            })
+            .json();
     } else {
-        apiCall = await submitGetRequest(`${statsUrl}top/contributors?${params}`);
+        apiCall = await statsApi
+            .get<PaginatedResponse<TopContributor>>(`top/contributors`, {
+                searchParams,
+            })
+            .json();
     }
 
     const uniqContributorsInfosRequests = apiCall.content.map((c) => getContributorInformationById(c.contributor).catch(() => null));
@@ -113,12 +132,16 @@ export const getChangelogs = ({
     researchFieldId?: string | null;
     page?: number;
     size?: number;
-}): Promise<PaginatedResponse<Activity>> => {
-    const params = qs.stringify(
+}) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog?${params}`);
+    return statsApi
+        .get<PaginatedResponse<Activity>>(`${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog`, {
+            searchParams,
+        })
+        .json();
 };

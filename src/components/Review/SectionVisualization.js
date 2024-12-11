@@ -5,7 +5,7 @@ import Visualization from 'libs/selfVisModel/RenderingComponents/GDCVisualizatio
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 
 const SectionVisualization = ({ id }) => {
     const [data, setData] = useState(null);

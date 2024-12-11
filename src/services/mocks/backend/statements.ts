@@ -5,7 +5,7 @@ import db from 'services/mocks/db';
 import { createMSWStatement, findEntityById } from 'services/mocks/helpers';
 
 const statements = [
-    http.get(`${statementsUrl}:id/bundle/`, ({ params }) => {
+    http.get(`${statementsUrl}:id/bundle`, ({ params }) => {
         const { id } = params as { id: string };
         if (!id) {
             throw new Error();

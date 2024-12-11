@@ -27,7 +27,7 @@ import {
     UncontrolledPopover,
 } from 'reactstrap';
 import { getVisualization, visualizationsUrl } from 'services/backend/visualizations';
-import { getThing, simCompServiceUrl } from 'services/similarity';
+import { getThing, simCompServiceUrl } from 'services/simcomp';
 import useSWR from 'swr';
 
 const ViewVisualizationModal = ({ isOpen, toggle, id }) => {

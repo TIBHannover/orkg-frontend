@@ -1,8 +1,8 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { url } from 'constants/misc';
-import { getCreatedIdFromHeaders, submitDeleteRequest, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
 import { prepareParams } from 'services/backend/misc';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import {
@@ -24,42 +24,45 @@ import {
 } from 'services/backend/types';
 
 export const papersUrl = `${url}papers/`;
+export const papersApi = backendApi.extend(() => ({ prefixUrl: papersUrl }));
+const PAPERS_CONTENT_TYPE = 'application/vnd.orkg.paper.v2+json';
+const CONTRIBUTIONS_CONTENT_TYPE = 'application/vnd.orkg.contribution.v2+json';
 
-export const getPaper = (id: string): Promise<Paper> =>
-    submitGetRequest(`${papersUrl}${id}`, {
-        'Content-Type': 'application/vnd.orkg.paper.v2+json',
-        Accept: 'application/vnd.orkg.paper.v2+json',
-    });
+export const getPaper = (id: string) =>
+    papersApi
+        .get<Paper>(id, {
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .json();
 
-export const updatePaper = (id: string, data: UpdatePaperParams): Promise<Paper> =>
-    submitPutRequest(
-        `${papersUrl}${id}`,
-        {
-            'Content-Type': 'application/vnd.orkg.paper.v2+json',
-            Accept: 'application/vnd.orkg.paper.v2+json',
-        },
-        data,
-    );
+export const updatePaper = (id: string, data: UpdatePaperParams) =>
+    papersApi
+        .put<Paper>(id, {
+            json: data,
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export const createPaper = (data: CreatePaperParams): Promise<string> =>
-    submitPostRequest(
-        `${papersUrl}`,
-        {
-            'Content-Type': 'application/vnd.orkg.paper.v2+json',
-            Accept: 'application/vnd.orkg.paper.v2+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header
+    papersApi
+        .post<void>('', {
+            json: data,
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const markAsVerified = (id: string): Promise<null> =>
-    submitPutRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
+export const markAsVerified = (id: string) => papersApi.put<void>(`${id}/metadata/verified`).json();
 
-export const markAsUnverified = (id: string): Promise<null> =>
-    submitDeleteRequest(`${papersUrl}${id}/metadata/verified`, { 'Content-Type': 'application/json' });
+export const markAsUnverified = (id: string) => papersApi.delete<void>(`${id}/metadata/verified`).json();
 
 export const getOriginalPaperId = (paperId: string) => {
     const getPaperId = async (id: string): Promise<string> => {
@@ -87,38 +90,53 @@ export const getPapersLinkedToResource = async ({
 }: {
     id: string;
     returnContent?: boolean;
-} & PaginationParams): Promise<
-    PaginatedResponse<
-        Resource & {
-            path: Resource[][];
-        }
-    >
-> => {
+} & PaginationParams) => {
     const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { linkedTo: id, page, size },
         {
             skipNulls: true,
         },
     );
 
-    const resources = await submitGetRequest(`${papersUrl}?${params}`).then((res) => (returnContent ? res.content : res));
+    const resources = await papersApi
+        .get<
+            PaginatedResponse<
+                Resource & {
+                    path: Resource[][];
+                }
+            >
+        >('', {
+            searchParams,
+        })
+        .json()
+        .then((res) => (returnContent ? res.content : res));
     return resources;
 };
 
 export const getPaperByDoi = async (doi: string): Promise<Paper | null> => {
-    const papers: PaginatedResponse<Paper> = await submitGetRequest(`${papersUrl}?doi=${encodeURIComponent(doi)}`, {
-        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.paper.v2+json',
-    });
+    const papers = await papersApi
+        .get<PaginatedResponse<Paper>>('', {
+            searchParams: encodeURIComponent(doi),
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .json();
     return papers.content[0] ?? null;
 };
 
 export const getPaperByTitle = async (title: string): Promise<Paper | null> => {
-    const papers: PaginatedResponse<Paper> = await submitGetRequest(`${papersUrl}?title=${encodeURIComponent(title)}&exact=true`, {
-        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.paper.v2+json',
-    });
+    const papers = await papersApi
+        .get<PaginatedResponse<Paper>>('', {
+            searchParams: `title=${encodeURIComponent(title)}&exact=true`,
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .json();
     return papers.content?.[0] ?? null;
 };
 
@@ -133,14 +151,28 @@ export const getPapers = ({
     research_field,
     include_subfields,
     sdg,
-}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams): Promise<
-    PaginatedResponse<Paper>
-> => {
-    const params = prepareParams({ page, size, sortBy, verified, visibility, created_by, observatory_id, sdg, research_field, include_subfields });
-    return submitGetRequest(`${papersUrl}?${params}`, {
-        'Content-Type': 'application/vnd.orkg.paper.v2+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.paper.v2+json',
+}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams) => {
+    const searchParams = prepareParams({
+        page,
+        size,
+        sortBy,
+        verified,
+        visibility,
+        created_by,
+        observatory_id,
+        sdg,
+        research_field,
+        include_subfields,
     });
+    return papersApi
+        .get<PaginatedResponse<Paper>>('', {
+            searchParams,
+            headers: {
+                'Content-Type': PAPERS_CONTENT_TYPE,
+                Accept: PAPERS_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 type CreateContributionParams = {
@@ -150,16 +182,13 @@ type CreateContributionParams = {
     } & CreateContribution;
 };
 
-export const createContribution = ({ paperId, contributionStatements }: CreateContributionParams): Promise<string> =>
-    submitPostRequest(
-        `${papersUrl}${paperId}/contributions`,
-        {
-            'Content-Type': 'application/vnd.orkg.contribution.v2+json',
-            Accept: 'application/vnd.orkg.contribution.v2+json',
-        },
-        contributionStatements,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers));
+export const createContribution = ({ paperId, contributionStatements }: CreateContributionParams) =>
+    papersApi
+        .post<void>(`${paperId}/contributions`, {
+            json: contributionStatements,
+            headers: {
+                'Content-Type': CONTRIBUTIONS_CONTENT_TYPE,
+                Accept: CONTRIBUTIONS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));

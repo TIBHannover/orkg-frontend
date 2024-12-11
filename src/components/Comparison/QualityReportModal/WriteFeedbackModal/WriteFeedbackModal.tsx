@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import { RootStore } from 'slices/types';
 
 type WriteFeedbackModalProps = {

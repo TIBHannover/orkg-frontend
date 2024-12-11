@@ -11,7 +11,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import { Statement } from 'services/backend/types';
 

@@ -1,12 +1,12 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import { ALL_CONTENT_TYPES_ID, url as baseUrl } from 'constants/misc';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { getComparisons } from 'services/backend/comparisons';
 import { getLiteratureLists } from 'services/backend/literatureLists';
 import { mergePaginateResponses, prepareParams } from 'services/backend/misc';
-import { observatoriesUrl } from 'services/backend/observatories';
+import { observatoriesApi } from 'services/backend/observatories';
 import { getPaper, getPapers } from 'services/backend/papers';
 import { getResources } from 'services/backend/resources';
 import { getReviews } from 'services/backend/reviews';
@@ -30,6 +30,7 @@ import {
 import { getVisualizations } from 'services/backend/visualizations';
 
 export const contentTypesUrl = `${baseUrl}content-types/`;
+export const contentTypesApi = backendApi.extend(() => ({ prefixUrl: contentTypesUrl }));
 
 export type GetContentParams = {
     filter_config?: FilterConfig[];
@@ -61,7 +62,7 @@ export const getGenericContentTypes = ({
     research_field,
     include_subfields,
     sdg,
-}: { classes: string[] } & GetContentParams): Promise<PaginatedResponse<Item>> => {
+}: { classes: string[] } & GetContentParams) => {
     const params = prepareParams({
         page,
         size,
@@ -75,9 +76,11 @@ export const getGenericContentTypes = ({
         sdg,
         include_subfields,
     });
-    return submitGetRequest(`${contentTypesUrl}?${params}&classes=${classes.join(',')}`, {
-        'Content-Type': 'Content-Type: application/json;charset=UTF-8',
-    });
+    return contentTypesApi
+        .get<PaginatedResponse<Item>>('', {
+            searchParams: `?${params}&classes=${classes.join(',')}`,
+        })
+        .json();
 };
 
 const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, 'contentType'>) => {
@@ -92,12 +95,11 @@ const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, '
                 return getPapers(paramsObj);
             }
             if (paramsObj.observatory_id) {
-                const result = await submitGetRequest(
-                    `${observatoriesUrl}${encodeURIComponent(paramsObj.observatory_id)}/papers?${qs.stringify(
-                        { ...paramsObj, filter_config: JSON.stringify(paramsObj.filter_config) },
-                        { skipNulls: true },
-                    )}`,
-                );
+                const result = await observatoriesApi
+                    .get<any>(`${encodeURIComponent(paramsObj.observatory_id)}/papers`, {
+                        searchParams: qs.stringify({ ...paramsObj, filter_config: JSON.stringify(paramsObj.filter_config) }, { skipNulls: true }),
+                    })
+                    .json();
                 const papers = await Promise.all(result.content.map((p: Resource) => getPaper(p.id)));
                 return { ...result, content: papers };
             }

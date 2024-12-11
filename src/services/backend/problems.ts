@@ -1,41 +1,39 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
-import { submitGetRequest } from 'network';
 import qs from 'qs';
+import backendApi from 'services/backend/backendApi';
 import { Contributor, PaginatedResponse, Resource } from 'services/backend/types';
 
 export const problemsUrl = `${url}problems/`;
+export const problemsApi = backendApi.extend(() => ({ prefixUrl: problemsUrl }));
 
-export const getResearchFieldsByResearchProblemId = (
-    problemId: string,
-): Promise<
-    {
-        field: Resource;
-        freq: number;
-    }[]
-> => submitGetRequest(`${problemsUrl}${encodeURIComponent(problemId)}/fields`);
+export const getResearchFieldsByResearchProblemId = (problemId: string) =>
+    problemsApi
+        .get<
+            {
+                field: Resource;
+                freq: number;
+            }[]
+        >(`${encodeURIComponent(problemId)}/fields`)
+        .json();
 
-export const getContributorsByResearchProblemId = ({
-    id,
-    page = 0,
-    size = 9999,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-}): Promise<
-    {
-        user: Contributor;
-        contributions: number;
-    }[]
-> => {
-    const params = qs.stringify(
+export const getContributorsByResearchProblemId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/users?${params}`);
+    return problemsApi
+        .get<
+            {
+                user: Contributor;
+                contributions: number;
+            }[]
+        >(`${encodeURIComponent(id)}/users`, {
+            searchParams,
+        })
+        .json();
 };
 
 export type ResearchProblemTopAuthor = {
@@ -45,22 +43,18 @@ export type ResearchProblemTopAuthor = {
     papers: number;
 };
 
-export const getAuthorsByResearchProblemId = ({
-    id,
-    page = 0,
-    size = 9999,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-}): Promise<PaginatedResponse<ResearchProblemTopAuthor>> => {
-    const params = qs.stringify(
+export const getAuthorsByResearchProblemId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
+    const searchParams = qs.stringify(
         { page, size },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
+    return problemsApi
+        .get<PaginatedResponse<ResearchProblemTopAuthor>>(`${encodeURIComponent(id)}/authors`, {
+            searchParams,
+        })
+        .json();
 };
 
 export const getContentByResearchProblemIdAndClasses = ({
@@ -79,24 +73,28 @@ export const getContentByResearchProblemIdAndClasses = ({
     desc?: boolean;
     visibility?: string;
     classes?: string[];
-}): Promise<
-    PaginatedResponse<{
-        id: string;
-        label: string;
-        created_at: string;
-        featured: boolean;
-        unlisted: boolean;
-        classes: string[];
-        created_by: string;
-    }>
-> => {
+}) => {
     // Sort is not supported in this endpoint
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = qs.stringify(
+    const searchParams = qs.stringify(
         { page, size, sort, visibility, classes: classes.join(',') },
         {
             skipNulls: true,
         },
     );
-    return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/?${params}`);
+    return problemsApi
+        .get<
+            PaginatedResponse<{
+                id: string;
+                label: string;
+                created_at: string;
+                featured: boolean;
+                unlisted: boolean;
+                classes: string[];
+                created_by: string;
+            }>
+        >(encodeURIComponent(id), {
+            searchParams,
+        })
+        .json();
 };

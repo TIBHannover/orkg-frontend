@@ -9,7 +9,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { memo, useEffect, useState } from 'react';
 import { getStatements } from 'services/backend/statements';
-import { getThing } from 'services/similarity';
+import { getThing } from 'services/simcomp';
 import styled from 'styled-components';
 
 const ResourceItem = styled.div`

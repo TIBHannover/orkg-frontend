@@ -1,8 +1,9 @@
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest } from 'network';
+import backendApi from 'services/backend/backendApi';
 import { ConferenceSeries, PaginatedResponse } from 'services/backend/types';
 
 export const conferenceSeriesUrl = `${url}conference-series/`;
+export const conferenceSeriesApi = backendApi.extend(() => ({ prefixUrl: conferenceSeriesUrl }));
 
 export const createConference = (
     organization_id: string,
@@ -13,12 +14,11 @@ export const createConference = (
         start_date: string;
         review_type: string;
     },
-): Promise<ConferenceSeries> =>
-    submitPostRequest(`${conferenceSeriesUrl}`, { 'Content-Type': 'application/json' }, { organization_id, name, display_id, url, metadata });
+) => conferenceSeriesApi.post<ConferenceSeries>('', { json: { organization_id, name, display_id, url, metadata } }).json();
 
-export const getConferencesSeries = (): Promise<PaginatedResponse<ConferenceSeries>> => submitGetRequest(`${conferenceSeriesUrl}`);
+export const getConferencesSeries = () => conferenceSeriesApi.get<PaginatedResponse<ConferenceSeries>>('').json();
 
-export const getSeriesListByConferenceId = (id: string): Promise<PaginatedResponse<ConferenceSeries>> =>
-    submitGetRequest(`${conferenceSeriesUrl}${encodeURIComponent(id)}/series`);
+export const getSeriesListByConferenceId = (id: string) =>
+    conferenceSeriesApi.get<PaginatedResponse<ConferenceSeries>>(`${encodeURIComponent(id)}/series`).json();
 
-export const getConferenceById = (id: string): Promise<ConferenceSeries> => submitGetRequest(`${conferenceSeriesUrl}${encodeURIComponent(id)}/`);
+export const getConferenceById = (id: string) => conferenceSeriesApi.get<ConferenceSeries>(encodeURIComponent(id)).json();

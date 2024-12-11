@@ -27,7 +27,7 @@ import {
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
 } from 'services/backend/statements';
-import { createThing } from 'services/similarity';
+import { createThing } from 'services/simcomp';
 import {
     convertAuthorsToNewFormat,
     convertAuthorsToOldFormat,

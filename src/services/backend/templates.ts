@@ -1,8 +1,8 @@
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { url } from 'constants/misc';
 import { uniqBy } from 'lodash';
-import { getCreatedIdFromHeaders, submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import qs from 'qs';
+import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
 import {
     CreatedByParam,
     CreateTemplateParams,
@@ -17,36 +17,39 @@ import {
 } from 'services/backend/types';
 
 export const templatesUrl = `${url}templates/`;
+export const templatesApi = backendApi.extend(() => ({ prefixUrl: templatesUrl }));
+const TEMPLATE_CONTENT_TYPE = 'application/vnd.orkg.template.v1+json';
 
-export const getTemplate = (id: string): Promise<Template> =>
-    submitGetRequest(`${templatesUrl}${id}`, {
-        'Content-Type': 'application/vnd.orkg.template.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.template.v1+json',
-    });
+export const getTemplate = (id: string) =>
+    templatesApi
+        .get<Template>(id, {
+            headers: {
+                Accept: TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 
-export const createTemplate = (data: CreateTemplateParams): Promise<Template> =>
-    submitPostRequest(
-        `${templatesUrl}`,
-        {
-            'Content-Type': 'application/vnd.orkg.template.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.template.v1+json',
-        },
-        data,
-        true,
-        true,
-        true,
-        true,
-    ).then(({ headers }) => getCreatedIdFromHeaders(headers)); // get the id from the location header;
+export const createTemplate = (data: CreateTemplateParams) =>
+    templatesApi
+        .post<Template>('', {
+            json: data,
+            headers: {
+                'Content-Type': TEMPLATE_CONTENT_TYPE,
+                Accept: TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const updateTemplate = (id: string, data: UpdateTemplateParams): Promise<Template> =>
-    submitPutRequest(
-        `${templatesUrl}${id}`,
-        {
-            'Content-Type': 'application/vnd.orkg.template.v1+json;charset=UTF-8',
-            Accept: 'application/vnd.orkg.template.v1+json',
-        },
-        data,
-    );
+export const updateTemplate = (id: string, data: UpdateTemplateParams) =>
+    templatesApi
+        .put<Template>(id, {
+            json: data,
+            headers: {
+                'Content-Type': TEMPLATE_CONTENT_TYPE,
+                Accept: TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 
 export type getTemplatesParams = {
     q?: string | null;
@@ -78,8 +81,8 @@ export const getTemplates = ({
     size = 999,
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: getTemplatesParams): Promise<PaginatedResponse<Template>> => {
-    const params = qs.stringify(
+}: getTemplatesParams) => {
+    const searchParams = qs.stringify(
         {
             page,
             size,
@@ -102,10 +105,14 @@ export const getTemplates = ({
         },
     );
 
-    return submitGetRequest(`${templatesUrl}?${params}`, {
-        'Content-Type': 'application/vnd.orkg.template.v1+json;charset=UTF-8',
-        Accept: 'application/vnd.orkg.template.v1+json',
-    });
+    return templatesApi
+        .get<PaginatedResponse<Template>>('', {
+            searchParams,
+            headers: {
+                Accept: TEMPLATE_CONTENT_TYPE,
+            },
+        })
+        .json();
 };
 
 export const getFeaturedTemplates = async ({
