@@ -382,7 +382,13 @@ const ComparisonHeaderMenu = () => {
             {showPublishDialog && <Publish toggle={() => setShowPublishDialog((v) => !v)} />}
 
             {showLatexDialog && <ExportToLatex toggle={() => setShowLatexDialog((v) => !v)} />}
-            {showExportCitationsDialog && <ExportCitation toggle={() => setShowExportCitationsDialog((v) => !v)} />}
+            {showExportCitationsDialog && (
+                <ExportCitation
+                    toggle={() => setShowExportCitationsDialog((v) => !v)}
+                    showDialog={showExportCitationsDialog}
+                    DOI={comparison?.identifiers?.doi?.[0] ?? ''}
+                />
+            )}
             <SelectProperties showPropertiesDialog={showPropertiesDialog} togglePropertiesDialog={() => setShowPropertiesDialog((v) => !v)} />
             {isOpenTopAuthorsModal && <ComparisonAuthorsModel comparisonId={comparison.id} toggle={() => setIsOpenTopAuthorsModal((v) => !v)} />}
             {isOpenQualityReportModal && <QualityReportModal toggle={() => setIsOpenQualityReportModal((v) => !v)} />}

@@ -1,6 +1,5 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useComparison from 'components/Comparison/hooks/useComparison';
 import { zipObject } from 'lodash';
 import { FC, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -24,20 +23,18 @@ const CITATION_STYLES = [
 
 type ExportCitationProps = {
     toggle: () => void;
+    showDialog: boolean;
+    DOI: string;
 };
 
-const ExportCitation: FC<ExportCitationProps> = ({ toggle }) => {
+const ExportCitation: FC<ExportCitationProps> = ({ toggle, showDialog, DOI }) => {
     const [selectedTab, setSelectedTab] = useState('APA');
     const [citations, setCitations] = useState<{ [key: string]: string }>({});
-
-    const { comparison } = useComparison();
 
     const getCitation = () => {
         Promise.all(
             CITATION_STYLES.map((s) =>
-                getCitationByDOI(comparison?.identifiers?.doi?.[0], s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(
-                    () => 'Failed to load citation',
-                ),
+                getCitationByDOI(DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(() => 'Failed to load citation'),
             ),
         ).then((citations) => {
             setCitations(
@@ -51,7 +48,7 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle }) => {
 
     return (
         <Modal
-            isOpen
+            isOpen={showDialog}
             toggle={toggle}
             size="lg"
             onOpened={() => {
