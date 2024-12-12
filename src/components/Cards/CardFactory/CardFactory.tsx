@@ -6,7 +6,18 @@ import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
 import { ChangeEvent, FC } from 'react';
-import { Comparison, Item, LiteratureList, Paper, Review, Template, Visualization, RosettaStoneTemplate } from 'services/backend/types';
+import {
+    Comparison,
+    Item,
+    LiteratureList,
+    Paper,
+    Review,
+    Template,
+    Visualization,
+    RosettaStoneTemplate,
+    RosettaStoneStatement,
+} from 'services/backend/types';
+import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 
 type CardFactoryProps = {
     item: Item;
@@ -46,6 +57,9 @@ const CardFactory: FC<CardFactoryProps> = ({ item, showBadge, showCurationFlags,
     }
     if (item._class === 'template') {
         return <TemplateCard template={item as Template} showBadge={showBadge} />;
+    }
+    if ('context' in item) {
+        return <SingleStatement showContext key={item.id} statement={item as RosettaStoneStatement} />;
     }
     if ('example_usage' in item) {
         return <RSTemplateCard template={item as RosettaStoneTemplate} showBadge={showBadge} />;

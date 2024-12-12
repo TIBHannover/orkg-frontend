@@ -816,4 +816,4 @@ export type ApiError = {
 
 export type Item = {
     _class: string;
-} & (Paper | Comparison | LiteratureList | Visualization | Review | Template | Resource | RosettaStoneTemplate);
+} & (Paper | Comparison | LiteratureList | Visualization | Review | Template | Resource | RosettaStoneTemplate | RosettaStoneStatement);
