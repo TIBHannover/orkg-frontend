@@ -766,6 +766,10 @@ export type OrganizationIdParam = {
     organization_id?: string;
 };
 
+export type AuthorIdParam = {
+    author_id?: string;
+};
+
 export type ResearchFieldIdParams = {
     research_field?: string;
     include_subfields?: boolean;

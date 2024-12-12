@@ -9,11 +9,14 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 
-const AuthorHeader = ({ authorId }) => {
+type AuthorHeaderProps = {
+    authorId: string;
+};
+
+const AuthorHeader: FC<AuthorHeaderProps> = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
@@ -163,10 +166,6 @@ const AuthorHeader = ({ authorId }) => {
             )}
         </>
     );
-};
-
-AuthorHeader.propTypes = {
-    authorId: PropTypes.string.isRequired,
 };
 
 export default AuthorHeader;
