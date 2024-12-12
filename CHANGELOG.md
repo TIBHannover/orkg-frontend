@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.1...v0.154.2) - 2024-12-12
+
+### Changes
+
+- fix: export citation modal [`#1447`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1447)
+- refactor: use ky for network requests [`#1418`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1418)
+
+---
 ## [v0.154.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.0...v0.154.1) - 2024-12-10
 
 ### Changes
