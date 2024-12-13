@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.2...v0.154.3) - 2024-12-13
+
+### Changes
+
+- fix: get paper by doi [`#1450`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1450)
+- refactor: prevent mounting modals when not needed [`#1449`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1449)
+
+---
 ## [v0.154.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.1...v0.154.2) - 2024-12-12
 
 ### Changes
