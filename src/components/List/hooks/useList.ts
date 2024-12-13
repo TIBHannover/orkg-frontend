@@ -1,11 +1,7 @@
-import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import useParams from 'components/useParams/useParams';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
-import THING_TYPES from 'constants/thingTypes';
+import { CLASSES, MISC } from 'constants/graphSettings';
 import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
-import { toast } from 'react-toastify';
-import { createLiteral } from 'services/backend/literals';
 import {
     createLiteratureListSection,
     deleteLiteratureListSection,
@@ -20,8 +16,6 @@ import {
 import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
 import { getOrganization, organizationsUrl } from 'services/backend/organizations';
 import { getPaper, papersUrl } from 'services/backend/papers';
-import { createResource } from 'services/backend/resources';
-import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
 import {
     LiteratureList,
     LiteratureListSectionList,
@@ -30,10 +24,8 @@ import {
     Organization,
     Paper,
 } from 'services/backend/types';
-import { createThing } from 'services/simcomp';
 import useSWR from 'swr';
 import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
-import { convertAuthorsToOldFormat } from 'utils';
 
 const useList = (listId?: string) => {
     let { id } = useParams<{ id: string }>();
@@ -189,48 +181,6 @@ const useList = (listId?: string) => {
 
     const allPapers = list && list.published ? papersPublished : papers;
 
-    const publishList = async ({ updateMessage }: { updateMessage: string }) => {
-        try {
-            const { statements } = await getStatementsBundleBySubject({
-                id,
-                blacklist: [CLASSES.RESEARCH_FIELD],
-            });
-            if (!statements || statements.length === 0) {
-                throw new Error('No statements found for the list');
-            }
-            const listTitle = statements.find((statement) => statement.subject.id === id)?.subject.label ?? '';
-            const versionResource = await createResource(listTitle, [CLASSES.LITERATURE_LIST_PUBLISHED]);
-            const updateMessageLiteral = await createLiteral(updateMessage);
-            await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
-            await createResourceStatement(id, PREDICATES.HAS_PUBLISHED_VERSION, versionResource.id);
-
-            // assign additional metadata to the published version
-            if (list?.sdgs && list?.sdgs.length > 0) {
-                for (const sdg of list.sdgs) {
-                    createResourceStatement(versionResource.id, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, sdg.id);
-                }
-            }
-            if (list?.research_fields && list?.research_fields.length > 0) {
-                createResourceStatement(versionResource.id, PREDICATES.HAS_RESEARCH_FIELD, list?.research_fields?.[0].id);
-            }
-            if (list?.authors && list?.authors.length > 0) {
-                await createAuthorsList({ resourceId: versionResource.id, authors: convertAuthorsToOldFormat(list.authors) });
-            }
-
-            // @ts-expect-error awaiting TS migration
-            await createThing({ thingType: THING_TYPES.LIST, thingKey: versionResource.id, data: { rootResource: id, statements } });
-
-            mutate();
-
-            toast.success('List published successfully');
-            return versionResource.id;
-        } catch (e) {
-            toast.error('An error occurred when publishing the list');
-            console.error(e);
-            return null;
-        }
-    };
-
     const { onErrorRetry } = useSWRConfig();
 
     const { data: organization } = useSWR(
@@ -267,7 +217,6 @@ const useList = (listId?: string) => {
         allPapers,
         getPaperById,
         mutatePapers,
-        publishList,
         createSection,
         deleteSection,
         isValidating,

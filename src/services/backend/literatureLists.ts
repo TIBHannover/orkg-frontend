@@ -148,3 +148,20 @@ export const updateLiteratureListSection = ({
         })
         .json();
 };
+
+export const publishList = (
+    listId: string,
+    data: {
+        changelog: string;
+    },
+) => {
+    return listsApi
+        .post<void>(`${listId}/publish`, {
+            json: data,
+            headers: {
+                'Content-Type': LITERATURE_LISTS_CONTENT_TYPE,
+                Accept: LITERATURE_LISTS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+};
