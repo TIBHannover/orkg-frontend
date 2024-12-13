@@ -117,7 +117,7 @@ export const getPapersLinkedToResource = async ({
 export const getPaperByDoi = async (doi: string): Promise<Paper | null> => {
     const papers = await papersApi
         .get<PaginatedResponse<Paper>>('', {
-            searchParams: encodeURIComponent(doi),
+            searchParams: `doi=${encodeURIComponent(doi)}`,
             headers: {
                 'Content-Type': PAPERS_CONTENT_TYPE,
                 Accept: PAPERS_CONTENT_TYPE,
