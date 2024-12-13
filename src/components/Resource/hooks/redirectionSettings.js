@@ -23,6 +23,11 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.COMPARISON,
         routeParams: 'comparisonId',
     },
+    [CLASSES.COMPARISON_PUBLISHED]: {
+        label: 'Comparison',
+        route: ROUTES.COMPARISON,
+        routeParams: 'comparisonId',
+    },
     [CLASSES.AUTHOR]: {
         label: 'Author',
         route: ROUTES.AUTHOR_PAGE,
@@ -72,6 +77,11 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.ROSETTA_STONE_STATEMENT]: {
         label: 'Statement',
         route: ROUTES.RS_STATEMENT,
+        routeParams: 'id',
+    },
+    [CLASSES.ROSETTA_NODE_SHAPE]: {
+        label: 'Statement type',
+        route: ROUTES.RS_TEMPLATE,
         routeParams: 'id',
     },
 };
