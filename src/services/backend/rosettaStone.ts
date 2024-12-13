@@ -104,7 +104,7 @@ export const deleteRSTemplate = (id: string) =>
 
 export const getRSStatement = (id: string): Promise<RosettaStoneStatement> =>
     rosettaStoneApi
-        .delete<void>(`statements/${id}`, {
+        .get<RosettaStoneStatement>(`statements/${id}`, {
             headers: {
                 Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
             },
