@@ -1,4 +1,5 @@
 import AutocompleteProvider, { useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
+import CustomMultiValueLabel from 'components/Autocomplete/CustomComponents/CustomMultiValueLabel';
 import Input from 'components/Autocomplete/CustomComponents/Input';
 import Menu from 'components/Autocomplete/CustomComponents/Menu';
 import { Option as CustomOption } from 'components/Autocomplete/CustomComponents/Option';
@@ -61,6 +62,13 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
 
     const [defaultValue, setValue] = useState<OptionType[] | OptionType | null>(null);
 
+    let localValue = value;
+    if (defaultValueId) {
+        localValue = defaultValue;
+    } else if (isMulti && fixedOptions?.length) {
+        localValue = (value as OptionType[])?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
+    }
+
     useEffect(() => {
         const loadNode = async () => {
             if (defaultValueId && !value && !isMulti) {
@@ -90,7 +98,9 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         includeClasses,
         excludeClasses,
         enableExternalSources,
-        additionalOptions,
+        additionalOptions: localValue
+            ? [...(Array.isArray(localValue) ? localValue : [localValue]), ...(additionalOptions ?? [])]
+            : additionalOptions,
     });
 
     const noOptionsMessage = (value: { inputValue: string }) => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
@@ -100,20 +110,13 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         onOntologySelectorModalStatusChange?.(isOntologySelectorIsOpen);
     }, [onOntologySelectorModalStatusChange, isOntologySelectorIsOpen]);
 
-    let localValue = value;
-    if (defaultValueId) {
-        localValue = defaultValue;
-    } else if (isMulti && fixedOptions?.length) {
-        localValue = (value as OptionType[])?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
-    }
-
     return (
         <>
             <SelectGlobalStyle />
             <Select<OptionType, GroupBase<OptionType>, AdditionalType, IsMulti>
                 {...restProps}
                 // to clear the cached options if the selected ontologies changes
-                key={JSON.stringify(selectedOntologies.map((o) => o.id))}
+                key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(localValue)}
                 instanceId={useId()}
                 styles={customStyles}
                 classNames={customClassNames}
@@ -126,6 +129,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                     Menu,
                     Option: CustomOption,
                     Input,
+                    MultiValueLabel: CustomMultiValueLabel,
                 }}
                 value={localValue}
                 getOptionValue={({ id }) => id}
