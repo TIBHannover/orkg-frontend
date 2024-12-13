@@ -23,11 +23,10 @@ const CITATION_STYLES = [
 
 type ExportCitationProps = {
     toggle: () => void;
-    showDialog: boolean;
     DOI: string;
 };
 
-const ExportCitation: FC<ExportCitationProps> = ({ toggle, showDialog, DOI }) => {
+const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
     const [selectedTab, setSelectedTab] = useState('APA');
     const [citations, setCitations] = useState<{ [key: string]: string }>({});
 
@@ -48,7 +47,7 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, showDialog, DOI }) =>
 
     return (
         <Modal
-            isOpen={showDialog}
+            isOpen
             toggle={toggle}
             size="lg"
             onOpened={() => {

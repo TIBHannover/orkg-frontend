@@ -42,7 +42,7 @@ const SelectProperties = (props) => {
     };
 
     return (
-        <Modal isOpen={props.showPropertiesDialog} toggle={props.togglePropertiesDialog}>
+        <Modal isOpen toggle={props.togglePropertiesDialog}>
             <GlobalStyle />
             <ModalHeader toggle={props.togglePropertiesDialog}>Select properties</ModalHeader>
             <ModalBody>
@@ -78,7 +78,6 @@ const SelectProperties = (props) => {
 };
 
 SelectProperties.propTypes = {
-    showPropertiesDialog: PropTypes.bool.isRequired,
     togglePropertiesDialog: PropTypes.func.isRequired,
 };
 
