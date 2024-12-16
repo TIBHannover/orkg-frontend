@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.3...v0.154.4) - 2024-12-16
+
+### Changes
+
+- fix: set correct prefixUrl for objects endpoint [`#1456`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1456)
+- fix(Resource): add missing 'Comparison view' link for published comparisons [`#1452`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1452)
+
+---
 ## [v0.154.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.2...v0.154.3) - 2024-12-13
 
 ### Changes
