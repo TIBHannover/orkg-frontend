@@ -24,6 +24,8 @@ import { mergeAlternate } from 'utils';
 
 export const doisUrl = `${url}dois/`;
 export const doisApi = backendApi.extend(() => ({ prefixUrl: doisUrl }));
+export const objectsUrl = `${url}objects/`;
+export const objectsApi = backendApi.extend(() => ({ prefixUrl: objectsUrl }));
 
 export const generateDoi = ({
     type,
@@ -50,7 +52,7 @@ export const generateDoi = ({
         .post<{ doi: string }>('', { json: { type, resource_type, resource_id, title, subject, description, related_resources, authors, url } })
         .json();
 
-export const createObject = (payload: object) => backendApi.post<Resource>('objects', { json: payload }).json();
+export const createObject = (payload: object) => objectsApi.post<Resource>('', { json: payload }).json();
 
 export const getEntities = (
     entityType: string,
