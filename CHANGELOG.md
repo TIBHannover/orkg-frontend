@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.154.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.4...v0.154.5) - 2024-12-17
+
+### Changes
+
+- fix: update the comparison when a contribution is added or removed from the contribution editor [`#1455`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1455)
+
+---
 ## [v0.154.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.3...v0.154.4) - 2024-12-16
 
 ### Changes
