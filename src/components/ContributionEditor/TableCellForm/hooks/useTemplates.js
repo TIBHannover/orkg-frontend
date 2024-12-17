@@ -148,7 +148,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
         featuredTemplates: differenceBy(featuredTemplates?.[0] ?? [], usedTemplates, 'id'),
         // Hide the delete button for contribution template
-        usedTemplates: usedTemplates.filter((t) => t?.classId !== CLASSES.CONTRIBUTION),
+        usedTemplates: usedTemplates?.filter((t) => t?.classId !== CLASSES.CONTRIBUTION) ?? [],
         isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,

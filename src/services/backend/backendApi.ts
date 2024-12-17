@@ -2,6 +2,7 @@ import ky from 'ky';
 import { getToken, isLoggedIn } from 'services/keycloak';
 
 const backendApi = ky.create({
+    timeout: 1000 * 60 * 10, // 10 minutes
     hooks: {
         beforeRequest: [
             async (request) => {
