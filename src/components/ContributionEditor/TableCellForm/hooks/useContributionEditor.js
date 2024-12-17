@@ -1,14 +1,15 @@
+import useComparison from 'components/Comparison/hooks/useComparison';
 import Confirm from 'components/Confirmation/Confirmation';
 import TableCell from 'components/ContributionEditor/TableCell';
 import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
 import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';
 import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import ROUTES from 'constants/routes';
 import { difference, intersection, sortBy, uniq, without } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { getResource, updateResourceClasses } from 'services/backend/resources';
 import { getTemplates } from 'services/backend/templates';
@@ -23,6 +24,7 @@ const useContributionEditor = () => {
     }, [searchParams]);
 
     const comparisonId = searchParams.get('comparisonId');
+    const { comparison, updateComparison } = useComparison(comparisonId);
 
     const handleAddContributions = async (ids) => {
         // get the list of current common classes
@@ -66,14 +68,38 @@ const useContributionEditor = () => {
                 }
             }
         }
+        if (comparison && comparisonId) {
+            updateComparison({
+                contributions: [
+                    ...comparison.contributions,
+                    ...ids.map((id) => ({
+                        id,
+                        label: '',
+                    })),
+                ],
+                config: {
+                    ...comparison.config,
+                    contributions: [...comparison.config.contributions, ...ids],
+                },
+            });
+        }
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
         router.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${comparisonId ? `&comparisonId=${comparisonId}` : ''}`);
     };
 
-    const handleRemoveContribution = (id) => {
+    const handleRemoveContribution = async (id) => {
         const idsQueryString = getContributionIds()
             .filter((_id) => _id !== id)
             .join(',');
+        if (comparisonId) {
+            updateComparison({
+                contributions: comparison.contributions.filter((c) => c.id !== id),
+                config: {
+                    ...comparison.config,
+                    contributions: comparison.config.contributions.filter((contributionId) => contributionId !== id),
+                },
+            });
+        }
         router.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${comparisonId ? `&comparisonId=${comparisonId}` : ''}`);
     };
 
