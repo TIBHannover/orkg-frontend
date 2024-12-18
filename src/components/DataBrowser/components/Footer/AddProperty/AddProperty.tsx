@@ -122,10 +122,7 @@ const AddProperty = () => {
                     label={inputValue}
                     onCreate={(value) => addProperty(value as Predicate)}
                     isOpen={isModalOpen}
-                    toggle={() => {
-                        setIsModalOpen((v) => !v);
-                        setShowAdd(false);
-                    }}
+                    toggle={() => setIsModalOpen((v) => !v)}
                 />
             )}
         </div>
