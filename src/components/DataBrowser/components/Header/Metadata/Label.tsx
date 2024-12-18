@@ -4,17 +4,18 @@ import ActionButton from 'components/ActionButton/ActionButton';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
+import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { match } from 'path-to-regexp';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
+import { useDispatch } from 'react-redux';
 import { Button, Input, InputGroup } from 'reactstrap';
 import { updateResource } from 'services/backend/resources';
 import { updatePaperContributionLabel } from 'slices/viewPaperSlice';
-import { useDispatch } from 'react-redux';
-import { usePathname } from 'next/navigation';
-import { match } from 'path-to-regexp';
+import { getLinkByEntityType } from 'utils';
 
 const Label = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -52,7 +53,7 @@ const Label = () => {
         <div className="mb-2 d-flex align-items-center">
             {!isEditing && (
                 <>
-                    <Link className="h6 text-primary me-1 mb-0" href={`${reverse(ROUTES.RESOURCE, { id: entity?.id })}?noRedirect`}>
+                    <Link className="h6 text-primary me-1 mb-0" href={getLinkByEntityType(entity?._class ?? ENTITIES.RESOURCE, entity?.id ?? '')}>
                         {entity?.label || (!entity ? <Skeleton width={100} /> : <i>No label</i>)}
                     </Link>
                     {canEdit && isEditMode && <ActionButton title="Edit" icon={faPen} action={handleEditClick} />}
