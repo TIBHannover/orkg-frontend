@@ -1,5 +1,7 @@
 'use client';
 
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 
 import { Button } from 'reactstrap';
@@ -16,7 +18,7 @@ export default function ReadMore({ text = '', maxLength = 750 }: ReadMoreProps) 
     const isExpandable = text.length > maxLength;
     return (
         <p>
-            {textSliced}
+            <ValuePlugins type={ENTITIES.LITERAL}>{textSliced}</ValuePlugins>
             {isExpandable && (
                 <>
                     {!isExpanded ? '...' : ''}{' '}
