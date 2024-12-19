@@ -19,6 +19,7 @@ type ListPaginatedContentProps<ItemType> = {
     pageSize: number;
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
+    prefixParams?: string;
     showPagination?: boolean;
     flush?: boolean;
     loadingComponent?: ReactNode;
@@ -41,6 +42,7 @@ const ListPaginatedContent = <ItemType,>({
     setPage,
     setPageSize,
     showPagination = true,
+    prefixParams = '',
     ListGroupComponent = ListGroup,
     flush = true,
     listGroupProps = {
@@ -76,6 +78,7 @@ const ListPaginatedContent = <ItemType,>({
                     {!isLoading && boxShadow && <div className="mt-2" />}
                     <div className={`${flush ? 'ms-2 me-2' : ''}`}>
                         <PaginationControl
+                            prefixParams={prefixParams}
                             page={page}
                             setPage={setPage}
                             totalPages={totalPages}

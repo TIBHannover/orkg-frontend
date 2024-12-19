@@ -11,6 +11,7 @@ type PaginationProps = {
     totalPages: number;
     pageSize: number;
     setPageSize: (pageSize: number) => void;
+    prefixParams?: string;
     isLoading: boolean;
     hasNextPage: boolean;
     totalElements: number;
@@ -51,14 +52,15 @@ const PaginationControl: FC<PaginationProps> = ({
     hasNextPage,
     totalElements,
     boxShadow,
+    prefixParams = '',
 }) => {
     const paginationParams = {
-        page: parseAsInteger,
+        [`${prefixParams}page`]: parseAsInteger,
     };
 
     const searchParams = useSearchParams();
     const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete('page');
+    currentParams.delete(`${prefixParams}page`);
     const currentParamsString = `?${currentParams.toString()}`;
 
     const serialize = createSerializer(paginationParams);
@@ -84,7 +86,7 @@ const PaginationControl: FC<PaginationProps> = ({
         <PaginationStyle size="md" aria-label="Page navigation" className={`d-flex ${boxShadow ? 'box-shadow mb-0' : 'mb-2'} rounded`}>
             <PaginationItem
                 tag={Link}
-                href={serialize(currentParamsString, { page: page - 1 })}
+                href={serialize(currentParamsString, { [`${prefixParams}page`]: page - 1 })}
                 title="Previous page"
                 {...(page === 0 ? disabledProps : {})}
             >
@@ -95,7 +97,7 @@ const PaginationControl: FC<PaginationProps> = ({
                 <>
                     <PaginationItem
                         tag={Link}
-                        href={serialize(currentParamsString, { page: 0 })}
+                        href={serialize(currentParamsString, { [`${prefixParams}page`]: 0 })}
                         title="First page"
                         {...(page === 0 ? disabledProps : {})}
                     >
@@ -104,7 +106,7 @@ const PaginationControl: FC<PaginationProps> = ({
                     {getPageNumbers()[0] !== 1 && (
                         <PaginationItem
                             tag={Link}
-                            href={serialize(currentParamsString, { page: getPageNumbers()[0] - 1 })}
+                            href={serialize(currentParamsString, { [`${prefixParams}page`]: getPageNumbers()[0] - 1 })}
                             title={`Page ${getPageNumbers()[0]}`}
                         >
                             <PaginationLink>...</PaginationLink>
@@ -116,7 +118,7 @@ const PaginationControl: FC<PaginationProps> = ({
                 <PaginationItem
                     key={_page}
                     tag={Link}
-                    href={serialize(currentParamsString, { page: _page })}
+                    href={serialize(currentParamsString, { [`${prefixParams}page`]: _page })}
                     title={`Page ${_page + 1}`}
                     active={page === _page}
                     {...(page === _page ? disabledProps : {})}
@@ -127,13 +129,16 @@ const PaginationControl: FC<PaginationProps> = ({
             {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && (
                 <>
                     {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 2 && (
-                        <PaginationItem tag={Link} href={serialize(currentParamsString, { page: getPageNumbers()[getPageNumbers().length - 1] + 1 })}>
+                        <PaginationItem
+                            tag={Link}
+                            href={serialize(currentParamsString, { [`${prefixParams}page`]: getPageNumbers()[getPageNumbers().length - 1] + 1 })}
+                        >
                             <PaginationLink>...</PaginationLink>
                         </PaginationItem>
                     )}
                     <PaginationItem
                         tag={Link}
-                        href={serialize(currentParamsString, { page: totalPages - 1 })}
+                        href={serialize(currentParamsString, { [`${prefixParams}page`]: totalPages - 1 })}
                         title="Last page"
                         {...(!hasNextPage ? disabledProps : {})}
                     >
@@ -143,7 +148,7 @@ const PaginationControl: FC<PaginationProps> = ({
             )}
             <PaginationItem
                 tag={Link}
-                href={serialize(currentParamsString, { page: page + 1 })}
+                href={serialize(currentParamsString, { [`${prefixParams}page`]: page + 1 })}
                 title="Next page"
                 {...(!hasNextPage ? disabledProps : {})}
             >

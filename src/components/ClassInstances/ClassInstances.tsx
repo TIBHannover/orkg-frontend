@@ -36,6 +36,9 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
             <td className="col-2">{item.shared}</td>
         </tr>
     );
+
+    const prefixParams = 'instances';
+
     const {
         data: items,
         isLoading,
@@ -52,7 +55,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
         fetchFunctionName: 'getResources',
         fetchUrl: resourcesUrl,
         fetchExtraParams: { include: [classId], q },
-        prefixParams: 'instances',
+        prefixParams,
     });
 
     const handleSearch = debounce((term) => {
@@ -105,6 +108,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
                     ListGroupComponent={Table}
                     flush={false}
                     listGroupProps={{ size: 'sm', bordered: true, className: 'text-break' }}
+                    prefixParams={prefixParams}
                 />
             </div>
         </div>
