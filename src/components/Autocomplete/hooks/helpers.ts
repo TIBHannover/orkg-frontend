@@ -2,6 +2,7 @@ import { ExternalServiceResponse, Ontology, OptionType, OptionsSettings } from '
 import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
+import { uniqBy } from 'lodash';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 import { MultiValue } from 'react-select';
 import { getClasses } from 'services/backend/classes';
@@ -112,7 +113,7 @@ export const addAdditionalData = (
         defaultOptions = defaultOptions.filter((option) => option.label.toLowerCase().includes(value.trim().toLowerCase()));
         (prevOptions as OptionType[]).unshift(...(defaultOptions as OptionType[]));
     }
-    return prevOptions as OptionType[];
+    return uniqBy(prevOptions as OptionType[], 'id') as OptionType[];
 };
 
 /**
