@@ -4,7 +4,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
-import { getStatementsBundleBySubject, statementsUrl } from 'services/backend/statements';
+import { getTable, tablesUrl } from 'services/backend/tables';
 import { Resource, Statement } from 'services/backend/types';
 import useSWR from 'swr';
 
@@ -21,14 +21,12 @@ const useTableData = ({ id }: { id: string }) => {
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config } = useDataBrowserState();
 
-    const { data: tableStatements, isLoading: isLoadingTableData } = useSWR(
-        !isUsingSnapshot ? [{ id, maxLevel: 3 }, statementsUrl, 'getStatementsBundleBySubject'] : null,
-        ([params]) => getStatementsBundleBySubject(params),
+    const { data: tableData, isLoading: isLoadingTableData } = useSWR(!isUsingSnapshot ? [id, tablesUrl, 'getTable'] : null, ([params]) =>
+        getTable(params),
     );
+
     let _tableStatements: Statement[] = [];
-    if (!isUsingSnapshot) {
-        _tableStatements = tableStatements?.statements ?? [];
-    } else if (config.statementsSnapshot) {
+    if (config.statementsSnapshot) {
         _tableStatements = config.statementsSnapshot;
     }
 
@@ -41,10 +39,11 @@ const useTableData = ({ id }: { id: string }) => {
         number?: number;
         cells: { id: string; value: string }[];
     }[] = [];
-    const rows: TableRow[] = [];
+    let rows: TableRow[] = [];
 
     let isTitlesColumnsExist = false;
 
+    // this code block is for backward compatibility with old table data stored in statements (statementsSnapshot)
     if (_tableStatements) {
         const filteredTableStatements = _tableStatements.filter((st) => st.subject.id === id);
         tableResource = filteredTableStatements[0]?.subject ?? null;
@@ -124,7 +123,23 @@ const useTableData = ({ id }: { id: string }) => {
         }
     }
 
-    const data = useMemo(() => rows, [lines?.length]);
+    if (tableData && tableData.rows.length > 0) {
+        isTitlesColumnsExist = tableData?.rows.some((row) => row.label !== null);
+        cols = tableData?.rows[0]?.data?.map((c, i) => ({ id: c.id ?? i.toString(), label: c.label ?? '' })) ?? [];
+        rows =
+            tableData.rows
+                .slice(1)
+                .map((r) =>
+                    Object.assign(
+                        {},
+                        ...r.data.map((c, i) => ({ [cols[i].id ?? i]: { id: c.id ?? i.toString(), value: c.label } })),
+                        ...(isTitlesColumnsExist ? [{ titles: { id: 'titles', value: r.label } }] : []),
+                    ),
+                ) ?? [];
+        cols = isTitlesColumnsExist ? [{ id: 'titles', label: '', number: undefined }, ...cols] : cols;
+    }
+
+    const data = useMemo(() => rows, [lines?.length, rows?.length]);
 
     return {
         cols,
