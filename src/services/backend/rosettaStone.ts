@@ -190,6 +190,16 @@ export const updateRSStatement = (id: string, data: UpdateRosettaStoneStatementP
         })
         .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const deleteRSStatement = (id: string) => rosettaStoneApi.delete<void>(`statements/${id}`).json();
+export const deleteRSStatement = (id: string) =>
+    rosettaStoneApi.delete<void>(`statements/${id}`, {
+        headers: {
+            Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+        },
+    });
 
-export const fullyDeleteRSStatement = (id: string) => rosettaStoneApi.delete<void>(`statements/${id}/versions`).json();
+export const fullyDeleteRSStatement = (id: string) =>
+    rosettaStoneApi.delete<void>(`statements/${id}/versions`, {
+        headers: {
+            Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
+        },
+    });
