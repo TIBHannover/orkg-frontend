@@ -1,23 +1,9 @@
 import { http, HttpResponse } from 'msw';
 import { statementsUrl } from 'services/backend/statements';
-import { bulkStatementsTableResource } from 'services/mocks/backend/__mocks__/Statements';
 import db from 'services/mocks/db';
 import { createMSWStatement, findEntityById } from 'services/mocks/helpers';
 
 const statements = [
-    http.get(`${statementsUrl}:id/bundle`, ({ params }) => {
-        const { id } = params as { id: string };
-        if (!id) {
-            throw new Error();
-        }
-        const MAPPING: Record<string, { root: string; statements: any[] }> = {
-            TableResource: bulkStatementsTableResource,
-        };
-        if (MAPPING[id]) {
-            return HttpResponse.json(MAPPING[id]);
-        }
-        return HttpResponse.json({ root: id, statements: [] });
-    }),
     http.get(statementsUrl, ({ request }) => {
         const url = new URL(request.url);
         const objectId = url.searchParams.get('object_id');

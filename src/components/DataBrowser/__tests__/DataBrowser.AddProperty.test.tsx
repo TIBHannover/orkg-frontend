@@ -40,9 +40,10 @@ describe('DataBrowser.AddProperty', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Add property' }));
         await userEvent.type(screen.getByRole('combobox'), 'test property');
         // await waitForElementToBeRemoved(() => screen.queryAllByText(/Loading/i));
-        await selectEvent.create(screen.getByRole('combobox'), 'test property', { waitForElement: false });
+        await selectEvent.create(screen.getByRole('combobox'), 'test property', { waitForElement: true });
         await waitFor(() => expect(screen.getByText(/Often there are existing properties that you can use as well/i)).toBeInTheDocument());
         await userEvent.click(screen.getAllByRole('button', { name: /cancel/i })[1]);
+        await userEvent.click(screen.getAllByRole('button', { name: /cancel/i })[0]);
         await waitFor(() => expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument());
     });
 });
