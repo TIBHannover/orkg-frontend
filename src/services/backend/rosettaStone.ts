@@ -13,6 +13,7 @@ import {
     UpdateRosettaStoneStatementParams,
     UpdateRosettaStoneTemplateParams,
     CreatedByParam,
+    ObservatoryIdParam,
 } from 'services/backend/types';
 
 export const rosettaStoneUrl = `${url}rosetta-stone/`;
@@ -35,7 +36,8 @@ export type GetTemplatesParams = {
     createdBy?: string | null;
 } & PaginationParams &
     VisibilityParam &
-    CreatedByParam;
+    CreatedByParam &
+    ObservatoryIdParam;
 
 export const getRSTemplates = ({
     q = null,
@@ -45,6 +47,7 @@ export const getRSTemplates = ({
     sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
+    observatory_id,
 }: GetTemplatesParams) => {
     const searchParams = qs.stringify(
         {
@@ -54,6 +57,7 @@ export const getRSTemplates = ({
             ...(q ? { q, exact } : {}),
             visibility,
             created_by,
+            observatory_id,
         },
         {
             skipNulls: true,
@@ -116,7 +120,8 @@ export type GetStatementsParams = {
     template_id?: string;
     createdBy?: string | null;
 } & PaginationParams &
-    VisibilityParam;
+    VisibilityParam &
+    ObservatoryIdParam;
 
 export const getRSStatements = ({
     context,
@@ -125,6 +130,7 @@ export const getRSStatements = ({
     size = 999,
     sortBy = [{ property: 'created_at', direction: 'asc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
+    observatory_id,
 }: GetStatementsParams) => {
     const searchParams = qs.stringify(
         {
@@ -134,6 +140,7 @@ export const getRSStatements = ({
             visibility,
             context,
             template_id,
+            observatory_id,
         },
         {
             skipNulls: true,

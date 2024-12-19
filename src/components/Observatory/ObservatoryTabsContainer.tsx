@@ -16,10 +16,12 @@ export const OBSERVATORY_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },
     { id: CLASSES.COMPARISON, label: 'Comparisons' },
     { id: CLASSES.PAPER, label: 'Papers' },
+    { id: CLASSES.ROSETTA_STONE_STATEMENT, label: 'Statements' },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
     { id: CLASSES.NODE_SHAPE, label: 'Templates' },
+    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement types' },
 ];
 
 function ObservatoryTabsContainer({ id }: { id: string }) {
