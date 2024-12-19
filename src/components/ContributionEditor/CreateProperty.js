@@ -33,13 +33,13 @@ export const CreateProperty = () => {
         );
         setIsCreating(false);
         setInputValue('');
-        setIsOpenConfirmModal(false);
     };
 
     return (
         <>
             {isOpenConfirmModal && (
                 <ConfirmCreatePropertyModal
+                    isOpen={isOpenConfirmModal}
                     onCreate={handleCreate}
                     label={propertyLabel}
                     toggle={() => setIsOpenConfirmModal((v) => !v)}

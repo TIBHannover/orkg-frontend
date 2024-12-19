@@ -85,7 +85,7 @@ const TableHeaderRow = ({ property }) => {
                     onCreate={handleCreate}
                     label={inputValue}
                     toggle={() => setIsOpenConfirmModal((v) => !v)}
-                    shouldPerformCreate
+                    isOpen={isOpenConfirmModal}
                 />
             )}
             {!isEditing ? (

@@ -76,7 +76,6 @@ const PropertyShapesTab: FC<{}> = () => {
             setShowAddProperty(false);
         }
         dispatch(updatePropertyShapes(templatePropertyShapes));
-        setIsOpenConfirmModal(false);
         setPropertyIndex(null);
     };
 

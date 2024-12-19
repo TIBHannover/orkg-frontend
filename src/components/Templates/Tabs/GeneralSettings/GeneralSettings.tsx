@@ -47,7 +47,6 @@ const GeneralSettings: FC<{}> = () => {
 
     const handleCreate = ({ id }: { id: string }) => {
         dispatch(updatePredicate({ label: propertyLabel, id }));
-        setIsOpenConfirmModal(false);
     };
 
     const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
