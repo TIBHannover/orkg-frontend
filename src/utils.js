@@ -344,6 +344,7 @@ export const getAuthorData = (resource, statements) => {
         linkedIn,
         researchGate,
         googleScholar,
+        dblp: '',
     };
 };
 

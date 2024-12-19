@@ -13,6 +13,7 @@ import { getReviews } from 'services/backend/reviews';
 import { getRSTemplates } from 'services/backend/rosettaStone';
 import { getTemplates } from 'services/backend/templates';
 import {
+    AuthorIdParam,
     CreatedByParam,
     FilterConfig,
     Item,
@@ -42,7 +43,8 @@ export type GetContentParams = {
     ObservatoryIdParam &
     OrganizationIdParam &
     ResearchFieldIdParams &
-    PublishedParam;
+    PublishedParam &
+    AuthorIdParam;
 
 export const getGenericContentTypes = ({
     classes,
@@ -62,6 +64,7 @@ export const getGenericContentTypes = ({
     research_field,
     include_subfields,
     sdg,
+    author_id,
 }: { classes: string[] } & GetContentParams) => {
     const params = prepareParams({
         page,
@@ -75,6 +78,7 @@ export const getGenericContentTypes = ({
         research_field,
         sdg,
         include_subfields,
+        author_id,
     });
     return contentTypesApi
         .get<PaginatedResponse<Item>>('', {
@@ -92,6 +96,9 @@ const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, '
             });
         case CLASSES.PAPER:
             if (!paramsObj.filter_config || paramsObj.filter_config?.length === 0) {
+                if (paramsObj.author_id) {
+                    return getGenericContentTypes({ ...paramsObj, classes: ['PAPER'] });
+                }
                 return getPapers(paramsObj);
             }
             if (paramsObj.observatory_id) {
@@ -105,12 +112,24 @@ const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, '
             }
             return getGenericContentTypes({ ...paramsObj, classes: ['PAPER'] });
         case CLASSES.COMPARISON:
+            if (paramsObj.author_id) {
+                return getGenericContentTypes({ ...paramsObj, classes: ['COMPARISON'] });
+            }
             return getComparisons(paramsObj);
         case CLASSES.SMART_REVIEW_PUBLISHED:
+            if (paramsObj.author_id) {
+                return getGenericContentTypes({ ...paramsObj, classes: ['SMART_REVIEW'] });
+            }
             return getReviews(paramsObj);
         case CLASSES.VISUALIZATION:
+            if (paramsObj.author_id) {
+                return getGenericContentTypes({ ...paramsObj, classes: ['VISUALIZATION'] });
+            }
             return getVisualizations(paramsObj);
         case CLASSES.LITERATURE_LIST_PUBLISHED:
+            if (paramsObj.author_id) {
+                return getGenericContentTypes({ ...paramsObj, classes: ['LITERATURE_LIST'] });
+            }
             return getLiteratureLists(paramsObj);
         case CLASSES.PROBLEM:
             return getResources({ ...paramsObj, include: [cType] });
@@ -151,6 +170,7 @@ export const getContentTypes = ({
     created_by,
     sdg,
     published,
+    author_id,
 }: { contentType: string } & GetContentParams): Promise<PaginatedResponse<Resource | Item>> => {
     // Sort is not supported in this endpoint
     const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
@@ -167,6 +187,7 @@ export const getContentTypes = ({
         published,
         created_by,
         organization_id,
+        author_id,
     };
     if (visibility === VISIBILITY_FILTERS.TOP_RECENT) {
         const paramsFeaturedObj = { ...paramsObj, visibility: VISIBILITY_FILTERS.FEATURED };

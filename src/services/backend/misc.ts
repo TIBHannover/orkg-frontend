@@ -6,6 +6,7 @@ import { getClasses } from 'services/backend/classes';
 import { getPredicates } from 'services/backend/predicates';
 import { getResources } from 'services/backend/resources';
 import {
+    AuthorIdParam,
     Class,
     CreatedByParam,
     ObservatoryIdParam,
@@ -106,7 +107,8 @@ export const prepareParams = (
         PublishedParam &
         ObservatoryIdParam &
         OrganizationIdParam &
-        ResearchFieldIdParams,
+        ResearchFieldIdParams &
+        AuthorIdParam,
 ): string =>
     qs.stringify(
         {
@@ -122,6 +124,7 @@ export const prepareParams = (
             organization_id: params.organization_id,
             research_field: params.research_field,
             include_subfields: params.include_subfields,
+            author_id: params.author_id,
         },
         {
             skipNulls: true,
