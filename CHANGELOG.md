@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.156.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.155.0...v0.156.0) - 2024-12-20
+
+### Changes
+
+- feat(Search): add ORKG Ask example questions [`#1454`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1454)
+
+---
 ## [v0.155.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.5...v0.155.0) - 2024-12-20
 
 ### Changes
