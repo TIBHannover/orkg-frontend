@@ -104,11 +104,7 @@ const PaginationControl: FC<PaginationProps> = ({
                         <PaginationLink>1</PaginationLink>
                     </PaginationItem>
                     {getPageNumbers()[0] !== 1 && (
-                        <PaginationItem
-                            tag={Link}
-                            href={serialize(currentParamsString, { [`${prefixParams}page`]: getPageNumbers()[0] - 1 })}
-                            title={`Page ${getPageNumbers()[0]}`}
-                        >
+                        <PaginationItem tag="div" {...disabledProps}>
                             <PaginationLink>...</PaginationLink>
                         </PaginationItem>
                     )}
@@ -129,10 +125,7 @@ const PaginationControl: FC<PaginationProps> = ({
             {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && (
                 <>
                     {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 2 && (
-                        <PaginationItem
-                            tag={Link}
-                            href={serialize(currentParamsString, { [`${prefixParams}page`]: getPageNumbers()[getPageNumbers().length - 1] + 1 })}
-                        >
+                        <PaginationItem tag="div" {...disabledProps}>
                             <PaginationLink>...</PaginationLink>
                         </PaginationItem>
                     )}
