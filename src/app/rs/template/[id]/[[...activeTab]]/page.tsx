@@ -100,7 +100,7 @@ const RSTemplatePage = () => {
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError />)}
+            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && template && (
                 <>
                     <TitleBar

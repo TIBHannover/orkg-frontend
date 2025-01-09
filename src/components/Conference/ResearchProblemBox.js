@@ -35,7 +35,7 @@ const ResearchProblemBox = ({ id }) => {
 
     return (
         <div className="box rounded-3 p-3 flex-grow-1">
-            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />}</>}
             <h5>Research problems </h5>
             {!isLoading && problems.length > 0 && (
                 <ul className="ps-3 pt-2">

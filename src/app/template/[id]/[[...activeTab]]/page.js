@@ -84,7 +84,7 @@ const Template = () => {
     }, [label]);
 
     if (!isLoading && hasFailed && failureStatus === 500) {
-        return <InternalServerError />;
+        return <InternalServerError error="Loading template failed" />;
     }
 
     if (!isLoading && hasFailed) {

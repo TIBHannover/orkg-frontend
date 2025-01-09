@@ -145,7 +145,7 @@ const Review = () => {
     }
 
     if (hasFailed) {
-        return <InternalServerError />;
+        return <InternalServerError error="Loading review failed" />;
     }
 
     const ldJson = {

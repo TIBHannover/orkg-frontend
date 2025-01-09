@@ -6,10 +6,11 @@ import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import 'assets/scss/DefaultLayout.scss';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header/Header';
-import { env } from 'next-runtime-env';
-import { usePathname } from 'next/navigation';
 import ROUTES from 'constants/routes';
 import { detect } from 'detect-browser';
+import { env } from 'next-runtime-env';
+import { ErrorBoundary } from 'next/dist/client/components/error-boundary';
+import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { Suspense, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -176,7 +177,9 @@ export default function DefaultLayout(props) {
                 </>
             )}
             <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
-                <StyledAppContent>{props.children}</StyledAppContent>
+                <ErrorBoundary fallback="Something went wrong while loading the page!">
+                    <StyledAppContent>{props.children}</StyledAppContent>
+                </ErrorBoundary>
             </Suspense>
             {showFooter && (
                 <StyledFooter>

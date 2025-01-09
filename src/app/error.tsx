@@ -2,12 +2,27 @@
 
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
+import { detect } from 'detect-browser';
 
-const InternalServerError = () => {
+const InternalServerError = ({ error }: { error?: Error & { digest?: string } }) => {
+    const { trackEvent } = useMatomo();
+
+    useEffect(() => {
+        // log the error as matomo event
+        const browser = detect();
+        trackEvent({
+            category: 'errors',
+            action: error?.toString().replace(' ', '') || 'InternalServerError',
+            name: `Location ${window.location.href} Browser:${JSON.stringify(browser)}`,
+        });
+    }, [error, trackEvent]);
+
     return (
         <div>
             <TitleBar>An error has occurred</TitleBar>
