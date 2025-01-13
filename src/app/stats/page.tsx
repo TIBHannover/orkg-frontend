@@ -1,33 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Container, Row } from 'reactstrap';
-import { CLASSES } from 'constants/graphSettings';
+import capitalize from 'capitalize';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
-import { toast } from 'react-toastify';
-import { getStats, Statistics } from 'services/backend/stats';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { CLASSES } from 'constants/graphSettings';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import capitalize from 'capitalize';
+import { useEffect } from 'react';
+import { Container, Row } from 'reactstrap';
+import { getStats, statsUrl } from 'services/backend/stats';
+import useSWR from 'swr';
 
 const Stats = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [stats, setStats] = useState<Statistics | null>(null);
+    const { data: stats, isLoading } = useSWR(
+        [[CLASSES.BENCHMARK, CLASSES.COMPARISON_PUBLISHED, CLASSES.LITERATURE_LIST_PUBLISHED], statsUrl, 'getStats'],
+        ([params]) => getStats(params),
+    );
 
     useEffect(() => {
         document.title = 'Stats - ORKG';
-        setIsLoading(true);
-        getStats([CLASSES.BENCHMARK])
-            .then((stat: Statistics) => {
-                setIsLoading(false);
-                setStats(stat);
-            })
-            .catch((e) => {
-                setIsLoading(false);
-                toast.error('Failed loading statistics data');
-            });
     }, []);
 
     return (
@@ -39,18 +31,29 @@ const Stats = () => {
                     <ColoredStatsBox link={reverse(ROUTES.PAPERS)} number={stats?.papers} label="Papers" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.COMPARISONS)} number={stats?.comparisons} label="Comparisons" isLoading={isLoading} />
                     <ColoredStatsBox
+                        link={reverse(ROUTES.COMPARISONS)}
+                        number={stats?.extras?.[CLASSES.COMPARISON_PUBLISHED]}
+                        label="Comparison versions"
+                        isLoading={isLoading}
+                    />
+                    <ColoredStatsBox
                         link={reverse(ROUTES.VISUALIZATIONS)}
                         number={stats?.visualizations}
                         label="Visualizations"
                         isLoading={isLoading}
                     />
-                    <ColoredStatsBox number={stats?.problems} label="Research problems" isLoading={isLoading} />
                 </Row>
                 <Row>
                     <ColoredStatsBox number={stats?.contributions} label="Contributions" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.RESEARCH_FIELDS)} number={stats?.fields} label="Research fields" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.TEMPLATES)} number={stats?.templates} label="Templates" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.REVIEWS)} number={stats?.smart_reviews} label="Reviews" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.LISTS)}
+                        number={stats?.extras?.[CLASSES.LITERATURE_LIST_PUBLISHED]}
+                        label="Lists"
+                        isLoading={isLoading}
+                    />
                 </Row>
                 <Row>
                     <ColoredStatsBox number={stats?.users} label="Users" isLoading={isLoading} />
@@ -67,6 +70,7 @@ const Stats = () => {
                         label="Benchmarks"
                         isLoading={isLoading}
                     />
+                    <ColoredStatsBox number={stats?.problems} label="Research problems" isLoading={isLoading} />
                 </Row>
             </Container>
             <Container>
