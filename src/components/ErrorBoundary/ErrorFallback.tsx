@@ -1,16 +1,19 @@
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Button, Container, Collapse, Card, CardBody } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logo from 'assets/img/logo.svg';
-import { detect } from 'detect-browser';
-import PropTypes from 'prop-types';
+import ROUTES from 'constants/routes';
+import { BrowserInfo, SearchBotDeviceInfo, BotInfo, NodeInfo, ReactNativeInfo, detect } from 'detect-browser';
+import Link from 'next/link';
+import { FC, useEffect, useState } from 'react';
+import { Button, Card, CardBody, Collapse, Container } from 'reactstrap';
 
-const ErrorFallback = (props) => {
-    const [collapse, setCollapse] = useState(false);
-    const browser = detect();
+type ErrorFallbackProps = {
+    error: Error;
+};
+
+const ErrorFallback: FC<ErrorFallbackProps> = ({ error }) => {
+    const [collapse, setCollapse] = useState<boolean>(false);
+    const browser: BrowserInfo | SearchBotDeviceInfo | BotInfo | NodeInfo | ReactNativeInfo | null = detect();
 
     useEffect(() => {
         document.title = 'Something went wrong - ORKG';
@@ -35,9 +38,7 @@ const ErrorFallback = (props) => {
                             </Button>
                             <Button
                                 tag="a"
-                                href={`https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/new?issue[title]=${
-                                    props.error
-                                }&issue[description]=%0A%0A%0A%23%23%23 Error details%0AError: ${props.error}%0A%0ALocation: ${
+                                href={`https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/new?issue[title]=${error}&issue[description]=%0A%0A%0A%23%23%23 Error details%0AError: ${error}%0A%0ALocation: ${
                                     window?.location.href
                                 }%0A%0ABrowser: ${JSON.stringify(browser)}`}
                                 color="primary"
@@ -57,7 +58,7 @@ const ErrorFallback = (props) => {
                         <Collapse isOpen={collapse}>
                             <Card>
                                 <CardBody>
-                                    <b>Error:</b> {props.error?.message}
+                                    <b>Error:</b> {error?.message}
                                     <br />
                                     <b>Location:</b> {window?.location.href}
                                     <br />
@@ -70,10 +71,6 @@ const ErrorFallback = (props) => {
             </Container>
         </div>
     );
-};
-
-ErrorFallback.propTypes = {
-    error: PropTypes.object,
 };
 
 export default ErrorFallback;

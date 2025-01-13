@@ -10,7 +10,7 @@ type ListPaginatedContentProps<ItemType> = {
     renderListItem: (item: ItemType, lastItem?: boolean) => React.ReactNode;
     boxShadow?: boolean;
     isLoading: boolean;
-    error: { statusCode: number } | null;
+    error: ({ statusCode?: number } & Error) | null;
     items: ItemType[];
     hasNextPage: boolean;
     totalElements?: number;
@@ -67,7 +67,7 @@ const ListPaginatedContent = <ItemType,>({
         <Container className="p-0">
             {isLoading && loadingComponent}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
-            {!isLoading && error && error.statusCode !== 404 && <InternalServerError />}
+            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && items && items.length > 0 && (
                 <ListGroupComponent {...listGroupProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
                     {items?.map((item, index) => renderListItem(item, index === items.length - 1))}

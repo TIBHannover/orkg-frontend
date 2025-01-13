@@ -44,7 +44,7 @@ const ConferenceDetails = () => {
     return (
         <>
             {isLoading && <Container className="box rounded py-4 px-5 mt-5 clearfix">Loading ...</Container>}
-            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />}</>}
             {!isLoading && !error && label && (
                 <>
                     <TitleBar titleAddition={<SubTitle>Conference event</SubTitle>} wrap={false}>
