@@ -1,6 +1,8 @@
 export type EntityType = 'class' | 'predicate' | 'resource' | 'literal';
 
-export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility';
+export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility' | 'name';
+
+export type SortDirectionOptions = 'asc' | 'desc';
 
 export type VisibilityOptions = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
 
@@ -738,12 +740,10 @@ export type LiteratureList = {
 
 export type Verified = boolean | null;
 
-export type PaginationDirection = 'asc' | 'desc';
-
 export type PaginationParams = {
     page?: number;
     size?: number;
-    sortBy?: { property: string; direction: PaginationDirection }[];
+    sortBy?: { property: string; direction: SortDirectionOptions }[];
 };
 
 export type VerifiedParam = {

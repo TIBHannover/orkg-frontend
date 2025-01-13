@@ -4,7 +4,7 @@ import qs from 'qs';
 import backendApi from 'services/backend/backendApi';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import { getResource } from 'services/backend/resources';
-import { Contributor, FilterConfig, Observatory, PaginatedResponse } from 'services/backend/types';
+import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from 'services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
 export const observatoriesApi = backendApi.extend(() => ({ prefixUrl: observatoriesUrl }));
@@ -23,14 +23,14 @@ export const getObservatories = ({
     q = null,
     page = 0,
     size = 9999,
+    sortBy = [{ property: 'name', direction: 'asc' }],
 }: {
     researchFieldId?: string | null;
     q?: string | null;
-    page?: number;
-    size?: number;
-}): Promise<PaginatedResponse<Observatory>> => {
+} & PaginationParams): Promise<PaginatedResponse<Observatory>> => {
+    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const searchParams = qs.stringify(
-        { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size },
+        { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size, sort },
         {
             skipNulls: true,
         },
