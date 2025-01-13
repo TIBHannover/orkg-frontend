@@ -66,7 +66,7 @@ const ListPage = <ItemType, FetchFunctionParams>({
 
     return (
         <>
-            {!hideTitleBar && (
+            {!error && !hideTitleBar && (
                 <TitleBar
                     titleAddition={
                         <div className="text-muted mt-1">{isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items</div>
@@ -80,7 +80,7 @@ const ListPage = <ItemType, FetchFunctionParams>({
                     {capitalize(label)}
                 </TitleBar>
             )}
-            {infoContainerText && (
+            {!error && infoContainerText && (
                 <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
                     {infoContainerText}
                 </Container>
