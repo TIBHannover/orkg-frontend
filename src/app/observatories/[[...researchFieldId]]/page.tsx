@@ -2,17 +2,19 @@
 
 import Tippy from '@tippyjs/react';
 import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
+import SortingSelector from 'components/Observatory/SortingSelector/SortingSelector';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import PreventModal from 'components/Resource/PreventModal/PreventModal';
 import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useParams from 'components/useParams/useParams';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Container, Row } from 'reactstrap';
 import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from 'services/backend/observatories';
@@ -23,7 +25,11 @@ import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
+const defaultSortBy = 'name';
+const defaultSortDirection = 'asc';
+
 const Observatories = () => {
+    const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
     useEffect(() => {
         document.title = 'Observatories - ORKG';
@@ -72,6 +78,8 @@ const Observatories = () => {
         fetchUrl: observatoriesUrl,
         fetchExtraParams: { researchFieldId: researchFieldId === 'all' ? undefined : researchFieldId },
         defaultPageSize: 20,
+        defaultSortBy,
+        defaultSortDirection,
     });
 
     const { data: researchFieldSelected } = useSWR(
@@ -107,17 +115,28 @@ const Observatories = () => {
         <>
             <TitleBar
                 buttonGroup={
-                    <Tippy
-                        content="Observatories can only be created by curators. Contact the ORKG team for proposing a new observatory"
-                        disabled={isCurator}
-                        hideOnClick={false}
-                    >
-                        <span>
-                            <Button color="secondary" size="sm" tag={Link} href={reverse(ROUTES.ADD_OBSERVATORY)} disabled={!isCurator}>
-                                Create observatory
-                            </Button>
-                        </span>
-                    </Tippy>
+                    <>
+                        <SortingSelector
+                            isLoading={observatoriesIsLoading}
+                            defaultSortBy={defaultSortBy}
+                            defaultSortDirection={defaultSortDirection}
+                        />
+                        <RequireAuthentication
+                            component={Button}
+                            className="float-end"
+                            color="secondary"
+                            size="sm"
+                            onClick={() => {
+                                if (!isCurator) {
+                                    setIsOpenPreventModal(true);
+                                } else {
+                                    router.push(reverse(ROUTES.ADD_OBSERVATORY));
+                                }
+                            }}
+                        >
+                            Create observatory
+                        </RequireAuthentication>
+                    </>
                 }
             >
                 Observatories
@@ -130,6 +149,14 @@ const Observatories = () => {
                 </a>
                 .
             </Container>
+            {isOpenPreventModal && (
+                <PreventModal
+                    header="Create observatory"
+                    content="Observatories can only be created by curators. Contact the ORKG team for proposing a new observatory"
+                    isOpen={isOpenPreventModal}
+                    toggle={() => setIsOpenPreventModal((v) => !v)}
+                />
+            )}
             <Container className="box rounded p-4 clearfix">
                 {_researchFields?.length > 0 && (
                     <Tabs

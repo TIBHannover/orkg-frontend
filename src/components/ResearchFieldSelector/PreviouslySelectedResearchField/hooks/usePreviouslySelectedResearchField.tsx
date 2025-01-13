@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { getPapers, papersUrl } from 'services/backend/papers';
-import { PaginationDirection } from 'services/backend/types';
+import { SortDirectionOptions } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 
@@ -15,7 +15,7 @@ const usePreviouslySelectedResearchField = () => {
                   {
                       page: 0,
                       size: 8,
-                      sortBy: [{ property: 'created_at', direction: 'desc' as PaginationDirection }],
+                      sortBy: [{ property: 'created_at', direction: 'desc' as SortDirectionOptions }],
                       created_by: userId,
                   },
                   papersUrl,
