@@ -25,6 +25,7 @@ type ListPaginatedContentProps<ItemType> = {
     loadingComponent?: ReactNode;
     ListGroupComponent?: React.ComponentType<any>;
     listGroupProps?: React.ComponentProps<typeof ListGroup>;
+    noDataComponent?: ReactNode;
 };
 
 const ListPaginatedContent = <ItemType,>({
@@ -56,6 +57,11 @@ const ListPaginatedContent = <ItemType,>({
             </ContentLoader>
         </div>
     ),
+    noDataComponent = (
+        <div className={boxShadow ? 'container box rounded' : ''}>
+            <div className="p-5 text-center mt-4 mb-4">There are no content for this {label} that matches this filter, yet</div>
+        </div>
+    ),
 }: ListPaginatedContentProps<ItemType>) => {
     return (
         <Container className="p-0">
@@ -63,15 +69,11 @@ const ListPaginatedContent = <ItemType,>({
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError />}
             {!isLoading && items && items.length > 0 && (
-                <ListGroupComponent {...listGroupProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ overflow: 'hidden', clear: 'both' }}>
+                <ListGroupComponent {...listGroupProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
                     {items?.map((item, index) => renderListItem(item, index === items.length - 1))}
                 </ListGroupComponent>
             )}
-            {!isLoading && items && items.length === 0 && (
-                <div className={boxShadow ? 'container box rounded' : ''}>
-                    <div className="p-5 text-center mt-4 mb-4">There are no content for this {label} that matches this filter, yet</div>
-                </div>
-            )}
+            {!isLoading && items && items.length === 0 && noDataComponent}
             {showPagination && !isLoading && !!totalElements && !!totalPages && totalPages > 1 && totalElements > 0 && (
                 <div className="mt-3">
                     {!isLoading && flush && !boxShadow && <hr />}
