@@ -1,58 +1,56 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { faEllipsisV, faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTimes, faEllipsisV, faExternalLinkAlt, faComments } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PropTypes from 'prop-types';
+import PreventModal from 'components/Resource/PreventModal/PreventModal';
+import AccessPaperButton from 'components/ViewPaper/PaperHeaderBar/AccessPaperButton';
+import Publish from 'components/ViewPaper/Publish/Publish';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Publish from 'components/ViewPaper/Publish/Publish';
-import AccessPaperButton from 'components/ViewPaper/PaperHeaderBar/AccessPaperButton';
+import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { RootStore } from 'slices/types';
 import { getPaperLink } from 'slices/viewPaperSlice';
-import PreventModal from 'components/Resource/PreventModal/PreventModal';
-import DiscussionModal from 'components/DiscussionModal/DiscussionModal';
-import useDiscussionCount from 'components/DiscussionModal/hooks/useDiscussionCount';
 
-function PaperMenuBar(props) {
+type PaperMenuBarProps = {
+    editMode: boolean;
+    disableEdit: boolean;
+    toggle: (key: string) => void;
+};
+
+const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
-    const [isOpenDiscussionModal, setIsOpenDiscussionModal] = useState(false);
-    const id = useSelector((state) => state.viewPaper.paper.id);
-    const title = useSelector((state) => state.viewPaper.paper.title);
-    const doi = useSelector((state) => state.viewPaper.paper.identifiers?.doi?.[0]);
+    const id = useSelector((state: RootStore) => state.viewPaper.paper.id);
+    const title = useSelector((state: RootStore) => state.viewPaper.paper.title);
+    const doi = useSelector((state: RootStore) => state.viewPaper.paper.identifiers?.doi?.[0]);
     const paperLink = useSelector(getPaperLink);
-    const { discussionCount, isLoading, getCount: refreshCount } = useDiscussionCount(id);
 
     return (
         <>
             <AccessPaperButton paperLink={paperLink} doi={doi} title={title} />
-            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenDiscussionModal(true)}>
-                <FontAwesomeIcon icon={faComments} style={{ margin: '2px 4px 0 0' }} /> Discussion{' '}
-                {!isLoading && discussionCount !== null && `(${discussionCount})`}
-            </Button>
-            {!props.editMode && (
+            {!editMode && (
                 <RequireAuthentication
                     component={Button}
                     className="flex-shrink-0"
                     style={{ marginRight: 2 }}
                     color="secondary"
                     size="sm"
-                    onClick={() => (!props.disableEdit ? props.toggle('editMode') : setIsOpenPWCModal(true))}
+                    onClick={() => (!disableEdit ? toggle('editMode') : setIsOpenPWCModal(true))}
                 >
                     <FontAwesomeIcon icon={faPen} /> Edit
                 </RequireAuthentication>
             )}
-            {props.editMode && (
+            {editMode && (
                 <Button
                     className="flex-shrink-0"
                     style={{ marginRight: 2 }}
                     color="secondary-darker"
                     size="sm"
-                    disabled={props.disableEdit}
-                    onClick={() => props.toggle('editMode')}
+                    disabled={disableEdit}
+                    onClick={() => toggle('editMode')}
                 >
                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                 </Button>
@@ -66,7 +64,7 @@ function PaperMenuBar(props) {
                         Publish
                     </RequireAuthentication>
                     <DropdownItem divider />
-                    <DropdownItem onClick={() => props.toggle('showGraphModal')}>View graph</DropdownItem>
+                    <DropdownItem onClick={() => toggle('showGraphModal')}>View graph</DropdownItem>
                     <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                         View resource
                     </DropdownItem>
@@ -93,17 +91,8 @@ function PaperMenuBar(props) {
                 }
             />
             <Publish showDialog={showPublishDialog} toggle={() => setShowPublishDialog((v) => !v)} />
-            {isOpenDiscussionModal && (
-                <DiscussionModal entityId={id} toggle={() => setIsOpenDiscussionModal((v) => !v)} refreshCount={refreshCount} />
-            )}
         </>
     );
-}
-
-PaperMenuBar.propTypes = {
-    editMode: PropTypes.bool.isRequired,
-    disableEdit: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
 };
 
 export default PaperMenuBar;
