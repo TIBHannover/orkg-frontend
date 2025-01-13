@@ -73,7 +73,7 @@ const ListPaginatedContent = <ItemType,>({
                     {items?.map((item, index) => renderListItem(item, index === items.length - 1))}
                 </ListGroupComponent>
             )}
-            {!isLoading && items && items.length === 0 && noDataComponent}
+            {!isLoading && !error && items && items.length === 0 && noDataComponent}
             {showPagination && !isLoading && !!totalElements && !!totalPages && totalPages > 1 && totalElements > 0 && (
                 <div className="mt-3">
                     {!isLoading && flush && !boxShadow && <hr />}
