@@ -1,14 +1,19 @@
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { FC, useEffect, useState } from 'react';
 import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { getLinksByDoi, getLinksByTitle } from 'services/unpaywall';
 
-const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
-    const [links, setLinks] = useState([]);
+type AccessPaperButtonProps = {
+    paperLink?: string | null;
+    doi?: string | null;
+    title?: string | null;
+};
+
+const AccessPaperButton: FC<AccessPaperButtonProps> = ({ paperLink = null, doi = null, title = null }) => {
+    const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hasLoaded, setHasLoaded] = useState(false);
@@ -81,12 +86,6 @@ const AccessPaperButton = ({ paperLink = null, doi = null, title = null }) => {
             </DropdownMenu>
         </ButtonDropdown>
     );
-};
-
-AccessPaperButton.propTypes = {
-    paperLink: PropTypes.string,
-    doi: PropTypes.string,
-    title: PropTypes.string,
 };
 
 export default AccessPaperButton;

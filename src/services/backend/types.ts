@@ -136,13 +136,6 @@ export type Contributor = {
     avatar_url: string;
 };
 
-export type Comment = {
-    id: string;
-    message: string;
-    created_by: string;
-    created_at: string;
-};
-
 export type List = {
     id: string;
     label: string;
