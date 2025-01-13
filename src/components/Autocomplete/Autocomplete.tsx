@@ -116,7 +116,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             <Select<OptionType, GroupBase<OptionType>, AdditionalType, IsMulti>
                 {...restProps}
                 // to clear the cached options if the selected ontologies changes
-                key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(localValue)}
+                key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(defaultAdditional)}
                 instanceId={useId()}
                 styles={customStyles}
                 classNames={customClassNames}
