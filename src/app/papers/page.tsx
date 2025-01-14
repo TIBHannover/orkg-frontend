@@ -6,15 +6,17 @@ import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ListPage from 'components/PaginatedContent/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import Link from 'next/link';
-import { useQueryState, parseAsInteger } from 'nuqs';
+import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getPapers, papersUrl } from 'services/backend/papers';
-import { Paper } from 'services/backend/types';
+import { Paper, VisibilityOptions } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 
 const Papers: FC = () => {
@@ -22,6 +24,11 @@ const Papers: FC = () => {
         defaultValue: null,
         // eslint-disable-next-line no-nested-ternary
         parse: (value) => (value === 'true' ? true : value === 'false' ? false : null),
+    });
+
+    const [visibility] = useQueryState<VisibilityOptions>('visibility', {
+        defaultValue: VISIBILITY_FILTERS.ALL_LISTED,
+        parse: (value) => value as VisibilityOptions,
     });
 
     useEffect(() => {
@@ -34,6 +41,7 @@ const Papers: FC = () => {
 
     const buttons = (
         <>
+            <VisibilityFilter />
             {!!user && user.isCurationAllowed && (
                 <UncontrolledButtonDropdown size="sm" style={{ marginRight: 2 }}>
                     <DropdownToggle caret color="secondary">
@@ -81,7 +89,7 @@ const Papers: FC = () => {
                 fetchFunction={getPapers}
                 fetchFunctionName="getPapers"
                 fetchUrl={papersUrl}
-                fetchExtraParams={{ verified }}
+                fetchExtraParams={{ verified, visibility }}
                 renderListItem={renderListItem}
                 resourceClass={CLASSES.PAPER}
                 buttons={buttons}

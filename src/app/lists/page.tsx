@@ -5,14 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListCard from 'components/Cards/ListCard/ListCard';
 import ListPage from 'components/PaginatedContent/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
+import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getLiteratureLists, listsUrl } from 'services/backend/literatureLists';
-import { LiteratureList } from 'services/backend/types';
+import { LiteratureList, VisibilityOptions } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 
 const Lists = () => {
@@ -22,10 +25,16 @@ const Lists = () => {
 
     const user = useSelector((state: RootStore) => state.auth.user);
 
+    const [visibility] = useQueryState<VisibilityOptions>('visibility', {
+        defaultValue: VISIBILITY_FILTERS.ALL_LISTED,
+        parse: (value) => value as VisibilityOptions,
+    });
+
     const renderListItem = (list: LiteratureList) => <ListCard key={list.id} list={list} showBadge={false} />;
 
     const buttons = (
         <>
+            <VisibilityFilter />
             <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.LIST_NEW}>
                 <FontAwesomeIcon icon={faPlus} /> Create list
             </RequireAuthentication>
@@ -62,7 +71,7 @@ const Lists = () => {
             fetchFunction={getLiteratureLists}
             fetchFunctionName="getLiteratureLists"
             fetchUrl={listsUrl}
-            fetchExtraParams={{ published: true }}
+            fetchExtraParams={{ published: true, visibility }}
             buttons={buttons}
             infoContainerText={infoContainerText}
         />

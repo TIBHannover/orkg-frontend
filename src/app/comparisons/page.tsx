@@ -6,19 +6,27 @@ import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
 import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import ListPage from 'components/PaginatedContent/ListPage';
 import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
-import Link from 'next/link';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { useEffect } from 'react';
-import { getComparisons, comparisonUrl } from 'services/backend/comparisons';
-import { Comparison } from 'services/backend/types';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useQueryState } from 'nuqs';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { comparisonUrl, getComparisons } from 'services/backend/comparisons';
+import { Comparison, VisibilityOptions } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 
 const Comparisons = () => {
     const user = useSelector((state: RootStore) => state.auth.user);
+
+    const [visibility] = useQueryState<VisibilityOptions>('visibility', {
+        defaultValue: VISIBILITY_FILTERS.ALL_LISTED,
+        parse: (value) => value as VisibilityOptions,
+    });
 
     useEffect(() => {
         document.title = 'Comparisons list - ORKG';
@@ -28,6 +36,7 @@ const Comparisons = () => {
 
     const buttons = (
         <>
+            <VisibilityFilter />
             <RequireAuthentication
                 component={Link}
                 color="secondary"
@@ -90,6 +99,7 @@ const Comparisons = () => {
             fetchFunctionName="getComparisons"
             fetchExtraParams={{
                 published: true,
+                visibility,
             }}
             renderListItem={renderListItem}
             buttons={buttons}
