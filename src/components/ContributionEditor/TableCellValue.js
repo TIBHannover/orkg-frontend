@@ -48,7 +48,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate }, ref) => {
                                 onDoubleClick={env('NEXT_PUBLIC_PWC_USER_ID') !== value.created_by ? handleStartEdit : undefined}
                             >
                                 {value.label ? (
-                                    <ValuePlugins type={value._class} options={{ inModal: true }}>
+                                    <ValuePlugins type={value._class} options={{ inModal: true }} datatype={value.datatype}>
                                         {value.label}
                                     </ValuePlugins>
                                 ) : (

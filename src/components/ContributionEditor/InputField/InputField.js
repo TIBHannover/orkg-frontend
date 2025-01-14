@@ -1,27 +1,27 @@
-import { Input } from 'reactstrap';
+import DateTimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
+import DurationInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
+import GregorianInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
+import InputFieldModal from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
+import TimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
+import { getConfigByClassId, getConfigByType } from 'constants/DataTypes';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { getConfigByType } from 'constants/DataTypes';
 import Textarea from 'react-textarea-autosize';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { Input } from 'reactstrap';
 
 export default function InputField(props) {
+    const { inputFieldModalIsOpen: isModalOpen, setInputFieldModalIsOpen: setIsModalOpen } = props;
     let inputFormType = 'text';
+    let dataType = MISC.DEFAULT_LITERAL_DATATYPE;
 
     if (props.valueClass?.id) {
-        switch (props.valueClass.id) {
-            case CLASSES.DATE:
-                inputFormType = 'date';
-                break;
-            case CLASSES.BOOLEAN:
-                inputFormType = 'boolean';
-                break;
-            default:
-                inputFormType = 'text';
-                break;
-        }
+        const config = getConfigByClassId(props.valueClass.id);
+        inputFormType = config.inputFormType;
+        dataType = props.valueClass.id;
     } else if (props.inputDataType !== ENTITIES.RESOURCE) {
         const config = getConfigByType(props.inputDataType);
         inputFormType = config.inputFormType;
+        dataType = props.inputDataType;
     }
 
     const Forms = {
@@ -73,6 +73,41 @@ export default function InputField(props) {
                 autoFocus
             />
         ),
+        duration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <DurationInput value={props.inputValue} onChange={props.setInputValue} />
+            </InputFieldModal>
+        ),
+        yearMonthDuration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <DurationInput value={props.inputValue} onChange={props.setInputValue} type="yearMonthDuration" />
+            </InputFieldModal>
+        ),
+        dayTimeDuration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <DurationInput value={props.inputValue} onChange={props.setInputValue} type="dayTimeDuration" />
+            </InputFieldModal>
+        ),
+        gYearMonth: <GregorianInput value={props.inputValue} onChange={props.setInputValue} type="gYearMonth" />,
+        gYear: <GregorianInput value={props.inputValue} onChange={props.setInputValue} type="gYear" />,
+        gMonthDay: <GregorianInput value={props.inputValue} onChange={props.setInputValue} type="gMonthDay" />,
+        gDay: <GregorianInput value={props.inputValue} onChange={props.setInputValue} type="gDay" />,
+        gMonth: <GregorianInput value={props.inputValue} onChange={props.setInputValue} type="gMonth" />,
+        dateTime: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <DateTimeInput value={props.inputValue} onChange={props.setInputValue} type="dateTime" />
+            </InputFieldModal>
+        ),
+        dateTimeStamp: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <DateTimeInput value={props.inputValue} onChange={props.setInputValue} type="dateTimeStamp" />
+            </InputFieldModal>
+        ),
+        time: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={props.inputValue}>
+                <TimeInput value={props.inputValue} onChange={props.setInputValue} />
+            </InputFieldModal>
+        ),
     };
 
     return <>{Forms[inputFormType] || Forms.default}</>;
@@ -88,4 +123,6 @@ InputField.propTypes = {
     isValid: PropTypes.bool.isRequired,
     placeholder: PropTypes.string,
     literalInputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+    inputFieldModalIsOpen: PropTypes.bool,
+    setInputFieldModalIsOpen: PropTypes.func,
 };

@@ -1,7 +1,12 @@
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import DateTimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
+import DurationInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
+import GregorianInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
+import InputFieldModal from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
+import TimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
 import { InputType, StandardInputType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { Input } from 'reactstrap';
 import { Node } from 'services/backend/types';
@@ -34,6 +39,8 @@ const InputField: FC<InputFieldProps> = ({
     onChange,
     allowCreate = false,
 }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const Forms: { [key: string]: JSX.Element } = {
         textarea: (
             <Textarea
@@ -59,6 +66,26 @@ const InputField: FC<InputFieldProps> = ({
                 <option value="false">False</option>
             </Input>
         ),
+        duration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <DurationInput value={inputValue} onChange={setInputValue} />
+            </InputFieldModal>
+        ),
+        yearMonthDuration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <DurationInput value={inputValue} onChange={setInputValue} type="yearMonthDuration" />
+            </InputFieldModal>
+        ),
+        dayTimeDuration: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <DurationInput value={inputValue} onChange={setInputValue} type="dayTimeDuration" />
+            </InputFieldModal>
+        ),
+        gYearMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gYearMonth" />,
+        gYear: <GregorianInput value={inputValue} onChange={setInputValue} type="gYear" />,
+        gMonthDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonthDay" />,
+        gDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gDay" />,
+        gMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonth" />,
         autocomplete: (
             <Autocomplete
                 entityType={ENTITIES.RESOURCE}
@@ -103,6 +130,21 @@ const InputField: FC<InputFieldProps> = ({
                 className="flex-grow d-flex"
                 autoFocus
             />
+        ),
+        dateTime: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <DateTimeInput value={inputValue} onChange={setInputValue} type="dateTime" />
+            </InputFieldModal>
+        ),
+        dateTimeStamp: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <DateTimeInput value={inputValue} onChange={setInputValue} type="dateTimeStamp" />
+            </InputFieldModal>
+        ),
+        time: (
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+                <TimeInput value={inputValue} onChange={setInputValue} />
+            </InputFieldModal>
         ),
     };
 

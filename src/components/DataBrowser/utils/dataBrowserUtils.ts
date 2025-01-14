@@ -105,28 +105,6 @@ export const commitChangeLabel = (valueId: string, _class: EntityType, label: st
     return apiCall;
 };
 
-/**
- * Get the xsd datatype if it's literal
- */
-export const getXsdByClassId = (classId: string) => {
-    switch (classId) {
-        case CLASSES.STRING:
-            return MISC.DEFAULT_LITERAL_DATATYPE;
-        case CLASSES.DECIMAL:
-            return 'xsd:decimal';
-        case CLASSES.INTEGER:
-            return 'xsd:integer';
-        case CLASSES.DATE:
-            return 'xsd:date';
-        case CLASSES.BOOLEAN:
-            return 'xsd:boolean';
-        case CLASSES.URI:
-            return 'xsd:anyURI';
-        default:
-            return MISC.DEFAULT_LITERAL_DATATYPE;
-    }
-};
-
 export const getResourceFromStatementsById = (id: string, statements: Statement[]) => {
     let resource = statements.find((s) => s.subject.id === id);
     if (resource) {

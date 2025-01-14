@@ -109,7 +109,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
 
     const schema = useSelector((state) => {
         const propertyShapes = getPropertyShapesByResourceIDAndPredicateID(state, contributionId, propertyId);
-        if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
+        if (valueClass && getConfigByClassId(valueClass.id)._class === ENTITIES.LITERAL) {
             let propertyShape;
             if (propertyShapes && propertyShapes.length > 0) {
                 propertyShape = propertyShapes[0];
@@ -124,7 +124,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
                 };
             }
             const _schema = validationSchema(propertyShape);
-            return _schema;
+            return _schema || getConfigByClassId(valueClass.id).schema;
         }
         const config = getConfigByType(inputDataType);
         return config.schema;
@@ -135,25 +135,14 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
      */
     const getDataType = () => {
         if (valueClass && entityType === ENTITIES.LITERAL) {
-            switch (valueClass.id) {
-                case CLASSES.STRING:
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
-                case CLASSES.DECIMAL:
-                    return 'xsd:decimal';
-                case CLASSES.INTEGER:
-                    return 'xsd:integer';
-                case CLASSES.DATE:
-                    return 'xsd:date';
-                case CLASSES.BOOLEAN:
-                    return 'xsd:boolean';
-                case CLASSES.URI:
-                    return 'xsd:anyURI';
-                default:
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
+            const config = getConfigByClassId(valueClass.id);
+
+            if (config.type !== ENTITIES.RESOURCE) {
+                return config.type;
             }
-        } else {
-            return getConfigByType(inputDataType).type;
+            return MISC.DEFAULT_LITERAL_DATATYPE;
         }
+        return getConfigByType(inputDataType).type;
     };
 
     const updateResourceStatements = (resourceId) => dispatch(updateResourceStatementsAction(resourceId));

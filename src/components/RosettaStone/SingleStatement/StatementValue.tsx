@@ -3,6 +3,7 @@ import ActionButton from 'components/ActionButton/ActionButton';
 import { OptionType } from 'components/Autocomplete/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import StatementTypeModal from 'components/RosettaStone/AddStatement/StatementTypeModal';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
@@ -37,7 +38,11 @@ const StatementValue: FC<StatementValueProps> = ({ template, value, propertyShap
         <span>
             {value.map((v, i) => (
                 <Fragment key={v.id}>
-                    {'datatype' in v && <span>{v.label}</span>}
+                    {'datatype' in v && (
+                        <ValuePlugins type={ENTITIES.LITERAL} datatype={v.datatype as string}>
+                            {v.label}
+                        </ValuePlugins>
+                    )}
                     {!('datatype' in v) && (
                         <Fragment key={`v${v.id}`}>
                             <DescriptionTooltip id={v.id} _class={v._class ?? ENTITIES.RESOURCE} classes={'classes' in v ? v.classes : undefined}>

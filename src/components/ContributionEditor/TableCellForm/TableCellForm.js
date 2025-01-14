@@ -51,13 +51,14 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
 
     // we need this state to prevent closing the modal of selecting ontologies when the users clicks outside the input field because of useClickAway
     const [ontologyModalIsOpen, setOntologyModalIsOpen] = useState(false);
+    const [inputFieldModalIsOpen, setInputFieldModalIsOpen] = useState(false);
     const [formFeedback, setFormFeedback] = useState(null);
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
         // setIsCreating(false);
-        if (!ontologyModalIsOpen) {
+        if (!ontologyModalIsOpen && !inputFieldModalIsOpen) {
             if (!editMode) {
                 if ((inputValue === '' && inputFormType !== 'empty') || entityType === ENTITIES.RESOURCE) {
                     closeForm(false);
@@ -272,6 +273,8 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                         }
                                     }}
                                     placeholder={propertyShape?.placeholder}
+                                    inputFieldModalIsOpen={inputFieldModalIsOpen}
+                                    setInputFieldModalIsOpen={setInputFieldModalIsOpen}
                                 />
                                 {!isValid && (
                                     <FormFeedback tooltip className="d-block">

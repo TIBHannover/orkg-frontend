@@ -53,7 +53,7 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
 
     return (
         <div className="d-flex flex-column flex-grow-1">
-            <InputGroup size="sm" className="flex-grow-1">
+            <InputGroup size="sm" className="flex-grow-1 flex-nowrap">
                 <DatatypeSelector
                     _class={editMode && value && '_class' in value ? value._class : undefined}
                     range={range}

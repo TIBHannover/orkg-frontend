@@ -73,6 +73,7 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
             ...provided,
             // @ts-expect-error state should be state manager of react select
             ...(state.selectProps.noFormControl ? { borderRadius: '6px 0 0 6px' } : {}),
+            display: 'flex',
         } as CSSObjectWithLabel),
     control: (provided, state) =>
         ({
@@ -85,6 +86,7 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
             '&>div:first-of-type': {
                 ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '0 8px !important' } : {}),
             },
+            flexGrow: 1,
         } as CSSObjectWithLabel),
     clearIndicator: (provided, state) =>
         ({ ...provided, ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '4px !important' } : {}) } as CSSObjectWithLabel),

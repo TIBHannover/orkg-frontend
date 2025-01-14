@@ -1,7 +1,7 @@
 import { OptionType } from 'components/Autocomplete/types';
 import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import { getConfigByClassId } from 'constants/DataTypes';
-import { CLASSES } from 'constants/graphSettings';
+import { ENTITIES } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import errorHandler from 'helpers/errorHandler';
 import { differenceWith, toInteger } from 'lodash';
@@ -107,7 +107,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
                         }
                         subjects = values;
                     }
-                } else if ([CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(range?.id ?? '')) {
+                } else if (getConfigByClassId(range?.id ?? '')._class === ENTITIES.LITERAL) {
                     // Literal
                     // Literal are always recreated because the id is not returned by the api
                     const values: string[] = [];
