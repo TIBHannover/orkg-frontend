@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.158.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.157.0...v0.158.0) - 2025-01-14
+
+### Changes
+
+- fix(Template): remove new lines from the description input fields [`#1471`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1471)
+- feat: add support for additional literal types (time and duration) [`#1425`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1425)
+
+---
 ## [v0.157.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.156.0...v0.157.0) - 2025-01-13
 
 ### Changes
