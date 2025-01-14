@@ -8,7 +8,7 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import DATA_TYPES from 'constants/DataTypes';
+import DATA_TYPES, { getConfigByClassId } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
@@ -42,7 +42,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
 
     const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
         if (action === 'select-option' && selected) {
-            if (['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(selected.id)) {
+            if (getConfigByClassId(selected.id)._class === ENTITIES.LITERAL) {
                 if (index === 0) {
                     toast.error('Subject must not be of a literal type.');
                     return;

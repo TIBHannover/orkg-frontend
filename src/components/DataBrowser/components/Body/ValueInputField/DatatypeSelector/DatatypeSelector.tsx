@@ -29,7 +29,7 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, 
                 />
             }
         >
-            <span>{children}</span>
+            <span className="d-flex flex-shrink-0">{children}</span>
         </Tippy>
     );
 
@@ -56,7 +56,10 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, 
                     styles={customStyles}
                     size="sm"
                     noFormControl
-                    classNames={customClassNames}
+                    classNames={{
+                        ...customClassNames,
+                        container: () => `${customClassNames.container({ selectProps: { noFormControl: true, size: 'sm' } })} flex-shrink-0`,
+                    }}
                     classNamePrefix="react-select-dark"
                 />
             </ConditionalWrapper>

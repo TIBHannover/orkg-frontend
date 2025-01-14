@@ -94,6 +94,7 @@ export const PREDICATES: {
     SUSTAINABLE_DEVELOPMENT_GOAL: 'sustainableDevelopmentGoal',
 };
 
+// https://gitlab.com/TIBHannover/orkg/orkg-backend/-/blob/master/rest-api-server/src/main/resources/data/classes.json
 export const CLASSES: {
     [key: string]: string;
 } = {
@@ -159,6 +160,36 @@ export const CLASSES: {
     LIST: 'List',
     QUALITY_FEEDBACK: 'QualityFeedback',
     ROSETTA_STONE_STATEMENT: 'RosettaStoneStatement',
+    // xsd types
+    DURATION: 'Duration',
+    YEAR_MONTH_DURATION: 'YearMonthDuration',
+    DAY_TIME_DURATION: 'DayTimeDuration',
+    TIME: 'Time',
+    DATE_TIME: 'DateTime',
+    DATE_TIME_STAMP: 'DateTimeStamp',
+    G_YEAR_MONTH: 'GregorianYearMonth',
+    G_YEAR: 'GregorianYear',
+    G_MONTH_DAY: 'GregorianMonthDay',
+    G_DAY: 'GregorianDay',
+    G_MONTH: 'GregorianMonth',
+    NON_POSITIVE_INTEGER: 'NonPositiveInteger',
+    NON_NEGATIVE_INTEGER: 'NonNegativeInteger',
+    POSITIVE_INTEGER: 'PositiveInteger',
+    NEGATIVE_INTEGER: 'NegativeInteger',
+    UNSIGNED_LONG: 'UnsignedLong',
+    UNSIGNED_INT: 'UnsignedInt',
+    UNSIGNED_SHORT: 'UnsignedShort',
+    UNSIGNED_BYTE: 'UnsignedByte',
+    FLOAT: 'Float',
+    HEX_BINARY: 'HexBinary',
+    BASE64_BINARY: 'Base64Binary',
+    NORMALIZED_STRING: 'NormalizedString',
+    TOKEN: 'Token',
+    LANGUAGE: 'LanguageTag',
+    LONG: 'Long',
+    INT: 'Int',
+    SHORT: 'Short',
+    BYTE: 'Byte',
 };
 
 export const RESOURCES: {

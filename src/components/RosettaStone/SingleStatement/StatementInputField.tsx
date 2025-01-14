@@ -1,9 +1,14 @@
 import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import DateTimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
+import DurationInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
+import GregorianInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
+import InputFieldModal from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
+import TimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
 import ListInputField from 'components/RosettaStone/SingleStatement/ListInputField';
 import { getConfigByClassId, InputType, StandardInputType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Input, InputGroup } from 'reactstrap';
 import { Node, RSPropertyShape } from 'services/backend/types';
 
@@ -14,6 +19,7 @@ type StatementInputFieldProps = {
 };
 
 const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, value, updateValue }) => {
+    const [isInputFieldModalOpen, setIsInputFieldModalOpen] = useState(false);
     let range: Node | undefined;
 
     if ('class' in propertyShape && propertyShape.class) {
@@ -92,6 +98,143 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                     />
                 </InputGroup>
             </div>
+        ),
+        duration: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <DurationInput value={value?.[0]?.label ?? ''} onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])} />
+            </InputFieldModal>
+        ),
+        yearMonthDuration: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <DurationInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="yearMonthDuration"
+                />
+            </InputFieldModal>
+        ),
+        dayTimeDuration: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <DurationInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="dayTimeDuration"
+                />
+            </InputFieldModal>
+        ),
+        gYearMonth: (
+            <div className="w-25 d-inline-block">
+                <div className="flex-grow-1 d-flex">
+                    <GregorianInput
+                        value={value?.[0]?.label ?? ''}
+                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                        type="gYearMonth"
+                    />
+                </div>
+            </div>
+        ),
+        gYear: (
+            <div className="w-25 d-inline-block">
+                <div className="flex-grow-1 d-flex">
+                    <GregorianInput
+                        value={value?.[0]?.label ?? ''}
+                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                        type="gYear"
+                    />
+                </div>
+            </div>
+        ),
+        gMonthDay: (
+            <div className="w-25 d-inline-block">
+                <div className="flex-grow-1 d-flex">
+                    <GregorianInput
+                        value={value?.[0]?.label ?? ''}
+                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                        type="gMonthDay"
+                    />
+                </div>
+            </div>
+        ),
+        gDay: (
+            <div className="w-25 d-inline-block">
+                <div className="flex-grow-1 d-flex">
+                    <GregorianInput
+                        value={value?.[0]?.label ?? ''}
+                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                        type="gDay"
+                    />
+                </div>
+            </div>
+        ),
+        gMonth: (
+            <div className="w-25 d-inline-block">
+                <div className="flex-grow-1 d-flex">
+                    <GregorianInput
+                        value={value?.[0]?.label ?? ''}
+                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                        type="gMonth"
+                    />
+                </div>
+            </div>
+        ),
+        dateTime: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <DateTimeInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="dateTime"
+                />
+            </InputFieldModal>
+        ),
+        dateTimeStamp: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <DateTimeInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="dateTimeStamp"
+                />
+            </InputFieldModal>
+        ),
+        time: (
+            <InputFieldModal
+                isOpen={isInputFieldModalOpen}
+                setIsOpen={setIsInputFieldModalOpen}
+                dataType={config.type}
+                inputValue={value?.[0]?.label ?? ''}
+                className="w-25 d-inline-block"
+            >
+                <TimeInput value={value?.[0]?.label ?? ''} onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])} />
+            </InputFieldModal>
         ),
     };
 

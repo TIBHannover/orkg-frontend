@@ -8,7 +8,7 @@ import ValueOptions from 'components/DataBrowser/components/Body/ValueOptions/Va
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import Link from 'next/link';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import { Button } from 'reactstrap';
@@ -94,7 +94,12 @@ const TripleObject: FC<SingleStatementProps> = ({
                             </span>
                         )}
                         {statement.object._class === ENTITIES.LITERAL && (
-                            <ValuePlugins type={statement.object._class}>{statement.object.label || 'No label'}</ValuePlugins>
+                            <ValuePlugins
+                                datatype={'datatype' in statement.object ? statement.object.datatype : MISC.DEFAULT_LITERAL_DATATYPE}
+                                type={statement.object._class}
+                            >
+                                {statement.object.label || 'No label'}
+                            </ValuePlugins>
                         )}
                         {preferences.showInlineDataTypes && <ValueDatatype value={statement.object} />}
                         {!isEditMode && !path.includes(statement.object.id) && hasObjectStatements && (

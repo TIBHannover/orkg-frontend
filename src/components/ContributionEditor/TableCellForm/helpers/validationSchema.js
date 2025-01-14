@@ -37,5 +37,5 @@ export default function validationSchema(propertyShape) {
             schema = schema.regex(new RegExp(propertyShape.pattern));
         }
     }
-    return schema.describe(propertyShape.path.label);
+    return schema?.describe(propertyShape.path.label);
 }
