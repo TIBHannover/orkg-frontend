@@ -520,11 +520,12 @@ const Header = () => {
                         <Button
                             id="sign-in"
                             color="secondary"
-                            className="px-3 flex-shrink-0 sign-in"
+                            className="px-3 flex-shrink-0 sign-in d-flex align-items-center justify-content-center"
                             outline
                             onClick={() => login({ redirectUri: window.location.href })}
                         >
-                            <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
+                            <FontAwesomeIcon className="me-1" icon={faUser} />
+                            <span className="d-md-none d-sm-block d-lg-block">Sign in</span>
                         </Button>
                     )}
 

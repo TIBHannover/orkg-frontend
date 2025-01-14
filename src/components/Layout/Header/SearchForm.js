@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import { getLinkByEntityType } from 'utils';
 
 const InputStyled = styled(Input)`
-    max-width: 120px;
+    max-width: 130px;
     width: 100%;
     transition: max-width 0.3s ease-in-out;
 
@@ -62,7 +62,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
 
     return (
         <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} id="tour-search-bar">
-            <InputGroup>
+            <InputGroup className="flex-nowrap">
                 <InputStyled
                     placeholder={placeholder}
                     value={value}
