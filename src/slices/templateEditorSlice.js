@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import errorHandler from 'helpers/errorHandler';
 import { match } from 'path-to-regexp';
 import { toast } from 'react-toastify';
 import { getTemplatesByClass } from 'services/backend/statements';
 import { getTemplate, updateTemplate } from 'services/backend/templates';
+import { removeLinebreaks } from 'tsUtils';
 
 const initialState = {
     label: '',
@@ -186,7 +188,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
     }
     const dataToSubmit = {
         label: data.label,
-        description: data.description || null,
+        description: data.description ? removeLinebreaks(data.description) : null,
         formatted_label: data.hasLabelFormat && data.formatted_label ? data.formatted_label : null,
         target_class: data.target_class.id,
         relations: {
@@ -197,7 +199,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         properties: data.properties.map((ps) => ({
             label: ps.label || 'Property shape',
             placeholder: ps.placeholder,
-            description: ps.description,
+            description: removeLinebreaks(ps.description),
             min_count: ps.min_count,
             max_count: ps.max_count,
             path: ps.path.id,
@@ -215,10 +217,11 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
     } catch (e) {
         dispatch(setHasFailedSaving(true));
         toggleIsEditMode(false);
-        toast.error('Template failed saving!');
+        errorHandler({ error: e, shouldShowToast: true });
+    } finally {
+        dispatch(setIsSaving(false));
+        toggleIsEditMode(false);
     }
-    dispatch(setIsSaving(false));
-    toggleIsEditMode(false);
 
     return data.id;
 };
