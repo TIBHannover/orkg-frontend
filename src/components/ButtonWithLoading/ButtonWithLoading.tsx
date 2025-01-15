@@ -1,12 +1,19 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { FC, ReactNode } from 'react';
 import { Button } from 'reactstrap';
+
+type ButtonWithLoadingProps = {
+    children: ReactNode;
+    isLoading?: boolean;
+    isDisabled?: boolean;
+    loadingMessage?: string;
+} & React.ComponentProps<typeof Button>;
 
 /**
  * Wrapper for Reactstrap Button component that adds a loading state
  */
-const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Loading', isDisabled = false, ...props }) => (
+const ButtonWithLoading: FC<ButtonWithLoadingProps> = ({ children, isLoading = false, loadingMessage = 'Loading', isDisabled = false, ...props }) => (
     <Button disabled={isLoading || isDisabled} {...props}>
         {!isLoading ? (
             children
@@ -17,12 +24,5 @@ const ButtonWithLoading = ({ children, isLoading = false, loadingMessage = 'Load
         )}
     </Button>
 );
-
-ButtonWithLoading.propTypes = {
-    children: PropTypes.node.isRequired,
-    isLoading: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    loadingMessage: PropTypes.string,
-};
 
 export default ButtonWithLoading;

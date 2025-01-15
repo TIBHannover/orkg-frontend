@@ -1,9 +1,13 @@
 import { faExternalLinkAlt, faUserLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
-const CuratorModal = ({ toggle }) => (
+type CuratorModalProps = {
+    toggle: () => void;
+};
+
+const CuratorModal: FC<CuratorModalProps> = ({ toggle }) => (
     <Modal isOpen toggle={toggle}>
         <ModalHeader toggle={toggle}>Curator role required</ModalHeader>
         <ModalBody className="py-4">
@@ -20,9 +24,5 @@ const CuratorModal = ({ toggle }) => (
         </ModalBody>
     </Modal>
 );
-
-CuratorModal.propTypes = {
-    toggle: PropTypes.func.isRequired,
-};
 
 export default CuratorModal;

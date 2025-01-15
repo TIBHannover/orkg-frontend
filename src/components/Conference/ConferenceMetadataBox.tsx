@@ -1,9 +1,18 @@
-import PropTypes from 'prop-types';
 import { faExternalLinkAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
+import { FC } from 'react';
 
-function ConferenceMetadataBox({ url, metadata, isLoading }) {
+type ConferenceMetadataBoxProps = {
+    url: string;
+    metadata: {
+        start_date: string;
+        review_process: string;
+    };
+    isLoading: boolean;
+};
+
+const ConferenceMetadataBox: FC<ConferenceMetadataBoxProps> = ({ url, metadata, isLoading }) => {
     return (
         <div className="box rounded-3 p-3 flex-grow-1">
             <h5>Conference information </h5>
@@ -23,12 +32,6 @@ function ConferenceMetadataBox({ url, metadata, isLoading }) {
             )}
         </div>
     );
-}
-
-ConferenceMetadataBox.propTypes = {
-    url: PropTypes.string,
-    metadata: PropTypes.object,
-    isLoading: PropTypes.bool.isRequired,
 };
 
 export default ConferenceMetadataBox;

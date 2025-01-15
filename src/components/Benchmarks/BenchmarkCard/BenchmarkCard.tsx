@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { Card, CardBody } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
+import Link from 'next/link';
+import { FC } from 'react';
+import { Card, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 import { reverseWithSlug } from 'utils';
 
@@ -28,25 +28,36 @@ const BenchmarkCardStyled = styled.div`
     }
 `;
 
-function BenchmarkCard(props) {
+type BenchmarkCardProps = {
+    benchmark: {
+        research_problem: {
+            id: string;
+            label: string;
+        };
+        total_papers: number;
+        total_datasets: number;
+        total_codes: number;
+    };
+};
+const BenchmarkCard: FC<BenchmarkCardProps> = ({ benchmark }) => {
     return (
         <BenchmarkCardStyled className="col-md-3 mb-4">
             <Link
                 href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                    researchProblemId: props.benchmark.research_problem.id,
-                    slug: props.benchmark.research_problem.label,
+                    researchProblemId: benchmark.research_problem.id,
+                    slug: benchmark.research_problem.label,
                 })}
                 style={{ textDecoration: 'none' }}
             >
                 <Card className="h-100">
                     <CardBody>
                         <div className="mt-2">
-                            <div className="researchProblemName">{props.benchmark.research_problem.label}</div>
+                            <div className="researchProblemName">{benchmark.research_problem.label}</div>
 
                             <div className="researchProblemStats text-muted">
-                                Papers: <b>{props?.benchmark.total_papers}</b> <br />
-                                Datasets: <b>{props?.benchmark.total_datasets}</b> <br />
-                                Code: <b>{props?.benchmark.total_codes}</b>
+                                Papers: <b>{benchmark.total_papers}</b> <br />
+                                Datasets: <b>{benchmark.total_datasets}</b> <br />
+                                Code: <b>{benchmark.total_codes}</b>
                             </div>
                         </div>
                     </CardBody>
@@ -54,10 +65,6 @@ function BenchmarkCard(props) {
             </Link>
         </BenchmarkCardStyled>
     );
-}
-
-BenchmarkCard.propTypes = {
-    benchmark: PropTypes.object.isRequired,
 };
 
 export default BenchmarkCard;

@@ -1,12 +1,13 @@
 'use client';
 
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { useRouter } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
+import errorHandler from 'helpers/errorHandler';
 import { reverse } from 'named-urls';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
@@ -22,7 +23,7 @@ const AddProperty = () => {
         document.title = 'Add property - ORKG';
     }, []);
 
-    const handleAdd = async (e) => {
+    const handleAdd = async (e: MouseEvent) => {
         e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
@@ -32,8 +33,7 @@ const AddProperty = () => {
                 setIsLoading(false);
                 router.push(`${reverse(ROUTES.PROPERTY, { id: newProperty.id })}?isEditMode=true`);
             } catch (error) {
-                console.error(error);
-                toast.error(`Error creating property ${error.message}`);
+                errorHandler({ error, shouldShowToast: true });
                 setIsLoading(false);
             }
         } else {
