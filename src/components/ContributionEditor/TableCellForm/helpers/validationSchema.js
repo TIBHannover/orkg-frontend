@@ -16,7 +16,10 @@ export default function validationSchema(propertyShape) {
                 schema = z.string();
                 break;
             case CLASSES.INTEGER:
-                schema = z.preprocess(preprocessNumber, z.number()).int();
+                schema = z.preprocess(preprocessNumber, z.number().int()).refine(
+                    (value) => !Number.isNaN(value), // Reject NaN values
+                    { message: 'Invalid input: must be a valid integer' },
+                );
                 break;
             case CLASSES.BOOLEAN:
                 schema = z.preprocess(preprocessBoolean, z.boolean());
