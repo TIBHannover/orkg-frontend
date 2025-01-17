@@ -123,7 +123,7 @@
         "string-format": "^2.0.0",
         "styled-components": "^6.0.7",
         "stylis": "^4.3.0",
-        "swr": "^2.2.5",
+        "swr": "^2.3.0",
         "typed.js": "^2.0.15",
         "url-regex-safe": "^4.0.0",
         "use-resize-observer": "^9.1.0",
