@@ -110,7 +110,7 @@ export const addAdditionalData = (
 ) => {
     if (additionalOptions && additionalOptions.length > 0 && page === 0) {
         let defaultOptions = additionalOptions;
-        defaultOptions = defaultOptions.filter((option) => option.label.toLowerCase().includes(value.trim().toLowerCase()));
+        defaultOptions = defaultOptions.filter((option) => option?.label?.toLowerCase().includes(value.trim().toLowerCase()));
         (prevOptions as OptionType[]).unshift(...(defaultOptions as OptionType[]));
     }
     return uniqBy(prevOptions as OptionType[], 'id') as OptionType[];
