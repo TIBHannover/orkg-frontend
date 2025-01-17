@@ -164,7 +164,9 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 {showContext && isLoadingContext && <div className="d-inline-block">Loading...</div>}
                 {showContext && !isLoadingContext && context && (
                     <Link href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: context.id, contributionId: 'statements' })}>
-                        <Badge color="light">Context: {context.title}</Badge>
+                        <Badge color="light" className="d-inline-block text-truncate" style={{ maxWidth: '50%' }} title={context.title}>
+                            Context: {context.title}
+                        </Badge>
                     </Link>
                 )}
             </div>
