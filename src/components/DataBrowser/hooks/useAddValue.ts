@@ -62,7 +62,6 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
                         id: entity?.id,
                         elements: [...(originalOrder?.elements ?? []), response.id],
                     });
-                    mutateList();
                 } else {
                     await createResourceStatement(entity?.id, predicate?.id, response.id);
                 }
@@ -73,7 +72,6 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
                     id: entity?.id,
                     elements: [...(originalOrder?.elements ?? []), v.id],
                 });
-                mutateList();
             } else {
                 apiCall = createResourceStatement(entity?.id, predicate?.id, v.id);
             }
@@ -81,6 +79,11 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
         if (apiCall) {
             await apiCall
                 .then(() => {
+                    if (isList) {
+                        mutateList(undefined, {
+                            revalidate: true,
+                        });
+                    }
                     mutateStatements();
                     // mutateStatements for the upper level (for formatted labels)
                     const previousId = getPreviousId(entity.id);

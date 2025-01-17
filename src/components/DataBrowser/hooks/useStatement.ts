@@ -3,19 +3,20 @@ import { getStatementsBySubjectId } from 'components/DataBrowser/utils/dataBrows
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { groupBy, uniqWith, isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 import { deleteStatementById, getStatements, statementsUrl } from 'services/backend/statements';
 import { Statement } from 'services/backend/types';
 import useSWR from 'swr';
+import { getList, listsUrl, updateList } from 'services/backend/lists';
 
 const useStatement = (statement: Statement, path: string[], level: number) => {
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config, preferences } = useDataBrowserState();
     const { isEditMode } = config;
     const { currentId, history, setHistory } = useHistory();
-    const { mutateStatements } = useEntity();
+    const { entity, mutateStatements } = useEntity();
 
     // if the object is a resource and the classes is not in the collapsedClasses, show the sub-level
     const showSubLevelDefault =
@@ -50,8 +51,20 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
 
     const _objectStatements = groupBy(objectStatements, 'predicate.label');
 
+    // support for lists
+    const isList = entity && 'classes' in entity && entity.classes.includes(CLASSES.LIST) && statement.predicate.id === PREDICATES.HAS_LIST_ELEMENT;
+    const { data: originalOrder, mutate: mutateList } = useSWR(isList ? [entity?.id, listsUrl, 'getList'] : null, ([_params]) => getList(_params));
+
     const deleteStatement = async () => {
-        await deleteStatementById(statement.id);
+        if (isList) {
+            await updateList({
+                id: entity?.id,
+                elements: [...(originalOrder?.elements.filter((c) => c !== statement.object.id) ?? [])],
+            });
+            mutateList();
+        } else {
+            await deleteStatementById(statement.id);
+        }
         mutateStatements();
     };
 

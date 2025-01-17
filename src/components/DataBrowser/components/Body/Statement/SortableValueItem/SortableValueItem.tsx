@@ -26,7 +26,7 @@ const SortableValueItem: FC<SortableValueItemProps> = ({ statement, children }) 
     const { config } = useDataBrowserState();
     const { isEditMode } = config;
     const ref = useRef(null);
-    const originalIndex = originalOrder?.elements.indexOf(statement.id) ?? index;
+    const originalIndex = originalOrder?.elements?.indexOf(statement.id) ?? index;
 
     const handleUpdate = ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
         const _valueIds = arrayMove(statements?.map((s) => s.object.id) ?? [], dragIndex, hoverIndex);
