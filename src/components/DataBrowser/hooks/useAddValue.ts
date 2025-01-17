@@ -1,4 +1,4 @@
-import { commitChangeLabel, createValue } from 'components/DataBrowser/utils/dataBrowserUtils';
+import { commitChangeLabel, convertPropertyShapeToSchema, createValue } from 'components/DataBrowser/utils/dataBrowserUtils';
 import useConstraints from 'components/DataBrowser/hooks/useConstraints';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
@@ -41,6 +41,8 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
     const onConversionTippyShown = () => confirmButtonRef?.current?.focus();
 
     const { schema, name: dataTypeName } = getConfigByType(dataType);
+
+    const propertySchema = propertyShape ? convertPropertyShapeToSchema(propertyShape) : schema;
 
     const isList = entity && 'classes' in entity && entity.classes.includes(CLASSES.LIST) && predicate.id === PREDICATES.HAS_LIST_ELEMENT;
 
@@ -101,6 +103,9 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
         let error;
         if (schema) {
             error = schema.safeParse(inputValue.trim()).error;
+        }
+        if (propertySchema) {
+            error = propertySchema.safeParse(inputValue.trim()).error;
         }
         if (error) {
             setFormFeedback(error.errors?.[0]?.message);

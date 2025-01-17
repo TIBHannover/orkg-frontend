@@ -1,4 +1,5 @@
-import { CLASSES, ENTITIES, MISC, RESOURCES } from 'constants/graphSettings';
+import { preprocessNumber } from 'constants/DataTypes';
+import { ENTITIES, MISC, RESOURCES } from 'constants/graphSettings';
 import { Cookies } from 'react-cookie';
 import { createClass } from 'services/backend/classes';
 import { createList } from 'services/backend/lists';
@@ -6,6 +7,7 @@ import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource, getResource, updateResource } from 'services/backend/resources';
 import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement, Template } from 'services/backend/types';
+import { z, ZodTypeAny } from 'zod';
 
 const cookies = new Cookies();
 
@@ -121,6 +123,43 @@ export const getResourceFromStatementsById = (id: string, statements: Statement[
 
 export const getStatementsBySubjectId = (id: string, statements: Statement[]) => {
     return statements.filter((s) => s.subject.id === id);
+};
+
+export const convertPropertyShapeToSchema = (propertyShape: PropertyShape) => {
+    // Start with base schema based on the first validation rule
+    let baseSchema: ZodTypeAny;
+    if ('min_inclusive' in propertyShape && 'max_inclusive' in propertyShape && propertyShape.min_inclusive && propertyShape.max_inclusive) {
+        baseSchema = z.preprocess(
+            preprocessNumber,
+            z
+                .number()
+                .gte(propertyShape.min_inclusive)
+                .lte(propertyShape.max_inclusive)
+                .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
+        );
+    } else if ('min_inclusive' in propertyShape && propertyShape.min_inclusive) {
+        baseSchema = z.preprocess(
+            preprocessNumber,
+            z
+                .number()
+                .gte(propertyShape.min_inclusive)
+                .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
+        );
+    } else if ('max_inclusive' in propertyShape && propertyShape.max_inclusive) {
+        baseSchema = z.preprocess(
+            preprocessNumber,
+            z
+                .number()
+                .lte(propertyShape.max_inclusive)
+                .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
+        );
+    } else if ('pattern' in propertyShape && propertyShape.pattern) {
+        baseSchema = z.string().regex(new RegExp(propertyShape.pattern)).describe(propertyShape.path.label);
+    } else {
+        return z.any();
+    }
+
+    return baseSchema;
 };
 
 export default getListPropertiesFromTemplate;
