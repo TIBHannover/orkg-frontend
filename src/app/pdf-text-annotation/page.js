@@ -13,15 +13,7 @@ import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import dynamic from 'next/dynamic';
-
-// CRA-CODE
-// import { PdfLoader, PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
-
-// NEXT-CODE
-const { PdfLoader, PdfHighlighter, Popup, AreaHighlight } = dynamic(() => import('react-pdf-highlighter'), {
-    ssr: false,
-});
+import { PdfLoader, PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
 
 const Wrapper = styled.div`
     margin-top: -30px;

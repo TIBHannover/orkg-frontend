@@ -135,7 +135,7 @@ const nextConfig = {
         return config;
     },
     experimental: {
-        serverComponentsExternalPackages: ['citeproc'],
+        serverComponentsExternalPackages: ['citeproc', 'react-pdf-highlighter'],
         turbo: {
             resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
             rules: {
