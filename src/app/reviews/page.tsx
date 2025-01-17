@@ -7,18 +7,26 @@ import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
 import ListPage from 'components/PaginatedContent/ListPage';
 import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
+import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getReviews, reviewUrl } from 'services/backend/reviews';
-import { Review } from 'services/backend/types';
+import { Review, VisibilityOptions } from 'services/backend/types';
 import { RootStore } from 'slices/types';
 
 const Reviews = () => {
     const user = useSelector((state: RootStore) => state.auth.user);
+
+    const [visibility] = useQueryState<VisibilityOptions>('visibility', {
+        defaultValue: VISIBILITY_FILTERS.ALL_LISTED,
+        parse: (value) => value as VisibilityOptions,
+    });
 
     useEffect(() => {
         document.title = 'Reviews - ORKG';
@@ -28,6 +36,7 @@ const Reviews = () => {
 
     const buttons = (
         <>
+            <VisibilityFilter />
             <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.REVIEW_NEW}>
                 <FontAwesomeIcon icon={faPlus} /> Create review
             </RequireAuthentication>
@@ -78,7 +87,7 @@ const Reviews = () => {
             fetchFunction={getReviews}
             fetchFunctionName="getReviews"
             fetchUrl={reviewUrl}
-            fetchExtraParams={{ published: true }}
+            fetchExtraParams={{ published: true, visibility }}
             renderListItem={renderListItem}
             buttons={buttons}
             infoContainerText={infoContainerText}

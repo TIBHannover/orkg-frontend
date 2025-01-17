@@ -2,12 +2,20 @@
 
 import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
 import ListPage from 'components/PaginatedContent/ListPage';
+import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
+import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { Visualization } from 'services/backend/types';
+import { VisibilityOptions, Visualization } from 'services/backend/types';
 import { getVisualizations, visualizationsUrl } from 'services/backend/visualizations';
 
 const Visualizations = () => {
+    const [visibility] = useQueryState<VisibilityOptions>('visibility', {
+        defaultValue: VISIBILITY_FILTERS.ALL_LISTED,
+        parse: (value) => value as VisibilityOptions,
+    });
+
     useEffect(() => {
         document.title = 'Visualizations list - ORKG';
     });
@@ -31,9 +39,10 @@ const Visualizations = () => {
             fetchFunction={getVisualizations}
             fetchUrl={visualizationsUrl}
             fetchFunctionName="getVisualizations"
-            fetchExtraParams={{}}
+            fetchExtraParams={{ visibility }}
             renderListItem={renderListItem}
             defaultPageSize={10}
+            buttons={<VisibilityFilter />}
             infoContainerText={infoContainerText}
         />
     );
