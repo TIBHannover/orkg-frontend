@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
@@ -40,7 +40,10 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const LoadingOverlay = ({ isLoading = false }) => (
+type LoadingOverlayProps = {
+    isLoading?: boolean;
+};
+const LoadingOverlay: FC<LoadingOverlayProps> = ({ isLoading = false }) => (
     <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
         <div>
             <Overlay className="text-secondary">
@@ -50,9 +53,5 @@ const LoadingOverlay = ({ isLoading = false }) => (
         </div>
     </AnimationContainer>
 );
-
-LoadingOverlay.propTypes = {
-    isLoading: PropTypes.bool,
-};
 
 export default LoadingOverlay;

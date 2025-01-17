@@ -14,17 +14,12 @@ const RedirectShortLinks = () => {
 
     useEffect(() => {
         router.push(`${reverse(ROUTES.COMPARISON, { comparisonId: shortCode })}?noResource=true`);
-        return null;
     }, [router, shortCode]);
 
     return (
-        <>
-            {isLoading && (
-                <Container className="p-0 d-flex align-items-center">
-                    <h1 className="h5 mt-4 mb-4 ">Redirection....</h1>
-                </Container>
-            )}
-        </>
+        <Container className="p-0 d-flex align-items-center">
+            <h1 className="h5 mt-4 mb-4 ">{isLoading && 'Redirection....'}</h1>
+        </Container>
     );
 };
 

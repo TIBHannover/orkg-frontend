@@ -1,6 +1,5 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import L3S_LOGO from 'assets/img/poweredby/L3S.png';
 import LUH_LOGO from 'assets/img/poweredby/LUH.png';
@@ -8,11 +7,11 @@ import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
 import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
 import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
 import Logo from 'assets/img/vertical_logo.svg';
-import Image from 'next/image';
-import Link from 'next/link';
 import ROUTES from 'constants/routes';
 import ROUTES_CMS from 'constants/routesCms';
 import { reverse } from 'named-urls';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Badge, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 

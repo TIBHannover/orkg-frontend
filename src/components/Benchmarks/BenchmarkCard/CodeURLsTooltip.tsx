@@ -1,13 +1,12 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, Button, Table } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { faFirefox, faGithub, faGitlab } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faGitlab, faFirefox } from '@fortawesome/free-brands-svg-icons';
+import Link from 'next/link';
+import { FC, useState } from 'react';
+import { Button, Modal, ModalBody, ModalHeader, Table } from 'reactstrap';
 
-function getCodeIconByURL(url) {
+function getCodeIconByURL(url: string) {
     let faIcon = faFirefox;
     if (url.includes('gitlab')) {
         faIcon = faGitlab;
@@ -17,7 +16,13 @@ function getCodeIconByURL(url) {
     return faIcon;
 }
 
-const CodeURLsTooltip = ({ urls, title, id }) => {
+type CodeURLsTooltipProps = {
+    urls: string[];
+    title: string;
+    id: string;
+};
+
+const CodeURLsTooltip: FC<CodeURLsTooltipProps> = ({ urls, title, id }) => {
     const [showModal, setShowModal] = useState(false);
 
     if (urls?.length === 1) {
@@ -44,7 +49,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {urls.map((url, index) => (
+                            {urls?.map((url, index) => (
                                 <tr key={index}>
                                     <td>
                                         <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-dark">
@@ -64,9 +69,4 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
     );
 };
 
-CodeURLsTooltip.propTypes = {
-    title: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    urls: PropTypes.array.isRequired,
-};
 export default CodeURLsTooltip;

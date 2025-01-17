@@ -1,11 +1,16 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, InputGroup, InputGroupText } from 'reactstrap';
 
-const CopyId = ({ id, text = 'ID' }) => (
+type CopyIdProps = {
+    id: string;
+    text?: string;
+};
+
+const CopyId: FC<CopyIdProps> = ({ id, text = 'ID' }) => (
     <InputGroup size="sm">
         <InputGroupText className="py-0">{text}</InputGroupText>
         <Input
@@ -30,10 +35,5 @@ const CopyId = ({ id, text = 'ID' }) => (
         </CopyToClipboard>
     </InputGroup>
 );
-
-CopyId.propTypes = {
-    id: PropTypes.string.isRequired,
-    text: PropTypes.string,
-};
 
 export default CopyId;

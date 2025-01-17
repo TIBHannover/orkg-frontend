@@ -1,10 +1,15 @@
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { AddContribution } from 'components/ContributionTabs/styled';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import { AddContribution } from 'components/ContributionTabs/styled';
+import { FC } from 'react';
 
-const AddContributionButton = ({ onClick, disabled = false }) => (
+type AddContributionButtonProps = {
+    onClick: () => void;
+    disabled: boolean;
+};
+
+const AddContributionButton: FC<AddContributionButtonProps> = ({ onClick, disabled = false }) => (
     <AddContribution className="my-1" disabled={disabled} color="link" onClick={onClick}>
         <Tippy content="Add contribution">
             <span>
@@ -13,10 +18,5 @@ const AddContributionButton = ({ onClick, disabled = false }) => (
         </Tippy>
     </AddContribution>
 );
-
-AddContributionButton.propTypes = {
-    onClick: PropTypes.func.isRequired,
-    disabled: PropTypes.bool.isRequired,
-};
 
 export default AddContributionButton;

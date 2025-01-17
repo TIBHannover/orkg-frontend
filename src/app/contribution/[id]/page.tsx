@@ -1,29 +1,29 @@
 'use client';
 
+import NotFound from 'app/not-found';
+import useParams from 'components/useParams/useParams';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import useParams from 'components/useParams/useParams';
-import NotFound from 'app/not-found';
-import { redirect } from 'next/navigation';
+import { getStatements } from 'services/backend/statements';
 
 /**
  * Component for redirecting contribution IDs to the paper view
  */
-export default function Contribution(props) {
+export default function Contribution() {
     const params = useParams();
     const contributionId = params.id;
     const [error, setError] = useState(false);
-    const [paperId, setPaperId] = useState(null);
+    const [paperId, setPaperId] = useState<string | null>(null);
     const [isReview, setIsReview] = useState(false);
 
     useEffect(() => {
-        getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
+        getStatements({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
             // check if statements are found and if "contributionId" has the contribution class
-            if (!statements.length || !statements[0].object.classes.includes(CLASSES.CONTRIBUTION)) {
+            if (!statements.length || ('classes' in statements[0].object && !statements[0].object.classes.includes(CLASSES.CONTRIBUTION))) {
                 setError(true);
                 return;
             }

@@ -1,7 +1,12 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Badge } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
+import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-function HelpModal({ isHelpModalOpen, setIsHelpModalOpen }) {
+type HelpModalProps = {
+    isHelpModalOpen: boolean;
+    setIsHelpModalOpen: () => void;
+};
+
+const HelpModal: FC<HelpModalProps> = ({ isHelpModalOpen, setIsHelpModalOpen }) => {
     return (
         <Modal isOpen={isHelpModalOpen} toggle={setIsHelpModalOpen}>
             <ModalHeader toggle={setIsHelpModalOpen}>ORKG Diagram</ModalHeader>
@@ -58,10 +63,6 @@ function HelpModal({ isHelpModalOpen, setIsHelpModalOpen }) {
             </ModalFooter>
         </Modal>
     );
-}
-
-HelpModal.propTypes = {
-    isHelpModalOpen: PropTypes.bool.isRequired,
-    setIsHelpModalOpen: PropTypes.func.isRequired,
 };
+
 export default HelpModal;
