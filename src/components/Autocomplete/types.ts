@@ -41,7 +41,7 @@ export type OptionType = Node & {
     // To indicate whether the option is loaded from orkg knowledge graph or some external service
     external?: boolean;
     source?: AutocompleteSource;
-} & (Partial<Resource> | Partial<Predicate> | Partial<Class>);
+} & Omit<Partial<Resource> | Partial<Predicate> | Partial<Class>, 'id' | 'label'>;
 
 export type ExternalServiceResponse = { options: OptionType[]; hasMore: boolean };
 
