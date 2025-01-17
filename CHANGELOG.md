@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.159.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.158.0...v0.159.0) - 2025-01-17
+
+### Changes
+
+- fix(Databrowser): literal constraints [`#1483`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1483)
+- fix(StatementBrowser): adding and deleting items from lists [`#1469`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1469)
+- feat: redirection page for papers [`#1470`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1470)
+- refactor: convert some files to typescript [`#1475`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1475)
+- chore: remove handsontable from the dependencies [`#1481`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1481)
+- fix: pdf sentence annotator tool [`#1480`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1480)
+- fix: add additional data to the autocomplete [`#1479`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1479)
+- fix: validation of integer in validationSchema [`#1478`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1478)
+- fix: truncate rosetta statement context badge [`#1476`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1476)
+- feat: add visibility selector to content type pages [`#1473`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1473)
+- fix: search field breaks with small horizontal resolution [`#1472`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1472)
+
+---
 ## [v0.158.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.157.0...v0.158.0) - 2025-01-14
 
 ### Changes
