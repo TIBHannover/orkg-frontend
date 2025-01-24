@@ -88,6 +88,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 isEditMode={isEditMode}
                 handleAddStatement={handleAddStatement}
                 context={statement.context}
+                showQuickActionButtons={!showContext}
             />
         );
     };

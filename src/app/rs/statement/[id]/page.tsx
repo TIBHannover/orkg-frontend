@@ -1,19 +1,22 @@
 'use client';
 
+import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
-import useRosettaStatements from 'components/RosettaStone/SingleStatement/hooks/useStatements';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
+import useRosettaStatements from 'components/RosettaStone/SingleStatement/hooks/useStatements';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useParams from 'components/useParams/useParams';
 import { useEffect } from 'react';
-import { Container, ListGroup } from 'reactstrap';
+import { Button, Container, ListGroup } from 'reactstrap';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();
-    const { isEditMode } = useIsEditMode();
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
 
     const { data: statement, isLoading, error, mutate: reloadStatement } = useRosettaStatements({ id });
 
@@ -27,7 +30,30 @@ const RSStatementPage = () => {
             {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && statement && (
                 <>
-                    <TitleBar>Statement</TitleBar>
+                    <TitleBar
+                        buttonGroup={
+                            <>
+                                {!isEditMode && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-end"
+                                        color="secondary"
+                                        size="sm"
+                                        onClick={() => toggleIsEditMode()}
+                                    >
+                                        <FontAwesomeIcon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                )}
+                                {isEditMode && (
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
+                                        <FontAwesomeIcon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )}
+                            </>
+                        }
+                    >
+                        Statement
+                    </TitleBar>
 
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
                         <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>

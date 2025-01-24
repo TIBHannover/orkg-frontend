@@ -7,7 +7,7 @@ import { OptionProps, components } from 'react-select';
 import ReactStringReplace from 'react-string-replace';
 import { RosettaStoneTemplate } from 'services/backend/types';
 
-export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used: boolean };
+export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used?: boolean };
 
 const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ children, data, ...props }) => {
     const replacementFunction = (match: string) => {

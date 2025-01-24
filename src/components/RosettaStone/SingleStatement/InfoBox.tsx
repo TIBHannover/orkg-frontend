@@ -1,4 +1,4 @@
-import { faCheck, faClock, faClose, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClock, faClose, faInfo, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
@@ -85,10 +85,13 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                 <div className="p-1">
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
                         {statement.latest_version_id && statement.id && (
-                            <div className="clearfix">
+                            <div className="clearfix d-flex align-items-center justify-content-end">
                                 <div className="float-end f-d my-1">
                                     <CopyId text="Statement ID" id={statement.id} />
                                 </div>
+                                <Link href={reverse(ROUTES.RS_STATEMENT, { id: statement.id })} className="ms-2" target="_blank">
+                                    <FontAwesomeIcon icon={faLink} />
+                                </Link>
                             </div>
                         )}
                         <li className="mb-1">
