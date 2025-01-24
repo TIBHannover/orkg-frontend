@@ -106,9 +106,7 @@ const ComparisonTable = (props) => {
             {
                 Header: () => <ColumnHeaderFirstColumn />,
                 accessor: 'property',
-                Cell: (cell) => (
-                    <RowHeader cell={cell.value} property={comparisonType === 'MERGE' ? cell.value : getPropertyObjectFromData(data, cell.value)} />
-                ),
+                Cell: (cell) => <RowHeader cell={cell.value} property={getPropertyObjectFromData(data, cell.value)} />,
                 sticky: !isSmallScreen ? 'left' : undefined,
                 minWidth: DEFAULT_COLUMN_WIDTH,
             },
@@ -124,7 +122,7 @@ const ComparisonTable = (props) => {
                                     headerData={headerData}
                                     columnId={column.column.id}
                                     columnStyle={column.column.getHeaderProps()?.style}
-                                    property={comparisonType === 'MERGE' ? headerData : getPropertyObjectFromData(data, headerData)}
+                                    property={getPropertyObjectFromData(data, headerData)}
                                 />
                             ),
                             accessor: (d) => d.values[index],

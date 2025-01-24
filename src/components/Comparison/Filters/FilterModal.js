@@ -1,25 +1,45 @@
-import { Modal, ModalHeader } from 'reactstrap';
+import CategoricalFilterRule from 'components/Comparison/Filters/CategoricalFilterRule';
+import OrdinalFilterRule from 'components/Comparison/Filters/OrdinalFilterRule';
+import TextFilterRule from 'components/Comparison/Filters/TextFilterRule';
 import PropTypes from 'prop-types';
+import { Modal, ModalHeader } from 'reactstrap';
 import { z } from 'zod';
-import CategoricalFilterRule from 'components/Comparison/Filters/CategoricalFilterRule.js';
-import OrdinalFilterRule from 'components/Comparison/Filters/OrdinalFilterRule.js';
-import TextFilterRule from 'components/Comparison/Filters/TextFilterRule.js';
 
 function FilterModal(props) {
     const { data, updateRulesOfProperty, showFilterDialog, toggleFilterDialog } = props;
     const { property, values, rules } = data;
     const { label: propertyName } = property;
 
+    const vals = Object.keys(values)
+        .map((key) => ({
+            label: key,
+            length: values[key].length,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+
     const isCategory = () => Object.keys(values).length > 1;
+
     const isNum = () => Object.keys(values).length === Object.keys(values).filter((value) => !isNaN(value) && !isNaN(parseFloat(value))).length;
+
     const isDate = () =>
         Object.keys(values).length ===
         Object.keys(values).filter((value) => {
             const { error } = z.string().date().safeParse(value);
             return !error;
         }).length;
-    const isText = () =>
-        Object.keys(values).length > 3 && Object.keys(values).length !== Object.keys(values).filter((value) => value.split(' ').length < 6).length;
+
+    const isText = () => {
+        const valuesArray = Object.keys(values);
+        // Check if total values are more than 3
+        const hasMultipleValues = valuesArray.length > 3;
+        // Check if there are values with more than 6 words
+        const hasLongPhrases = valuesArray.length !== valuesArray.filter((value) => value.split(' ').length < 6).length;
+        // Check if majority of values have length (number of items) more than 2
+        const valuesWithLongLength = vals.filter((value) => value.length > 2).length;
+        const majorityHasLongLength = valuesWithLongLength / vals.length < 0.5;
+
+        return hasMultipleValues && hasLongPhrases && majorityHasLongLength;
+    };
 
     const generateCategoricalFilter = () => (
         <CategoricalFilterRule dataController={{ property, values, rules, updateRulesOfProperty, toggleFilterDialog }} />
