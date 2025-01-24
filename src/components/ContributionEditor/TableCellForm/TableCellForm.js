@@ -233,7 +233,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                     }
                                 }}
                                 menuPortalTarget={document?.body}
-                                value={inputValue}
+                                inputValue={inputValue}
                                 openMenuOnFocus
                                 allowCreate
                                 isValidNewOption={(val, selectValue, selectOptions) => {
