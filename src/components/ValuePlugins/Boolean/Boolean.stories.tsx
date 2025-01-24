@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import Boolean from 'components/ValuePlugins/Boolean/Boolean';
 
 export default {
@@ -5,10 +6,10 @@ export default {
     component: Boolean,
 };
 
-const Template = (args) => <Boolean {...args} />;
+const Template: StoryFn<typeof Boolean> = (args) => <Boolean {...args} />;
 
 export const Default = Template.bind({});
 
 Default.args = {
-    children: 'true',
+    text: 'true',
 };

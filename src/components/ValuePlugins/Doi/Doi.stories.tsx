@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import Doi from 'components/ValuePlugins/Doi/Doi';
 import { ENTITIES } from 'constants/graphSettings';
 
@@ -13,11 +14,10 @@ export default {
     },
 };
 
-const Template = (args) => <Doi {...args} />;
+const Template: StoryFn<typeof Doi> = (args) => <Doi {...args} />;
 
 export const Default = Template.bind({});
 
 Default.args = {
-    children: '10.1145/3360901.3364435',
-    type: 'literal',
+    text: '10.1145/3360901.3364435',
 };

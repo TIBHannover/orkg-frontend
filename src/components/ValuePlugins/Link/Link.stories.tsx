@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import Link from 'components/ValuePlugins/Link/Link';
 
 export default {
@@ -5,11 +6,10 @@ export default {
     component: Link,
 };
 
-const Template = (args) => <Link {...args} />;
+const Template: StoryFn<typeof Link> = (args) => <Link {...args} />;
 
 export const Default = Template.bind({});
 
 Default.args = {
-    children: 'https://orkg.org',
-    type: 'literal',
+    text: 'https://orkg.org',
 };
