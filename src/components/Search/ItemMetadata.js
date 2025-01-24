@@ -27,7 +27,8 @@ const ItemMetadata = ({
 
     const handleSave = async (selectedOption) => {
         setExtractionMethod(selectedOption);
-        await updateResource(item.id, item?.label, item?.classes, selectedOption);
+        // rosetta statement require the version_id to be updated
+        await updateResource(item.version_id ?? item.id, item?.label, item?.classes, selectedOption);
         toast.success('Resource extraction method updated successfully');
     };
 

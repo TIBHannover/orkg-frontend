@@ -1,4 +1,4 @@
-import { faRotateLeft, faShuffle } from '@fortawesome/free-solid-svg-icons';
+import { faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { OptionType } from 'components/Autocomplete/types';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -15,11 +15,20 @@ type StatementValueProps = {
     value: OptionType[];
     propertyShape: RSPropertyShape;
     isEditMode?: boolean;
+    showQuickActionButtons?: boolean;
     handleAddStatement?: (templateId: string, subjects: OptionType[]) => void;
     context: string;
 };
 
-const StatementValue: FC<StatementValueProps> = ({ template, value, propertyShape, isEditMode = false, handleAddStatement, context }) => {
+const StatementValue: FC<StatementValueProps> = ({
+    template,
+    value,
+    propertyShape,
+    showQuickActionButtons = true,
+    isEditMode = false,
+    handleAddStatement,
+    context,
+}) => {
     const [showStatementTypeModal, setShowStatementTypeModal] = useState(false);
     const [reuseSubject, setReuseSubject] = useState<OptionType | null>(null);
 
@@ -50,24 +59,11 @@ const StatementValue: FC<StatementValueProps> = ({ template, value, propertyShap
                                     {v?.label}
                                 </Link>
                             </DescriptionTooltip>
-                            {isEditMode && (
+                            {showQuickActionButtons && isEditMode && (
                                 <div className="ms-1 d-inline-block">
-                                    {canBeUsedAsSubject && (
-                                        <ActionButton
-                                            title={
-                                                canBeUsedAsSubject
-                                                    ? 'Reuse as a subject in the same statement type'
-                                                    : 'this resource cannot be reused as a subject'
-                                            }
-                                            icon={faRotateLeft}
-                                            iconSize="xs"
-                                            isDisabled={!canBeUsedAsSubject}
-                                            action={() => handleAddStatement?.(template.id, [v])}
-                                        />
-                                    )}
                                     <ActionButton
-                                        title="Reuse as subject in a different statement type"
-                                        icon={faShuffle}
+                                        title="Reuse as subject"
+                                        icon={faRotateLeft}
                                         iconSize="xs"
                                         action={() => {
                                             setReuseSubject(v);
@@ -89,6 +85,7 @@ const StatementValue: FC<StatementValueProps> = ({ template, value, propertyShap
                     handleAddStatement={handleAddStatement}
                     subject={reuseSubject}
                     context={context}
+                    template={canBeUsedAsSubject ? template : null}
                 />
             )}
         </span>

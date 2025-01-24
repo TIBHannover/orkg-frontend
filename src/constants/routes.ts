@@ -26,6 +26,7 @@ const routes = {
     RS_TEMPLATE_EDIT: '/rs/template/:id/edit',
     RS_TEMPLATE_TABS: '/rs/template/:id/:activeTab',
     RS_ADD_TEMPLATE: '/rs/template/',
+    RS_STATEMENTS: '/rs/statements/',
     RS_STATEMENT: '/rs/statement/:id',
     ORGANIZATIONS: '/organizations/:id',
     OBSERVATORIES: '/observatories',

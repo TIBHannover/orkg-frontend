@@ -13,6 +13,16 @@ const StatementsPage = () => {
 
     const renderListItem = (s: RosettaStoneStatement) => <SingleStatement showContext key={s.id} statement={s} />;
 
+    const infoContainerText = (
+        <>
+            Statements are a new method to describe knowledge in the ORKG, they are currently in beta.{' '}
+            <a href="https://orkg.org/help-center/article/59/Statements" rel="noreferrer" target="_blank">
+                Visit the help center
+            </a>
+            .
+        </>
+    );
+
     return (
         <ListPage
             label="statements"
@@ -22,6 +32,7 @@ const StatementsPage = () => {
             fetchExtraParams={{}}
             renderListItem={renderListItem}
             disableSearch
+            infoContainerText={infoContainerText}
         />
     );
 };

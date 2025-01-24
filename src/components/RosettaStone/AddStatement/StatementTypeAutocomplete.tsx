@@ -22,6 +22,7 @@ type StatementTypeAutocompleteProps = {
     additionalOptions?: RosettaStoneTemplate[];
     autoFocus?: boolean;
     openMenuOnFocus?: boolean;
+    defaultValue?: RosettaStoneTemplateOption;
 };
 
 const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
@@ -29,6 +30,7 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
     onChange,
     autoFocus = true,
     openMenuOnFocus = true,
+    defaultValue,
 }) => {
     const loadOptions = async (
         search: string,
@@ -68,6 +70,7 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
         <>
             <SelectGlobalStyle />
             <AsyncPaginateCreatable<RosettaStoneTemplateOption, GroupBase<RosettaStoneTemplateOption>, AdditionalType, false>
+                defaultValue={defaultValue}
                 instanceId={instanceId}
                 classNamePrefix="react-select"
                 // @ts-expect-error different type from OptionType

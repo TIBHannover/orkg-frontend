@@ -413,6 +413,12 @@ const Header = () => {
                                 <DropdownItem tag={Link} href={ROUTES.CLASSES} onClick={closeMenu} active={pathname === ROUTES.CLASSES}>
                                     Classes
                                 </DropdownItem>
+                                <DropdownItem tag={Link} href={ROUTES.RS_STATEMENTS} onClick={closeMenu} active={pathname === ROUTES.RS_STATEMENTS}>
+                                    Statements{' '}
+                                    <small className="ms-2">
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
 

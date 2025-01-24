@@ -14,7 +14,9 @@ import { Badge } from 'reactstrap';
 
 function ProvenanceBox({ item, editMode = false }) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: item.organization_id, obsId: item.observatory_id });
+    const _observatoryId = 'observatories' in item && item.observatories.length > 0 ? item.observatories[0] : item.observatory_id;
+    const _organizationId = 'observatories' in item && item.organizations.length > 0 ? item.organizations[0] : item.organization_id;
+    const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
     const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
 
     if (!provenance && !editMode) {
@@ -52,7 +54,8 @@ function ProvenanceBox({ item, editMode = false }) {
                 showDialog={showAssignObservatory}
                 observatory={provenance}
                 organization={provenance?.organization}
-                resourceId={item.id}
+                // rosetta statement require the version_id to be updated
+                resourceId={item.version_id ?? item.id}
                 toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </>
