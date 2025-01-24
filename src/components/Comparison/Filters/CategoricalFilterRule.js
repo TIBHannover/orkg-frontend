@@ -20,10 +20,18 @@ const CategoricalFilterRule = (props) => {
     const vals = Object.keys(values)
         .map((key) => ({
             label: key,
+            count: values[key].length,
             checked:
                 rules.filter((item) => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0,
         }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+        .sort((a, b) => {
+            // Sort by count (descending) first
+            if (b.count !== a.count) {
+                return b.count - a.count;
+            }
+            // If counts are equal, sort alphabetically
+            return a.label.localeCompare(b.label);
+        });
 
     const [categoricalValues, setCategoricalValues] = useState(vals);
 

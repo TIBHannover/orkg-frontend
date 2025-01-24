@@ -102,7 +102,7 @@ const applyInc = ({ filterControlData, propertyId, value }) => {
     const data = getValuesByProperty(filterControlData, propertyId);
     return [].concat(
         ...Object.keys(data)
-            .filter((key) => value.filter((val) => key.includes(val)).length > 0)
+            .filter((key) => value.filter((val) => key.toLowerCase().includes(val.toLowerCase())).length > 0)
             .map((key) => data[key]),
     );
 };
