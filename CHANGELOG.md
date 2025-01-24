@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.160.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.159.0...v0.160.0) - 2025-01-24
+
+### Changes
+
+- feat(Statement): add edit mode to rosetta statement page [`#1474`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1474)
+- fix: set correct parameters for Autocomplete in TableCellForm of the contribution editor [`#1482`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1482)
+- chore: update husky [`#1485`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1485)
+- fix: update the heuristic approach to display the CategoricalFilter and fix the TextFilter [`#1484`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1484)
+
+---
 ## [v0.159.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.158.0...v0.159.0) - 2025-01-17
 
 ### Changes
