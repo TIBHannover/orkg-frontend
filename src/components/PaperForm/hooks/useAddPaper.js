@@ -11,11 +11,11 @@ import { getErrorMessage } from 'utils';
 const useAddPaper = ({ onCreate = null }) => {
     const [doi, setDoi] = useState('');
     const [title, setTitle] = useState('');
-    const [researchField, setResearchField] = useState({});
+    const [researchField, setResearchField] = useState(null);
     const [authors, setAuthors] = useState([]);
     const [publicationMonth, setPublicationMonth] = useState('');
     const [publicationYear, setPublicationYear] = useState('');
-    const [publishedIn, setPublishedIn] = useState({});
+    const [publishedIn, setPublishedIn] = useState(null);
     const [abstract, setAbstract] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
