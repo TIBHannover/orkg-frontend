@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.160.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.0...v0.160.1) - 2025-01-27
+
+### Changes
+
+- refactor(Review): migrate to TypeScript, integrate new backend endpoints, use SWR [`#1412`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1412)
+- fix: useAddPaper hooks and autocomplete helpers [`#1488`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1488)
+- fix: resource relationship loops seem to loop infinitely [`#1487`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1487)
+- refactor: value plugins change loading method, use typescript [`#1486`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1486)
+
+---
 ## [v0.160.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.159.0...v0.160.0) - 2025-01-24
 
 ### Changes
