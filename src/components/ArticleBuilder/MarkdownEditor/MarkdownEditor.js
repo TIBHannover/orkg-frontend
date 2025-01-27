@@ -17,7 +17,7 @@ import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import MarkdownRendererReferences from 'components/Review/MarkdownRenderer';
+import TextSection from 'components/Review/Sections/Text/TextSection';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -77,7 +77,7 @@ ItemResource.propTypes = {
 
 const Loading = () => <div>Loading</div>;
 
-const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = null }) => {
+const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = null }) => {
     const [markdownValue, setMarkdownValue] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [markdownEditorRef, setMarkdownEditorRef] = useState(null);
@@ -191,11 +191,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
                         <div role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
-                            {references ? (
-                                <MarkdownRendererReferences text={markdownValue} id={literalId} />
-                            ) : (
-                                <MarkdownRenderer text={markdownValue} />
-                            )}
+                            {references ? <TextSection text={markdownValue} sectionId={sectionId} /> : <MarkdownRenderer text={markdownValue} />}
                         </div>
                     ) : (
                         <MarkdownPlaceholder role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
@@ -329,7 +325,7 @@ MarkdownEditor.propTypes = {
     label: PropTypes.string.isRequired,
     handleUpdate: PropTypes.func.isRequired,
     references: PropTypes.array,
-    literalId: PropTypes.string,
+    sectionId: PropTypes.string,
 };
 
 export default MarkdownEditor;

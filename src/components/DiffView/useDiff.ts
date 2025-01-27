@@ -1,31 +1,34 @@
 import { isListSection, isTextSection } from 'components/List/helpers/typeGuards';
+import { SectionContentLinkTypes } from 'components/Review/Sections/ContentLink/ContentLink';
 import { useCallback } from 'react';
-import { Comparison, LiteratureList } from 'services/backend/types';
+import { Comparison, LiteratureList, Review } from 'services/backend/types';
 
 const useDiff = () => {
-    // @ts-expect-error awaiting TS migration
-    const reviewToPlainText = useCallback((article) => {
+    const reviewToPlainText = useCallback((article: Review) => {
         let articleText = '';
-        articleText += `Title: ${article.paper.title}\n\n`;
+        articleText += `Title: ${article.title}\n\n`;
 
-        if (article.researchField) {
-            articleText += `Research field: ${article.researchField.label}\n\n`;
+        if (article.research_fields?.[0]) {
+            articleText += `Research field: ${article.research_fields?.[0].label}\n\n`;
         }
 
-        for (const [index, author] of article.authorResources.entries()) {
-            articleText += `Author ${index + 1}: ${author.label}\n`;
+        for (const [index, author] of article.authors.entries()) {
+            articleText += `Author ${index + 1}: ${author.name}\n`;
         }
 
         for (const section of article.sections) {
             articleText += '------------------Section------------------\n';
-            articleText += `Title: ${section.title.label}\n`;
-            articleText += `Type: ${section.type.id}\n`;
+            articleText += `Title: ${section.heading}\n`;
+            articleText += `Type: ${section.type}\n`;
 
-            if (section.markdown) {
-                articleText += `Content:\n${section.markdown?.label}\n\n`;
+            if (section.type === 'text' && section.text) {
+                articleText += `Content:\n${section.text}\n\n`;
             }
-            if (section.contentLink) {
-                articleText += `Link to: ${section.contentLink?.objectId} (${section.contentLink?.label})\n\n`;
+            if (['resource', 'property', 'comparison', 'visualization'].includes(section.type)) {
+                const sectionType: SectionContentLinkTypes =
+                    section.type !== 'property' ? (section.type as SectionContentLinkTypes) : ('predicate' as SectionContentLinkTypes);
+
+                articleText += `Link to: ${section?.[sectionType]?.id} (${section?.[sectionType]?.label})\n\n`;
             }
         }
 

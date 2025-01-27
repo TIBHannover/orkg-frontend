@@ -1,5 +1,5 @@
 import HistoryModalComponent from 'components/HistoryModal/HistoryModal';
-import useList from 'components/List/hooks/useList';
+import useReview from 'components/Review/hooks/useReview';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC } from 'react';
@@ -10,15 +10,15 @@ type HistoryModalProps = {
 };
 
 const HistoryModal: FC<HistoryModalProps> = ({ id, toggle }) => {
-    const { list } = useList();
+    const { review } = useReview();
 
-    const versions = list?.versions.published.map((version) => ({
+    const versions = review?.versions.published.map((version) => ({
         ...version,
         isSelected: id === version.id,
-        link: reverse(ROUTES.LIST, { id: version.id }),
+        link: reverse(ROUTES.REVIEW, { id: version.id }),
     }));
 
-    return <HistoryModalComponent id={id} show toggle={toggle} title="Publish history" versions={versions} routeDiff={ROUTES.LIST_DIFF} />;
+    return <HistoryModalComponent id={id} show toggle={toggle} title="Publish history" versions={versions} routeDiff={ROUTES.REVIEW_DIFF} />;
 };
 
 export default HistoryModal;

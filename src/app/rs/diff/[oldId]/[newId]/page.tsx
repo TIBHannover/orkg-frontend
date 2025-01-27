@@ -98,8 +98,8 @@ const StatementDiff = () => {
         return {
             oldText,
             newText,
-            oldTitleData: oId && oldStatement ? getTitleData(oldStatement) : '',
-            newTitleData: nId && newStatement ? getTitleData(newStatement) : '',
+            oldTitleData: oId && oldStatement ? getTitleData(oldStatement) : null,
+            newTitleData: nId && newStatement ? getTitleData(newStatement) : null,
         };
     };
 

@@ -4,7 +4,6 @@ import comparison from 'slices/comparisonSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 import pdfAnnotation from 'slices/pdfAnnotationSlice';
 import pdfTextAnnotation from 'slices/pdfTextAnnotationSlice';
-import review from 'slices/reviewSlice';
 import templateEditor from 'slices/templateEditorSlice';
 import viewPaper from 'slices/viewPaperSlice';
 
@@ -15,7 +14,6 @@ export default (routerReducer) =>
         auth,
         viewPaper,
         contributionEditor,
-        review,
         templateEditor,
         pdfAnnotation,
         pdfTextAnnotation,

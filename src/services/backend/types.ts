@@ -621,10 +621,93 @@ export type Comparison = {
         type: 'PATH' | 'MERGE';
     };
     data: {
-        contributions: [];
-        predicates: [];
-        data: unknown;
+        contributions: {
+            id: string;
+            label: string;
+            paper_id: string;
+            paper_label: string;
+            paper_year: string;
+            active: boolean;
+        }[];
+        predicates: {
+            id: string;
+            label: string;
+            n_contributions: string;
+            active: boolean;
+            similar_predicates: string[];
+        }[];
+        data: {
+            [predicateId: string]: {
+                id: string;
+                label: string;
+                classes: string[];
+                path: string[];
+                path_labels: string[];
+                _class: string;
+            }[][];
+        };
     };
+};
+
+export type ReviewSectionData = {
+    id: string;
+    label: string;
+    classes: string[];
+    _class: string;
+};
+
+export type ReviewSectionType = 'text' | 'resource' | 'property' | 'comparison' | 'visualization' | 'ontology';
+
+export type ReviewSection = {
+    id: string;
+    heading: string;
+    classes: string[];
+    class?: string | null;
+    text?: string;
+    type: ReviewSectionType;
+    comparison?: ReviewSectionData;
+    visualization?: ReviewSectionData;
+    resource?: ReviewSectionData;
+    predicate?: Omit<ReviewSectionData, 'classes'>;
+    predicates?: Omit<ReviewSectionData, 'classes'>[];
+    entities?: ReviewSectionData[];
+};
+
+export type ReviewSectionComparisonPayload = {
+    heading: string;
+    comparison: string | null;
+};
+
+export type ReviewSectionVisualizationPayload = {
+    heading: string;
+    visualization: string | null;
+};
+
+export type ReviewSectionResourcePayload = {
+    heading: string;
+    resource: string | null;
+};
+
+export type ReviewSectionPredicatePayload = {
+    heading: string;
+    predicate: string | null;
+};
+
+export type ReviewSectionOntologyPayload = {
+    heading: string;
+    entities: string[];
+    predicates: string[];
+};
+
+export type ReviewSectionTextPayload = {
+    heading: string;
+    text: string;
+    class: string | null;
+};
+
+export type ReviewPublishedContents = {
+    _class: string;
+    statements: Statement[];
 };
 
 export type Review = {
@@ -642,8 +725,12 @@ export type Review = {
             id: string;
             label: string;
             created_at: string;
+            created_by: string;
             changelog: string;
         }[];
+    };
+    identifiers: {
+        doi: string[];
     };
     sdgs: Node[];
     observatories: string[];
@@ -654,19 +741,11 @@ export type Review = {
     observatory_id: string;
     visibility: Visibility;
     published: boolean;
-    sections: {
-        id: string;
-        heading: string;
-        classes: string[];
-        text?: string;
-        type: string;
-        comparison?: {
-            id: string;
-            label: string;
-            classes: string[];
-        };
-    }[];
+    sections: ReviewSection[];
     references: string[];
+    acknowledgements: {
+        [contributorId: string]: number;
+    };
 };
 
 export type LiteratureListSectionListEntry = {

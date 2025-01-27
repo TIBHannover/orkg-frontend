@@ -84,6 +84,15 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
             </Tippy>
         );
     }
+    if (userId === MISC.UNKNOWN_ID) {
+        return (
+            <Tippy offset={[0, 10]} placement="bottom" content={`Unknown users ${appendToTooltip}`} plugins={[hideOnEsc]}>
+                <span>
+                    <StyledGravatar className="rounded-circle" md5={userId} size={size} />
+                </span>
+            </Tippy>
+        );
+    }
     return (
         <StyledSpinnerGravatar className="rounded-circle" size={size}>
             <FontAwesomeIcon icon={faSpinner} spin />

@@ -22,6 +22,7 @@ const HistoryModal: FC<HistoryModalProps> = ({ comparedComparisonId, toggle, sho
         ...version,
         isSelected: comparisonId === version.id || comparedComparisonId === version.id,
         link: reverse(ROUTES.COMPARISON, { comparisonId: version.id }),
+        changelog: version.label,
     }));
 
     return (

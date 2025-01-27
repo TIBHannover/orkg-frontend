@@ -141,16 +141,7 @@ function useComparisonOld({ id, isPublished, contributionIds, isEmbeddedMode = f
             dispatch(setConfigurationAttribute({ attribute: 'predicatesList', value: predicatesList }));
             getComparisonResult(contributionsIDs);
         }
-    }, [
-        comparisonId,
-        dispatch,
-        searchParams,
-        isPublished,
-        JSON.stringify(contributionIds),
-        comparisonType,
-        transpose,
-        JSON.stringify(predicatesList),
-    ]);
+    }, [comparisonId, dispatch, isPublished, JSON.stringify(contributionIds), comparisonType, transpose, JSON.stringify(predicatesList)]);
 
     useEffect(() => {
         dispatch(setIsEmbeddedMode(isEmbeddedMode));
