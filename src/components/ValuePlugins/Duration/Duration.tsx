@@ -1,25 +1,19 @@
-import { FC, ReactNode } from 'react';
-import { EntityType } from 'services/backend/types';
 import { parseDurationString } from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/helpers';
-import { isString } from 'lodash';
-import { renderToString } from 'react-dom/server';
-import { ENTITIES } from 'constants/graphSettings';
+import { FC } from 'react';
+
+export const isDurationValue = ({ text, datatype }: { text: string; datatype?: string }) =>
+    !!(datatype?.startsWith('xsd:') && datatype?.toLowerCase().includes('duration') && parseDurationString(text));
 
 type DurationProps = {
-    children: ReactNode;
-    type: EntityType;
+    text: string;
     datatype?: string;
 };
 
-const Duration: FC<DurationProps> = ({ children, type, datatype }) => {
-    const childrenToText = isString(children) ? children : renderToString(<>{children}</>);
-    if (type !== ENTITIES.LITERAL || !datatype?.startsWith('xsd:') || !datatype?.toLowerCase().includes('duration')) {
-        return children;
-    }
+const Duration: FC<DurationProps> = ({ text, datatype }) => {
+    const duration = parseDurationString(text);
 
-    const duration = parseDurationString(childrenToText);
-    if (!duration) {
-        return children;
+    if (!isDurationValue({ text, datatype }) || !duration) {
+        return text;
     }
 
     const formatDuration = () => {
@@ -44,7 +38,7 @@ const Duration: FC<DurationProps> = ({ children, type, datatype }) => {
             parts.push(`${duration.seconds} second${duration.seconds === '1' ? '' : 's'}`);
         }
 
-        return parts.length > 0 ? parts.join(', ') : childrenToText;
+        return parts.length > 0 ? parts.join(', ') : text;
     };
 
     return <>{formatDuration()}</>;

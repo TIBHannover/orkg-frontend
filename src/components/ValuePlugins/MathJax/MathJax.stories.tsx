@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import MathJax from 'components/ValuePlugins/MathJax/MathJax';
 
 export default {
@@ -5,11 +6,10 @@ export default {
     component: MathJax,
 };
 
-const Template = (args) => <MathJax {...args} />;
+const Template: StoryFn<typeof MathJax> = (args) => <MathJax {...args} />;
 
 export const Default = Template.bind({});
 
 Default.args = {
-    children: '$$lim_{x \\to infty} \\exp(-x) = O$$',
-    type: 'literal',
+    text: '$$lim_{x \\to infty} \\exp(-x) = O$$',
 };

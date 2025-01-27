@@ -99,7 +99,7 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                                         </div>
                                         {comparison.description && (
                                             <div style={{ lineHeight: 1.5, whiteSpace: 'pre-wrap' }} className="h6 mb-2">
-                                                <LinkValuePlugins type={ENTITIES.LITERAL}>{comparison.description}</LinkValuePlugins>
+                                                <LinkValuePlugins text={comparison.description} />
                                             </div>
                                         )}
                                         {comparison.identifiers?.doi?.[0] && (

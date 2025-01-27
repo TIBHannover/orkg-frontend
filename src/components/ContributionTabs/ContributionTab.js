@@ -83,7 +83,7 @@ const ContributionTab = (props) => {
                     wrapper={(children) => <Tippy content={props.contribution.label}>{children}</Tippy>}
                 >
                     <div className="text-truncate d-inline-block" style={{ maxWidth: 300 }}>
-                        <MathJax type={ENTITIES.LITERAL}>{props.contribution.label}</MathJax>
+                        <MathJax text={props.contribution.label} />
                     </div>
                 </ConditionalWrapper>
             )}

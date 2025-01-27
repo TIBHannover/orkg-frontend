@@ -1,9 +1,7 @@
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import { FC, ReactElement, useState } from 'react';
-import { renderToString } from 'react-dom/server';
+import { FC, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -21,42 +19,34 @@ const IframeFullWidth = styled.iframe`
 // Plugin for video previews of TIB AV portal, Youtube, Dailymotion and Vimeo
 
 type ValuePluginsProps = {
-    children: ReactElement;
-    type: typeof ENTITIES.LITERAL | typeof ENTITIES.RESOURCE;
+    text: string;
     options?: { isModal?: boolean };
 };
 
-const Video: FC<ValuePluginsProps> = ({ children, type, options = { inModal: false } }) => {
+export const isVideoValue = (text: string) =>
+    text.match(new RegExp(REGEX.TIB_URL)) ||
+    text.match(new RegExp(REGEX.YOUTUBE_URL)) ||
+    text.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
+    text.match(new RegExp(REGEX.VIMEO_URL));
+
+const Video: FC<ValuePluginsProps> = ({ text, options = { inModal: false } }) => {
     const [showVideoDialog, setShowVideoDialog] = useState(false);
 
-    const label = children;
-    const labelToText = renderToString(label);
-
-    if (!labelToText) {
-        return '';
-    }
-
-    if (
-        type === 'literal' &&
-        (labelToText.match(new RegExp(REGEX.TIB_URL)) ||
-            labelToText.match(new RegExp(REGEX.YOUTUBE_URL)) ||
-            labelToText.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
-            labelToText.match(new RegExp(REGEX.VIMEO_URL)))
-    ) {
-        const videoId = labelToText
+    if (isVideoValue(text)) {
+        const videoId = text
             .replace(new RegExp(REGEX.TIB_URL), '')
             .replace(new RegExp(REGEX.YOUTUBE_URL), '')
             .replace(new RegExp(REGEX.DAILYMOTION_URL), '')
             .replace(new RegExp(REGEX.VIMEO_URL), '');
 
         let providerUrl = '';
-        if (labelToText.match(new RegExp(REGEX.TIB_URL))) {
+        if (text.match(new RegExp(REGEX.TIB_URL))) {
             providerUrl = '//av.tib.eu/player/';
-        } else if (labelToText.match(new RegExp(REGEX.YOUTUBE_URL))) {
+        } else if (text.match(new RegExp(REGEX.YOUTUBE_URL))) {
             providerUrl = 'https://www.youtube.com/embed/';
-        } else if (labelToText.match(new RegExp(REGEX.DAILYMOTION_URL))) {
+        } else if (text.match(new RegExp(REGEX.DAILYMOTION_URL))) {
             providerUrl = 'https://www.dailymotion.com/embed/video/';
-        } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
+        } else if (text.match(new RegExp(REGEX.VIMEO_URL))) {
             providerUrl = 'https://player.vimeo.com/video/';
         }
         if (!('inModal' in options) || ('inModal' in options && !options.inModal)) {
@@ -77,7 +67,7 @@ const Video: FC<ValuePluginsProps> = ({ children, type, options = { inModal: fal
                     role="button"
                     tabIndex={0}
                 >
-                    {labelToText} <FontAwesomeIcon icon={faVideo} />
+                    {text} <FontAwesomeIcon icon={faVideo} />
                 </span>
                 <Modal isOpen={showVideoDialog} toggle={() => setShowVideoDialog((v) => !v)} size="lg">
                     <ModalHeader toggle={() => setShowVideoDialog((v) => !v)}>Video Preview</ModalHeader>
@@ -90,7 +80,7 @@ const Video: FC<ValuePluginsProps> = ({ children, type, options = { inModal: fal
             </>
         );
     }
-    return label;
+    return text;
 };
 
 export default Video;
