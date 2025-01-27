@@ -9,6 +9,7 @@ import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserC
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
+import { isEqual } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import { Button } from 'reactstrap';
@@ -54,7 +55,7 @@ const TripleObject: FC<SingleStatementProps> = ({
     showSubLevel,
     setIsEditingValue,
 }) => {
-    const { config, preferences } = useDataBrowserState();
+    const { config, preferences, loadedResources } = useDataBrowserState();
 
     const { isEditMode, valuesAsLinks } = config;
 
@@ -102,20 +103,25 @@ const TripleObject: FC<SingleStatementProps> = ({
                             </ValuePlugins>
                         )}
                         {preferences.showInlineDataTypes && <ValueDatatype value={statement.object} />}
-                        {!isEditMode && !path.includes(statement.object.id) && hasObjectStatements && (
-                            <Button
-                                color="link"
-                                className="p-0 ms-1"
-                                onClick={() => setShowSubLevel((v) => !v)}
-                                aria-label={`${showSubLevel ? 'collapse' : 'expand'} nested statements`}
-                            >
-                                <FontAwesomeIcon color="rgb(128, 134, 155)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
-                            </Button>
-                        )}
+                        {!isEditMode &&
+                            statement.object._class !== ENTITIES.LITERAL &&
+                            isEqual(loadedResources[statement.object.id], path) &&
+                            !path.includes(statement.object.id) &&
+                            hasObjectStatements && (
+                                <Button
+                                    color="link"
+                                    className="p-0 ms-1"
+                                    onClick={() => setShowSubLevel((v) => !v)}
+                                    aria-label={`${showSubLevel ? 'collapse' : 'expand'} nested statements`}
+                                >
+                                    <FontAwesomeIcon color="rgb(128, 134, 155)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
+                                </Button>
+                            )}
                         <ValueOptions
                             showPreview={() => setShowSubLevel((v) => !v)}
                             path={path}
                             statement={statement}
+                            hasObjectStatements={hasObjectStatements}
                             toggleEditValue={() => setIsEditingValue((prev) => !prev)}
                         />
                     </div>

@@ -9,20 +9,21 @@ type DataBrowserState = {
     config: DataBrowserConfig;
     preferences: DataBrowserPreferences;
     context: DataBrowserResourceContext;
-    highlightedCycle?: string;
     isHelpModalOpen: boolean;
     helpCenterArticleId?: string;
     history?: string[];
+    loadedResources: Record<string, string[]>; // key is the resource id, value is the path to the resource
 };
 
 type DataBrowserAction =
     | { type: 'ADD_PROPERTY'; payload: { predicate: Predicate; id: string } }
     | { type: 'DELETE_PROPERTY'; payload: { id: string; predicateId: string } }
-    | { type: 'HIGHLIGHT_CYCLE'; payload: string }
     | { type: 'SET_IS_EDIT_MODE'; payload: boolean }
     | { type: 'SET_HISTORY'; payload: string[] }
     | { type: 'UPDATE_PREFERENCES'; payload: Partial<DataBrowserPreferences> }
-    | { type: 'SET_IS_HELP_MODAL_OPEN'; payload: { isOpen: boolean; articleId?: string } };
+    | { type: 'SET_IS_HELP_MODAL_OPEN'; payload: { isOpen: boolean; articleId?: string } }
+    | { type: 'ADD_LOADED_RESOURCES'; payload: Record<string, string[]> }
+    | { type: 'SET_LOADED_RESOURCES'; payload: Record<string, string[]> };
 
 const initialState = {
     rootId: '',
@@ -34,6 +35,7 @@ const initialState = {
         expandValuesByDefault: true,
     },
     isHelpModalOpen: getPreferenceFromCookies('showInlineDataTypes') ?? false,
+    loadedResources: {},
 };
 
 export const DataBrowserContext = createContext<DataBrowserState>(initialState);
@@ -41,9 +43,6 @@ export const DataBrowserDispatchContext = createContext<Dispatch<DataBrowserActi
 
 export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserAction) => {
     switch (action.type) {
-        case 'HIGHLIGHT_CYCLE': {
-            return { ...state, highlightedCycle: action.payload };
-        }
         case 'ADD_PROPERTY': {
             return {
                 ...state,
@@ -77,6 +76,12 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
                 preferences: { ...state.preferences, ...action.payload },
             };
         }
+        case 'ADD_LOADED_RESOURCES': {
+            return { ...state, loadedResources: { ...state.loadedResources, ...action.payload } };
+        }
+        case 'SET_LOADED_RESOURCES': {
+            return { ...state, loadedResources: action.payload };
+        }
         default: {
             throw Error('Unknown action');
         }
@@ -109,6 +114,7 @@ const DataBrowserProvider: FC<DataBrowserProviderProps> = ({ children, rootId, c
         },
         context,
         isHelpModalOpen: false,
+        loadedResources: {},
         ...(config.defaultHistory && config.defaultHistory.length > 0 && { history: config.defaultHistory }),
     });
 
