@@ -108,7 +108,7 @@ export const addAdditionalData = (
     prevOptions: OptionsOrGroups<OptionType, GroupBase<OptionType>>,
     page: number,
 ) => {
-    if (additionalOptions && additionalOptions.length > 0 && page === 0) {
+    if (additionalOptions && additionalOptions.filter((o) => o.label).length > 0 && page === 0) {
         let defaultOptions = additionalOptions;
         defaultOptions = defaultOptions.filter((option) => option.label.toLowerCase().includes(value.trim().toLowerCase()));
         (prevOptions as OptionType[]).unshift(...(defaultOptions as OptionType[]));
