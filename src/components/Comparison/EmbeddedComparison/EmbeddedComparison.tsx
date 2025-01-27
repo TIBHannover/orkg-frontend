@@ -6,11 +6,10 @@ import { FC, useEffect } from 'react';
 
 type EmbeddedComparisonProps = {
     id: string;
-    updateReferences: (contributions: unknown) => void;
-    setComparisonDataCallBack: ({ data, properties, metaData }: { data: unknown; properties: unknown; metaData: unknown }) => void;
+    updateReferences: (contributions: { paper_id: string }[]) => void;
 };
 
-const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences, setComparisonDataCallBack }) => {
+const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences }) => {
     const { comparison } = useComparison(id);
     const { isLoadingResult, data, contributions, properties } = useComparisonOld({
         id,
@@ -21,7 +20,6 @@ const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences,
     useEffect(() => {
         if (!isLoadingResult) {
             updateReferences(contributions);
-            setComparisonDataCallBack({ data, properties, metaData: comparison });
         }
     }, [comparison, contributions, data, isLoadingResult, properties]);
     return (
