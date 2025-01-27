@@ -1,11 +1,12 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import Classes, { BadgeTagsStyle } from 'components/DataBrowser/components/Header/Metadata/Classes';
 import Label from 'components/DataBrowser/components/Header/Metadata/Label';
 import Templates from 'components/DataBrowser/components/Header/Metadata/Templates';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import pluralize from 'pluralize';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-use';
 import styled from 'styled-components';
 
 export const MetadataStyled = styled.div`
@@ -32,14 +33,24 @@ export const MetadataStyled = styled.div`
 
 const Metadata = () => {
     const { entity } = useEntity();
-    const { highlightedCycle } = useDataBrowserState();
-    const dispatch = useDataBrowserDispatch();
-    const highlight = highlightedCycle && highlightedCycle === entity?.id;
+    const [isHighlighted, setIsHighlighted] = useState(false);
+    const { hash } = useLocation();
+
+    useEffect(() => {
+        // Check if this entity's ID matches the URL hash
+        if (hash === `#${entity?.id}`) {
+            setIsHighlighted(true);
+            setTimeout(() => setIsHighlighted(false), 3000);
+            // Clear the hash after highlighting
+            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }, [entity?.id, hash]);
 
     return (
         <MetadataStyled
-            className={`py-3 px-3 br-bottom ${highlight ? 'highlight' : ''}`}
-            onAnimationEnd={() => highlightedCycle && dispatch({ type: 'HIGHLIGHT_CYCLE', payload: '' })}
+            id={entity?.id}
+            className={`py-3 px-3 br-bottom ${isHighlighted ? 'highlight' : ''}`}
+            onAnimationEnd={() => setIsHighlighted(false)}
         >
             <Label />
             <div className="d-flex flex-wrap">

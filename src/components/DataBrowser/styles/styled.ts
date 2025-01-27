@@ -19,6 +19,9 @@ export const StatementWrapperStyled = styled.div`
         .btn-link {
             color: #fff !important;
         }
+        .text-break > a {
+            color: #fff !important;
+        }
         animation: blinkAnimation 0.7s 3;
     }
 

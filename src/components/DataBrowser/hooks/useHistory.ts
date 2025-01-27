@@ -37,11 +37,14 @@ const useHistory = () => {
                     }
                     return newHistories;
                 });
+                dispatch({ type: 'SET_LOADED_RESOURCES', payload: {} });
             } else {
                 setHistory((prev) => [...prev, ...(newHistory.length > 1 ? [{ p: newHistory }] : [])]);
+                dispatch({ type: 'SET_LOADED_RESOURCES', payload: {} });
             }
         } else {
             dispatch({ type: 'SET_HISTORY', payload: newHistory });
+            dispatch({ type: 'SET_LOADED_RESOURCES', payload: {} });
         }
     };
 
