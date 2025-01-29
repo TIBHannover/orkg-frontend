@@ -9,6 +9,7 @@ import {
     AuthorIdParam,
     Class,
     CreatedByParam,
+    Item,
     ObservatoryIdParam,
     OrganizationIdParam,
     PaginatedResponse,
@@ -88,9 +89,9 @@ export const getEntities = (
  * @return {PaginatedResponse<Resource>} - Merged responses
  */
 export const mergePaginateResponses = (
-    response1: PaginatedResponse<Resource>,
-    response2: PaginatedResponse<Resource>,
-): PaginatedResponse<Resource> => ({
+    response1: PaginatedResponse<Resource | Item>,
+    response2: PaginatedResponse<Resource | Item>,
+): PaginatedResponse<Resource | Item> => ({
     ...response1,
     content: mergeAlternate(response1.content, response2.content),
     totalElements: response1.totalElements + response2.totalElements,
