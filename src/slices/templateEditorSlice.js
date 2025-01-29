@@ -7,7 +7,6 @@ import { match } from 'path-to-regexp';
 import { toast } from 'react-toastify';
 import { getTemplatesByClass } from 'services/backend/statements';
 import { getTemplate, updateTemplate } from 'services/backend/templates';
-import { removeLinebreaks } from 'tsUtils';
 
 const initialState = {
     label: '',
@@ -188,7 +187,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
     }
     const dataToSubmit = {
         label: data.label,
-        description: data.description ? removeLinebreaks(data.description) : null,
+        description: data.description ? data.description : null,
         formatted_label: data.hasLabelFormat && data.formatted_label ? data.formatted_label : null,
         target_class: data.target_class.id,
         relations: {
@@ -199,7 +198,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         properties: data.properties.map((ps) => ({
             label: ps.label || 'Property shape',
             placeholder: ps.placeholder,
-            description: removeLinebreaks(ps.description),
+            description: ps.description,
             min_count: ps.min_count,
             max_count: ps.max_count,
             path: ps.path.id,
