@@ -99,7 +99,7 @@ const AddClass = () => {
                         This form allows you to create a new class. If you want to create a hierarchy of classes, we suggest that you first create the
                         root class, which is the highest-level class in the hierarchy. Alternatively, you can also suggest to include a new ontology
                         to the{' '}
-                        <a href="https://service.tib.eu/ts4tib/index" target="_blank" rel="noopener noreferrer">
+                        <a href="https://terminology.tib.eu/ts/" target="_blank" rel="noopener noreferrer">
                             TIB Terminology Service <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                         </a>{' '}
                         by creating an issue at the{' '}

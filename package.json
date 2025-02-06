@@ -57,6 +57,7 @@
         "nextjs-toploader": "^1.6.6",
         "node-html-parser": "^6.1.5",
         "nuqs": "^1.19.3",
+        "openapi-fetch": "^0.13.4",
         "path-to-regexp": "^6.2.1",
         "pdfjs-dist": "2.16.105",
         "pluralize": "^8.0.0",
@@ -146,7 +147,8 @@
         "prepare": "husky",
         "storybook": "BROWSER=true storybook dev -p 6006",
         "build-storybook": "storybook build --output-dir public/storybook",
-        "commit": "cz"
+        "commit": "cz",
+        "types:generateTIB-OLS": "openapi-typescript https://api.terminology.tib.eu/v3/api-docs -o src/services/ols/schema.d.ts"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.21.4",
@@ -207,6 +209,7 @@
         "lint-staged": "^13.2.1",
         "msw": "^2.4.9",
         "next-router-mock": "^0.9.13",
+        "openapi-typescript": "^7.6.1",
         "prettier": "^2.8.7",
         "raw-loader": "^4.0.2",
         "react-select-event": "^5.5.1",

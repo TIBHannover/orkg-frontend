@@ -7,7 +7,7 @@ Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBH
 
 ### Prerequisites
 
-In order to run the frontend, ensure that Node.js is installed (version >=16.0.0). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
+In order to run the frontend, ensure that Node.js is installed (version >=20.0.0). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
 
 ### Installation
 
@@ -74,7 +74,7 @@ In order to run the frontend, the backend needs to be running as well. Please re
 
 Make sure that your backend instance contains the default classes and properties, the list is defined in the file `constants/graphSettings.js`, you can run this [python snippet](https://gitlab.com/TIBHannover/orkg/orkg-backend/-/snippets/1959376) to create them in your backend.
 
-Two additional services are used in the frontend. These services are: [ORKG similarity](https://gitlab.com/TIBHannover/orkg/orkg-similarity) and [ORKG annotation](https://gitlab.com/TIBHannover/orkg/annotation). These services are not critical for the frontend to operate, but some for functionalities the message `Couldn't connect to service ...` appears. This message can be ignored, or can be fixed by running the respective service locally.
+An additional service is used in the frontend. This service is: [ORKG NLP API](https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api). It is not critical for the frontend to operate, but some functionalities the message `Couldn't connect to service ...` appears. This message can be ignored, or can be fixed by running the respective service locally.
 
 ## Running
 
@@ -96,7 +96,7 @@ Copy the file `default.env` to `.env`:
 
 Start the application
 
-    docker-compose up -d
+    docker compose up -d
 
 Open the browser and enter the URL of the application: http://localhost:3000/.
 
@@ -111,7 +111,7 @@ We use [React](https://reactjs.org/) as frontend framework. Additionally, we use
 -   Run Prettier rules on commit for coding style consistency
 -   The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
 -   We are transitioning to fully adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). Currently, some rules are displayed to warnings instead of errors because of the transition period. Please ensure your code does not contain any warnings before commiting.
--   We are transitioning to TypeScript. We started with the [backend service folder](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/tree/master/src/services/backend). When creating new components, consider doing this in TypeScript.
+-   We are transitioning to TypeScript. When creating new components, consider doing this in TypeScript.
 
 Happy coding! 😁☕️
 
@@ -121,4 +121,4 @@ Please have a look at the [Storybook component libary](https://tibhannover.gitla
 
 ## Value plugins
 
-An easy start for contributing is to take a look at [value plugins](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/src/components/ValuePlugins). These plugins allow for converting data into a appropriate visualization. Currently, we support plugins for the following visualizations: `Boolean checkmarks`, `LaTeX preview`, `External links`. The [boolean checkmarks plugin](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/src/components/ValuePlugins/Boolean/Boolean.js) provides an easy example on how to create your own value plugins.
+An easy start for contributing is to take a look at [value plugins](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/src/components/ValuePlugins). These plugins allow for converting data into a appropriate visualization. Currently, we support plugins for the following visualizations: `Boolean checkmarks`, `LaTeX preview`, `External links`. The [boolean checkmarks plugin](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/master/src/components/ValuePlugins/Boolean/Boolean.tsx) provides an easy example on how to create your own value plugins.

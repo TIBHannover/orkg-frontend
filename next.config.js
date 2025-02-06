@@ -62,7 +62,6 @@ const cspHeader = `default-src 'self' ;
                           https://doi.org
                           https://data.crosscite.org
                           https://secure.geonames.org
-                          https://service.tib.eu
                           https://pub.orcid.org
                           https://api.semanticscholar.org
                           https://api.datacite.org
@@ -77,6 +76,8 @@ const cspHeader = `default-src 'self' ;
                           https://fonts.gstatic.com
                           https://mastodon.social
                           https://dbpedia.org
+                          https://api.terminology.tib.eu
+                          https://www.ebi.ac.uk/ols4/api/
                       ;`;
 
 /** @type {import('next').NextConfig} */
