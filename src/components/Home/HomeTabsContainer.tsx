@@ -58,8 +58,8 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            research_field: researchFieldId,
-            include_subfields: includeSubFields,
+            research_field: researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? researchFieldId : undefined,
+            include_subfields: researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? includeSubFields : undefined,
             visibility: sort,
             contentType,
             published: true,
