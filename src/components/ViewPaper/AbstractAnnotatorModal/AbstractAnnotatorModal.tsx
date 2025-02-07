@@ -39,34 +39,25 @@ const PREDICATE_OPTIONS = [
         color: '#DAA520',
     },
     {
-        id: PREDICATES.LANGUAGE,
-        service_id: 'LANGUAGE',
-        label: 'Language',
-        description: 'The natural language focus of the work',
+        id: PREDICATES.MATERIAL,
+        service_id: 'MATERIAL',
+        label: 'Material',
+        description: 'The key resources utilized in a research contribution',
         color: '#D2B8E5',
-    },
-    {
-        id: PREDICATES.HAS_DATASET,
-        service_id: 'DATASET',
-        label: 'Dataset',
-        description:
-            'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).',
-        color: '#9df28a',
-    },
-    {
-        id: PREDICATES.TOOL,
-        service_id: 'TOOL',
-        label: 'Tool',
-        description: 'Tools used in the research',
-        color: '#EAB0A2',
     },
     {
         id: PREDICATES.METHOD,
         service_id: 'METHOD',
         label: 'Method',
-        description:
-            'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).',
+        description: 'The method represents the approach, technique, or framework',
         color: '#7fa2ff',
+    },
+    {
+        id: PREDICATES.RESULT,
+        service_id: 'RESULT',
+        label: 'Result',
+        description: 'The result  represents the key findings from a research contribution',
+        color: '#9df28a',
     },
 ];
 
