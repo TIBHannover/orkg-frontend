@@ -1,4 +1,5 @@
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { StoryFn } from '@storybook/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 export default {
@@ -6,7 +7,7 @@ export default {
     component: DescriptionTooltip,
 };
 
-const Template = (args) => <DescriptionTooltip {...args} />;
+const Template: StoryFn<typeof DescriptionTooltip> = (args) => <DescriptionTooltip {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

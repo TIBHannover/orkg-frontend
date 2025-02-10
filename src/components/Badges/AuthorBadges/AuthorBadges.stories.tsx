@@ -1,30 +1,30 @@
+import { StoryFn } from '@storybook/react';
 import AuthorBadgesComponent from 'components/Badges/AuthorBadges/AuthorBadges';
-import { CLASSES } from 'constants/graphSettings';
 
 export default {
     title: 'Badges/AuthorBadges',
     component: AuthorBadgesComponent,
 };
 
-const Template = (args) => <AuthorBadgesComponent {...args} />;
+const Template: StoryFn<typeof AuthorBadgesComponent> = (args) => <AuthorBadgesComponent {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
     authors: [
         {
             id: 'R1',
-            label: 'John Doe',
-            classes: [CLASSES.AUTHOR],
+            name: 'John Doe',
+            identifiers: {},
         },
         {
             id: 'R1',
-            label: 'Jane Doe',
-            classes: [],
+            name: 'Jane Doe',
+            identifiers: {},
         },
         {
             id: 'R1',
-            label: 'Jane Roe',
-            classes: [CLASSES.AUTHOR],
+            name: 'Jane Roe',
+            identifiers: {},
         },
     ],
 };
@@ -34,8 +34,8 @@ Single.args = {
     authors: [
         {
             id: 'R1',
-            label: 'John Doe',
-            classes: [CLASSES.AUTHOR],
+            name: 'John Doe',
+            identifiers: {},
         },
     ],
 };

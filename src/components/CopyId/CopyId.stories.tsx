@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import CopyId from 'components/CopyId/CopyId';
 
 export default {
@@ -5,7 +6,7 @@ export default {
     component: CopyId,
 };
 
-const Template = (args) => <CopyId {...args} />;
+const Template: StoryFn<typeof CopyId> = (args) => <CopyId {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

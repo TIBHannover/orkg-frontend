@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ResearchFieldBadgeComponent from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -8,7 +9,7 @@ export default {
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => <ResearchFieldBadgeComponent {...args} />;
+const Template: StoryFn<typeof ResearchFieldBadgeComponent> = (args) => <ResearchFieldBadgeComponent {...args} />;
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

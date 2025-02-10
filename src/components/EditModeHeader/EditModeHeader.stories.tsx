@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 export default {
@@ -5,7 +6,7 @@ export default {
     component: EditModeHeader,
 };
 
-const Template = (args) => <EditModeHeader {...args} />;
+const Template: StoryFn<typeof EditModeHeader> = (args) => <EditModeHeader {...args} />;
 
 export const Default = Template.bind({});
 

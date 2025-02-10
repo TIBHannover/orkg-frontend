@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 
 export default {
@@ -5,7 +6,7 @@ export default {
     component: ShareCreatedContent,
 };
 
-const Template = (args) => <ShareCreatedContent {...args} />;
+const Template: StoryFn<typeof ShareCreatedContent> = (args) => <ShareCreatedContent {...args} />;
 
 export const Default = Template.bind({});
 
