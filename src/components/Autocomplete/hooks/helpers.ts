@@ -14,7 +14,7 @@ import { createLiteralStatement, getStatements } from 'services/backend/statemen
 import { getThing } from 'services/backend/things';
 import { Class, EntityType, Predicate, Resource, Statement } from 'services/backend/types';
 import getGeoNames from 'services/geoNames';
-import { getOntologyTerms, selectTerms } from 'services/ols';
+import { getOntologyEntities, selectEntities, EntityPath } from 'services/ols';
 import { searchEntity } from 'services/wikidata';
 
 /**
@@ -155,26 +155,33 @@ export const getExternalData = ({
     // OLS
     const selectedOlsOntologies = selectedOntologies.filter((ontology) => ontology.source === AUTOCOMPLETE_SOURCE.OLS_API);
     if (includeClasses.length === 0 && selectedOlsOntologies.length > 0) {
-        const classes = {
-            [ENTITIES.CLASS]: 'class',
-            [ENTITIES.PREDICATE]: 'property',
-            [ENTITIES.RESOURCE]: 'individual',
-            default: 'individual',
-        };
         if (value) {
+            const types = {
+                [ENTITIES.CLASS]: 'class',
+                [ENTITIES.PREDICATE]: 'property',
+                [ENTITIES.RESOURCE]: 'individual',
+                default: 'entity',
+            };
             promises.push(
-                selectTerms({
+                selectEntities({
                     page,
                     pageSize,
-                    type: classes[entityType] || classes.default,
+                    type: types[entityType] || types.default,
                     q: encodeURIComponent(value.trim()),
-                    ontology: selectedOlsOntologies.map((o) => o.id).join(','),
+                    ontologies: selectedOlsOntologies.map((o) => o.id) as string[],
                 }),
             );
         } else {
             for (const o of selectedOlsOntologies) {
+                const urlPath: { [key: string]: EntityPath } = {
+                    [ENTITIES.CLASS]: 'classes',
+                    [ENTITIES.PREDICATE]: 'properties',
+                    [ENTITIES.RESOURCE]: 'individuals',
+                    default: 'entities',
+                };
                 promises.push(
-                    getOntologyTerms({
+                    getOntologyEntities({
+                        type: urlPath[entityType] || urlPath.default,
                         ontology_id: o.id,
                         page,
                         pageSize,

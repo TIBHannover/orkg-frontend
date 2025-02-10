@@ -20,7 +20,7 @@ export type Ontology = {
 export type OntologyTerm = Ontology & {
     ontology: string;
     shortLabel: string;
-    tooltipData: string[];
+    tooltipData: { property: string; value: string | null }[];
 };
 
 export type OptionType = Node & {
