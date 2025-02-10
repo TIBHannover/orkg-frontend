@@ -1,10 +1,11 @@
 'use client';
 
-import IntegratedList from 'components/ResearchProblem/IntegratedList';
-import useParams from 'components/useParams/useParams';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Benchmarks from 'components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import ResearchProblemTabsContainer from 'components/ResearchProblem/ResearchProblemTabsContainer';
+import useParams from 'components/useParams/useParams';
+import { Container } from 'reactstrap';
 
 function ResearchProblem() {
     const { researchProblemId, slug } = useParams();
@@ -13,8 +14,9 @@ function ResearchProblem() {
         <div>
             <ResearchProblemHeader id={researchProblemId} />
             <Benchmarks id={researchProblemId} />
-
-            <IntegratedList id={researchProblemId} slug={slug} boxShadow />
+            <Container className="p-0 mt-2">
+                <ResearchProblemTabsContainer id={researchProblemId} />
+            </Container>
             <ComparisonPopup />
         </div>
     );

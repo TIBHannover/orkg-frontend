@@ -30,7 +30,7 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
     const isLastPageReached = isEmpty || benchmarks?.[benchmarks.length - 1]?.last;
     const hasNextPage = !isLastPageReached;
 
-    if (benchmarks && benchmarks.length === 0 && !isLoading) {
+    if (benchmarks && benchmarks.map((b) => b.content).flat().length === 0 && !isLoading) {
         return null;
     }
 
