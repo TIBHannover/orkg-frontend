@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { ListGroup } from 'reactstrap';
 
@@ -6,7 +7,7 @@ export default {
     component: ShortRecord,
 };
 
-const Template = (args) => <ShortRecord {...args} />;
+const Template: StoryFn<typeof ShortRecord> = (args) => <ShortRecord {...args} />;
 
 export const Default = Template.bind({});
 
@@ -24,7 +25,7 @@ WithoutLabel.args = {
     header: '',
 };
 
-const TemplateWithinList = (args) => (
+const TemplateWithinList: StoryFn<typeof ShortRecord> = (args) => (
     <ListGroup>
         <ShortRecord {...args} />
         <ShortRecord {...args} />

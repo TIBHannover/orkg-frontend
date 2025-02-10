@@ -1,14 +1,16 @@
+import type { Preview } from '@storybook/react';
 import 'assets/scss/CustomBootstrap.scss';
 import 'assets/scss/DefaultLayout.scss';
-import 'react-toastify/dist/ReactToastify.css';
 import 'leaflet/dist/leaflet.css';
-import styled, { createGlobalStyle } from 'styled-components';
+import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import 'react-toastify/dist/ReactToastify.css';
+import { createGlobalStyle } from 'styled-components';
 import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 
-export const parameters = {
+export const parameters: Preview['parameters'] = {
     controls: {
         matchers: {
             color: /(background|color)$/i,
@@ -25,8 +27,8 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-export const decorators = [
-    (Story) => (
+export const decorators: Preview['decorators'] = [
+    (Story: React.ComponentType) => (
         <DndProvider backend={HTML5Backend}>
             <Wrapper>
                 <GlobalStyle />
@@ -37,3 +39,4 @@ export const decorators = [
         </DndProvider>
     ),
 ];
+export const tags = ['autodocs'];

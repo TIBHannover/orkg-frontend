@@ -1,7 +1,9 @@
+import type { StorybookConfig } from '@storybook/nextjs';
+
 /**
  * Gets a list of environment variables that start with `NEXT_PUBLIC_`.
  */
-export function getPublicEnv(config) {
+export function getPublicEnv(config: string) {
     const publicEnv = Object.keys(JSON.parse(config))
         .filter((key) => /^NEXT_PUBLIC_/i.test(key))
         .reduce(
@@ -15,7 +17,7 @@ export function getPublicEnv(config) {
     return JSON.stringify(publicEnv);
 }
 
-const config = {
+const config: StorybookConfig = {
     stories: ['./**/*.mdx', '../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
     addons: ['@storybook/addon-links', '@storybook/addon-essentials', '@storybook/addon-interactions', '@storybook/addon-mdx-gfm'],
     framework: {
@@ -26,7 +28,6 @@ const config = {
         disableTelemetry: true,
     },
     docs: {
-        autodocs: true,
         defaultName: 'Docs',
     },
     env: (config) => ({

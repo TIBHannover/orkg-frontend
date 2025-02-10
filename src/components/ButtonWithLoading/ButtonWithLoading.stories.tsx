@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 
 export default {
@@ -6,7 +7,7 @@ export default {
     argTypes: { onClick: { action: 'clicked' } },
 };
 
-const Template = (args) => <ButtonWithLoading {...args} />;
+const Template: StoryFn<typeof ButtonWithLoading> = (args) => <ButtonWithLoading {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

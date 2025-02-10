@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import { useState } from 'react';
 import { ModalBody, ModalHeader } from 'reactstrap';
@@ -7,12 +8,14 @@ export default {
     component: ModalWithLoading,
 };
 
-const Template = (args) => {
+const Template: StoryFn<typeof ModalWithLoading> = (args) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <>
-            <button onClick={() => setIsOpen((v) => !v)}>Trigger confirm</button>
+            <button type="button" onClick={() => setIsOpen((v) => !v)}>
+                Trigger confirm
+            </button>
 
             <ModalWithLoading {...args} isOpen={isOpen} toggle={() => setIsOpen((v) => !v)}>
                 <ModalHeader toggle={() => setIsOpen((v) => !v)}>Test</ModalHeader>

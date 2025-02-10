@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/react';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 
 export default {
@@ -5,7 +6,7 @@ export default {
     component: ShareLinkMarker,
 };
 
-const Template = (args) => (
+const Template: StoryFn<typeof ShareLinkMarker> = (args) => (
     <div style={{ width: '90%', height: 200, position: 'relative', backgroundColor: 'WhiteSmoke' }}>
         <ShareLinkMarker {...args} />
     </div>
