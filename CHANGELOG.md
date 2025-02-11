@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.160.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.1...v0.160.2) - 2025-02-11
+
+### Changes
+
+- fix: merge conflict of !1495 with master [`#1496`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1496)
+- chore: update storybook [`#1495`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1495)
+- refactor: ols service and use openapi-typescript [`#1492`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1492)
+- fix: update the list of predicates for abstract annotation [`#1494`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1494)
+- perf: skip filter content-types by research field on front page [`#1493`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1493)
+- fix: use tabs in research problem page [`#1489`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1489)
+- fix: allow new lines in property descriptions (revert !1471) [`#1477`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1477)
+
+---
 ## [v0.160.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.0...v0.160.1) - 2025-01-27
 
 ### Changes
