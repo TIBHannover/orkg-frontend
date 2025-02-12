@@ -62,6 +62,7 @@ const cspHeader = `default-src 'self' ;
                           https://doi.org
                           https://data.crosscite.org
                           https://secure.geonames.org
+                          https://service.tib.eu
                           https://pub.orcid.org
                           https://api.semanticscholar.org
                           https://api.datacite.org
