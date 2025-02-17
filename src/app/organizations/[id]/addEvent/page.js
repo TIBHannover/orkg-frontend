@@ -1,25 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
-import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
-import { toast } from 'react-toastify';
-import { createConference } from 'services/backend/conferences-series';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import REGEX from 'constants/regex';
-import { reverse } from 'named-urls';
-import { getPublicUrl } from 'utils';
-import slugify from 'slugify';
-import ROUTES from 'constants/routes';
-import Tooltip from 'components/Utils/Tooltip';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { useSelector, useDispatch } from 'react-redux';
-import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useAuthentication from 'components/hooks/useAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
+import Tooltip from 'components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
-import { login } from 'services/keycloak';
+import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
+import REGEX from 'constants/regex';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { createConference } from 'services/backend/conferences-series';
+import slugify from 'slugify';
+import { getPublicUrl } from 'utils';
 
 const AddConference = () => {
     const params = useParams();
@@ -30,8 +30,7 @@ const AddConference = () => {
     const [reviewType, setReviewType] = useState('');
     const [editorState, setEditorState] = useState('edit');
     const publicConferenceRoute = `${getPublicUrl()}${reverse(ROUTES.EVENT_SERIES, { id: ' ' })}`;
-    const user = useSelector((state) => state.auth.user);
-    const dispatch = useDispatch();
+    const { user } = useAuthentication();
     const router = useRouter();
 
     useEffect(() => {
@@ -191,7 +190,7 @@ const AddConference = () => {
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
-                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login({ redirectUri: window.location.href })}>
+                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => signIn('keycloak')}>
                         <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create conference event
                     </Button>
                 )}

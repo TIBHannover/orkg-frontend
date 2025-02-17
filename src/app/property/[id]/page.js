@@ -13,9 +13,9 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import ItemMetadata from 'components/Search/ItemMetadata';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useAuthentication from 'components/hooks/useAuthentication';
 import useParams from 'components/useParams/useParams';
 import { ENTITIES } from 'constants/graphSettings';
-import { useSelector } from 'react-redux';
 import { Button, Container } from 'reactstrap';
 import { getPredicate, predicatesUrl } from 'services/backend/predicates';
 import useSWR from 'swr';
@@ -23,8 +23,7 @@ import useSWR from 'swr';
 function Property() {
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const { id: propertyId } = useParams();
-    const user = useSelector((state) => state.auth.user);
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { user, isCurationAllowed } = useAuthentication();
 
     const { deleteProperty } = useDeleteProperty({ propertyId, redirect: true });
 

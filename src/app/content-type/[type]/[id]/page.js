@@ -7,14 +7,14 @@ import NotFound from 'app/not-found';
 import { supportedContentTypes } from 'components/ContentType/types';
 import DataBrowser from 'components/DataBrowser/DataBrowser';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useParams from 'components/useParams/useParams';
+import useAuthentication from 'components/hooks/useAuthentication';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
+import useParams from 'components/useParams/useParams';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { upperFirst } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 
@@ -25,7 +25,7 @@ function ContentType() {
     const [isLoading, setIsLoading] = useState(true);
     const params = useParams();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
     const resourceId = params.id;
 
     useEffect(() => {

@@ -1,17 +1,15 @@
 import { faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ActionButton from 'components/ActionButton/ActionButton';
 import FilterInputField from 'components/Filters/FilterInputField/FilterInputField';
 import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
 import FilterCurationForm from 'components/Filters/Panel/FilterCurationForm';
 import useCurateFilters from 'components/Filters/hooks/useCurateFilters';
-import ActionButton from 'components/ActionButton/ActionButton';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Alert, Badge, Button, Label, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';
 import { FilterConfig, FilterConfigValue } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 
 type AllFiltersOffCanvasProps = {
     id: string;
@@ -36,7 +34,7 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
     showResult,
     resetFilters,
 }) => {
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
     const { isSaving, currentFilter, handleSaveFilter, deleteFilter, setCurrentFilter } = useCurateFilters({
@@ -63,12 +61,13 @@ const AllFiltersOffCanvas: FC<AllFiltersOffCanvasProps> = ({
                             <div className="col-auto">
                                 <Label for={filter?.id || index.toString()} className="col-form-label d-block">
                                     <FilterLabel filter={filter} />
-                                    {isCurator && filter.featured && (
+                                    {isCurationAllowed && filter.featured && (
                                         <small>
                                             <Badge>Featured</Badge>
                                         </small>
                                     )}
-                                    {(filter.source === FILTER_SOURCE.LOCAL_STORAGE || (filter.source === FILTER_SOURCE.DATABASE && isCurator)) && (
+                                    {(filter.source === FILTER_SOURCE.LOCAL_STORAGE ||
+                                        (filter.source === FILTER_SOURCE.DATABASE && isCurationAllowed)) && (
                                         <div className="float-end">
                                             <ActionButton
                                                 title="Edit filter"

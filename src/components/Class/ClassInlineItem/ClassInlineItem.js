@@ -1,15 +1,15 @@
-import Link from 'next/link';
 import { faCheck, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import ActionButton from 'components/ActionButton/ActionButton';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ActionButton from 'components/ActionButton/ActionButton';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { StyledButton } from 'components/StatementBrowser/styled';
-import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { InputGroup } from 'reactstrap';
@@ -36,7 +36,7 @@ const ClassInlineItem = ({
     onChange,
 }) => {
     const classAutocompleteRef = useRef(null);
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
     const [isChangingValue, setIsChangingValue] = useState(null);
     const [isSavingChange, setIsSavingChange] = useState(false);
     const [isSavingDelete, setIsSavingDelete] = useState(false);

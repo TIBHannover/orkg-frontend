@@ -7,21 +7,21 @@ import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useParams from 'components/useParams/useParams';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import ObservatoryTabsContainer from 'components/Observatory/ObservatoryTabsContainer';
 import MembersBox from 'components/Observatory/MembersBox';
 import ObservatoryModal from 'components/Observatory/ObservatoryModal/ObservatoryModal';
+import ObservatoryTabsContainer from 'components/Observatory/ObservatoryTabsContainer';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
+import ReadMore from 'components/ReadMore/ReadMore';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { SubTitle } from 'components/styled';
+import useParams from 'components/useParams/useParams';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Col, Container, Row } from 'reactstrap';
-import ReadMore from 'components/ReadMore/ReadMore';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
 
@@ -39,7 +39,7 @@ const Observatory = () => {
     const [showDialogInfo, setShowDialogInfo] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const { id } = useParams();
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
 
     const loadOrganizations = (organizationsData) => {
         setIsLoadingOrganizations(true);

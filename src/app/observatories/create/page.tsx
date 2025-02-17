@@ -3,6 +3,7 @@
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
 import Option from 'components/AutocompleteObservatory/CustomComponents/Option';
+import useAuthentication from 'components/hooks/useAuthentication';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
 import Tooltip from 'components/Utils/Tooltip';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -12,7 +13,6 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
@@ -20,8 +20,6 @@ import requireAuthentication from 'requireAuthentication';
 import { createObservatory } from 'services/backend/observatories';
 import { getAllOrganizations, getOrganization, organizationsUrl } from 'services/backend/organizations';
 import { Organization } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import slugify from 'slugify';
 import useSWR from 'swr';
 import { getPublicUrl } from 'utils';
@@ -55,7 +53,7 @@ const CreateObservatory = () => {
     const [researchField, setResearchField] = useState<OptionType | null>(null);
     const [organization, setOrganization] = useState<Organization | null>(prefilledOrganization || null);
     const [permalink, setPermalink] = useState('');
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
 
     const publicObservatoryRoute = `${getPublicUrl()}${reverse(ROUTES.OBSERVATORY, { id: ' ' })}`;
 
@@ -107,7 +105,7 @@ const CreateObservatory = () => {
 
     const loading = editorState === 'loading';
 
-    if (!isCurator) {
+    if (!isCurationAllowed) {
         return <Unauthorized />;
     }
 

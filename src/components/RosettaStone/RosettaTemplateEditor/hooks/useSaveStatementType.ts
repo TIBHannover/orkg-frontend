@@ -1,19 +1,18 @@
+import useMembership from 'components/hooks/useMembership';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { CLASSES } from 'constants/graphSettings';
 import errorHandler from 'helpers/errorHandler';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createRSTemplate, rosettaStoneUrl, updateRSTemplate } from 'services/backend/rosettaStone';
-import { RootStore } from 'slices/types';
 import { mutate } from 'swr';
 
 const useSaveStatementType = () => {
     const { id, examples, label, description, properties } = useRosettaTemplateEditorState();
 
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { organizationId, observatoryId } = useMembership();
 
     const dispatch = useRosettaTemplateEditorDispatch();
 
@@ -60,8 +59,8 @@ const useSaveStatementType = () => {
                             }),
                         ...('class' in p && p.class?.id && { class: p.class?.id }),
                     })),
-                observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
             };
             const savedTemplate = await (id ? updateRSTemplate(id, data) : createRSTemplate(data));
             if (id) {

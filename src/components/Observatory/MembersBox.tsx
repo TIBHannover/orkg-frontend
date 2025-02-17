@@ -4,14 +4,13 @@ import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import AddMember from 'components/Observatory/AddMember';
 import MembersModal from 'components/Observatory/MembersModal';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { getUsersByObservatoryId, observatoriesUrl } from 'services/backend/observatories';
 import { Contributor, Organization } from 'services/backend/types';
 import { deleteUserFromObservatoryById } from 'services/backend/users';
-import { RootStore } from 'slices/types';
 import { mutate } from 'swr';
 
 type MembersBoxProps = {
@@ -21,7 +20,7 @@ type MembersBoxProps = {
 };
 
 const MembersBox = ({ observatoryId, organizationsList, isEditMode }: MembersBoxProps) => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
     const [openModal, setOpenModal] = useState(false);
     const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
 

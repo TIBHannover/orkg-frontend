@@ -1,8 +1,8 @@
+import useMembership from 'components/hooks/useMembership';
 import { extractConcept, extractLabelFromRdfURI, mapClass, mapPredicate, mapResource } from 'components/Templates/ImportSHACL/helpers/helpers';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { sortBy } from 'lodash';
 import rdf from 'rdf';
-import { useSelector } from 'react-redux';
 import { createClass, getClasses } from 'services/backend/classes';
 import { createPredicate } from 'services/backend/predicates';
 import { getTemplatesByClass } from 'services/backend/statements';
@@ -10,7 +10,7 @@ import { createTemplate, getTemplate } from 'services/backend/templates';
 import format from 'string-format';
 
 const useImportSHACL = () => {
-    const user = useSelector((state) => state.auth.user);
+    const { observatoryId, organizationId } = useMembership();
 
     const parseTemplates = async (text) => {
         const result = [];
@@ -228,8 +228,8 @@ const useImportSHACL = () => {
                             }),
                     })),
                     is_closed: nodesShape.closed,
-                    observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                    organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                    observatories: observatoryId ? [observatoryId] : [],
+                    organizations: organizationId ? [organizationId] : [],
                 };
 
                 const templateResource = await createTemplate(templateObject);

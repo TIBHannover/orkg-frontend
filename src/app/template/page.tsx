@@ -9,16 +9,17 @@ import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
+import useAuthentication from 'components/hooks/useAuthentication';
+import useMembership from 'components/hooks/useMembership';
 import { ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
@@ -31,10 +32,8 @@ const TemplateNew = () => {
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
-    const organizationId = useSelector((state: any) => state.auth.user?.organization_id);
-    const observatoryId = useSelector((state: any) => state.auth.user?.observatory_id);
-
-    const user = useSelector((state: any) => state.auth.user);
+    const { user } = useAuthentication();
+    const { organizationId, observatoryId } = useMembership();
 
     const classAutocompleteRef = useRef<SelectInstance<OptionType | null>>(null);
 

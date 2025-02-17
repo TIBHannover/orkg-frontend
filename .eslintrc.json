@@ -23,9 +23,18 @@
         "no-restricted-imports": [
             2,
             {
-                "name": "next/navigation",
-                "importNames": ["useParams"],
-                "message": "Please import from `components/useParams/useParams` instead."
+                "patterns": [
+                    {
+                        "group": ["next-auth/react"],
+                        "importNames": ["useSession"],
+                        "message": "Please import useSession from `components/hooks/useSession` instead."
+                    },
+                    {
+                        "group": ["next/navigation"],
+                        "importNames": ["useParams"],
+                        "message": "Please import from `components/useParams/useParams` instead."
+                    }
+                ]
             }
         ],
         "prefer-const": 1,

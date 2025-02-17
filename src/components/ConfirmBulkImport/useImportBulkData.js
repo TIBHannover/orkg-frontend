@@ -1,12 +1,12 @@
 /* eslint-disable guard-for-in */
 import { Cite } from '@citation-js/core';
+import useMembership from 'components/hooks/useMembership';
 import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';
 import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getPaperByDoi } from 'services/backend/papers';
 import { createPredicate, getPredicate, getPredicates } from 'services/backend/predicates';
@@ -33,7 +33,7 @@ const useImportBulkData = ({ data, onFinish }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [createdContributions, setCreatedContributions] = useState([]);
-    const user = useSelector((state) => state.auth.user);
+    const { observatoryId, organizationId } = useMembership();
 
     const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
 
@@ -264,8 +264,8 @@ const useImportBulkData = ({ data, onFinish }) => {
                     url,
                 },
                 authors,
-                observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
                 extraction_method: extractionMethod,
                 contents: [
                     {

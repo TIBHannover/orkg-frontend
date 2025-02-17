@@ -4,6 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ListPage from 'components/PaginatedContent/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
@@ -13,11 +14,9 @@ import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getPapers, papersUrl } from 'services/backend/papers';
 import { Paper, VisibilityOptions } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 
 const Papers: FC = () => {
     const [verified, setVerified] = useQueryState<boolean | null>('verified', {
@@ -35,7 +34,7 @@ const Papers: FC = () => {
         document.title = 'Papers list - ORKG';
     }, []);
 
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const renderListItem = (paper: Paper) => <PaperCard paper={paper} key={paper.id} />;
 

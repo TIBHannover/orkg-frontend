@@ -1,5 +1,6 @@
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import useMembership from 'components/hooks/useMembership';
 import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
 import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
 import Tooltip from 'components/Utils/Tooltip';
@@ -9,12 +10,9 @@ import THING_TYPES from 'constants/thingTypes';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createClass } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
 import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 import { createThing } from 'services/simcomp';
@@ -25,7 +23,7 @@ function PublishVisualization(props) {
     const [title, setTitle] = useState('');
     const { mutate } = useComparison();
     const [description, setDescription] = useState('');
-    const displayName = useSelector((state) => state.auth.user.displayName);
+    const { displayName } = useMembership();
 
     const [visualizationCreators, setVisualizationCreators] = useState(
         props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],

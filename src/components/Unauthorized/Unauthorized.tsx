@@ -1,31 +1,30 @@
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuthentication from 'components/hooks/useAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Container } from 'reactstrap';
-import { login, register } from 'services/keycloak';
-import { RootStore } from 'slices/types';
 
 /**
  * Unauthorized can mean both unauthenticated and unauthorized. So when a user is not signed in,
  * a sign in button is displayed, otherwise just a general unauthorized message is shown
  */
 const Unauthorized = () => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     useEffect(() => {
         document.title = 'Unauthorized - ORKG';
     }, []);
 
     const handleSignIn = () => {
-        login({ redirectUri: window.location.href });
+        signIn('keycloak');
     };
 
     const handleSignUp = () => {
-        register();
+        signIn('keycloak');
     };
 
     return (

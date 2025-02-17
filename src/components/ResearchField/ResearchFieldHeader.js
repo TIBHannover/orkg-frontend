@@ -4,6 +4,7 @@ import CheckClasses from 'components/CheckClasses/CheckClasses';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
+import useAuthentication from 'components/hooks/useAuthentication';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
@@ -16,14 +17,13 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
 

@@ -1,17 +1,16 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import CuratorModal from 'components/CuratorModal/CuratorModal';
 import ActionButton from 'components/ActionButton/ActionButton';
+import CuratorModal from 'components/CuratorModal/CuratorModal';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { ENTITIES } from 'constants/graphSettings';
-import { useState, FC, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Input, InputGroup } from 'reactstrap';
+import { updateClass } from 'services/backend/classes';
 import { updatePredicate } from 'services/backend/predicates';
 import { updateResource } from 'services/backend/resources';
-import { updateClass } from 'services/backend/classes';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import { RootStore } from 'slices/types';
 
 type EditableHeaderProp = {
     id: string;
@@ -26,8 +25,7 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
     const [isEditMode, setIsEditMode] = useState(false);
     const [isOpenCuratorModal, setIsOpenCuratorModal] = useState(false);
 
-    const user = useSelector((state: RootStore) => state.auth.user);
-    const isCurator = user ? user.isCurationAllowed : false;
+    const { isCurationAllowed } = useAuthentication();
 
     const handleSubmitClick = async () => {
         setIsLoading(true);
@@ -62,7 +60,7 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
     };
 
     const handleEditClick = () => {
-        if (curatorsOnly && !isCurator) {
+        if (curatorsOnly && !isCurationAllowed) {
             setIsOpenCuratorModal(true);
             return;
         }

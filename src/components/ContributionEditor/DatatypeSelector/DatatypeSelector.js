@@ -43,7 +43,6 @@ const DatatypeSelector = ({
     menuPortalTarget = null,
     isDisabled = false,
 }) => {
-    // const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const theme = useContext(ThemeContext);
 
     const CustomOption = useCallback(

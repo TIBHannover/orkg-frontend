@@ -1,5 +1,6 @@
+import useAuthentication from 'components/hooks/useAuthentication';
+import { signIn } from 'next-auth/react';
 import { env } from 'next-runtime-env';
-import { isLoggedIn, login } from 'services/keycloak';
 
 type RequireAuthenticationProps = {
     component: React.ComponentType<React.ComponentProps<any>>;
@@ -8,11 +9,13 @@ type RequireAuthenticationProps = {
 } & React.ComponentProps<any>;
 
 const RequireAuthentication = ({ component: Component, ...rest }: RequireAuthenticationProps) => {
+    const { user } = useAuthentication();
+
     const requireAuthentication = (e: React.MouseEvent) => {
-        if (!isLoggedIn()) {
+        if (!user) {
             let redirectUri = rest.href || undefined;
             redirectUri = redirectUri ? `${env('NEXT_PUBLIC_URL')}${redirectUri}` : undefined;
-            login({ redirectUri });
+            signIn('keycloak', { callbackUrl: redirectUri });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
             return null;

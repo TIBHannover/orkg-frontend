@@ -1,19 +1,19 @@
+import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
+import ActionButton from 'components/ActionButton/ActionButton';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import useAuthentication from 'components/hooks/useAuthentication';
+import AddResearchProblem from 'components/Observatory/AddResearchProblem';
+import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
+import ResearchProblemsModal from 'components/ResearchProblemsBox/ResearchProblemsModal';
+import ROUTES from 'constants/routes';
+import { truncate } from 'lodash';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
-import AddResearchProblem from 'components/Observatory/AddResearchProblem';
-import { faPlus, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { truncate } from 'lodash';
-import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
-import Tippy from '@tippyjs/react';
-import { useSelector } from 'react-redux';
-import ActionButton from 'components/ActionButton/ActionButton';
-import ResearchProblemsModal from 'components/ResearchProblemsBox/ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
     const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
@@ -23,7 +23,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
         pageSize: 10,
     });
     const [openModal, setOpenModal] = useState(false);
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
     const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
 
     return (

@@ -1,6 +1,7 @@
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useMembership from 'components/hooks/useMembership';
 import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
 import MetadataTable from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/MetadataTable/MetadataTable';
 import useList from 'components/List/hooks/useList';
@@ -11,14 +12,12 @@ import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, FormGroup, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getPaper, getPaperByDoi, getPaperByTitle } from 'services/backend/papers';
 import { Author, LiteratureListSectionList, Paper, Resource, UpdateAuthor } from 'services/backend/types';
 import { SemanticScholarResult } from 'services/semanticScholar';
-import { RootStore } from 'slices/types';
 import { parseCiteResult } from 'utils';
 
 type AddEntryModalProps = {
@@ -47,7 +46,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
     const [tab, setTab] = useState('title');
     const [results, setResults] = useState<Result[]>([]);
     const { list } = useList();
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { organizationId, observatoryId } = useMembership();
 
     const checkIfInList = (entityId: string) => {
         if (!list) {
@@ -78,8 +77,8 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                             published_in: result.publishedIn || null,
                         },
                         authors: result.authors ?? [],
-                        observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                        organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                        observatories: observatoryId ? [observatoryId] : [],
+                        organizations: organizationId ? [organizationId] : [],
                     },
                 });
                 _entity.id = paper;

@@ -3,6 +3,7 @@ import Tippy from '@tippyjs/react';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useAuthentication from 'components/hooks/useAuthentication';
 import removeEmptySegments from 'components/RosettaStone/SingleStatement/hooks/helpers';
 import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useEditStatement';
 import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
@@ -16,13 +17,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
 import { Badge, FormGroup, Input, Label, ListGroupItem } from 'reactstrap';
 import { getPaper, papersUrl } from 'services/backend/papers';
 import { RosettaStoneStatement } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 
 type SingleStatementProps = {
@@ -51,7 +49,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
         handleDeleteStatementPermanently,
     } = useEditStatement({ statement, setNewStatements, reloadStatements });
 
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
 
     const { data: context, isLoading: isLoadingContext } = useSWR(showContext ? [statement.context, papersUrl, 'getStatement'] : null, ([params]) =>
         getPaper(params),
@@ -131,12 +129,12 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                             isDisabled={!statement.modifiable}
                             confirmationMessage="Are you sure to delete?"
                             confirmationButtons={[
-                                ...(statement.latest_version_id && isCurator
+                                ...(statement.latest_version_id && isCurationAllowed
                                     ? [{ title: 'Delete permanently', color: 'danger', icon: faCheck, action: handleDeleteStatementPermanently }]
                                     : []),
                                 {
                                     title: 'Delete',
-                                    color: statement.latest_version_id && isCurator ? 'warning' : 'danger',
+                                    color: statement.latest_version_id && isCurationAllowed ? 'warning' : 'danger',
                                     icon: faCheck,
                                     action: handleDeleteStatement,
                                 },

@@ -14,15 +14,17 @@ import UserTooltip from 'components/Layout/Header/UserTooltip';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { signIn } from 'next-auth/react';
+import useAuthentication from 'components/hooks/useAuthentication';
+import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
-import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
 import { Cookies } from 'react-cookie';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
     Badge,
     Button,
@@ -37,7 +39,6 @@ import {
     NavItem,
     NavLink,
 } from 'reactstrap';
-import { login } from 'services/keycloak';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const cookies = new Cookies();
@@ -183,6 +184,7 @@ const StyledNavbar = styled(Navbar)`
 `;
 
 const Header = () => {
+    const { user, status } = useAuthentication();
     const [isOpenNavBar, setIsOpenNavBar] = useState(false);
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
@@ -192,7 +194,7 @@ const Header = () => {
     const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
     const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
     const [isHomePage, setIsHomePage] = useState(isHomePath);
-    const { user, initialized, authenticated } = useSelector((state) => state.auth);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -237,9 +239,9 @@ const Header = () => {
     };
 
     const requireAuthentication = (e, redirectRoute) => {
-        if (!authenticated) {
+        if (!user) {
             const redirectUri = `${env('NEXT_PUBLIC_URL')}${redirectRoute}`;
-            login({ redirectUri });
+            signIn('keycloak', { callbackUrl: redirectUri });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
         } else {
@@ -520,22 +522,22 @@ const Header = () => {
 
                     <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
 
-                    {initialized && authenticated && !!user && <UserTooltip />}
+                    {status === 'authenticated' && user && <UserTooltip />}
 
-                    {initialized && !authenticated && (
+                    {status === 'unauthenticated' && (
                         <Button
                             id="sign-in"
                             color="secondary"
                             className="px-3 flex-shrink-0 sign-in d-flex align-items-center justify-content-center"
                             outline
-                            onClick={() => login({ redirectUri: window.location.href })}
+                            onClick={() => signIn('keycloak')}
                         >
                             <FontAwesomeIcon className="me-1" icon={faUser} />
                             <span className="d-md-none d-sm-block d-lg-block">Sign in</span>
                         </Button>
                     )}
 
-                    {(!initialized || (authenticated && !user)) && (
+                    {status === 'loading' && (
                         <div className="ms-2 me-1 position-relative">
                             <FontAwesomeIcon {...(isTransparentNavbar ? { color: 'white' } : {})} size="xl" icon={faSpinner} spin />
                         </div>

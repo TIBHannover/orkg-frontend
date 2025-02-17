@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import auth from 'slices/authSlice';
 import comparison from 'slices/comparisonSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 import pdfAnnotation from 'slices/pdfAnnotationSlice';
@@ -11,7 +10,6 @@ import viewPaper from 'slices/viewPaperSlice';
 export default (routerReducer) =>
     combineReducers({
         router: routerReducer,
-        auth,
         viewPaper,
         contributionEditor,
         templateEditor,

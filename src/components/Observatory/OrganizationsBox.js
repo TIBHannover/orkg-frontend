@@ -1,22 +1,22 @@
-import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import capitalize from 'capitalize';
+import ActionButton from 'components/ActionButton/ActionButton';
+import useAuthentication from 'components/hooks/useAuthentication';
+import AddOrganization from 'components/Observatory/AddOrganization';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import AddOrganization from 'components/Observatory/AddOrganization';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { Button } from 'reactstrap';
-import { faPlus, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import ActionButton from 'components/ActionButton/ActionButton';
+import { Button } from 'reactstrap';
 import { updateObservatory } from 'services/backend/observatories';
-import capitalize from 'capitalize';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 
 const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem, isEditMode }) => {
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
     const [showAddOrganizationDialog, setShowAddOrganizationDialog] = useState(false);
     const [organizations, setOrganizations] = useState([]);
 

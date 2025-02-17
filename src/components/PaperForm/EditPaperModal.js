@@ -1,15 +1,15 @@
-import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import PaperForm from 'components/PaperForm/PaperForm';
 import useEditPaper from 'components/PaperForm/hooks/useEditPaper';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisible = false }) => {
@@ -39,7 +39,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
         abstract,
     } = useEditPaper({ paperData, afterUpdate });
 
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
 
     return (
         <ModalWithLoading isLoading={isLoadingEdit} isOpen toggle={toggle} size="lg">

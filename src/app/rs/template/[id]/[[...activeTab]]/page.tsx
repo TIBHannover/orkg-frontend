@@ -7,6 +7,7 @@ import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import Confirm from 'components/Confirmation/Confirmation';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import useAuthentication from 'components/hooks/useAuthentication';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 import { SlotTooltip } from 'components/RosettaStone/SlotTooltip/SlotTooltip';
@@ -22,20 +23,16 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import ReactStringReplace from 'react-string-replace';
 import { toast } from 'react-toastify';
 import { Badge, Button, Container, ListGroup } from 'reactstrap';
 import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 
 const RSTemplatePage = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const user = useSelector((state: RootStore) => state.auth.user);
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { user, isCurationAllowed } = useAuthentication();
 
     const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) => getRSTemplate(params));
     const {
@@ -94,7 +91,7 @@ const RSTemplatePage = () => {
 
     const { totalElements } = statements ?? { totalElements: 0 };
 
-    const canDeleteTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurator || user?.id === template?.created_by));
+    const canDeleteTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurationAllowed || user?.id === template?.created_by));
     const canEditTemplate = !!user;
 
     return (

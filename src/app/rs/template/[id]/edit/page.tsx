@@ -2,28 +2,25 @@
 
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
-import { useRouter } from 'next/navigation';
+import useAuthentication from 'components/hooks/useAuthentication';
 import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
 import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
 import { getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { getStatements, statementsUrl } from 'services/backend/statements';
 import { PaginatedResponse, Statement } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 import { guid } from 'utils';
-import useParams from 'components/useParams/useParams';
 
 const RSTemplateEditPage = () => {
     const { id } = useParams<{ id: string; activeTab: string }>();
-    const user = useSelector((state: RootStore) => state.auth.user);
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { user } = useAuthentication();
 
     const { data: template, isLoading, error } = useSWR(id ? [id, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) => getRSTemplate(params));
     const { data: rsStatements, isLoading: isLoadingRSStatements } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) =>

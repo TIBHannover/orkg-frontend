@@ -3,20 +3,18 @@ import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
+import useAuthentication from 'components/hooks/useAuthentication';
 import DATA_TYPES from 'constants/DataTypes';
 import { FILTER_SOURCE } from 'constants/filters';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { motion } from 'framer-motion';
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, FormText, Input, InputGroup, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { getPredicatesByIds } from 'services/backend/predicates';
 import { Class, FilterConfig, Predicate } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 
 type FilterCurationFormProps = {
     isOpen: boolean;
@@ -35,7 +33,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
     const [exact, setExact] = useState(filter ? filter.exact : true);
 
     const [isLoadingEntities, setIsLoadingEntities] = useState(false);
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
 
     const handleSaveClick = async () => {
         if (!label || path?.length === 0 || !range) {
@@ -91,7 +89,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
             <ModalWithLoading onClosed={resetValues} isLoading={isSaving} isOpen={isOpen} toggle={toggle}>
                 <ModalHeader toggle={toggle}>{filter ? 'Edit' : 'Add'} Filter</ModalHeader>
                 <ModalBody>
-                    {!isCurator && !filter && (
+                    {!isCurationAllowed && !filter && (
                         <Alert color="secondary">Please note that any added filters will only be stored locally in your browser.</Alert>
                     )}
                     <FormGroup>
@@ -205,7 +203,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                         </Label>
                     </FormGroup>
 
-                    {filter?.source !== FILTER_SOURCE.LOCAL_STORAGE && isCurator && (
+                    {filter?.source !== FILTER_SOURCE.LOCAL_STORAGE && isCurationAllowed && (
                         <>
                             <FormGroup check>
                                 <Input

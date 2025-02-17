@@ -13,15 +13,13 @@ import useParams from 'components/useParams/useParams';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Container, Row } from 'reactstrap';
 import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from 'services/backend/observatories';
 import { getResource, resourcesUrl } from 'services/backend/resources';
 import { Observatory } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -30,7 +28,8 @@ const defaultSortDirection = 'asc';
 
 const Observatories = () => {
     const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
+
     useEffect(() => {
         document.title = 'Observatories - ORKG';
     }, []);
@@ -127,7 +126,7 @@ const Observatories = () => {
                             color="secondary"
                             size="sm"
                             onClick={() => {
-                                if (!isCurator) {
+                                if (!isCurationAllowed) {
                                     setIsOpenPreventModal(true);
                                 } else {
                                     router.push(reverse(ROUTES.ADD_OBSERVATORY));

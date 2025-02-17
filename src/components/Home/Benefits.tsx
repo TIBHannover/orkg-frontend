@@ -5,14 +5,13 @@ import IconConvince from 'assets/img/benefits/convince.svg';
 import IconFeedback from 'assets/img/benefits/feedback.svg';
 import IconReputation from 'assets/img/benefits/reputation.svg';
 import IconVisibility from 'assets/img/benefits/visibility.svg';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { CarouselIndicatorsStyled } from 'components/styled';
-import styled from 'styled-components';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
-import { RootStore } from 'slices/types';
-import { login } from 'services/keycloak';
+import { useState } from 'react';
+import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
+import styled from 'styled-components';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -90,8 +89,7 @@ const ITEMS = [
 export default function Benefits() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
-    const dispatch = useDispatch();
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const next = () => {
         if (animating) {
@@ -121,7 +119,7 @@ export default function Benefits() {
                 </div>
                 <div className="flex-shrink-0">
                     {!user && (
-                        <Button color="secondary" size="sm" onClick={() => login({ redirectUri: window.location.href })}>
+                        <Button color="secondary" size="sm" onClick={() => signIn('keycloak')}>
                             <span>Sign up</span>
                         </Button>
                     )}

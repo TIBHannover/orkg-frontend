@@ -3,6 +3,7 @@
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
+import useAuthentication from 'components/hooks/useAuthentication';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useParams from 'components/useParams/useParams';
@@ -13,10 +14,8 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
 import { getAllOrganizations, getConferences, organizationsUrl } from 'services/backend/organizations';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 
 const Organizations = () => {
@@ -24,7 +23,7 @@ const Organizations = () => {
 
     const { label, alternateLabel } = ORGANIZATIONS_TYPES.find((t) => t.label === params.id) ?? {};
 
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const { data: organizations, isLoading } = useSWR([alternateLabel, organizationsUrl, 'getAllOrganizations'], () =>
         alternateLabel === ORGANIZATIONS_MISC.ORGANIZATION ? getAllOrganizations() : getConferences(),

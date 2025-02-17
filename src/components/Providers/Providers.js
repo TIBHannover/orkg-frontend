@@ -9,12 +9,12 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import theme from 'assets/scss/ThemeVariables';
 import { MathJaxContext } from 'better-react-mathjax';
-import AuthProvider from 'components/Authentication/AuthProvider';
 import DefaultLayout from 'components/Layout/DefaultLayout';
 import ResetStoreOnNavigate from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';
 import StyledComponentsRegistry from 'lib/registry';
+import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { CookiesProvider } from 'react-cookie';
@@ -66,11 +66,12 @@ const configCitationJs = plugins.config.get('@bibtex');
 configCitationJs.format.useIdAsLabel = true;
 
 const Providers = ({ children }) => (
-    <StyledComponentsRegistry>
-        <DndProvider backend={HTML5Backend}>
-            <CookiesProvider>
-                <Provider store={store}>
-                    <AuthProvider>
+    // The session provider would make sure that the session is kept alive by polling the nextjs server every 4 minutes
+    <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
+        <StyledComponentsRegistry>
+            <DndProvider backend={HTML5Backend}>
+                <CookiesProvider>
+                    <Provider store={store}>
                         <ResetStoreOnNavigate>
                             <ThemeProvider theme={theme}>
                                 <SWRConfig value={SWR_CONFIG}>
@@ -82,11 +83,11 @@ const Providers = ({ children }) => (
                                 </SWRConfig>
                             </ThemeProvider>
                         </ResetStoreOnNavigate>
-                    </AuthProvider>
-                </Provider>
-            </CookiesProvider>
-        </DndProvider>
-    </StyledComponentsRegistry>
+                    </Provider>
+                </CookiesProvider>
+            </DndProvider>
+        </StyledComponentsRegistry>
+    </SessionProvider>
 );
 
 Providers.propTypes = {

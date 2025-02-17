@@ -1,12 +1,11 @@
+import useAuthentication from 'components/hooks/useAuthentication';
 import { uniqBy } from 'lodash';
-import { useSelector } from 'react-redux';
 import { getPapers, papersUrl } from 'services/backend/papers';
 import { SortDirectionOptions } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import useSWR from 'swr';
 
 const usePreviouslySelectedResearchField = () => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
     const userId = user ? user.id : undefined;
 
     const { data: papers, isLoading } = useSWR(

@@ -1,15 +1,15 @@
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { MISC } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
-import useProvenance from 'components/Resource/hooks/useProvenance';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActionButton from 'components/ActionButton/ActionButton';
+import useAuthentication from 'components/hooks/useAuthentication';
+import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
+import useProvenance from 'components/Resource/hooks/useProvenance';
+import { MISC } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Badge } from 'reactstrap';
 
 function ProvenanceBox({ item, editMode = false }) {
@@ -17,7 +17,7 @@ function ProvenanceBox({ item, editMode = false }) {
     const _observatoryId = 'observatories' in item && item.observatories.length > 0 ? item.observatories[0] : item.observatory_id;
     const _organizationId = 'observatories' in item && item.organizations.length > 0 ? item.organizations[0] : item.organization_id;
     const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
 
     if (!provenance && !editMode) {
         return null;

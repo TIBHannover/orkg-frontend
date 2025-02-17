@@ -29,12 +29,28 @@ jest.mock('react-dnd', () => ({
 
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
 
+window.scrollTo = jest.fn();
+
 jest.mock('next/router', () => nextRouterMock);
 
-jest.mock('services/keycloak', () => ({
-    getToken: jest.fn().mockResolvedValue('test-token'),
-    isLoggedIn: jest.fn(() => false),
-}));
+jest.mock('next-auth/react', () => {
+    const originalModule = jest.requireActual('next-auth/react');
+    const mockSession = {
+        expires: new Date(Date.now() + 2 * 86400).toISOString(),
+        user: { name: 'test', id: '123', email: 'test@example.com' },
+    };
+    return {
+        __esModule: true,
+        ...originalModule,
+        useSession: jest.fn(() => {
+            return { data: mockSession, status: 'authenticated' };
+        }),
+        signIn: jest.fn(),
+        signOut: jest.fn(),
+        log: jest.fn(),
+        getSession: jest.fn(),
+    };
+});
 
 jest.mock('next/navigation', () => {
     const usePathname = () => {
