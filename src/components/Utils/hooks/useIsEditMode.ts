@@ -1,10 +1,8 @@
+import useAuthentication from 'components/hooks/useAuthentication';
 import { parseAsJson, useQueryState } from 'nuqs';
-import { useSelector } from 'react-redux';
-import { RootStore } from 'slices/types';
 
 const useIsEditMode = () => {
-    const { initialized, authenticated } = useSelector((state: RootStore) => state.auth);
-
+    const { status } = useAuthentication();
     const [isEditMode, setIsEditMode] = useQueryState('isEditMode', parseAsJson<boolean>().withDefault(false));
 
     const toggleIsEditMode = (newValue = undefined) => {
@@ -12,7 +10,7 @@ const useIsEditMode = () => {
     };
 
     if (isEditMode) {
-        if (initialized && !authenticated) {
+        if (status === 'unauthenticated') {
             toggleIsEditMode();
         }
     }

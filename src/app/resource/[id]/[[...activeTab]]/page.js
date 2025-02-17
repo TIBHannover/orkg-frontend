@@ -11,9 +11,6 @@ import GraphViewModal from 'components/GraphView/GraphViewModal';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import { useRouter, useSearchParams } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PreventModal from 'components/Resource/PreventModal/PreventModal';
 import TabsContainer from 'components/Resource/Tabs/TabsContainer';
@@ -23,11 +20,14 @@ import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+import useAuthentication from 'components/hooks/useAuthentication';
+import useParams from 'components/useParams/useParams';
 import CONTENT_TYPES from 'constants/contentTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import { reverseWithSlug } from 'utils';
@@ -43,7 +43,7 @@ function Resource() {
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [preventEditCase, setPreventEditCase] = useState(null);
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
     const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
     const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
@@ -54,7 +54,7 @@ function Resource() {
 
     const isShared = resource?.shared > 0;
     const isUserIsCreator = resource?.created_by === user?.id;
-    const isCurationAllowed = user && (user.isCurationAllowed || (user.id === resource.created_by && resource.classes.includes(CLASSES.COMPARISON)));
+    const isCurationAllowed = user && (user.isCurationAllowed || (user.id === resource.created_by && resource.classes?.includes(CLASSES.COMPARISON)));
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
     const getDedicatedLink = useCallback((_classes) => {

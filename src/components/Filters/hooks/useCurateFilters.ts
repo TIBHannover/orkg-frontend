@@ -1,13 +1,11 @@
 import Confirm from 'components/Confirmation/Confirmation';
 import { areFiltersEqual, loadFiltersFromLocalStorage } from 'components/Filters/helpers';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { FILTERS_LOCAL_STORAGE_NAME, FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createFiltersInObservatory, deleteFilterOfObservatory, updateFiltersOfObservatory } from 'services/backend/observatories';
 import { FilterConfig } from 'services/backend/types';
-import { isCurationAllowed } from 'slices/authSlice';
-import { RootStore } from 'slices/types';
 import { asyncLocalStorage, getErrorMessage, guid } from 'utils';
 
 const useCurateFilters = ({
@@ -27,13 +25,13 @@ const useCurateFilters = ({
     deleteFilter: (_filter: FilterConfig) => void;
     setCurrentFilter: Dispatch<SetStateAction<FilterConfig | null>>;
 } => {
-    const isCurator = useSelector((state: RootStore) => isCurationAllowed(state));
+    const { isCurationAllowed } = useAuthentication();
     const [isSaving, setIsSaving] = useState(false);
     const [currentFilter, setCurrentFilter] = useState<FilterConfig | null>(null);
 
     const handleSaveFilter = async (filterId: string | null, filter: FilterConfig) => {
         setIsSaving(true);
-        if (isCurator && filter.persisted) {
+        if (isCurationAllowed && filter.persisted) {
             if (filterId) {
                 await updateFiltersOfObservatory(oId, filterId, filter).catch((e) => {
                     toast.error(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
@@ -76,7 +74,7 @@ const useCurateFilters = ({
         });
 
         if (isConfirmed) {
-            if (isCurator && filter.source === FILTER_SOURCE.DATABASE && filter.id) {
+            if (isCurationAllowed && filter.source === FILTER_SOURCE.DATABASE && filter.id) {
                 await deleteFilterOfObservatory(oId, filter.id);
             }
             if (filter.source === FILTER_SOURCE.LOCAL_STORAGE && filter.id) {

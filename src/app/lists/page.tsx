@@ -3,6 +3,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ListCard from 'components/Cards/ListCard/ListCard';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ListPage from 'components/PaginatedContent/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
@@ -13,17 +14,15 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { getLiteratureLists, listsUrl } from 'services/backend/literatureLists';
 import { LiteratureList, VisibilityOptions } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 
 const Lists = () => {
     useEffect(() => {
         document.title = 'Lists list - ORKG';
     });
 
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const [visibility] = useQueryState<VisibilityOptions>('visibility', {
         defaultValue: VISIBILITY_FILTERS.ALL_LISTED,

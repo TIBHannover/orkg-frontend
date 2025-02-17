@@ -1,3 +1,6 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ROUTES from 'constants/routes';
 import { AnimatePresence, motion } from 'framer-motion';
 import greetingTime from 'greeting-time';
@@ -5,12 +8,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Gravatar from 'react-gravatar';
-import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row } from 'reactstrap';
-import { accountManagement, logout } from 'services/keycloak';
-import { resetAuth } from 'slices/authSlice';
+import { getUserInformation, userUrl } from 'services/backend/users';
+import { federatedLogout, visitAccountUrl } from 'services/keycloak';
 import styled from 'styled-components';
+import useSWR from 'swr';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};
@@ -65,11 +68,13 @@ const StyledAuthTooltip = styled(motion.div)`
 `;
 
 const UserTooltip = () => {
-    const { user } = useSelector((state) => state.auth);
-    const email = user && user.email ? user.email : 'example@example.com';
+    const { user: _user } = useAuthentication();
+
+    const { data: user, isLoading } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
+
+    const email = user?.email ? user?.email : 'example@example.com';
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
     const userPopup = useRef(null);
-    const dispatch = useDispatch();
     const greeting = greetingTime(new Date());
 
     useEffect(() => {
@@ -92,24 +97,31 @@ const UserTooltip = () => {
         return () => document.removeEventListener('keydown', handleEscapeKey);
     }, [isVisibleTooltip]);
 
-    const handleSignOut = () => {
-        dispatch(resetAuth());
-        setIsVisibleTooltip(false);
-        toast.success('You have been signed out successfully');
-        logout();
+    const handleSignOut = async () => {
+        try {
+            setIsVisibleTooltip(false);
+            await federatedLogout();
+            toast.success('Signed out successfully');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
         <div className="ms-2 position-relative" ref={userPopup}>
-            <StyledGravatar
-                role="button"
-                tabIndex={0}
-                className="rounded-circle"
-                email={email}
-                size={40}
-                onClick={() => setIsVisibleTooltip((v) => !v)}
-                onKeyDown={(e) => (e.code === 'Enter' ? setIsVisibleTooltip((v) => !v) : undefined)}
-            />
+            {isLoading ? (
+                <FontAwesomeIcon size="xl" icon={faSpinner} spin />
+            ) : (
+                <StyledGravatar
+                    role="button"
+                    tabIndex={0}
+                    className="rounded-circle"
+                    email={email}
+                    size={40}
+                    onClick={() => setIsVisibleTooltip((v) => !v)}
+                    onKeyDown={(e) => (e.code === 'Enter' ? setIsVisibleTooltip((v) => !v) : undefined)}
+                />
+            )}
             <AnimatePresence>
                 {isVisibleTooltip && (
                     <StyledAuthTooltip
@@ -157,7 +169,7 @@ const UserTooltip = () => {
                                     >
                                         Profile
                                     </Button>
-                                    <Button color="secondary" onClick={() => accountManagement()}>
+                                    <Button color="secondary" onClick={() => visitAccountUrl(window.location.href)}>
                                         Settings
                                     </Button>
                                     <Button

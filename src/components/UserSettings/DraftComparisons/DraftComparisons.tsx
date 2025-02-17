@@ -1,21 +1,20 @@
 import { faCalendar, faClock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
-import { useSelector } from 'react-redux';
 import { Alert, ListGroup, ListGroupItem } from 'reactstrap';
 import { comparisonUrl, GetComparisonParams, getComparisons } from 'services/backend/comparisons';
-import { RootStore } from 'slices/types';
 import useSWRInfinite from 'swr/infinite';
 
 const PAGE_SIZE = 25;
 
 const DraftComparisons = () => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
     const userId = user ? user.id : '';
 
     useEffect(() => {

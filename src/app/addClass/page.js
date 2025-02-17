@@ -8,15 +8,15 @@ import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import TreeSelector from 'components/Autocomplete/ValueButtons/TreeSelector';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { useRouter } from 'next/navigation';
+import useAuthentication from 'components/hooks/useAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 import requireAuthentication from 'requireAuthentication';
@@ -32,7 +32,7 @@ const AddClass = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
 
     useEffect(() => {
         // Set document title

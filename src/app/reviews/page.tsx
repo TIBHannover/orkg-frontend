@@ -4,6 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
 import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ListPage from 'components/PaginatedContent/ListPage';
 import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -15,13 +16,11 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { getReviews, reviewUrl } from 'services/backend/reviews';
 import { Review, VisibilityOptions } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 
 const Reviews = () => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const [visibility] = useQueryState<VisibilityOptions>('visibility', {
         defaultValue: VISIBILITY_FILTERS.ALL_LISTED,

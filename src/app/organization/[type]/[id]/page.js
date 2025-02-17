@@ -15,9 +15,9 @@ import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizations
 import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
+import useAuthentication from 'components/hooks/useAuthentication';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Col, Container, Row } from 'reactstrap';
 import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
@@ -60,7 +60,7 @@ const Organization = () => {
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const typeName = ORGANIZATIONS_TYPES.find((t) => t.label === orgType).alternateLabel;
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
 
     useEffect(() => {
         const findOrg = () => {

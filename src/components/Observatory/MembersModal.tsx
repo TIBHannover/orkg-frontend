@@ -2,12 +2,11 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { useSelector } from 'react-redux';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId, observatoriesUrl } from 'services/backend/observatories';
 import { Contributor, Organization } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 
 type MembersModalProps = {
     observatoryId: string;
@@ -19,7 +18,7 @@ type MembersModalProps = {
 };
 
 const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList, isEditMode, openModal, setOpenModal, deleteObservatoryMember }) => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     const {
         data: items,

@@ -2,17 +2,16 @@ import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import feedbackQuestions from 'components/Comparison/QualityReportModal/hooks/feedbackQuestions';
 import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import THING_TYPES from 'constants/thingTypes';
 import { ChangeEvent, FC, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { createResourceStatement } from 'services/backend/statements';
 import { createThing } from 'services/simcomp';
-import { RootStore } from 'slices/types';
 
 type WriteFeedbackModalProps = {
     toggle: () => void;
@@ -23,7 +22,7 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { comparison, isPublished } = useComparison();
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
     const userId = user ? user.id : null;
 
     if (!comparison) {

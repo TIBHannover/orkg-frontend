@@ -1,11 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import NotFound from 'app/not-found';
 import capitalize from 'capitalize';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import useParams from 'components/useParams/useParams';
 import UserProfileTabsContainer from 'components/UserProfile/UserProfileTabsContainer';
 import UserStatistics from 'components/UserProfile/UserStatistics';
 import { MISC } from 'constants/graphSettings';
@@ -13,12 +15,10 @@ import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import NotFound from 'app/not-found';
+import useAuthentication from 'components/hooks/useAuthentication';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Gravatar from 'react-gravatar';
-import { useSelector } from 'react-redux';
-import useParams from 'components/useParams/useParams';
 import { Container, Row } from 'reactstrap';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryById } from 'services/backend/observatories';
@@ -67,7 +67,9 @@ const UserProfile = (props) => {
     const [notFound, setNotFound] = useState(false);
     const params = useParams();
     const { userId } = params;
-    const currentUserId = useSelector((state) => state.auth.user?.id);
+    const { user } = useAuthentication();
+    const currentUserId = user?.id;
+
     useEffect(() => {
         const getUserInformation = async () => {
             setNotFound(false);

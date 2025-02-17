@@ -1,16 +1,49 @@
 import ky from 'ky';
-import { getToken, isLoggedIn } from 'services/keycloak';
+import { getSession, signOut } from 'next-auth/react';
+
+let cachedToken: string | null = null;
+let tokenExpiryTime: number | null = null;
+let pendingTokenPromise: Promise<string | null> | null = null;
+
+const getAccessToken = async (): Promise<string | null> => {
+    const EXPIRY_BUFFER_TIME = 60 * 1000; // 60 seconds
+    if (cachedToken && tokenExpiryTime && Date.now() < tokenExpiryTime) {
+        return cachedToken;
+    }
+    if (pendingTokenPromise) {
+        return pendingTokenPromise;
+    }
+    pendingTokenPromise = (async () => {
+        const session = await getSession();
+        if (session?.error === 'RefreshTokenError') {
+            await signOut();
+            return null;
+        }
+        const token = session?.access_token;
+        const expiresAt = session?.expires_at ? session.expires_at * 1000 : null; // Convert to milliseconds
+        if (token && expiresAt) {
+            // Calculate expiry time with buffer
+            tokenExpiryTime = expiresAt - EXPIRY_BUFFER_TIME;
+            if (Date.now() < tokenExpiryTime) {
+                cachedToken = token;
+                return token;
+            }
+        }
+        return null;
+    })().finally(() => {
+        pendingTokenPromise = null;
+    });
+    return pendingTokenPromise;
+};
 
 const backendApi = ky.create({
     timeout: 1000 * 60 * 10, // 10 minutes
     hooks: {
         beforeRequest: [
             async (request) => {
-                if (isLoggedIn()) {
-                    const token = await getToken();
-                    if (token) {
-                        request.headers.set('Authorization', `Bearer ${token}`);
-                    }
+                const token = await getAccessToken();
+                if (token) {
+                    request.headers.set('Authorization', `Bearer ${token}`);
                 }
             },
         ],

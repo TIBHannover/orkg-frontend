@@ -3,6 +3,7 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import useAuthentication from 'components/hooks/useAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useParams from 'components/useParams/useParams';
 import Tooltip from 'components/Utils/Tooltip';
@@ -11,13 +12,12 @@ import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createOrganization } from 'services/backend/organizations';
-import { login } from 'services/keycloak';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
 
@@ -30,7 +30,8 @@ const AddOrganization = () => {
     const [editorState, setEditorState] = useState('edit');
     const organizationType = ORGANIZATIONS_TYPES.find((t) => t.label === params.type);
     const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label, id: ' ' })}`;
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
+
     const router = useRouter();
 
     useEffect(() => {
@@ -172,7 +173,7 @@ const AddOrganization = () => {
                     </Form>
                 )}
                 {(!user || !user.isCurationAllowed) && (
-                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => login({ redirectUri: window.location.href })}>
+                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => signIn('keycloak')}>
                         <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in to create organization
                     </Button>
                 )}

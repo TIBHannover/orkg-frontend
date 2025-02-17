@@ -3,6 +3,7 @@ import ActionButton from 'components/ActionButton/ActionButton';
 import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
 import useCountInstances from 'components/Class/hooks/useCountInstances';
 import DataBrowser from 'components/DataBrowser/DataBrowser';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
@@ -10,7 +11,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Table } from 'reactstrap';
 import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
@@ -21,7 +21,7 @@ import { getErrorMessage } from 'utils';
 function InformationTab({ id, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true }) {
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
     const [showMoreChildren, setShowMoreChildren] = useState(false);
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
 
     const { data: rsTemplateStatements } = useSWR(
         [{ subjectClasses: [CLASSES.ROSETTA_NODE_SHAPE], objectId: id, predicateId: PREDICATES.SHACL_TARGET_CLASS }, statementsUrl, 'getStatements'],

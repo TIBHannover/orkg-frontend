@@ -1,4 +1,5 @@
 import { OptionType } from 'components/Autocomplete/types';
+import useMembership from 'components/hooks/useMembership';
 import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import { getConfigByClassId } from 'constants/DataTypes';
 import { ENTITIES } from 'constants/graphSettings';
@@ -6,10 +7,8 @@ import { EXTRACTION_METHODS } from 'constants/misc';
 import errorHandler from 'helpers/errorHandler';
 import { differenceWith, toInteger } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { createRSStatement, deleteRSStatement, fullyDeleteRSStatement, updateRSStatement } from 'services/backend/rosettaStone';
 import { NewLiteral, NewResource, Node, RosettaStoneStatement } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import { guid } from 'utils';
 
 type UseEditStatementProps = {
@@ -19,7 +18,7 @@ type UseEditStatementProps = {
 };
 
 const useEditStatement = ({ statement, setNewStatements, reloadStatements }: UseEditStatementProps) => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { organizationId, observatoryId } = useMembership();
 
     const initialLocalValues = useCallback(() => {
         return {
@@ -150,8 +149,8 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
             classes,
             negated: isNegate,
             certainty,
-            observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-            organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+            observatories: observatoryId ? [observatoryId] : [],
+            organizations: organizationId ? [organizationId] : [],
             extraction_method: EXTRACTION_METHODS.MANUAL,
         };
         try {

@@ -1,6 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OptionType } from 'components/Autocomplete/types';
+import useAuthentication from 'components/hooks/useAuthentication';
+import useMembership from 'components/hooks/useMembership';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
 import AddStatement from 'components/RosettaStone/AddStatement/AddStatement';
@@ -11,11 +13,9 @@ import { MISC } from 'constants/graphSettings';
 import { EXTRACTION_METHODS } from 'constants/misc';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import { RosettaStoneStatement } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import { guid } from 'utils';
 
 type RosettaStoneStatementsProps = { context: string };
@@ -23,7 +23,8 @@ type RosettaStoneStatementsProps = { context: string };
 const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) => {
     const [newStatements, setNewStatements] = useState<RosettaStoneStatement[]>([]);
     const { isEditMode } = useIsEditMode();
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
+    const { organizationId, observatoryId } = useMembership();
 
     const {
         data: statements,
@@ -64,8 +65,8 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
                 created_by: ((user && 'id' in user && user?.id) as string) ?? MISC.UNKNOWN_ID,
                 certainty: CERTAINTY.MODERATE,
                 negated: false,
-                observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
                 extraction_method: EXTRACTION_METHODS.MANUAL,
                 visibility: VISIBILITY.DEFAULT,
                 unlisted_by: undefined,

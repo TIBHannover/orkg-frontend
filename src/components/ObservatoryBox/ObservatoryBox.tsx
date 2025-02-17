@@ -1,6 +1,7 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import capitalize from 'capitalize';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
@@ -9,10 +10,8 @@ import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import { ConferenceSeries, Observatory, Organization } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import styled from 'styled-components';
 
 const ObservatoryBoxStyled = styled.div`
@@ -40,7 +39,7 @@ type ObservatoryBoxProps = {
 const ObservatoryBox: FC<ObservatoryBoxProps> = ({ organization, observatory, conferenceSeries, mutate, resourceId }) => {
     const [isOpenObservatoryModal, setIsOpenObservatoryModal] = useState(false);
     const { isEditMode } = useIsEditMode();
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     let route = '';
     if (organization?.type === ORGANIZATIONS_MISC.EVENT) {

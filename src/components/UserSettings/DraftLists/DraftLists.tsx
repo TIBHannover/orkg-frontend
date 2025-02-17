@@ -1,5 +1,6 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ListPage from 'components/PaginatedContent/ListPage';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { CLASSES } from 'constants/graphSettings';
@@ -7,14 +8,12 @@ import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
 import { getLiteratureLists, listsUrl } from 'services/backend/literatureLists';
 import { LiteratureList } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 
 const DraftLists = () => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
 
     useEffect(() => {
         document.title = 'Draft lists - ORKG';

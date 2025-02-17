@@ -1,3 +1,4 @@
+import useAuthentication from 'components/hooks/useAuthentication';
 import REGEX from 'constants/regex';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -17,7 +18,7 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
     const abstract = useSelector((state) => state.viewPaper.abstract);
 
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuthentication();
 
     useEffect(() => {
         if (!paperData) {

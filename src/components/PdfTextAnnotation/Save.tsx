@@ -2,19 +2,19 @@ import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Link from 'next/link';
+import useMembership from 'components/hooks/useMembership';
 import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { uniqueId } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Author, CreateContributionData, NewContribution } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import { parseCiteResult } from 'utils';
 
 type SaveProps = {
@@ -23,7 +23,7 @@ type SaveProps = {
 };
 
 const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { organizationId, observatoryId } = useMembership();
 
     // @ts-expect-error
     const annotations = useSelector((state) => state.pdfTextAnnotation.annotations);
@@ -116,8 +116,8 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                     // url,
                 },
                 authors: paperAuthors,
-                observatories: user && 'observatory_id' in user && user.observatory_id ? [user.observatory_id] : [],
-                organizations: user && 'organization_id' in user && user.organization_id ? [user.organization_id] : [],
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
             },
             contribution,
             createContributionData,

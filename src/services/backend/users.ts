@@ -1,12 +1,9 @@
 import { url } from 'constants/misc';
-import { env } from 'next-runtime-env';
 import backendApi from 'services/backend/backendApi';
 import { Contributor, User } from 'services/backend/types';
 
 export const userUrl = `${url}user/`;
 export const userApi = backendApi.extend(() => ({ prefixUrl: userUrl }));
-
-export const authenticationUrl = env('NEXT_PUBLIC_BACKEND_URL');
 
 export const getUserInformation = () => userApi.get<User>('').json();
 

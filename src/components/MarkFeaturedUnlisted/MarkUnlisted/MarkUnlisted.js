@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash as faEmptyEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';
-import styled from 'styled-components';
+import useAuthentication from 'components/hooks/useAuthentication';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 const StyledIcon = styled(FontAwesomeIcon)`
     cursor: ${(props) => (props.$isButton ? 'pointer' : 'initial')};
@@ -14,7 +14,7 @@ const StyledIcon = styled(FontAwesomeIcon)`
 const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => {
     const [over, setOver] = useState(false);
 
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
 
     const buttonTooltip = unlisted ? 'Remove unlisted badge' : 'Mark as unlisted';
 

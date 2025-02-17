@@ -1,7 +1,7 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
-import Link from 'next/link';
+import useAuthentication from 'components/hooks/useAuthentication';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
@@ -10,12 +10,12 @@ import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import { Contributor, Observatory, Organization, Paper } from 'services/backend/types';
-import { RootStore } from 'slices/types';
 import { setPaperObservatory } from 'slices/viewPaperSlice';
 
 type ProvenanceProps = {
@@ -38,7 +38,7 @@ const Provenance: FC<ProvenanceProps> = ({
     isLoadingContributors,
 }) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const user = useSelector((state: RootStore) => state.auth.user);
+    const { user } = useAuthentication();
     // @ts-expect-error
     const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
     const dispatch = useDispatch();

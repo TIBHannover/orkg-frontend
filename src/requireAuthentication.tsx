@@ -1,18 +1,16 @@
 import Unauthorized from 'components/Unauthorized/Unauthorized';
-import { useSelector } from 'react-redux';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { Container } from 'reactstrap';
-import { RootStore } from 'slices/types';
 
 export default function requireAuthentication<P extends object>(Component: React.ComponentType<P>) {
     // Return a new component that handles the authentication check
     return function AuthenticatedComponent(props: P) {
-        // Move hooks inside the component
-        const { initialized, authenticated } = useSelector((state: RootStore) => state.auth);
+        const { status } = useAuthentication();
 
-        if (!initialized) {
+        if (status === 'loading') {
             return <Container>Loading....</Container>;
         }
-        if (initialized && !authenticated) {
+        if (status === 'unauthenticated') {
             return <Unauthorized />;
         }
 

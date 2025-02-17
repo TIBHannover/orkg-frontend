@@ -1,7 +1,7 @@
 import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
+import useMembership from 'components/hooks/useMembership';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createPaper } from 'services/backend/papers';
 import { createResource } from 'services/backend/resources';
@@ -20,8 +20,7 @@ const useAddPaper = ({ onCreate = null }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [extractedContributionData, setExtractedContributionData] = useState(null);
-    const organizationId = useSelector((state) => state.auth.user?.organization_id);
-    const observatoryId = useSelector((state) => state.auth.user?.observatory_id);
+    const { organizationId, observatoryId } = useMembership();
 
     const { checkIfPaperExists, ExistingPaperModels } = useExistingPaper();
 

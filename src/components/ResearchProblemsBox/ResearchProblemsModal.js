@@ -1,15 +1,15 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
+import useAuthentication from 'components/hooks/useAuthentication';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { RESOURCES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { useSelector } from 'react-redux';
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenModal }) => {
-    const isCurationAllowed = useSelector((state) => state.auth.user?.isCurationAllowed);
+    const { isCurationAllowed } = useAuthentication();
     const {
         problems,
         page,
