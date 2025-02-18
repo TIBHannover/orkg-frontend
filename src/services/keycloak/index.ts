@@ -33,7 +33,7 @@ export const hasRealmRole = (role: string, access: { roles: string[] }) => {
 };
 
 export const visitAccountUrl = (referrerUrl: string) => {
-    const url = `${env('NEXT_PUBLIC_KEYCLOAK_URL')}realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}/account?referrer=${env(
+    const url = `${env('NEXT_PUBLIC_KEYCLOAK_URL')}/realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}/account?referrer=${env(
         'NEXT_PUBLIC_KEYCLOAK_CLIENT_ID',
     )}&referrer_uri=${referrerUrl}`;
     window.location.href = url;
