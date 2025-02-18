@@ -43,7 +43,7 @@ export const refreshAccessToken = async (token: JWT): Promise<JWT> => {
             ...token,
             id_token: refreshedTokens.id_token,
             access_token: refreshedTokens.access_token,
-            expires_at: Date.now() + (refreshedTokens.expires_in as number) * 1000,
+            expires_at: Math.floor(Date.now() / 1000 + (refreshedTokens.expires_in as number)),
             refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
         } as JWT;
     } catch (error) {
