@@ -11,7 +11,7 @@ import ky from 'ky';
  */
 export const refreshAccessToken = async (token: JWT): Promise<JWT> => {
     try {
-        const tokenEndpoint = `${env('NEXT_PUBLIC_KEYCLOAK_URL')}realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}/protocol/openid-connect/token`;
+        const tokenEndpoint = `${env('NEXT_PUBLIC_KEYCLOAK_URL')}/realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}/protocol/openid-connect/token`;
 
         const formData = new URLSearchParams({
             client_id: env('NEXT_PUBLIC_KEYCLOAK_CLIENT_ID')!,
