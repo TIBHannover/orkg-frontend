@@ -1,6 +1,6 @@
 # ORKG frontend
 
-This is the repository for the frontend of the Open Research Knowledge Grapph (ORKG), which is running live at: https://orkg.org.
+This is the repository for the frontend of the Open Research Knowledge Graph (ORKG), which is running live at: https://orkg.org.
 Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home
 
 ## Frontend installation
@@ -27,7 +27,7 @@ Copy the file `default.env` to `.env`:
 
     cp default.env .env
 
-By default, the `.env` file uses the [ORKG sandbox](https://sandbox.orkg.org) APIs. Read the wiki in case you want to [quickly switch between environments](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Switch-between-environments).
+By default, the `.env` file uses the [ORKG Sandbox](https://sandbox.orkg.org) APIs. Read the wiki in case you want to [quickly switch between environments](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Switch-between-environments).
 
 The **environment variables** descriptions:
 
@@ -118,7 +118,7 @@ We use [React](https://reactjs.org/) as frontend framework. Additionally, we use
 
 Happy coding! 😁☕️
 
-## Storybook component libary
+## Storybook component library
 
 Please have a look at the [Storybook component libary](https://tibhannover.gitlab.io/orkg/orkg-frontend/storybook/) for React components that can be easily reused throughout the code base.
 
