@@ -56,7 +56,7 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
         if (!entity) return;
         let apiCall;
         if (editMode && entityType !== 'empty') {
-            apiCall = commitChangeLabel(value.id, entityType, inputValue, dataType);
+            apiCall = commitChangeLabel(value.id, entityType, inputValue, 'datatype' in v ? v.datatype : dataType);
         } else if (!existingValue) {
             apiCall = createValue(entityType, { ...v, ...(range?.id && { classes: [range.id] }) }).then(async (response) => {
                 if (isList) {
