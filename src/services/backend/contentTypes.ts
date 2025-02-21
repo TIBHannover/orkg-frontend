@@ -174,15 +174,13 @@ export const getContentTypes = ({
     published,
     author_id,
 }: { contentType: string } & GetContentParams): Promise<PaginatedResponse<Resource | Item>> => {
-    // Sort is not supported in this endpoint
-    const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
     const paramsObj = {
         observatory_id,
         research_field,
         include_subfields,
         page,
         size,
-        sort,
+        sortBy,
         visibility,
         filter_config,
         sdg,
