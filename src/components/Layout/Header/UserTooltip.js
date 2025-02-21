@@ -5,7 +5,6 @@ import ROUTES from 'constants/routes';
 import { AnimatePresence, motion } from 'framer-motion';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Gravatar from 'react-gravatar';
@@ -71,13 +70,7 @@ const StyledAuthTooltip = styled(motion.div)`
 const UserTooltip = () => {
     const { user: _user } = useAuthentication();
 
-    const {
-        data: user,
-        isLoading,
-        error,
-    } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation(), {
-        revalidateOnFocus: true,
-    });
+    const { data: user, isLoading } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
 
     const email = user?.email ? user?.email : 'example@example.com';
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
@@ -113,20 +106,6 @@ const UserTooltip = () => {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        if (error?.statusCode === 401) {
-            signOut();
-        }
-    }, [error]);
-
-    if (isLoading) {
-        return <FontAwesomeIcon size="xl" icon={faSpinner} spin />;
-    }
-
-    if (!user) {
-        return null;
-    }
 
     return (
         <div className="ms-2 position-relative" ref={userPopup}>
