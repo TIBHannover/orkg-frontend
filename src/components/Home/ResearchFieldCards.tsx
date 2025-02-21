@@ -161,6 +161,7 @@ const ResearchFieldCards = ({
                             allowCreate={false}
                             size="sm"
                             isDisabled={isLoading}
+                            rightAligned
                         />
                     </div>
                     {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
