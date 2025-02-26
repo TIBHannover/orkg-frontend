@@ -6,7 +6,7 @@ import Templates from 'components/DataBrowser/components/Header/Metadata/Templat
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-use';
+import { useHash } from 'react-use';
 import styled from 'styled-components';
 
 export const MetadataStyled = styled.div`
@@ -34,7 +34,7 @@ export const MetadataStyled = styled.div`
 const Metadata = () => {
     const { entity } = useEntity();
     const [isHighlighted, setIsHighlighted] = useState(false);
-    const { hash } = useLocation();
+    const [hash] = useHash();
 
     useEffect(() => {
         // Check if this entity's ID matches the URL hash
