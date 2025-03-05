@@ -161,7 +161,7 @@ function Resource() {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu end>
+                                    <DropdownMenu end="true">
                                         <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>

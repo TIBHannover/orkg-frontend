@@ -191,10 +191,10 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu end="true">
                                 <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
                                 <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
-                                <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: review?.id })}?noRedirect`}>
+                                <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id: review?.id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>

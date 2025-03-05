@@ -84,8 +84,8 @@ const ResearchFieldHeader = ({ id }) => {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu end>
-                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                                    <DropdownMenu end="true">
+                                        <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

@@ -1,4 +1,5 @@
-import ResearchFieldSelector, { ResearchField } from 'components/ResearchFieldSelector/ResearchFieldSelector';
+import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
+import { RESOURCES } from 'constants/graphSettings';
 import { FC, useCallback, useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Node } from 'services/backend/types';
@@ -12,28 +13,17 @@ type ResearchFieldSelectorModalProps = {
 };
 
 const ResearchFieldSelectorModal: FC<ResearchFieldSelectorModalProps> = ({ isOpen, toggle, onSelectField, title = null, abstract = null }) => {
-    const [selectedResearchField, setSelectedResearchField] = useState('');
-    const [researchFields, setResearchFields] = useState<ResearchField[]>([]);
+    const [selectedResearchField, setSelectedResearchField] = useState<Node | null>(null);
 
     const handleUpdate = useCallback(
-        (
-            data: {
-                researchFields: ResearchField[];
-                selectedResearchField?: string;
-                selectedResearchFieldLabel?: string;
-            },
-            submit = false,
-        ) => {
-            if (data.selectedResearchField) {
-                setSelectedResearchField(data.selectedResearchField);
+        (selected?: Node, submit?: boolean) => {
+            if (selected) {
+                setSelectedResearchField(selected);
             }
-            if (data.researchFields) {
-                setResearchFields(data.researchFields);
-            }
-            if (submit) {
+            if (submit && selected) {
                 onSelectField({
-                    id: data.selectedResearchField || '',
-                    label: data.selectedResearchFieldLabel || '',
+                    id: selected.id,
+                    label: selected.label,
                 });
                 toggle();
             }
@@ -42,10 +32,9 @@ const ResearchFieldSelectorModal: FC<ResearchFieldSelectorModalProps> = ({ isOpe
     );
 
     const handleSelect = () => {
-        const field = researchFields.find((rf) => rf.id === selectedResearchField);
         onSelectField({
-            id: selectedResearchField,
-            label: field?.label || '',
+            id: selectedResearchField?.id ?? '',
+            label: selectedResearchField?.label ?? '',
         });
         toggle();
     };
@@ -55,9 +44,8 @@ const ResearchFieldSelectorModal: FC<ResearchFieldSelectorModalProps> = ({ isOpe
             <ModalHeader toggle={toggle}>Choose research field</ModalHeader>
             <ModalBody>
                 <ResearchFieldSelector
-                    selectedResearchField={selectedResearchField}
-                    researchFields={researchFields}
                     updateResearchField={handleUpdate}
+                    selectedResearchFieldId={selectedResearchField?.id ?? RESOURCES.RESEARCH_FIELD_MAIN}
                     insideModal
                     title={title}
                     abstract={abstract}

@@ -169,10 +169,10 @@ const Template = () => {
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                 <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu end="true">
                                 <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
                                 <DropdownItem onClick={exportSHACL}>{!isConvertingToSHACL ? 'Export as SHACL' : 'Exporting...'}</DropdownItem>
-                                <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
+                                <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>

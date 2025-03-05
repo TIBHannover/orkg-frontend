@@ -2,13 +2,10 @@
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
 import CopyId from 'components/CopyId/CopyId';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import ResearchFieldSelector, { ResearchField } from 'components/ResearchFieldSelector/ResearchFieldSelector';
+import ResearchFieldTabsContainer from 'components/ResearchField/ResearchFieldTabsContainer';
+import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
@@ -18,37 +15,29 @@ import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { Item, VisibilityOptions } from 'services/backend/types';
+import { getResource, resourcesUrl } from 'services/backend/resources';
+import { Node, VisibilityOptions } from 'services/backend/types';
+import useSWR from 'swr';
 import { reverseWithSlug } from 'utils';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [selectedResearchField, setSelectedResearchField] = useState('');
-    const [researchFields, setResearchFields] = useState<ResearchField[]>([]);
-    const [researchFieldLabel, setResearchFieldLabel] = useState('');
+    const [selectedResearchFieldId, setSelectedResearchFieldId] = useQueryState('selectedResearchField', {
+        defaultValue: RESOURCES.RESEARCH_FIELD_MAIN,
+        parse: (value) => value as string,
+        history: 'push',
+    });
 
     useEffect(() => {
         document.title = 'Research field taxonomy browser - ORKG';
     }, []);
 
-    useEffect(() => {
-        if (!selectedResearchField) {
-            return;
-        }
-        const field = researchFields.find((rf) => rf.id === selectedResearchField);
-        setResearchFieldLabel(field ? field.label : selectedResearchField);
-    }, [selectedResearchField, researchFields]);
+    const { data: selectedResearchField } = useSWR(
+        selectedResearchFieldId ? [selectedResearchFieldId, resourcesUrl, 'getResource'] : null,
+        ([params]) => getResource(params),
+    );
 
-    const handleUpdate = useCallback((data: { selectedResearchField?: string; researchFields: ResearchField[] }) => {
-        if (data.selectedResearchField) {
-            setSelectedResearchField(data.selectedResearchField);
-        }
-        if (data.researchFields) {
-            setResearchFields(data.researchFields);
-        }
-    }, []);
-
+    const [contentType] = useQueryState('contentType', { defaultValue: CLASSES.COMPARISON });
     const [sort] = useQueryState<VisibilityOptions>('sort', {
         defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
         parse: (value) => value as VisibilityOptions,
@@ -58,31 +47,15 @@ const ResearchFields = () => {
         parse: (value) => value === 'true',
     });
 
-    const renderListItem = (item: Item) => <CardFactory showBadge={false} showCurationFlags showAddToComparison key={item.id} item={item} />;
-
-    const {
-        data: items,
-        isLoading,
-        totalElements,
-        page,
-        hasNextPage,
-        totalPages,
-        error,
-        pageSize,
-        setPage,
-        setPageSize,
-    } = usePaginate({
-        fetchFunction: getContentTypes,
-        fetchUrl: contentTypesUrl,
-        fetchFunctionName: 'getContentTypes',
-        fetchExtraParams: {
-            research_field: selectedResearchField,
-            include_subfields: includeSubFields,
-            visibility: sort,
-            contentType: CLASSES.PAPER,
-            published: true,
+    const handleSelectResearchField = useCallback(
+        (selected?: Node) => {
+            if (selected) {
+                setSelectedResearchFieldId(selected.id);
+            }
         },
-    });
+        [setSelectedResearchFieldId],
+    );
+
     return (
         <>
             <TitleBar
@@ -91,8 +64,12 @@ const ResearchFields = () => {
                         <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                             <FontAwesomeIcon icon={faEllipsisV} />
                         </DropdownToggle>
-                        <DropdownMenu end>
-                            <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}>
+                        <DropdownMenu end="true">
+                            <DropdownItem
+                                tag={Link}
+                                end="true"
+                                href={`${reverse(ROUTES.RESOURCE, { id: selectedResearchFieldId ?? RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}
+                            >
                                 View resource
                             </DropdownItem>
                         </DropdownMenu>
@@ -111,11 +88,10 @@ const ResearchFields = () => {
             <Container className="p-0">
                 <div className="box rounded-3 p-4">
                     <Row>
-                        <Col md="5" className="border-right">
+                        <Col md="5">
                             <ResearchFieldSelector
-                                selectedResearchField={selectedResearchField}
-                                researchFields={researchFields as ResearchField[]}
-                                updateResearchField={handleUpdate}
+                                selectedResearchFieldId={selectedResearchFieldId}
+                                updateResearchField={handleSelectResearchField}
                                 showPreviouslySelected={false}
                                 showStatistics
                             />
@@ -125,18 +101,18 @@ const ResearchFields = () => {
                             {selectedResearchField && (
                                 <>
                                     <div className="d-flex justify-content-between align-items-center mb-3">
-                                        <h2 className="h5">{researchFieldLabel}</h2>
+                                        <h2 className="h5">{selectedResearchField.label}</h2>
                                         <div className="d-flex align-items-center justify-content-end flex-wrap">
                                             <div className="flex-shrink-0 my-1">
-                                                <CopyId id={selectedResearchField} />
+                                                <CopyId id={selectedResearchFieldId} />
                                             </div>
-                                            {selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN && (
+                                            {selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
                                                 <Button
                                                     tag={Link}
-                                                    href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                        researchFieldId: selectedResearchField,
-                                                        slug: researchFieldLabel,
-                                                    })}
+                                                    href={`${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                        researchFieldId: selectedResearchFieldId,
+                                                        slug: selectedResearchField.label,
+                                                    })}?sort=${sort}&include_subfields=${includeSubFields}&contentType=${contentType}`}
                                                     color="light"
                                                     size="sm"
                                                     className="flex-shrink-0 ms-2 my-1"
@@ -147,23 +123,7 @@ const ResearchFields = () => {
                                         </div>
                                     </div>
                                     <hr />
-                                    <ContentTypeListHeader label="Papers" isLoading={isLoading} totalElements={totalElements} showSubFieldsFilter />
-                                    <ListPaginatedContent<Item>
-                                        renderListItem={renderListItem}
-                                        pageSize={pageSize}
-                                        label="Research Field"
-                                        isLoading={isLoading}
-                                        items={items ?? []}
-                                        hasNextPage={hasNextPage}
-                                        page={page}
-                                        setPage={setPage}
-                                        setPageSize={setPageSize}
-                                        totalElements={totalElements}
-                                        error={error}
-                                        totalPages={totalPages}
-                                        boxShadow={false}
-                                        flush={false}
-                                    />
+                                    <ResearchFieldTabsContainer id={selectedResearchFieldId} boxShadow={false} />
                                 </>
                             )}
                         </Col>

@@ -66,7 +66,7 @@ const SideBar = () => {
                         Save
                     </Button>
                     <DropdownToggle caret color="primary" className="ps-1 pe-2" />
-                    <DropdownMenu end>
+                    <DropdownMenu end="true">
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
                             <FontAwesomeIcon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour

@@ -87,6 +87,7 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
                 ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '0 8px !important' } : {}),
             },
             flexGrow: 1,
+            overflow: 'auto',
         } as CSSObjectWithLabel),
     clearIndicator: (provided, state) =>
         ({ ...provided, ...(state.selectProps.size && state.selectProps.size === 'sm' ? { padding: '4px !important' } : {}) } as CSSObjectWithLabel),

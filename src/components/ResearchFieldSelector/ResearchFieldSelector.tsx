@@ -6,12 +6,14 @@ import FieldStatistics from 'components/ResearchFieldSelector/FieldStatistics';
 import PreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from 'components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
 import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
-import { cloneDeep, find, set, sortBy } from 'lodash';
-import { FC, MouseEvent, useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
-import { getFieldChildren, getFieldParents } from 'services/backend/researchFields';
+import { find, sortBy, uniq } from 'lodash';
+import { FC, useEffect, useState } from 'react';
+import { Alert, Button } from 'reactstrap';
+import { FieldChildren, getFieldChildren, getFieldParents, researchFieldUrl } from 'services/backend/researchFields';
+import { getResource, resourcesUrl } from 'services/backend/resources';
 import { Node } from 'services/backend/types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import useSWR from 'swr';
 
 const FieldItem = styled(Button)`
     &&& {
@@ -31,28 +33,15 @@ const FieldItem = styled(Button)`
             background: ${(props) => props.theme.secondary};
             color: #fff;
         }
-    }
-`;
 
-const List = styled.ul`
-    list-style: none;
-    padding: 10px 0 0 0;
-`;
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(232, 97, 97, 0.25);
+        }
 
-const SubList = styled.ul`
-    list-style: none;
-    padding-left: 20px;
-`;
-
-const IndicatorContainer = styled.div`
-    width: 20px;
-    margin-right: 5px;
-    text-align: center;
-`;
-
-const CollapseButton = styled(Button)`
-    && {
-        color: ${(props) => props.theme.secondary};
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     }
 `;
 
@@ -65,16 +54,8 @@ export type ResearchField = {
 };
 
 type ResearchFieldSelectorProps = {
-    selectedResearchField: string;
-    researchFields: ResearchField[];
-    updateResearchField: (
-        data: {
-            researchFields: ResearchField[];
-            selectedResearchField?: string;
-            selectedResearchFieldLabel?: string;
-        },
-        submit?: boolean,
-    ) => void;
+    selectedResearchFieldId: string;
+    updateResearchField: (selectedResearchField?: Node, submit?: boolean) => void;
     insideModal?: boolean;
     showPreviouslySelected?: boolean;
     title?: string | null;
@@ -83,8 +64,7 @@ type ResearchFieldSelectorProps = {
 };
 
 const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
-    selectedResearchField,
-    researchFields,
+    selectedResearchFieldId = RESOURCES.RESEARCH_FIELD_MAIN,
     updateResearchField,
     insideModal = false,
     showPreviouslySelected = true,
@@ -92,134 +72,117 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
     abstract = '',
     showStatistics = false,
 }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [loadingId, setLoadingId] = useState<string | null>(null);
+    const theme = useTheme();
+    const [loadingSubFieldsId, setLoadingSubFieldsId] = useState<string | null>(null);
+    const [researchFields, setResearchFields] = useState<ResearchField[]>([]);
 
-    const handleFieldSelect = (selected: Node, submit = false) => {
-        setIsLoading(true);
-        getFieldParents({ fieldId: selected.id }).then(async (_parents) => {
-            const parents = _parents.reverse();
-            let fields = cloneDeep(researchFields);
-
-            for (const parent of parents) {
-                fields = await getChildFields(parent.id, fields);
-            }
-
-            updateResearchField(
-                {
-                    researchFields: fields,
-                    selectedResearchField: selected.id,
-                    selectedResearchFieldLabel: selected.label,
-                },
-                submit,
-            );
-            setIsLoading(false);
-        });
-    };
-
-    const getFieldsByIds = useCallback(async (ids: string[], previousFields: ResearchField[] = []) => {
-        const fields = cloneDeep(previousFields);
-        const subfieldStatements = await Promise.all(ids.map((id) => getFieldChildren({ fieldId: id })));
-        subfieldStatements.forEach((subfields, index) => {
-            const hasChildren = subfields.length > 0;
-            subfields.forEach((subfield) => {
-                fields.push({
-                    label: subfield.resource.label,
-                    id: subfield.resource.id,
-                    parent: ids[index],
-                    hasChildren: null,
-                    isExpanded: false,
-                });
-            });
-
-            const fieldIndex = fields.findIndex((field) => field.id === ids[index]);
-            if (fieldIndex !== -1) {
-                fields[fieldIndex].hasChildren = hasChildren;
-            }
-        });
-        return sortBy(fields, ['label']);
-    }, []);
-
-    const getChildFields = useCallback(
-        async (fieldId: string, previousFields: ResearchField[], toggleExpand = false) => {
-            const fields = cloneDeep(previousFields);
-            const fieldIndex = fields.findIndex((field) => field.id === fieldId);
-            if (fieldIndex !== -1) {
-                const field = fields[fieldIndex];
-                // don't toggle if the search input is used, always expand
-                fields[fieldIndex].isExpanded = toggleExpand ? !field.isExpanded : true;
-            }
-            const children = fields.filter((field) => field.parent === fieldId && field.hasChildren === null);
-            const childrenIds = children.map((field) => field.id);
-
-            if (!childrenIds.length) {
-                return fields;
-            }
-
-            return getFieldsByIds(childrenIds, fields);
-        },
-        [getFieldsByIds],
+    const { data: selectedResearchField } = useSWR(
+        selectedResearchFieldId ? [selectedResearchFieldId, resourcesUrl, 'getResource'] : null,
+        ([params]) => getResource(params),
     );
 
-    const handleFieldClick = async (e: MouseEvent, fieldId: string, shouldSetActive = true) => {
-        // prevent triggering outer handler when the icon is pressed
-        e.stopPropagation();
-        setLoadingId(fieldId);
-        const fields = await getChildFields(fieldId, researchFields, true);
-        setLoadingId(null);
+    const { data: parentResearchFields, isLoading: isParentLoading } = useSWR(
+        selectedResearchFieldId ? [{ fieldId: selectedResearchFieldId }, researchFieldUrl, 'getFieldParents'] : null,
+        ([params]) => getFieldParents(params),
+    );
 
-        const payload = {
-            researchFields: fields,
-            selectedResearchField: shouldSetActive ? fieldId : undefined,
-        };
+    const path = uniq([selectedResearchFieldId, ...(parentResearchFields?.map((field) => field.id) ?? [])]);
+    const fieldsToLoad = path.filter((id) => {
+        const hasChildren = researchFields.find((f) => f.id === id)?.hasChildren;
+        const loadedSubFields = researchFields.filter((f) => f.parent === id);
+        return (hasChildren && loadedSubFields.length === 0) || hasChildren === undefined;
+    });
 
-        updateResearchField(payload);
-    };
+    const { data: childrenResearchFields, isLoading } = useSWR(
+        !isParentLoading && path.length > 0 ? [path, researchFieldUrl, 'getFieldChildren'] : null,
+        ([params]) =>
+            Promise.all(params.map((id) => (fieldsToLoad.includes(id) ? getFieldChildren({ fieldId: id }) : []))).then((data) =>
+                data.map((d, index) => ({ children: d, parent: params[index] })),
+            ),
+    );
 
     useEffect(() => {
-        // select the main field is none is selected yet (i.e. first time visiting this step)
-        if (!selectedResearchField) {
-            const initializeFields = async () => {
-                setIsLoading(true);
-
-                let fields = await getFieldsByIds([RESOURCES.RESEARCH_FIELD_MAIN]);
-                fields = await getChildFields(RESOURCES.RESEARCH_FIELD_MAIN, fields);
-
-                updateResearchField({
-                    researchFields: fields,
+        if (childrenResearchFields) {
+            const fields: ResearchField[] = [];
+            const _path = childrenResearchFields.map((field) => field.parent);
+            childrenResearchFields?.forEach((field) => {
+                field.children.forEach((child) => {
+                    if (_path.find((f) => f === child.resource.id)) {
+                        fields.push({
+                            label: child.resource.label,
+                            id: child.resource.id,
+                            parent: field.parent,
+                            hasChildren: child.child_count > 0,
+                            isExpanded: true,
+                        });
+                        return;
+                    }
+                    fields.push({
+                        label: child.resource.label,
+                        id: child.resource.id,
+                        parent: field.parent,
+                        hasChildren: child.child_count > 0,
+                        isExpanded: false,
+                    });
                 });
-                setIsLoading(false);
-            };
-            initializeFields();
+            });
+            setResearchFields((v) => {
+                const oldFields = v.filter((f) => !fields.find((f2) => f2.id === f.id));
+                return [...oldFields, ...fields].map((f) =>
+                    _path.find((f2) => f2 === f.id)
+                        ? {
+                              ...f,
+                              isExpanded: true,
+                          }
+                        : {
+                              ...f,
+                              isExpanded: v.find((f2) => f2.id === f.id)?.isExpanded ?? false,
+                          },
+                );
+            });
         }
-    }, [getChildFields, getFieldsByIds, selectedResearchField, updateResearchField]);
+    }, [childrenResearchFields]);
 
-    const getParents = (field: ResearchField, parents: ResearchField[]): ResearchField[] => {
-        const f = field ? find(researchFields, (_f) => _f.id === field.parent) : null;
-        if (f) {
-            parents.push(f);
-            return getParents(f, parents);
-        }
-        return parents;
+    const handleFieldSelect = async (selected: Node, submit = false) => {
+        updateResearchField(selected, submit);
     };
 
-    let researchFieldLabel;
-    let parents: ResearchField[] = [];
-    if (researchFields && researchFields.length > 0) {
-        const field = researchFields.find((rf) => rf.id === selectedResearchField);
-        researchFieldLabel = field ? field.label : selectedResearchField;
-        if (field) {
-            parents = getParents(field, []);
+    const handleFieldClick = async (field: Node, shouldSetActive = true) => {
+        if (shouldSetActive) {
+            updateResearchField(field);
+        } else {
+            // load subfields
+            const hasChildren = researchFields.find((f) => f.id === field.id)?.hasChildren;
+            const subFields = researchFields.filter((f) => f.parent === field.id);
+            let loadedSubFields: FieldChildren[] = [];
+            if (hasChildren && subFields.length === 0) {
+                setLoadingSubFieldsId(field.id);
+                loadedSubFields = await getFieldChildren({ fieldId: field.id });
+                setLoadingSubFieldsId(null);
+            }
+            setResearchFields((v) => [
+                ...v.map((f) => (field.id === f.id ? { ...f, isExpanded: !f.isExpanded } : f)),
+                ...loadedSubFields.map((f) => ({
+                    label: f.resource.label,
+                    id: f.resource.id,
+                    parent: field.id,
+                    hasChildren: f.child_count > 0,
+                    isExpanded: false,
+                })),
+            ]);
         }
-    }
+    };
 
     const fieldList = (selectedField: string) => {
-        const subFields = researchFields.filter((field) => field.parent === selectedField);
+        const subFields = sortBy(
+            researchFields.filter((field) => field.parent === selectedField),
+            'label',
+        );
         if (subFields.length === 0) {
             return null;
         }
         return subFields.map((field) => {
-            const _isLoading = loadingId === field.id;
+            const _isLoading = loadingSubFieldsId === field.id || (fieldsToLoad.includes(field.id) && isLoading);
             let icon;
             if (_isLoading) {
                 icon = faSpinner;
@@ -231,26 +194,36 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
 
             return (
                 <li key={field.id}>
-                    <FieldItem
-                        onClick={(e) => handleFieldClick(e, field.id)}
-                        color="link"
-                        className={selectedResearchField === field.id ? 'active' : ''}
-                    >
+                    <FieldItem onClick={() => handleFieldClick(field)} color="link" className={selectedResearchFieldId === field.id ? 'active' : ''}>
                         <div className="flex-grow-1 d-flex">
-                            <IndicatorContainer onClick={(e) => handleFieldClick(e, field.id, false)}>
+                            <div
+                                role="button"
+                                tabIndex={0}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleFieldClick(field, false);
+                                }}
+                                onKeyDown={(e: React.KeyboardEvent) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.stopPropagation();
+                                        handleFieldClick(field, false);
+                                    }
+                                }}
+                                className="w-10 me-2 text-center"
+                            >
                                 {field.hasChildren && (
                                     <FontAwesomeIcon
                                         icon={icon}
                                         spin={_isLoading}
-                                        className={selectedResearchField !== field.id ? 'text-secondary' : ''}
+                                        className={selectedResearchFieldId !== field.id ? 'text-secondary' : ''}
                                     />
                                 )}
-                            </IndicatorContainer>
-                            {find(parents, (p) => p.id === field.id) ? <b>{field.label}</b> : field.label}
+                            </div>
+                            {find(path, (pId) => pId === field.id) ? <b>{field.label}</b> : field.label}
                         </div>
                         {showStatistics && <FieldStatistics field={field} />}
                     </FieldItem>
-                    {field.isExpanded && !_isLoading && <SubList>{fieldList(field.id)}</SubList>}
+                    {field.isExpanded && !_isLoading && <ul className="ps-3 list-unstyled">{fieldList(field.id)}</ul>}
                 </li>
             );
         });
@@ -264,20 +237,17 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                     includeClasses={[CLASSES.RESEARCH_FIELD]}
                     placeholder="Search for fields..."
                     onChange={(value, { action }) => {
-                        if (action === 'select-option') {
+                        if (action === 'select-option' && value) {
                             handleFieldSelect({
-                                id: value?.id ?? '',
-                                label: value?.label ?? '',
+                                id: value.id,
+                                label: value.label,
                             });
                         }
                     }}
-                    value={
-                        selectedResearchField !== RESOURCES.RESEARCH_FIELD_MAIN
-                            ? { id: selectedResearchField, label: researchFieldLabel ?? '' }
-                            : null
-                    }
+                    value={selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
                     enableExternalSources={false}
                     allowCreate={false}
+                    aria-label="Search research fields"
                 />
             </div>
 
@@ -285,31 +255,38 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                 <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
                     <SmartSuggestionsFields handleFieldSelect={handleFieldSelect} title={title} abstract={abstract} />
                     {showPreviouslySelected && (
-                        <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
+                        <PreviouslySelectedResearchField selectedResearchField={selectedResearchFieldId} handleFieldSelect={handleFieldSelect} />
                     )}
                 </div>
 
                 <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
+                    {!isParentLoading && path.length === 1 && selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
+                        <Alert color="info">This research field is not part of the ORKG taxonomy.</Alert>
+                    )}
                     <div className="d-flex">
                         <h3 className="fw-bold h6 mt-1 mb-0">Browse taxonomy</h3>
-                        <CollapseButton
+                        <Button
                             size="sm"
                             color="link"
                             disabled={!find(researchFields, (f) => f.isExpanded)}
                             className="ms-auto text-decoration-none p-0"
-                            onClick={() => {
-                                const fields = cloneDeep(researchFields);
-                                updateResearchField({
-                                    researchFields: fields.map((f) => set(f, 'isExpanded', false)),
-                                });
-                            }}
+                            onClick={() => setResearchFields((v) => v.map((f) => ({ ...f, isExpanded: false })))}
+                            aria-label="Collapse all fields"
+                            style={{ color: theme.secondary }}
                         >
-                            <FontAwesomeIcon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
-                        </CollapseButton>
+                            <FontAwesomeIcon icon={faMinusSquare} className="me-1" />
+                            <span className="text-decoration-underline">Collapse all</span>
+                        </Button>
                     </div>
-                    {isLoading && (
+                    {!researchFields && isLoading ? (
                         <div>
-                            <ContentLoader width="100%" speed={2} viewBox="0 0 100 30" style={{ width: '100% !important' }}>
+                            <ContentLoader
+                                width="100%"
+                                speed={2}
+                                viewBox="0 0 100 30"
+                                style={{ width: '100% !important' }}
+                                aria-label="Loading research fields"
+                            >
                                 <rect x="0" y="0" rx="1" ry="1" width="100" height="5" />
                                 <rect x="0" y="6" rx="1" ry="1" width="100" height="5" />
                                 <rect x="0" y="12" rx="1" ry="1" width="100" height="5" />
@@ -317,8 +294,11 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                                 <rect x="0" y="24" rx="1" ry="1" width="100" height="5" />
                             </ContentLoader>
                         </div>
+                    ) : (
+                        <ul className="pt-3 list-unstyled" role="tree" aria-label="Research field hierarchy">
+                            {fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}
+                        </ul>
                     )}
-                    {!isLoading && <List>{fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}</List>}
                 </div>
             </div>
         </>
