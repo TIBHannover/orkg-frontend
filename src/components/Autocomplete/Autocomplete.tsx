@@ -23,6 +23,7 @@ declare module 'react-select/base' {
     export interface Props<Option, IsMulti extends boolean, Group extends GroupBase<Option>> {
         enableExternalSources?: boolean;
         size?: 'sm';
+        rightAligned?: boolean;
     }
 }
 

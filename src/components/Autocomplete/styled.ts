@@ -104,13 +104,14 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
                     : {}),
             },
         } as CSSObjectWithLabel),
-    menu: (provided) =>
+    menu: (provided, state) =>
         ({
             ...provided,
             zIndex: 10,
             width: 'max-content', // making sure the menu can be wider than the input size
             minWidth: '100%',
             maxWidth: 700,
+            ...(state.selectProps.rightAligned ? { position: 'absolute', right: 0 } : {}),
         } as CSSObjectWithLabel),
     multiValueLabel: (provided, state) =>
         ({
