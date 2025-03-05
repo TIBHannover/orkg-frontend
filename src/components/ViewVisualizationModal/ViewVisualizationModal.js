@@ -4,9 +4,9 @@ import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
+import dayjs from 'dayjs';
 import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
-import moment from 'moment';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -79,7 +79,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, id }) => {
                 <div className="mt-2">
                     <Badge color="light" className="me-2">
                         <FontAwesomeIcon icon={faCalendar} className="text-primary" />{' '}
-                        {visualization.created_at ? moment(visualization.created_at).format('DD MMMM YYYY') : ''}
+                        {visualization.created_at ? dayjs(visualization.created_at).format('DD MMMM YYYY') : ''}
                     </Badge>
                     <AuthorBadges authors={visualization.authors} />
                 </div>

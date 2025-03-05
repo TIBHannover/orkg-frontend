@@ -1,12 +1,12 @@
+import dayjs from 'dayjs';
 import { range } from 'lodash';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input } from 'reactstrap';
 
 const PublicationYearInput = ({ value = '', onChange, inputId = null, isDisabled = false }) => (
     <Input id={inputId} type="select" value={value} onChange={(e) => onChange(e.target.value)} disabled={isDisabled}>
         <option value="">Year</option>
-        {range(1900, moment().year() + 1)
+        {range(1900, dayjs().year() + 1)
             .reverse()
             .map((year) => (
                 <option key={year}>{year}</option>

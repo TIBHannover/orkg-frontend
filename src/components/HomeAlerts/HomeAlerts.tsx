@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
 import { getHomeAlerts } from 'services/cms';
@@ -29,7 +29,7 @@ const HomeAlerts = () => {
     }
 
     return alerts.map((alert) =>
-        !alert.attributes?.hideAfterDate || moment() < moment(alert.attributes?.hideAfterDate) ? (
+        !alert.attributes?.hideAfterDate || dayjs() < dayjs(alert.attributes?.hideAfterDate) ? (
             <AlertStyled key={alert.id} color={alert.attributes?.color} className="box-shadow mt-2">
                 <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.attributes?.message) }} />
             </AlertStyled>

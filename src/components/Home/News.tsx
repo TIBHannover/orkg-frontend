@@ -1,5 +1,5 @@
 import { CarouselIndicatorsStyled } from 'components/styled';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getNewsCards } from 'services/cms';
@@ -56,7 +56,7 @@ export default function News() {
         setActiveIndex(newIndex);
     };
 
-    return !isLoading && moment(items?.[0]?.attributes?.publishedAt) > moment().subtract(2, 'months') ? (
+    return !isLoading && dayjs(items?.[0]?.attributes?.publishedAt) > dayjs().subtract(2, 'month') ? (
         <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">

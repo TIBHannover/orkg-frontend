@@ -6,7 +6,7 @@ import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { Statement } from 'services/backend/types';
@@ -50,7 +50,7 @@ function StatementCard({ statement }: { statement: Statement }) {
                                     <li className="mb-1">
                                         Created:{' '}
                                         <span title={statement.created_at}>
-                                            <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                            <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
                                         </span>
                                     </li>
                                     {statement.created_by && (

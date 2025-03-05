@@ -12,7 +12,7 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { FC } from 'react';
 import { Review } from 'services/backend/types';
@@ -74,7 +74,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                             {review.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
-                                    {moment(review.created_at).format('DD-MM-YYYY')}
+                                    {dayjs(review.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

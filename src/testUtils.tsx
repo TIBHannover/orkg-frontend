@@ -10,6 +10,12 @@ import { RootStore } from 'slices/types';
 import { AppStore, setupStore } from 'store';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
+import dayjs from 'dayjs';
+import localeData from 'dayjs/plugin/localeData';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+dayjs.extend(localeData);
 
 type WrapperProps = {
     initialState?: Partial<RootStore>;

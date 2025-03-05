@@ -13,7 +13,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import useParams from 'components/useParams/useParams';
 import { LICENSE_URL } from 'constants/misc';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
 import { Helmet } from 'react-helmet';
 import { InView } from 'react-intersection-observer';
@@ -27,7 +27,7 @@ const ViewPaper = () => {
         paperId: resourceId,
     });
     const getSEODescription = () =>
-        `Published: ${viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
+        `Published: ${viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
             viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''
         } • Research field: ${viewPaper?.research_fields?.[0]?.label} • Authors: ${viewPaper?.authors?.map((author) => author.name).join(', ')}`;
 
@@ -42,7 +42,7 @@ const ViewPaper = () => {
                 '@type': 'Person',
             })),
             datePublished: `${
-                viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''
+                viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''
             } ${viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}`,
             about: viewPaper?.research_fields?.[0]?.label,
             license: LICENSE_URL,

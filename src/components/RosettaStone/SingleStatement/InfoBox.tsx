@@ -10,7 +10,7 @@ import { CERTAINTY } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { findKey, toInteger } from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
@@ -103,7 +103,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                         <li className="mb-1">
                             Created:{' '}
                             <span title={statement.created_at}>
-                                <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
                             </span>
                         </li>
                         {statement.created_by && (

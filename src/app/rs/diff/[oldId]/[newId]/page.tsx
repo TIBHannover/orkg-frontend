@@ -8,8 +8,8 @@ import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/us
 import useRosettaStatements from 'components/RosettaStone/SingleStatement/hooks/useStatements';
 import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
+import dayjs from 'dayjs';
 import { toInteger } from 'lodash';
-import moment from 'moment';
 import { reverse } from 'named-urls';
 import reactStringReplace from 'react-string-replace';
 import { Container } from 'reactstrap';
@@ -66,7 +66,7 @@ const StatementDiff = () => {
 
     const getTitleData = (version: RosettaStoneStatement) => {
         const versionNumber = versions && versions.length ? versions.findIndex((v) => v.id === version.id) + 1 : null;
-        const publicationDate = version ? moment(version.created_at).format('DD MMMM YYYY - HH:mm:ss') : null;
+        const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY - HH:mm:ss') : null;
 
         return {
             creator: version?.created_by,

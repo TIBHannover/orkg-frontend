@@ -4,7 +4,7 @@ import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcru
 import { CardBadge } from 'components/styled';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -35,7 +35,7 @@ const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) =>
                                 <FontAwesomeIcon size="sm" icon={faLock} className="ms-2 me-1" /> Closed
                             </>
                         )}
-                        <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(template.created_at).format('DD-MM-YYYY')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" /> {dayjs(template.created_at).format('DD-MM-YYYY')}
                     </small>
                 </div>
                 <div className="mb-1">

@@ -6,7 +6,7 @@ import useDiff from 'components/DiffView/useDiff';
 import useList from 'components/List/hooks/useList';
 import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { LiteratureList } from 'services/backend/types';
 
@@ -25,7 +25,7 @@ const ListDiff = () => {
         const versionNumber = versions.published.length
             ? versions.published.length - versions.published.findIndex((version) => version.id === id)
             : null;
-        const publicationDate = version ? moment(version.created_at).format('DD MMMM YYYY - H:m:s') : null;
+        const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY - H:m:s') : null;
 
         return {
             creator: null, // TODO version.creator

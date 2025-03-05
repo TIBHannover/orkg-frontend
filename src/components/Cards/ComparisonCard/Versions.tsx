@@ -1,17 +1,17 @@
-import { useState, FC } from 'react';
-import Link from 'next/link';
-import { reverse } from 'named-urls';
+import { faChartBar, faCodeBranch, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faChartBar, faPaperclip, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes';
-import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import ROUTES from 'constants/routes';
+import dayjs from 'dayjs';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC, useState } from 'react';
+import { Button } from 'reactstrap';
 import { getStatements, statementsUrl } from 'services/backend/statements';
-import { getComparisonData } from 'utils';
 import { ComparisonVersion, Statement } from 'services/backend/types';
 import useSWR from 'swr';
-import { Button } from 'reactstrap';
+import { getComparisonData } from 'utils';
 
 type VersionTooltipProps = {
     version: ComparisonVersion;
@@ -65,7 +65,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
             }
         >
             <span>
-                <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>Version {moment(version.created_at).format('DD-MM-YYYY')}</Link>
+                <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>Version {dayjs(version.created_at).format('DD-MM-YYYY')}</Link>
             </span>
         </Tippy>
     );

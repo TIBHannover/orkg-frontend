@@ -6,14 +6,14 @@ import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { LiteratureList } from 'services/backend/types';
 import styled from 'styled-components';
@@ -75,7 +75,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                             {list.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-1 me-1" />{' '}
-                                    {moment(list.created_at).format('DD-MM-YYYY')}
+                                    {dayjs(list.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

@@ -14,7 +14,7 @@ import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import useAuthentication from 'components/hooks/useAuthentication';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -91,7 +91,7 @@ const PaperHeader = (props) => {
             {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
                     <FontAwesomeIcon icon={faCalendar} />{' '}
-                    {viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>
             )}

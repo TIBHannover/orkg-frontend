@@ -1,21 +1,21 @@
-import { createRef } from 'react';
-import NativeListener from 'react-native-listener';
-import { BaseEditorComponent } from '@handsontable/react';
-import { InputGroup, DropdownMenu, Dropdown, Input } from 'reactstrap';
-import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { connect } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { setLabelCache } from 'slices/pdfAnnotationSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { BaseEditorComponent } from '@handsontable/react';
 import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { createResource } from 'services/backend/resources';
-import { createPredicate } from 'services/backend/predicates';
-import moment from 'moment';
-import { range } from 'utils';
-import { isString } from 'lodash';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
+import dayjs from 'dayjs';
+import { isString } from 'lodash';
+import { createRef } from 'react';
+import NativeListener from 'react-native-listener';
+import { connect } from 'react-redux';
+import { Dropdown, DropdownMenu, Input, InputGroup } from 'reactstrap';
+import { createPredicate } from 'services/backend/predicates';
+import { createResource } from 'services/backend/resources';
+import { setLabelCache } from 'slices/pdfAnnotationSlice';
+import { range } from 'utils';
 
 class EditorComponent extends BaseEditorComponent {
     constructor(props) {
@@ -184,7 +184,7 @@ class EditorComponent extends BaseEditorComponent {
                             <option value="" key="">
                                 Month
                             </option>
-                            {moment.months().map((el, index) => (
+                            {dayjs.months().map((el, index) => (
                                 <option value={index + 1} key={index + 1}>
                                     {el}
                                 </option>
@@ -213,7 +213,7 @@ class EditorComponent extends BaseEditorComponent {
                             <option value="" key="">
                                 Year
                             </option>
-                            {range(1900, moment().year())
+                            {range(1900, dayjs().year() + 1)
                                 .reverse()
                                 .map((year) => (
                                     <option key={year}>{year}</option>

@@ -1,9 +1,9 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { env } from 'next-runtime-env';
+import dayjs from 'dayjs';
 import { sanitize } from 'isomorphic-dompurify';
-import moment from 'moment';
 import { useCookies } from 'next-client-cookies';
+import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { Message, loadMastodonTimeline } from 'services/mastodon';
@@ -108,7 +108,7 @@ const MastodonTimeline = () => {
                                                 View on Mastodon
                                             </Button>
                                         </a>
-                                        <small className="text-muted">{moment(message.created_at).fromNow()}</small>
+                                        <small className="text-muted">{dayjs(message.created_at)?.fromNow()}</small>
                                     </div>
                                 </ListGroupItem>
                             );

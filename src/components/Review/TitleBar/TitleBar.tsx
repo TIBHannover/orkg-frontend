@@ -25,7 +25,7 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { SubTitle } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -53,7 +53,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
     const isLoadingInline = isLoading || isValidating;
 
     const version = review?.versions.published.find((_version) => _version.id === review?.id);
-    const publicationDate = version ? moment(version.created_at).format('DD MMMM YYYY') : null;
+    const publicationDate = version ? dayjs(version.created_at)?.format('DD MMMM YYYY') : null;
     const versionNumber = review?.versions.published.length
         ? review.versions.published.length - review.versions.published.findIndex((_version) => _version.id === review?.id)
         : null;

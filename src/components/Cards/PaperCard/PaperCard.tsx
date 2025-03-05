@@ -7,15 +7,15 @@ import Paths from 'components/Cards/PaperCard/Paths';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
 import { Input } from 'reactstrap';
@@ -143,7 +143,7 @@ const PaperCard: FC<PaperCardType> = ({
                                 <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
                             )}
                             {paper.publication_info?.published_month && paper.publication_info?.published_month > 0
-                                ? moment(paper.publication_info?.published_month, 'M').format('MMMM')
+                                ? dayjs(paper.publication_info?.published_month, 'M').format('MMMM')
                                 : ''}{' '}
                             {paper.publication_info?.published_year ?? null}
                         </small>

@@ -13,7 +13,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle } from 'components/styled';
 import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -42,17 +42,17 @@ function getTicksAxisH(data) {
     const ticksAxisH = [];
     let year = -1;
     for (
-        let i = moment(minDate.getTime()).subtract(1, 'M').valueOf();
-        i <= moment(maxDate.getTime()).add(1, 'M').valueOf();
-        i = moment(i).add(1, 'M').valueOf()
+        let i = dayjs(minDate.getTime()).subtract(1, 'month').valueOf();
+        i <= dayjs(maxDate.getTime()).add(1, 'month').valueOf();
+        i = dayjs(i).add(1, 'month').valueOf()
     ) {
         const tick = new Date(i);
-        if (year !== moment(tick).format('MMM yyyy')) {
+        if (year !== dayjs(tick).format('MMM YYYY')) {
             ticksAxisH.push({
                 v: tick,
-                f: moment(tick).format('MMM yyyy'),
+                f: dayjs(tick).format('MMM YYYY'),
             });
-            year = moment(tick).format('MMM yyyy');
+            year = dayjs(tick).format('MMM YYYY');
         }
     }
     return ticksAxisH;
@@ -159,7 +159,7 @@ function Benchmark() {
         ...(benchmarkDatasetPapers[selectedMetric]
             ? benchmarkDatasetPapers[selectedMetric]
                   .map((c) => {
-                      const publishedOn = moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM');
+                      const publishedOn = dayjs(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM');
                       try {
                           return parseFloat(c.score)
                               ? [

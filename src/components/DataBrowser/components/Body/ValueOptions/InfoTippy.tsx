@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Statement } from 'services/backend/types';
 
@@ -22,7 +22,7 @@ const InfoTippy: FC<InfoTippyProps> = ({ statement }) => {
                         <li className="mb-1">
                             Created:{' '}
                             <span title={statement.created_at}>
-                                <FontAwesomeIcon icon={faClock} /> {moment(statement.created_at).fromNow()}
+                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
                             </span>
                         </li>
                         {statement.created_by && (

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Alert, Button } from 'reactstrap';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { MISC } from 'constants/graphSettings';
@@ -19,7 +19,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
             {versions?.length > 0 &&
                 versions.map((version, index) => (
                     <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        <div className="time">{moment(version.created_at).format('DD MMM YYYY HH:mm')}</div>
+                        <div className="time">{dayjs(version.created_at).format('DD MMM YYYY HH:mm')}</div>
                         <div>
                             {paperResource.created_by && (
                                 <>
@@ -27,8 +27,8 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                     {!version.publishedResource &&
                                     !isLoadingContributors &&
                                     !hasNextPageContributors &&
-                                    moment(version.created_at).format('DD MMM YYYY HH:mm') ===
-                                        moment(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
+                                    dayjs(version.created_at).format('DD MMM YYYY HH:mm') ===
+                                        dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
                                     version.created_by.id === (createdBy?.id ?? MISC.UNKNOWN_ID)
                                         ? 'Added by '
                                         : 'Updated by '}
@@ -79,7 +79,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
 
             {!isLoadingContributors && hasNextPageContributors && (
                 <StyledActivity className="ps-3 pb-3">
-                    <div className="time">{moment(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
+                    <div className="time">{dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
                     <>
                         Added by{' '}
                         {createdBy ? (
