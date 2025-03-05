@@ -185,7 +185,7 @@ const ComparisonHeaderMenu = () => {
                             <DropdownToggle color="secondary" size="sm" className="rounded-end">
                                 <span className="me-2">Actions</span> <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu end style={{ zIndex: '1031' }}>
+                            <DropdownMenu end="true" style={{ zIndex: '1031' }}>
                                 <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen((v) => !v)} direction="start">
                                     <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />

@@ -51,8 +51,8 @@ const AuthorHeader: FC<AuthorHeaderProps> = ({ authorId }) => {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu end>
-                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
+                                    <DropdownMenu end="true">
+                                        <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

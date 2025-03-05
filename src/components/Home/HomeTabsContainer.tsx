@@ -2,6 +2,7 @@ import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
+import TabLabel from 'components/Tabs/TabLabel';
 import Tabs from 'components/Tabs/Tabs';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES, RESOURCES } from 'constants/graphSettings';
@@ -83,7 +84,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={HOME_CONTENT_TABS.map((tab) => ({
-                    label: tab.label,
+                    label: <TabLabel label={tab.label} classId={tab.id} researchFieldId={researchFieldId} />,
                     key: tab.id,
                     children: (
                         <>

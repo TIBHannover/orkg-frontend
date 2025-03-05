@@ -3,6 +3,7 @@ import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHea
 import Filters from 'components/Filters/Filters';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
+import TabLabel from 'components/Tabs/TabLabel';
 import Tabs from 'components/Tabs/Tabs';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
@@ -84,7 +85,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={OBSERVATORY_CONTENT_TABS.map((tab) => ({
-                    label: tab.label,
+                    label: <TabLabel label={tab.label} classId={tab.id} observatoryId={id} />,
                     key: tab.id,
                     children: (
                         <>

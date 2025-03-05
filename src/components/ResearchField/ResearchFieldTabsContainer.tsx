@@ -2,6 +2,7 @@ import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
+import TabLabel from 'components/Tabs/TabLabel';
 import Tabs from 'components/Tabs/Tabs';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
@@ -18,7 +19,7 @@ export const RESEARCH_FIELD_CONTENT_TABS = [
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
 ];
 
-function ResearchFieldTabsContainer({ id }: { id: string }) {
+function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxShadow?: boolean }) {
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: CLASSES.COMPARISON });
     const [sort] = useQueryState<VisibilityOptions>('sort', {
         defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
@@ -67,12 +68,12 @@ function ResearchFieldTabsContainer({ id }: { id: string }) {
             <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} showSubFieldsFilter />
 
             <Tabs
-                className="box rounded mt-2"
+                className={`rounded mt-2 ${boxShadow ? 'box' : ''}`}
                 destroyInactiveTabPane
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={RESEARCH_FIELD_CONTENT_TABS.map((tab) => ({
-                    label: tab.label,
+                    label: <TabLabel label={tab.label} classId={tab.id} researchFieldId={id} />,
                     key: tab.id,
                     children: (
                         <ListPaginatedContent<Item>

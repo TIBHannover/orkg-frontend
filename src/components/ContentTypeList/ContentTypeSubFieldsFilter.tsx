@@ -26,7 +26,7 @@ const ContentTypeSubFieldsFilter: FC<ContentTypeSubFieldsFilterProps> = ({ isLoa
                             onChange={handleChangeIncludeSubFields}
                             type="checkbox"
                             disabled={isLoading}
-                            {...(includeSubFields && { checked: true })}
+                            checked={includeSubFields}
                         />
                         Include subfields
                     </Label>

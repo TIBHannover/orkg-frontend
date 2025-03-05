@@ -38,14 +38,14 @@ export const getResearchProblemsByResearchFieldId = ({
         .json();
 };
 
+export type FieldChildren = {
+    child_count: number;
+    resource: Resource;
+};
+
 export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
     researchFieldApi
-        .get<
-            PaginatedResponse<{
-                child_count: number;
-                resource: Resource;
-            }>
-        >(`${fieldId}/children`)
+        .get<PaginatedResponse<FieldChildren>>(`${fieldId}/children?page=0&size=9999`)
         .json()
         .then((res) => res.content);
 

@@ -221,8 +221,8 @@ function Benchmark() {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu end>
-                                        <DropdownItem tag={Link} end href={`${reverse(ROUTES.RESOURCE, { id: datasetId })}?noRedirect`}>
+                                    <DropdownMenu end="true">
+                                        <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id: datasetId })}?noRedirect`}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -317,7 +317,7 @@ function Benchmark() {
                                         <DropdownToggle caret size="sm" color="secondary">
                                             {selectedMetric}
                                         </DropdownToggle>
-                                        <DropdownMenu end>
+                                        <DropdownMenu end="true">
                                             {metrics.map((m, index) => (
                                                 <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
                                                     {m}

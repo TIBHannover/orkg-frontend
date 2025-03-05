@@ -83,13 +83,13 @@ const Templates = () => {
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                 <FontAwesomeIcon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu end>
+                            <DropdownMenu end="true">
                                 <RequireAuthentication
                                     component={DropdownItem}
                                     tag={Link}
                                     color="secondary"
                                     size="sm"
-                                    end
+                                    end="true"
                                     href={reverse(ROUTES.IMPORT_SHACL)}
                                 >
                                     Import SHACL{' '}
