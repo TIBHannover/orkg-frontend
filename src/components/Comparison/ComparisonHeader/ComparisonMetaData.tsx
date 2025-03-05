@@ -13,9 +13,9 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
 import { VISIBILITY } from 'constants/contentTypes';
-import { ENTITIES, MISC } from 'constants/graphSettings';
+import { MISC } from 'constants/graphSettings';
 import { LICENSE_URL } from 'constants/misc';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Badge, Button } from 'reactstrap';
@@ -39,7 +39,7 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                 ...(author.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author.identifiers.orcid?.[0]}` } : {}),
                 '@type': 'Person',
             })),
-            datePublished: comparison.created_at ? moment(comparison.created_at).format('DD MMMM YYYY') : '',
+            datePublished: comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : '',
             about: comparison.research_fields?.[0]?.label,
             license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
@@ -79,8 +79,8 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                                         <div>
                                             {isPublished && comparison.created_at && (
                                                 <Badge color="light" className="me-2 mb-2">
-                                                    <FontAwesomeIcon icon={faCalendar} /> {moment(comparison.created_at).format('MMMM')}{' '}
-                                                    {moment(comparison.created_at).format('YYYY')}
+                                                    <FontAwesomeIcon icon={faCalendar} /> {dayjs(comparison.created_at).format('MMMM')}{' '}
+                                                    {dayjs(comparison.created_at).format('YYYY')}
                                                 </Badge>
                                             )}
                                             {comparison.research_fields?.[0] && (

@@ -8,7 +8,7 @@ import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styl
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
@@ -100,7 +100,7 @@ const Provenance: FC<ProvenanceProps> = ({
                     <div className="mb-1">
                         <b>Added on</b>
                     </div>
-                    {paperResource.created_at && moment(paperResource.created_at).format('DD MMM YYYY')}
+                    {paperResource.created_at && dayjs(paperResource.created_at).format('DD MMM YYYY')}
                 </StyledItemProvenanceBox>
                 {createdBy && createdBy.id && (
                     <StyledItemProvenanceBox>

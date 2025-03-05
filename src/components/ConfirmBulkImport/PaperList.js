@@ -2,10 +2,10 @@ import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
-import Link from 'next/link';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment, useState } from 'react';
 import { Alert, Badge, Button, ListGroup } from 'reactstrap';
@@ -117,7 +117,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 {(paper.publicationMonth || paper.publicationYear) && (
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
                                 )}
-                                {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
+                                {paper.publicationMonth && paper.publicationMonth > 0 ? dayjs(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
                             </small>
                         </PaperCardStyled>

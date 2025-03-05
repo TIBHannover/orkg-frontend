@@ -5,14 +5,14 @@ import useVisualizationResearchField from 'components/Cards/VisualizationCard/ho
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Visualization } from 'services/backend/types';
 import styled from 'styled-components';
@@ -78,7 +78,7 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                             {visualization.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
-                                    {moment(visualization.created_at).format('DD-MM-YYYY')}
+                                    {dayjs(visualization.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

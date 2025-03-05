@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import { Card, Table } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import moment from 'moment';
-import { FC } from 'react';
-import { Author, UpdateAuthor } from 'services/backend/types';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
+import ROUTES from 'constants/routes';
+import dayjs from 'dayjs';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC } from 'react';
+import { Card, Table } from 'reactstrap';
+import { Author, UpdateAuthor } from 'services/backend/types';
 
 type MetadataTableProps = {
     title?: string;
@@ -60,7 +60,7 @@ const MetadataTable: FC<MetadataTableProps> = ({
                     {(publicationYear || publicationMonth) && (
                         <tr>
                             <td>
-                                <strong>Publication date:</strong> {publicationMonth ? moment(publicationMonth, 'M').format('MMMM') : ''}{' '}
+                                <strong>Publication date:</strong> {publicationMonth ? dayjs(publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {publicationYear} {!publicationMonth && !publicationYear && <i>Not available</i>}
                             </td>
                         </tr>

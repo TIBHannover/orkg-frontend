@@ -13,7 +13,7 @@ import UserStatistics from 'components/UserProfile/UserStatistics';
 import { MISC } from 'constants/graphSettings';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import useAuthentication from 'components/hooks/useAuthentication';
 import Link from 'next/link';
@@ -151,7 +151,7 @@ const UserProfile = (props) => {
                                 <div>
                                     <h2 className="h3 flex-grow-1 m-0">{userData.display_name}</h2>
                                     <div className="text-muted" title={userData.joined_at}>
-                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {moment(userData.joined_at).fromNow(true)}
+                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {dayjs().from(dayjs(userData.joined_at), true)}
                                     </div>
                                 </div>
                                 {observatoryData && (

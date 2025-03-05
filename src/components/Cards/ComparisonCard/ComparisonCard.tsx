@@ -5,15 +5,15 @@ import Versions from 'components/Cards/ComparisonCard/Versions';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
 import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
+import dayjs from 'dayjs';
 import { truncate } from 'lodash';
-import moment from 'moment';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Comparison } from 'services/backend/types';
 import styled from 'styled-components';
@@ -92,7 +92,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                             {comparison.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
-                                    {moment(comparison.created_at).format('DD-MM-YYYY')}
+                                    {dayjs(comparison.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

@@ -2,10 +2,10 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import Link from 'next/link';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getAltMetrics } from 'services/altmetric/index';
@@ -43,7 +43,7 @@ const PaperVersionHeader = () => {
             {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
                     <FontAwesomeIcon icon={faCalendar} />{' '}
-                    {viewPaper.publication_info?.published_month ? moment(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>
             )}

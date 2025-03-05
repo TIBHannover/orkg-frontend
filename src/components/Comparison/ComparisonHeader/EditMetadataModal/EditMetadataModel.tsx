@@ -4,7 +4,7 @@ import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFiel
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import Tooltip from 'components/Utils/Tooltip';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FC, useEffect, useId, useState } from 'react';
 import Select from 'react-select';
 import { Button, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -59,7 +59,7 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
 
     const isConferenceDoubleBlind =
         selectedConference?.metadata.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
-        moment().format('YYYY-MM-DD') < selectedConference?.metadata?.start_date;
+        dayjs().format('YYYY-MM-DD') < selectedConference?.metadata?.start_date;
 
     return (
         <ModalWithLoading isLoading={isLoadingEdit} isOpen toggle={toggle} size="lg">
@@ -133,7 +133,7 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
                         <Label check for={`${formId}-is-anonymized`} className="mb-0">
                             Is anonymized{' '}
                             {isConferenceDoubleBlind && (
-                                <>(until the conference date: {moment(selectedConference?.metadata?.start_date).format('DD MMM YYYY')})</>
+                                <>(until the conference date: {dayjs(selectedConference?.metadata?.start_date).format('DD MMM YYYY')})</>
                             )}
                         </Label>
                     </FormGroup>

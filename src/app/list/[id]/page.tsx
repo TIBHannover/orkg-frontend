@@ -15,18 +15,18 @@ import ExportBibtexModal from 'components/List/ExportBibtexModal/ExportBibtexMod
 import HistoryModal from 'components/List/HistoryModal/HistoryModal';
 import ViewList from 'components/List/ViewList/ViewList';
 import useList from 'components/List/hooks/useList';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { SubTitle } from 'components/styled';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import useParams from 'components/useParams/useParams';
 
 const List = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
@@ -41,7 +41,7 @@ const List = () => {
 
     const isLoadingInline = isLoading || isValidating;
     const version = list?.versions.published.find((_version) => _version.id === id);
-    const publicationDate = version ? moment(version.created_at).format('DD MMMM YYYY') : null;
+    const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY') : null;
     const versionNumber = list?.versions.published.length
         ? list.versions.published.length - list.versions.published.findIndex((_version) => _version.id === id)
         : null;

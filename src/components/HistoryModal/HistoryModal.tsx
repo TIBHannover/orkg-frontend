@@ -1,18 +1,17 @@
-import Link from 'next/link';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
-import moment from 'moment';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import React, { FC, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Select, { components, GroupBase, OptionProps, SingleValue } from 'react-select';
-import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import styled from 'styled-components';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import dayjs from 'dayjs';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FC, useState } from 'react';
+import Select, { components, GroupBase, OptionProps } from 'react-select';
+import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getResource, resourcesUrl } from 'services/backend/resources';
+import styled from 'styled-components';
 import useSWR from 'swr';
 
 const Option = ({ children, ...props }: OptionProps<VersionOption, false, GroupBase<VersionOption>>) => (
@@ -173,7 +172,7 @@ const HistoryModal: FC<HistoryModalProps> = ({
                             {versions.map((version, i) => (
                                 <Activity key={version.id} className="ps-3 pb-3">
                                     <Time className={id === version.id ? 'selected' : ''}>
-                                        {version.created_at ? moment(version.created_at).format('DD MMMM YYYY - H:mm') : ''}{' '}
+                                        {version.created_at ? dayjs(version.created_at)?.format('DD MMMM YYYY - H:mm') : ''}{' '}
                                         {id === version.id && <>(This version)</>}
                                         <span className="ms-2">
                                             <UserAvatar userId={version.created_by} />

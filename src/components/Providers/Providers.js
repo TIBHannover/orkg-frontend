@@ -13,6 +13,9 @@ import DefaultLayout from 'components/Layout/DefaultLayout';
 import ResetStoreOnNavigate from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import MATH_JAX_CONFIG from 'constants/mathJax';
 import REGEX from 'constants/regex';
+import dayjs from 'dayjs';
+import localeData from 'dayjs/plugin/localeData';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import StyledComponentsRegistry from 'lib/registry';
 import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
@@ -25,6 +28,9 @@ import SWR_CONFIG from 'services/SWRConfig';
 import { setupStore } from 'store';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
+
+dayjs.extend(relativeTime);
+dayjs.extend(localeData);
 
 config.autoAddCss = false;
 

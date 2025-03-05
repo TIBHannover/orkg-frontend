@@ -1,14 +1,14 @@
-import Link from 'next/link';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import moment from 'moment';
-import { getResourceLink, getResourceTypeLabel } from 'utils';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { truncate } from 'lodash';
-import PropTypes from 'prop-types';
 import { StyledActivity } from 'components/LastUpdatesBox/styled';
+import ROUTES from 'constants/routes';
+import dayjs from 'dayjs';
+import { truncate } from 'lodash';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { getResourceLink, getResourceTypeLabel } from 'utils';
 
 const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 30 });
@@ -21,7 +21,7 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                     {!isLoading &&
                         activities.map((activity, index) => (
                             <StyledActivity key={`sss${activity.id}`} className="ps-3 pb-3">
-                                <div className="time">{moment(activity.created_at).fromNow()}</div>
+                                <div className="time">{dayjs(activity.created_at).fromNow()}</div>
                                 <div className="action">
                                     {activity.profile?.id ? (
                                         <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>

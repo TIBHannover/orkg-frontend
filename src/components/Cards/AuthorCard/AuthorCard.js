@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -86,8 +86,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                     papers.map((paper, index) => (
                         <Link key={index} href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
                             <Badge color="light" size="sm" className="ms-1">
-                                <FontAwesomeIcon icon={faFile} className="text-primary" /> {moment.localeData().ordinal(paper.author_index + 1)}{' '}
-                                author
+                                <FontAwesomeIcon icon={faFile} className="text-primary" /> {dayjs.localeData().ordinal(paper.author_index + 1)} author
                                 {paper.paper_year ? ` - ${paper.paper_year}` : ''}
                             </Badge>
                         </Link>

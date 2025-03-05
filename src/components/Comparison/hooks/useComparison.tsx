@@ -1,8 +1,8 @@
 import useParams from 'components/useParams/useParams';
 import { MISC } from 'constants/graphSettings';
 import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
+import dayjs from 'dayjs';
 import errorHandler from 'helpers/errorHandler';
-import moment from 'moment';
 import { comparisonUrl, getComparison, updateComparison as updateComparisonBackend } from 'services/backend/comparisons';
 import { conferenceSeriesUrl, getConferenceById } from 'services/backend/conferences-series';
 import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
@@ -95,7 +95,7 @@ const useComparison = (comparisonId?: string) => {
 
     const isConferenceDoubleBlind =
         conferenceSeries?.metadata.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
-        moment().format('YYYY-MM-DD') < conferenceSeries?.metadata?.start_date;
+        dayjs().format('YYYY-MM-DD') < conferenceSeries?.metadata?.start_date;
 
     const isAnonymized = isConferenceDoubleBlind || comparison?.is_anonymized;
 

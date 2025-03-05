@@ -22,6 +22,8 @@ afterAll(() => {
     server.close();
 });
 
+window.scrollTo = jest.fn();
+
 jest.mock('react-dnd', () => ({
     useDrag: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
     useDrop: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),

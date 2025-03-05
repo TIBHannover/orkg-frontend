@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState, FC } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -30,7 +30,7 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                             activities?.length > 0 &&
                             activities.slice(0, 3).map((activity) => (
                                 <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
-                                    <div className="time">{moment(activity.created_at).fromNow()}</div>
+                                    <div className="time">{dayjs(activity.created_at).fromNow()}</div>
                                     <div className="action">
                                         {activity.profile?.id ? (
                                             <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>

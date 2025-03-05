@@ -10,7 +10,7 @@ import ReviewContextProvider from 'components/Review/context/ReviewContext';
 import useReview from 'components/Review/hooks/useReview';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { LICENSE_URL } from 'constants/misc';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { createGlobalStyle } from 'styled-components';
@@ -47,7 +47,7 @@ const Review = () => {
     const { isEditMode } = useIsEditMode();
 
     const version = review?.versions.published.find((_version) => _version.id === review?.id);
-    const publicationDate = version ? moment(version.created_at).format('DD MMMM YYYY') : null;
+    const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
         let title = 'Review - ORKG';

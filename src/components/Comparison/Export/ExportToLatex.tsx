@@ -3,18 +3,18 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tooltip from 'components/Utils/Tooltip';
 import ROUTES from 'constants/routes';
-// @ts-expect-error package doesn't support typescript
-import MakeLatex from 'make-latex';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { toast } from 'react-toastify';
 import { activatedContributionsToList, getComparisonURLConfigOfReduxState } from 'components/Comparison/hooks/helpers';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import { PREDICATES } from 'constants/graphSettings';
+import dayjs from 'dayjs';
 import { clone } from 'lodash';
-import moment from 'moment';
+// @ts-expect-error package doesn't support typescript
+import MakeLatex from 'make-latex';
 import { reverse } from 'named-urls';
 import { FC, useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { Statement } from 'services/backend/types';
@@ -149,13 +149,13 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
             if (includeFootnote) {
                 if (comparison && comparison.id) {
                     const link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}`;
-                    _latexTable += `\n\\footnotetext{${link} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    _latexTable += `\n\\footnotetext{${link} [accessed ${dayjs().format('YYYY MMM DD')}]}`;
                     setLatexTable(_latexTable);
                     setLatexTableLoading(false);
                 } else {
                     let link = '';
                     link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${comparisonURLConfig}`;
-                    _latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    _latexTable += `\n\\footnotetext{${link}} [accessed ${dayjs().format('YYYY MMM DD')}]}`;
                     setLatexTable(_latexTable);
                     setLatexTableLoading(false);
                 }

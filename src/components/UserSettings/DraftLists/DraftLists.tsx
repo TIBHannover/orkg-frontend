@@ -5,7 +5,7 @@ import ListPage from 'components/PaginatedContent/ListPage';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { Alert } from 'reactstrap';
@@ -23,7 +23,7 @@ const DraftLists = () => {
         <ShortRecord key={list.id} header={list.title} href={reverse(ROUTES.LIST, { id: list.id })}>
             <div className="time">
                 <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" />{' '}
-                {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
+                {list.created_at ? dayjs(list.created_at).format('DD MMMM YYYY') : ''}
             </div>
         </ShortRecord>
     );

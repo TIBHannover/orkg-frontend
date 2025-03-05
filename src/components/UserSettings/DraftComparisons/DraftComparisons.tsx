@@ -2,7 +2,7 @@ import { faCalendar, faClock, faSpinner } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuthentication from 'components/hooks/useAuthentication';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -63,9 +63,9 @@ const DraftComparisons = () => {
                                             </Link>
                                             <br />
                                             <small>
-                                                <FontAwesomeIcon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
+                                                <FontAwesomeIcon icon={faCalendar} /> {dayjs(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
                                                 <FontAwesomeIcon icon={faClock} className="ms-2 me-1" />
-                                                {moment(draftComparison.created_at).format('H:mm')}
+                                                {dayjs(draftComparison.created_at).format('H:mm')}
                                             </small>
                                         </div>
                                         {/* <div className="flex-shrink-0">

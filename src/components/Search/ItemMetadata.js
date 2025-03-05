@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { faArrowRight, faCalendar, faTags, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCalendar, faSearch, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CopyId from 'components/CopyId/CopyId';
 import ProvenanceBox from 'components/Resource/ProvenanceBox';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import moment from 'moment';
+import { MISC } from 'constants/graphSettings';
+import { EXTRACTION_METHODS } from 'constants/misc';
+import dayjs from 'dayjs';
+import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
-import { Badge, Input } from 'reactstrap';
-import { MISC } from 'constants/graphSettings';
-import { updateResource } from 'services/backend/resources';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { capitalize } from 'lodash';
-import { EXTRACTION_METHODS } from 'constants/misc';
+import { Badge, Input } from 'reactstrap';
+import { updateResource } from 'services/backend/resources';
 
 const ItemMetadata = ({
     editMode = false,
@@ -41,7 +41,7 @@ const ItemMetadata = ({
             <div className="flex-grow-1">
                 {showCreatedAt && (
                     <Badge color="light" className="me-2">
-                        <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {dayjs(item.created_at).format('DD MMMM YYYY - H:mm')}
                     </Badge>
                 )}
                 {item.shared > 0 && (
