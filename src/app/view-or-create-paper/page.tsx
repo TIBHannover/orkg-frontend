@@ -19,7 +19,11 @@ const ViewOrCreatePaper = async ({ searchParams }: { searchParams: { [key: strin
     }
 
     if (!paper) {
-        return redirect(`${ROUTES.ADD_PAPER}${searchParams.doi ? `?entry=${searchParams.doi}` : `?title=${searchParams.title}`}`);
+        return redirect(
+            `${ROUTES.ADD_PAPER}${
+                searchParams.doi ? `?entry=${searchParams.doi}` : `?title=${encodeURIComponent(searchParams.title?.toString() ?? '')}`
+            }`,
+        );
     }
 
     return redirect(reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id }));
