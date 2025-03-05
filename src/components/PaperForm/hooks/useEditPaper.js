@@ -53,11 +53,9 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
 
             const data = {
                 title,
-                identifiers: doi
-                    ? {
-                          doi: [doi],
-                      }
-                    : null,
+                identifiers: {
+                    doi: doi ? [doi] : [],
+                },
                 authors,
                 research_fields: researchField?.id ? [researchField?.id] : null,
                 publication_info: {
