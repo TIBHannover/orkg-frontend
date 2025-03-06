@@ -1,0 +1,17 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme) prefix(tw);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(tw);
+
+@theme {
+    --color-primary: #e86161;
+    --color-primary-darker: #c61d1d;
+    --color-secondary: #80869b;
+    --color-secondary-darker: #505565; 
+    --color-light: #e9ebf2;
+    --color-light-lighter: #f8f9fb;
+    --color-light-darker: #dbdde5;
+    --color-dark: #5b6176;
+    --color-body: #4f4f4f;
+    --color-smart: #17a2b8;
+    --color-smart-darker: #148da0;
+}

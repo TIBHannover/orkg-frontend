@@ -4,6 +4,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import 'assets/scss/DefaultLayout.scss';
+import 'assets/scss/global.css';
 import Footer from 'components/Layout/Footer';
 import Header from 'components/Layout/Header/Header';
 import ROUTES from 'constants/routes';
