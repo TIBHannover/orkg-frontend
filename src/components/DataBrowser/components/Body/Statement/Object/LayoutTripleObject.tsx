@@ -1,12 +1,12 @@
 import HierarchyIndicator from 'components/DataBrowser/components/Body/Statement/HierarchyIndicator';
 import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { getBackgroundColor } from 'components/DataBrowser/utils/dataBrowserUtils';
 import { StatementWrapperStyled } from 'components/DataBrowser/styles/styled';
-import { isEqual, range } from 'lodash';
-import { FC, PropsWithChildren, useState, useEffect } from 'react';
-import { Statement } from 'services/backend/types';
+import { getBackgroundColor } from 'components/DataBrowser/utils/dataBrowserUtils';
 import { ENTITIES } from 'constants/graphSettings';
-import { useLocation } from 'react-use';
+import { isEqual, range } from 'lodash';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { useHash } from 'react-use';
+import { Statement } from 'services/backend/types';
 
 type LayoutTripleObjectProps = {
     level: number;
@@ -17,7 +17,7 @@ type LayoutTripleObjectProps = {
 const LayoutTripleObject: FC<LayoutTripleObjectProps> = ({ children, level, statement, path }) => {
     const [isHighlighted, setIsHighlighted] = useState(false);
     const { loadedResources, rootId } = useDataBrowserState();
-    const { hash } = useLocation();
+    const [hash] = useHash();
 
     useEffect(() => {
         // Check if this statement's ID matches the URL hash

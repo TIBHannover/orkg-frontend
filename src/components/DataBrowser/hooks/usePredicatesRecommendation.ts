@@ -22,7 +22,11 @@ const usePredicatesRecommendation = () => {
 
     const { data: _recommendedPredicates, isLoading: isLoadingRP } = useSWR(
         !isDisabledFeature ? [{ title, abstract }, nlpServiceUrl, 'getRecommendedPredicates'] : null,
-        ([_params]) => getRecommendedPredicates(_params),
+        ([_params]) =>
+            getRecommendedPredicates(_params).then((res) => {
+                dispatch(setPredicatesRawResponse(res));
+                return res;
+            }),
     );
 
     const recommendedPredicates =
@@ -32,10 +36,6 @@ const usePredicatesRecommendation = () => {
             }
             return p;
         }) ?? [];
-
-    if (!isLoadingRP && _recommendedPredicates) {
-        dispatch(setPredicatesRawResponse(_recommendedPredicates));
-    }
 
     return {
         isDisabledFeature,
