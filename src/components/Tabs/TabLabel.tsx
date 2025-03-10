@@ -1,9 +1,6 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
-import { useQueryState } from 'nuqs';
 import { FC } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { Badge } from 'reactstrap';
 import { getStatistics, statisticsUrl } from 'services/backend/statistics';
 import { VisibilityOptions } from 'services/backend/types';
@@ -13,8 +10,15 @@ interface TabLabelProps {
     label: string;
     showCount?: boolean;
     classId: string;
-    researchFieldId?: string;
-    observatoryId?: string;
+    countParams: {
+        researchFieldId?: string;
+        includeSubfields?: boolean;
+        observatoryId?: string;
+        visibility?: VisibilityOptions;
+        createdBy?: string;
+        published?: boolean;
+        sdgId?: string;
+    };
 }
 
 const getStatsName = (classId: string) => {
@@ -36,31 +40,19 @@ const getStatsName = (classId: string) => {
         case CLASSES.ROSETTA_STONE_STATEMENT:
             return 'rosetta-stone-statement-count';
         default:
-            return 'all-count';
+            return 'content-type-count';
     }
 };
 
-const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, researchFieldId, observatoryId }) => {
-    const [sort] = useQueryState<VisibilityOptions>('sort', {
-        defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
-        parse: (value) => value as VisibilityOptions,
-    });
-
-    const [includeSubfields] = useQueryState('include_subfields', {
-        defaultValue: true,
-        parse: (value) => value === 'true',
-    });
-
+const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countParams }) => {
     const { data: count, isLoading: isStatisticsLoading } = useSWR(
         showCount
             ? [
                   {
                       group: 'content-types',
-                      researchFieldId,
-                      includeSubfields: researchFieldId ? includeSubfields : undefined,
-                      sort,
+                      ...countParams,
+                      includeSubfields: countParams.researchFieldId ? countParams.includeSubfields : undefined,
                       name: getStatsName(classId),
-                      observatoryId,
                   },
                   statisticsUrl,
                   'getStatistics',
@@ -72,15 +64,11 @@ const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, resear
     return (
         <>
             {label}
-            {showCount && (
-                <>
-                    {isStatisticsLoading && <FontAwesomeIcon icon={faSpinner} spin className="ms-1" />}
-                    {!isStatisticsLoading && count && (
-                        <Badge color="light" pill className="ms-1 px-2">
-                            {count.value}
-                        </Badge>
-                    )}
-                </>
+            {showCount && (isStatisticsLoading || count) && (
+                <Badge color="light" pill className="ms-1 px-2">
+                    {isStatisticsLoading && <Skeleton width={10} />}
+                    {!isStatisticsLoading && count?.value.toLocaleString('en-US', { notation: 'compact' })}
+                </Badge>
             )}
         </>
     );

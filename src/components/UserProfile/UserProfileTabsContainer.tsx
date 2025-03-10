@@ -16,16 +16,17 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ROUTES from 'constants/routes';
+import TabLabel from 'components/Tabs/TabLabel';
 
 export const USER_PROFILE_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },
-    { id: CLASSES.COMPARISON, label: 'Comparisons' },
-    { id: CLASSES.PAPER, label: 'Papers' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
-    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
-    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
-    { id: CLASSES.NODE_SHAPE, label: 'Templates' },
-    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement types' },
+    { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
+    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
+    { id: CLASSES.NODE_SHAPE, label: 'Templates', params: { published: undefined } },
+    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement types', params: { published: undefined } },
 ];
 
 function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUserId: string }) {
@@ -118,7 +119,18 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={USER_PROFILE_CONTENT_TABS.map((tab) => ({
-                    label: tab.label,
+                    label: (
+                        <TabLabel
+                            label={tab.label}
+                            classId={tab.id}
+                            showCount
+                            countParams={{
+                                createdBy: id,
+                                visibility: sort,
+                                published: tab.params?.published,
+                            }}
+                        />
+                    ),
                     key: tab.id,
                     children: (
                         <>

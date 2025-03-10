@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import Tabs, { TabsProps } from 'rc-tabs';
+import Tabs, { TabsProps } from '@rc-component/tabs';
 import { ORKGTabsStyle } from 'components/Tabs/styled';
 
 type ORKGTabsProps = TabsProps &

@@ -2,6 +2,7 @@ import CardFactory from 'components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
+import TabLabel from 'components/Tabs/TabLabel';
 import Tabs from 'components/Tabs/Tabs';
 import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { CLASSES } from 'constants/graphSettings';
@@ -17,12 +18,12 @@ type SgdTabsContainerProps = {
 };
 
 export const SDG_CONTENT_TABS = [
-    { id: CLASSES.COMPARISON, label: 'Comparisons' },
-    { id: CLASSES.PAPER, label: 'Papers' },
+    { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
     // visualizations can't be associated with sdg
     // { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
-    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
-    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
+    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
 ];
 
 const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
@@ -75,7 +76,7 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={SDG_CONTENT_TABS.map((tab) => ({
-                    label: tab.label,
+                    label: <TabLabel label={tab.label} classId={tab.id} showCount countParams={{ sdgId, published: tab.params?.published }} />,
                     key: tab.id,
                     children: (
                         <ListPaginatedContent<Item>

@@ -16,11 +16,11 @@ import { Item, VisibilityOptions } from 'services/backend/types';
 import { reverseWithSlug } from 'utils';
 
 export const HOME_CONTENT_TABS = [
-    { id: CLASSES.COMPARISON, label: 'Comparisons' },
-    { id: CLASSES.PAPER, label: 'Papers' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
-    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
-    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
+    { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
+    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
 ];
 
 function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFieldId: string; researchFieldLabel: string }) {
@@ -84,7 +84,19 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={HOME_CONTENT_TABS.map((tab) => ({
-                    label: <TabLabel label={tab.label} classId={tab.id} researchFieldId={researchFieldId} />,
+                    label: (
+                        <TabLabel
+                            label={tab.label}
+                            classId={tab.id}
+                            showCount
+                            countParams={{
+                                researchFieldId,
+                                includeSubfields: includeSubFields,
+                                visibility: sort,
+                                published: tab.params?.published,
+                            }}
+                        />
+                    ),
                     key: tab.id,
                     children: (
                         <>

@@ -1,6 +1,6 @@
+import { StoryFn } from '@storybook/react';
 import Tabs from 'components/Tabs/Tabs';
 import { useState } from 'react';
-import { StoryFn } from '@storybook/react';
 
 export default {
     title: 'Tabs',
@@ -38,7 +38,7 @@ Default.args = {
     activeKey: '1',
     onChange: () => {},
     destroyInactiveTabPane: true,
-    moreIcon: '>',
+    more: { icon: '>' },
     items: [
         {
             label: 'Tab 1',
