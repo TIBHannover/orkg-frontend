@@ -11,23 +11,38 @@ import PropertyStatements from 'components/Property/PropertyStatements/PropertyS
 import useDeleteProperty from 'components/Property/hooks/useDeleteProperty';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
+import Tabs from 'components/Tabs/Tabs';
 import TitleBar from 'components/TitleBar/TitleBar';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import useAuthentication from 'components/hooks/useAuthentication';
 import useParams from 'components/useParams/useParams';
 import { ENTITIES } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { Button, Container } from 'reactstrap';
 import { getPredicate, predicatesUrl } from 'services/backend/predicates';
 import useSWR from 'swr';
 
-function Property() {
+const Property = () => {
+    const { id: propertyId, activeTab } = useParams();
+    const router = useRouter();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const { id: propertyId } = useParams();
+
     const { user, isCurationAllowed } = useAuthentication();
 
     const { deleteProperty } = useDeleteProperty({ propertyId, redirect: true });
 
-    const fetcher = async (id) => {
+    const onTabChange = (key: string) => {
+        router.push(
+            `${reverse(ROUTES.PROPERTY_TABS, {
+                id: propertyId,
+                activeTab: key,
+            })}?isEditMode=${isEditMode}`,
+        );
+    };
+
+    const fetcher = async (id: string) => {
         const response = await getPredicate(id);
         document.title = `${response.label} - Property - ORKG`;
         return response;
@@ -40,7 +55,7 @@ function Property() {
         mutate,
     } = useSWR(propertyId ? [propertyId, predicatesUrl, 'getPredicate'] : null, ([params]) => fetcher(params));
 
-    const handleHeaderChange = (value) => {
+    const handleHeaderChange = (value: string) => {
         mutate();
     };
 
@@ -50,8 +65,9 @@ function Property() {
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
-            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />}</>}
-            {!isLoading && !error && (
+            {!isLoading && error && error.statusCode === 404 && <NotFound />}
+            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
+            {!isLoading && !error && property && (
                 <>
                     <TitleBar
                         buttonGroup={
@@ -88,7 +104,7 @@ function Property() {
                             <>
                                 <EditableHeader
                                     id={propertyId}
-                                    value={property?.label}
+                                    value={property?.label || ''}
                                     onChange={handleHeaderChange}
                                     entityType={ENTITIES.PREDICATE}
                                     curatorsOnly
@@ -102,17 +118,41 @@ function Property() {
                         )}
                         <ItemMetadata item={property} showCreatedAt showCreatedBy />
                     </Container>
-                    <Container className="mt-3 p-1 box rounded">
-                        <div className="pt-4 ps-4 pb-4 pe-4">
-                            <DataBrowser isEditMode={isEditMode} id={propertyId} propertiesAsLinks valuesAsLinks />
 
-                            <PropertyStatements propertyId={propertyId} />
-                        </div>
+                    <Container className="mt-3 p-0">
+                        <Tabs
+                            className="box rounded"
+                            destroyInactiveTabPane
+                            onChange={onTabChange}
+                            activeKey={activeTab ?? 'information'}
+                            items={[
+                                {
+                                    label: 'Property information',
+                                    key: 'information',
+                                    children: (
+                                        <div className="p-4">
+                                            <DataBrowser
+                                                isEditMode={isEditMode}
+                                                id={propertyId}
+                                                valuesAsLinks
+                                                propertiesAsLinks
+                                                canEditSharedRootLevel
+                                            />
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    label: 'In statements',
+                                    key: 'statements',
+                                    children: <PropertyStatements id={propertyId} />,
+                                },
+                            ]}
+                        />
                     </Container>
                 </>
             )}
         </>
     );
-}
+};
 
 export default Property;
