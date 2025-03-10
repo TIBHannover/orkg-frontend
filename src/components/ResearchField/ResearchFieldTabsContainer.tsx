@@ -12,11 +12,11 @@ import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes'
 import { Item, VisibilityOptions } from 'services/backend/types';
 
 export const RESEARCH_FIELD_CONTENT_TABS = [
-    { id: CLASSES.COMPARISON, label: 'Comparisons' },
-    { id: CLASSES.PAPER, label: 'Papers' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
-    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews' },
-    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists' },
+    { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
+    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
 ];
 
 function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxShadow?: boolean }) {
@@ -73,7 +73,19 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={RESEARCH_FIELD_CONTENT_TABS.map((tab) => ({
-                    label: <TabLabel label={tab.label} classId={tab.id} researchFieldId={id} />,
+                    label: (
+                        <TabLabel
+                            label={tab.label}
+                            classId={tab.id}
+                            showCount
+                            countParams={{
+                                researchFieldId: id,
+                                includeSubfields: includeSubFields,
+                                visibility: sort,
+                                published: tab.params.published,
+                            }}
+                        />
+                    ),
                     key: tab.id,
                     children: (
                         <ListPaginatedContent<Item>

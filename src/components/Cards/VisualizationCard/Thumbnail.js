@@ -32,10 +32,12 @@ const Thumbnail = (props) => {
                 getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: props.visualization.id })
                     .then((visualization) => {
                         setThumbnail(visualization);
-                        setIsLoading(false);
                     })
                     .catch((err) => {
                         console.log(err);
+                    })
+                    .finally(() => {
+                        setIsLoading(false);
                     });
             }
         };
