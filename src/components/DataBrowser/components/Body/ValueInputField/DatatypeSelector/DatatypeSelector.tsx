@@ -1,7 +1,7 @@
-import Tippy from '@tippyjs/react';
 import { SelectGlobalStyle, customClassNames, customStyles } from 'components/Autocomplete/styled';
 import DatatypeOption from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeOption';
 import DisabledTooltipContent from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DisabledTooltipContent';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
@@ -19,8 +19,7 @@ type DatatypeSelectorProps = {
 
 const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, setDataType, menuPortalTarget, isDisabled = false }) => {
     const disabledWrapper = (children: ReactElement) => (
-        <Tippy
-            interactive
+        <Tooltip
             content={
                 <DisabledTooltipContent
                     _class={getConfigByType(dataType)._class}
@@ -30,7 +29,7 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, 
             }
         >
             <span className="d-flex flex-shrink-0">{children}</span>
-        </Tippy>
+        </Tooltip>
     );
 
     return (

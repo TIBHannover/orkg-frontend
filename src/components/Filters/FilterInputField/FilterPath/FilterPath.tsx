@@ -1,12 +1,12 @@
 import { faAngleDoubleRight, faEllipsis, faRoute, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'next/link';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { BreadcrumbStyled, TippyContentStyled } from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { getPredicatesByIds, predicatesUrl } from 'services/backend/predicates';
 import { FilterConfig } from 'services/backend/types';
@@ -23,9 +23,7 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
 
     return (
         <BreadcrumbStyled className="d-inline">
-            <Tippy
-                appendTo={document.body}
-                interactive
+            <Tooltip
                 content={
                     <TippyContentStyled>
                         {!isLoading ? (
@@ -62,7 +60,7 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                 <span>
                     <FontAwesomeIcon size="sm" icon={faRoute} />
                 </span>
-            </Tippy>
+            </Tooltip>
         </BreadcrumbStyled>
     );
 };

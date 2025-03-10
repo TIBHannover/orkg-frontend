@@ -1,7 +1,7 @@
 import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useAuthentication from 'components/hooks/useAuthentication';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -19,7 +19,7 @@ const FeaturedMark = ({ featured = false, size = '1x', handleChangeStatus }) => 
         return null;
     }
     return (
-        <Tippy content={isCurationAllowed ? (featured ? 'Remove featured badge' : 'Mark as featured') : 'Featured content'}>
+        <Tooltip content={isCurationAllowed ? (featured ? 'Remove featured badge' : 'Mark as featured') : 'Featured content'}>
             <span
                 role="checkbox"
                 tabIndex="0"
@@ -36,7 +36,7 @@ const FeaturedMark = ({ featured = false, size = '1x', handleChangeStatus }) => 
                     size={size}
                 />
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

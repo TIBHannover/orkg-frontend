@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { components } from 'react-select';
 import { Badge } from 'reactstrap';
@@ -21,7 +21,7 @@ const PaperOption = ({ children, ...innerProps }) => {
                     </div>
                 )}
                 {isOrkgResource && (
-                    <Tippy content="Open existing ORKG entity">
+                    <Tooltip content="Open existing ORKG entity">
                         <span className="ms-auto">
                             <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: innerProps?.data?.id })} target="_blank">
                                 <Badge onClick={(e) => e.stopPropagation()} color="light" className="px-2">
@@ -29,7 +29,7 @@ const PaperOption = ({ children, ...innerProps }) => {
                                 </Badge>
                             </Link>
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 )}
             </div>
         </components.Option>

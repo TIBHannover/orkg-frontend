@@ -1,6 +1,6 @@
-import Tippy from '@tippyjs/react';
 import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import useReview from 'components/Review/hooks/useReview';
 import { sortBy, upperFirst } from 'lodash';
@@ -106,9 +106,9 @@ const SectionType: FC<SectionTypeProps> = ({ section, type, isDisabled = false, 
         <>
             {isDisabled && (
                 <SectionTypeStyled disabled>
-                    <Tippy hideOnClick={false} content={disabledTooltip}>
+                    <Tooltip content={disabledTooltip}>
                         <span>{typeValue.label}</span>
-                    </Tippy>
+                    </Tooltip>
                 </SectionTypeStyled>
             )}
 

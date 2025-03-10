@@ -1,26 +1,26 @@
-import Link from 'next/link';
-import { env } from 'next-runtime-env';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
-import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
 import useUsedTemplates from 'components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
+import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import EditPaperModal from 'components/PaperForm/EditPaperModal';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { env } from 'next-runtime-env';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
 import { getPaper } from 'services/backend/papers';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
+import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -62,7 +62,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
     return (
         <ItemHeader key={contribution.id}>
             <ItemHeaderInner className="position-relative contribution-editor">
-                <Tippy content="Edit paper's metadata" disabled={env('NEXT_PUBLIC_PWC_USER_ID') === contribution.created_by}>
+                <Tooltip content="Edit paper's metadata" disabled={env('NEXT_PUBLIC_PWC_USER_ID') === contribution.created_by}>
                     <span>
                         <Button
                             color="link"
@@ -72,12 +72,10 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                             <PaperTitle title={paper.label} />
                         </Button>
                     </span>
-                </Tippy>
+                </Tooltip>
                 <Contribution className="contribution-editor">
                     <ContributionButton color="link" className="user-select-auto" onClick={() => setIsOpenContributionModal(true)}>
-                        <Tippy
-                            interactive
-                            appendTo={document.body}
+                        <Tooltip
                             content={
                                 <>
                                     Instance of:{' '}
@@ -116,16 +114,16 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                             }
                         >
                             <span>{contribution.label}</span>
-                        </Tippy>
+                        </Tooltip>
                     </ContributionButton>
                 </Contribution>
 
                 <Delete className="contribution-editor" onClick={() => handleRemoveContribution(contribution.id)}>
-                    <Tippy content="Remove contribution from contribution editor">
+                    <Tooltip content="Remove contribution from contribution editor">
                         <span>
                             <FontAwesomeIcon icon={faTimes} />
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 </Delete>
             </ItemHeaderInner>
             {isOpenContributionModal && (

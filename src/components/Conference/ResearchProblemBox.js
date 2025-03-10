@@ -1,15 +1,15 @@
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Button } from 'reactstrap';
-import { getProblemsByOrganizationId } from 'services/backend/organizations';
-import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
-import ROUTES from 'constants/routes';
-import { reverseWithSlug } from 'utils';
-import { truncate } from 'lodash';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import ResearchProblemsModal from 'components/Conference/ResearchProblemsModal';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import ROUTES from 'constants/routes';
+import { truncate } from 'lodash';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Button } from 'reactstrap';
+import { getProblemsByOrganizationId } from 'services/backend/organizations';
+import { reverseWithSlug } from 'utils';
 
 const ResearchProblemBox = ({ id }) => {
     const [error, setError] = useState(null);
@@ -41,11 +41,11 @@ const ResearchProblemBox = ({ id }) => {
                 <ul className="ps-3 pt-2">
                     {problems.slice(0, 5).map((rp) => (
                         <li key={`p${rp.id}`}>
-                            <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
+                            <Tooltip content={rp.label} disabled={rp.label?.length <= 70}>
                                 <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                     {truncate(rp.label, { length: 70 })}
                                 </Link>
-                            </Tippy>
+                            </Tooltip>
                         </li>
                     ))}
                 </ul>

@@ -77,7 +77,6 @@ const MentioningItem: FC<MentioningItemProps> = ({ item, isEditMode, onDelete })
                                     icon: faTimes,
                                 },
                             ]}
-                            appendTo={document.body}
                         />
                     </ButtonsContainer>
                 )}

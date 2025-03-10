@@ -85,7 +85,8 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                         icon: faTimes,
                     },
                 ]}
-                onVisibilityChange={(disable) => setDisableHover(disable)}
+                open={disableHover}
+                setOpen={setDisableHover}
             />
         </ButtonsContainer>
     );

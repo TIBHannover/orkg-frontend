@@ -1,9 +1,9 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -120,7 +120,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                 >
                                     {section.heading}{' '}
                                     {section.type === 'comparison' && (
-                                        <Tippy content="Go to comparison page">
+                                        <Tooltip content="Go to comparison page">
                                             <Link
                                                 target="_blank"
                                                 className="ms-2"
@@ -130,7 +130,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                             >
                                                 <FontAwesomeIcon icon={faLink} size="xs" />
                                             </Link>
-                                        </Tippy>
+                                        </Tooltip>
                                     )}
                                 </h2>
                                 {section.type === 'ontology' && <SectionDataTable key={section.id} section={section} />}

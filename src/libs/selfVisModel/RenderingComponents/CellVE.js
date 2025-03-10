@@ -1,24 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
-import { Button } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { validateCellMapping } from 'libs/selfVisModel/validateCellMapping';
-import { usePrevious } from 'react-use';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import {
-    PropertyCellEditor,
     ContributionCell,
+    ContributionCellInput,
     MetaCell,
     MetaMapperSelector,
     MetaMapperSelectorSimple,
-    ValueCellValidator,
+    PropertyCellEditor,
     PropertyCellInput,
-    ContributionCellInput,
-    ValueCellInput,
     TippyContainer,
+    ValueCellInput,
+    ValueCellValidator,
 } from 'libs/selfVisModel/RenderingComponents/styledComponents';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import { validateCellMapping } from 'libs/selfVisModel/validateCellMapping';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { usePrevious } from 'react-use';
+import { Button } from 'reactstrap';
 
 const CellVE = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());
@@ -34,7 +34,6 @@ const CellVE = (props) => {
     const disableCellValueEdit = false; // this flag is used to disable the editing of the cell values, headers still editable
 
     const cellValueDoubleClicked = () => {
-        props.tippySource.data.instance.disable();
         // disable cell value edit **This is a draft**
         if (disableCellValueEdit && props.type === 'value') {
             return;
@@ -121,7 +120,7 @@ const CellVE = (props) => {
     return (
         <>
             {(props.type === 'value' || props.type === 'property' || props.type === 'contribution') && (
-                <Tippy singleton={props.tippyTarget} content={tippyContent}>
+                <Tooltip content={tippyContent} contentStyle={{ maxWidth: '300px' }}>
                     <TippyContainer>
                         {/* PROPERTY LABELS */}
                         {props.type === 'property' && renderingItem === 'text' && (
@@ -143,7 +142,7 @@ const CellVE = (props) => {
                                 onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                 onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
-                                    props.tippySource.data.instance.enable();
+
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
@@ -173,7 +172,7 @@ const CellVE = (props) => {
                                 onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                 onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
-                                    props.tippySource.data.instance.enable();
+
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
@@ -204,7 +203,7 @@ const CellVE = (props) => {
                                 onKeyDown={(e) => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                 onBlur={(e) => {
                                     props.data.setLabel(cellLabelValue);
-                                    props.tippySource.data.instance.enable();
+
                                     setRenderingItem('text');
                                 }}
                                 onFocus={
@@ -215,7 +214,7 @@ const CellVE = (props) => {
                             />
                         )}
                     </TippyContainer>
-                </Tippy>
+                </Tooltip>
             )}
             {props.type === 'metaNode' && <MetaCell>{props.children}</MetaCell>}
             {props.type === 'metaNodeSelector' && <MetaMapperSelector>{props.children}</MetaMapperSelector>}
@@ -228,8 +227,6 @@ CellVE.propTypes = {
     type: PropTypes.string.isRequired,
     data: PropTypes.object,
     children: PropTypes.any,
-    tippyTarget: PropTypes.object,
-    tippySource: PropTypes.object,
 };
 
 export default CellVE;

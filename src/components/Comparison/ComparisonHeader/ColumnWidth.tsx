@@ -1,6 +1,6 @@
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -41,7 +41,7 @@ const ColumnWidth = () => {
                     min={25}
                     max={500}
                 />
-                <Tippy content="Reset to default">
+                <Tooltip content="Reset to default">
                     <span>
                         <Button
                             color="link"
@@ -52,7 +52,7 @@ const ColumnWidth = () => {
                             <FontAwesomeIcon icon={faRotateRight} />
                         </Button>
                     </span>
-                </Tippy>
+                </Tooltip>
             </DropdownItem>
         </>
     );

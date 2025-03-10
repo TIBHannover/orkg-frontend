@@ -1,6 +1,5 @@
 import { faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
@@ -17,6 +16,7 @@ import { activatedContributionsToList, generateRdfDataVocabularyFile } from 'com
 import useComparison from 'components/Comparison/hooks/useComparison';
 import { ComparisonTypeButton } from 'components/Comparison/styled';
 import Confirm from 'components/Confirmation/Confirmation';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -212,14 +212,14 @@ const ComparisonHeaderMenu = () => {
                                 </Dropdown>
                                 <DropdownItem divider />
                                 <DropdownItem header>Customize</DropdownItem>
-                                <Tippy disabled={isEditMode} content={publishedMessage}>
+                                <Tooltip content={publishedMessage}>
                                     <span>
                                         <DropdownItem onClick={() => setShowPropertiesDialog((v) => !v)} disabled={!isEditMode}>
                                             Select properties
                                         </DropdownItem>
                                     </span>
-                                </Tippy>
-                                <Tippy disabled={isEditMode} content={publishedMessage}>
+                                </Tooltip>
+                                <Tooltip content={publishedMessage}>
                                     <span>
                                         <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen((v) => !v)} direction="end">
                                             <DropdownToggle
@@ -253,15 +253,15 @@ const ComparisonHeaderMenu = () => {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
 
-                                <Tippy disabled={isEditMode} content={publishedMessage}>
+                                <Tooltip content={publishedMessage}>
                                     <span>
                                         <DropdownItem onClick={handleEditContributions} disabled={!isEditMode}>
                                             Edit contributions
                                         </DropdownItem>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
 
                                 <DropdownItem divider />
                                 <DropdownItem header>Export</DropdownItem>
@@ -310,7 +310,7 @@ const ComparisonHeaderMenu = () => {
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Tools</DropdownItem>
-                                <Tippy
+                                <Tooltip
                                     disabled={comparison.versions.published.length > 0}
                                     content="There is no history available for this comparison"
                                 >
@@ -322,7 +322,7 @@ const ComparisonHeaderMenu = () => {
                                             <span className="me-2">History</span>
                                         </DropdownItem>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                                 <DropdownItem onClick={() => setIsOpenQualityReportModal(true)}>Quality report</DropdownItem>
                                 <DropdownItem onClick={() => setIsOpenTopAuthorsModal(true)}>Top authors</DropdownItem>
                                 <DropdownItem divider />

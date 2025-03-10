@@ -1,9 +1,9 @@
 import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Coins from 'components/Coins/Coins';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import { Contribution, Delete } from 'components/Comparison/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import ROUTES from 'constants/routes';
@@ -37,7 +37,7 @@ const ContributionCell = ({ contribution }) => {
     return (
         <>
             {columnWidth && columnWidth < 200 && !transpose ? (
-                <Tippy
+                <Tooltip
                     content={
                         <div>
                             <Link
@@ -55,8 +55,6 @@ const ContributionCell = ({ contribution }) => {
                             </Contribution>
                         </div>
                     }
-                    interactive
-                    appendTo={document.body}
                 >
                     <span>
                         <Link
@@ -71,7 +69,7 @@ const ContributionCell = ({ contribution }) => {
                             </div>
                         </Link>
                     </span>
-                </Tippy>
+                </Tooltip>
             ) : (
                 <>
                     <Link

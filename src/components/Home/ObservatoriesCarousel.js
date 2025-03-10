@@ -1,18 +1,18 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import Dotdotdot from 'react-dotdotdot';
+import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
-import { CarouselIndicatorsStyled } from 'components/styled';
-import Tippy from '@tippyjs/react';
-import styled from 'styled-components';
-import Gravatar from 'react-gravatar';
-import { reverse } from 'named-urls';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { CarouselIndicatorsStyled } from 'components/styled';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import Dotdotdot from 'react-dotdotdot';
+import Gravatar from 'react-gravatar';
+import { Card, CardBody, CardFooter, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getOrganizationLogoUrl } from 'services/backend/organizations';
+import styled from 'styled-components';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -118,11 +118,11 @@ function ObservatoriesCarousel(props) {
                             </small>
                             <div className="float-end" style={{ height: '25px' }}>
                                 {observatory.members.slice(0, 5).map((contributor) => (
-                                    <Tippy key={`contributor${contributor.id}`} content={contributor.display_name}>
+                                    <Tooltip key={`contributor${contributor.id}`} content={contributor.display_name}>
                                         <Link className="ms-1" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                             <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={24} />
                                         </Link>
-                                    </Tippy>
+                                    </Tooltip>
                                 ))}
                             </div>
                         </CardFooterStyled>

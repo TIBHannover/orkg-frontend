@@ -3,16 +3,16 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import StepContainer from 'components/StepContainer';
 import ViewShapes from 'components/Templates/ImportSHACL/ViewShapes';
 import useImportSHACL from 'components/Templates/ImportSHACL/hooks/useImportSHACL';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import requireAuthentication from 'requireAuthentication';
 import { Accordion, Button, ListGroup } from 'reactstrap';
+import requireAuthentication from 'requireAuthentication';
 import styled from 'styled-components';
 
 const DragRDF = styled.div`
@@ -101,7 +101,7 @@ function ImportSHACL() {
                 title={
                     <>
                         Import SHACL
-                        <Tippy content="Open help center">
+                        <Tooltip content="Open help center">
                             <span className="ms-3">
                                 <a
                                     href="https://orkg.org/help-center/article/51/Import_SHACL_shapes_in_ORKG"
@@ -115,7 +115,7 @@ function ImportSHACL() {
                                     />
                                 </a>
                             </span>
-                        </Tippy>
+                        </Tooltip>
                     </>
                 }
             >

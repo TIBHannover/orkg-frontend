@@ -1,20 +1,20 @@
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import {
-    PropertyCell,
     ContributionCell,
     MetaCell,
     MetaMapperSelector,
     MetaMapperSelectorSimple,
-    ValueCell,
+    PropertyCell,
     TippyContainer,
+    ValueCell,
 } from 'libs/selfVisModel/RenderingComponents/styledComponents';
+import PropTypes from 'prop-types';
 
 export default function CellRenderer(props) {
     return (
         <>
             {(props.type === 'property' || props.type === 'contribution' || props.type === 'value') && (
-                <Tippy singleton={props.tippyTarget} content={props.data.label ?? 'Empty'}>
+                <Tooltip content={props.data.label ?? 'Empty'} contentStyle={{ maxWidth: '300px' }}>
                     <TippyContainer>
                         {props.type === 'property' && (
                             <PropertyCell>
@@ -30,7 +30,7 @@ export default function CellRenderer(props) {
                             <ValueCell>{props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}</ValueCell>
                         )}
                     </TippyContainer>
-                </Tippy>
+                </Tooltip>
             )}
             {props.type === 'metaNode' && <MetaCell />}
             {props.type === 'metaNodeHeader' && <MetaMapperSelector style={{ backgroundColor: 'white' }} />}
@@ -44,5 +44,4 @@ CellRenderer.propTypes = {
     type: PropTypes.string.isRequired,
     data: PropTypes.object,
     children: PropTypes.any,
-    tippyTarget: PropTypes.object,
 };

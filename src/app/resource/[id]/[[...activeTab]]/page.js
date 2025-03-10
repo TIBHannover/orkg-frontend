@@ -2,11 +2,11 @@
 
 import { faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
@@ -193,7 +193,7 @@ function Resource() {
                             <>
                                 <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
 
-                                <Tippy content={preventDeletionTooltipText} disabled={isDeletionAllowed}>
+                                <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed}>
                                     <span>
                                         <Button
                                             color="danger"
@@ -206,7 +206,7 @@ function Resource() {
                                             <FontAwesomeIcon icon={faTrash} /> Delete resource
                                         </Button>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                             </>
                         )}
 

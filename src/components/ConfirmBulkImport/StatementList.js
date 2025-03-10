@@ -1,11 +1,11 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
-import Link from 'next/link';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { getConfigByType } from 'constants/DataTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Badge, ListGroup } from 'reactstrap';
 
@@ -20,9 +20,9 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                                 {idToLabel[property]}
                             </Link>
                         ) : (
-                            <Tippy content="A new property will be created">
+                            <Tooltip content="A new property will be created">
                                 <span>{property}</span>
-                            </Tippy>
+                            </Tooltip>
                         )}
                     </span>
                 </div>
@@ -43,14 +43,14 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                                     </>
                                 )}
                                 {value.label && (
-                                    <Tippy content="A new resource will be created">
+                                    <Tooltip content="A new resource will be created">
                                         <span>
                                             <span className="text-primary">{value.label}</span>
                                             <Badge color="light" className="ms-2">
                                                 Resource
                                             </Badge>
                                         </span>
-                                    </Tippy>
+                                    </Tooltip>
                                 )}
                                 {value.text && (
                                     <>
@@ -59,13 +59,13 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
                                             {getConfigByType(value.datatype).name}
                                         </Badge>
                                         {validationErrors?.[i] && (
-                                            <Tippy content="The provided datatype does not seem to match the cell value">
+                                            <Tooltip content="The provided datatype does not seem to match the cell value">
                                                 <span>
                                                     <Badge color="warning" className="ms-2">
                                                         <FontAwesomeIcon icon={faExclamationTriangle} className="text-white" /> Warning
                                                     </Badge>
                                                 </span>
-                                            </Tippy>
+                                            </Tooltip>
                                         )}
                                     </>
                                 )}

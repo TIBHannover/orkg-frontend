@@ -1,10 +1,10 @@
-import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import DateTimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
 import DurationInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
 import GregorianInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
 import InputFieldModal from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
 import TimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ListInputField from 'components/RosettaStone/SingleStatement/ListInputField';
 import { getConfigByClassId, InputType, StandardInputType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -239,14 +239,14 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
     };
 
     return (
-        <Tippy disabled={!propertyShape.description} content={propertyShape.description} trigger="focusin">
+        <Tooltip disabled={!propertyShape.description} content={propertyShape.description}>
             <span>
                 {(!isMulti || inputFormType === 'autocomplete') && (Forms[inputFormType] || Forms.default)}
                 {isMulti && inputFormType !== 'autocomplete' && (
                     <ListInputField value={value} updateValue={updateValue} inputFormType={inputFormType} placeholder={propertyShape.placeholder} />
                 )}
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

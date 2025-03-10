@@ -1,10 +1,10 @@
-import { faCheck, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import ConfirmationTooltip from 'components/ActionButton/ConfirmationTooltip/ConfirmationTooltip';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { FC, MouseEvent, ReactNode, useRef } from 'react';
-import type { Instance } from 'tippy.js';
+import { faCheck, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import ActionButtonView from 'components/ActionButton/ActionButtonView';
+import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from 'components/FloatingUI/Popover';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { FC, ReactNode, useState } from 'react';
 
 export type ActionButtonProps = {
     title: ReactNode;
@@ -14,11 +14,10 @@ export type ActionButtonProps = {
     iconSize?: 'xs' | 'sm' | 'lg';
     action?: () => void;
     isDisabled?: boolean;
-    appendTo?: 'parent' | Element | ((ref: Element) => Element);
-    onVisibilityChange?: (visibility: boolean) => void;
+    open?: boolean;
+    setOpen?: (isOpen: boolean) => void;
     requireConfirmation?: boolean;
     confirmationMessage?: string;
-    interactive?: boolean;
     confirmationButtons?: {
         title: string;
         color: string;
@@ -31,10 +30,7 @@ export type ActionButtonProps = {
 const ActionButton: FC<ActionButtonProps> = ({
     iconSpin = false,
     requireConfirmation = false,
-    interactive = false,
-    appendTo = 'parent',
     action = () => {},
-    onVisibilityChange,
     title,
     testId,
     icon,
@@ -55,34 +51,18 @@ const ActionButton: FC<ActionButtonProps> = ({
     confirmationMessage = 'Are you sure?',
     iconSize,
     isLoading = false,
+    setOpen: setControlledOpen,
+    open: controlledOpen,
 }) => {
-    const tippy = useRef<Instance | null>(null);
-    const confirmButtonRef = useRef<HTMLInputElement>(null);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+    const open = controlledOpen ?? uncontrolledOpen;
+    const setOpen = setControlledOpen ?? setUncontrolledOpen;
 
-    const onShown = () => {
-        confirmButtonRef.current?.focus();
-    };
-
-    const onShow = () => {
-        if (onVisibilityChange) {
-            onVisibilityChange(true);
-        }
-    };
-
-    const onHide = () => {
-        if (onVisibilityChange) {
-            onVisibilityChange(false);
-        }
-    };
-
-    const closeTippy = () => {
-        tippy.current?.hide();
-    };
-
-    const handleClick = (e: MouseEvent) => {
-        e.stopPropagation();
+    const handleClick = () => {
         if (!requireConfirmation) {
             action();
+        } else {
+            setOpen(true);
         }
     };
 
@@ -99,34 +79,18 @@ const ActionButton: FC<ActionButtonProps> = ({
     );
 
     return requireConfirmation && confirmationButtons?.length && !isDisabled ? (
-        <Tippy trigger="mouseenter" content={title}>
-            <Tippy
-                onShown={onShown}
-                onShow={onShow}
-                onHide={onHide}
-                onCreate={(tippyInst) => {
-                    tippy.current = tippyInst;
-                }}
-                interactive
-                trigger="click"
-                appendTo={appendTo}
-                content={
-                    <ConfirmationTooltip
-                        tippy={tippy}
-                        message={confirmationMessage}
-                        closeTippy={closeTippy}
-                        ref={confirmButtonRef}
-                        buttons={confirmationButtons}
-                    />
-                }
+        <Tooltip content={title}>
+            <Popover
+                open={open}
+                onOpenChange={setOpen}
+                content={<ConfirmationTooltip message={confirmationMessage} buttons={confirmationButtons} />}
+                modal
             >
                 {tippyChildren}
-            </Tippy>
-        </Tippy>
+            </Popover>
+        </Tooltip>
     ) : (
-        <Tippy appendTo={appendTo} hideOnClick={false} interactive={interactive} trigger="mouseenter" content={title}>
-            {tippyChildren}
-        </Tippy>
+        <Tooltip content={title}>{tippyChildren}</Tooltip>
     );
 };
 

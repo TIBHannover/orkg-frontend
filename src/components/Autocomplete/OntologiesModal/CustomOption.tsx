@@ -1,8 +1,8 @@
 import { faExternalLink, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { SourceBadge } from 'components/Autocomplete/styled';
 import { Ontology } from 'components/Autocomplete/types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { MAXIMUM_DESCRIPTION_LENGTH } from 'constants/autocompleteSources';
 import { truncate } from 'lodash';
 import { useContext } from 'react';
@@ -31,11 +31,11 @@ export const CustomOption = <OptionT extends Ontology, Group extends GroupBase<O
                 </div>
 
                 {data.description && data.description !== truncatedDescription && (
-                    <Tippy content={data.description}>
+                    <Tooltip content={data.description}>
                         <span>
                             <FontAwesomeIcon icon={faInfoCircle} color={iconColor} />
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 )}
 
                 <SourceBadge href={data.uri} target="_blank" rel="noreferrer" className="ms-1 d-flex align-items-center px-2 py-1">

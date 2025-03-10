@@ -1,35 +1,20 @@
-import Link from 'next/link';
-import { useRef } from 'react';
-import { Button } from 'reactstrap';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import { faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
-import { animateFill } from 'tippy.js';
 import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from 'assets/img/tools/contribution-editor.png';
-import styled from 'styled-components';
+import Popover from 'components/FloatingUI/Popover';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Image from 'next/image';
+import Link from 'next/link';
+import { FC, useState } from 'react';
+import { Button } from 'reactstrap';
+import styled from 'styled-components';
 
 const LabelStyled = styled.span`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {
         display: none;
-    }
-`;
-
-const TippyStyled = styled(Tippy)`
-    &.tippy-box {
-        background: #fff !important;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.125) !important;
-        .tippy-content {
-            background-color: #fff !important;
-            padding: 0 !important;
-            border: 1px solid #d9d9d9 !important;
-            border-radius: 4px !important;
-        }
     }
 `;
 
@@ -82,27 +67,28 @@ const Header = styled.h3`
     text-align: left;
 `;
 
-const AddNew = ({ isHomePageStyle, onAdd = null }) => {
-    const refTippyInstance = useRef();
+type AddNewProps = {
+    isHomePageStyle: boolean;
+    onAdd: (() => void) | null;
+};
+
+const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
     const handleClickMenuItem = () => {
-        refTippyInstance?.current?.hide();
-        onAdd && onAdd();
+        setIsOpen(false);
+        onAdd?.();
     };
 
     return (
-        <TippyStyled
-            interactive
-            animateFill
-            arrow={false}
-            plugins={[animateFill]}
-            interactiveBorder={30}
+        <Popover
+            showArrow={false}
+            open={isOpen}
+            onOpenChange={setIsOpen}
             placement="bottom"
-            trigger="click"
-            onCreate={(instance) => (refTippyInstance.current = instance)}
-            maxWidth="470px"
-            offset={[0, 0]}
+            contentStyle={{ maxWidth: '470px', padding: 0, background: '#fff', boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)' }}
             content={
-                <div>
+                <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px' }}>
                     <ToolContainer onClick={handleClickMenuItem} href={ROUTES.ADD_COMPARISON} className="d-flex p-2">
                         <ImgContainer>
                             <Image src={ContributionEditor} style={{ width: '90%', height: 'auto' }} alt="Contribution editor preview" />
@@ -142,18 +128,13 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
             }
         >
             <div className="mx-2 mb-2 mb-md-0 flex-shrink-0" id="tour-add-paper">
-                <Button color={!isHomePageStyle ? 'primary' : 'light'} className="px-3">
+                <Button onClick={() => setIsOpen((v) => !v)} color={!isHomePageStyle ? 'primary' : 'light'} className="px-3">
                     <FontAwesomeIcon className="me-1" icon={faPlus} />
                     <LabelStyled>Add new</LabelStyled>
                 </Button>
             </div>
-        </TippyStyled>
+        </Popover>
     );
-};
-
-AddNew.propTypes = {
-    isHomePageStyle: PropTypes.bool.isRequired,
-    onAdd: PropTypes.func,
 };
 
 export default AddNew;

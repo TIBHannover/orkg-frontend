@@ -1,10 +1,9 @@
 import { faCheck, faClock, faClose, faInfo, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
-import CopyId from 'components/CopyId/CopyId';
-import Link from 'next/link';
-import VersionsModal from 'components/RosettaStone/SingleStatement/VersionsModal';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
+import CopyId from 'components/CopyId/CopyId';
+import Popover from 'components/FloatingUI/Popover';
+import VersionsModal from 'components/RosettaStone/SingleStatement/VersionsModal';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CERTAINTY } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
@@ -12,12 +11,12 @@ import ROUTES from 'constants/routes';
 import { findKey, toInteger } from 'lodash';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import { Dispatch, FC, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import { getRSStatementVersions } from 'services/backend/rosettaStone';
 import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from 'services/backend/types';
 import { ThemeContext } from 'styled-components';
-import type { Instance } from 'tippy.js';
 
 type InfoBoxProps = {
     statement: RosettaStoneStatement;
@@ -31,9 +30,9 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
     const [versions, setVersions] = useState<RosettaStoneStatement[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const theme = useContext(ThemeContext);
-    const tippy = useRef<Instance | null>(null);
 
     const onTrigger = () => {
         if (!isLoaded && statement.latest_version_id) {
@@ -65,22 +64,17 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
 
     const certaintyNumber = [toInteger(findKey(CertaintyVALUES, (cert) => cert === certainty) ?? 0)];
 
-    const closeTippy = () => {
-        tippy.current?.hide();
-    };
-
     const showVersionsModal = () => {
         setIsHistoryModalOpen((v) => !v);
-        closeTippy();
+        setIsOpen(false);
     };
 
     return (
-        <Tippy
-            onCreate={(tippyInst) => {
-                tippy.current = tippyInst;
-            }}
+        <Popover
+            open={isOpen}
+            onOpenChange={setIsOpen}
             onTrigger={onTrigger}
-            interactive
+            contentStyle={{ maxWidth: '400px' }}
             content={
                 <div className="p-1">
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
@@ -200,11 +194,9 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                     </ul>
                 </div>
             }
-            appendTo={document.body}
-            trigger="click"
         >
             <span>
-                <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
+                <ActionButtonView action={() => setIsOpen((v) => !v)} title="Show information about this statement" icon={faInfo} />
                 <VersionsModal
                     versions={versions}
                     show={isHistoryModalOpen}
@@ -212,7 +204,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                     toggle={() => setIsHistoryModalOpen((v) => !v)}
                 />
             </span>
-        </Tippy>
+        </Popover>
     );
 };
 

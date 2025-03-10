@@ -1,17 +1,17 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { CardTitle } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
-import Tippy from '@tippyjs/react';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import pluralize from 'pluralize';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ContributorsModal from 'components/ResearchProblem/ContributorsModal';
 import useResearchProblemContributors from 'components/ResearchProblem/hooks/useResearchProblemContributors';
+import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { CardTitle } from 'reactstrap';
 
 const Contributors = ({ researchProblemId }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
@@ -31,8 +31,7 @@ const Contributors = ({ researchProblemId }) => {
                 <ContributorsAvatars>
                     {contributors.slice(0, 18).map((contributor /* 18 perfect for the container width */) => (
                         <div key={`contributor${contributor.user.id}`}>
-                            <Tippy
-                                offset={[0, 20]}
+                            <Tooltip
                                 placement="bottom"
                                 content={
                                     <>
@@ -41,19 +40,20 @@ const Contributors = ({ researchProblemId }) => {
                                         {contributor.contributions !== null && <i>{pluralize('contribution', contributor.contributions, true)}</i>}
                                     </>
                                 }
+                                contentStyle={{ maxWidth: '300px' }}
                             >
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.user.id })}>
                                     <StyledGravatar className="rounded-circle" md5={contributor.user.gravatar_id} size={48} />
                                 </Link>
-                            </Tippy>
+                            </Tooltip>
                         </div>
                     ))}
                     {contributors.length > 18 && (
-                        <Tippy key="contributor" content="View More">
+                        <Tooltip key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
                                 <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
-                        </Tippy>
+                        </Tooltip>
                     )}
                 </ContributorsAvatars>
             )}

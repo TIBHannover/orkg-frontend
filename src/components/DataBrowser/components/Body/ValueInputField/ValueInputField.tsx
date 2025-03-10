@@ -1,10 +1,10 @@
 import { faCheck, faClose, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
-import ConfirmationTooltip from 'components/ActionButton/ConfirmationTooltip/ConfirmationTooltip';
 import DatatypeSelector from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
 import InputField from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputField';
 import useAddValue from 'components/DataBrowser/hooks/useAddValue';
+import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from 'components/FloatingUI/Popover';
 import SmartLiteralTypeCheck from 'components/SmartSuggestions/SmartLiteralTypeCheck';
 import SmartResourceLabelCheck from 'components/SmartSuggestions/SmartResourceLabelCheck';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -35,10 +35,10 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
         acceptSuggestion,
         rejectSuggestion,
         handleSubmitValue,
-        onConversionTippyShown,
+
         suggestionType,
-        confirmConversion,
-        confirmButtonRef,
+        setIsConversionTippyOpen,
+        isConversionTippyOpen,
         isValid,
         formFeedback,
         setFormFeedback,
@@ -103,9 +103,10 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                     onClick={onSubmit}
                     title="Save"
                 >
-                    <Tippy
-                        onShown={onConversionTippyShown}
-                        onCreate={(instance) => (confirmConversion.current = instance)}
+                    <Popover
+                        modal
+                        open={isConversionTippyOpen}
+                        onOpenChange={setIsConversionTippyOpen}
                         content={
                             <ConfirmationTooltip
                                 message={
@@ -114,8 +115,6 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                                         <b>{suggestionType?.name}</b>. Do you want to convert it?
                                     </p>
                                 }
-                                closeTippy={() => confirmConversion?.current?.hide()}
-                                ref={confirmButtonRef}
                                 buttons={[
                                     {
                                         title: 'Convert',
@@ -132,13 +131,9 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                                 ]}
                             />
                         }
-                        interactive
-                        appendTo={document.body}
-                        trigger="manual"
-                        placement="top"
                     >
                         <span>{editMode ? <FontAwesomeIcon icon={faCheck} /> : 'Create'}</span>
-                    </Tippy>
+                    </Popover>
                 </Button>
             </InputGroup>
             {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}

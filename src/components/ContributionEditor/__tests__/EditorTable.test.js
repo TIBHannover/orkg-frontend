@@ -10,15 +10,6 @@ jest.mock(
             children,
 );
 
-// mock the ResizeObserver
-class ResizeObserver {
-    observe() {}
-
-    unobserve() {}
-}
-
-window.ResizeObserver = ResizeObserver;
-
 const setup = (initialState = {}) => {
     render(
         <TableScrollContainer className="contribution-editor">
@@ -86,9 +77,9 @@ describe('literals', () => {
         fireEvent.click(within(cell).getByRole('button', { name: /delete/i, hidden: true }));
 
         // confirm deletion
-        const tooltip = screen.getByRole('tooltip', { name: /are you sure to delete?/i });
-        expect(tooltip).toBeInTheDocument();
-        fireEvent.click(within(tooltip).getByRole('button', { name: /delete/i }));
+        const dialog = screen.getByRole('dialog');
+        expect(dialog).toBeInTheDocument();
+        fireEvent.click(within(dialog).getByRole('button', { name: /delete/i }));
         await waitForElementToBeRemoved(() => screen.queryByRole('cell', { name: /test literal/i, hidden: true }));
         expect(screen.queryByRole('cell', { name: /test literal/i, hidden: true })).not.toBeInTheDocument();
     });

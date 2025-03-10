@@ -1,7 +1,7 @@
 import { faClock, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { MISC } from 'constants/graphSettings';
 import dayjs from 'dayjs';
@@ -14,8 +14,7 @@ type InfoTippyProps = {
 
 const InfoTippy: FC<InfoTippyProps> = ({ statement }) => {
     return (
-        <Tippy
-            interactive
+        <Tooltip
             content={
                 <div className="p-1">
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
@@ -38,11 +37,9 @@ const InfoTippy: FC<InfoTippyProps> = ({ statement }) => {
                     </ul>
                 </div>
             }
-            trigger="click"
-            appendTo={document.body}
         >
-            <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
-        </Tippy>
+            <ActionButtonView title="Show information about this statement" icon={faInfo} />
+        </Tooltip>
     );
 };
 

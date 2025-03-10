@@ -1,7 +1,7 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Popover from 'components/FloatingUI/Popover';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -63,9 +63,7 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
         }
     };
     return (
-        <Tippy
-            interactive
-            trigger="click"
+        <Popover
             content={
                 <div style={{ minWidth: 300, fontSize: '100%' }} className="p-2">
                     <h2 className="h6 text-white my-1">Provide feedback {VALUES[type].icon}</h2>
@@ -119,7 +117,7 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                     {VALUES[type].icon}
                 </Button>
             </span>
-        </Tippy>
+        </Popover>
     );
 };
 

@@ -1,9 +1,9 @@
-import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'next/link';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
@@ -17,21 +17,21 @@ const ViewShapes = ({ data }) => (
                     <div className="flex-grow-1 d-flex">
                         <div className="flex-grow-1">
                             {nodesShape.targetClassHasAlreadyTemplate ? (
-                                <Tippy content="This shape will be ignored because there is already a template for the target class">
+                                <Tooltip content="This shape will be ignored because there is already a template for the target class">
                                     <span>
                                         <Badge color="secondary" className="me-1 py-1 px-2">
                                             Ignored
                                         </Badge>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                             ) : (
-                                <Tippy content="An ORKG Template will be created">
+                                <Tooltip content="An ORKG Template will be created">
                                     <span>
                                         <Badge color="info" className="me-1 py-1 px-2">
                                             New
                                         </Badge>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                             )}
                             {nodesShape.label}
                         </div>

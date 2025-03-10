@@ -1,7 +1,7 @@
-import Tippy from '@tippyjs/react';
 import { useState, useEffect } from 'react';
 import { stringifyType } from 'components/Comparison/Filters/helpers';
 import PropTypes from 'prop-types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 
 const FilterWrapper = (props) => {
     const { rules, disabled } = props.data;
@@ -25,9 +25,9 @@ const FilterWrapper = (props) => {
     }, [JSON.stringify(rules), disabled]);
 
     return (
-        <Tippy content={content} arrow disabled={rules.length === 0 && !disabled}>
+        <Tooltip content={content} disabled={rules.length === 0 && !disabled}>
             <span>{props.children}</span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

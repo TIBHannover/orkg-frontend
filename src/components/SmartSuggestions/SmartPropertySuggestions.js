@@ -1,8 +1,8 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import Tippy from '@tippyjs/react';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
 import { ENTITIES } from 'constants/graphSettings';
 import LLM_TASK_NAMES from 'constants/llmTasks';
@@ -69,58 +69,63 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     };
 
     return (
-        <SmartSuggestions
-            tooltipContent={
-                <>
-                    <p className="m-0 mb-2">Based on the already used properties, the following properties might be relevant</p>
-                    <hr />
-                    {isLoading && (
-                        <div className="ms-2 mb-2">
-                            <FontAwesomeIcon icon={faSpinner} spin />
-                        </div>
-                    )}
-                    {!isLoading && !isFailed && recommendedProperties.length > 0 && (
-                        <div>
-                            {recommendedProperties.map((property) => (
-                                <DescriptionTooltip key={property.label} _class={ENTITIES.PREDICATE} id={property.id}>
-                                    <Button
-                                        color="smart-darker"
-                                        onClick={() => handleProblemClick(property)}
-                                        className="me-2 mb-2 text-start rounded-pill"
-                                        size="sm"
-                                    >
-                                        {property.label}
-                                    </Button>
-                                </DescriptionTooltip>
-                            ))}
-                        </div>
-                    )}
-                    {(isFailed || (recommendedProperties.length === 0 && !isLoading && properties.length > 0)) && (
-                        <em>
-                            {isFailed ? 'Failed to fetch recommendations.' : 'No recommendations found'}{' '}
-                            <Button color="link" size="sm" className="text-white p-0 border-0 align-baseline" onClick={getChatResponse}>
-                                Try again.
-                            </Button>
-                        </em>
-                    )}
-                    {(!properties || properties.length === 0) && (
-                        <em>No properties added yet, first add properties yourself to use this functionality</em>
-                    )}
-                </>
-            }
-            isOpenSmartTooltip={isOpenSmartTooltip}
-            setIsOpenSmartTooltip={setIsOpenSmartTooltip}
-            inputData={{ properties }}
-            outputData={recommendedProperties}
-            llmTask={LLM_TASK_NAMES.RECOMMEND_PROPERTIES}
-            handleReload={getChatResponse}
-        >
-            <Tippy content="Get suggestions for new properties">
-                <button className="btn btn-smart px-3 btn-sm" style={{ marginLeft: 1 }} onClick={() => setIsOpenSmartTooltip((v) => !v)}>
+        <Tooltip content="Get suggestions for new properties">
+            <SmartSuggestions
+                tooltipContent={
+                    <>
+                        <p className="m-0 mb-2">Based on the already used properties, the following properties might be relevant</p>
+                        <hr />
+                        {isLoading && (
+                            <div className="ms-2 mb-2">
+                                <FontAwesomeIcon icon={faSpinner} spin />
+                            </div>
+                        )}
+                        {!isLoading && !isFailed && recommendedProperties.length > 0 && (
+                            <div>
+                                {recommendedProperties.map((property) => (
+                                    <DescriptionTooltip key={property.label} _class={ENTITIES.PREDICATE} id={property.id}>
+                                        <Button
+                                            color="smart-darker"
+                                            onClick={() => handleProblemClick(property)}
+                                            className="me-2 mb-2 text-start rounded-pill"
+                                            size="sm"
+                                        >
+                                            {property.label}
+                                        </Button>
+                                    </DescriptionTooltip>
+                                ))}
+                            </div>
+                        )}
+                        {(isFailed || (recommendedProperties.length === 0 && !isLoading && properties.length > 0)) && (
+                            <em>
+                                {isFailed ? 'Failed to fetch recommendations.' : 'No recommendations found'}{' '}
+                                <Button color="link" size="sm" className="text-white p-0 border-0 align-baseline" onClick={getChatResponse}>
+                                    Try again.
+                                </Button>
+                            </em>
+                        )}
+                        {(!properties || properties.length === 0) && (
+                            <em>No properties added yet, first add properties yourself to use this functionality</em>
+                        )}
+                    </>
+                }
+                isOpenSmartTooltip={isOpenSmartTooltip}
+                setIsOpenSmartTooltip={setIsOpenSmartTooltip}
+                inputData={{ properties }}
+                outputData={recommendedProperties}
+                llmTask={LLM_TASK_NAMES.RECOMMEND_PROPERTIES}
+                handleReload={getChatResponse}
+            >
+                <button
+                    type="button"
+                    className="btn btn-smart px-3 btn-sm"
+                    style={{ marginLeft: 1 }}
+                    onClick={() => setIsOpenSmartTooltip((v) => !v)}
+                >
                     <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
-            </Tippy>
-        </SmartSuggestions>
+            </SmartSuggestions>
+        </Tooltip>
     );
 };
 

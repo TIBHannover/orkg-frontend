@@ -1,6 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import PaperForm from 'components/PaperForm/PaperForm';
 import useEditPaper from 'components/PaperForm/hooks/useEditPaper';
@@ -79,7 +79,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
             <ModalFooter className="align-items-center">
                 {!!user && user.isCurationAllowed && (
                     <FormGroup check className="me-2">
-                        <Tippy content="Mark the metadata as verified">
+                        <Tooltip content="Mark the metadata as verified">
                             <span>
                                 <Input
                                     type="checkbox"
@@ -92,7 +92,7 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisi
                                     Verified
                                 </Label>
                             </span>
-                        </Tippy>
+                        </Tooltip>
                     </FormGroup>
                 )}
                 <Button disabled={isLoadingParsing} color="primary" onClick={handleSave}>

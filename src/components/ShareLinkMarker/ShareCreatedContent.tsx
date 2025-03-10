@@ -1,7 +1,7 @@
+import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import Tippy, { useSingleton } from '@tippyjs/react';
-import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from 'components/ShareLinkMarker/helpers';
 import { usePathname } from 'next/navigation';
 import { FC } from 'react';
 
@@ -11,29 +11,27 @@ type ShareCreatedContentProps = {
 };
 
 const ShareCreatedContent: FC<ShareCreatedContentProps> = ({ typeOfLink, title }) => {
-    const [source, target] = useSingleton();
     const pathname = usePathname();
     const shareUrl = `${window.location.protocol}//${window.location.host}${pathname}`;
 
     return (
         <div className="mb-2">
-            <Tippy placement="bottom" singleton={source} delay={500} />
             <div className="mb-3 mt-2">Share: </div>
-            <Tippy singleton={target} content={`Share this ${typeOfLink || 'page'} on Facebook`}>
+            <Tooltip content={`Share this ${typeOfLink || 'page'} on Facebook`}>
                 <a href={getFacebookSharerLink({ shareUrl })} target="_blank" className="text-secondary  me-2" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faFacebook} size="lg" />
                 </a>
-            </Tippy>
-            <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
+            </Tooltip>
+            <Tooltip content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
                 <a href={getTwitterSharerLink({ shareUrl, title })} target="_blank" className="text-secondary  me-2" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faXTwitter} size="lg" />
                 </a>
-            </Tippy>
-            <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
+            </Tooltip>
+            <Tooltip content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
                 <a href={getLinkedInSharerLink({ shareUrl })} target="_blank" className="text-secondary" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faLinkedin} size="lg" />
                 </a>
-            </Tippy>
+            </Tooltip>
         </div>
     );
 };

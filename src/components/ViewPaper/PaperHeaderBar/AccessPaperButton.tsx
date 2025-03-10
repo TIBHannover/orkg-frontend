@@ -1,7 +1,7 @@
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC, useEffect, useState } from 'react';
 import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { getLinksByDoi, getLinksByTitle } from 'services/unpaywall';
@@ -63,7 +63,10 @@ const AccessPaperButton: FC<AccessPaperButtonProps> = ({ paperLink = null, doi =
                 {!isLoading && links.length > 0 && (
                     <>
                         {paperLink && <DropdownItem divider />}
-                        <Tippy content="Results can be incomplete or incorrect (especially if no DOI is available for this paper)">
+                        <Tooltip
+                            contentStyle={{ maxWidth: '300px' }}
+                            content="Results can be incomplete or incorrect (especially if no DOI is available for this paper)"
+                        >
                             <span>
                                 <DropdownItem
                                     tag="a"
@@ -75,7 +78,7 @@ const AccessPaperButton: FC<AccessPaperButtonProps> = ({ paperLink = null, doi =
                                     Alternative sources by Unpaywall
                                 </DropdownItem>
                             </span>
-                        </Tippy>
+                        </Tooltip>
                         {links.map((link, index) => (
                             <DropdownItem key={index} tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
                                 {link.name}

@@ -1,7 +1,7 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
@@ -28,11 +28,11 @@ const CopyIdButton: FC<CopyIdButtonProps> = ({ value }) => {
 
     return (
         <Button onClick={handleCopyClick} outline className="px-2">
-            <Tippy content="Copy the id to clipboard">
+            <Tooltip content="Copy the id to clipboard">
                 <span>
                     <FontAwesomeIcon icon={faClipboard} size="sm" />
                 </span>
-            </Tippy>
+            </Tooltip>
         </Button>
     );
 };

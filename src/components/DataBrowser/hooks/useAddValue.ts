@@ -1,7 +1,7 @@
-import { commitChangeLabel, convertPropertyShapeToSchema, createValue } from 'components/DataBrowser/utils/dataBrowserUtils';
 import useConstraints from 'components/DataBrowser/hooks/useConstraints';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useHistory from 'components/DataBrowser/hooks/useHistory';
+import { commitChangeLabel, convertPropertyShapeToSchema, createValue } from 'components/DataBrowser/utils/dataBrowserUtils';
 import { DataType, getConfigByClassId, getConfigByType, getSuggestionByTypeAndValue, InputType } from 'constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useEffect, useRef, useState } from 'react';
@@ -10,7 +10,6 @@ import { getList, listsUrl, updateList } from 'services/backend/lists';
 import { createResourceStatement, statementsUrl } from 'services/backend/statements';
 import { Class, EntityType, Literal, Node, Predicate, Resource } from 'services/backend/types';
 import useSWR, { useSWRConfig } from 'swr';
-import type { Instance } from 'tippy.js';
 
 const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: Node | Literal) => {
     const { ranges, propertyShapes, isLiteralField } = useConstraints(predicate.id);
@@ -34,8 +33,7 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
 
     const [suggestionType, setSuggestionType] = useState<DataType | null>(null);
     const [formFeedback, setFormFeedback] = useState<string | null>(null);
-
-    const confirmConversion = useRef<Instance | null>(null);
+    const [isConversionTippyOpen, setIsConversionTippyOpen] = useState(false);
     const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
 
     const onConversionTippyShown = () => confirmButtonRef?.current?.focus();
@@ -115,7 +113,7 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
             const suggestions = getSuggestionByTypeAndValue(dataType, inputValue.trim());
             if (suggestions.length > 0 && !range) {
                 setSuggestionType(suggestions[0]);
-                confirmConversion?.current?.show();
+                setIsConversionTippyOpen(true);
             } else {
                 handleSubmitValue(_class, { label: inputValue.trim(), datatype: dataType });
                 toggleShowInput();
@@ -125,9 +123,9 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
 
     const acceptSuggestion = () => {
         if (suggestionType) {
-            confirmConversion?.current?.hide();
             handleSubmitValue(suggestionType?._class, { label: inputValue.trim(), datatype: suggestionType?.type });
             setDataType(suggestionType?.type ?? dataType);
+            setIsConversionTippyOpen(false);
             toggleShowInput();
         }
     };
@@ -172,8 +170,8 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
         handleSubmitValue,
         onConversionTippyShown,
         suggestionType,
-        confirmConversion,
-        confirmButtonRef,
+        isConversionTippyOpen,
+        setIsConversionTippyOpen,
         isValid,
         formFeedback,
         setFormFeedback,

@@ -1,15 +1,13 @@
-import { useState } from 'react';
-import { Alert, ButtonGroup, Button } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import Tippy, { useSingleton } from '@tippyjs/react';
-import PropTypes from 'prop-types';
 import CellRenderer from 'libs/selfVisModel/RenderingComponents/CellRenderer';
-import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 import CheckboxSelector from 'libs/selfVisModel/RenderingComponents/CheckBoxSelector';
+import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Alert, Button, ButtonGroup } from 'reactstrap';
 
 const CellSelector = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());
-    const [source, target] = useSingleton();
 
     /** some data handlers * */
     const toggleCheckboxForCol = (id, value) => {
@@ -38,10 +36,10 @@ const CellSelector = (props) => {
                     // renders the cell
                     const keyVal = `key_cellIdMeta${i}_${j}`;
                     if (j === 0) {
-                        rowArray.push(<CellRenderer key={keyVal} type="metaNodeHeader" data={null} tippyTarget={target} />);
+                        rowArray.push(<CellRenderer key={keyVal} type="metaNodeHeader" data={null} />);
                     } else {
                         rowArray.push(
-                            <CellRenderer key={keyVal} type="metaNodeSelector" data={null} tippyTarget={target}>
+                            <CellRenderer key={keyVal} type="metaNodeSelector" data={null}>
                                 <ButtonGroup
                                     style={{ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' }}
                                     className="p-0 flex-grow-1"
@@ -84,27 +82,16 @@ const CellSelector = (props) => {
                 const keyVal = `key_cellId${i}_${j}`;
 
                 if (i === 0 && j === 0) {
-                    rowArray.push(<CellRenderer key={keyVal} type="metaNode" data={null} tippyTarget={target} />);
+                    rowArray.push(<CellRenderer key={keyVal} type="metaNode" data={null} />);
                 }
                 if (i === 0 && j !== 0) {
-                    rowArray.push(
-                        <CellRenderer key={keyVal} type="property" data={selfVisModel.mrrModel.propertyAnchors[j - 1]} tippyTarget={target} />,
-                    );
+                    rowArray.push(<CellRenderer key={keyVal} type="property" data={selfVisModel.mrrModel.propertyAnchors[j - 1]} />);
                 }
                 if (i > 0 && j === 0) {
-                    rowArray.push(
-                        <CellRenderer
-                            key={keyVal}
-                            type="contribution"
-                            data={selfVisModel.mrrModel.contributionAnchors[i - 1]}
-                            tippyTarget={target}
-                        />,
-                    );
+                    rowArray.push(<CellRenderer key={keyVal} type="contribution" data={selfVisModel.mrrModel.contributionAnchors[i - 1]} />);
                 }
                 if (i > 0 && j !== 0) {
-                    rowArray.push(
-                        <CellRenderer key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(i - 1, j - 1)} tippyTarget={target} />,
-                    );
+                    rowArray.push(<CellRenderer key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(i - 1, j - 1)} />);
                 }
             }
 
@@ -158,8 +145,6 @@ const CellSelector = (props) => {
             <Alert color="info" fade={false}>
                 Select cells for the visualization and map them to types
             </Alert>
-            {/* This is the tippy that gets used as the tippyTarget */}
-            <Tippy singleton={source} delay={300} offset={[0, 0]} moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)" />
             {props.isLoading ? <div>Loading...</div> : <div style={{ height: `${props.height}px`, overflow: 'auto' }}>{createTable()} </div>}
         </div>
     );

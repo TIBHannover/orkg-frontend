@@ -10,9 +10,9 @@ import {
     faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Confirm from 'components/Confirmation/Confirmation';
 import ExportCitation from 'components/ExportCitation/ExportCitation';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PublishModal from 'components/Review/EditReview/PublishModal/PublishModal';
@@ -90,11 +90,11 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
             <TitleBarOriginal
                 titleAddition={
                     publicationDate && (
-                        <Tippy content={`Update message: "${version?.changelog}"`}>
+                        <Tooltip content={`Update message: "${version?.changelog}"`}>
                             <SubTitle className=" mt-1">
                                 Published on <time dateTime={version?.created_at}>{publicationDate}</time> - Version {versionNumber}
                             </SubTitle>
-                        </Tippy>
+                        </Tooltip>
                     )
                 }
                 buttonGroup={
@@ -104,7 +104,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                                 {isLoadingInline ? (
                                     <FontAwesomeIcon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
-                                    <Tippy content="All changes are saved">
+                                    <Tooltip content="All changes are saved">
                                         <span>
                                             <FontAwesomeIcon
                                                 icon={faCheckCircle}
@@ -113,7 +113,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                                                 aria-label="All changes are saved"
                                             />
                                         </span>
-                                    </Tippy>
+                                    </Tooltip>
                                 )}
                             </div>
                         )}

@@ -1,9 +1,9 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from 'components/ArticleBuilder/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { sortableHandle } from 'react-sortable-hoc';
 import { Button } from 'reactstrap';
 
@@ -29,22 +29,22 @@ const SortableSection = ({ handleDelete, handleSort, children }) => {
             </DeleteButton>
             <SortableHandle />
             <MoveButton className={isHovering ? 'hover up' : 'up'}>
-                <Tippy content="Move up">
+                <Tooltip content="Move up">
                     <span>
                         <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('up')} aria-label="Move section up">
                             <FontAwesomeIcon icon={faArrowUp} />
                         </Button>
                     </span>
-                </Tippy>
+                </Tooltip>
             </MoveButton>
             <MoveButton className={isHovering ? 'hover down' : 'down'}>
-                <Tippy content="Move down">
+                <Tooltip content="Move down">
                     <span>
                         <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('down')} aria-label="Move section down">
                             <FontAwesomeIcon icon={faArrowDown} />
                         </Button>
                     </span>
-                </Tippy>
+                </Tooltip>
             </MoveButton>
             {children}
         </SectionStyled>

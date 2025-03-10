@@ -1,7 +1,7 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
 import { CLASSES } from 'constants/graphSettings';
 import { FC } from 'react';
@@ -46,11 +46,11 @@ const SmartSuggestionsFields: FC<SmartSuggestionsFieldsProps> = ({ handleFieldSe
         (fields.length > 0 || isLoading) && (
             <SuggestionsBox className="mb-3 rounded p-2 px-3">
                 <h3 className="fw-bold h6 mt-1">
-                    <Tippy content="The listed smart suggestions are research fields based on the article's title and abstract (if available)">
+                    <Tooltip content="The listed smart suggestions are research fields based on the article's title and abstract (if available)">
                         <span>
                             Smart suggested fields <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 </h3>
                 {!isLoading ? (
                     <div className="d-flex flex-wrap">

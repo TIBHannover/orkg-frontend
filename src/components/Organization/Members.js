@@ -1,16 +1,16 @@
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { CardTitle } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import { getUsersByOrganizationId } from 'services/backend/organizations';
-import ROUTES from 'constants/routes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
-import Tippy from '@tippyjs/react';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import MembersModal from 'components/Organization/MembersModal';
+import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { CardTitle } from 'reactstrap';
+import { getUsersByOrganizationId } from 'services/backend/organizations';
 
 const Members = ({ organizationsId }) => {
     const [members, setMembers] = useState([]);
@@ -44,19 +44,19 @@ const Members = ({ organizationsId }) => {
                 <ContributorsAvatars>
                     {members.slice(0, 18).map((member /* 18 perfect for the container width */) => (
                         <div key={`contributor${member.id}`}>
-                            <Tippy offset={[0, 20]} placement="bottom" content={<>{member.display_name}</>}>
+                            <Tooltip placement="bottom" content={member.display_name}>
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: member.id })}>
                                     <StyledGravatar className="rounded-circle" md5={member.gravatar_id} size={48} />
                                 </Link>
-                            </Tippy>
+                            </Tooltip>
                         </div>
                     ))}
                     {members.length > 18 && (
-                        <Tippy key="contributor" content="View More">
+                        <Tooltip key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
                                 <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
-                        </Tippy>
+                        </Tooltip>
                     )}
                 </ContributorsAvatars>
             )}

@@ -1,9 +1,9 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Coins from 'components/Coins/Coins';
 import Authors from 'components/Cards/PaperCard/Authors';
 import useCardData from 'components/Cards/hooks/useCardData';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -88,11 +88,11 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                             All versions:{' '}
                             {review.versions.published.map((version, index) => (
                                 <span key={version?.id}>
-                                    <Tippy content={version?.changelog || 'no description'}>
+                                    <Tooltip content={version?.changelog || 'no description'}>
                                         <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>
                                             Version {(review.versions.published?.length ?? 0) - index}
                                         </Link>
-                                    </Tippy>{' '}
+                                    </Tooltip>{' '}
                                     {index < review.versions.published.length - 1 && ' • '}
                                 </span>
                             ))}

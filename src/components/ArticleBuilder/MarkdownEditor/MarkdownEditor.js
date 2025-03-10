@@ -1,32 +1,32 @@
 import {
     faBold,
     faCode,
+    faExternalLinkAlt,
     faImage,
     faItalic,
     faLink,
     faList,
     faListOl,
     faQuoteLeft,
+    faStrikethrough,
     faTable,
     faVideo,
-    faExternalLinkAlt,
-    faStrikethrough,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import TextSection from 'components/Review/Sections/Text/TextSection';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import TextSection from 'components/Review/Sections/Text/TextSection';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
-import { env } from 'next-runtime-env';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
 import { getResource, getResources } from 'services/backend/resources';
 import styled from 'styled-components';
 
@@ -188,7 +188,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
     return (
         <>
             {!editMode && (
-                <Tippy hideOnClick={false} content="Double click to edit">
+                <Tooltip content="Double click to edit">
                     {markdownValue ? (
                         <div role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
                             {references ? <TextSection text={markdownValue} sectionId={sectionId} /> : <MarkdownRenderer text={markdownValue} />}
@@ -198,48 +198,48 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
                             Double click to edit this text
                         </MarkdownPlaceholder>
                     )}
-                </Tippy>
+                </Tooltip>
             )}
 
             {editMode && (
                 <MarkdownSection>
                     <Toolbar>
                         <ButtonGroup className="me-1" size="sm">
-                            <Tippy content="Add bold text">
+                            <Tooltip content="Add bold text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '**', '**')}>
                                     <FontAwesomeIcon icon={faBold} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add italic text">
+                            </Tooltip>
+                            <Tooltip content="Add italic text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '*', '*')}>
                                     <FontAwesomeIcon icon={faItalic} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add strikethrough text">
+                            </Tooltip>
+                            <Tooltip content="Add strikethrough text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '~~', '~~')}>
                                     <FontAwesomeIcon icon={faStrikethrough} />
                                 </div>
-                            </Tippy>
+                            </Tooltip>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
-                            <Tippy content="Add bullet list">
+                            <Tooltip content="Add bullet list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '* ')}>
                                     <FontAwesomeIcon icon={faList} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add numbered list">
+                            </Tooltip>
+                            <Tooltip content="Add numbered list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '1. ')}>
                                     <FontAwesomeIcon icon={faListOl} />
                                 </div>
-                            </Tippy>
+                            </Tooltip>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
-                            <Tippy content="Add link">
+                            <Tooltip content="Add link">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[', '](url)')}>
                                     <FontAwesomeIcon icon={faLink} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add image">
+                            </Tooltip>
+                            <Tooltip content="Add image">
                                 <div
                                     role="button"
                                     tabIndex="0"
@@ -248,8 +248,8 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
                                 >
                                     <FontAwesomeIcon icon={faImage} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add video">
+                            </Tooltip>
+                            <Tooltip content="Add video">
                                 <div
                                     role="button"
                                     tabIndex="0"
@@ -258,25 +258,25 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
                                 >
                                     <FontAwesomeIcon icon={faVideo} />
                                 </div>
-                            </Tippy>
+                            </Tooltip>
                         </ButtonGroup>
                         <ButtonGroup size="sm">
                             {references && (
                                 <>
-                                    <Tippy content="Add citation">
+                                    <Tooltip content="Add citation">
                                         <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[@', ']')}>
                                             <FontAwesomeIcon icon={faQuoteLeft} />
                                         </div>
-                                    </Tippy>
+                                    </Tooltip>
 
-                                    <Tippy content="Add ORKG resource">
+                                    <Tooltip content="Add ORKG resource">
                                         <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '[!', ']')}>
                                             <FontAwesomeIcon icon={faExternalLinkAlt} />
                                         </div>
-                                    </Tippy>
+                                    </Tooltip>
                                 </>
                             )}
-                            <Tippy content="Add table">
+                            <Tooltip content="Add table">
                                 <div
                                     role="button"
                                     tabIndex="0"
@@ -287,12 +287,12 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
                                 >
                                     <FontAwesomeIcon icon={faTable} />
                                 </div>
-                            </Tippy>
-                            <Tippy content="Add code">
+                            </Tooltip>
+                            <Tooltip content="Add code">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={(e) => wrapText(e, '`', '`')}>
                                     <FontAwesomeIcon icon={faCode} />
                                 </div>
-                            </Tippy>
+                            </Tooltip>
                         </ButtonGroup>
                     </Toolbar>
                     <ReactTextareaAutocomplete

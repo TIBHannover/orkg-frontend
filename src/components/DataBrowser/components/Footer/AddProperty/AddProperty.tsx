@@ -1,6 +1,5 @@
 import { faClose, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
@@ -10,6 +9,7 @@ import useDefaultProperties from 'components/DataBrowser/hooks/useDefaultPropert
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useTemplates from 'components/DataBrowser/hooks/useTemplates';
 import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -62,9 +62,9 @@ const AddProperty = () => {
                 condition={!canAddProperty}
                 // eslint-disable-next-line react/no-unstable-nested-components
                 wrapper={(children: ReactElement) => (
-                    <Tippy content="This resource uses strict template">
+                    <Tooltip content="This resource uses strict template">
                         <span>{children}</span>
-                    </Tippy>
+                    </Tooltip>
                 )}
             >
                 {!showAdd ? (

@@ -1,4 +1,4 @@
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { DataType } from 'constants/DataTypes';
 import type { GroupBase } from 'react-select';
 import { OptionProps, components } from 'react-select';
@@ -9,9 +9,9 @@ const DatatypeOption = <OptionT extends DataType, Group extends GroupBase<Option
     const { data } = props;
     return (
         <components.Option {...props}>
-            <Tippy content={data.tooltip} disabled={!data.tooltip}>
+            <Tooltip content={data.tooltip} disabled={!data.tooltip}>
                 <div>{data.name}</div>
-            </Tippy>
+            </Tooltip>
         </components.Option>
     );
 };

@@ -1,8 +1,8 @@
 import { faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
 import TreeView from 'components/Class/TreeView';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -36,11 +36,11 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
                 outline
                 className="px-2"
             >
-                <Tippy content="Show class tree">
+                <Tooltip content="Show class tree">
                     <span>
                         <FontAwesomeIcon icon={faSitemap} size="sm" />
                     </span>
-                </Tippy>
+                </Tooltip>
             </Button>
             <Modal isOpen={showTree} toggle={toggleTree} size="lg">
                 <ModalHeader toggle={toggleTree}>Tree view</ModalHeader>

@@ -1,12 +1,11 @@
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { Steps } from 'intro.js-react';
+import { env } from 'next-runtime-env';
+import { useState } from 'react';
 import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestion } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'reactstrap';
-import Tippy from '@tippyjs/react';
-import { useState, FC } from 'react';
-import { env } from 'next-runtime-env';
-import { Steps } from 'intro.js-react';
 
 type HelpButtonProps = {
     id: string;
@@ -224,25 +223,15 @@ const HelpTour = () => {
             />
 
             <HelpButton id="helpIcon" $woochat={env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')}>
-                <Tippy
-                    visible={isTooltipVisible}
-                    appendTo={typeof window !== 'undefined' ? document.body : undefined}
-                    interactive
-                    content={
-                        <div className="p-1">
-                            Click to activate the tour guide
-                            <div className="text-end">
-                                <Button color="link" size="sm" className="p-0 fw-bold text-decoration-none mt-2 text-white" onClick={closeTooltip}>
-                                    Got it
-                                </Button>
-                            </div>
-                        </div>
-                    }
+                <Tooltip
+                    initialOpen={isTooltipVisible}
+                    onTrigger={() => closeTooltip()}
+                    content={<div className="p-1">Click to activate the tour guide</div>}
                 >
                     <div className="px-3 py-1">
                         <HelpIcon icon={faQuestion} onClick={() => setIsHelpOpen(true)} />
                     </div>
-                </Tippy>
+                </Tooltip>
             </HelpButton>
         </>
     );

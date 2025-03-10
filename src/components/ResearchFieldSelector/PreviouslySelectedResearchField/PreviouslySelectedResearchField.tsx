@@ -1,6 +1,6 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import usePreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
 import { FC } from 'react';
 import { Button } from 'reactstrap';
@@ -18,11 +18,11 @@ const PreviouslySelectedResearchField: FC<PreviouslySelectedResearchFieldProps> 
             {researchFields.length > 0 && (
                 <>
                     <h3 className="fw-bold h6 mt-1">
-                        <Tippy content="Based on your 8 most recently added papers">
+                        <Tooltip content="Based on your 8 most recently added papers">
                             <span>
                                 Recent fields <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
                             </span>
-                        </Tippy>
+                        </Tooltip>
                     </h3>
 
                     <div className="d-flex flex-wrap">

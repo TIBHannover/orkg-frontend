@@ -1,8 +1,8 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
 import styled from 'styled-components';
-import Tippy from '@tippyjs/react';
 
 const DeleteButton = styled(Button)`
     &&& {
@@ -171,7 +171,7 @@ export const createLabelSelectors = (ref) => {
                         currentCustomState.xAxisLabel = item.label;
                     }}
                 >
-                    <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
+                    <Tooltip content={item.label} placement="right" disabled={item.label.length < 30}>
                         <span
                             className="d-inline-block"
                             style={{
@@ -184,7 +184,7 @@ export const createLabelSelectors = (ref) => {
                         >
                             {item.label}
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 </DropdownItem>
             ));
 
@@ -200,7 +200,7 @@ export const createLabelSelectors = (ref) => {
                     }}
                 >
                     <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
-                        <Tippy content={ref.state.xAxisSelector.label} placement="right" disabled={ref.state.xAxisSelector.label.length < 30}>
+                        <Tooltip content={ref.state.xAxisSelector.label} placement="right" disabled={ref.state.xAxisSelector.label.length < 30}>
                             <span
                                 className="d-inline-block"
                                 style={{
@@ -213,7 +213,7 @@ export const createLabelSelectors = (ref) => {
                             >
                                 {ref.state.xAxisSelector.label}
                             </span>
-                        </Tippy>
+                        </Tooltip>
                     </TippyDropdownToggle>
                     <DropdownMenu>{items}</DropdownMenu>
                 </Dropdown>
@@ -256,7 +256,7 @@ export const createValueSelectors = (ref) => {
                             }
                         }}
                     >
-                        <Tippy content={item.axis.label} placement="right" disabled={item.axis.label.length < 30}>
+                        <Tooltip content={item.axis.label} placement="right" disabled={item.axis.label.length < 30}>
                             <span
                                 className="d-inline-block"
                                 style={{
@@ -269,7 +269,7 @@ export const createValueSelectors = (ref) => {
                             >
                                 {item.axis.label}
                             </span>
-                        </Tippy>
+                        </Tooltip>
                     </DropdownItem>
                 ));
                 itemsArray.push(items);
@@ -299,7 +299,7 @@ export const createValueSelectors = (ref) => {
                             }}
                         >
                             <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100 ">
-                                <Tippy
+                                <Tooltip
                                     content={ref.state.yAxisSelector[id].axis.label}
                                     placement="right"
                                     disabled={ref.state.yAxisSelector[id].axis.label < 30}
@@ -316,7 +316,7 @@ export const createValueSelectors = (ref) => {
                                     >
                                         {ref.state.yAxisSelector[id].axis.label}
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                             </TippyDropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
@@ -324,7 +324,7 @@ export const createValueSelectors = (ref) => {
                             (!ref.state.yAxisSelector[id].intervals ||
                                 (ref.state.yAxisSelector[id].intervals &&
                                     ref.state.yAxisSelector[id].intervals.length < possibleValueCandidates.length)) && (
-                                <Tippy content="Add interval">
+                                <Tooltip content="Add interval">
                                     <span>
                                         <Button
                                             size="sm"
@@ -338,7 +338,7 @@ export const createValueSelectors = (ref) => {
                                             <FontAwesomeIcon icon={faPlus} />
                                         </Button>
                                     </span>
-                                </Tippy>
+                                </Tooltip>
                             )}
                     </div>
                     <div className="mt-2">{createIntervalSelectors(ref, id, possibleAxisCandidates)}</div>
@@ -426,7 +426,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
         >
             {/* qnd text length handler */}
 
-            <Tippy content={pvc.axis.label} placement="right" disabled={pvc.axis.label.length < 30}>
+            <Tooltip content={pvc.axis.label} placement="right" disabled={pvc.axis.label.length < 30}>
                 <span
                     className="d-inline-block"
                     style={{
@@ -439,7 +439,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 >
                     {pvc.axis.label}
                 </span>
-            </Tippy>
+            </Tooltip>
         </DropdownItem>
     ));
 
@@ -458,7 +458,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
             }}
         >
             <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
-                <Tippy
+                <Tooltip
                     content={ref.state.yAxisSelector[id].intervals[interval_id].item.label}
                     placement="right"
                     disabled={ref.state.yAxisSelector[id].intervals[interval_id].item.label.length < 30}
@@ -475,7 +475,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                     >
                         {ref.state.yAxisSelector[id].intervals[interval_id].item.label}
                     </span>
-                </Tippy>
+                </Tooltip>
             </TippyDropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
         </Dropdown>

@@ -1,11 +1,11 @@
-import Link from 'next/link';
 import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -54,8 +54,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                         <FormGroup switch className="d-inline-block ms-3">
                             <Label check>
                                 <Input type="switch" role="switch" checked={isCitationsEnabled} onChange={() => setIsCitationsEnabled((v) => !v)} />
-                                <Tippy
-                                    interactive
+                                <Tooltip
                                     content={
                                         <>
                                             This feature is in beta, citation counts might be inaccurate or wrong. Citation data provided by{' '}
@@ -67,7 +66,7 @@ function AuthorCard({ author, paperAmount = null, papers = null, isVisibleGoogle
                                     }
                                 >
                                     <span>Show citations</span>
-                                </Tippy>
+                                </Tooltip>
                             </Label>
                         </FormGroup>
                     </small>

@@ -1,4 +1,3 @@
-import Tippy from '@tippyjs/react';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
@@ -6,6 +5,7 @@ import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFie
 import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { supportedContentTypes } from 'components/ContentType/types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import Contributors from 'components/List/Contributors/Contributors';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
 import SustainableDevelopmentGoals from 'components/List/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
@@ -149,9 +149,9 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
 
                     <section>
                         <h2 className="h4 border-bottom mt-5">
-                            <Tippy content="Contributors are automatically generated based on ORKG users that contributed to this list">
+                            <Tooltip content="Contributors are automatically generated based on ORKG users that contributed to this list">
                                 <span>Contributors</span>
-                            </Tippy>
+                            </Tooltip>
                         </h2>
                         <Contributors />
                     </section>

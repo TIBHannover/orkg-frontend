@@ -7,7 +7,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import 'react-toastify/dist/ReactToastify.css';
 import { createGlobalStyle } from 'styled-components';
-import 'tippy.js/dist/tippy.css';
 import { Wrapper } from '../src/testUtils';
 
 export const parameters: Preview['parameters'] = {
