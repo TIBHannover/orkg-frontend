@@ -65,7 +65,7 @@ export const getEntities = (
         exclude?: string[];
         exact?: boolean;
     },
-): Promise<PaginatedResponse<Resource | Predicate | Class> | Resource[] | Predicate[] | Class[] | Class> => {
+): Promise<PaginatedResponse<Resource | Predicate | Class>> => {
     // { page = 0, size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
     // for resources there additional parameter: exclude
     // for resources there additional parameter: uri
@@ -94,9 +94,12 @@ export const mergePaginateResponses = (
 ): PaginatedResponse<Resource | Item> => ({
     ...response1,
     content: mergeAlternate(response1.content, response2.content),
-    totalElements: response1.totalElements + response2.totalElements,
-    totalPages: Math.max(response1.totalPages, response2.totalPages),
-    last: response1.last && response2.last,
+    page: {
+        number: response1.page.number,
+        size: response1.page.size,
+        total_elements: response1.page.total_elements + response2.page.total_elements,
+        total_pages: Math.max(response1.page.total_pages, response2.page.total_pages),
+    },
 });
 
 export const prepareParams = (

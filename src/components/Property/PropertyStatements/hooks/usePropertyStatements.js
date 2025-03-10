@@ -25,9 +25,9 @@ function usePropertyStatements({ propertyId, pageSize = 10 }) {
                 .then((result) => {
                     setStatements((prevResources) => [...prevResources, ...result.content]);
                     setIsLoading(false);
-                    setHasNextPage(!result.last);
-                    setIsLastPageReached(result.last);
-                    setTotalElements(result.totalElements);
+                    setHasNextPage(result.page.number < result.page.total_pages - 1);
+                    setIsLastPageReached(result.page.number === result.page.total_pages - 1);
+                    setTotalElements(result.page.total_elements);
                     setPage(page + 1);
                 })
                 .catch((error) => {

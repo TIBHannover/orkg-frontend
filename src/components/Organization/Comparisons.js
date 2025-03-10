@@ -42,8 +42,8 @@ const Comparisons = ({ organizationsId }) => {
                             ]);
                         });
                         setIsLoadingComparisons(false);
-                        setHasNextPage(!comparisons.last);
-                        setIsLastPageReached(comparisons.last);
+                        setHasNextPage(comparisons.page.number < comparisons.page.total_pages - 1);
+                        setIsLastPageReached(comparisons.page.number === comparisons.page.total_pages - 1);
                         setCurrentPage(page + 1);
                     }),
                 )

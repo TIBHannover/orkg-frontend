@@ -25,23 +25,12 @@ const resources = [
         });
         return HttpResponse.json({
             content: currentClasses,
-            pageable: {
-                sort: { sorted: true, unsorted: false, empty: false },
-                pageNumber: 0,
-                pageSize: size,
-                offset: 0,
-                paged: true,
-                unpaged: false,
+            page: {
+                number: page,
+                size,
+                total_elements: allClasses.length,
+                total_pages: Math.ceil(allClasses.length / size),
             },
-            totalPages: Math.ceil(allClasses.length / size),
-            totalElements: allClasses,
-            last: page + 1 >= Math.ceil(allClasses.length / size),
-            first: page === 0,
-            sort: { sorted: true, unsorted: false, empty: false },
-            size,
-            number: 0,
-            numberOfElements: allClasses.length,
-            empty: false,
         });
     }),
     http.get(`${classesUrl}:id`, ({ params }) => {

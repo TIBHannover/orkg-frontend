@@ -29,23 +29,12 @@ const resources = [
                 ...resource,
                 classes: resource.classes.split(',').filter((c) => c !== ''),
             })),
-            pageable: {
-                sort: { sorted: true, unsorted: false, empty: false },
-                pageNumber: 0,
-                pageSize: size,
-                offset: 0,
-                paged: true,
-                unpaged: false,
+            page: {
+                total_pages: Math.ceil(allResources.length / size),
+                total_elements: allResources,
+                size,
+                number: page,
             },
-            totalPages: Math.ceil(allResources.length / size),
-            totalElements: allResources,
-            last: page + 1 >= Math.ceil(allResources.length / size),
-            first: page === 0,
-            sort: { sorted: true, unsorted: false, empty: false },
-            size,
-            number: 0,
-            numberOfElements: allResources.length,
-            empty: false,
         });
     }),
     http.get(`${resourcesUrl}:id`, ({ params }) => {

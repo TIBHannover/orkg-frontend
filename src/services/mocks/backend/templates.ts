@@ -46,37 +46,22 @@ const templates = [
         if (targetClass && targetClass in MAPPING) {
             return HttpResponse.json({
                 content: [MAPPING[targetClass]],
-                pageable: {
-                    sort: { empty: false, sorted: true, unsorted: false },
-                    offset: 0,
-                    pageNumber: 0,
-                    pageSize: 999,
-                    paged: true,
-                    unpaged: false,
+                page: {
+                    total_pages: 1,
+                    total_elements: 1,
+                    size: 999,
+                    number: 0,
                 },
-                last: true,
-                totalElements: 1,
-                totalPages: 1,
-                size: 999,
-                number: 0,
-                sort: { empty: false, sorted: true, unsorted: false },
-                numberOfElements: 1,
-                first: true,
-                empty: false,
             });
         }
         return HttpResponse.json({
             content: [],
-            pageable: { sort: { empty: false, sorted: true, unsorted: false }, offset: 0, pageNumber: 0, pageSize: 999, paged: true, unpaged: false },
-            last: true,
-            totalElements: 0,
-            totalPages: 0,
-            size: 999,
-            number: 0,
-            sort: { empty: false, sorted: true, unsorted: false },
-            numberOfElements: 0,
-            first: true,
-            empty: true,
+            page: {
+                total_pages: 0,
+                total_elements: 0,
+                size: 999,
+                number: 0,
+            },
         });
     }),
 ];

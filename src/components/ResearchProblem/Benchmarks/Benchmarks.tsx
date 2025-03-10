@@ -26,8 +26,9 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
         { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
     );
 
-    const isEmpty = benchmarks?.[0]?.totalElements === 0;
-    const isLastPageReached = isEmpty || benchmarks?.[benchmarks.length - 1]?.last;
+    const isEmpty = benchmarks?.[0]?.page?.total_elements === 0;
+    const isLastPageReached =
+        isEmpty || benchmarks?.[benchmarks.length - 1]?.page?.number === (benchmarks?.[benchmarks.length - 1]?.page?.total_pages || 0) - 1;
     const hasNextPage = !isLastPageReached;
 
     if (benchmarks && benchmarks.map((b) => b.content).flat().length === 0 && !isLoading) {

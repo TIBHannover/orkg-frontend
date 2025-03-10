@@ -8,31 +8,12 @@ export type VisibilityOptions = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATUR
 
 export type PaginatedResponse<T> = {
     content: T[];
-    pageable: {
-        sort: {
-            sorted: boolean;
-            unsorted: boolean;
-            empty: boolean;
-        };
-        pageNumber: number;
-        pageSize: number;
-        offset: number;
-        paged: boolean;
-        unpaged: boolean;
+    page: {
+        number: number;
+        size: number;
+        total_elements: number;
+        total_pages: number;
     };
-    totalElements: number;
-    totalPages: number;
-    last: boolean;
-    sort: {
-        sorted: boolean;
-        unsorted: boolean;
-        empty: boolean;
-    };
-    first: boolean;
-    number: number;
-    numberOfElements: number;
-    size: number;
-    empty: boolean;
 };
 
 export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';

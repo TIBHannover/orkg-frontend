@@ -36,7 +36,6 @@ const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
         totalPages,
         setPage,
         error,
-
         setPageSize,
     } = usePaginate({
         fetchFunction: getTemplates,

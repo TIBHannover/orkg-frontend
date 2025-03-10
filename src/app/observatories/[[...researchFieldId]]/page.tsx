@@ -56,7 +56,7 @@ const Observatories = () => {
     );
 
     const researchFields = data?.map((page) => page.content).flat() ?? [];
-    const isLastPageReached = (data && data[data.length - 1])?.last;
+    const isLastPageReached = (data && data[data.length - 1])?.page.number === ((data && data[data.length - 1])?.page.total_pages || 0) - 1;
     const hasNextPage = !isLastPageReached;
     const loadNextPage = () => setSize(size + 1);
 

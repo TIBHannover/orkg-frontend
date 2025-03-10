@@ -49,8 +49,11 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                     const combinedC = mergeAlternate(newC.content, featuredC.content);
                     return {
                         content: combinedC,
-                        totalElements: _page === 0 ? newC.totalElements + featuredC.totalElements : total,
-                        last: newC.last && featuredC.last,
+                        page: {
+                            total_elements: _page === 0 ? newC.totalElements + featuredC.totalElements : total,
+                            number: _page,
+                            total_pages: newC.page.number === newC.page.total_pages && featuredC.page.number === featuredC.page.total_pages ? 1 : 2,
+                        },
                     };
                 });
             } else {
@@ -69,9 +72,9 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                 .then((result) => {
                     setProblems((prevResources) => [...prevResources, ...result.content]);
                     setIsLoading(false);
-                    setHasNextPage(!result.last);
-                    setIsLastPageReached(result.last);
-                    setTotalElements(result.totalElements);
+                    setHasNextPage(result.page.number < result.page.total_pages - 1);
+                    setIsLastPageReached(result.page.number === result.page.total_pages - 1);
+                    setTotalElements(result.page.total_elements);
                     setPage(_page + 1);
                 })
                 .catch(() => {

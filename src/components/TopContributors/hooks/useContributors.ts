@@ -43,15 +43,15 @@ function useContributors({
         ([params]) => getTopContributors(params),
     );
 
-    const { totalElements, totalPages } = data || {};
-    const hasNextPage = !data?.last;
+    const { page: pageObject } = data || {};
+    const hasNextPage = pageObject ? pageObject.number < pageObject.total_pages - 1 : false;
 
     return {
         contributors: data?.content,
         isLoading,
         hasNextPage,
-        totalElements,
-        totalPages,
+        totalElements: pageObject?.total_elements,
+        totalPages: pageObject?.total_pages,
         page,
         pageSize,
         includeSubFields,

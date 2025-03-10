@@ -39,7 +39,7 @@ const useLoadOptions = ({
 
                 if ('content' in orkgResponseItems) {
                     responseItems.push(...(orkgResponseItems?.content ?? []));
-                    hasMore = !orkgResponseItems.last;
+                    hasMore = orkgResponseItems.page.number < orkgResponseItems.page.total_pages - 1;
                 }
             }
 

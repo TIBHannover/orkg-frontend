@@ -43,9 +43,9 @@ function useVenuePapers({ venueId }) {
 
                             setPapers((prevResources) => [...prevResources, ...items]);
                             setIsNextPageLoading(false);
-                            setHasNextPage(!result.last);
-                            setIsLastPageReached(result.last);
-                            setTotalElements(result.totalElements);
+                            setHasNextPage(result.page.number < result.page.total_pages - 1);
+                            setIsLastPageReached(result.page.number === result.page.total_pages - 1);
+                            setTotalElements(result.page.total_elements);
                             setPage(p + 1);
                         })
                         .catch((error) => {
