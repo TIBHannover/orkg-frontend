@@ -3,6 +3,28 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.161.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.7...v0.161.0) - 2025-03-10
+
+### Changes
+
+- feat: display the number of content types on tabs [`#1516`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1516)
+- refactor: replace tippy with floating-ui [`#1512`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1512)
+- feat: render COinS metadata [`#1505`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1505)
+- fix: hide Add new paper on falsy allowCreate [`#1517`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1517)
+- refactor: migrate to new page fields [`#1502`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1502)
+- feat: display formatted labels outside contribution view [`#1500`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1500)
+- feat: install Tailwind [`#1518`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1518)
+- fix: use useHash instead of useLocation from react-use [`#1513`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1513)
+- feat: add content types to research fields taxonomy page [`#1514`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1514)
+- fix: clearing the DOI field using the paper metadata input form [`#1515`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1515)
+- fix: papers on front-page are not sorted by descending creation date [`#1511`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1511)
+- fix(Autocomplete): added props to align the autocomplete menu to right [`#1510`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1510)
+- fix: converting the data type of an already stored literal [`#1509`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1509)
+- fix: redirection page for papers [`#1508`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1508)
+- refactor: replace momentjs with dayjs [`#1499`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1499)
+- chore: update widgets dependencies [`#1497`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1497)
+
+---
 ## [v0.160.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.6...v0.160.7) - 2025-02-21
 
 ### Changes
