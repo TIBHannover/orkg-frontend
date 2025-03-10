@@ -890,6 +890,8 @@ export type ApiError = {
     }[];
 };
 
+export type ContentType = Paper | Comparison | LiteratureList | Visualization | Review | Template | RosettaStoneTemplate;
+
 export type Item = {
     _class: string;
-} & (Paper | Comparison | LiteratureList | Visualization | Review | Template | Resource | RosettaStoneTemplate | RosettaStoneStatement);
+} & (ContentType | Resource | RosettaStoneStatement);

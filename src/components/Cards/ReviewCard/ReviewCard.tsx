@@ -1,12 +1,12 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Coins from 'components/Coins/Coins';
 import Authors from 'components/Cards/PaperCard/Authors';
 import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import Link from 'next/link';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { CardBadge } from 'components/styled';
@@ -14,6 +14,7 @@ import { VISIBILITY } from 'constants/contentTypes';
 import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Review } from 'services/backend/types';
 import styled from 'styled-components';
@@ -28,9 +29,10 @@ type ReviewCardProps = {
     review: Review;
     showCurationFlags?: boolean;
     showBadge?: boolean;
+    renderCoins?: boolean;
 };
 
-const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, showBadge = false }) => {
+const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, showBadge = false, renderCoins = true }) => {
     // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
     // this because the new 'review' variable already has the field and authors included
     const { researchField, authors } = useCardData({
@@ -49,6 +51,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
     return (
         <ReviewCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {renderCoins && <Coins item={review} />}
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         <div>

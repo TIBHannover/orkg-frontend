@@ -1,5 +1,6 @@
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Coins from 'components/Coins/Coins';
 import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
 import Authors from 'components/Cards/PaperCard/Authors';
 import Description from 'components/Cards/PaperCard/Description/Description';
@@ -46,6 +47,7 @@ type PaperCardType = {
     isDescriptionEditable?: boolean;
     route?: string;
     handleUpdateDescription?: (description: string) => void;
+    renderCoins?: boolean;
 };
 
 const PaperCard: FC<PaperCardType> = ({
@@ -66,6 +68,7 @@ const PaperCard: FC<PaperCardType> = ({
     handleUpdateDescription = () => {},
     showContributionCount = false,
     route = null,
+    renderCoins = true,
 }) => {
     const showActionButtons = showAddToComparison || selectable || showCurationFlags;
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
@@ -82,6 +85,7 @@ const PaperCard: FC<PaperCardType> = ({
             style={{ flexWrap: 'wrap' }}
         >
             <div className="col-md-9 d-flex p-0">
+                {renderCoins && <Coins item={paper} />}
                 {showActionButtons && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         {selectable && (
