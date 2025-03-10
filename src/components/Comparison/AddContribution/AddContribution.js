@@ -306,15 +306,13 @@ export default function AddContribution({
                 </div>
             </ModalBody>
             <ModalFooter className="d-flex">
-                {paperResult.length > 0
-                    ? !allowCreate && (
-                          <div className="flex-grow-1">
-                              <Button color="light" onClick={() => onCreatePaper(searchPaper)}>
-                                  Add new paper
-                              </Button>
-                          </div>
-                      )
-                    : ''}
+                {allowCreate && (
+                    <div className="flex-grow-1">
+                        <Button color="light" onClick={() => onCreatePaper(searchPaper)}>
+                            Add new paper
+                        </Button>
+                    </div>
+                )}
 
                 <Button
                     disabled={selectedContributions.length === 0}
