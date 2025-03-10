@@ -1,22 +1,28 @@
 import DataBrowser from 'components/DataBrowser/DataBrowser';
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
 import ObjectStatements from 'components/Resource/Tabs/ObjectStatements';
 import PreviewFactory from 'components/Resource/Tabs/Preview/PreviewFactory/PreviewFactory';
 import ResourceUsage from 'components/Resource/Tabs/ResourceUsage';
 import Tabs from 'components/Tabs/Tabs';
+import useParams from 'components/useParams/useParams';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import { useRouter } from 'next/navigation';
+import { FC } from 'react';
 import { Container } from 'reactstrap';
 
-function TabsContainer({ id, classes, editMode }) {
+type TabsContainerProps = {
+    id: string;
+    classes: string[];
+    editMode: boolean;
+};
+
+const TabsContainer: FC<TabsContainerProps> = ({ id, classes, editMode }) => {
     const { activeTab } = useParams();
 
     const router = useRouter();
 
-    const onTabChange = (key) => {
+    const onTabChange = (key: string) => {
         router.push(
             `${reverse(ROUTES.RESOURCE_TABS, {
                 id,
@@ -72,12 +78,6 @@ function TabsContainer({ id, classes, editMode }) {
             />
         </Container>
     );
-}
-
-TabsContainer.propTypes = {
-    id: PropTypes.string.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    classes: PropTypes.array,
 };
 
 export default TabsContainer;

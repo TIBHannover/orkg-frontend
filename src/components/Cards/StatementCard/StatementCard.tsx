@@ -4,7 +4,7 @@ import Tippy from '@tippyjs/react';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -16,12 +16,14 @@ function StatementCard({ statement }: { statement: Statement }) {
     return (
         <div>
             <div className="row">
-                <div className="col-sm">
+                <div className="col-sm col-3">
                     <div className="px-3">
                         <DescriptionTooltip classes={statement.subject.classes} id={statement.subject.id} _class={statement.subject._class}>
                             {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
                                 <Link href={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
-                                    {statement.subject.label || 'No label'}
+                                    {('formatted_label' in statement.subject && statement.subject.formatted_label) || statement.subject.label || (
+                                        <i>No label</i>
+                                    )}
                                 </Link>
                             ) : (
                                 statement.subject.label || 'No label'
@@ -29,19 +31,20 @@ function StatementCard({ statement }: { statement: Statement }) {
                         </DescriptionTooltip>
                     </div>
                 </div>
-                <div className="col-sm">
+                <div className="col-sm col-3">
                     <DescriptionTooltip id={statement.predicate.id} _class={statement.predicate._class}>
                         <Link href={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
                     </DescriptionTooltip>
                 </div>
-                <div className="col-sm">
-                    {getLinkByEntityType(statement.object._class, statement.object.id) ? (
-                        <Link href={getLinkByEntityType(statement.object._class, statement.object.id)}>{statement.object.label || 'No label'}</Link>
-                    ) : (
-                        statement.object.label || 'No label'
+                <div className="col-sm col-3">
+                    {statement.object._class !== ENTITIES.LITERAL && (
+                        <Link href={getLinkByEntityType(statement.object._class, statement.object.id)}>
+                            {('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || <i>No label</i>}
+                        </Link>
                     )}
+                    {statement.object._class === ENTITIES.LITERAL && <span>{statement.object.label || 'No label'}</span>}
                 </div>
-                <div className="col-sm">
+                <div className="col-sm col-3">
                     <Tippy
                         interactive
                         content={

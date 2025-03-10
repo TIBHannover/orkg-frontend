@@ -18,7 +18,7 @@ import { getStatements, statementsUrl } from 'services/backend/statements';
 import useSWR from 'swr';
 import { getErrorMessage } from 'utils';
 
-function InformationTab({ id, classObject, editMode, callBackToReloadTree, showStatementsBrowser = true }) {
+function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);
     const [showMoreChildren, setShowMoreChildren] = useState(false);
     const { isCurationAllowed } = useAuthentication();
@@ -189,7 +189,6 @@ InformationTab.propTypes = {
     classObject: PropTypes.object,
     editMode: PropTypes.bool.isRequired,
     callBackToReloadTree: PropTypes.func,
-    showStatementsBrowser: PropTypes.bool,
 };
 
 export default InformationTab;

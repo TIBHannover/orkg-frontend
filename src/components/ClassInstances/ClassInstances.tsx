@@ -21,6 +21,11 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
     const searchParams = useSearchParams();
     const [q, setQ] = useQueryState('q', { defaultValue: '' });
 
+    const [isFormattedLabelEnabled, setIsFormattedLabelEnabled] = useQueryState('isFormattedLabelEnabled', {
+        defaultValue: true,
+        parse: (value) => value === 'true',
+    });
+
     const renderListItem = (item: Resource) => (
         <tr key={item.id}>
             <td className="col-4">
@@ -28,9 +33,11 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>{item.id}</Link>
                 </DescriptionTooltip>
             </td>
-            <td>
+            <td className="align-left">
                 <DescriptionTooltip id={item.id} _class={item._class} classes={item.classes}>
-                    <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>{item.label}</Link>
+                    <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>
+                        {isFormattedLabelEnabled && item.formatted_label ? item.formatted_label : item.label}
+                    </Link>
                 </DescriptionTooltip>
             </td>
             <td className="col-2">{item.shared}</td>
@@ -54,7 +61,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
         fetchFunction: getResources,
         fetchFunctionName: 'getResources',
         fetchUrl: resourcesUrl,
-        fetchExtraParams: { include: [classId], q },
+        fetchExtraParams: { include: [classId], q, returnFormattedLabels: true },
         prefixParams,
     });
 
@@ -77,6 +84,12 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
                         onChange={(e) => handleSearch(e.target.value)}
                         defaultValue={searchParams.get('q')?.toString()}
                     />
+                </FormGroup>
+                <FormGroup check>
+                    <Label>
+                        <Input type="checkbox" checked={isFormattedLabelEnabled} onChange={(e) => setIsFormattedLabelEnabled(e.target.checked)} />{' '}
+                        Show formatted label when available
+                    </Label>
                 </FormGroup>
             </Form>
             <p className="mt-2">Total number of instances: {!isLoading ? <b>{totalElements}</b> : 'Loading...'}</p>

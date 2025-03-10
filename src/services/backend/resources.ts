@@ -58,6 +58,7 @@ export type GetResourcesParams<T extends boolean = false> = {
     exclude?: string[];
     baseClass?: string | null;
     returnContent?: T;
+    returnFormattedLabels?: boolean;
 } & PaginationParams &
     VisibilityParam &
     VerifiedParam &
@@ -100,7 +101,15 @@ export const getResources = <T extends boolean = false>({
     ],
     baseClass = null,
     returnContent = false as T,
+    returnFormattedLabels = false,
 }: GetResourcesParams<T>): Promise<T extends true ? Resource[] : PaginatedResponse<Resource>> => {
+    let headers;
+    if (returnFormattedLabels) {
+        headers = {
+            'Content-Type': 'application/json;charset=utf-8',
+            Accept: 'application/json;formatted-labels=V1',
+        };
+    }
     const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
     const searchParams = qs.stringify(
         {
@@ -125,6 +134,7 @@ export const getResources = <T extends boolean = false>({
     return resourcesApi
         .get<PaginatedResponse<Resource>>('', {
             searchParams,
+            headers,
         })
         .json()
         .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Resource[] : PaginatedResponse<Resource>>;

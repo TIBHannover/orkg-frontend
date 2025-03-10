@@ -3,20 +3,27 @@ import TreeView from 'components/Class/TreeView';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import Tabs from 'components/Tabs/Tabs';
 import { TabHeaderStyle } from 'components/Tabs/styled';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
+import { FC, useState } from 'react';
 import { Col, Container, Row } from 'reactstrap';
+import { Class } from 'services/backend/types';
 
-function TabsContainer({ id, label, classObject, editMode }) {
+type TabsContainerProps = {
+    id: string;
+    label: string;
+    classObject: Class;
+    editMode: boolean;
+};
+
+const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMode }) => {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
     const router = useRouter();
 
-    const onTabChange = (key) => {
+    const onTabChange = (key: string) => {
         router.push(
             `${reverse(ROUTES.CLASS_TABS, {
                 id,
@@ -47,7 +54,6 @@ function TabsContainer({ id, label, classObject, editMode }) {
                                     <InformationTab
                                         classObject={classObject}
                                         id={id}
-                                        label={label}
                                         editMode={editMode}
                                         callBackToReloadTree={() => setReloadTree((v) => !v)}
                                     />
@@ -64,13 +70,6 @@ function TabsContainer({ id, label, classObject, editMode }) {
             </Row>
         </Container>
     );
-}
-
-TabsContainer.propTypes = {
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    classObject: PropTypes.object,
-    editMode: PropTypes.bool.isRequired,
 };
 
 export default TabsContainer;
