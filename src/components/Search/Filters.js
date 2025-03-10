@@ -1,7 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useFilters from 'components/Search/hooks/useFilters';
 import OrkgAskBanner from 'components/Search/OrkgAskBanner/OrkgAskBanner';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -67,7 +67,10 @@ const Filters = () => {
 
             {DEFAULT_FILTERS.map((filter) => (
                 <FormGroup key={`filter-${filter.id}`} check className="mb-0">
-                    <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by a user.">
+                    <Tooltip
+                        disabled={!(createdBy && !filter.isCreatedByActive)}
+                        content="This filter is not available for content created by a user."
+                    >
                         <span>
                             <Input
                                 disabled={createdBy && !filter.isCreatedByActive}
@@ -80,7 +83,7 @@ const Filters = () => {
                                 <span>{filter.label}</span>
                             </Label>
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 </FormGroup>
             ))}
             <br />

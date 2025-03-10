@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getStatementsByObjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 import { convertAuthorsToNewFormat, filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from 'utils';
 
-function useCardData({ id, initResearchField = null, initAuthors = [], isList = false }) {
+function useCardData({ id, initResearchField = undefined, initAuthors = [], isList = false }) {
     const [researchField, setResearchField] = useState(initResearchField);
     const [authors, setAuthors] = useState(initAuthors);
     const [isLoading, setIsLoading] = useState(false);

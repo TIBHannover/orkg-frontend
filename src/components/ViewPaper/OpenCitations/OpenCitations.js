@@ -1,12 +1,12 @@
-import { Badge } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { isNaN } from 'lodash';
-import { useEffect, useState } from 'react';
-import { getCitationCount } from 'services/openCitations';
 import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Badge } from 'reactstrap';
+import { getCitationCount } from 'services/openCitations';
 
 function OpenCitations({ doi }) {
     const [citationCount, setCitationCount] = useState(null);
@@ -21,8 +21,7 @@ function OpenCitations({ doi }) {
     return (
         typeof citationCount === 'number' &&
         !isNaN(citationCount) && (
-            <Tippy
-                interactive
+            <Tooltip
                 content={
                     <span>
                         Citation count provided by{' '}
@@ -37,7 +36,7 @@ function OpenCitations({ doi }) {
                         <FontAwesomeIcon icon={faComment} /> {pluralize('citation', citationCount, true)}
                     </Badge>
                 </span>
-            </Tippy>
+            </Tooltip>
         )
     );
 }

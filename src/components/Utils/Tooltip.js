@@ -1,20 +1,19 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 
-const Tooltip = ({ children, message, tippyProps = {} }) => (
-    <Tippy content={message} {...tippyProps}>
+const TooltipQuestion = ({ children, message }) => (
+    <Tooltip contentStyle={{ maxWidth: '300px' }} content={message}>
         <span>
-            {children} <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
+            {children ?? ''} <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
         </span>
-    </Tippy>
+    </Tooltip>
 );
 
-Tooltip.propTypes = {
+TooltipQuestion.propTypes = {
     children: PropTypes.node,
     message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    tippyProps: PropTypes.object,
 };
 
-export default Tooltip;
+export default TooltipQuestion;

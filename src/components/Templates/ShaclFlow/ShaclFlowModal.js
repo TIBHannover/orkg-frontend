@@ -1,8 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import DownloadButton from 'components/Templates/ShaclFlow/DownloadImage/DownloadButton';
 import Node from 'components/Templates/ShaclFlow/Node/Node';
 import useAutoLayout from 'components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
@@ -85,13 +85,13 @@ function ShaclFlowModal() {
         <Modal size="xl" isOpen={diagramMode} toggle={toggle} style={{ maxWidth: '90%', marginBottom: 0 }}>
             <ModalHeader toggle={toggle}>
                 Template diagram{' '}
-                <Tippy content="Open help center">
+                <Tooltip content="Open help center">
                     <span>
                         <a href="https://orkg.org/help-center/article/50/Template_Visualization_Diagram" target="_blank" rel="noopener noreferrer">
                             <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
                         </a>
                     </span>
-                </Tippy>
+                </Tooltip>
             </ModalHeader>
             <ModalBody>
                 <ErrorBoundary fallback="Something went wrong while loading the diagram!">

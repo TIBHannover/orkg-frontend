@@ -1,12 +1,12 @@
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { OptionType } from 'components/Autocomplete/types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { truncate } from 'lodash';
 import { FC, useContext, useState } from 'react';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
+import { getStatements, statementsUrl } from 'services/backend/statements';
 import { ThemeContext } from 'styled-components';
+import useSWR from 'swr';
 
 type InfoBoxProps = {
     data: OptionType;
@@ -16,40 +16,25 @@ type InfoBoxProps = {
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
 
 const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
-    const [statements, setStatements] = useState<Statement[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
     const theme = useContext(ThemeContext);
 
-    const onTrigger = () => {
-        if (!isLoaded && data.id && !data.external) {
-            setIsLoading(true);
-            getStatementsBySubject({ id: data.id })
-                .then((result) => {
-                    setStatements(result);
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                });
-        }
-    };
+    const [isOpen, setIsOpen] = useState(false);
+
+    const { data: statements, isLoading } = useSWR(data.id && isOpen ? [{ subjectId: data.id }, statementsUrl, 'getStatements'] : null, ([params]) =>
+        getStatements(params),
+    );
 
     const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
 
     return (
-        <Tippy
-            appendTo={document.body}
-            onTrigger={onTrigger}
-            interactive
+        <Tooltip
+            onTrigger={() => setIsOpen(true)}
             key="c"
             content={
                 <div className="text-start">
                     {!isLoading ? (
                         <>
-                            {!data.external && statements?.length > 0 && (
+                            {!data.external && statements && statements.length > 0 && (
                                 <>
                                     Statements:
                                     <ul className="px-3 mb-0">
@@ -89,7 +74,7 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
             <span>
                 <FontAwesomeIcon icon={faInfoCircle} color={iconColor} />
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

@@ -1,6 +1,5 @@
 import { faQuestionCircle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Breadcrumbs from 'components/DataBrowser/components/Header/Breadcrumbs/Breadcrumbs';
 import Metadata from 'components/DataBrowser/components/Header/Metadata/Metadata';
 import Preferences from 'components/DataBrowser/components/Header/Preferences/Preferences';
@@ -9,13 +8,13 @@ import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrow
 import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
+import Popover from 'components/FloatingUI/Popover';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import dayjs from 'dayjs';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
-import type { Instance } from 'tippy.js';
 
 const Header = () => {
-    const preferencesTippy = useRef<Instance | null>(null);
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config } = useDataBrowserState();
     const { error } = useEntity();
@@ -23,9 +22,7 @@ const Header = () => {
     const dispatch = useDataBrowserDispatch();
     const { canEdit } = useCanEdit();
 
-    const [visiblePreferences, setVisiblePreferences] = useState(false);
-    const showPreferences = () => setVisiblePreferences(true);
-    const hidePreferences = () => setVisiblePreferences(false);
+    const [preferencesPopover, setPreferencesPopover] = useState(false);
 
     if (error && error.statusCode === 404) {
         return <NotFound />;
@@ -47,26 +44,23 @@ const Header = () => {
             <div className="d-flex br-bottom p-2 align-items-center">
                 <Breadcrumbs />
                 <ButtonGroup className="m-auto flex-shrink-0" size="sm">
-                    <Tippy
-                        visible={visiblePreferences}
-                        onClickOutside={hidePreferences}
-                        onCreate={(instance) => (preferencesTippy.current = instance)}
-                        content={<Preferences closeTippy={() => preferencesTippy.current?.hide()} />}
-                        interactive
-                        appendTo={document.body}
+                    <Popover
+                        open={preferencesPopover}
+                        onOpenChange={setPreferencesPopover}
+                        content={<Preferences closeTippy={() => setPreferencesPopover(false)} />}
                     >
                         <div
                             className="btn btn-sm btn-outline-secondary d-flex align-items-center"
-                            onClick={visiblePreferences ? hidePreferences : showPreferences}
+                            onClick={() => setPreferencesPopover((v) => !v)}
                             role="button"
                             tabIndex={0}
-                            onKeyDown={(e) => (e.code === 'Enter' ? showPreferences() : undefined)}
+                            onKeyDown={(e) => (e.code === 'Enter' ? setPreferencesPopover((v) => !v) : undefined)}
                         >
                             <div className="flex-grow-1">
                                 <FontAwesomeIcon fixedWidth icon={faSlidersH} />
                             </div>
                         </div>
-                    </Tippy>
+                    </Popover>
                     <Button outline size="sm" onClick={() => dispatch({ type: 'SET_IS_HELP_MODAL_OPEN', payload: { isOpen: true } })}>
                         <FontAwesomeIcon fixedWidth icon={faQuestionCircle} />
                     </Button>
@@ -75,7 +69,7 @@ const Header = () => {
             {!canEdit && isEditMode && (
                 <UncontrolledAlert color="info" className="mb-0 mt-2 mx-2">
                     A shared resource cannot be edited directly{' '}
-                    <Tippy content="Open help center">
+                    <Tooltip content="Open help center">
                         <span className="ms-2">
                             <a
                                 href="https://orkg.org/help-center/article/29/%22A_shared_resource_cannot_be_edited_directly%22_-_What_does_that_mean"
@@ -89,7 +83,7 @@ const Header = () => {
                                 />
                             </a>
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 </UncontrolledAlert>
             )}
             <Metadata />

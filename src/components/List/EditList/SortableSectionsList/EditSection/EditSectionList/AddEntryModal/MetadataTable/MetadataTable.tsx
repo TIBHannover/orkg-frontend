@@ -1,6 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
 import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
@@ -35,15 +35,15 @@ const MetadataTable: FC<MetadataTableProps> = ({
                         <td>
                             <strong>Title:</strong>{' '}
                             {id ? (
-                                <Tippy content="Entry will be linked to ORKG resource">
+                                <Tooltip content="Entry will be linked to ORKG resource">
                                     <Link target="_blank" href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
                                         <PaperTitle title={title} /> <FontAwesomeIcon icon={faExternalLinkAlt} />
                                     </Link>
-                                </Tippy>
+                                </Tooltip>
                             ) : (
-                                <Tippy content="Not added to the ORKG yet, a new entry will be created">
+                                <Tooltip content="Not added to the ORKG yet, a new entry will be created">
                                     <span>{title}</span>
-                                </Tippy>
+                                </Tooltip>
                             )}
                         </td>
                     </tr>

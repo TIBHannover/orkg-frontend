@@ -1,10 +1,10 @@
-import Link from 'next/link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -16,16 +16,16 @@ const NodeHeaderStyled = styled.div`
 function NodeHeader({ label, id }) {
     return (
         <NodeHeaderStyled className="p-2 d-flex">
-            <ConditionalWrapper condition={label?.length > 40} wrapper={(children) => <Tippy content={label}>{children}</Tippy>}>
+            <ConditionalWrapper condition={label?.length > 40} wrapper={(children) => <Tooltip content={label}>{children}</Tooltip>}>
                 <div className="text-truncate d-inline-block me-2" style={{ maxWidth: 300 }}>
                     {label}
                 </div>
             </ConditionalWrapper>{' '}
-            <Tippy content="Go to template page">
+            <Tooltip content="Go to template page">
                 <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id })}>
                     <FontAwesomeIcon icon={faLink} color="#fff" />
                 </Link>
-            </Tippy>
+            </Tooltip>
         </NodeHeaderStyled>
     );
 }

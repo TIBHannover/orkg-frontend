@@ -1,15 +1,15 @@
-import styled from 'styled-components';
-import { upperFirst, filter } from 'lodash';
+import { faExclamationTriangle, faPen, faQuestionCircle, faQuoteLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import { Button } from 'reactstrap';
-import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
-import tokenizer from 'sbd';
+import { filter, upperFirst } from 'lodash';
 import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { Button } from 'reactstrap';
+import tokenizer from 'sbd';
+import styled from 'styled-components';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
 const MAX_SENTENCES_PER_ANNOTATION = 2;
@@ -89,16 +89,16 @@ const AnnotationCategory = (props) => {
     return (
         <Container>
             <h2 className="h5 d-flex justify-content-between">
-                <Tippy content={annotationClass.comment}>
+                <Tooltip content={annotationClass.comment} contentStyle={{ maxWidth: '300px' }}>
                     <span>
                         {upperFirst(annotationClass.label)} <QuestionIcon icon={faQuestionCircle} />
                     </span>
-                </Tippy>
-                <Tippy content="It is recommended to have maximum 3 annotated sentences per type">
+                </Tooltip>
+                <Tooltip content="It is recommended to have maximum 3 annotated sentences per type">
                     <AnnotationAmount>
                         {amount > 3 ? <FontAwesomeIcon icon={faExclamationTriangle} /> : ''} {pluralize('annotation', amount, true)}
                     </AnnotationAmount>
-                </Tippy>
+                </Tooltip>
             </h2>
             {annotationsFiltered.map((annotation) => {
                 const sentences = tokenizer.sentences(annotation.content.text);
@@ -110,30 +110,30 @@ const AnnotationCategory = (props) => {
                         {!hasTooManySentences ? (
                             <Quote icon={faQuoteLeft} />
                         ) : (
-                            <Tippy
+                            <Tooltip
                                 content={`It looks like you selected ${sentenceAmount} sentences for this annotation. It is recommended to select maximum 2 sentences`}
                             >
                                 <span>
                                     <SentenceWarning icon={faExclamationTriangle} />
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         )}
 
                         <div className="float-end">
-                            <Tippy content="Edit annotation text">
+                            <Tooltip content="Edit annotation text">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={(e) => handleEditClick(e, annotation.id)}>
                                         <FontAwesomeIcon icon={faPen} />
                                     </Button>
                                 </span>
-                            </Tippy>{' '}
-                            <Tippy content="Delete this annotation">
+                            </Tooltip>{' '}
+                            <Tooltip content="Delete this annotation">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={(e) => handleDeleteClick(e, annotation.id)}>
                                         <FontAwesomeIcon icon={faTrash} />
                                     </Button>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </div>
                         {annotation.content.text}
                     </AnnotationItem>

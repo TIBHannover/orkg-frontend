@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { DropdownMenu, DropdownItem, FormGroup, Label, Input, UncontrolledButtonDropdown, DropdownToggle, Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Popover from 'components/FloatingUI/Popover';
 import { RESOURCES } from 'constants/graphSettings';
-import Tippy from '@tippyjs/react';
-import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Button, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, UncontrolledButtonDropdown } from 'reactstrap';
+import { stringifySort } from 'utils';
 
 const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, setIncludeSubFields, researchFieldId }) => {
-    const [tippy, setTippy] = useState({});
+    const [isOpenPopover, setIsOpenPopover] = useState(false);
     return (
         <>
             {researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN && (
@@ -27,11 +27,8 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                 </UncontrolledButtonDropdown>
             )}
             {researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
-                <Tippy
-                    interactive
-                    trigger="click"
+                <Popover
                     placement="bottom-end"
-                    onCreate={(instance) => setTippy(instance)}
                     content={
                         <div className="p-2">
                             <FormGroup>
@@ -39,7 +36,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                                 <Input
                                     value={sort}
                                     onChange={(e) => {
-                                        tippy.hide();
+                                        setIsOpenPopover(false);
                                         setSort(e.target.value);
                                     }}
                                     bsSize="sm"
@@ -56,7 +53,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                                 <Label check>
                                     <Input
                                         onChange={(e) => {
-                                            tippy.hide();
+                                            setIsOpenPopover(false);
                                             setIncludeSubFields(e.target.checked);
                                         }}
                                         checked={includeSubFields}
@@ -69,13 +66,21 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                             </FormGroup>
                         </div>
                     }
+                    open={isOpenPopover}
+                    onOpenChange={setIsOpenPopover}
                 >
                     <span>
-                        <Button color="light" className="flex-shrink-0 ps-3 pe-3" style={{ marginLeft: 'auto' }} size="sm">
+                        <Button
+                            onClick={() => setIsOpenPopover((v) => !v)}
+                            color="light"
+                            className="flex-shrink-0 ps-3 pe-3"
+                            style={{ marginLeft: 'auto' }}
+                            size="sm"
+                        >
                             {stringifySort(sort)} <FontAwesomeIcon icon={faChevronDown} />
                         </Button>
                     </span>
-                </Tippy>
+                </Popover>
             )}
         </>
     );

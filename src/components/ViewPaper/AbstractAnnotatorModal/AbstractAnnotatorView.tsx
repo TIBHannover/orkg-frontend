@@ -1,7 +1,7 @@
-import Tippy from '@tippyjs/react';
 import capitalize from 'capitalize';
 import { OptionType } from 'components/Autocomplete/types';
-import Tooltip from 'components/Utils/Tooltip';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import TooltipQuestion from 'components/Utils/Tooltip';
 import AbstractAnnotator from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
 import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 import toArray from 'lodash/toArray';
@@ -58,16 +58,16 @@ const AbstractAnnotatorView: FC<AbstractAnnotatorViewProps> = ({
             {!isAbstractLoading && !isAnnotationLoading && (
                 <div>
                     <div id="annotationBadges">
-                        <Tooltip message="Annotation labels are the properties that will be used in the contribution data.">
+                        <TooltipQuestion message="Annotation labels are the properties that will be used in the contribution data.">
                             Annotation labels
-                        </Tooltip>
+                        </TooltipQuestion>
                         <span className="me-1 ms-1" />
                         {rangesPredicates.length > 0 &&
                             rangesPredicates.map((p, index) => {
                                 const aconcept = p ? predicateOptions.filter((e) => e.id === p) : [];
                                 if (p && aconcept.length > 0) {
                                     return (
-                                        <Tippy key={`p${p}`} content={aconcept[0].description}>
+                                        <Tooltip key={`p${p}`} content={aconcept[0].description}>
                                             <span>
                                                 <Badge
                                                     className="me-2"
@@ -85,7 +85,7 @@ const AbstractAnnotatorView: FC<AbstractAnnotatorViewProps> = ({
                                                     </Badge>
                                                 </Badge>
                                             </span>
-                                        </Tippy>
+                                        </Tooltip>
                                     );
                                 }
                                 return (

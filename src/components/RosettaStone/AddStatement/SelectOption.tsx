@@ -1,6 +1,6 @@
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { toInteger } from 'lodash';
 import { FC } from 'react';
 import { OptionProps, components } from 'react-select';
@@ -34,11 +34,11 @@ const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ chil
                     </small>
                 )}
                 {!data.__isNew__ && (
-                    <Tippy appendTo={document.body} interactive content={<div className="text-start">{data.description}</div>}>
+                    <Tooltip content={<div className="text-start">{data.description}</div>}>
                         <span>
                             <FontAwesomeIcon icon={faInfoCircle} />
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 )}
             </div>
         </components.Option>

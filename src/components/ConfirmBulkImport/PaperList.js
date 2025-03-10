@@ -1,7 +1,7 @@
 import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import StatementList from 'components/ConfirmBulkImport/StatementList';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
@@ -91,13 +91,13 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                     )}
                                     {!existingPaperIds[i] && paper.title && (
                                         <>
-                                            <Tippy content="A new ORKG paper will be created">
+                                            <Tooltip content="A new ORKG paper will be created">
                                                 <span>
                                                     <Badge color="info" className="me-1 py-1 px-2">
                                                         New
                                                     </Badge>
                                                 </span>
-                                            </Tippy>
+                                            </Tooltip>
                                             {paper.title}
                                         </>
                                     )}

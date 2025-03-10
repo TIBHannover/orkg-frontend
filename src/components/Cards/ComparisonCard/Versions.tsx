@@ -1,6 +1,6 @@
 import { faChartBar, faCodeBranch, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
@@ -28,9 +28,8 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
     const _data = getComparisonData(version, data ?? []);
 
     return (
-        <Tippy
+        <Tooltip
             onTrigger={() => setIsActive(true)}
-            onHide={() => setIsActive(false)}
             content={
                 <>
                     {version.label}
@@ -67,7 +66,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
             <span>
                 <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>Version {dayjs(version.created_at).format('DD-MM-YYYY')}</Link>
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

@@ -1,13 +1,13 @@
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from 'components/ShareLinkMarker/helpers';
+import { usePathname } from 'next/navigation';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
-import Tippy, { useSingleton } from '@tippyjs/react';
 import { Button } from 'reactstrap';
-import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from 'components/ShareLinkMarker/helpers';
-import { usePathname } from 'next/navigation';
+import styled from 'styled-components';
 
 export const ShareSideBox = styled.div`
     position: absolute;
@@ -28,32 +28,30 @@ export const ShareSideBox = styled.div`
 `;
 
 const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: string }) => {
-    const [source, target] = useSingleton();
     const pathname = usePathname();
     const shareUrl = `${window.location.protocol}//${window.location.host}${pathname}`;
 
     return (
         <ShareSideBox className="pt-2 ps-2 pe-2 pb-2">
-            <Tippy placement="left" singleton={source} delay={500} />
             <div className="text-muted mb-1">
                 <small>Share</small>
             </div>
-            <Tippy singleton={target} content={`Share this ${typeOfLink || 'page'} on Facebook`}>
+            <Tooltip placement="left" content={`Share this ${typeOfLink || 'page'} on Facebook`}>
                 <a href={getFacebookSharerLink({ shareUrl })} target="_blank" className="text-secondary" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faFacebook} />
                 </a>
-            </Tippy>
-            <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
+            </Tooltip>
+            <Tooltip placement="left" content={`Share this  ${typeOfLink || 'page'} on Twitter`}>
                 <a href={getTwitterSharerLink({ shareUrl, title })} target="_blank" className="text-secondary" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faXTwitter} />
                 </a>
-            </Tippy>
-            <Tippy singleton={target} content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
+            </Tooltip>
+            <Tooltip placement="left" content={`Share this  ${typeOfLink || 'page'} on Linkedin`}>
                 <a href={getLinkedInSharerLink({ shareUrl })} target="_blank" className="text-secondary" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faLinkedin} />
                 </a>
-            </Tippy>
-            <Tippy singleton={target} content="Copy link to clipboard">
+            </Tooltip>
+            <Tooltip placement="left" content="Copy link to clipboard">
                 <span>
                     <CopyToClipboard
                         text={shareUrl}
@@ -70,7 +68,7 @@ const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: str
                         </Button>
                     </CopyToClipboard>
                 </span>
-            </Tippy>
+            </Tooltip>
         </ShareSideBox>
     );
 };

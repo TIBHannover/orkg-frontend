@@ -1,9 +1,9 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ObservatoryBox from 'components/ObservatoryBox/ObservatoryBox';
 import EditMetadataModal from 'components/Review/EditReview/EditMetadata/EditMetadataModal/EditMetadataModal';
 import useReview from 'components/Review/hooks/useReview';
@@ -22,9 +22,9 @@ const EditMetadata = () => {
     return (
         <SectionStyled className="box rounded">
             <SectionTypeStyled disabled>
-                <Tippy hideOnClick={false} content="The type of the metadata cannot be changed">
+                <Tooltip content="The type of the metadata cannot be changed">
                     <span>metadata</span>
-                </Tippy>
+                </Tooltip>
             </SectionTypeStyled>
 
             <div className="d-flex justify-content-between">

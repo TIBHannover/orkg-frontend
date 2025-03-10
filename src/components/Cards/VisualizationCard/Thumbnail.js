@@ -1,12 +1,12 @@
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { memo, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { getThing } from 'services/simcomp';
 import styled from 'styled-components';
 
@@ -46,11 +46,11 @@ const Thumbnail = (props) => {
         <>
             {!isLoading && thumbnail && (
                 <Link href={reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })}>
-                    <Tippy content={props.visualization.label}>
+                    <Tooltip content={props.visualization.title}>
                         <ResourceItem key={thumbnail.figureId}>
                             <GDCVisualizationRenderer disableInteractivity height="50px" width="160px" model={thumbnail} />
                         </ResourceItem>
-                    </Tippy>
+                    </Tooltip>
                 </Link>
             )}
             {isLoading && <div style={{ height: '50px', width: '160px' }} />}

@@ -1,7 +1,7 @@
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { useAutocompleteDispatch, useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import type { GroupBase } from 'react-select';
 import { MenuProps, components } from 'react-select';
 import { Badge, Button } from 'reactstrap';
@@ -35,7 +35,7 @@ const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends b
                                 Sources
                                 <div className="overflow-hidden">
                                     {selectedOntologies.map((ontology) => (
-                                        <Tippy
+                                        <Tooltip
                                             key={ontology.id}
                                             content={
                                                 <div className="text-break">
@@ -49,18 +49,18 @@ const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends b
                                                     {ontology.shortLabel}
                                                 </Badge>
                                             </span>
-                                        </Tippy>
+                                        </Tooltip>
                                     ))}
                                 </div>
                             </div>
 
-                            <Tippy content="Select sources">
+                            <Tooltip content="Select sources">
                                 <span>
                                     <Button color="light-darker" className="px-2 py-0 ms-2" onClick={toggle} size="sm">
                                         <FontAwesomeIcon icon={faGear} size="sm" />
                                     </Button>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </>
                     )}
                 </div>

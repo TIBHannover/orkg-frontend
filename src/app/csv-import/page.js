@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Alert, Button, Form, FormGroup, Label, Table, InputGroup } from 'reactstrap';
-import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
-import { useCSVReader } from 'react-papaparse';
-import styled from 'styled-components';
-import StepContainer from 'components/StepContainer';
-import Tippy from '@tippyjs/react';
-import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
+import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import StepContainer from 'components/StepContainer';
+import { useEffect, useState } from 'react';
+import { useCSVReader } from 'react-papaparse';
+import { Alert, Button, Form, FormGroup, InputGroup, Label, Table } from 'reactstrap';
+import styled from 'styled-components';
 
 const TableContainerStyled = styled.div`
     overflow: auto;
@@ -50,7 +50,7 @@ const CsvImport = () => {
     const title = (
         <>
             CSV import
-            <Tippy content="Open help center">
+            <Tooltip content="Open help center">
                 <span className="ms-3">
                     <a href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
                         <FontAwesomeIcon
@@ -60,7 +60,7 @@ const CsvImport = () => {
                         />
                     </a>
                 </span>
-            </Tippy>
+            </Tooltip>
         </>
     );
 

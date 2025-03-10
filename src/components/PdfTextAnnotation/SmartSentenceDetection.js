@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Input } from 'reactstrap';
-import Tippy from '@tippyjs/react';
-import { summarizeText } from 'services/annotation/index';
-import { useSelector, useDispatch } from 'react-redux';
-import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'slices/pdfTextAnnotationSlice';
-import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { isString } from 'lodash';
 import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Input } from 'reactstrap';
+import { summarizeText } from 'services/annotation/index';
+import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'slices/pdfTextAnnotationSlice';
+import styled, { createGlobalStyle } from 'styled-components';
 
 const ANNOTATION_RATIO = 0.08;
 const PROCESSING_SECONDS_PER_PAGE = 10;
@@ -283,9 +283,13 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
 
     return (
         <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={estimatedLoadingTime} id="smart-sentence-detection">
-            <Tippy content="Automatically highlight sentences that are potentially useful for annotation" placement="bottom">
+            <Tooltip
+                content="Automatically highlight sentences that are potentially useful for annotation"
+                placement="bottom"
+                contentStyle={{ maxWidth: '300px' }}
+            >
                 <span>Smart sentence detection</span>
-            </Tippy>
+            </Tooltip>
 
             {!isLoading ? (
                 <Input

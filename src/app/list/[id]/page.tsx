@@ -2,12 +2,12 @@
 
 import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import NotFound from 'app/not-found';
 import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import Confirm from 'components/Confirmation/Confirmation';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import GraphViewModal from 'components/GraphView/GraphViewModal';
 import EditList from 'components/List/EditList/EditList';
 import PublishModal from 'components/List/EditList/PublishModal/PublishModal';
@@ -89,11 +89,11 @@ const List = () => {
             <TitleBar
                 titleAddition={
                     publicationDate && (
-                        <Tippy content={`Update message: "${version?.changelog}"`}>
+                        <Tooltip content={`Update message: "${version?.changelog}"`}>
                             <SubTitle className=" mt-1">
                                 Published on <time dateTime={version?.created_at}>{publicationDate}</time> - Version {versionNumber}
                             </SubTitle>
-                        </Tippy>
+                        </Tooltip>
                     )
                 }
                 buttonGroup={
@@ -107,7 +107,7 @@ const List = () => {
                                 {isLoadingInline ? (
                                     <FontAwesomeIcon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
-                                    <Tippy content="All changes are saved">
+                                    <Tooltip content="All changes are saved">
                                         <span>
                                             <FontAwesomeIcon
                                                 icon={faCheckCircle}
@@ -116,7 +116,7 @@ const List = () => {
                                                 aria-label="All changes are saved"
                                             />
                                         </span>
-                                    </Tippy>
+                                    </Tooltip>
                                 )}
                             </div>
                         )}

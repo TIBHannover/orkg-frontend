@@ -1,4 +1,4 @@
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -37,7 +37,7 @@ type SlotTooltipProps = {
 
 export const SlotTooltip = ({ children, slot }: SlotTooltipProps) => {
     return (
-        <Tippy
+        <Tooltip
             content={
                 <>
                     <HeaderStyled className="pb-2 mb-2 d-flex">
@@ -104,14 +104,10 @@ export const SlotTooltip = ({ children, slot }: SlotTooltipProps) => {
                     )}
                 </>
             }
-            delay={[500, 0]}
-            appendTo={document.body}
-            interactive
-            arrow
         >
             <span tabIndex={0} role="button" style={{ cursor: 'inherit' }}>
                 {children}
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };

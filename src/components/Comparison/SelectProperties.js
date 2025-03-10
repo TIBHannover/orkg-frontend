@@ -1,7 +1,7 @@
-import Tippy from '@tippyjs/react';
 import capitalize from 'capitalize';
 import { activatedPropertiesToList } from 'components/Comparison/hooks/helpers';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Badge, FormGroup, Input, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -64,11 +64,11 @@ const SelectProperties = (props) => {
                                     {capitalize(property.label)}
                                 </Label>
                             </FormGroup>
-                            <Tippy content="Amount of contributions">
+                            <Tooltip content="Amount of contributions">
                                 <span>
                                     <Badge color="light">{property.contributionAmount}</Badge>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </ListGroupItemStyled>
                     ))}
                 </ListGroup>

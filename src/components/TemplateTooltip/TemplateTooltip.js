@@ -1,15 +1,15 @@
-import Link from 'next/link';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { getTemplate } from 'services/backend/templates';
 import format from 'string-format';
 import styled from 'styled-components';
-import { getTemplate } from 'services/backend/templates';
 
 export const HeaderStyled = styled.div`
     border-bottom: 1px ${(props) => props.theme.secondaryDarker} solid;
@@ -60,18 +60,18 @@ const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
     };
 
     return (
-        <Tippy
+        <Tooltip
             onTrigger={onTrigger}
             content={
-                <>
+                <div style={{ maxWidth: 300 }}>
                     <HeaderStyled className="pb-2 mb-2 d-flex">
                         <div className="flex-grow-1">{template.label}</div>
                         <div>
-                            <Tippy content="Go to template page">
+                            <Tooltip content="Go to template page">
                                 <Link target="_blank" className="ms-2" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                     <FontAwesomeIcon icon={faLink} />
                                 </Link>
-                            </Tippy>
+                            </Tooltip>
                         </div>
                     </HeaderStyled>
                     {!isLoading ? (
@@ -143,16 +143,12 @@ const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
                     ) : (
                         'Loading ...'
                     )}
-                </>
+                </div>
             }
-            delay={[500, 0]}
-            appendTo={document.body}
             disabled={disabled}
-            interactive
-            arrow
         >
             <span tabIndex="0">{children}</span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

@@ -1,7 +1,7 @@
 import { faEyeSlash as faEmptyEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useAuthentication from 'components/hooks/useAuthentication';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -23,8 +23,7 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
     }
 
     return (
-        <Tippy
-            interactive
+        <Tooltip
             content={
                 isCurationAllowed ? (
                     buttonTooltip
@@ -56,7 +55,7 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
                     size={size}
                 />
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

@@ -1,8 +1,8 @@
 import { faClock, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { ENTITIES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -45,8 +45,7 @@ function StatementCard({ statement }: { statement: Statement }) {
                     {statement.object._class === ENTITIES.LITERAL && <span>{statement.object.label || 'No label'}</span>}
                 </div>
                 <div className="col-sm col-3">
-                    <Tippy
-                        interactive
+                    <Tooltip
                         content={
                             <div className="p-1">
                                 <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
@@ -71,7 +70,7 @@ function StatementCard({ statement }: { statement: Statement }) {
                         }
                     >
                         <ActionButtonView action={(e) => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
-                    </Tippy>
+                    </Tooltip>
                 </div>
             </div>
             <hr />

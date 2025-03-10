@@ -1,10 +1,10 @@
+import { drop } from '@mswjs/data';
 import '@testing-library/jest-dom/extend-expect';
 import 'jest-canvas-mock';
-import server from 'services/mocks/server';
+import nextRouterMock, { useRouter } from 'next-router-mock';
 import db from 'services/mocks/db';
 import seed from 'services/mocks/seed';
-import { drop } from '@mswjs/data';
-import nextRouterMock, { useRouter } from 'next-router-mock';
+import server from 'services/mocks/server';
 
 beforeAll(async () => {
     server.listen();
@@ -53,6 +53,12 @@ jest.mock('next-auth/react', () => {
         getSession: jest.fn(),
     };
 });
+
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+}));
 
 jest.mock('next/navigation', () => {
     const usePathname = () => {

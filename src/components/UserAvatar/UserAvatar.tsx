@@ -1,7 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
-import hideOnEsc from 'components/Tippy/hideOnEsc';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useContributor from 'components/hooks/useContributor';
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -59,12 +58,10 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
 
     if (userId && userId !== MISC.UNKNOWN_ID) {
         return (
-            <Tippy
-                offset={[0, 10]}
+            <Tooltip
                 placement="bottom"
                 content={`${contributor?.display_name}${appendToTooltip}`}
                 disabled={showDisplayName || !userId || !contributor || isLoadingContributor}
-                plugins={[hideOnEsc]}
             >
                 <StyledUserAvatar tabIndex={0}>
                     <Link href={reverse(ROUTES.USER_PROFILE, { userId })} target={linkTarget}>
@@ -81,16 +78,16 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
                         )}
                     </Link>
                 </StyledUserAvatar>
-            </Tippy>
+            </Tooltip>
         );
     }
     if (userId === MISC.UNKNOWN_ID) {
         return (
-            <Tippy offset={[0, 10]} placement="bottom" content={`Unknown users ${appendToTooltip}`} plugins={[hideOnEsc]}>
+            <Tooltip placement="bottom" content={`Unknown users ${appendToTooltip}`}>
                 <span>
                     <StyledGravatar className="rounded-circle" md5={userId} size={size} />
                 </span>
-            </Tippy>
+            </Tooltip>
         );
     }
     return (

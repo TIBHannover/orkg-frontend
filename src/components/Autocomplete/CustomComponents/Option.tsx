@@ -1,9 +1,9 @@
 import { faArrowRight, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import InfoBox from 'components/Autocomplete/CustomComponents/InfoBox';
 import { SourceBadge } from 'components/Autocomplete/styled';
 import { OptionType } from 'components/Autocomplete/types';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
 import { useContext } from 'react';
@@ -66,9 +66,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                             </div>
                         )}
 
-                        <Tippy
-                            interactive
-                            appendTo={document.body}
+                        <Tooltip
                             content={
                                 <div className="d-flex align-items-center text-break">
                                     {data.id}
@@ -95,7 +93,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                             >
                                 {data.ontology ?? 'ORKG'} <FontAwesomeIcon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
                             </SourceBadge>
-                        </Tippy>
+                        </Tooltip>
                     </div>
                 )}
             </div>

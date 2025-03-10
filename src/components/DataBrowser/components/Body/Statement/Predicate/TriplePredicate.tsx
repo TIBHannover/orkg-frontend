@@ -6,7 +6,7 @@ import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserC
 import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
 import { StatementWrapperStyled } from 'components/DataBrowser/styles/styled';
 import { range } from 'lodash';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Statement } from 'services/backend/types';
 
 type TriplePredicateProps = {
@@ -16,6 +16,7 @@ type TriplePredicateProps = {
 };
 
 const TriplePredicate: FC<TriplePredicateProps> = ({ level, statement, deleteStatement }) => {
+    const [isFocused, setIsFocused] = useState(false);
     const { config } = useDataBrowserState();
 
     const { isEditMode } = config;
@@ -28,8 +29,10 @@ const TriplePredicate: FC<TriplePredicateProps> = ({ level, statement, deleteSta
             <StatementWrapperStyled className="px-2 py-1 d-flex align-items-center flex-grow-1">
                 <PredicateView predicate={statement.predicate} />{' '}
                 {canEdit && isEditMode && (
-                    <span className="ms-1 actionButtons">
+                    <span className={`ms-1 ${!isFocused && 'actionButtons'}`}>
                         <ActionButton
+                            open={isFocused}
+                            setOpen={setIsFocused}
                             title="Delete statement"
                             icon={faTrash}
                             requireConfirmation

@@ -1,7 +1,7 @@
 import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import dayjs from 'dayjs';
@@ -69,11 +69,11 @@ const ViewVisualizationModal = ({ isOpen, toggle, id }) => {
             <ModalBody>
                 <div className="d-flex">
                     <h5>{visualization.title ?? 'No Title'}</h5>
-                    <Tippy content="Go to resource page">
+                    <Tooltip content="Go to resource page">
                         <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: visualization.id })}?noRedirect`}>
                             <FontAwesomeIcon icon={faLink} className="text-primary" />
                         </Link>
-                    </Tippy>
+                    </Tooltip>
                 </div>
                 {visualization.description ?? 'No Description'}
                 <div className="mt-2">

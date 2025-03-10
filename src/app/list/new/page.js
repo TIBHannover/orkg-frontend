@@ -2,14 +2,14 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { useRouter } from 'next/navigation';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
@@ -53,11 +53,11 @@ const ListNew = () => {
 
                     <hr className="mt-5 mb-4" />
                     <FormGroup>
-                        <Tippy content="Choose the title of your list. You can always update the title later">
+                        <Tooltip content="Choose the title of your list. You can always update the title later">
                             <span>
                                 <Label for="articleTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
                             </span>
-                        </Tippy>
+                        </Tooltip>
 
                         <Input type="text" id="articleTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={(e) => setTitle(e.target.value)} />
                     </FormGroup>

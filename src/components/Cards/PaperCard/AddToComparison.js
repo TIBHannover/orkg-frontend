@@ -1,12 +1,12 @@
-import { useRef, useEffect } from 'react';
-import Tippy from '@tippyjs/react';
-import { Input, Label, FormGroup } from 'reactstrap';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Select, { components } from 'react-select';
-import { useSelector, useDispatch } from 'react-redux';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import PropTypes from 'prop-types';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Select, { components } from 'react-select';
+import { FormGroup, Input, Label } from 'reactstrap';
 import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
+import styled from 'styled-components';
 
 const Option = ({ children, data, ...props }) => (
     <components.Option {...props}>
@@ -100,10 +100,8 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
     }
 
     return (
-        <Tippy
+        <Tooltip
             placement="bottom-start"
-            interactiveDebounce={75}
-            interactive={!!(!contributionId && paper.contributions?.length > 1)}
             content={
                 !contributionId && paper.contributions?.length > 1 ? (
                     <>
@@ -159,7 +157,7 @@ const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
                     )}
                 </FormGroup>
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

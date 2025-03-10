@@ -1,7 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
@@ -14,39 +14,35 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 import { getLinkByEntityType, getResourceLink } from 'utils';
 
-const TippyStyle = styled(Tippy)`
-    &.tippy-box .tippy-content {
-        padding: 0 !important;
-        table {
-            border-collapse: collapse;
-            color: #fff;
-            overflow-wrap: break-word;
-            table-layout: fixed;
-            width: 100%;
-        }
-        table td,
-        table th {
-            border: 1px solid black;
-        }
-        table td:first-child {
-            width: 100px;
-        }
-        table tr:first-child td {
-            border-top: 0;
-            border-bottom: 0;
-            border-left: 0;
-        }
-        table tr:last-child td {
-            border-bottom: 0;
-        }
-        table tr td:first-child,
-        table tr th:first-child {
-            border-left: 0;
-        }
-        table tr td:last-child,
-        table tr th:last-child {
-            border-right: 0;
-        }
+const TableContentStyle = styled(Table)`
+    border-collapse: collapse;
+    color: #fff;
+    overflow-wrap: break-word;
+    table-layout: fixed;
+    max-width: 300px;
+
+    td,
+    th {
+        border: 1px solid black;
+    }
+    td:first-child {
+        width: 100px;
+    }
+    tr:first-child td {
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 0;
+    }
+    tr:last-child td {
+        border-bottom: 0;
+    }
+    tr td:first-child,
+    tr th:first-child {
+        border-left: 0;
+    }
+    tr td:last-child,
+    tr th:last-child {
+        border-right: 0;
     }
 `;
 
@@ -107,11 +103,13 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
     };
 
     return (
-        <TippyStyle
+        <Tooltip
+            contentStyle={{
+                padding: 0,
+            }}
             onTrigger={() => setIsActive(true)}
-            onHide={() => setIsActive(false)}
             content={
-                <Table className="rounded mb-0">
+                <TableContentStyle className="rounded mb-0" style={{ padding: '0px' }}>
                     <tbody>
                         <tr>
                             <td>{renderTypeLabel()} id</td>
@@ -141,11 +139,11 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                                 </div>
                                 {id && showURL && (
                                     <div>
-                                        <Tippy content={`Go to ${renderTypeLabel()} page`}>
+                                        <Tooltip content={`Go to ${renderTypeLabel()} page`}>
                                             <Link href={getLinkByEntityType(_class, id)} target="_blank">
                                                 <FontAwesomeIcon icon={faLink} size="xs" />
                                             </Link>
-                                        </Tippy>
+                                        </Tooltip>
                                     </div>
                                 )}
                             </td>
@@ -198,16 +196,12 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                             </tr>
                         )}
                     </tbody>
-                </Table>
+                </TableContentStyle>
             }
-            delay={[500, 0]}
-            appendTo={document.body}
             disabled={disabled}
-            interactive
-            arrow
         >
             <span>{children}</span>
-        </TippyStyle>
+        </Tooltip>
     );
 };
 

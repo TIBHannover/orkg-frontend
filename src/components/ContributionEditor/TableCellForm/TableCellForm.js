@@ -1,19 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
-import { InputGroup, FormFeedback } from 'reactstrap';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import InputField from 'components/ContributionEditor/InputField/InputField';
 import DatatypeSelector from 'components/ContributionEditor/DatatypeSelector/DatatypeSelector';
-import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
-import a from 'indefinite';
-import { useDispatch } from 'react-redux';
-import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
-import { useClickAway } from 'react-use';
-import ConfirmationTooltip from 'components/ActionButton/ConfirmationTooltip/ConfirmationTooltip';
-import Tippy from '@tippyjs/react';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
+import InputField from 'components/ContributionEditor/InputField/InputField';
 import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from 'components/FloatingUI/Popover';
+import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import a from 'indefinite';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useClickAway } from 'react-use';
+import { FormFeedback, InputGroup } from 'reactstrap';
+import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
 import { compareOption } from 'utils';
 
 const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
@@ -41,19 +41,15 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
 
     const literalInputRef = useRef(null);
     const autocompleteInputRef = useRef(null);
-    const confirmButtonRef = useRef(null);
-
-    const onShown = () => {
-        confirmButtonRef.current.focus();
-    };
 
     const [isValid, setIsValid] = useState(true);
+    const [isConversionTippyOpen, setIsConversionTippyOpen] = useState(false);
 
     // we need this state to prevent closing the modal of selecting ontologies when the users clicks outside the input field because of useClickAway
     const [ontologyModalIsOpen, setOntologyModalIsOpen] = useState(false);
     const [inputFieldModalIsOpen, setInputFieldModalIsOpen] = useState(false);
     const [formFeedback, setFormFeedback] = useState(null);
-    const confirmConversion = useRef(null);
+
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
@@ -93,7 +89,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
             const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue.trim());
             if (suggestions.length > 0 && !valueClass) {
                 setSuggestionType(suggestions[0]);
-                confirmConversion.current.show();
+                setIsConversionTippyOpen(true);
             } else if (!editMode) {
                 dispatch(addValue(entityType, { label: inputValue.trim(), datatype: getDataType() }, valueClass, contributionId, propertyId));
                 closeForm?.(false);
@@ -112,7 +108,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
             setInputDataType(suggestionType.type);
             closeForm?.(false);
         } else {
-            confirmConversion.current.hide();
+            setIsConversionTippyOpen(false);
             commitChangeLabel(inputValue.trim(), suggestionType.type);
             setInputDataType(suggestionType.type);
             closeForm();
@@ -154,9 +150,10 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
 
     return (
         <div ref={refContainer} style={{ minHeight: 35 }}>
-            <Tippy
-                onShown={onShown}
-                onCreate={(instance) => (confirmConversion.current = instance)}
+            <Popover
+                modal
+                open={isConversionTippyOpen}
+                onOpenChange={setIsConversionTippyOpen}
                 content={
                     <ConfirmationTooltip
                         message={
@@ -165,8 +162,6 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 Do you want to convert it?
                             </p>
                         }
-                        closeTippy={() => confirmConversion.current.hide()}
-                        ref={confirmButtonRef}
                         buttons={[
                             {
                                 title: 'Convert',
@@ -183,9 +178,6 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                         ]}
                     />
                 }
-                appendTo={document.body}
-                interactive
-                trigger="manual"
                 placement="top"
             >
                 <span>
@@ -296,7 +288,7 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                         />
                     </InputGroup>
                 </span>
-            </Tippy>
+            </Popover>
         </div>
     );
 };

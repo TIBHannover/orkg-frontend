@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import useSuggestions from 'components/PdfTextAnnotation/hooks/useSuggestions';
-import { upperFirst, isString } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import { Button } from 'reactstrap';
+import { isString, upperFirst } from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
+import { Button } from 'reactstrap';
+import styled from 'styled-components';
 
 const Container = styled.div`
     background: #333333;
@@ -31,11 +31,11 @@ const Option = ({ children, ...props }) => (
     <components.Option {...props}>
         <StyledSelectOption>
             <span>{children}</span>
-            <Tippy content={props.data.comment}>
+            <Tooltip content={props.data.comment} contentStyle={{ maxWidth: '300px' }}>
                 <span>
                     <FontAwesomeIcon icon={faQuestionCircle} />
                 </span>
-            </Tippy>
+            </Tooltip>
         </StyledSelectOption>
     </components.Option>
 );

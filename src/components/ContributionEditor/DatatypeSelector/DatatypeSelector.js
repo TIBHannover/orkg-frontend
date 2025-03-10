@@ -1,15 +1,15 @@
-import Link from 'next/link';
-import { useContext, useCallback } from 'react';
-import Select, { components } from 'react-select';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
 import { ENTITIES } from 'constants/graphSettings';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ThemeContext } from 'styled-components';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useCallback, useContext } from 'react';
+import Select, { components } from 'react-select';
+import { ThemeContext } from 'styled-components';
 
 const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
     <>
@@ -48,9 +48,9 @@ const DatatypeSelector = ({
     const CustomOption = useCallback(
         (innerProps) => (
             <components.Option {...innerProps}>
-                <Tippy content={innerProps.data.tooltip} disabled={!innerProps.data.tooltip}>
+                <Tooltip content={innerProps.data.tooltip} disabled={!innerProps.data.tooltip}>
                     <div>{innerProps.data.name}</div>
-                </Tippy>
+                </Tooltip>
             </components.Option>
         ),
         [],
@@ -119,8 +119,7 @@ const DatatypeSelector = ({
             <ConditionalWrapper
                 condition={isDisabled}
                 wrapper={(children) => (
-                    <Tippy
-                        interactive
+                    <Tooltip
                         content={
                             <TypeTooltipContent
                                 switchEntityType={entity && DATA_TYPES.filter((dt) => dt._class === entity).length <= 1}
@@ -130,7 +129,7 @@ const DatatypeSelector = ({
                         }
                     >
                         <span>{children}</span>
-                    </Tippy>
+                    </Tooltip>
                 )}
             >
                 <Select

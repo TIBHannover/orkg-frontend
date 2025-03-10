@@ -1,17 +1,17 @@
-import { components, MultiValueGenericProps } from 'react-select';
 import { OptionType } from 'components/Autocomplete/types';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import { components, MultiValueGenericProps } from 'react-select';
 
 const CustomMultiValueLabel = (props: MultiValueGenericProps<OptionType>) => {
     const { data } = props;
     const { innerProps, ...rest } = props;
     return (
-        <Tippy content={data?.label}>
+        <Tooltip content={data?.label}>
             {/* @ts-expect-error */}
             <span {...innerProps} style={innerProps.css}>
                 <components.MultiValueLabel innerProps={{ className: undefined }} {...rest} />
             </span>
-        </Tippy>
+        </Tooltip>
     );
 };
 

@@ -56,7 +56,7 @@ export const OptionButtonStyled = styled(Button)<OptionButtonStyledProps>`
     }
 `;
 
-type ActionButtonViewProps = {
+export type ActionButtonViewProps = {
     title: ReactNode;
     icon: IconDefinition;
     iconSpin?: boolean;
@@ -66,7 +66,6 @@ type ActionButtonViewProps = {
     testId?: string;
 };
 
-/* Tippy doesn't work when reference element is disabled, so adding span around the button fixes it  */
 const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
     ({ size = 'xs', iconSpin = false, isDisabled, action, title, icon, testId }, ref) => (
         <span ref={ref} className="me-2">

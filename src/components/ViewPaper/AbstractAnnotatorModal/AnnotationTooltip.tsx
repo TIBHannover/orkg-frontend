@@ -1,15 +1,13 @@
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { OptionType } from 'components/Autocomplete/types';
+import Popover from 'components/FloatingUI/Popover';
 import { ENTITIES } from 'constants/graphSettings';
-import { FC, ReactElement, useEffect, useRef, useState } from 'react';
+import { FC, ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createPredicate } from 'services/backend/predicates';
-import { removeAnnotation, updateAnnotationPredicate } from 'slices/viewPaperSlice';
-import { followCursor } from 'tippy.js';
-import type { Instance } from 'tippy.js';
 import { SingleValue } from 'react-select';
+import { createPredicate } from 'services/backend/predicates';
 import { Range } from 'slices/types';
+import { removeAnnotation, updateAnnotationPredicate } from 'slices/viewPaperSlice';
 
 type AnnotationTooltipProps = {
     range: Range;
@@ -19,9 +17,9 @@ type AnnotationTooltipProps = {
 };
 
 const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, getPredicateColor, predicateOptions }) => {
-    const tippyInstance = useRef<Instance | null>(null);
     const dispatch = useDispatch();
     const [defaultOptions, setDefaultOptions] = useState<OptionType[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         setDefaultOptions(predicateOptions);
@@ -40,15 +38,10 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
     };
     return (
         <span>
-            <Tippy
+            <Popover
+                open={isOpen}
+                onOpenChange={setIsOpen}
                 placement="top"
-                followCursor
-                plugins={[followCursor]}
-                arrow
-                interactive
-                onCreate={(instance) => {
-                    tippyInstance.current = instance;
-                }}
                 content={
                     <div style={{ width: '300px' }}>
                         <Autocomplete
@@ -57,7 +50,7 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
                             placeholder="Select or type to enter a property"
                             onChange={(e, a) => {
                                 handleChangeAnnotationClass(e, a);
-                                tippyInstance.current?.hide();
+                                setIsOpen(false);
                             }}
                             value={{
                                 label: range.predicate.label ? range.predicate.label : '',
@@ -71,10 +64,21 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
                     </div>
                 }
             >
-                <span style={{ backgroundColor: getPredicateColor(range.predicate.id), color: 'black' }} id={`CR${range.id}`}>
+                <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setIsOpen(!isOpen)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            setIsOpen(!isOpen);
+                        }
+                    }}
+                    style={{ backgroundColor: getPredicateColor(range.predicate.id), color: 'black' }}
+                    id={`CR${range.id}`}
+                >
                     {lettersNode}
                 </span>
-            </Tippy>
+            </Popover>
         </span>
     );
 };

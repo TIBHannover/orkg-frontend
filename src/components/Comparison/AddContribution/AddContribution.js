@@ -1,24 +1,24 @@
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
-import Link from 'next/link';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import PaperTitle from 'components/PaperTitle/PaperTitle';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getPaperByDoi } from 'services/backend/papers';
 import { getResources } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import styled from 'styled-components';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -242,7 +242,7 @@ export default function AddContribution({
                                     <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
                                         <Label check className="pe-2 ps-2">
                                             <Input type="checkbox" onChange={(e) => togglePaper(paper, e)} /> <PaperTitle title={paper.label} />{' '}
-                                            <Tippy content="Open paper in new window">
+                                            <Tooltip content="Open paper in new window">
                                                 <span>
                                                     <Link
                                                         title="View the paper page"
@@ -252,15 +252,15 @@ export default function AddContribution({
                                                         <FontAwesomeIcon icon={faExternalLinkAlt} />
                                                     </Link>
                                                 </span>
-                                            </Tippy>
+                                            </Tooltip>
                                             {allowCreate && (
-                                                <Tippy content="Create new contribution for this paper">
+                                                <Tooltip content="Create new contribution for this paper">
                                                     <span className="ms-2">
                                                         <Button color="link" className="p-0" size="lg" onClick={() => onCreateContribution(paper.id)}>
                                                             <FontAwesomeIcon icon={faPlusCircle} />
                                                         </Button>
                                                     </span>
-                                                </Tippy>
+                                                </Tooltip>
                                             )}
                                         </Label>
                                         {paper.contributions.length > 1 && (

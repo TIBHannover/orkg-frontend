@@ -1,7 +1,7 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
 import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
 import ContributorsModal from 'components/TopContributors/ContributorsModal';
@@ -46,8 +46,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                 <ContributorsAvatars>
                     {contributors?.slice(0, 18).map((contributor) => (
                         <div key={`contributor${contributor.id}`}>
-                            <Tippy
-                                offset={[0, 20]}
+                            <Tooltip
                                 placement="bottom"
                                 content={
                                     <div className="p-2">
@@ -77,15 +76,15 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                     <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
                                 </Link>
-                            </Tippy>
+                            </Tooltip>
                         </div>
                     ))}
                     {contributors?.length > 18 && (
-                        <Tippy key="contributor" content="View More">
+                        <Tooltip key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
                                 <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
-                        </Tippy>
+                        </Tooltip>
                     )}
                 </ContributorsAvatars>
             )}

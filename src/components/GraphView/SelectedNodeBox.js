@@ -1,12 +1,12 @@
-import Link from 'next/link';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
@@ -31,9 +31,9 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 <h2 className="h4 m-0 me-2">{selectedNode.data._class === ENTITIES.RESOURCE ? 'Resource' : 'Literal'}</h2>
                 {selectedNode.data._class === ENTITIES.RESOURCE && (
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: selectedNode.id })}?noRedirect`} target="_blank">
-                        <Tippy content="View resource">
+                        <Tooltip content="View resource">
                             <FontAwesomeIcon icon={faExternalLinkAlt} />
-                        </Tippy>
+                        </Tooltip>
                     </Link>
                 )}
             </div>

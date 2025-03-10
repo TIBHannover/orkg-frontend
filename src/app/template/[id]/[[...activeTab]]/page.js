@@ -2,13 +2,13 @@
 
 import { faClose, faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 import EditableHeader from 'components/EditableHeader';
 import ExportCitation from 'components/ExportCitation/ExportCitation';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
@@ -99,13 +99,13 @@ const Template = () => {
         <>
             <TitleBar
                 titleAddition={
-                    <Tippy content="Open help center">
+                    <Tooltip content="Open help center">
                         <span>
                             <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer">
                                 <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
                             </a>
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 }
                 buttonGroup={
                     <>

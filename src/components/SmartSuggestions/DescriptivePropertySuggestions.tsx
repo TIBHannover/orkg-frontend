@@ -1,6 +1,6 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
 import LLM_TASK_NAMES from 'constants/llmTasks';
 import ROUTES from 'constants/routes';
@@ -120,15 +120,16 @@ export const SmartDescriptiveProperty: FC<SmartDescriptivePropertyProps> = ({ pr
             llmTask={LLM_TASK_NAMES.RECOMMEND_PROPERTIES_DESCRIPTION}
             handleReload={getChatResponse}
         >
-            <Tippy content="Automatically generate a property description">
-                <button
-                    className="btn btn-smart btn-sm px-3 position-absolute"
-                    style={{ right: 5, top: 5 }}
-                    onClick={() => setIsOpenSmartTooltip((v) => !v)}
-                >
-                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
-                </button>
-            </Tippy>
+            <button
+                type="button"
+                onClick={() => setIsOpenSmartTooltip((v) => !v)}
+                style={{ right: 5, top: 5 }}
+                className="btn btn-smart btn-sm p-0 position-absolute p-0"
+            >
+                <Tooltip content="Automatically generate a property description" disabled={isOpenSmartTooltip}>
+                    <FontAwesomeIcon className="px-3 py-1" icon={faLightbulb} style={{ fontSize: '120%' }} />
+                </Tooltip>
+            </button>
         </SmartSuggestions>
     );
 };

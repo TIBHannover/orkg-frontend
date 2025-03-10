@@ -1,7 +1,7 @@
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import Tippy from '@tippyjs/react';
+import { filter, meanBy, upperFirst } from 'lodash';
 import { useSelector } from 'react-redux';
-import { upperFirst, filter, meanBy } from 'lodash';
 import { Progress } from 'reactstrap';
 
 const RECOMMENDED_ANNOTATION_AMOUNT = 2;
@@ -50,12 +50,12 @@ const ProgressBar = () => {
     );
 
     return (
-        <Tippy content={completionTooltip} placement="bottom">
+        <Tooltip content={completionTooltip} placement="bottom" contentStyle={{ maxWidth: '300px' }}>
             <div className="mb-4" id="completion-bar">
                 Completion {percentageTotal}%
                 <Progress color="success" value={percentageTotal} />
             </div>
-        </Tippy>
+        </Tooltip>
     );
 };
 

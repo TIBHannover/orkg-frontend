@@ -1,26 +1,26 @@
 'use client';
 
-import Link from 'next/link';
-import { useEffect } from 'react';
-import useParams from 'components/useParams/useParams';
-import { Controls, MarkerType, MiniMap } from 'reactflow';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
+import { faEllipsisV, faPen, faQuestionCircle, faRefresh, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContextMenu from 'components/DiagramEditor/ContextMenu';
-import EditNode from 'components/DiagramEditor/EditNode';
 import EditEdge from 'components/DiagramEditor/EditEdge';
 import EditGroup from 'components/DiagramEditor/EditGroup';
-import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
+import EditNode from 'components/DiagramEditor/EditNode';
 import ExportDiagram from 'components/DiagramEditor/ExportDiagram';
 import HelpModal from 'components/DiagramEditor/HelpModal';
-import TitleBar from 'components/TitleBar/TitleBar';
-import StyledReactFlow from 'components/DiagramEditor/styled';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPen, faSave, faRefresh, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import Tippy from '@tippyjs/react';
 import useDiagramEditor from 'components/DiagramEditor/hooks/useDiagramEditor';
+import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
+import StyledReactFlow from 'components/DiagramEditor/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
+import useParams from 'components/useParams/useParams';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { Controls, MarkerType, MiniMap } from 'reactflow';
+import { Alert, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 
 function Diagram() {
     const { id } = useParams();
@@ -147,7 +147,7 @@ function Diagram() {
             >
                 Diagram{diagram ? `: ${diagramResource?.label}` : ''}{' '}
                 {editMode && (
-                    <Tippy content="Open help modal">
+                    <Tooltip content="Open help modal">
                         <span className="ml-3">
                             <Button color="link" size="sm" className="p-0 m-0" style={{ fontSize: '22px' }} onClick={() => setIsHelpModalOpen(true)}>
                                 <span className="text-primary">
@@ -155,7 +155,7 @@ function Diagram() {
                                 </span>
                             </Button>
                         </span>
-                    </Tippy>
+                    </Tooltip>
                 )}
             </TitleBar>
             {isDataLoadedFromLocalStorage && (

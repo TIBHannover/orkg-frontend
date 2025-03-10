@@ -36,7 +36,7 @@ const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue,
         <div className="ms-2 d-inline-block">
             {'classes' in statement.object &&
                 (statement.object.classes?.includes(CLASSES.QB_DATASET_CLASS) || statement.object.classes?.includes(CLASSES.CSVW_TABLE)) && (
-                    <ActionButton appendTo={document.body} title="Visualize data in tabular form" icon={faTable} action={() => showPreview()} />
+                    <ActionButton title="Visualize data in tabular form" icon={faTable} action={() => showPreview()} />
                 )}
 
             {path.includes(statement.object.id) && !isEditMode && hasObjectStatements && (

@@ -103,7 +103,6 @@ TemplateButton.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     classId: PropTypes.string,
-    tippyTarget: PropTypes.object,
 };
 
 export default TemplateButton;

@@ -1,7 +1,7 @@
 import { faCheck, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -12,7 +12,7 @@ const TableHeaderColumnFirst = () => {
         <Properties>
             <PropertiesInner $transpose={false} className="first d-flex justify-content-between align-items-start">
                 Properties
-                <Tippy content="Every change you make is automatically saved">
+                <Tooltip content="Every change you make is automatically saved">
                     <div>
                         {isLoading && (
                             <div className="rounded">
@@ -25,7 +25,7 @@ const TableHeaderColumnFirst = () => {
                             </div>
                         )}
                     </div>
-                </Tippy>
+                </Tooltip>
             </PropertiesInner>
         </Properties>
     );

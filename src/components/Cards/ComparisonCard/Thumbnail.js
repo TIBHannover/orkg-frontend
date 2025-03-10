@@ -1,11 +1,11 @@
-import Tippy from '@tippyjs/react';
-import Link from 'next/link';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import THING_TYPES from 'constants/thingTypes';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { memo, useEffect, useState } from 'react';
 import { getStatements } from 'services/backend/statements';
@@ -69,20 +69,20 @@ const Thumbnail = (props) => {
         <>
             {!isLoading && thumbnail && thumbnail.src && (
                 <Link href={`${reverse(ROUTES.COMPARISON, { comparisonId: id })}#${figures[0].id}`}>
-                    <Tippy content={figures[0].label}>
+                    <Tooltip content={figures[0].label}>
                         <ResourceItem key={figures[0].id}>
                             <ThumbnailImg src={thumbnail.src} alt={figures[0].label} />
                         </ResourceItem>
-                    </Tippy>
+                    </Tooltip>
                 </Link>
             )}
             {!isLoading && thumbnail && !thumbnail.src && (
                 <Link href={reverse(ROUTES.COMPARISON, { comparisonId: id })}>
-                    <Tippy content={visualizations[0].label}>
+                    <Tooltip content={visualizations[0].label}>
                         <ResourceItem key={thumbnail.figureId}>
                             <GDCVisualizationRenderer disableInteractivity height="50px" width="160px" model={thumbnail} />
                         </ResourceItem>
-                    </Tippy>
+                    </Tooltip>
                 </Link>
             )}
             {isLoading && <div style={{ height: '50px', width: '160px' }} />}

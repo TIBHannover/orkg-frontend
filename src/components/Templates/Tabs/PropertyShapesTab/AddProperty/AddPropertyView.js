@@ -1,8 +1,8 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
 import { AddPropertyContentStyle, AddPropertyFormStyle, AddPropertyStyle, StyledButton } from 'components/StatementBrowser/styled';
@@ -31,9 +31,9 @@ const AddPropertyView = ({
                     <ConditionalWrapper
                         condition={isDisabled}
                         wrapper={(children) => (
-                            <Tippy content="This resource uses strict template">
+                            <Tooltip content="This resource uses strict template">
                                 <span>{children}</span>
-                            </Tippy>
+                            </Tooltip>
                         )}
                     >
                         <ButtonGroup className="d-flex">

@@ -1,8 +1,8 @@
 'use client';
 
-import Tippy from '@tippyjs/react';
 import DiffView from 'components/DiffView/DiffView';
 import useDiff from 'components/DiffView/useDiff';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useReview from 'components/Review/hooks/useReview';
 import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
@@ -31,11 +31,11 @@ const ReviewDiff = () => {
             creator: version.created_by,
             route: reverse(ROUTES.REVIEW, { id: version.id }),
             headerText: version && (
-                <Tippy content={`Update message: ${version.changelog}`}>
+                <Tooltip content={`Update message: ${version.changelog}`}>
                     <span>
                         Version {versionNumber} - {publicationDate}
                     </span>
-                </Tippy>
+                </Tooltip>
             ),
             buttonText: 'View article',
         };

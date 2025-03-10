@@ -2,11 +2,11 @@
 
 import { faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import InternalServerError from 'app/error';
 import NotFound from 'app/not-found';
 import Confirm from 'components/Confirmation/Confirmation';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useAuthentication from 'components/hooks/useAuthentication';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
@@ -132,11 +132,11 @@ const RSTemplatePage = () => {
                                     href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
                                     disabled={!canEditTemplate}
                                 >
-                                    <Tippy content={preventEditTooltipText} disabled={canEditTemplate}>
+                                    <Tooltip content={preventEditTooltipText} disabled={canEditTemplate}>
                                         <span>
                                             <FontAwesomeIcon icon={faPen} /> Edit statement type
                                         </span>
-                                    </Tippy>
+                                    </Tooltip>
                                 </Button>
                             </>
                         }
@@ -153,7 +153,7 @@ const RSTemplatePage = () => {
                             )}
                         </h3>
                         {isEditMode && !!user && (
-                            <Tippy content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
+                            <Tooltip content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
                                 <span>
                                     <Button
                                         color="danger"
@@ -166,7 +166,7 @@ const RSTemplatePage = () => {
                                         <FontAwesomeIcon icon={faTrash} /> Delete statement type
                                     </Button>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         )}
 
                         <ItemMetadata

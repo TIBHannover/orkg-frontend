@@ -1,14 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
-import { Input } from 'reactstrap';
+import { faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { ActionButton } from 'components/ContributionTabs/styled';
-import { ENTITIES } from 'constants/graphSettings';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import MathJax from 'components/ValuePlugins/MathJax/MathJax';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { Input } from 'reactstrap';
+import styled from 'styled-components';
 
 export const StyledInput = styled(Input)`
     background: #fff;
@@ -80,7 +79,7 @@ const ContributionTab = (props) => {
             {!isEditing && (
                 <ConditionalWrapper
                     condition={props.contribution.label?.length > 40}
-                    wrapper={(children) => <Tippy content={props.contribution.label}>{children}</Tippy>}
+                    wrapper={(children) => <Tooltip content={props.contribution.label}>{children}</Tooltip>}
                 >
                     <div className="text-truncate d-inline-block" style={{ maxWidth: 300 }}>
                         <MathJax text={props.contribution.label} />
@@ -91,7 +90,7 @@ const ContributionTab = (props) => {
                 <>
                     {props.canDelete && props.isSelected && (
                         <span className="d-inline-block ms-1 me-1">
-                            <Tippy content="Delete contribution">
+                            <Tooltip content="Delete contribution">
                                 <span>
                                     <ActionButton
                                         color="link"
@@ -107,12 +106,12 @@ const ContributionTab = (props) => {
                                         />
                                     </ActionButton>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </span>
                     )}
                     {props.isSelected && (
                         <span className="d-inline-block ms-1">
-                            <Tippy content="Edit the contribution label">
+                            <Tooltip content="Edit the contribution label">
                                 <span>
                                     <ActionButton
                                         color="link"
@@ -125,7 +124,7 @@ const ContributionTab = (props) => {
                                         <FontAwesomeIcon icon={!props.contribution.isSaving ? faPen : faSpinner} spin={props.contribution.isSaving} />
                                     </ActionButton>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </span>
                     )}
                 </>

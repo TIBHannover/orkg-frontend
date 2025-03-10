@@ -1,13 +1,13 @@
+import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useMeasure } from 'react-use';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
-import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
-import Tippy from '@tippyjs/react';
 
 const TableCellLiteral = ({ entity }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -35,13 +35,13 @@ const TableCellLiteral = ({ entity }) => {
                 </DescriptionTooltip>
             </div>
             {showButton && (
-                <Tippy content={entity.label} disabled={isExpanded}>
+                <Tooltip content={entity.label} disabled={isExpanded} contentStyle={{ maxWidth: '300px' }}>
                     <span>
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
                             {isExpanded ? 'Hide more' : 'Show more'} <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     </span>
-                </Tippy>
+                </Tooltip>
             )}
         </>
     );

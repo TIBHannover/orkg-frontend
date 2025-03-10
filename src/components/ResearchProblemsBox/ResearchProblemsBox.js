@@ -1,8 +1,8 @@
 import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ActionButton from 'components/ActionButton/ActionButton';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useAuthentication from 'components/hooks/useAuthentication';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
@@ -50,11 +50,11 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                     <ul className="ps-3 pt-2">
                         {problems.slice(0, 5).map((rp) => (
                             <li key={`rp${rp.id}`}>
-                                <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
+                                <Tooltip content={rp.label} disabled={rp.label?.length <= 70}>
                                     <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                         {truncate(rp.label, { length: 70 })}
                                     </Link>
-                                </Tippy>{' '}
+                                </Tooltip>{' '}
                                 {isEditMode && !!user && user.isCurationAllowed && by === 'Observatory' && (
                                     <ActionButton
                                         title="Delete this research problem from the observatory"

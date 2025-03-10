@@ -1,20 +1,20 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
+import { faAngleDoubleRight, faEllipsisH, faHome, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisH, faSpinner, faHome, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import { getParentResearchFields } from 'services/backend/statements';
-import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC, useState } from 'react';
+import { getFieldParents, researchFieldUrl } from 'services/backend/researchFields';
+import { Node } from 'services/backend/types';
+import styled from 'styled-components';
+import useSWR from 'swr';
 import { reverseWithSlug } from 'utils';
 
 export const BreadcrumbStyled = styled.ul`
     list-style: none;
     margin-bottom: 5px;
     font-size: small;
-    padding: 0;
 
     & .truncate {
         width: 120px;
@@ -25,12 +25,9 @@ export const BreadcrumbStyled = styled.ul`
     }
 
     & > li {
-        float: left;
         & > a {
             color: ${(props) => props.theme.secondary};
-            display: block;
             background: ${(props) => props.theme.lightDarker};
-            text-decoration: none;
             position: relative;
             line-height: 20px;
             padding: 0 6px 0 0;
@@ -103,54 +100,48 @@ export const TippyContentStyled = styled.div`
     }
 `;
 
-const RelativeBreadcrumbs = ({ researchField }) => {
-    const [parentResearchFields, setParentResearchFields] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+type RelativeBreadcrumbsProps = {
+    researchField?: Node;
+};
 
-    const onTrigger = () => {
-        if (!isLoaded && researchField) {
-            setIsLoading(true);
-            getParentResearchFields(researchField.id)
-                .then((result) => {
-                    setParentResearchFields(result.reverse());
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                });
-        }
-    };
+const RelativeBreadcrumbs: FC<RelativeBreadcrumbsProps> = ({ researchField }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
-    return researchField?.id ? (
-        <BreadcrumbStyled className="d-flex">
+    const { data: parentResearchFields, isLoading } = useSWR(
+        researchField && isOpen ? [{ fieldId: researchField?.id }, researchFieldUrl, 'getFieldParents'] : null,
+        ([params]) => getFieldParents(params),
+    );
+
+    if (!researchField) return null;
+
+    return (
+        <BreadcrumbStyled className="d-flex p-0">
             <li>
-                <Tippy
-                    appendTo={document.body}
-                    onTrigger={onTrigger}
-                    interactive
+                <Tooltip
+                    onTrigger={() => setIsOpen(true)}
                     content={
                         <TippyContentStyled>
                             {!isLoading ? (
                                 <small>
-                                    {parentResearchFields.map((field, index) => (
-                                        <span key={field.id}>
-                                            <Link
-                                                href={
-                                                    index === 0
-                                                        ? reverse(ROUTES.HOME)
-                                                        : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
-                                                }
-                                            >
-                                                {index === 0 ? <FontAwesomeIcon className="me-1" icon={faHome} /> : field.label}
-                                            </Link>
-                                            {index !== parentResearchFields.length - 1 && (
-                                                <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
-                                            )}
-                                        </span>
-                                    ))}
+                                    <Link href={reverse(ROUTES.HOME)}>
+                                        <FontAwesomeIcon className="me-1" icon={faHome} />
+                                    </Link>
+                                    {parentResearchFields && parentResearchFields?.length > 1 && (
+                                        <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                    )}
+                                    {parentResearchFields
+                                        ?.slice()
+                                        .reverse()
+                                        .map((field, index) => (
+                                            <span key={field.id}>
+                                                <Link href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}>
+                                                    {field.label}
+                                                </Link>
+                                                {index !== parentResearchFields.length - 1 && (
+                                                    <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                                )}
+                                            </span>
+                                        ))}
                                 </small>
                             ) : (
                                 <FontAwesomeIcon icon={faSpinner} spin />
@@ -158,31 +149,27 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                         </TippyContentStyled>
                     }
                 >
-                    <Link href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
+                    <Link
+                        className="d-block text-decoration-none"
+                        href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
+                    >
                         <FontAwesomeIcon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
                     </Link>
-                </Tippy>
+                </Tooltip>
             </li>
 
             <li>
-                <Tippy content={researchField.label} disabled={researchField.label?.length <= 18}>
+                <Tooltip content={researchField.label} disabled={researchField.label?.length <= 18}>
                     <Link
-                        className="text-decoration-none"
+                        className="d-block text-decoration-none"
                         href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
                     >
                         <div className="truncate">{researchField.label}</div>
                     </Link>
-                </Tippy>
+                </Tooltip>
             </li>
         </BreadcrumbStyled>
-    ) : null;
-};
-
-RelativeBreadcrumbs.propTypes = {
-    researchField: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string,
-    }),
+    );
 };
 
 export default RelativeBreadcrumbs;

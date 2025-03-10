@@ -1,6 +1,5 @@
 import { faCalendar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Coins from 'components/Coins/Coins';
@@ -8,6 +7,7 @@ import EditMetadataModal from 'components/Comparison/ComparisonHeader/EditMetada
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ObservatoryBox from 'components/Comparison/ObservatoryBox/ObservatoryBox';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -90,13 +90,13 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                                             )}
                                             {comparison.authors?.length > 0 && !isAnonymized && <AuthorBadges authors={comparison.authors} />}
                                             {isAnonymized && (
-                                                <Tippy content="The authors are hidden because the comparison is anonymized">
+                                                <Tooltip content="The authors are hidden because the comparison is anonymized">
                                                     <span>
                                                         <Badge color="light" className="me-2 mb-2" typeof="foaf:Person">
                                                             <FontAwesomeIcon icon={faUser} aria-label="Author name" /> Anonymized
                                                         </Badge>
                                                     </span>
-                                                </Tippy>
+                                                </Tooltip>
                                             )}
                                         </div>
                                         {comparison.description && (

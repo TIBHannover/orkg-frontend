@@ -1,8 +1,8 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -130,9 +130,9 @@ const PaperHeader = (props) => {
                         <ConditionalWrapper
                             condition={isMetadataDisabled}
                             wrapper={(children) => (
-                                <Tippy content="The metadata cannot be edited because the correctness is manually verified by a human curator">
+                                <Tooltip content="The metadata cannot be edited because the correctness is manually verified by a human curator">
                                     {children}
-                                </Tippy>
+                                </Tooltip>
                             )}
                         >
                             <div>
@@ -157,12 +157,12 @@ const PaperHeader = (props) => {
                 </div>
 
                 {viewPaper.verified && (
-                    <Tippy content="The paper metadata was verified by an ORKG curator">
+                    <Tooltip content="The paper metadata was verified by an ORKG curator">
                         <div className="mt-3 justify-content-end">
                             <FontAwesomeIcon icon={faCheckCircle} className="mt-1 me-1 text-success" />
                             Verified
                         </div>
-                    </Tippy>
+                    </Tooltip>
                 )}
             </div>
             {isOpenEditModal && (

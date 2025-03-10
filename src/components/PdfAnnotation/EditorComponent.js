@@ -1,8 +1,8 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BaseEditorComponent } from '@handsontable/react';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
@@ -293,14 +293,14 @@ class EditorComponent extends BaseEditorComponent {
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
                                     <StyledDropdownItem onClick={() => this.setState({ valueType: 'resource' })}>
-                                        <Tippy content="Choose Object to link this to an object, which can contain values on its own">
+                                        <Tooltip content="Choose Object to link this to an object, which can contain values on its own">
                                             <span>Object</span>
-                                        </Tippy>
+                                        </Tooltip>
                                     </StyledDropdownItem>
                                     <StyledDropdownItem onClick={() => this.setState({ valueType: 'literal' })}>
-                                        <Tippy content="Choose literal for values like numbers or plain text">
+                                        <Tooltip content="Choose literal for values like numbers or plain text">
                                             <span>Literal</span>
-                                        </Tippy>
+                                        </Tooltip>
                                     </StyledDropdownItem>
                                 </DropdownMenu>
                             </Dropdown>

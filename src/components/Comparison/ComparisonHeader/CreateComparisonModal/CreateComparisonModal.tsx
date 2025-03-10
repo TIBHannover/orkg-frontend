@@ -1,6 +1,6 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
 import { MAX_LENGTH_INPUT } from 'constants/misc';
 import ROUTES from 'constants/routes';
@@ -68,11 +68,11 @@ const CreateComparisonModal: FC<CreateComparisonModalProps> = ({ toggle, contrib
                 <ModalBody>
                     {!createdComparisonId ? (
                         <FormGroup>
-                            <Tippy content="Choose the title of your comparison. You can always update the title later">
+                            <Tooltip content="Choose the title of your comparison. You can always update the title later">
                                 <span>
                                     <Label for={`${formId}label`}>Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                             <Input
                                 type="text"
                                 value={title}

@@ -2,13 +2,13 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Unauthorized from 'components/Unauthorized/Unauthorized';
 import useAuthentication from 'components/hooks/useAuthentication';
@@ -128,11 +128,11 @@ const TemplateNew = () => {
                     </Container>
                 )}
                 <FormGroup>
-                    <Tippy content="Choose the name of your template. You can always update this name later">
+                    <Tooltip content="Choose the name of your template. You can always update this name later">
                         <span>
                             <Label for="templateName">Name</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
                         </span>
-                    </Tippy>
+                    </Tooltip>
 
                     <Input type="text" maxLength={MAX_LENGTH_INPUT} id="templateName" value={label} onChange={(e) => setLabel(e.target.value)} />
                 </FormGroup>

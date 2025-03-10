@@ -1,8 +1,8 @@
 import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react';
 import ActionButton from 'components/ActionButton/ActionButton';
 import { OptionType } from 'components/Autocomplete/types';
 import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import useAuthentication from 'components/hooks/useAuthentication';
 import removeEmptySegments from 'components/RosettaStone/SingleStatement/hooks/helpers';
 import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useEditStatement';
@@ -119,7 +119,6 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                                 icon={isEditing ? faClose : faPen}
                                 action={() => setIsEditing((v) => !v)}
                                 isDisabled={!statement.modifiable}
-                                appendTo={document.body}
                             />
                         )}
                         <ActionButton
@@ -144,7 +143,6 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                                     icon: faTimes,
                                 },
                             ]}
-                            appendTo={document.body}
                         />
                     </span>
                 )}
@@ -173,7 +171,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 {isEditing && isEditMode && (
                     <div className="clearfix">
                         <FormGroup switch className="pull-right me-2">
-                            <Tippy interactive appendTo={document.body} content="By activating this option the statement would be negated.">
+                            <Tooltip content="By activating this option the statement would be negated.">
                                 <span>
                                     <Input
                                         checked={isNegate}
@@ -186,7 +184,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                                         Negate statement
                                     </Label>
                                 </span>
-                            </Tippy>
+                            </Tooltip>
                         </FormGroup>
                     </div>
                 )}

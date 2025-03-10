@@ -1,7 +1,8 @@
 'use client';
 
-import Tippy from '@tippyjs/react';
 import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import useAuthentication from 'components/hooks/useAuthentication';
 import SortingSelector from 'components/Observatory/SortingSelector/SortingSelector';
 import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
@@ -13,7 +14,6 @@ import useParams from 'components/useParams/useParams';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import useAuthentication from 'components/hooks/useAuthentication';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 import { Button, Container, Row } from 'reactstrap';
@@ -108,7 +108,7 @@ const Observatories = () => {
         }
     };
 
-    const labelWrapper = (children: ReactNode, label: string) => <Tippy content={label}>{children as React.ReactElement}</Tippy>;
+    const labelWrapper = (children: ReactNode, label: string) => <Tooltip content={label}>{children as React.ReactElement}</Tooltip>;
 
     return (
         <>

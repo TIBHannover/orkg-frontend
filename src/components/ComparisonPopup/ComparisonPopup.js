@@ -1,30 +1,31 @@
-import Link from 'next/link';
-import { createRef, Component } from 'react';
-import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
-import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import { Cookies } from 'react-cookie';
-import ROUTES from 'constants/routes';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { reverse } from 'named-urls';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import Tippy from '@tippyjs/react';
+import { faCheck, faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    ComparisonBoxButton,
     ComparisonBox,
+    ComparisonBoxButton,
+    ContributionItem,
     Header,
     List,
-    ContributionItem,
-    Title,
     Number,
     Remove,
     StartComparison,
+    Title,
 } from 'components/ComparisonPopup/styled';
+import Popover from 'components/FloatingUI/Popover';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PaperTitle from 'components/PaperTitle/PaperTitle';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { Component, createRef } from 'react';
+import { Cookies } from 'react-cookie';
+import { connect } from 'react-redux';
+import { Badge, Button, ButtonGroup, Container, Navbar } from 'reactstrap';
+import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
+import styled from 'styled-components';
 
 const cookies = new Cookies();
 
@@ -51,10 +52,9 @@ class ComparisonPopup extends Component {
 
         this.state = {
             showComparisonBox: false,
+            showConfirmationPopover: false,
         };
 
-        this.yesButtonRef = createRef();
-        this.cancelButtonRef = createRef();
         this.comparisonPopup = createRef();
     }
 
@@ -85,7 +85,12 @@ class ComparisonPopup extends Component {
     };
 
     handleClickOutside = (event) => {
-        if (this.comparisonPopup.current && !this.comparisonPopup.current.contains(event.target) && this.state.showComparisonBox) {
+        if (
+            this.comparisonPopup.current &&
+            !this.comparisonPopup.current.contains(event.target) &&
+            this.state.showComparisonBox &&
+            !this.state.showConfirmationPopover
+        ) {
             this.toggleComparisonBox();
         }
     };
@@ -96,43 +101,6 @@ class ComparisonPopup extends Component {
 
     removeFromComparison = (id) => {
         this.props.removeFromComparison(id);
-    };
-
-    onShow = () => {
-        document.addEventListener('keydown', this.onKeyPressed);
-    };
-
-    onShown = () => {
-        this.yesButtonRef.current.focus();
-    };
-
-    onHide = () => {
-        document.removeEventListener('keydown', this.onKeyPressed);
-    };
-
-    onKeyPressed = (e) => {
-        if (e.keyCode === 27) {
-            // escape
-            this.tippy.hide();
-        }
-        if (e.keyCode === 9) {
-            // Tab
-            e.preventDefault();
-            e.stopPropagation();
-            if (document.activeElement === this.yesButtonRef.current) {
-                this.cancelButtonRef.current.focus();
-            } else {
-                this.yesButtonRef.current.focus();
-            }
-        }
-    };
-
-    closeTippy = () => {
-        this.tippy.hide();
-    };
-
-    onCreate = (tippy) => {
-        this.tippy = tippy;
     };
 
     render() {
@@ -165,20 +133,24 @@ class ComparisonPopup extends Component {
                             </ComparisonBoxButton>
                         ) : (
                             <ComparisonBox className="ms-auto">
-                                <Header onClick={this.toggleComparisonBox}>
-                                    <Badge color="primary-darker" className="ps-2 pe-2 me-1">
+                                <Header className="d-flex">
+                                    <Badge color="primary-darker" className="ps-2 pe-2 me-1" onClick={this.toggleComparisonBox}>
                                         {contributionAmount}
                                     </Badge>{' '}
-                                    Compare contributions
+                                    <Button
+                                        color="link"
+                                        className="flex-grow-1 text-decoration-none p-0 text-white"
+                                        style={{ textAlign: 'left' }}
+                                        onClick={this.toggleComparisonBox}
+                                    >
+                                        Compare contributions
+                                    </Button>
                                     <div className="float-end">
-                                        <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={9999}>
-                                            <Tippy
-                                                onShow={this.onShow}
-                                                onShown={this.onShown}
-                                                onHide={this.onHide}
-                                                onCreate={this.onCreate}
-                                                interactive
-                                                trigger="click"
+                                        <Tooltip content="Remove all contributions from comparison" disabled={this.state.showConfirmationPopover}>
+                                            <Popover
+                                                modal
+                                                open={this.state.showConfirmationPopover}
+                                                onOpenChange={(open) => this.setState({ showConfirmationPopover: open })}
                                                 content={
                                                     <div
                                                         className="text-center p-1"
@@ -189,9 +161,8 @@ class ComparisonPopup extends Component {
                                                             <Button
                                                                 onClick={() => {
                                                                     this.removeAllContributionFromComparison(allIds);
-                                                                    this.closeTippy();
+                                                                    this.setState({ showConfirmationPopover: false });
                                                                 }}
-                                                                innerRef={this.yesButtonRef}
                                                                 className="px-2"
                                                                 color="danger"
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
@@ -201,30 +172,27 @@ class ComparisonPopup extends Component {
                                                             </Button>
                                                             <Button
                                                                 onClick={() => {
-                                                                    this.closeTippy();
+                                                                    this.setState({ showConfirmationPopover: false });
                                                                 }}
-                                                                innerRef={this.cancelButtonRef}
                                                                 className="px-2"
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
-                                                                {' '}
                                                                 <FontAwesomeIcon icon={faTimes} className="me-1" /> Cancel
                                                             </Button>
                                                         </ButtonGroup>
                                                     </div>
                                                 }
                                             >
-                                                <span>
-                                                    <FontAwesomeIcon
-                                                        className="ms-2 me-2"
-                                                        size="sm"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        icon={faTrash}
-                                                    />
-                                                </span>
-                                            </Tippy>
-                                        </Tippy>
-                                        <FontAwesomeIcon icon={faChevronDown} />
+                                                <FontAwesomeIcon
+                                                    onClick={() => this.setState({ showConfirmationPopover: true })}
+                                                    className="ms-2 me-2"
+                                                    size="sm"
+                                                    icon={faTrash}
+                                                />
+                                            </Popover>
+                                        </Tooltip>
+
+                                        <FontAwesomeIcon icon={faChevronDown} onClick={this.toggleComparisonBox} />
                                     </div>
                                 </Header>
                                 <List>
@@ -245,7 +213,7 @@ class ComparisonPopup extends Component {
                                                     </Title>
                                                     <Number>{byId[contributionId].contributionTitle}</Number>
                                                 </div>
-                                                <Tippy content="Remove from comparison">
+                                                <Tooltip content="Remove from comparison">
                                                     <span>
                                                         <Remove>
                                                             <FontAwesomeIcon
@@ -254,7 +222,7 @@ class ComparisonPopup extends Component {
                                                             />
                                                         </Remove>
                                                     </span>
-                                                </Tippy>
+                                                </Tooltip>
                                             </div>
                                         </ContributionItem>
                                     ))}
@@ -264,13 +232,13 @@ class ComparisonPopup extends Component {
                                         condition={contributionAmount > 1}
                                         wrapper={(children) => <Link href={comparisonUrl}>{children}</Link>}
                                     >
-                                        <Tippy disabled={contributionAmount > 1} content="Please select at least two contributions">
+                                        <Tooltip disabled={contributionAmount > 1} content="Please select at least two contributions">
                                             <span>
                                                 <StartComparison disabled={contributionAmount <= 1} color="primary-darker" className="mb-2">
                                                     Start comparison
                                                 </StartComparison>
                                             </span>
-                                        </Tippy>
+                                        </Tooltip>
                                     </ConditionalWrapper>
                                 </div>
                             </ComparisonBox>

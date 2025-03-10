@@ -1,11 +1,11 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import CopyId from 'components/CopyId/CopyId';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledBox = styled.div`
@@ -26,9 +26,9 @@ const SelectedEdgeBox = ({ selectedEdge }) => (
                 <h4 className="h4 m-0 me-2">Property</h4>
                 {selectedEdge && (
                     <Link href={`${reverse(ROUTES.PROPERTY, { id: selectedEdge?.propertyId })}?noRedirect`} target="_blank">
-                        <Tippy content="View property">
+                        <Tooltip content="View property">
                             <FontAwesomeIcon icon={faExternalLinkAlt} />
-                        </Tippy>
+                        </Tooltip>
                     </Link>
                 )}
             </div>

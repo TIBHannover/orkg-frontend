@@ -1,12 +1,12 @@
-import { Button, ButtonGroup } from 'reactstrap';
+import { faExpandArrowsAlt, faQuestionCircle, faSearchMinus, faSearchPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import Confirm from 'components/Confirmation/Confirmation';
-import styled from 'styled-components';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
-import Tippy from '@tippyjs/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, ButtonGroup } from 'reactstrap';
+import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
+import styled from 'styled-components';
 
 const ToolbarStyled = styled.div`
     background: ${(props) => props.theme.secondary};
@@ -42,7 +42,7 @@ const Toolbar = (props) => {
                 {/* Set the height to overwrite styles from the PDF  */}
                 Survey table extractor
             </h1>
-            <Tippy content="Open help center">
+            <Tooltip content="Open help center">
                 <span className="ms-3">
                     <a
                         href="https://www.orkg.org/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
@@ -52,7 +52,7 @@ const Toolbar = (props) => {
                         <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1, color: '#fff' }} className="p-0" />
                     </a>
                 </span>
-            </Tippy>
+            </Tooltip>
             <div className="ms-auto">
                 <ButtonGroup className="me-2">
                     <Button

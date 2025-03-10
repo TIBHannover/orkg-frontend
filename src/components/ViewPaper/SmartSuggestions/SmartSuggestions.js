@@ -1,7 +1,7 @@
 import { faExclamationTriangle, faMagic, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy, { useSingleton } from '@tippyjs/react';
-import Tooltip from 'components/Utils/Tooltip';
+import Tooltip from 'components/FloatingUI/Tooltip';
+import TooltipQuestion from 'components/Utils/Tooltip';
 import AbstractAnnotatorModal from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorModal';
 import AbstractModal from 'components/ViewPaper/AbstractModal/AbstractModal';
 import Bioassays from 'components/ViewPaper/BioassaysModal/Bioassays';
@@ -13,8 +13,6 @@ import { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 
 const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resourceId }) => {
-    const [source, target] = useSingleton();
-
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);
     const [isOpenAbstractAnnotationModal, setIsOpenAbstractAnnotationModal] = useState(false);
 
@@ -22,19 +20,16 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resour
 
     return (
         <SuggestionsBox className="rounded">
-            <Tippy singleton={source} delay={500} />
-
             <h3 className="h5 mb-3 d-flex justify-content-between align-items-center">
-                <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
+                <TooltipQuestion message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
                     Suggestions
-                </Tooltip>
+                </TooltipQuestion>
             </h3>
 
-            <Tippy
-                showOnCreate
-                delay="1000"
+            <Tooltip
                 disabled={!showAbstractWarning}
                 placement="right"
+                contentStyle={{ maxWidth: '300px' }}
                 content="We were unable to fetch the abstract of the paper. Click the button to manually add it, this improves the suggestions."
             >
                 <span>
@@ -63,7 +58,7 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resour
                         )}
                     </Button>
                 </span>
-            </Tippy>
+            </Tooltip>
 
             <ButtonGroup vertical className="w-100 mt-2">
                 {abstract && (
@@ -75,7 +70,7 @@ const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resour
             </ButtonGroup>
 
             <NERSuggestions title={title} abstract={abstract} resourceId={resourceId} />
-            <TemplatesRecommendations target={target} title={title} abstract={abstract} resourceId={resourceId} />
+            <TemplatesRecommendations title={title} abstract={abstract} resourceId={resourceId} />
             {isOpenAbstractModal && <AbstractModal toggle={() => setIsOpenAbstractModal((v) => !v)} />}
             {isOpenAbstractAnnotationModal && (
                 <AbstractAnnotatorModal resourceId={resourceId} toggle={() => setIsOpenAbstractAnnotationModal((v) => !v)} />

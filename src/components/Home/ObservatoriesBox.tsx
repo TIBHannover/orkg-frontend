@@ -1,9 +1,9 @@
-import { FC } from 'react';
-import Link from 'next/link';
+import Tooltip from 'components/FloatingUI/Tooltip';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
-import ROUTES from 'constants/routes';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import Tippy from '@tippyjs/react';
+import ROUTES from 'constants/routes';
+import Link from 'next/link';
+import { FC } from 'react';
 
 type ObservatoriesBoxProps = {
     researchFieldId: string;
@@ -20,9 +20,12 @@ const ObservatoriesBox: FC<ObservatoriesBoxProps> = ({ researchFieldId }) => {
                     padding: '15px',
                 }}
             >
-                <Tippy content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field.">
+                <Tooltip
+                    contentStyle={{ maxWidth: '300px' }}
+                    content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field."
+                >
                     <span>Observatories</span>
-                </Tippy>
+                </Tooltip>
                 <Link href={ROUTES.OBSERVATORIES}>
                     <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More observatories</span>
                 </Link>

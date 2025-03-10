@@ -1,6 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy, { useSingleton } from '@tippyjs/react';
 import TemplateButton from 'components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
 import useEntity from 'components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from 'components/DataBrowser/hooks/useFeaturedTemplates';
@@ -69,8 +68,6 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const { featuredTemplates } = useFeaturedTemplates();
     const { recommendedTemplates } = useRecommendedTemplates();
 
-    const [source, target] = useSingleton();
-
     const { entity } = useEntity();
     const { templates: _usedTemplates } = useTemplates();
     // Filter out resource templates
@@ -86,7 +83,6 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
 
     return (
         <div>
-            <Tippy singleton={source} delay={500} />
             <Modal
                 size="xl"
                 isOpen={isOpen}
