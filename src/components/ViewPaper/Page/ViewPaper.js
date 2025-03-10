@@ -1,5 +1,6 @@
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import Coins from 'components/Coins/Coins';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
@@ -61,7 +62,7 @@ const ViewPaper = () => {
                         <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
-
+                    <Coins item={viewPaper} />
                     <Helmet>
                         <title>{`${viewPaper.title ?? 'Paper'} - ORKG`}</title>
                         <meta property="og:title" content={`${viewPaper.title} - ORKG`} />

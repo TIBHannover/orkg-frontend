@@ -1,6 +1,7 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import Coins from 'components/Coins/Coins';
 import Authors from 'components/Cards/PaperCard/Authors';
 import useCardData from 'components/Cards/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -28,9 +29,10 @@ type ListCardProps = {
     list: LiteratureList;
     showBadge?: boolean;
     showCurationFlags?: boolean;
+    renderCoins?: boolean;
 };
 
-const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlags = true }) => {
+const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlags = true, renderCoins = true }) => {
     // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
     // this because the new 'review' variable already has the field and authors included
     const { researchField, authors } = useCardData({
@@ -50,6 +52,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
     return (
         <CardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {renderCoins && <Coins item={list} />}
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         <div>

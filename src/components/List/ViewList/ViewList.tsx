@@ -135,6 +135,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                                         linkTarget="_blank"
                                                         showContributionCount={isPaper}
                                                         route={route}
+                                                        renderCoins={isPaper}
                                                     />
                                                 </ListGroupItem>
                                             );

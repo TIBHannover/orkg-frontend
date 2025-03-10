@@ -1,5 +1,6 @@
 import { faCalendar, faChartBar, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Coins from 'components/Coins/Coins';
 import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
 import Versions from 'components/Cards/ComparisonCard/Versions';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -31,6 +32,7 @@ type ComparisonCardProps = {
     showBreadcrumbs?: boolean;
     showBadge?: boolean;
     showCurationFlags?: boolean;
+    renderCoins?: boolean;
 };
 
 const ComparisonCard: FC<ComparisonCardProps> = ({
@@ -40,6 +42,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
     showBreadcrumbs = true,
     showBadge = false,
     showCurationFlags = true,
+    renderCoins = true,
 }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: comparison.id,
@@ -54,6 +57,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
             className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">
+                {renderCoins && <Coins item={comparison} />}
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         <div>

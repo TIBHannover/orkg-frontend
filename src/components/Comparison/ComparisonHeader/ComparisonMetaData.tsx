@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Coins from 'components/Coins/Coins';
 import EditMetadataModal from 'components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import useComparison from 'components/Comparison/hooks/useComparison';
@@ -50,6 +51,7 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
 
     return (
         <>
+            <Coins item={comparison} />
             <Helmet>
                 <title>{`${comparison.title ?? 'Unpublished'} - Comparison - ORKG`}</title>
                 <meta property="og:title" content={`${comparison.title ?? 'Unpublished'} - Comparison - ORKG`} />

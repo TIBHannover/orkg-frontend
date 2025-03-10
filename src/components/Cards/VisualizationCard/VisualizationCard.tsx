@@ -1,5 +1,6 @@
 import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Coins from 'components/Coins/Coins';
 import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
 import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -31,9 +32,10 @@ type VisualizationCardProps = {
     visualization: Visualization;
     showBadge?: boolean;
     showCurationFlags?: boolean;
+    renderCoins?: boolean;
 };
 
-const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadge = false, showCurationFlags = true }) => {
+const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadge = false, showCurationFlags = true, renderCoins = true }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: visualization.id,
         unlisted: visualization?.visibility === VISIBILITY.UNLISTED,
@@ -47,6 +49,7 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
     return (
         <VisualizationCardStyled className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {renderCoins && <Coins item={visualization} genre="unknown" />}
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         <div>
