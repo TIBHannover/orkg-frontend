@@ -49,7 +49,7 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
 
         if ('content' in orkgResponseItems) {
             responseItems.push(...(orkgResponseItems?.content ?? []).map((t) => ({ ...t, used: false })));
-            hasMore = !orkgResponseItems.last;
+            hasMore = orkgResponseItems.page.number < orkgResponseItems.page.total_pages - 1;
         }
 
         return {

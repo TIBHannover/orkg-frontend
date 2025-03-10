@@ -44,7 +44,7 @@ function BenchmarksCarousel(props) {
                 props.loadNextPage();
             }
             if (props.page !== 0 && slidesLoaded && !props.hasNextPage) {
-                slidesLoaded();
+                // slidesLoaded();
             }
         },
         responsive: [

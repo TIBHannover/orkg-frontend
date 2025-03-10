@@ -12,7 +12,7 @@ import { getEntities } from 'services/backend/misc';
 import { createResource, getResources } from 'services/backend/resources';
 import { createLiteralStatement, getStatements } from 'services/backend/statements';
 import { getThing } from 'services/backend/things';
-import { Class, EntityType, Predicate, Resource, Statement } from 'services/backend/types';
+import { Class, EntityType, PaginatedResponse, Predicate, Resource, Statement } from 'services/backend/types';
 import getGeoNames from 'services/geoNames';
 import { getOntologyEntities, selectEntities, EntityPath } from 'services/ols';
 import { searchEntity } from 'services/wikidata';
@@ -32,7 +32,7 @@ export const orkgLookup = async ({
     value: string;
     page: number;
     pageSize: number;
-} & OptionsSettings) => {
+} & OptionsSettings): Promise<PaginatedResponse<Resource | Predicate | Class>> => {
     const exact = !!(value.startsWith('"') && value.endsWith('"') && value.length > 2);
     const isURI = new RegExp(REGEX.URL).test(value.trim());
     let localValue = value;
@@ -62,9 +62,11 @@ export const orkgLookup = async ({
             })) as Class;
         } catch (error) {
             // No matching class
-            return { content: [], last: true, totalElements: 0 };
+            return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
         }
-        responseJson = responseJson ? { content: [responseJson], last: true, totalElements: 1 } : { content: [], last: true, totalElements: 0 };
+        responseJson = responseJson
+            ? { content: [responseJson], page: { total_elements: 1, total_pages: 1, size: 0, number: 0 } }
+            : { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
     } else {
         // Predicate or Class
         responseJson = await getEntities(entityType, {

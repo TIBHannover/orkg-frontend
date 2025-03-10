@@ -42,15 +42,16 @@ const usePaginate = <ItemType, FetchFunctionParams>({
         ([params]) => fetchFunction(params),
     );
 
-    const { totalElements, totalPages } = data || {};
-    const hasNextPage = !data?.last;
+    const { page: pageObject } = data || {};
+
+    const hasNextPage = pageObject ? pageObject.number < pageObject.total_pages - 1 : false;
 
     return {
         data: data?.content,
         isLoading,
         hasNextPage,
-        totalElements,
-        totalPages,
+        totalElements: pageObject?.total_elements,
+        totalPages: pageObject?.total_pages,
         page,
         pageSize,
         error,

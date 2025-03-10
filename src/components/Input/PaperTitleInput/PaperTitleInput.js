@@ -78,16 +78,8 @@ function PaperTitleInput({
                 }
                 for (const promise of await Promise.all(promises)) {
                     options = [...options, ...promise.content.map((result) => ({ ...result, isOrkgResource: true }))];
-                    hasMore = !hasMore ? !promise.last : hasMore;
+                    hasMore = !hasMore ? promise.page.number < promise.page.total_pages - 1 : hasMore;
                 }
-
-                /* resources = await getResources({
-                    page: page,
-                    size: PAGE_SIZE,
-                    q: title
-                });
-                options = resources.content.map(result => ({ ...result, isOrkgResource: true }));
-                hasMore = !resources.last; */
             }
         } catch (err) {
             console.error(err);

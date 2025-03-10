@@ -23,9 +23,9 @@ function useTopChangelog({ researchFieldId, pageSize = 30 }: { researchFieldId: 
                 .then((result) => {
                     setActivities((prevResources) => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
                     setIsLoading(false);
-                    setHasNextPage(!result.last);
-                    setIsLastPageReached(result.last);
-                    setTotalElements(result.totalElements);
+                    setHasNextPage(result.page.number < result.page.total_pages - 1);
+                    setIsLastPageReached(result.page.number === result.page.total_pages - 1);
+                    setTotalElements(result.page.total_elements);
                     setPage(page + 1);
                 })
                 .catch((error) => {

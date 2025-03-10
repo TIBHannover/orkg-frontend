@@ -96,10 +96,10 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
             searchCall.then((result) => {
                 setTemplates((prevTemplates) => [...prevTemplates, ...result.content]);
                 setIsNextPageLoading(false);
-                setHasNextPage(!result.last);
-                setIsLastPageReached(result.last);
+                setHasNextPage(result.page.number < result.page.total_pages - 1);
+                setIsLastPageReached(result.page.number === result.page.total_pages - 1);
                 setPage((prevPage) => prevPage + 1);
-                setTotalElements(result.totalElements);
+                setTotalElements(result.page.total_elements);
             });
         } else {
             setTemplates([]);

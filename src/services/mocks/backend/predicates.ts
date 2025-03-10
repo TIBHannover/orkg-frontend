@@ -17,23 +17,12 @@ const predicates = [
 
         return HttpResponse.json({
             content: currentPredicates,
-            pageable: {
-                sort: { sorted: true, unsorted: false, empty: false },
-                pageNumber: 0,
-                pageSize: size,
-                offset: 0,
-                paged: true,
-                unpaged: false,
+            page: {
+                total_pages: Math.ceil(allPredicates.length / size),
+                total_elements: allPredicates,
+                size,
+                number: page,
             },
-            totalPages: Math.ceil(allPredicates.length / size),
-            totalElements: allPredicates,
-            last: page + 1 >= Math.ceil(allPredicates.length / size),
-            first: page === 0,
-            sort: { sorted: true, unsorted: false, empty: false },
-            size,
-            number: 0,
-            numberOfElements: currentPredicates.length,
-            empty: false,
         });
     }),
     http.get(`${predicatesUrl}:id`, ({ params }: { params: { id: string } }) => {

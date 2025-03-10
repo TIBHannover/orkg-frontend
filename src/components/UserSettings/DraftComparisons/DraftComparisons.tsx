@@ -33,9 +33,10 @@ const DraftComparisons = () => {
         ([params]) => getComparisons(params),
     );
 
-    const totalElements = data?.[0]?.totalElements;
+    const { page: pageObject } = data?.[0] || {};
+    const totalElements = pageObject?.total_elements;
     const isEmpty = totalElements === 0;
-    const isLastPageReached = isEmpty || (data && data[data.length - 1])?.last;
+    const isLastPageReached = isEmpty || pageObject?.number === (pageObject?.total_pages || 0) - 1;
     const hasNextPage = !isLastPageReached;
 
     const handleLoadMore = () => setSize(size + 1);

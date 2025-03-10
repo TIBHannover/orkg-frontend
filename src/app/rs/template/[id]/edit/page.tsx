@@ -64,12 +64,18 @@ const RSTemplateEditPage = () => {
         return null;
     }
 
-    const { totalElements: rsTotalElements } = rsStatements ?? { totalElements: 0 };
-    const { totalElements } = statements ?? { totalElements: 0 };
+    const { page: rsPage } = rsStatements ?? { page: { total_elements: 0 } };
+    const { page: statementsPage } = statements ?? { page: { total_elements: 0 } };
 
     const canEditTemplate = !!user;
 
-    const canFullyUpdate = !!(user && !isLoadingRSStatements && !isLoadingStatements && rsTotalElements === 0 && totalElements === 0);
+    const canFullyUpdate = !!(
+        user &&
+        !isLoadingRSStatements &&
+        !isLoadingStatements &&
+        rsPage.total_elements === 0 &&
+        statementsPage.total_elements === 0
+    );
 
     if (!canEditTemplate) {
         return (

@@ -89,9 +89,14 @@ const RSTemplatePage = () => {
         replacementFunction,
     );
 
-    const { totalElements } = statements ?? { totalElements: 0 };
+    const { page } = statements ?? { page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
 
-    const canDeleteTemplate = !!(user && !isLoadingStatements && totalElements === 0 && (isCurationAllowed || user?.id === template?.created_by));
+    const canDeleteTemplate = !!(
+        user &&
+        !isLoadingStatements &&
+        page.total_elements === 0 &&
+        (isCurationAllowed || user?.id === template?.created_by)
+    );
     const canEditTemplate = !!user;
 
     return (
@@ -210,21 +215,21 @@ const RSTemplatePage = () => {
                                             {isLoadingStatements ? (
                                                 <FontAwesomeIcon icon={faSpinner} className="me-2" spin />
                                             ) : (
-                                                <Badge pill>{totalElements}</Badge>
+                                                <Badge pill>{page.total_elements}</Badge>
                                             )}
                                         </>
                                     ),
                                     key: 'instances',
                                     children: (
                                         <div className="">
-                                            {totalElements > 0 && (
+                                            {page.total_elements > 0 && (
                                                 <ListGroup flush tag="div" className="mb-2">
                                                     {statements?.content?.map((s) => (
                                                         <SingleStatement showContext key={s.id} statement={s} reloadStatements={reloadStatements} />
                                                     ))}
                                                 </ListGroup>
                                             )}
-                                            {totalElements === 0 && <div className="text-center m-4">No instances</div>}
+                                            {page.total_elements === 0 && <div className="text-center m-4">No instances</div>}
                                         </div>
                                     ),
                                 },

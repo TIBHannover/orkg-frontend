@@ -56,23 +56,12 @@ const statements = [
                             : objectRef,
                 };
             }),
-            pageable: {
-                sort: { sorted: true, unsorted: false, empty: false },
-                pageNumber: 0,
-                pageSize: size,
-                offset: 0,
-                paged: true,
-                unpaged: false,
+            page: {
+                total_pages: Math.ceil(allStatements.length / size),
+                total_elements: allStatements,
+                size,
+                number: page,
             },
-            totalPages: Math.ceil(allStatements.length / size),
-            totalElements: allStatements,
-            last: page + 1 >= Math.ceil(allStatements.length / size),
-            first: page === 0,
-            sort: { sorted: true, unsorted: false, empty: false },
-            size,
-            number: 0,
-            numberOfElements: currentStatements.length,
-            empty: false,
         });
     }),
     http.post(statementsUrl, async ({ request }: { request: Request }) => {
