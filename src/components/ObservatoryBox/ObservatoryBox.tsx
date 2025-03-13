@@ -40,7 +40,7 @@ const ObservatoryBox: FC<ObservatoryBoxProps> = ({ organization, observatory, co
     const [isOpenObservatoryModal, setIsOpenObservatoryModal] = useState(false);
     const { isEditMode } = useIsEditMode();
     const { user } = useAuthentication();
-
+    const [optimizedLogo, setOptimizedLogo] = useState(true);
     let route = '';
     if (organization?.type === ORGANIZATIONS_MISC.EVENT) {
         route = reverse(ROUTES.EVENT_SERIES, { id: observatory?.display_id });
@@ -64,6 +64,8 @@ const ObservatoryBox: FC<ObservatoryBoxProps> = ({ organization, observatory, co
                                 alt={`${organization?.name} logo`}
                                 layout="fill"
                                 objectFit="contain"
+                                unoptimized={!optimizedLogo}
+                                onError={() => optimizedLogo && setOptimizedLogo(false)}
                             />
                         </div>
                     )}

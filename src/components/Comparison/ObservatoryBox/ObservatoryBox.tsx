@@ -33,6 +33,7 @@ const OrganizationBanner = () => {
     const { comparison, organization, observatory, conferenceSeries, mutate } = useComparison();
     const { isEditMode } = useIsEditMode();
     const { user } = useAuthentication();
+    const [optimizedLogo, setOptimizedLogo] = useState(true);
 
     if (!comparison) {
         return null;
@@ -61,6 +62,8 @@ const OrganizationBanner = () => {
                                 alt={`${organization?.name} logo`}
                                 layout="fill"
                                 objectFit="contain"
+                                unoptimized={!optimizedLogo}
+                                onError={() => optimizedLogo && setOptimizedLogo(false)}
                             />
                         </div>
                     )}

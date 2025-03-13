@@ -59,7 +59,7 @@ const Organization = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const typeName = ORGANIZATIONS_TYPES.find((t) => t.label === orgType).alternateLabel;
+    const typeName = ORGANIZATIONS_TYPES.find((t) => t.label.toLowerCase() === orgType.toLowerCase()).alternateLabel;
     const { user } = useAuthentication();
 
     useEffect(() => {
