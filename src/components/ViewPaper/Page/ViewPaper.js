@@ -1,6 +1,7 @@
+'use client';
+
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import Coins from 'components/Coins/Coins';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
@@ -13,10 +14,7 @@ import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import useParams from 'components/useParams/useParams';
-import { LICENSE_URL } from 'constants/misc';
-import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
-import { Helmet } from 'react-helmet';
 import { InView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
@@ -27,31 +25,6 @@ const ViewPaper = () => {
     const { isLoading, isLoadingFailed, showHeaderBar, isEditMode, showGraphModal, toggle, handleShowHeaderBar, setShowGraphModal } = useViewPaper({
         paperId: resourceId,
     });
-    const getSEODescription = () =>
-        `Published: ${viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
-            viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''
-        } • Research field: ${viewPaper?.research_fields?.[0]?.label} • Authors: ${viewPaper?.authors?.map((author) => author.name).join(', ')}`;
-
-    const ldJson = {
-        mainEntity: {
-            headline: viewPaper.title,
-            description: getSEODescription(),
-            ...(viewPaper?.identifiers?.doi?.[0] ? { sameAs: `https://doi.org/${viewPaper?.identifiers?.doi?.[0]}` } : {}),
-            author: viewPaper?.authors?.map((author) => ({
-                name: author.name,
-                ...(author?.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author?.identifiers?.orcid?.[0]}` } : {}),
-                '@type': 'Person',
-            })),
-            datePublished: `${
-                viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''
-            } ${viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}`,
-            about: viewPaper?.research_fields?.[0]?.label,
-            license: LICENSE_URL,
-            '@type': 'ScholarlyArticle',
-        },
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-    };
 
     return (
         <div>
@@ -62,14 +35,7 @@ const ViewPaper = () => {
                         <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
-                    <Coins item={viewPaper} />
-                    <Helmet>
-                        <title>{`${viewPaper.title ?? 'Paper'} - ORKG`}</title>
-                        <meta property="og:title" content={`${viewPaper.title} - ORKG`} />
-                        <meta property="og:type" content="article" />
-                        <meta property="og:description" content={getSEODescription()} />
-                        <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
-                    </Helmet>
+
                     <InView as="div" onChange={(inView) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={

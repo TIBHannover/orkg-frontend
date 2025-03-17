@@ -1,147 +1,63 @@
-'use client';
+import Comparison from 'app/comparison/[[...comparisonId]]/Comparison';
+import Coins from 'components/Coins/Coins';
+import { LICENSE_URL } from 'constants/misc';
+import dayjs from 'dayjs';
+import { sanitize } from 'isomorphic-dompurify';
+import { Metadata } from 'next';
+import { getComparison } from 'services/backend/comparisons';
+import { Comparison as ComparisonType } from 'services/backend/types';
 
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
-import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import ComparisonTable from 'components/Comparison/Comparison';
-import ComparisonCarousel from 'components/Comparison/ComparisonCarousel/ComparisonCarousel';
-import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
-import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
-import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
-import LiveComparisonHeader from 'components/Comparison/ComparisonHeader/LiveComparisonHeader';
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import References from 'components/Comparison/References/References';
-import useComparisonOld from 'components/Comparison/hooks/useComparisonOld';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import { ContainerAnimated } from 'components/Comparison/styled';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import useParams from 'components/useParams/useParams';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { useSelector } from 'react-redux';
-import { Alert, Button, Container } from 'reactstrap';
-
-const Comparison = () => {
-    const [isOpenAddContributionModal, setIsOpenAddContributionModal] = useState(false);
-
-    const { comparisonId } = useParams<{ comparisonId: string }>();
-    const searchParams = useSearchParams();
-    const { comparison, isPublished, updateComparison, error } = useComparison(comparisonId);
-    const { isEditMode } = useIsEditMode();
-    const [cookies] = useCookies(['useFullWidthForComparisonTable']);
-    // @ts-expect-error awaiting migration
-    const hasFailedLoadingComparisonTable = useSelector((state) => state.comparison.isFailedLoadingResult);
-
-    const isLiveComparison = !comparisonId;
-    let contributionsLiveComparison = searchParams.getAll('contributions');
-    if (contributionsLiveComparison?.length === 1 && contributionsLiveComparison[0].includes(',')) {
-        contributionsLiveComparison = searchParams.get('contributions')?.split(',') ?? [];
+export async function generateMetadata({ params }: { params: Promise<{ comparisonId: string }> }): Promise<Metadata> {
+    const { comparisonId } = await params;
+    let comparison: ComparisonType | undefined;
+    try {
+        comparison = await getComparison(comparisonId);
+    } catch (e) {
+        console.error(e);
     }
-    // ensure the comparison data is available in the redux store
-    const { isLoadingResult: isLoadingComparisonTable } = useComparisonOld({
-        id: comparisonId,
-        isPublished,
-        contributionIds: !isLiveComparison ? comparison?.config?.contributions : contributionsLiveComparison,
-    });
 
-    const contributionsList = !isLiveComparison ? comparison?.contributions ?? [] : contributionsLiveComparison;
-    const fullWidth = cookies.useFullWidthForComparisonTable ?? contributionsList.length > 3;
-    const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
+    const title = `${comparison?.title ?? 'Unpublished'} - Comparison - ORKG`;
 
-    useEffect(() => {
-        if (comparison?.title) {
-            document.title = `${comparison.title} - Comparison - ORKG`;
-        }
-    }, [comparison]);
+    return {
+        title,
+        description: comparison?.description,
+        openGraph: {
+            title,
+            type: 'article',
+            description: comparison?.description,
+        },
+    };
+}
 
-    const handleAddContributions = (newContributionIds: string[]) => {
-        if (!comparison) {
-            return;
-        }
-        updateComparison({
-            contributions: [...comparison.contributions, ...newContributionIds.map((id) => ({ id, label: '' }))],
-            config: {
-                ...comparison.config,
-                contributions: [...comparison.config.contributions, ...newContributionIds],
-            },
-        });
+export default async function ComparisonPage({ params }: { params: Promise<{ comparisonId: string }> }) {
+    const { comparisonId } = await params;
+
+    const comparison = await getComparison(comparisonId);
+
+    const jsonLd = {
+        mainEntity: {
+            headline: comparison.title,
+            description: comparison.description,
+            ...(comparison.identifiers?.doi?.[0] ? { sameAs: `https://doi.org/${comparison.identifiers?.doi?.[0]}` } : {}),
+            author: comparison.authors?.map((author) => ({
+                name: author.name,
+                ...(author.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author.identifiers.orcid?.[0]}` } : {}),
+                '@type': 'Person',
+            })),
+            datePublished: comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : '',
+            about: comparison.research_fields?.[0]?.label,
+            license: LICENSE_URL,
+            '@type': 'ScholarlyArticle',
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
     };
 
-    if (error) {
-        return <NotFound />;
-    }
-
-    if (!comparison && !isLiveComparison) {
-        return null;
-    }
-
     return (
-        <div>
-            {!isLiveComparison && comparison && (
-                <>
-                    <ComparisonHeaderMenu />
-
-                    <Container className="box rounded p-0 clearfix position-relative overflow-hidden" style={{ marginBottom: isEditMode ? 10 : 0 }}>
-                        <EditModeHeader isVisible={isEditMode} message="Edit mode" />
-                    </Container>
-
-                    <Container id="description" className="box rounded clearfix position-relative mb-4 px-5">
-                        <ComparisonMetaData comparisonId={comparison.id} />
-
-                        <AppliedFilters />
-                    </Container>
-                </>
-            )}
-            {isLiveComparison && <LiveComparisonHeader contributionIds={contributionsList as string[]} />}
-
-            {!isLoadingComparisonTable && contributionsList.length > 1 && <ComparisonCarousel />}
-
-            <ContainerAnimated className="box rounded p-0 clearfix position-relative" style={containerStyle}>
-                {!hasFailedLoadingComparisonTable && (
-                    <>
-                        {!isLoadingComparisonTable && contributionsList.length > 1 && <ComparisonTable />}
-                        {!isLoadingComparisonTable && contributionsList.length <= 1 && (
-                            <Alert className="mt-3 text-center border-0" color="info" fade={false}>
-                                {contributionsList.length === 0
-                                    ? "This comparison doesn't have any contributions yet"
-                                    : 'A comparison needs to have at least 2 contributions'}
-                                {isEditMode ? (
-                                    <>
-                                        , click on the <strong>plus button on the right</strong> to add contributions.
-                                    </>
-                                ) : (
-                                    '.'
-                                )}
-                            </Alert>
-                        )}
-                        {isEditMode && (
-                            <Button
-                                color="primary"
-                                className="shadow"
-                                style={{ position: 'absolute', right: -45, paddingLeft: 10, paddingRight: 10, top: 0, zIndex: 10 }}
-                                aria-label="add contribution"
-                                onClick={() => setIsOpenAddContributionModal(true)}
-                            >
-                                <FontAwesomeIcon icon={faPlus} />
-                            </Button>
-                        )}
-                        {isLoadingComparisonTable && <ComparisonLoadingComponent />}
-                    </>
-                )}
-            </ContainerAnimated>
-
-            <Container className="box rounded px-5 clearfix position-relative mt-4">
-                <References />
-            </Container>
-
-            {isOpenAddContributionModal && (
-                <AddContribution onAddContributions={handleAddContributions} showDialog toggle={() => setIsOpenAddContributionModal((v) => !v)} />
-            )}
-        </div>
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitize(JSON.stringify(jsonLd)) }} />
+            <Coins item={comparison} />
+            <Comparison />
+        </>
     );
-};
-
-export default Comparison;
+}
