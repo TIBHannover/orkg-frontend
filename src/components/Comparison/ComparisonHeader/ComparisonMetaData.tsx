@@ -2,7 +2,6 @@ import { faCalendar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import Coins from 'components/Coins/Coins';
 import EditMetadataModal from 'components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
 import useComparison from 'components/Comparison/hooks/useComparison';
@@ -15,10 +14,8 @@ import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
 import { VISIBILITY } from 'constants/contentTypes';
 import { MISC } from 'constants/graphSettings';
-import { LICENSE_URL } from 'constants/misc';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { Badge, Button } from 'reactstrap';
 
 const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
@@ -30,35 +27,8 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
         return null;
     }
 
-    const ldJson = {
-        mainEntity: {
-            headline: comparison.title,
-            description: comparison.description,
-            ...(comparison.identifiers?.doi?.[0] ? { sameAs: `https://doi.org/${comparison.identifiers?.doi?.[0]}` } : {}),
-            author: comparison.authors?.map((author) => ({
-                name: author.name,
-                ...(author.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author.identifiers.orcid?.[0]}` } : {}),
-                '@type': 'Person',
-            })),
-            datePublished: comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : '',
-            about: comparison.research_fields?.[0]?.label,
-            license: LICENSE_URL,
-            '@type': 'ScholarlyArticle',
-        },
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-    };
-
     return (
         <>
-            <Coins item={comparison} />
-            <Helmet>
-                <title>{`${comparison.title ?? 'Unpublished'} - Comparison - ORKG`}</title>
-                <meta property="og:title" content={`${comparison.title ?? 'Unpublished'} - Comparison - ORKG`} />
-                <meta property="og:type" content="article" />
-                <meta property="og:description" content={comparison.description} />
-                <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
-            </Helmet>
             {comparison.id && <ShareLinkMarker typeOfLink="comparison" title={comparison.title} />}
             {comparison.id && (
                 <div className="pt-2 pb-3" style={{ minHeight: 150 }}>

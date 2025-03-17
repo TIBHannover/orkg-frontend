@@ -1,20 +1,23 @@
+'use client';
+
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NotFound from 'app/not-found';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
+import Coins from 'components/Coins/Coins';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
+import ContentLoader from 'components/ContentLoader/ContentLoader';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
 import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
 import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
+import useParams from 'components/useParams/useParams';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -53,6 +56,7 @@ const ViewPaperVersion = () => {
             {!isLoading && isLoadingFailed && <NotFound />}
             {!isLoadingFailed && (
                 <>
+                    <Coins item={paper} />
                     <Breadcrumbs researchFieldId={paper.research_fields.length > 0 ? paper.research_fields?.[0]?.id : null} />
                     <TitleBar
                         buttonGroup={
