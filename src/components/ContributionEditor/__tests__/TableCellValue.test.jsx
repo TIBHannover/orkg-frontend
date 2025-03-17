@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from 'testUtils';
 import TableCellValue from 'components/ContributionEditor/TableCellValue';
+import { fireEvent, render, screen } from 'testUtils';
+import { vi } from 'vitest';
 
 const setup = (className) => {
     const label = 'example label';
-    const setDisableCreate = jest.fn();
+    const setDisableCreate = vi.fn();
     const value = {
         label,
         _class: className,

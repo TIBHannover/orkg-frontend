@@ -846,19 +846,6 @@ export type TopContributor = {
     total?: number;
 } & Contributor;
 
-export type Activity = {
-    id: string;
-    label: string;
-    created_at: string;
-    classes: string[];
-    profile: {
-        id: string;
-        display_name: string;
-        gravatar_id: string;
-        gravatar_url: string;
-    };
-};
-
 export type ApiError = {
     status: number;
     error: number;

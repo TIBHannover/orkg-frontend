@@ -1,9 +1,9 @@
 import useAuthentication from 'components/hooks/useAuthentication';
-import { parseAsJson, useQueryState } from 'nuqs';
+import { parseAsBoolean, useQueryState } from 'nuqs';
 
 const useIsEditMode = () => {
     const { status } = useAuthentication();
-    const [isEditMode, setIsEditMode] = useQueryState('isEditMode', parseAsJson<boolean>().withDefault(false));
+    const [isEditMode, setIsEditMode] = useQueryState('isEditMode', parseAsBoolean.withDefault(false));
 
     const toggleIsEditMode = (newValue = undefined) => {
         setIsEditMode(newValue === undefined ? !isEditMode : newValue);

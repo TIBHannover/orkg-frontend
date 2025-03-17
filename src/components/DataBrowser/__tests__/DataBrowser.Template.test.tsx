@@ -1,21 +1,6 @@
 import DataBrowser from 'components/DataBrowser/DataBrowser';
 import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
-import { History } from 'components/DataBrowser/hooks/useHistory';
-import { parseAsJson, useQueryState } from 'nuqs';
-import { useEffect } from 'react';
 import { fireEvent, render, screen, waitFor } from 'testUtils';
-
-// Clear history of DataBrowser due to this issue: https://github.com/47ng/nuqs/issues/259#issuecomment-2372431672
-const ClearHistory = ({ children }: { children: React.ReactNode }) => {
-    const [, setHistory] = useQueryState('history', parseAsJson<History>().withDefault([]));
-
-    useEffect(() => {
-        setHistory([]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return children;
-};
 
 const Setup = (
     props: DataBrowserProps = {
@@ -23,11 +8,7 @@ const Setup = (
         isEditMode: false,
     },
 ) => {
-    render(
-        <ClearHistory>
-            <DataBrowser {...props} />
-        </ClearHistory>,
-    );
+    render(<DataBrowser {...props} />);
 };
 
 describe('DataBrowser.Template', () => {
@@ -58,7 +39,7 @@ describe('DataBrowser.Template', () => {
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
-        await waitFor(() => expect(screen.getByText(/value/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument());
         fireEvent.click(screen.getByRole('button', { name: /back/i }));
         await waitFor(() => expect(screen.getByText(/Test Resource R0/i)).toBeInTheDocument());
         const addR0Value = screen.getByTestId('add-value-P23140-true');

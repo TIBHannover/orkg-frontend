@@ -1,14 +1,24 @@
 import { drop } from '@mswjs/data';
 import '@testing-library/jest-dom/extend-expect';
-import 'jest-canvas-mock';
-import nextRouterMock, { useRouter } from 'next-router-mock';
+import { useRouter } from 'next-router-mock';
 import db from 'services/mocks/db';
 import seed from 'services/mocks/seed';
 import server from 'services/mocks/server';
+import { afterAll, afterEach, beforeAll, vi } from 'vitest';
+
+vi.mock('next-client-cookies', () => {
+    return {
+        useCookies: () => ({
+            get: vi.fn().mockReturnValue(null),
+            set: vi.fn(),
+            remove: vi.fn(),
+        }),
+    };
+});
 
 beforeAll(async () => {
     server.listen();
-    jest.setTimeout(20000);
+    vi.setConfig({ testTimeout: 20000 });
     seed();
 });
 
@@ -22,21 +32,21 @@ afterAll(() => {
     server.close();
 });
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn();
 
-jest.mock('react-dnd', () => ({
-    useDrag: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
-    useDrop: jest.fn().mockImplementation(() => [jest.fn(), jest.fn(), jest.fn()]),
+vi.mock('react-dnd', () => ({
+    useDrag: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),
+    useDrop: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),
 }));
 
-jest.mock('components/UserAvatar/UserAvatar', () => () => null);
+vi.mock('components/UserAvatar/UserAvatar', () => ({
+    default: () => null,
+}));
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn();
 
-jest.mock('next/router', () => nextRouterMock);
-
-jest.mock('next-auth/react', () => {
-    const originalModule = jest.requireActual('next-auth/react');
+vi.mock('next-auth/react', () => {
+    const originalModule = vi.importActual('next-auth/react');
     const mockSession = {
         expires: new Date(Date.now() + 2 * 86400).toISOString(),
         user: { name: 'test', id: '123', email: 'test@example.com' },
@@ -44,23 +54,23 @@ jest.mock('next-auth/react', () => {
     return {
         __esModule: true,
         ...originalModule,
-        useSession: jest.fn(() => {
+        useSession: vi.fn(() => {
             return { data: mockSession, status: 'authenticated' };
         }),
-        signIn: jest.fn(),
-        signOut: jest.fn(),
-        log: jest.fn(),
-        getSession: jest.fn(),
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+        log: vi.fn(),
+        getSession: vi.fn(),
     };
 });
 
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
 }));
 
-jest.mock('next/navigation', () => {
+vi.mock('next/navigation', () => {
     const usePathname = () => {
         const router = useRouter();
         return router.pathname;
@@ -79,7 +89,7 @@ jest.mock('next/navigation', () => {
     };
 });
 
-jest.setTimeout(20000);
+vi.setConfig({ testTimeout: 20000 });
 
 // required due to the usage of react-slick https://github.com/akiran/ts/issues/742
 window.matchMedia =

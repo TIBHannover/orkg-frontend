@@ -21,7 +21,7 @@ install:
     paths:
       - node_modules/
 
-jest:
+vitest:
     image: node:lts-buster
     stage: test
     script:

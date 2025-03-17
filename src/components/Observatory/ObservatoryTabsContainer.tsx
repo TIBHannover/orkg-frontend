@@ -12,6 +12,7 @@ import { parseAsJson, useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
 import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
 import { FilterConfig, Item, VisibilityOptions } from 'services/backend/types';
+import { schemaFilterConfig } from 'components/Filters/hooks/useFilterConfig';
 
 export const OBSERVATORY_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All', params: { published: undefined } },
@@ -27,7 +28,10 @@ export const OBSERVATORY_CONTENT_TABS = [
 
 function ObservatoryTabsContainer({ id }: { id: string }) {
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: ALL_CONTENT_TYPES_ID });
-    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>(
+        'filter_config',
+        parseAsJson<FilterConfig[]>(schemaFilterConfig.parse).withDefault([]),
+    );
     const [sort] = useQueryState<VisibilityOptions>('sort', {
         defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
         parse: (value) => value as VisibilityOptions,

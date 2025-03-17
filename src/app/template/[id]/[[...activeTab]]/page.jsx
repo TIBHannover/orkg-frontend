@@ -234,7 +234,7 @@ const Template = () => {
                     id={id}
                     title={label}
                     authors={[contributor?.display_name]}
-                    classId={CLASSES.TEMPLATE}
+                    classId={CLASSES.NODE_SHAPE}
                     isOpen={showExportCitation}
                     toggle={() => setShowExportCitation((v) => !v)}
                 />

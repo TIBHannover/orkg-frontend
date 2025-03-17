@@ -65,7 +65,7 @@ export const getGenericContentTypes = ({
     include_subfields,
     sdg,
     author_id,
-}: { classes: string[] } & GetContentParams) => {
+}: { classes?: string[] } & GetContentParams) => {
     const params = prepareParams({
         page,
         size,
@@ -82,7 +82,7 @@ export const getGenericContentTypes = ({
     });
     return contentTypesApi
         .get<PaginatedResponse<Item>>('', {
-            searchParams: `?${params}&classes=${classes.join(',')}`,
+            searchParams: `?${params}${classes ? `&classes=${classes.join(',')}` : ''}`,
         })
         .json();
 };

@@ -1,14 +1,12 @@
 import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
-import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved } from 'testUtils';
 import EditTable from 'components/ContributionEditor/EditorTable';
 import { contribution, contributionLiteralOnly } from 'components/ContributionEditor/__mocks__/ContributionEditorData';
+import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within } from 'testUtils';
+import { vi } from 'vitest';
 
-jest.mock(
-    'react-flip-move',
-    () =>
-        ({ children }) =>
-            children,
-);
+vi.mock('react-flip-move', () => ({
+    default: ({ children }) => children,
+}));
 
 const setup = (initialState = {}) => {
     render(

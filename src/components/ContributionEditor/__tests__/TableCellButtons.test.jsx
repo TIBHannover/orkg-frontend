@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from 'testUtils';
 import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
+import { fireEvent, render, screen } from 'testUtils';
+import { vi } from 'vitest';
 
 const setup = () => {
-    const onEdit = jest.fn();
-    const onDelete = jest.fn();
+    const onEdit = vi.fn();
+    const onDelete = vi.fn();
 
     render(<TableCellButtons onEdit={onEdit} onDelete={() => {}} backgroundColor="rgba(240, 242, 247, 0.8)" />);
 

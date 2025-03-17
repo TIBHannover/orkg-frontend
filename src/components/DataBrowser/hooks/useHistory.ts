@@ -1,6 +1,13 @@
 import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import { findIndex } from 'lodash';
 import { parseAsJson, useQueryState } from 'nuqs';
+import { z } from 'zod';
+
+const schemaHistory = z.array(
+    z.object({
+        p: z.array(z.string()),
+    }),
+);
 
 export type History = {
     p: string[];
@@ -10,7 +17,7 @@ const useHistory = () => {
     const { rootId, config, history: stateHistory } = useDataBrowserState();
     const dispatch = useDataBrowserDispatch();
 
-    const [history, setHistory] = useQueryState('history', parseAsJson<History>().withDefault([]));
+    const [history, setHistory] = useQueryState('history', parseAsJson<History>(schemaHistory.parse).withDefault([]));
 
     // Current history is the history that starts with the root id (from context)
     let currentHistory = history.find((h) => h.p.length > 0 && h.p[0] === rootId)?.p ?? [];
