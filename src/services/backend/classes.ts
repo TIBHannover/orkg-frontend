@@ -23,7 +23,7 @@ export const createClass = (label: string, uri: string | null = null, id: string
 
 export const updateClass = (id: string, label: string) =>
     classesApi
-        .get<Class>(encodeURIComponent(id), {
+        .patch<Class>(encodeURIComponent(id), {
             json: {
                 label,
             },
