@@ -23,6 +23,6 @@
             }
         ]
     },
-    "include": ["commitlint.config.ts", "jest.config.ts", "src", ".next/types/**/*.ts"],
+    "include": ["commitlint.config.ts", "vitest.config.mts", "src", ".next/types/**/*.ts"],
     "exclude": ["node_modules", "widget/node_modules"]
 }

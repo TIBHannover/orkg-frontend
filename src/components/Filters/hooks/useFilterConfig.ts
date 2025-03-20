@@ -6,6 +6,24 @@ import { orderBy } from 'lodash';
 import { parseAsJson, useQueryState } from 'nuqs';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FilterConfig, FilterConfigValue } from 'services/backend/types';
+import { z } from 'zod';
+
+export const schemaFilterConfig = z.array(
+    z.object({
+        id: z.string().optional(),
+        observatory_id: z.string().optional(),
+        label: z.string().optional(),
+        path: z.array(z.string()),
+        range: z.string(),
+        exact: z.boolean(),
+        created_at: z.string().optional(),
+        created_by: z.string().optional(),
+        featured: z.boolean().optional(),
+        persisted: z.boolean().optional(),
+        values: z.array(z.any()).optional(),
+        source: z.string().optional(),
+    }),
+);
 
 const useFilterConfig = ({
     oId,
@@ -24,7 +42,10 @@ const useFilterConfig = ({
     // Load default filters
     const { isLoading: isLoadingFilters, filters: defaultFilters, refreshFilters: refreshObservatoryFilters } = useObservatoryFilters({ id: oId });
 
-    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>('filter_config', parseAsJson());
+    const [filterConfig, setFilterConfig] = useQueryState<FilterConfig[]>(
+        'filter_config',
+        parseAsJson<FilterConfig[]>(schemaFilterConfig.parse).withDefault([]),
+    );
 
     // Get filters from the local storage
     const { localStorageFilters: storedFilters, refresh: refreshLocalStorageFilters } = useLocalStorageFilters();

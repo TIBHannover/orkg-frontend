@@ -2,7 +2,7 @@ import { url } from 'constants/misc';
 import qs from 'qs';
 import backendApi from 'services/backend/backendApi';
 import { getContributorInformationById } from 'services/backend/contributors';
-import { PaginatedResponse, TopContributor, Activity } from 'services/backend/types';
+import { PaginatedResponse, TopContributor } from 'services/backend/types';
 
 export const statsUrl = `${url}stats/`;
 export const statsApi = backendApi.extend(() => ({ prefixUrl: statsUrl }));
@@ -122,26 +122,4 @@ export const getTopContributors = async ({
             .map((c) => ({ ...c, ...uniqContributorsInfos.filter((i) => i).find((i) => c.contributor === i?.id) }))
             .filter((u) => u.id),
     };
-};
-
-export const getChangelogs = ({
-    researchFieldId = null,
-    page = 0,
-    size = 9999,
-}: {
-    researchFieldId?: string | null;
-    page?: number;
-    size?: number;
-}) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return statsApi
-        .get<PaginatedResponse<Activity>>(`${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog`, {
-            searchParams,
-        })
-        .json();
 };

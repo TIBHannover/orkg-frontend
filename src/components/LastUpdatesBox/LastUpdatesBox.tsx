@@ -1,22 +1,33 @@
-import Link from 'next/link';
-import { useState, FC } from 'react';
 import ContentLoader from 'components/ContentLoader/ContentLoader';
-import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
-import dayjs from 'dayjs';
-import { getResourceLink, getResourceTypeLabel } from 'utils';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { truncate } from 'lodash';
-import { Button } from 'reactstrap';
-import { StyledActivity } from 'components/LastUpdatesBox/styled';
 import LastUpdatesModal from 'components/LastUpdatesBox/LastUpdatesModal';
+import { StyledActivity } from 'components/LastUpdatesBox/styled';
+import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { RESOURCES } from 'constants/graphSettings';
+import dayjs from 'dayjs';
+import { truncate } from 'lodash';
+import Link from 'next/link';
+import { FC, useState } from 'react';
+import { Button } from 'reactstrap';
+import { contentTypesUrl, getGenericContentTypes } from 'services/backend/contentTypes';
+import { getResourceLink } from 'utils';
 
 type LastUpdatesBoxProps = {
     researchFieldId: string;
 };
 
 const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
-    const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 4 });
+    const { data: activities, isLoading } = usePaginate({
+        defaultPageSize: 4,
+        fetchFunction: getGenericContentTypes,
+        fetchUrl: contentTypesUrl,
+        fetchFunctionName: 'getGenericContentTypes',
+        fetchExtraParams: {
+            research_field: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : researchFieldId,
+            include_subfields: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : true,
+        },
+    });
+
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -27,28 +38,24 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                 <div>
                     <div>
                         {!isLoading &&
-                            activities?.length > 0 &&
+                            activities &&
+                            activities.length > 0 &&
                             activities.slice(0, 3).map((activity) => (
                                 <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
                                     <div className="time">{dayjs(activity.created_at).fromNow()}</div>
                                     <div className="action">
-                                        {activity.profile?.id ? (
-                                            <Link href={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                {activity.profile.display_name}
-                                            </Link>
-                                        ) : (
-                                            <i>Anonymous user</i>
-                                        )}{' '}
-                                        added
-                                        {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                        <Link href={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
-                                            {truncate(activity.label, { length: 50 })}
+                                        <UserAvatar userId={activity.created_by} showDisplayName />
+                                        {` added a ${activity._class} `}
+                                        <Link href={getResourceLink(activity._class, activity.id)}>
+                                            {truncate('title' in activity ? activity.title : 'label' in activity ? activity.label : '', {
+                                                length: 50,
+                                            })}
                                         </Link>
                                     </div>
                                 </StyledActivity>
                             ))}
                     </div>
-                    {!isLoading && activities.length > 3 && (
+                    {!isLoading && activities && activities.length > 3 && (
                         <div className="text-center">
                             <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                                 View more
@@ -75,7 +82,7 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                             </ContentLoader>
                         </div>
                     )}
-                    {activities.length > 3 && openModal && (
+                    {activities && activities.length > 3 && openModal && (
                         <LastUpdatesModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />
                     )}
                 </div>

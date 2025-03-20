@@ -13,6 +13,7 @@ import { SWRConfig } from 'swr';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localeData);
@@ -26,23 +27,25 @@ type WrapperProps = {
 const Wrapper = ({ children, initialState = {}, store = setupStore(initialState) }: WrapperProps) => {
     const { store: _store } = store;
     return (
-        <Provider store={_store}>
-            <ThemeProvider theme={theme}>
-                <SWRConfig value={{ dedupingInterval: 0 }}>
-                    <MathJaxContext config={MATH_JAX_CONFIG}>
-                        {children}
-                        <ToastContainer
-                            position="top-right"
-                            autoClose={5000}
-                            hideProgressBar
-                            className="toast-container"
-                            icon={false}
-                            theme="colored"
-                        />
-                    </MathJaxContext>
-                </SWRConfig>
-            </ThemeProvider>
-        </Provider>
+        <NuqsTestingAdapter>
+            <Provider store={_store}>
+                <ThemeProvider theme={theme}>
+                    <SWRConfig value={{ dedupingInterval: 0 }}>
+                        <MathJaxContext config={MATH_JAX_CONFIG}>
+                            {children}
+                            <ToastContainer
+                                position="top-right"
+                                autoClose={5000}
+                                hideProgressBar
+                                className="toast-container"
+                                icon={false}
+                                theme="colored"
+                            />
+                        </MathJaxContext>
+                    </SWRConfig>
+                </ThemeProvider>
+            </Provider>
+        </NuqsTestingAdapter>
     );
 };
 

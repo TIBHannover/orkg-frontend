@@ -86,6 +86,7 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
             <Tooltip placement="bottom" content={`Unknown users ${appendToTooltip}`}>
                 <span>
                     <StyledGravatar className="rounded-circle" md5={userId} size={size} />
+                    {showDisplayName && !isLoadingContributor && <> Anonymous user</>}
                 </span>
             </Tooltip>
         );

@@ -8,6 +8,7 @@ import NextTopLoader from 'nextjs-toploader';
 import PropTypes from 'prop-types';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const RootLayout = ({ children }) => (
     <html lang="en">
@@ -31,7 +32,9 @@ const RootLayout = ({ children }) => (
             <NextTopLoader color="#e86161" />
             {/* CookiesProvider is a server component so cannot be placed in <Providers> */}
             <CookiesProvider>
-                <Providers>{children}</Providers>
+                <NuqsAdapter>
+                    <Providers>{children}</Providers>
+                </NuqsAdapter>
             </CookiesProvider>
         </body>
     </html>

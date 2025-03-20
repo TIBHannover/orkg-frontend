@@ -36,3 +36,5 @@ export const StyledActivity = styled.div`
         padding-left: 1.2rem !important;
     }
 `;
+
+export default StyledActivity;
