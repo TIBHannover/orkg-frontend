@@ -19,12 +19,14 @@ import SustainableDevelopmentGoals from 'components/Review/SustainableDevelopmen
 import useReview from 'components/Review/hooks/useReview';
 import useParams from 'components/useParams/useParams';
 import { VISIBILITY } from 'constants/contentTypes';
+import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import Link from 'next/link';
 import { FC } from 'react';
 import { Alert, Button, Container } from 'reactstrap';
+import { getLinkByEntityType } from 'utils';
 
 type ViewReviewProps = {
     setIsOpenHistoryModal: (isOpen: boolean) => void;
@@ -127,6 +129,20 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                                 href={reverse(ROUTES.COMPARISON, {
                                                     comparisonId: section.comparison?.id,
                                                 })}
+                                            >
+                                                <FontAwesomeIcon icon={faLink} size="xs" />
+                                            </Link>
+                                        </Tooltip>
+                                    )}
+                                    {(section.type === 'resource' || section.type === 'property') && (
+                                        <Tooltip content={`Go to ${section.type} page`}>
+                                            <Link
+                                                target="_blank"
+                                                className="ms-2"
+                                                href={getLinkByEntityType(
+                                                    section.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE,
+                                                    (section.type === 'property' ? section.predicate?.id : section.resource?.id) || '',
+                                                )}
                                             >
                                                 <FontAwesomeIcon icon={faLink} size="xs" />
                                             </Link>
