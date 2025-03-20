@@ -29,7 +29,9 @@ function ProvenanceBox({ item, editMode = false }) {
                 <Badge color="light" className="me-2 mt-2">
                     <FontAwesomeIcon icon={faUsers} /> Organization
                     <span className="ms-1">
-                        <Link href={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })}>{provenance.organization.name}</Link>
+                        <Link href={reverse(ROUTES.ORGANIZATION, { type: provenance.organization.type, id: provenance.organization.display_id })}>
+                            {provenance.organization.name}
+                        </Link>
                     </span>
                 </Badge>
             )}
