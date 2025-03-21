@@ -29,7 +29,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
     canEditSharedRootLevel = false,
     showExternalDescriptions = true,
     showHeader = true,
-    collapsedClasses = ['', CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION, CLASSES.CSVW_TABLE, CLASSES.CSVW_ROW, CLASSES.CSVW_COLUMN],
+    collapsedClasses = ['', CLASSES.RESEARCH_FIELD, CLASSES.PAPER, CLASSES.CONTRIBUTION, CLASSES.CSVW_TABLE, CLASSES.CSVW_ROW, CLASSES.CSVW_COLUMN],
     researchField,
     title,
     abstract,
