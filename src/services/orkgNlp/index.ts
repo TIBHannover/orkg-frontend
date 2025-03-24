@@ -20,7 +20,10 @@ type NlpResponse<T> = {
 };
 
 export const nlpServiceUrl = env('NEXT_PUBLIC_NLP_SERVICE_URL');
-const nlpServiceApi = ky.create({ prefixUrl: nlpServiceUrl });
+const nlpServiceApi = ky.create({
+    timeout: 1000 * 60 * 10, // 10 minutes
+    prefixUrl: nlpServiceUrl,
+});
 
 // https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api/-/blob/main/app/__init__.py#L13
 export const SERVICE_MAPPING: {

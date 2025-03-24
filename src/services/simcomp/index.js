@@ -8,7 +8,10 @@ import { env } from 'next-runtime-env';
 import qs from 'qs';
 
 export const simCompServiceUrl = env('NEXT_PUBLIC_SIMILARITY_SERVICE_URL');
-const simCompServiceApi = ky.create({ prefixUrl: simCompServiceUrl });
+const simCompServiceApi = ky.create({
+    timeout: 1000 * 60 * 10, // 10 minutes
+    prefixUrl: simCompServiceUrl,
+});
 
 /**
  * Get comparison result

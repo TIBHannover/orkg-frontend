@@ -4,7 +4,10 @@ import qs from 'qs';
 import { SimilarPaper } from 'services/orkgSimpaper/types';
 
 export const similarPaperURL = env('NEXT_PUBLIC_SIMILAR_PAPER_URL');
-const similarPaperApi = ky.create({ prefixUrl: similarPaperURL });
+const similarPaperApi = ky.create({
+    timeout: 1000 * 60 * 10, // 10 minutes
+    prefixUrl: similarPaperURL,
+});
 
 export type GetSimilarPapersParams = { contributionIds: string[]; mode?: 'STATIC' | 'DYNAMIC' | null };
 
