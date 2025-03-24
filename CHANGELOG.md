@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.162.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.161.0...v0.162.0) - 2025-03-24
+
+### Changes
+
+- chore: update nextjs to 14.2.25 [`#1526`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1526)
+- refactor: upgrade to nuqs 2 and migrate to Vitest [`#1523`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1523)
+- feat(Review): add go to resource page in the resource section [`#1522`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1522)
+- fix: disable Image optimization in case of error [`#1520`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1520)
+- fix: update class request method [`#1524`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1524)
+- feat: use server component for paper page [`#1519`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1519)
+
+---
 ## [v0.161.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.7...v0.161.0) - 2025-03-10
 
 ### Changes
