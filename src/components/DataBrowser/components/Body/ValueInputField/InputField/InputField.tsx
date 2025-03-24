@@ -114,6 +114,7 @@ const InputField: FC<InputFieldProps> = ({
                 }}
                 inputValue={inputValue}
                 openMenuOnFocus
+                autoFocus
                 size="sm"
             />
         ),
