@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.162.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.0...v0.162.1) - 2025-03-24
+
+### Changes
+
+- fix: increase the timeout for SimComp, NLP and SimPaper calls [`#1528`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1528)
+
+---
 ## [v0.162.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.161.0...v0.162.0) - 2025-03-24
 
 ### Changes
