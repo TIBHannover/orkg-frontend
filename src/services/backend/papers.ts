@@ -91,9 +91,8 @@ export const getPapersLinkedToResource = async ({
     id: string;
     returnContent?: boolean;
 } & PaginationParams) => {
-    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const searchParams = qs.stringify(
-        { linkedTo: id, page, size },
+        { linked_to: id, page, size },
         {
             skipNulls: true,
         },
