@@ -1,5 +1,6 @@
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import { useSelector } from 'react-redux';
+
+import { Properties, PropertiesInner } from '@/components/Comparison/styled';
 
 const ColumnHeaderFirstColumn = () => {
     const transpose = useSelector((state) => state.comparison.configuration.transpose);

@@ -1,8 +1,9 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
 import { MotionGlobalConfig } from 'framer-motion';
-import { createMSWResource, createMSWStatement } from 'services/mocks/helpers';
-import { fireEvent, render, screen, waitForElementToBeRemoved } from 'testUtils';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { createMSWResource, createMSWStatement } from '@/services/mocks/helpers';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@/testUtils';
 
 MotionGlobalConfig.skipAnimations = true;
 

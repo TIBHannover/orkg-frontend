@@ -1,20 +1,21 @@
 import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Coins from 'components/Coins/Coins';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import { Contribution, Delete } from 'components/Comparison/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes';
 import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { getPaper, papersUrl } from 'services/backend/papers';
 import useSWR from 'swr';
+
+import Coins from '@/components/Coins/Coins';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import { Contribution, Delete } from '@/components/Comparison/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ROUTES from '@/constants/routes';
+import { getPaper, papersUrl } from '@/services/backend/papers';
 
 const ContributionCell = ({ contribution }) => {
     const { comparison, updateComparison } = useComparison();

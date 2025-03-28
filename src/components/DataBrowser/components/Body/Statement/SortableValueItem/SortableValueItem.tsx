@@ -1,16 +1,17 @@
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useOriginalOrder from 'components/DataBrowser/hooks/useOriginalOrder';
-import DND_TYPES from 'constants/dndTypes';
 import { FC, ReactElement, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { toast } from 'react-toastify';
-import { updateList } from 'services/backend/lists';
-import { Statement } from 'services/backend/types';
-import { handleSortableHoverReactDnd } from 'utils';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useOriginalOrder from '@/components/DataBrowser/hooks/useOriginalOrder';
+import DND_TYPES from '@/constants/dndTypes';
+import { updateList } from '@/services/backend/lists';
+import { Statement } from '@/services/backend/types';
+import { handleSortableHoverReactDnd } from '@/utils';
 
 type SortableValueItemProps = {
     statement: Statement;

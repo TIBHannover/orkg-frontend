@@ -1,11 +1,12 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Badge, Button } from 'reactstrap';
-import { Author } from 'services/backend/types';
+
+import ROUTES from '@/constants/routes';
+import { Author } from '@/services/backend/types';
 
 const AUTHOR_LIMIT = 15;
 

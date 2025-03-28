@@ -1,6 +1,6 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
-import { render, screen } from 'testUtils';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { render, screen } from '@/testUtils';
 
 const setup = (
     props: DataBrowserProps = {

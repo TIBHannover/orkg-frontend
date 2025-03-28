@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import PropTypes from 'prop-types';
-import { filterSubjectOfStatementsByPredicateAndClass, getResourceLink } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getStatementsByObjectAndPredicate } from '@/services/backend/statements';
+import { filterSubjectOfStatementsByPredicateAndClass, getResourceLink } from '@/utils';
 
 function CustomNode({ data }) {
     const [paper, setPaper] = useState(null);

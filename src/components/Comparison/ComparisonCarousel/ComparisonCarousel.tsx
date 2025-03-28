@@ -1,21 +1,22 @@
 import { faArrowCircleLeft, faArrowCircleRight, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RelatedFigureCard from 'components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFigureCard';
-import RelatedFiguresModal from 'components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFiguresModal/RelatedFiguresModal';
-import useRelatedFigures from 'components/Comparison/ComparisonCarousel/RelatedFigures/hooks/useRelatedFigures';
-import RelatedResourceCard from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourceCard';
-import RelatedResourcesModal from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourcesModal/RelatedResourcesModal';
-import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
-import VisualizationCard from 'components/Comparison/ComparisonCarousel/Visualizations/VisualizationCard';
-import VisualizationsModal from 'components/Comparison/ComparisonCarousel/Visualizations/VisualizationsModal/VisualizationsModal';
-import useVisualizations from 'components/Comparison/ComparisonCarousel/Visualizations/hooks/useVisualizations';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
-import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { useState } from 'react';
 import { Button, Container } from 'reactstrap';
+
+import useRelatedFigures from '@/components/Comparison/ComparisonCarousel/RelatedFigures/hooks/useRelatedFigures';
+import RelatedFigureCard from '@/components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFigureCard';
+import RelatedFiguresModal from '@/components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFiguresModal/RelatedFiguresModal';
+import useRelatedResources from '@/components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
+import RelatedResourceCard from '@/components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourceCard';
+import RelatedResourcesModal from '@/components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourcesModal/RelatedResourcesModal';
+import useVisualizations from '@/components/Comparison/ComparisonCarousel/Visualizations/hooks/useVisualizations';
+import VisualizationCard from '@/components/Comparison/ComparisonCarousel/Visualizations/VisualizationCard';
+import VisualizationsModal from '@/components/Comparison/ComparisonCarousel/Visualizations/VisualizationsModal/VisualizationsModal';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
+import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const ComparisonCarousel = () => {
     const [isOpenVisualizationsModal, setIsOpenVisualizationsModal] = useState(false);

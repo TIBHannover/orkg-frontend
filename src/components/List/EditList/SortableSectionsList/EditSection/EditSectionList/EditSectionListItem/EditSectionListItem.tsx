@@ -1,19 +1,20 @@
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import Confirm from 'components/Confirmation/Confirmation';
-import { supportedContentTypes } from 'components/ContentType/types';
-import useList from 'components/List/hooks/useList';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
-import { LiteratureListSectionList, LiteratureListSectionListEntry } from 'services/backend/types';
 import styled from 'styled-components';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import Confirm from '@/components/Confirmation/Confirmation';
+import { supportedContentTypes } from '@/components/ContentType/types';
+import useList from '@/components/List/hooks/useList';
+import EditPaperModal from '@/components/PaperForm/EditPaperModal';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';
 
 const Toolbar = styled.div`
     width: 200px;

@@ -1,9 +1,10 @@
-import useAuthentication from 'components/hooks/useAuthentication';
-import REGEX from 'constants/regex';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getPaper, markAsUnverified, markAsVerified, updatePaper } from 'services/backend/papers';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import REGEX from '@/constants/regex';
+import { getPaper, markAsUnverified, markAsVerified, updatePaper } from '@/services/backend/papers';
 
 const useEditPaper = ({ paperData, afterUpdate }) => {
     const [title, setTitle] = useState('');

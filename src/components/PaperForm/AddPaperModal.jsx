@@ -1,11 +1,12 @@
-import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import AddPaperAdditionalButtons from 'components/PaperForm/AddPaperAdditionalButtons';
-import PaperForm from 'components/PaperForm/PaperForm';
-import useAddPaper from 'components/PaperForm/hooks/useAddPaper';
-import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import AddPaperAdditionalButtons from '@/components/PaperForm/AddPaperAdditionalButtons';
+import useAddPaper from '@/components/PaperForm/hooks/useAddPaper';
+import PaperForm from '@/components/PaperForm/PaperForm';
+import REGEX from '@/constants/regex';
 
 const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => {
     const [isLoadingParsing, setIsLoadingParsing] = useState(false);

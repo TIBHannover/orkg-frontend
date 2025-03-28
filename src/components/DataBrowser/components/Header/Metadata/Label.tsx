@@ -1,11 +1,5 @@
 import { faCheck, faClose, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
@@ -13,9 +7,16 @@ import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch } from 'react-redux';
 import { Button, Input, InputGroup } from 'reactstrap';
-import { updateResource } from 'services/backend/resources';
-import { updatePaperContributionLabel } from 'slices/viewPaperSlice';
-import { getLinkByEntityType } from 'utils';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { updateResource } from '@/services/backend/resources';
+import { updatePaperContributionLabel } from '@/slices/viewPaperSlice';
+import { getLinkByEntityType } from '@/utils';
 
 const Label = () => {
     const [isEditing, setIsEditing] = useState(false);

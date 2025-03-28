@@ -1,8 +1,9 @@
-import VisualizationPreview from 'components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
-import ViewVisualizationModal from 'components/ViewVisualizationModal/ViewVisualizationModal';
 import { useState } from 'react';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
+
+import VisualizationPreview from '@/components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
+import ViewVisualizationModal from '@/components/ViewVisualizationModal/ViewVisualizationModal';
 
 export const VisualizationCardStyled = styled.div`
     cursor: pointer;

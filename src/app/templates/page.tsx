@@ -2,18 +2,19 @@
 
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
-import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { Template } from 'services/backend/types';
+
+import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
+import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
+import { Template } from '@/services/backend/types';
 
 const Templates = () => {
     const {

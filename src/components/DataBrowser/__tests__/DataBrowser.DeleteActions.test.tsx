@@ -1,7 +1,7 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
-import { createMSWResource, createMSWStatement } from 'services/mocks/helpers';
-import { fireEvent, render, screen, Screen, waitFor } from 'testUtils';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { createMSWResource, createMSWStatement } from '@/services/mocks/helpers';
+import { fireEvent, render, Screen, screen, waitFor } from '@/testUtils';
 
 const setup = async (
     props: DataBrowserProps = {

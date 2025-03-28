@@ -1,23 +1,24 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import GraphViewModal from 'components/GraphView/GraphViewModal';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Contributions from 'components/ViewPaper/Contributions/Contributions';
-import PaperHeader from 'components/ViewPaper/PaperHeader';
-import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
-import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
-import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
-import useParams from 'components/useParams/useParams';
 import { env } from 'next-runtime-env';
 import { InView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import GraphViewModal from '@/components/GraphView/GraphViewModal';
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import Contributions from '@/components/ViewPaper/Contributions/Contributions';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
+import PaperHeader from '@/components/ViewPaper/PaperHeader';
+import PaperHeaderBar from '@/components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
+import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();

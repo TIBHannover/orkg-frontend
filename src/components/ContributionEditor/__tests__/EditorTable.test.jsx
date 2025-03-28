@@ -1,8 +1,9 @@
-import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
-import EditTable from 'components/ContributionEditor/EditorTable';
-import { contribution, contributionLiteralOnly } from 'components/ContributionEditor/__mocks__/ContributionEditorData';
-import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within } from 'testUtils';
 import { vi } from 'vitest';
+
+import TableScrollContainer from '@/components/Comparison/Table/TableScrollContainer';
+import { contribution, contributionLiteralOnly } from '@/components/ContributionEditor/__mocks__/ContributionEditorData';
+import EditTable from '@/components/ContributionEditor/EditorTable';
+import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within } from '@/testUtils';
 
 vi.mock('react-flip-move', () => ({
     default: ({ children }) => children,

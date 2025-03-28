@@ -1,16 +1,17 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
-import { CLASSES } from 'constants/graphSettings';
 import { FC } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { getResources } from 'services/backend/resources';
-import { Node, PaginatedResponse, Resource } from 'services/backend/types';
-import { classifyPaper, nlpServiceUrl } from 'services/orkgNlp';
 import useSWR from 'swr';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { SuggestionsBox } from '@/components/ViewPaper/SmartSuggestions/styled';
+import { CLASSES } from '@/constants/graphSettings';
+import { getResources } from '@/services/backend/resources';
+import { Node, PaginatedResponse, Resource } from '@/services/backend/types';
+import { classifyPaper, nlpServiceUrl } from '@/services/orkgNlp';
 
 type SmartSuggestionsFieldsProps = {
     handleFieldSelect: (selected: Node, submit?: boolean) => void;

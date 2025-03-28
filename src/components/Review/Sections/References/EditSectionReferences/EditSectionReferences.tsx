@@ -1,6 +1,6 @@
-import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import References from 'components/Review/Sections/References/References';
+import { SectionStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import References from '@/components/Review/Sections/References/References';
 
 const EditSectionReferences = () => (
     <SectionStyled className="box rounded mb-4">

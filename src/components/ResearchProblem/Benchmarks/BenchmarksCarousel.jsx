@@ -1,12 +1,13 @@
-import Link from 'next/link';
 import { faArrowCircleLeft, faArrowCircleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
+
+import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
+import ROUTES from '@/constants/routes';
 
 const BenchmarkCarouselCardStyled = styled.div`
     display: flex !important;

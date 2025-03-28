@@ -1,10 +1,11 @@
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { ChangeEvent, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, FormGroup, Input, Label } from 'reactstrap';
-import { PropertyShapeNumberType, PropertyShape as PropertyShapeType } from 'services/backend/types';
-import { updatePropertyShapes } from 'slices/templateEditorSlice';
+
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { PropertyShape as PropertyShapeType, PropertyShapeNumberType } from '@/services/backend/types';
+import { updatePropertyShapes } from '@/slices/templateEditorSlice';
 
 type ValidationRulesNumberProps = {
     id: number;

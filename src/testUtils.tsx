@@ -1,19 +1,20 @@
 import type { RenderOptions } from '@testing-library/react';
 import { render as rtlRender } from '@testing-library/react';
-import theme from 'assets/scss/ThemeVariables';
 import { MathJaxContext } from 'better-react-mathjax';
-import MATH_JAX_CONFIG from 'constants/mathJax';
-import { PropsWithChildren, ReactElement } from 'react';
-import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import { RootStore } from 'slices/types';
-import { AppStore, setupStore } from 'store';
-import { ThemeProvider } from 'styled-components';
-import { SWRConfig } from 'swr';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
+import { PropsWithChildren, ReactElement } from 'react';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { ThemeProvider } from 'styled-components';
+import { SWRConfig } from 'swr';
+
+import theme from '@/assets/scss/ThemeVariables';
+import MATH_JAX_CONFIG from '@/constants/mathJax';
+import { RootStore } from '@/slices/types';
+import { AppStore, setupStore } from '@/store';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localeData);

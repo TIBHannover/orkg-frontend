@@ -1,12 +1,13 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPen, faSort, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AuthorTag, StyledDragHandle } from 'components/Input/AuthorsInput/styled';
-import ItemTypes from 'constants/dndTypes';
 import PropTypes from 'prop-types';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { handleSortableHoverReactDnd } from 'utils';
+
+import { AuthorTag, StyledDragHandle } from '@/components/Input/AuthorsInput/styled';
+import ItemTypes from '@/constants/dndTypes';
+import { handleSortableHoverReactDnd } from '@/utils';
 
 const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, itemLabel, handleUpdate, isDisabled }) => {
     const ref = useRef(null);

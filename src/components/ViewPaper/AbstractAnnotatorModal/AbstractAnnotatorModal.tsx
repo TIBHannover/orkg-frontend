@@ -1,23 +1,24 @@
 import { faMagic, faSpinner, faThList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AbstractAnnotatorView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
-import AbstractInputView from 'components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
-import AbstractRangesList from 'components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import LLM_TASK_NAMES from 'constants/llmTasks';
 import toArray from 'lodash/toArray';
 import randomcolor from 'randomcolor';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createResource } from 'services/backend/resources';
-import { createResourceStatement, statementsUrl } from 'services/backend/statements';
-import { getLlmResponse, nlpServiceUrl } from 'services/orkgNlp';
-import { Range, RootStore } from 'slices/types';
-import { clearAnnotations, createAnnotation, setAbstractDialogView, setAbstract as setAbstractGlobal } from 'slices/viewPaperSlice';
 import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
+
+import AbstractAnnotatorView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
+import AbstractInputView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
+import AbstractRangesList from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import LLM_TASK_NAMES from '@/constants/llmTasks';
+import { createResource } from '@/services/backend/resources';
+import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
+import { getLlmResponse, nlpServiceUrl } from '@/services/orkgNlp';
+import { Range, RootStore } from '@/slices/types';
+import { clearAnnotations, createAnnotation, setAbstract as setAbstractGlobal, setAbstractDialogView } from '@/slices/viewPaperSlice';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {

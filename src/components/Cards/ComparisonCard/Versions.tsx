@@ -1,17 +1,18 @@
 import { faChartBar, faCodeBranch, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Button } from 'reactstrap';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { ComparisonVersion, Statement } from 'services/backend/types';
 import useSWR from 'swr';
-import { getComparisonData } from 'utils';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import ROUTES from '@/constants/routes';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { ComparisonVersion, Statement } from '@/services/backend/types';
+import { getComparisonData } from '@/utils';
 
 type VersionTooltipProps = {
     version: ComparisonVersion;

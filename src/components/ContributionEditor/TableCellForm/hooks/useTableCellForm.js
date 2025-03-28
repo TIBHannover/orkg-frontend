@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import validationSchema from '@/components/ContributionEditor/TableCellForm/helpers/validationSchema';
+import { getConfigByClassId, getConfigByType } from '@/constants/DataTypes';
+import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
 import {
-    createResource,
-    getPropertyShapesByResourceIDAndPredicateID,
-    fetchTemplatesOfClassIfNeeded,
     canAddValueAction,
-    updateResourceStatementsAction,
-    updateLiteral,
-    updateResourceLabel,
+    createResource,
+    fetchTemplatesOfClassIfNeeded,
+    getPropertyShapesByResourceIDAndPredicateID,
     getValueClass,
     isLiteral,
-} from 'slices/contributionEditorSlice';
-import validationSchema from 'components/ContributionEditor/TableCellForm/helpers/validationSchema';
-import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
-import { useDispatch, useSelector } from 'react-redux';
-import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+    updateLiteral,
+    updateResourceLabel,
+    updateResourceStatementsAction,
+} from '@/slices/contributionEditorSlice';
 
 const useTableCellForm = ({ value, contributionId, propertyId }) => {
     const dispatch = useDispatch();

@@ -1,12 +1,13 @@
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import usePublish from 'components/Comparison/hooks/usePublish';
-import Tooltip from 'components/Utils/Tooltip';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
 import { Alert, Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import EditMetadataModal from 'components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
-import useComparison from 'components/Comparison/hooks/useComparison';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import EditMetadataModal from '@/components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import usePublish from '@/components/Comparison/hooks/usePublish';
+import Tooltip from '@/components/Utils/Tooltip';
 
 type PublishProps = {
     toggle: () => void;

@@ -1,9 +1,10 @@
-import { FormGroup, Label, FormText, Input, Table } from 'reactstrap';
-import { updateHasLabelFormat, updateLabelFormat } from 'slices/templateEditorSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { FC, ChangeEvent } from 'react';
-import { PropertyShape } from 'services/backend/types';
+import { ChangeEvent, FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FormGroup, FormText, Input, Label, Table } from 'reactstrap';
+
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { PropertyShape } from '@/services/backend/types';
+import { updateHasLabelFormat, updateLabelFormat } from '@/slices/templateEditorSlice';
 
 const Format: FC<{}> = () => {
     const dispatch = useDispatch();

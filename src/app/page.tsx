@@ -1,20 +1,21 @@
 'use client';
 
-import Benefits from 'components/Home/Benefits';
-import HelpTour from 'components/Home/HelpTour';
-import MastodonTimeline from 'components/Home/MastodonTimeline';
-import News from 'components/Home/News';
-import ObservatoriesBox from 'components/Home/ObservatoriesBox';
-import ResearchFieldCards from 'components/Home/ResearchFieldCards';
-import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
-import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
-import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import { env } from 'next-runtime-env';
-import HomeTabsContainer from 'components/Home/HomeTabsContainer';
-import ContributorsBox from 'components/TopContributors/ContributorsBox';
-import { RESOURCES } from 'constants/graphSettings';
 import { Helmet } from 'react-helmet';
 import { Col, Container, Row } from 'reactstrap';
+
+import Benefits from '@/components/Home/Benefits';
+import HelpTour from '@/components/Home/HelpTour';
+import HomeTabsContainer from '@/components/Home/HomeTabsContainer';
+import useResearchFieldSelector from '@/components/Home/hooks/useResearchFieldSelector';
+import MastodonTimeline from '@/components/Home/MastodonTimeline';
+import News from '@/components/Home/News';
+import ObservatoriesBox from '@/components/Home/ObservatoriesBox';
+import ResearchFieldCards from '@/components/Home/ResearchFieldCards';
+import HomeAlerts from '@/components/HomeAlerts/HomeAlerts';
+import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
+import ContributorsBox from '@/components/TopContributors/ContributorsBox';
+import { RESOURCES } from '@/constants/graphSettings';
 
 export default function Home() {
     const { selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoadingFields, isLoadingStats } = useResearchFieldSelector();

@@ -1,9 +1,11 @@
 'use client';
 
+import { marked } from 'marked';
 import { Component } from 'react';
 import { Container } from 'reactstrap';
-import { marked } from 'marked';
-import TitleBar from 'components/TitleBar/TitleBar';
+
+import TitleBar from '@/components/TitleBar/TitleBar';
+
 import changelogPath from '../../../CHANGELOG.md';
 
 class Changelog extends Component {

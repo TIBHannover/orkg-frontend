@@ -1,20 +1,21 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
-import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
-import { OptionType } from 'components/Autocomplete/types';
-import { ValuesStyle } from 'components/StatementBrowser/styled';
-import ValidationRulesNumber from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
-import ValidationRulesString from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import DATA_TYPES from 'constants/DataTypes';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { Col, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
-import { Class, PropertyShape } from 'services/backend/types';
-import { updatePropertyShapes } from 'slices/templateEditorSlice';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
+import { ValuesStyle } from '@/components/StatementBrowser/styled';
+import ValidationRulesNumber from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
+import ValidationRulesString from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import DATA_TYPES from '@/constants/DataTypes';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { Class, PropertyShape } from '@/services/backend/types';
+import { updatePropertyShapes } from '@/slices/templateEditorSlice';
 
 type TemplateComponentValueProps = {
     id: number;

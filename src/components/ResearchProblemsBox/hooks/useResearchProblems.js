@@ -1,11 +1,12 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES, MISC } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getContentTypes } from 'services/backend/contentTypes';
-import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
-import { addResourceToObservatory } from 'services/backend/resources';
-import { mergeAlternate } from 'utils';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES, MISC } from '@/constants/graphSettings';
+import { getContentTypes } from '@/services/backend/contentTypes';
+import { getResearchProblemsByResearchFieldId } from '@/services/backend/researchFields';
+import { addResourceToObservatory } from '@/services/backend/resources';
+import { mergeAlternate } from '@/utils';
 
 function useResearchProblems({ id, by = 'ResearchField', initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);

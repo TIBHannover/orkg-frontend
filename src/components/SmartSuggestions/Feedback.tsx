@@ -1,13 +1,14 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Popover from 'components/FloatingUI/Popover';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Input, Label } from 'reactstrap';
-import { createFeedback } from 'services/cms';
-import { FeedbackType } from 'services/cms/types';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Popover from '@/components/FloatingUI/Popover';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { createFeedback } from '@/services/cms';
+import { FeedbackType } from '@/services/cms/types';
 
 type FeedbackProps = {
     type: FeedbackType;

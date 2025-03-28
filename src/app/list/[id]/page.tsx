@@ -2,31 +2,32 @@
 
 import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
-import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import Confirm from 'components/Confirmation/Confirmation';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import GraphViewModal from 'components/GraphView/GraphViewModal';
-import EditList from 'components/List/EditList/EditList';
-import PublishModal from 'components/List/EditList/PublishModal/PublishModal';
-import ExportBibtexModal from 'components/List/ExportBibtexModal/ExportBibtexModal';
-import HistoryModal from 'components/List/HistoryModal/HistoryModal';
-import ViewList from 'components/List/ViewList/ViewList';
-import useList from 'components/List/hooks/useList';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { SubTitle } from 'components/styled';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import LoadingArticle from '@/components/ArticleBuilder/LoadingArticle';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import Confirm from '@/components/Confirmation/Confirmation';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import GraphViewModal from '@/components/GraphView/GraphViewModal';
+import EditList from '@/components/List/EditList/EditList';
+import PublishModal from '@/components/List/EditList/PublishModal/PublishModal';
+import ExportBibtexModal from '@/components/List/ExportBibtexModal/ExportBibtexModal';
+import HistoryModal from '@/components/List/HistoryModal/HistoryModal';
+import useList from '@/components/List/hooks/useList';
+import ViewList from '@/components/List/ViewList/ViewList';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ROUTES from '@/constants/routes';
 
 const List = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);

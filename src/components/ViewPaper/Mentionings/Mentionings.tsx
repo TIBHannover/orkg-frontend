@@ -1,11 +1,12 @@
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { FC } from 'react';
 import { Container, ListGroup, ListGroupItem } from 'reactstrap';
-import { getPaper, papersUrl, updatePaper } from 'services/backend/papers';
-import { Mentioning } from 'services/backend/types';
 import useSWR from 'swr';
-import AddMentioning from 'components/ViewPaper/Mentionings/AddMentioning/AddMentioning';
-import MentioningItem from 'components/ViewPaper/Mentionings/MentioningItem/MentioningItem';
+
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import AddMentioning from '@/components/ViewPaper/Mentionings/AddMentioning/AddMentioning';
+import MentioningItem from '@/components/ViewPaper/Mentionings/MentioningItem/MentioningItem';
+import { getPaper, papersUrl, updatePaper } from '@/services/backend/papers';
+import { Mentioning } from '@/services/backend/types';
 
 type MentioningsProps = { id: string };
 

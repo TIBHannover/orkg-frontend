@@ -1,12 +1,13 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import { FC, useContext, useState } from 'react';
-import { getResource, resourcesUrl, updateResource } from 'services/backend/resources';
-import { Template } from 'services/backend/types';
 import styled, { ThemeContext } from 'styled-components';
 import useSWR from 'swr';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import { getResource, resourcesUrl, updateResource } from '@/services/backend/resources';
+import { Template } from '@/services/backend/types';
 
 type IconWrapperProps = {
     $wrappercolor: string;

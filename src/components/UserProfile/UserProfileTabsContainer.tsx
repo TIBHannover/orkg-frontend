@@ -1,22 +1,23 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import Tabs from 'components/Tabs/Tabs';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { flatten } from 'lodash';
-import { useQueryState } from 'nuqs';
-import { Button } from 'reactstrap';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { Item, Paper, VisibilityOptions } from 'services/backend/types';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
-import ROUTES from 'constants/routes';
-import TabLabel from 'components/Tabs/TabLabel';
+import { Button } from 'reactstrap';
+
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TabLabel from '@/components/Tabs/TabLabel';
+import Tabs from '@/components/Tabs/Tabs';
+import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
+import { Item, Paper, VisibilityOptions } from '@/services/backend/types';
 
 export const USER_PROFILE_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },

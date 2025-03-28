@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { asyncLocalStorage } from 'utils';
 import arrayMove from 'array-move';
-import { applyRule, getRuleByProperty } from 'components/Comparison/Filters/helpers';
+import { cloneDeep, findIndex, flatten, intersection, isEmpty, isEqual } from 'lodash';
+import { match } from 'path-to-regexp';
+import { Cookies } from 'react-cookie';
+
+import { applyRule, getRuleByProperty } from '@/components/Comparison/Filters/helpers';
 import {
     activatedContributionsToList,
     activatedPropertiesToList,
@@ -9,13 +12,11 @@ import {
     generateFilterControlData,
     isPredicatesListCorrect,
     similarPropertiesByLabel,
-} from 'components/Comparison/hooks/helpers';
-import { DEFAULT_COMPARISON_METHOD } from 'constants/misc';
-import ROUTES from 'constants/routes';
-import { cloneDeep, findIndex, flatten, intersection, isEmpty, isEqual } from 'lodash';
-import { match } from 'path-to-regexp';
-import { Cookies } from 'react-cookie';
-import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+} from '@/components/Comparison/hooks/helpers';
+import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+import { DEFAULT_COMPARISON_METHOD } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { asyncLocalStorage } from '@/utils';
 
 const cookies = new Cookies();
 

@@ -1,8 +1,9 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
 import { uniqBy } from 'lodash';
 import qs from 'qs';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import {
     CreatedByParam,
     CreateTemplateParams,
@@ -14,7 +15,7 @@ import {
     Template,
     UpdateTemplateParams,
     VisibilityParam,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const templatesUrl = `${url}templates/`;
 export const templatesApi = backendApi.extend(() => ({ prefixUrl: templatesUrl }));

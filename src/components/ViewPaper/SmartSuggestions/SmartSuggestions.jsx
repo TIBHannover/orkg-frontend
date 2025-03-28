@@ -1,16 +1,17 @@
 import { faExclamationTriangle, faMagic, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import TooltipQuestion from 'components/Utils/Tooltip';
-import AbstractAnnotatorModal from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorModal';
-import AbstractModal from 'components/ViewPaper/AbstractModal/AbstractModal';
-import Bioassays from 'components/ViewPaper/BioassaysModal/Bioassays';
-import NERSuggestions from 'components/ViewPaper/SmartSuggestions/NERSuggestions';
-import TemplatesRecommendations from 'components/ViewPaper/SmartSuggestions/TemplatesRecommendations';
-import { SuggestionsBox } from 'components/ViewPaper/SmartSuggestions/styled';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import TooltipQuestion from '@/components/Utils/Tooltip';
+import AbstractAnnotatorModal from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorModal';
+import AbstractModal from '@/components/ViewPaper/AbstractModal/AbstractModal';
+import Bioassays from '@/components/ViewPaper/BioassaysModal/Bioassays';
+import NERSuggestions from '@/components/ViewPaper/SmartSuggestions/NERSuggestions';
+import { SuggestionsBox } from '@/components/ViewPaper/SmartSuggestions/styled';
+import TemplatesRecommendations from '@/components/ViewPaper/SmartSuggestions/TemplatesRecommendations';
 
 const SmartSuggestions = ({ isLoadingAbstract, title = '', abstract = '', resourceId }) => {
     const [isOpenAbstractModal, setIsOpenAbstractModal] = useState(false);

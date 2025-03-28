@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import CopyId from 'components/CopyId/CopyId';
+
+import CopyId from '@/components/CopyId/CopyId';
 
 export default {
     title: 'CopyId',

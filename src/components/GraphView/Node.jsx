@@ -1,10 +1,10 @@
-import { Ring, Sphere } from 'reagraph';
-import PropTypes from 'prop-types';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Html } from '@react-three/drei';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { memo } from 'react';
+import { Html } from '@react-three/drei';
 import { functions, isEqual, omit } from 'lodash';
+import PropTypes from 'prop-types';
+import { memo } from 'react';
+import { Ring, Sphere } from 'reagraph';
 
 const COLOR_LITERAL = '#FFCC33';
 

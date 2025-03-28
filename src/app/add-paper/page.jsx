@@ -1,16 +1,17 @@
 'use client';
 
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import AddPaperAdditionalButtons from 'components/PaperForm/AddPaperAdditionalButtons';
-import PaperForm from 'components/PaperForm/PaperForm';
-import useAddPaper from 'components/PaperForm/hooks/useAddPaper';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import AddPaperAdditionalButtons from '@/components/PaperForm/AddPaperAdditionalButtons';
+import useAddPaper from '@/components/PaperForm/hooks/useAddPaper';
+import PaperForm from '@/components/PaperForm/PaperForm';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
 
 const AddPaper = () => {
     const [isLoadingParsing, setIsLoadingParsing] = useState(false);

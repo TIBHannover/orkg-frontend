@@ -1,6 +1,7 @@
-import { render, screen } from 'testUtils';
-import { describe, it, expect, vi, beforeAll } from 'vitest';
-import Index from 'app/page';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+
+import Index from '@/app/page';
+import { render, screen } from '@/testUtils';
 
 vi.mock('d3-hierarchy', () => ({
     stratify: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),

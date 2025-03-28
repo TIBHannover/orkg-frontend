@@ -1,13 +1,14 @@
-import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
-import SBEditorHelpModal from 'components/ContributionEditor/SBEditorHelpModal/SBEditorHelpModal';
-import { Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
+import FlipMove from 'react-flip-move';
 import { useSelector } from 'react-redux';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import FlipMove from 'react-flip-move';
+import { Alert } from 'reactstrap';
+
+import SBEditorHelpModal from '@/components/ContributionEditor/SBEditorHelpModal/SBEditorHelpModal';
+import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
 
 const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, papers, statements, properties, resources, literals } = useSelector((state) => state.contributionEditor);

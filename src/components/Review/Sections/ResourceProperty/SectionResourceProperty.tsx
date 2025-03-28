@@ -1,12 +1,13 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import useReview from 'components/Review/hooks/useReview';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { getReviewPublishedContents, reviewUrl } from 'services/backend/reviews';
-import { ReviewSection } from 'services/backend/types';
 import useSWR from 'swr';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import useReview from '@/components/Review/hooks/useReview';
+import ROUTES from '@/constants/routes';
+import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
+import { ReviewSection } from '@/services/backend/types';
 
 type SectionResourcePropertyProps = {
     section: ReviewSection;

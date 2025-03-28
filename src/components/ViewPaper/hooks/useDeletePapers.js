@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import Confirm from 'components/Confirmation/Confirmation';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { updateResourceClasses } from 'services/backend/resources';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { updateResourceClasses } from '@/services/backend/resources';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
 
 function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = () => {} }) {
     const router = useRouter();

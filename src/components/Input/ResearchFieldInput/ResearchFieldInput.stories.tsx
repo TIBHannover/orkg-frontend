@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
+
+import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 
 export default {
     title: 'Input/ResearchFieldInput',

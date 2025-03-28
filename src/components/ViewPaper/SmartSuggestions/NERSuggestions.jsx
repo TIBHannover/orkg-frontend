@@ -1,9 +1,5 @@
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { AnimationContainer, PropertyItem, ValueItem } from 'components/ViewPaper/SmartSuggestions/styled';
-import useEntityRecognition from 'components/ViewPaper/hooks/useEntityRecognition';
-import { ENTITIES } from 'constants/graphSettings';
 import { capitalize } from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
@@ -11,11 +7,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
 import { ListGroup } from 'reactstrap';
-import { createResource } from 'services/backend/resources';
-import { createResourceStatement, statementsUrl } from 'services/backend/statements';
-import { determineActiveNERService, getNerResults, saveFeedback } from 'services/orkgNlp';
-import { setNerProperties, setNerRawResponse, setNerResources } from 'slices/viewPaperSlice';
 import { mutate } from 'swr';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import useEntityRecognition from '@/components/ViewPaper/hooks/useEntityRecognition';
+import { AnimationContainer, PropertyItem, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import { createResource } from '@/services/backend/resources';
+import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
+import { determineActiveNERService, getNerResults, saveFeedback } from '@/services/orkgNlp';
+import { setNerProperties, setNerRawResponse, setNerResources } from '@/slices/viewPaperSlice';
 
 function NERSuggestions({ title = '', abstract = '', resourceId }) {
     const nerProperties = useSelector((state) => state.viewPaper.nerProperties);

@@ -1,16 +1,17 @@
 'use client';
 
 import capitalize from 'capitalize';
-import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES } from 'constants/graphSettings';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
-import { getStats, statsUrl } from 'services/backend/stats';
 import useSWR from 'swr';
+
+import ColoredStatsBox from '@/components/Stats/ColoredStatsBox';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { CLASSES } from '@/constants/graphSettings';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getStats, statsUrl } from '@/services/backend/stats';
 
 const Stats = () => {
     const { data: stats, isLoading } = useSWR(

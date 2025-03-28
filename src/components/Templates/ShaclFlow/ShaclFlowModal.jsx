@@ -1,22 +1,24 @@
+import 'reactflow/dist/style.css';
+
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import DownloadButton from 'components/Templates/ShaclFlow/DownloadImage/DownloadButton';
-import Node from 'components/Templates/ShaclFlow/Node/Node';
-import useAutoLayout from 'components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
-import useExportSHACL from 'components/Templates/ShaclFlow/hooks/useExportSHACL';
-import { CLASSES } from 'constants/graphSettings';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider, applyEdgeChanges, applyNodeChanges } from 'reactflow';
-import 'reactflow/dist/style.css';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, Controls, MiniMap, ReactFlowProvider } from 'reactflow';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { loadTemplateFlowByID } from 'services/backend/statements';
-import { setDiagramMode, setTemplateFlow } from 'slices/templateEditorSlice';
-import { convertTreeToFlat } from 'utils';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import DownloadButton from '@/components/Templates/ShaclFlow/DownloadImage/DownloadButton';
+import useAutoLayout from '@/components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
+import useExportSHACL from '@/components/Templates/ShaclFlow/hooks/useExportSHACL';
+import Node from '@/components/Templates/ShaclFlow/Node/Node';
+import { CLASSES } from '@/constants/graphSettings';
+import { loadTemplateFlowByID } from '@/services/backend/statements';
+import { setDiagramMode, setTemplateFlow } from '@/slices/templateEditorSlice';
+import { convertTreeToFlat } from '@/utils';
 
 function ShaclFlowModal() {
     useAutoLayout({ direction: 'LR' });

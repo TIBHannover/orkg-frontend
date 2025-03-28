@@ -1,12 +1,5 @@
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -15,10 +8,18 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getPaperByDoi } from 'services/backend/papers';
-import { getResources } from 'services/backend/resources';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import styled from 'styled-components';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import { getPaperByDoi } from '@/services/backend/papers';
+import { getResources } from '@/services/backend/resources';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;

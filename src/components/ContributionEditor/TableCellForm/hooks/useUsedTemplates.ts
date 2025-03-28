@@ -1,6 +1,7 @@
-import { getTemplates, templatesUrl } from 'services/backend/templates';
-import { Resource } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { getTemplates, templatesUrl } from '@/services/backend/templates';
+import { Resource } from '@/services/backend/types';
 
 type UseUsedTemplates = {
     resourceObject?: Resource;

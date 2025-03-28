@@ -1,9 +1,10 @@
-import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from 'services/backend/types';
-import { getTemplate } from 'services/backend/templates';
-import backendApi from 'services/backend/backendApi';
+
+import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getTemplate } from '@/services/backend/templates';
+import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from '@/services/backend/types';
 
 export const statementsUrl = `${url}statements/`;
 export const statementsApi = backendApi.extend(() => ({ prefixUrl: statementsUrl }));

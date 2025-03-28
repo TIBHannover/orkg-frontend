@@ -1,8 +1,9 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { find, flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from '@/services/backend/statements';
+import { getComparisonData, groupVersionsOfComparisons } from '@/utils';
 
 function useContributionComparison(contributionId) {
     const pageSize = 3;

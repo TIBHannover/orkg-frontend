@@ -1,11 +1,12 @@
-import Comparison from 'app/comparison/[[...comparisonId]]/Comparison';
-import Coins from 'components/Coins/Coins';
-import { LICENSE_URL } from 'constants/misc';
 import dayjs from 'dayjs';
 import { sanitize } from 'isomorphic-dompurify';
 import { Metadata } from 'next';
-import { getComparison } from 'services/backend/comparisons';
-import { Comparison as ComparisonType } from 'services/backend/types';
+
+import Comparison from '@/app/comparison/[[...comparisonId]]/Comparison';
+import Coins from '@/components/Coins/Coins';
+import { LICENSE_URL } from '@/constants/misc';
+import { getComparison } from '@/services/backend/comparisons';
+import { Comparison as ComparisonType } from '@/services/backend/types';
 
 export async function generateMetadata({ params }: { params: Promise<{ comparisonId?: string }> }): Promise<Metadata> {
     const { comparisonId } = await params;

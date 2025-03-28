@@ -1,17 +1,18 @@
-import IconCited from 'assets/img/benefits/cited.svg';
-import IconCommunity from 'assets/img/benefits/community.svg';
-import IconContribute from 'assets/img/benefits/contribute.svg';
-import IconConvince from 'assets/img/benefits/convince.svg';
-import IconFeedback from 'assets/img/benefits/feedback.svg';
-import IconReputation from 'assets/img/benefits/reputation.svg';
-import IconVisibility from 'assets/img/benefits/visibility.svg';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { CarouselIndicatorsStyled } from 'components/styled';
-import { signIn } from 'next-auth/react';
 import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import styled from 'styled-components';
+
+import IconCited from '@/assets/img/benefits/cited.svg';
+import IconCommunity from '@/assets/img/benefits/community.svg';
+import IconContribute from '@/assets/img/benefits/contribute.svg';
+import IconConvince from '@/assets/img/benefits/convince.svg';
+import IconFeedback from '@/assets/img/benefits/feedback.svg';
+import IconReputation from '@/assets/img/benefits/reputation.svg';
+import IconVisibility from '@/assets/img/benefits/visibility.svg';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { CarouselIndicatorsStyled } from '@/components/styled';
 
 const CarouselContainer = styled.div`
     width: 100%;

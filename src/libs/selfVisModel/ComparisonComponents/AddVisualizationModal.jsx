@@ -1,20 +1,21 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { activatedContributionsToList } from 'components/Comparison/hooks/helpers';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import useParams from 'components/useParams/useParams';
-import HelpVideoModal from 'libs/selfVisModel/ComparisonComponents/HelpVideoModal';
-import PublishVisualization from 'libs/selfVisModel/ComparisonComponents/PublishVisualization';
-import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
-import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { setIsOpenVisualizationModal } from 'slices/comparisonSlice';
 import styled from 'styled-components';
+
+import { activatedContributionsToList } from '@/components/Comparison/hooks/helpers';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import useParams from '@/components/useParams/useParams';
+import HelpVideoModal from '@/libs/selfVisModel/ComparisonComponents/HelpVideoModal';
+import PublishVisualization from '@/libs/selfVisModel/ComparisonComponents/PublishVisualization';
+import CellEditor from '@/libs/selfVisModel/RenderingComponents/CellEditor';
+import CellSelector from '@/libs/selfVisModel/RenderingComponents/CellSelector';
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import VisualizationWidget from '@/libs/selfVisModel/VisRenderer/VisualizationWidget';
+import { setIsOpenVisualizationModal } from '@/slices/comparisonSlice';
 
 const TabButtons = styled.div`
     border-bottom: 2px solid ${(props) => props.theme.lightDarker};

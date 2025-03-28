@@ -1,12 +1,13 @@
-import useReview from 'components/Review/hooks/useReview';
-import Outline from 'components/Review/Outline/Outline';
-import Section, { HandleManualSort } from 'components/Review/EditReview/SortableSections/Section/Section';
+import arrayMove from 'array-move';
 import { useState } from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import { Container } from 'reactstrap';
-import { ReviewSection } from 'services/backend/types';
 import { createGlobalStyle } from 'styled-components';
-import arrayMove from 'array-move';
+
+import Section, { HandleManualSort } from '@/components/Review/EditReview/SortableSections/Section/Section';
+import useReview from '@/components/Review/hooks/useReview';
+import Outline from '@/components/Review/Outline/Outline';
+import { ReviewSection } from '@/services/backend/types';
 
 type SortableListProps = {
     items: ReviewSection[];

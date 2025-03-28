@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { ListGroup } from 'reactstrap';
+
+import ShortRecord from '@/components/ShortRecord/ShortRecord';
 
 export default {
     title: 'ShortRecord',

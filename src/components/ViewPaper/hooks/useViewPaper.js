@@ -1,11 +1,12 @@
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { PREDICATES } from 'constants/graphSettings';
 import { sortBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getPaper } from 'services/backend/papers';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { loadPaper, setPaperContributions, setVersion } from 'slices/viewPaperSlice';
+
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { PREDICATES } from '@/constants/graphSettings';
+import { getPaper } from '@/services/backend/papers';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { loadPaper, setPaperContributions, setVersion } from '@/slices/viewPaperSlice';
 
 const useViewPaper = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);

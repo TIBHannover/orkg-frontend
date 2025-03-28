@@ -1,9 +1,10 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { OPERATORS_MAP } from 'constants/filters';
 import { invert, isNumber } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { FilterConfig, FilterConfigOperator, FilterConfigValue } from 'services/backend/types';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { OPERATORS_MAP } from '@/constants/filters';
+import { FilterConfig, FilterConfigOperator, FilterConfigValue } from '@/services/backend/types';
 
 type NumberInputFieldProps = {
     filter: FilterConfig;

@@ -3,18 +3,6 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import Coins from 'components/Coins/Coins';
-import ExportCitation from 'components/Comparison/Export/ExportCitation';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Contributions from 'components/ViewPaperVersion/ContributionsVersion/Contributions';
-import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
-import useViewPaperVersion from 'components/ViewPaperVersion/hooks/useViewPaperVersion';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -37,6 +25,19 @@ import {
     ModalBody,
     ModalHeader,
 } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import Coins from '@/components/Coins/Coins';
+import ExportCitation from '@/components/Comparison/Export/ExportCitation';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import Contributions from '@/components/ViewPaperVersion/ContributionsVersion/Contributions';
+import useViewPaperVersion from '@/components/ViewPaperVersion/hooks/useViewPaperVersion';
+import PaperVersionHeader from '@/components/ViewPaperVersion/PaperVersionHeader';
+import ROUTES from '@/constants/routes';
 
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();

@@ -1,13 +1,14 @@
 import { FloatingTree } from '@floating-ui/react';
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
-import LLM_TASK_NAMES from 'constants/llmTasks';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
-import { getLlmResponse } from 'services/orkgNlp';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import LLM_TASK_NAMES from '@/constants/llmTasks';
+import { getLlmResponse } from '@/services/orkgNlp';
 
 const SmartLiteralTypeCheck = ({ label = '' }) => {
     const [response, setResponse] = useState({});

@@ -1,7 +1,8 @@
-import { getPreferenceFromCookies } from 'components/DataBrowser/utils/dataBrowserUtils';
-import { Dispatch, FC, ReactNode, createContext, useContext, useEffect, useReducer } from 'react';
-import { Predicate } from 'services/backend/types';
-import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext } from 'components/DataBrowser/types/DataBrowserTypes';
+import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
+
+import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { getPreferenceFromCookies } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { Predicate } from '@/services/backend/types';
 
 type DataBrowserState = {
     rootId: string;

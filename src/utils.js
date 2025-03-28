@@ -1,58 +1,17 @@
 import capitalize from 'capitalize';
-import { env } from 'next-runtime-env';
-import { VISIBILITY } from 'constants/contentTypes';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { unescape } from 'he';
-import { isString, sortBy, uniqBy, isNaN } from 'lodash';
+import { isNaN, isString, sortBy, uniqBy } from 'lodash';
 import { reverse } from 'named-urls';
-import qs from 'qs';
+import { env } from 'next-runtime-env';
 import { Cookies } from 'react-cookie';
-import { getStatementsByObjectAndPredicate, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import slugifyString from 'slugify';
 
+import { VISIBILITY } from '@/constants/contentTypes';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getStatementsByObjectAndPredicate, getStatementsBySubject, getStatementsBySubjects } from '@/services/backend/statements';
+
 const cookies = new Cookies();
-
-/**
- * Parse comma separated values from the query string
- *
- * @param {String} locationSearch useLocation().search
- * @param {String} param parameter name
- * @return {Array} the list of values
- */
-export function getArrayParamFromQueryString(locationSearch, param) {
-    const values = qs.parse(locationSearch, { comma: true, ignoreQueryPrefix: true })[param];
-    if (!values) {
-        return [];
-    }
-    if (typeof values === 'string' || values instanceof String) {
-        return [values];
-    }
-    return values;
-}
-
-/**
- * Parse value from the query string
- *
- * @param {String} locationSearch useLocation().search
- * @param {String} param parameter name
- * @param {Boolean} boolean return false instead of null
- * @return {String|Boolean} value
- */
-export function getParamFromQueryString(locationSearch, param, boolean = false) {
-    const value = qs.parse(locationSearch, { ignoreQueryPrefix: true })[param];
-    if (!value) {
-        return boolean ? false : null;
-    }
-    if (typeof value === 'string' || value instanceof String) {
-        if (boolean && (value === 'false' || !value || !['true', '1'].includes(value))) {
-            return false;
-        }
-        return boolean ? true : value;
-    }
-    return value;
-}
 
 export const guid = () => {
     function s4() {
@@ -64,24 +23,6 @@ export const guid = () => {
 };
 
 export const range = (start, end) => [...Array(1 + end - start).keys()].map((v) => start + v);
-
-export function timeoutPromise(ms, promise) {
-    return new Promise((resolve, reject) => {
-        const timeoutId = setTimeout(() => {
-            reject(new Error('Promise timeout'));
-        }, ms);
-        promise.then(
-            (res) => {
-                clearTimeout(timeoutId);
-                resolve(res);
-            },
-            (err) => {
-                clearTimeout(timeoutId);
-                reject(err);
-            },
-        );
-    });
-}
 
 /**
  * Parse error response body (originating from server) by field name

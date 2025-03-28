@@ -1,15 +1,16 @@
-import { Button } from 'reactstrap';
+import { faCheck, faPen, faQuestionCircle, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import { setIsHelpModalOpen } from 'slices/contributionEditorSlice';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
-import { useState, memo } from 'react';
 import classNames from 'classnames';
 import { env } from 'next-runtime-env';
+import PropTypes from 'prop-types';
+import { memo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
+import { setIsHelpModalOpen } from '@/slices/contributionEditorSlice';
 
 const ButtonsContainer = styled.div`
     position: absolute;

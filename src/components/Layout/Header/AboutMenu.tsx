@@ -1,17 +1,18 @@
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import ROUTES from 'constants/routes';
 import { get, groupBy } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getAboutPageCategories, getAboutPages } from 'services/cms';
-import { AboutPageCategory, HelpArticle } from 'services/cms/types';
 import styled from 'styled-components';
-import { reverseWithSlug } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ROUTES from '@/constants/routes';
+import { getAboutPageCategories, getAboutPages } from '@/services/cms';
+import { AboutPageCategory, HelpArticle } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {

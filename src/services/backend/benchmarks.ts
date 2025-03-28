@@ -1,7 +1,7 @@
-import { url } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
-import { BenchmarkSummary, PaginatedResponse, PaginationParams } from 'services/backend/types';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
+import { BenchmarkSummary, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const benchmarksUrl = `${url}benchmarks/`;
 export const benchmarksApi = backendApi.extend(() => ({ prefixUrl: benchmarksUrl }));

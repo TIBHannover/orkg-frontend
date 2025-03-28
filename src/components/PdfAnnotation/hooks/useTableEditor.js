@@ -1,6 +1,7 @@
-import { updateTableData, setTableData } from 'slices/pdfAnnotationSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setTableData, updateTableData } from '@/slices/pdfAnnotationSlice';
 
 function useTableEditor(tableId, tableRef) {
     const dispatch = useDispatch();

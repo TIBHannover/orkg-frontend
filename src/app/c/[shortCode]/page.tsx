@@ -1,11 +1,12 @@
 'use client';
 
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { useRouter } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
+
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
 
 const RedirectShortLinks = () => {
     const { shortCode } = useParams();

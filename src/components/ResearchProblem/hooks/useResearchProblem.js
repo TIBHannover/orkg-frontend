@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { useCallback, useEffect, useState } from 'react';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getResource } from '@/services/backend/resources';
+import { getStatementsByObjectAndPredicate, getStatementsBySubject } from '@/services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 function useResearchProblem({ id }) {
     const [data, setData] = useState({});

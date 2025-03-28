@@ -1,15 +1,16 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
-import CsvImport from 'assets/img/tools/csv-import.png';
-import PdfSentenceAnnotation from 'assets/img/tools/pdf-sentence-annotation.png';
-import SurveyImporter from 'assets/img/tools/survey-importer.png';
-import ContributionEditor from 'assets/img/tools/contribution-editor.png';
-import ROUTES from 'constants/routes';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import Image from 'next/image';
+
+import AddPaperWizard from '@/assets/img/tools/add-paper-wizard.png';
+import ContributionEditor from '@/assets/img/tools/contribution-editor.png';
+import CsvImport from '@/assets/img/tools/csv-import.png';
+import PdfSentenceAnnotation from '@/assets/img/tools/pdf-sentence-annotation.png';
+import SurveyImporter from '@/assets/img/tools/survey-importer.png';
+import ROUTES from '@/constants/routes';
 
 const ToolsContainer = styled(Container)`
     display: flex;

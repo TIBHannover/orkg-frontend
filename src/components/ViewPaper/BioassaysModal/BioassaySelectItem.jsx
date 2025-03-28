@@ -1,9 +1,10 @@
-import Link from 'next/link';
-import { Label, ListGroup, Alert, Input } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { Alert, Input, Label, ListGroup } from 'reactstrap';
+
+import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import ROUTES from '@/constants/routes';
 
 export default function BioassaySelectItem(props) {
     return (

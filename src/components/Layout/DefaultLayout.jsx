@@ -1,17 +1,15 @@
 'use client';
 
+import '@/assets/scss/DefaultLayout.scss';
+import '@/assets/scss/global.css';
+
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import 'assets/scss/DefaultLayout.scss';
-import 'assets/scss/global.css';
-import Footer from 'components/Layout/Footer';
-import Header from 'components/Layout/Header/Header';
-import ROUTES from 'constants/routes';
 import { detect } from 'detect-browser';
-import { env } from 'next-runtime-env';
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary';
 import { usePathname } from 'next/navigation';
+import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { Suspense, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -19,6 +17,10 @@ import { Helmet } from 'react-helmet';
 import { Slide, ToastContainer } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import Footer from '@/components/Layout/Footer';
+import Header from '@/components/Layout/Header/Header';
+import ROUTES from '@/constants/routes';
 
 const StyledBody = styled.div`
     display: flex;

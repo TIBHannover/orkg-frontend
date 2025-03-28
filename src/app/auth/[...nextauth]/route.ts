@@ -1,7 +1,8 @@
-import { AuthOptions, refreshAccessToken } from 'lib/auth';
 import NextAuth, { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import { env } from 'next-runtime-env';
+
+import { AuthOptions, refreshAccessToken } from '@/lib/auth';
 
 const handler = NextAuth({
     ...AuthOptions,

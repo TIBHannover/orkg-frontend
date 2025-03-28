@@ -1,6 +1,7 @@
-import useAuthentication from 'components/hooks/useAuthentication';
 import { signIn } from 'next-auth/react';
 import { env } from 'next-runtime-env';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
 
 type RequireAuthenticationProps = {
     component: React.ComponentType<React.ComponentProps<any>>;

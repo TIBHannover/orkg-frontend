@@ -1,6 +1,15 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { Component, createRef } from 'react';
+import { Cookies } from 'react-cookie';
+import { connect } from 'react-redux';
+import { Badge, Button, ButtonGroup, Container, Navbar } from 'reactstrap';
+import styled from 'styled-components';
+
 import {
     ComparisonBox,
     ComparisonBoxButton,
@@ -11,21 +20,13 @@ import {
     Remove,
     StartComparison,
     Title,
-} from 'components/ComparisonPopup/styled';
-import Popover from 'components/FloatingUI/Popover';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { Component, createRef } from 'react';
-import { Cookies } from 'react-cookie';
-import { connect } from 'react-redux';
-import { Badge, Button, ButtonGroup, Container, Navbar } from 'reactstrap';
-import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
-import styled from 'styled-components';
+} from '@/components/ComparisonPopup/styled';
+import Popover from '@/components/FloatingUI/Popover';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import ROUTES from '@/constants/routes';
+import { loadComparisonFromLocalStorage, removeFromComparison } from '@/slices/viewPaperSlice';
 
 const cookies = new Cookies();
 

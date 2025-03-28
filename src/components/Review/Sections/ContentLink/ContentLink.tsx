@@ -1,14 +1,15 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { OptionType } from 'components/Autocomplete/types';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import useReview from 'components/Review/hooks/useReview';
-import SectionVisualization from 'components/Review/Sections/Visualization/SectionVisualization';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
-import { createResource } from 'services/backend/resources';
-import { ReviewSection } from 'services/backend/types';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { OptionType } from '@/components/Autocomplete/types';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import useReview from '@/components/Review/hooks/useReview';
+import SectionVisualization from '@/components/Review/Sections/Visualization/SectionVisualization';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { createResource } from '@/services/backend/resources';
+import { ReviewSection } from '@/services/backend/types';
 
 type ContentLinkProps = {
     section: ReviewSection;

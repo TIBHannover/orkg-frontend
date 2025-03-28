@@ -1,11 +1,12 @@
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { toInteger } from 'lodash';
 import { FC } from 'react';
-import { OptionProps, components } from 'react-select';
+import { components, OptionProps } from 'react-select';
 import ReactStringReplace from 'react-string-replace';
-import { RosettaStoneTemplate } from 'services/backend/types';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { RosettaStoneTemplate } from '@/services/backend/types';
 
 export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used?: boolean };
 

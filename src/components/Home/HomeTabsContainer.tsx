@@ -1,19 +1,20 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TabLabel from 'components/Tabs/TabLabel';
-import Tabs from 'components/Tabs/Tabs';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES, RESOURCES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { Button } from 'reactstrap';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { Item, VisibilityOptions } from 'services/backend/types';
-import { reverseWithSlug } from 'utils';
+
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ContentTypeVisibilityFilter from '@/components/ContentTypeList/ContentTypeVisibilityFilter';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TabLabel from '@/components/Tabs/TabLabel';
+import Tabs from '@/components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES, RESOURCES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
+import { Item, VisibilityOptions } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 export const HOME_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },

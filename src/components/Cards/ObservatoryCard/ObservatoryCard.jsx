@@ -1,13 +1,14 @@
-import Link from 'next/link';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Card, CardBody } from 'reactstrap';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
+
+import useObservatoryStats from '@/components/Observatory/hooks/useObservatoryStats';
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const ObservatoryCardStyled = styled.div`
     cursor: initial;

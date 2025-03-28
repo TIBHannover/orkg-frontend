@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
-import { Menu, Item } from 'react-contexify';
-import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
 import 'react-contexify/dist/ReactContexify.css';
+
+import PropTypes from 'prop-types';
+import { Item, Menu } from 'react-contexify';
+
+import { DIAGRAM_CONTEXT_MENU_ID } from '@/constants/misc';
 
 const ContextMenu = ({ actions, currentMenu }) => (
     <Menu id={DIAGRAM_CONTEXT_MENU_ID} animation={null}>

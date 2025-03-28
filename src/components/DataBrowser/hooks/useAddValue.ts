@@ -1,15 +1,16 @@
-import useConstraints from 'components/DataBrowser/hooks/useConstraints';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
-import { commitChangeLabel, convertPropertyShapeToSchema, createValue } from 'components/DataBrowser/utils/dataBrowserUtils';
-import { DataType, getConfigByClassId, getConfigByType, getSuggestionByTypeAndValue, InputType } from 'constants/DataTypes';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getList, listsUrl, updateList } from 'services/backend/lists';
-import { createResourceStatement, statementsUrl } from 'services/backend/statements';
-import { Class, EntityType, Literal, Node, Predicate, Resource } from 'services/backend/types';
 import useSWR, { useSWRConfig } from 'swr';
+
+import useConstraints from '@/components/DataBrowser/hooks/useConstraints';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import { commitChangeLabel, convertPropertyShapeToSchema, createValue } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { DataType, getConfigByClassId, getConfigByType, getSuggestionByTypeAndValue, InputType } from '@/constants/DataTypes';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { getList, listsUrl, updateList } from '@/services/backend/lists';
+import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
+import { Class, EntityType, Literal, Node, Predicate, Resource } from '@/services/backend/types';
 
 const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: Node | Literal) => {
     const { ranges, propertyShapes, isLiteralField } = useConstraints(predicate.id);

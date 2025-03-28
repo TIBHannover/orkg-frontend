@@ -1,15 +1,16 @@
 import { faAdd, faLinkSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useVisualizations from 'components/Comparison/ComparisonCarousel/Visualizations/hooks/useVisualizations';
-import Confirm from 'components/Confirmation/Confirmation';
-import VisualizationPreview from 'components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
-import ActionButton from 'components/ActionButton/ActionButton';
-import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } from 'slices/comparisonSlice';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import useVisualizations from '@/components/Comparison/ComparisonCarousel/Visualizations/hooks/useVisualizations';
+import Confirm from '@/components/Confirmation/Confirmation';
+import VisualizationPreview from '@/components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
+import AddVisualizationModal from '@/libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import { setIsOpenVisualizationModal, setUseReconstructedDataInVisualization } from '@/slices/comparisonSlice';
 
 type VisualizationsModalProps = {
     toggle: () => void;

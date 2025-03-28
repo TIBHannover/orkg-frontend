@@ -1,7 +1,8 @@
-import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
-import { useRosettaTemplateEditorDispatch } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { FC } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import RosettaTemplateEditor from '@/components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
+import { useRosettaTemplateEditorDispatch } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 
 type NewStatementTypeModalProps = {
     initialLabel: string;

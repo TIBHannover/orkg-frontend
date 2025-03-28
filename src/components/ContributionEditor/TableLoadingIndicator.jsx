@@ -1,7 +1,8 @@
 import { times } from 'lodash';
 import PropTypes from 'prop-types';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import styled from 'styled-components';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
 
 const LoadingContainer = styled.div`
     overflow: hidden;

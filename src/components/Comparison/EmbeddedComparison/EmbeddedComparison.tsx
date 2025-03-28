@@ -1,8 +1,9 @@
-import Comparison from 'components/Comparison/Comparison';
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import useComparisonOld from 'components/Comparison/hooks/useComparisonOld';
-import useComparison from 'components/Comparison/hooks/useComparison';
 import { FC, useEffect } from 'react';
+
+import Comparison from '@/components/Comparison/Comparison';
+import ComparisonLoadingComponent from '@/components/Comparison/ComparisonLoadingComponent';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import useComparisonOld from '@/components/Comparison/hooks/useComparisonOld';
 
 type EmbeddedComparisonProps = {
     id: string;

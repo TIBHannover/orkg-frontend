@@ -1,21 +1,22 @@
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import useTemplates from 'components/ContributionEditor/TableCellForm/hooks/useTemplates';
-import SearchFieldSelector from 'components/ContributionEditor/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
-import TemplateButton from 'components/ContributionEditor/TemplatesModal/TemplateButton/TemplateButton';
-import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { setIsTemplateModalOpen } from 'slices/contributionEditorSlice';
 import styled from 'styled-components';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import useTemplates from '@/components/ContributionEditor/TableCellForm/hooks/useTemplates';
+import SearchFieldSelector from '@/components/ContributionEditor/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
+import TemplateButton from '@/components/ContributionEditor/TemplatesModal/TemplateButton/TemplateButton';
+import ResearchFieldSelectorModal from '@/components/ResearchFieldSelector/ResearchFieldSelectorModal';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { setIsTemplateModalOpen } from '@/slices/contributionEditorSlice';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {

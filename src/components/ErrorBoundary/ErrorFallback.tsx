@@ -1,11 +1,12 @@
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Logo from 'assets/img/logo.svg';
-import ROUTES from 'constants/routes';
-import { BrowserInfo, SearchBotDeviceInfo, BotInfo, NodeInfo, ReactNativeInfo, detect } from 'detect-browser';
+import { BotInfo, BrowserInfo, detect, NodeInfo, ReactNativeInfo, SearchBotDeviceInfo } from 'detect-browser';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import { Button, Card, CardBody, Collapse, Container } from 'reactstrap';
+
+import Logo from '@/assets/img/logo.svg';
+import ROUTES from '@/constants/routes';
 
 type ErrorFallbackProps = {
     error: Error;

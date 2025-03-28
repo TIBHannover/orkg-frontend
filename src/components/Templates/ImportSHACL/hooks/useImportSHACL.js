@@ -1,13 +1,14 @@
-import useMembership from 'components/hooks/useMembership';
-import { extractConcept, extractLabelFromRdfURI, mapClass, mapPredicate, mapResource } from 'components/Templates/ImportSHACL/helpers/helpers';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { sortBy } from 'lodash';
 import rdf from 'rdf';
-import { createClass, getClasses } from 'services/backend/classes';
-import { createPredicate } from 'services/backend/predicates';
-import { getTemplatesByClass } from 'services/backend/statements';
-import { createTemplate, getTemplate } from 'services/backend/templates';
 import format from 'string-format';
+
+import useMembership from '@/components/hooks/useMembership';
+import { extractConcept, extractLabelFromRdfURI, mapClass, mapPredicate, mapResource } from '@/components/Templates/ImportSHACL/helpers/helpers';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { createClass, getClasses } from '@/services/backend/classes';
+import { createPredicate } from '@/services/backend/predicates';
+import { getTemplatesByClass } from '@/services/backend/statements';
+import { createTemplate, getTemplate } from '@/services/backend/templates';
 
 const useImportSHACL = () => {
     const { observatoryId, organizationId } = useMembership();

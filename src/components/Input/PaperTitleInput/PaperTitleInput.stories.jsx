@@ -1,5 +1,6 @@
-import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
 import { useState } from 'react';
+
+import PaperTitleInput from '@/components/Input/PaperTitleInput/PaperTitleInput';
 
 export default {
     title: 'Input/PaperTitleInput',

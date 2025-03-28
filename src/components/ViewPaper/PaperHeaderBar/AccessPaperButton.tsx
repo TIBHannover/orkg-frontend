@@ -1,10 +1,11 @@
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC, useEffect, useState } from 'react';
 import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { getLinksByDoi, getLinksByTitle } from 'services/unpaywall';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getLinksByDoi, getLinksByTitle } from '@/services/unpaywall';
 
 type AccessPaperButtonProps = {
     paperLink?: string | null;

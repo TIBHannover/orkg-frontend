@@ -1,13 +1,14 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TitleBar from 'components/TitleBar/TitleBar';
 import { capitalize } from 'lodash';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { Container } from 'reactstrap';
-import { PaginatedResponse } from 'services/backend/types';
+
+import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { PaginatedResponse } from '@/services/backend/types';
 
 type ListPageProps<ItemType, FetchFunctionParams> = {
     label: string;

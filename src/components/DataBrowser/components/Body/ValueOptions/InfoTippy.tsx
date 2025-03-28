@@ -1,12 +1,13 @@
 import { faClock, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { MISC } from 'constants/graphSettings';
 import dayjs from 'dayjs';
 import { FC } from 'react';
-import { Statement } from 'services/backend/types';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { MISC } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
 
 type InfoTippyProps = {
     statement: Statement;

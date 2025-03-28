@@ -1,7 +1,8 @@
 import { faExternalLinkAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
 import { FC } from 'react';
+
+import { CONFERENCE_REVIEW_TYPE } from '@/constants/organizationsTypes';
 
 type ConferenceMetadataBoxProps = {
     url: string;

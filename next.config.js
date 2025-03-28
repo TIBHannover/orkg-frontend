@@ -1,4 +1,5 @@
 const { version } = require('./package.json');
+const path = require('path');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
@@ -133,19 +134,27 @@ const nextConfig = {
             // This is the asset module.
             type: 'asset/source',
         });
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            '@': path.resolve(__dirname, 'src'),
+        };
         config.externals = [...config.externals, 'canvas', 'jsdom']; // to fix pdf-text-annotation: https://github.com/kkomelin/isomorphic-dompurify/issues/54
         return config;
     },
     experimental: {
         serverComponentsExternalPackages: ['citeproc', 'react-pdf-highlighter'],
-        turbo: {
-            resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
-            rules: {
-                '*.md': {
-                    loaders: ['raw-loader'],
-                },
-            },
-        },
+        ...(process.env.NODE_ENV === 'development'
+            ? {
+                  turbo: {
+                      resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+                      rules: {
+                          '*.md': {
+                              loaders: ['raw-loader'],
+                          },
+                      },
+                  },
+              }
+            : {}),
     },
     transpilePackages: ['ky'],
     output: 'standalone',

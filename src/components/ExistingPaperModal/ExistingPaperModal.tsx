@@ -1,7 +1,8 @@
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import { FC } from 'react';
 import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { Paper } from 'services/backend/types';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import { Paper } from '@/services/backend/types';
 
 type ExistingPaperModalProps = {
     paper: Paper;

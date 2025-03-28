@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { CLASSES } from 'constants/graphSettings';
-import { preprocessNumber, preprocessBoolean } from 'constants/DataTypes';
-import { convertPropertyShapeToSchema } from 'components/DataBrowser/utils/dataBrowserUtils';
+
+import { convertPropertyShapeToSchema } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { preprocessBoolean, preprocessNumber } from '@/constants/DataTypes';
+import { CLASSES } from '@/constants/graphSettings';
 
 export default function validationSchema(propertyShape) {
     let schema;

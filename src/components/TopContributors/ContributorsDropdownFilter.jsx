@@ -1,11 +1,12 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Popover from 'components/FloatingUI/Popover';
-import { RESOURCES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, UncontrolledButtonDropdown } from 'reactstrap';
-import { stringifySort } from 'utils';
+
+import Popover from '@/components/FloatingUI/Popover';
+import { RESOURCES } from '@/constants/graphSettings';
+import { stringifySort } from '@/utils';
 
 const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, setIncludeSubFields, researchFieldId }) => {
     const [isOpenPopover, setIsOpenPopover] = useState(false);

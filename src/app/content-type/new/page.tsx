@@ -1,3 +1,3 @@
-import ContentTypeNew from 'app/content-type/[type]/new/page';
+import ContentTypeNew from '@/app/content-type/[type]/new/page';
 
 export default ContentTypeNew;

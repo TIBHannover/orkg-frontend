@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 // This is not used at the moment, requires some changes in order for it te work
 class ConfirmModal extends Component {

@@ -1,13 +1,14 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Classes, { BadgeTagsStyle } from 'components/DataBrowser/components/Header/Metadata/Classes';
-import Label from 'components/DataBrowser/components/Header/Metadata/Label';
-import Templates from 'components/DataBrowser/components/Header/Metadata/Templates';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { useHash } from 'react-use';
 import styled from 'styled-components';
+
+import Classes, { BadgeTagsStyle } from '@/components/DataBrowser/components/Header/Metadata/Classes';
+import Label from '@/components/DataBrowser/components/Header/Metadata/Label';
+import Templates from '@/components/DataBrowser/components/Header/Metadata/Templates';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
 
 export const MetadataStyled = styled.div`
     &.highlight {

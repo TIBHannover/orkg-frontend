@@ -1,15 +1,16 @@
-import { OptionType } from 'components/Autocomplete/types';
-import useMembership from 'components/hooks/useMembership';
-import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
-import { getConfigByClassId } from 'constants/DataTypes';
-import { ENTITIES } from 'constants/graphSettings';
-import { EXTRACTION_METHODS } from 'constants/misc';
-import errorHandler from 'helpers/errorHandler';
 import { differenceWith, toInteger } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { createRSStatement, deleteRSStatement, fullyDeleteRSStatement, updateRSStatement } from 'services/backend/rosettaStone';
-import { NewLiteral, NewResource, Node, RosettaStoneStatement } from 'services/backend/types';
-import { guid } from 'utils';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import useMembership from '@/components/hooks/useMembership';
+import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
+import { getConfigByClassId } from '@/constants/DataTypes';
+import { ENTITIES } from '@/constants/graphSettings';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import errorHandler from '@/helpers/errorHandler';
+import { createRSStatement, deleteRSStatement, fullyDeleteRSStatement, updateRSStatement } from '@/services/backend/rosettaStone';
+import { NewLiteral, NewResource, Node, RosettaStoneStatement } from '@/services/backend/types';
+import { guid } from '@/utils';
 
 type UseEditStatementProps = {
     statement: RosettaStoneStatement;

@@ -1,7 +1,8 @@
-import { ExternalServiceResponse, OptionType } from 'components/Autocomplete/types';
-import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
 import ky from 'ky';
 import { env } from 'next-runtime-env';
+
+import { ExternalServiceResponse, OptionType } from '@/components/Autocomplete/types';
+import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';
 
 export const wikidataUrl = env('NEXT_PUBLIC_WIKIDATA_URL');
 export const wikidataSparql = env('NEXT_PUBLIC_WIKIDATA_SPARQL');

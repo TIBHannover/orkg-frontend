@@ -3,9 +3,10 @@
 import { faPython } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
-import TitleBar from 'components/TitleBar/TitleBar';
 import { useEffect } from 'react';
 import { Button, Card, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
+
+import TitleBar from '@/components/TitleBar/TitleBar';
 
 const Data = () => {
     useEffect(() => {

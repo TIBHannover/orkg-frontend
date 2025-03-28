@@ -2,17 +2,18 @@
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
-import useRosettaStatements from 'components/RosettaStone/SingleStatement/hooks/useStatements';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import useParams from 'components/useParams/useParams';
 import { useEffect } from 'react';
 import { Button, Container, ListGroup } from 'reactstrap';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hooks/useStatements';
+import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();

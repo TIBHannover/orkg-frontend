@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { guid } from 'utils';
+
+import { guid } from '@/utils';
 
 const initialState = {
     annotations: [],

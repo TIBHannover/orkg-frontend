@@ -1,17 +1,18 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import usePredicatesRecommendation from 'components/DataBrowser/hooks/usePredicatesRecommendation';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/Utils/Tooltip';
-import { AnimationContainer, ShowMoreButton, ValueItem } from 'components/ViewPaper/SmartSuggestions/styled';
-import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
-import { Predicate } from 'services/backend/types';
-import { SERVICE_MAPPING, saveFeedback } from 'services/orkgNlp';
+
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import usePredicatesRecommendation from '@/components/DataBrowser/hooks/usePredicatesRecommendation';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/Utils/Tooltip';
+import { AnimationContainer, ShowMoreButton, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Predicate } from '@/services/backend/types';
+import { saveFeedback, SERVICE_MAPPING } from '@/services/orkgNlp';
 
 const MAX_PROPERTIES_ITEMS = 8;
 

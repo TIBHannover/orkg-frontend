@@ -1,24 +1,25 @@
 import { faEllipsisV, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CheckClasses from 'components/CheckClasses/CheckClasses';
-import CheckSlug from 'components/CheckSlug/CheckSlug';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import useAuthentication from 'components/hooks/useAuthentication';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import useResearchField from 'components/ResearchField/hooks/useResearchField';
-import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
-import { SubTitle } from 'components/styled';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Contributors from 'components/TopContributors/Contributors';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { reverseWithSlug } from 'utils';
+
+import CheckClasses from '@/components/CheckClasses/CheckClasses';
+import CheckSlug from '@/components/CheckSlug/CheckSlug';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import useResearchField from '@/components/ResearchField/hooks/useResearchField';
+import ExternalDescription from '@/components/ResearchProblem/ExternalDescription';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import Contributors from '@/components/TopContributors/Contributors';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { reverseWithSlug } from '@/utils';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);

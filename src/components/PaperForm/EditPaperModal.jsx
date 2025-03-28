@@ -1,16 +1,17 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import PaperForm from 'components/PaperForm/PaperForm';
-import useEditPaper from 'components/PaperForm/hooks/useEditPaper';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import useEditPaper from '@/components/PaperForm/hooks/useEditPaper';
+import PaperForm from '@/components/PaperForm/PaperForm';
+import ROUTES from '@/constants/routes';
 
 const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisible = false }) => {
     const [isLoadingParsing, setIsLoadingParsing] = useState(false);

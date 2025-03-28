@@ -1,16 +1,17 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import CuratorModal from 'components/CuratorModal/CuratorModal';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { StyledButton } from 'components/StatementBrowser/styled';
-import { ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Input, InputGroup } from 'reactstrap';
-import { updateClass } from 'services/backend/classes';
-import { updatePredicate } from 'services/backend/predicates';
-import { updateResource } from 'services/backend/resources';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import CuratorModal from '@/components/CuratorModal/CuratorModal';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { StyledButton } from '@/components/StatementBrowser/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { updateClass } from '@/services/backend/classes';
+import { updatePredicate } from '@/services/backend/predicates';
+import { updateResource } from '@/services/backend/resources';
 
 type EditableHeaderProp = {
     id: string;

@@ -1,18 +1,19 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { GlobalStyle } from 'components/Input/AuthorsInput/styled';
-import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import Goal from 'components/SustainableDevelopmentGoals/SdgModal/Sdg';
-import SelectOption from 'components/SustainableDevelopmentGoals/SdgModal/SelectOption';
-import { sortSdgs } from 'components/SustainableDevelopmentGoals/helpers';
-import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
 import { FC, useEffect, useState } from 'react';
 import Select, { OnChangeValue } from 'react-select';
 import { Button, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getResource } from 'services/backend/resources';
-import { Node } from 'services/backend/types';
 import styled from 'styled-components';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { GlobalStyle } from '@/components/Input/AuthorsInput/styled';
+import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import { sortSdgs } from '@/components/SustainableDevelopmentGoals/helpers';
+import Goal from '@/components/SustainableDevelopmentGoals/SdgModal/Sdg';
+import SelectOption from '@/components/SustainableDevelopmentGoals/SdgModal/SelectOption';
+import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
+import { getResource } from '@/services/backend/resources';
+import { Node } from '@/services/backend/types';
 
 type SdgModalProps = {
     toggle: () => void;

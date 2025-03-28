@@ -1,6 +1,7 @@
-import { parseGregorianString } from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
-import { GregorianType } from 'constants/DataTypes';
 import { FC } from 'react';
+
+import { parseGregorianString } from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
+import { GregorianType } from '@/constants/DataTypes';
 
 export const isGregorianValue = ({ text, datatype }: { text: string; datatype?: string }) =>
     datatype?.startsWith('xsd:g') && parseGregorianString(text, datatype.slice(4) as GregorianType);

@@ -1,6 +1,6 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
 
 const useCanEdit = () => {
     const { config } = useDataBrowserState();

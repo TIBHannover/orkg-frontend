@@ -1,8 +1,9 @@
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { PaginatedResponse, TopContributor } from 'services/backend/types';
+
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getContributorInformationById } from '@/services/backend/contributors';
+import { PaginatedResponse, TopContributor } from '@/services/backend/types';
 
 export const statsUrl = `${url}stats/`;
 export const statsApi = backendApi.extend(() => ({ prefixUrl: statsUrl }));

@@ -1,11 +1,12 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
 import { groupBy, uniqBy } from 'lodash';
 import { env } from 'next-runtime-env';
 import { useDispatch } from 'react-redux';
-import { getRecommendedPredicates, nlpServiceUrl } from 'services/orkgNlp';
-import { setPredicatesRawResponse } from 'slices/viewPaperSlice';
 import useSWR from 'swr';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { getRecommendedPredicates, nlpServiceUrl } from '@/services/orkgNlp';
+import { setPredicatesRawResponse } from '@/slices/viewPaperSlice';
 
 const usePredicatesRecommendation = () => {
     const dispatch = useDispatch();

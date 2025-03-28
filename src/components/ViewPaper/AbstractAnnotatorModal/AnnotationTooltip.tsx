@@ -1,13 +1,14 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import Popover from 'components/FloatingUI/Popover';
-import { ENTITIES } from 'constants/graphSettings';
 import { FC, ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SingleValue } from 'react-select';
-import { createPredicate } from 'services/backend/predicates';
-import { Range } from 'slices/types';
-import { removeAnnotation, updateAnnotationPredicate } from 'slices/viewPaperSlice';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import Popover from '@/components/FloatingUI/Popover';
+import { ENTITIES } from '@/constants/graphSettings';
+import { createPredicate } from '@/services/backend/predicates';
+import { Range } from '@/slices/types';
+import { removeAnnotation, updateAnnotationPredicate } from '@/slices/viewPaperSlice';
 
 type AnnotationTooltipProps = {
     range: Range;

@@ -1,13 +1,14 @@
-import Confirm from 'components/Confirmation/Confirmation';
-import { PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { cloneDeep, isString, omit, zip } from 'lodash';
 import { createRef, useEffect, useState } from 'react';
 import { usePapaParse } from 'react-papaparse';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { extractTable } from 'services/orkgNlp/index';
-import { setTableData } from 'slices/pdfAnnotationSlice';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import { PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { extractTable } from '@/services/orkgNlp/index';
+import { setTableData } from '@/slices/pdfAnnotationSlice';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);

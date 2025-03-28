@@ -1,7 +1,8 @@
 import { times } from 'lodash';
 import { Fragment } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
 
 const LoadingArticle = () => (
     <Container className="p-0">

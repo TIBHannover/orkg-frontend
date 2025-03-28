@@ -1,7 +1,8 @@
-import { FILTERS_LOCAL_STORAGE_NAME } from 'constants/filters';
 import { isEqual } from 'lodash';
-import { FilterConfig } from 'services/backend/types';
-import { asyncLocalStorage } from 'utils';
+
+import { FILTERS_LOCAL_STORAGE_NAME } from '@/constants/filters';
+import { FilterConfig } from '@/services/backend/types';
+import { asyncLocalStorage } from '@/utils';
 
 export function areFiltersEqual(a: FilterConfig, b: FilterConfig): boolean {
     return a.range === b.range && isEqual(a.path, b.path) && isEqual(a.exact, b.exact);

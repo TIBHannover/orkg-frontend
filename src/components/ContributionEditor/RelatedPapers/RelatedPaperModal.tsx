@@ -1,6 +1,7 @@
 import React from 'react';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { SimilarPaper } from 'services/orkgSimpaper/types';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import { SimilarPaper } from '@/services/orkgSimpaper/types';
 
 interface RelatedPaperModalProps {
     isOpen: boolean;

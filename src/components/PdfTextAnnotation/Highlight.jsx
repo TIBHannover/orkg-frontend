@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
+
+import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
 
 const HighlightPart = styled.div`
     position: absolute;

@@ -1,6 +1,7 @@
-import styled, { createGlobalStyle } from 'styled-components';
 import { Navbar, NavbarProps } from 'reactstrap';
-import HomeBannerBg from 'assets/img/graph-background.svg';
+import styled, { createGlobalStyle } from 'styled-components';
+
+import HomeBannerBg from '@/assets/img/graph-background.svg';
 
 type GlobalStyleProps = {
     $scrollbarWidth?: number;

@@ -1,23 +1,24 @@
 import { faClose, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanAddProperty from 'components/DataBrowser/hooks/useCanAddProperty';
-import useDefaultProperties from 'components/DataBrowser/hooks/useDefaultProperties';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
-import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { uniq } from 'lodash';
 import { ReactElement, useState } from 'react';
 import { Button, ButtonGroup, InputGroup } from 'reactstrap';
-import { Predicate } from 'services/backend/types';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanAddProperty from '@/components/DataBrowser/hooks/useCanAddProperty';
+import useDefaultProperties from '@/components/DataBrowser/hooks/useDefaultProperties';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPropertyGuidelinesCheck';
+import SmartPropertySuggestions from '@/components/SmartSuggestions/SmartPropertySuggestions';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { Predicate } from '@/services/backend/types';
 
 const AddProperty = () => {
     const [showAdd, setShowAdd] = useState(false);

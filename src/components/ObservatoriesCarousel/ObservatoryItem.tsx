@@ -1,16 +1,17 @@
 import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
-import useObservatoryStats from 'components/Observatory/hooks/useObservatoryStats';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import Dotdotdot from 'react-dotdotdot';
 import { Card, CardBody, CardFooter, CardSubtitle, CardTitle, CarouselItem } from 'reactstrap';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import { Observatory } from 'services/backend/types';
 import styled from 'styled-components';
+
+import useObservatoryStats from '@/components/Observatory/hooks/useObservatoryStats';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
+import { Observatory } from '@/services/backend/types';
 
 const ObservatoryCardStyled = styled(Card)`
     cursor: initial;

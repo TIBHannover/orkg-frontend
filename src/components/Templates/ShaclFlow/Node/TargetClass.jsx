@@ -1,9 +1,10 @@
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Handle from 'components/Templates/ShaclFlow/Node/Handle';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { Position } from 'reactflow';
 import styled from 'styled-components';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Handle from '@/components/Templates/ShaclFlow/Node/Handle';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const TargetClassStyled = styled.div`
     background: ${(props) => props.theme.secondaryDarker};

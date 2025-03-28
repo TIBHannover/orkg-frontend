@@ -1,13 +1,14 @@
-import StepOne from 'components/RosettaStone/RosettaTemplateEditor/StepOne';
-import StepThree from 'components/RosettaStone/RosettaTemplateEditor/StepThree';
-import StepTwo from 'components/RosettaStone/RosettaTemplateEditor/StepTwo';
-import useSaveStatementType from 'components/RosettaStone/RosettaTemplateEditor/hooks/useSaveStatementType';
+import { FC } from 'react';
+import { Button } from 'reactstrap';
+
+import useSaveStatementType from '@/components/RosettaStone/RosettaTemplateEditor/hooks/useSaveStatementType';
+import StepOne from '@/components/RosettaStone/RosettaTemplateEditor/StepOne';
+import StepThree from '@/components/RosettaStone/RosettaTemplateEditor/StepThree';
+import StepTwo from '@/components/RosettaStone/RosettaTemplateEditor/StepTwo';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { FC } from 'react';
-import { Button } from 'reactstrap';
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 
 type RosettaTemplateEditorProps = {
     saveButtonText: string;

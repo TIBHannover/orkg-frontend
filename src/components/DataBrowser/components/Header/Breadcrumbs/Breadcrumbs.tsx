@@ -1,10 +1,11 @@
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useBreadcrumbs from 'components/DataBrowser/hooks/useBreadcrumbs';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
 import Skeleton from 'react-loading-skeleton';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import useBreadcrumbs from '@/components/DataBrowser/hooks/useBreadcrumbs';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
 
 const BreadcrumbItem = styled.li`
     border-radius: 5px;

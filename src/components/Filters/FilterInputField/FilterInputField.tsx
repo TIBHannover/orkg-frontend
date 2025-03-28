@@ -1,16 +1,17 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import NumberInputField from 'components/Filters/FilterInputField/NumberInputField';
-import { getConfigByClassId } from 'constants/DataTypes';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { isString } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { Input } from 'reactstrap';
-import { getResourcesByIds, resourcesUrl } from 'services/backend/resources';
-import { FilterConfig, FilterConfigValue } from 'services/backend/types';
 import useSWR from 'swr';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { OptionType } from '@/components/Autocomplete/types';
+import NumberInputField from '@/components/Filters/FilterInputField/NumberInputField';
+import { getConfigByClassId } from '@/constants/DataTypes';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { getResourcesByIds, resourcesUrl } from '@/services/backend/resources';
+import { FilterConfig, FilterConfigValue } from '@/services/backend/types';
 
 type FilterInputFieldProps = {
     filter: FilterConfig;

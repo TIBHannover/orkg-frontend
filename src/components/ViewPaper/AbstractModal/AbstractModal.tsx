@@ -1,11 +1,12 @@
-import Tooltip from 'components/Utils/Tooltip';
-import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 import { ClipboardEvent, FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { Alert, Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { RootStore } from 'slices/types';
-import { setAbstract as setAbstractStore } from 'slices/viewPaperSlice';
+
+import Tooltip from '@/components/Utils/Tooltip';
+import TitleWarningAlert from '@/components/ViewPaper/AbstractModal/TitleWarningAlert';
+import { RootStore } from '@/slices/types';
+import { setAbstract as setAbstractStore } from '@/slices/viewPaperSlice';
 
 type AbstractModalProps = {
     toggle: () => void;

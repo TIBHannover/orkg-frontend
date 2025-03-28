@@ -1,12 +1,13 @@
 import { faExpandArrowsAlt, faQuestionCircle, faSearchMinus, faSearchPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Confirm from 'components/Confirmation/Confirmation';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonGroup } from 'reactstrap';
-import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
 import styled from 'styled-components';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { resetPdfAnnotation } from '@/slices/pdfAnnotationSlice';
 
 const ToolbarStyled = styled.div`
     background: ${(props) => props.theme.secondary};

@@ -1,9 +1,10 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
-import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { getThing, thingsUrl } from 'services/backend/things';
-import { Class, Literal, Predicate, Resource } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import { getThing, thingsUrl } from '@/services/backend/things';
+import { Class, Literal, Predicate, Resource } from '@/services/backend/types';
 
 const useBreadcrumbs = () => {
     const { isUsingSnapshot } = useSnapshotStatement();

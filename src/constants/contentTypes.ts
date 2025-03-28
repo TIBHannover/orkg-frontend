@@ -1,5 +1,5 @@
-import { CLASSES } from 'constants/graphSettings';
-import { Visibility, VisibilityFilter, Certainty } from 'services/backend/types';
+import { CLASSES } from '@/constants/graphSettings';
+import { Certainty, Visibility, VisibilityFilter } from '@/services/backend/types';
 
 const CONTENT_TYPES: string[] = [
     CLASSES.PAPER,

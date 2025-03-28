@@ -1,8 +1,9 @@
-import Link from 'next/link';
 import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+import ROUTES from '@/constants/routes';
 
 const EventsCardStyled = styled.li`
     &:last-child {

@@ -1,9 +1,10 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { RSPropertyShape } from 'services/backend/types';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
+import { RSPropertyShape } from '@/services/backend/types';
 
 export const HeaderStyled = styled.div`
     border-bottom: 1px ${(props) => props.theme.secondaryDarker} solid;

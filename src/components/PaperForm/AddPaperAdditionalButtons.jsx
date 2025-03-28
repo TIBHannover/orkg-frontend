@@ -1,12 +1,13 @@
 import { faCode, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useOverwriteValuesModal from 'components/PaperForm/hooks/useOverwriteValuesModal';
-import BibTexModal from 'components/ViewPaper/BibTexModal/BibTexModal';
-import UploadPdfModal from 'components/ViewPaper/UploadPdfModal/UploadPdfModal';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup } from 'reactstrap';
+
+import useOverwriteValuesModal from '@/components/PaperForm/hooks/useOverwriteValuesModal';
+import BibTexModal from '@/components/ViewPaper/BibTexModal/BibTexModal';
+import UploadPdfModal from '@/components/ViewPaper/UploadPdfModal/UploadPdfModal';
 
 const AddPaperAdditionalButtons = ({
     doi,

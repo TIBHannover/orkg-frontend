@@ -1,20 +1,21 @@
-import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import HelpIcon from 'components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
-import NumberConstraints from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/NumberConstraints';
-import StringConstraints from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/StringConstraints';
-import {
-    useRosettaTemplateEditorDispatch,
-    useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import DATA_TYPES, { getConfigByClassId } from 'constants/DataTypes';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Alert, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
-import { Class, Node } from 'services/backend/types';
+
+import AutoComplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
+import NumberConstraints from '@/components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/NumberConstraints';
+import StringConstraints from '@/components/RosettaStone/RosettaTemplateEditor/SlotForms/LiteralConstraints/StringConstraints';
+import {
+    useRosettaTemplateEditorDispatch,
+    useRosettaTemplateEditorState,
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import DATA_TYPES, { getConfigByClassId } from '@/constants/DataTypes';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { Class, Node } from '@/services/backend/types';
 
 type SlotFormsProps = {
     index: number;

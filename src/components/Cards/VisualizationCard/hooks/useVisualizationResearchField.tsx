@@ -1,8 +1,9 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatements } from 'services/backend/statements';
-import { Node } from 'services/backend/types';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getStatements } from '@/services/backend/statements';
+import { Node } from '@/services/backend/types';
+import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 function useVisualizationResearchField({ visualizationId }: { visualizationId: string }) {
     const [researchField, setResearchField] = useState<Node | undefined>(undefined);

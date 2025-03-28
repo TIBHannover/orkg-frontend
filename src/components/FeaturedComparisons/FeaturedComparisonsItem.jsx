@@ -1,11 +1,12 @@
-import Link from 'next/link';
-import { Component } from 'react';
-import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styled from 'styled-components';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
+import { Badge, Card, CardBody, CardText, CardTitle, Col, Row } from 'reactstrap';
+import styled from 'styled-components';
+
+import ROUTES from '@/constants/routes';
 
 const Comparison = styled(Card)`
     border-width: 1px !important; //TODO: remove once style of 1px border is applied globally

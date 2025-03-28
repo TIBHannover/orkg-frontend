@@ -1,5 +1,5 @@
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 function HelpVideoModal(props) {
     return (

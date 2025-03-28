@@ -1,9 +1,10 @@
-import useTemplatesRecommendation from 'components/ViewPaper/hooks/useTemplatesRecommendation';
-import { AnimationContainer } from 'components/ViewPaper/SmartSuggestions/styled';
-import TemplateButton from 'components/ViewPaper/SmartSuggestions/TemplateButton';
 import PropTypes from 'prop-types';
 import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
+
+import useTemplatesRecommendation from '@/components/ViewPaper/hooks/useTemplatesRecommendation';
+import { AnimationContainer } from '@/components/ViewPaper/SmartSuggestions/styled';
+import TemplateButton from '@/components/ViewPaper/SmartSuggestions/TemplateButton';
 
 function TemplatesRecommendations({ title = '', abstract = '', resourceId }) {
     const { recommendedTemplates, isContributionLevel } = useTemplatesRecommendation({ title, abstract, resourceId });

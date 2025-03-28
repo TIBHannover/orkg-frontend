@@ -1,8 +1,8 @@
+import ky from 'ky';
 import { NextAuthOptions } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import KeycloakProvider from 'next-auth/providers/keycloak';
 import { env } from 'next-runtime-env';
-import { JWT } from 'next-auth/jwt';
-import ky from 'ky';
 
 /**
  * Takes a token, and returns a new token with updated

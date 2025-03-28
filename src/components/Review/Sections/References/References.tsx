@@ -1,11 +1,12 @@
-import { reviewContext } from 'components/Review/context/ReviewContext';
-import useParams from 'components/useParams/useParams';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes';
 import ky from 'ky';
 import { useContext, useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
 import styled from 'styled-components';
+
+import { reviewContext } from '@/components/Review/context/ReviewContext';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ROUTES from '@/constants/routes';
 
 const ListReferencesStyled = styled.ul`
     & li.blink-figure {

@@ -1,10 +1,5 @@
 import { faArrowRight, faCalendar, faSearch, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CopyId from 'components/CopyId/CopyId';
-import ProvenanceBox from 'components/Resource/ProvenanceBox';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { MISC } from 'constants/graphSettings';
-import { EXTRACTION_METHODS } from 'constants/misc';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
@@ -12,7 +7,13 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Badge, Input } from 'reactstrap';
-import { updateResource } from 'services/backend/resources';
+
+import CopyId from '@/components/CopyId/CopyId';
+import ProvenanceBox from '@/components/Resource/ProvenanceBox';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { MISC } from '@/constants/graphSettings';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import { updateResource } from '@/services/backend/resources';
 
 const ItemMetadata = ({
     editMode = false,

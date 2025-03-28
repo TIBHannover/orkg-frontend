@@ -1,10 +1,11 @@
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useState } from 'react';
 import { Button, Input, InputGroup } from 'reactstrap';
+
+import useParams from '@/components/useParams/useParams';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
 
 const HelpCenterSearchInput = () => {
     const router = useRouter();

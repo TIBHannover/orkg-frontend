@@ -1,14 +1,15 @@
-import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Menu from 'components/Input/PaperTitleInput/Menu';
-import PaperOption from 'components/Input/PaperTitleInput/PaperOption';
-import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { getResources } from 'services/backend/resources';
-import { getPapersByTitle } from 'services/semanticScholar';
 import styled, { withTheme } from 'styled-components';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import useExistingPaper from '@/components/ExistingPaperModal/useExistingPaper';
+import Menu from '@/components/Input/PaperTitleInput/Menu';
+import PaperOption from '@/components/Input/PaperTitleInput/PaperOption';
+import { CLASSES } from '@/constants/graphSettings';
+import { getResources } from '@/services/backend/resources';
+import { getPapersByTitle } from '@/services/semanticScholar';
 
 const PAGE_SIZE = 10;
 const MIN_INPUT_LENGTH = 3;

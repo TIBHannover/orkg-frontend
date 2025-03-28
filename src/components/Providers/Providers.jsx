@@ -1,22 +1,17 @@
 'use client';
 
-import { plugins } from '@citation-js/core';
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';
 import '@citation-js/plugin-doi';
-import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
-import theme from 'assets/scss/ThemeVariables';
+
+import { plugins } from '@citation-js/core';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import { createInstance, MatomoProvider } from '@jonkoops/matomo-tracker-react';
 import { MathJaxContext } from 'better-react-mathjax';
-import DefaultLayout from 'components/Layout/DefaultLayout';
-import ResetStoreOnNavigate from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import MATH_JAX_CONFIG from 'constants/mathJax';
-import REGEX from 'constants/regex';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import StyledComponentsRegistry from 'lib/registry';
 import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
@@ -24,10 +19,17 @@ import { CookiesProvider } from 'react-cookie';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
-import SWR_CONFIG from 'services/SWRConfig';
-import { setupStore } from 'store';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
+
+import theme from '@/assets/scss/ThemeVariables';
+import DefaultLayout from '@/components/Layout/DefaultLayout';
+import ResetStoreOnNavigate from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+import MATH_JAX_CONFIG from '@/constants/mathJax';
+import REGEX from '@/constants/regex';
+import StyledComponentsRegistry from '@/lib/registry';
+import SWR_CONFIG from '@/services/SWRConfig';
+import { setupStore } from '@/store';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localeData);

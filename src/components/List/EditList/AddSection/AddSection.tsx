@@ -1,13 +1,14 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useList from 'components/List/hooks/useList';
 import { uniqueId } from 'lodash';
 import { FC, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useClickAway } from 'react-use';
 import { Button, ButtonGroup } from 'reactstrap';
-import { LiteratureListSectionType } from 'services/backend/types';
 import styled from 'styled-components';
+
+import useList from '@/components/List/hooks/useList';
+import { LiteratureListSectionType } from '@/services/backend/types';
 
 const AddSectionStyled = styled(Button)`
     color: ${(props) => props.theme.secondary}!important;

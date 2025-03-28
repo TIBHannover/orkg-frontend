@@ -1,9 +1,10 @@
 'use client';
 
-import { Component, ReactNode } from 'react';
-import withMatomo from 'components/Matomo/withMatomo';
 import { detect } from 'detect-browser';
-import ErrorFallback from 'components/ErrorBoundary/ErrorFallback';
+import { Component, ReactNode } from 'react';
+
+import ErrorFallback from '@/components/ErrorBoundary/ErrorFallback';
+import withMatomo from '@/components/Matomo/withMatomo';
 
 type ErrorBoundaryProps = {
     children: ReactNode;

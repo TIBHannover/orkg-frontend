@@ -1,7 +1,8 @@
-import { RESOURCES } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
-import { getObservatories } from 'services/backend/observatories';
-import { Observatory } from 'services/backend/types';
+
+import { RESOURCES } from '@/constants/graphSettings';
+import { getObservatories } from '@/services/backend/observatories';
+import { Observatory } from '@/services/backend/types';
 
 function useResearchFieldObservatories({ researchFieldId }: { researchFieldId: string }) {
     const [data, setData] = useState<Observatory[]>([]);

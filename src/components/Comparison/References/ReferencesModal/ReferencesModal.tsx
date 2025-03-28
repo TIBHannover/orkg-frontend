@@ -1,12 +1,13 @@
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import ReferenceItem from 'components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
-import useComparison from 'components/Comparison/hooks/useComparison';
+import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { uniqueId } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd } from '@fortawesome/free-solid-svg-icons';
-import { uniqueId } from 'lodash';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import ReferenceItem from '@/components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
 
 type ReferencesModalProps = {
     toggle: () => void;

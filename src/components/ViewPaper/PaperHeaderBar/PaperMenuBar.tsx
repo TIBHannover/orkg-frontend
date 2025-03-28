@@ -1,17 +1,18 @@
 import { faEllipsisV, faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PreventModal from 'components/Resource/PreventModal/PreventModal';
-import AccessPaperButton from 'components/ViewPaper/PaperHeaderBar/AccessPaperButton';
-import Publish from 'components/ViewPaper/Publish/Publish';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { RootStore } from 'slices/types';
-import { getPaperLink } from 'slices/viewPaperSlice';
+
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import PreventModal from '@/components/Resource/PreventModal/PreventModal';
+import AccessPaperButton from '@/components/ViewPaper/PaperHeaderBar/AccessPaperButton';
+import Publish from '@/components/ViewPaper/Publish/Publish';
+import ROUTES from '@/constants/routes';
+import { RootStore } from '@/slices/types';
+import { getPaperLink } from '@/slices/viewPaperSlice';
 
 type PaperMenuBarProps = {
     editMode: boolean;

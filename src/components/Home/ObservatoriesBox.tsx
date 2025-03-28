@@ -1,9 +1,10 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
-import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { FC } from 'react';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ObservatoriesCarousel from '@/components/ObservatoriesCarousel/ObservatoriesCarousel';
+import useResearchFieldObservatories from '@/components/ResearchField/hooks/useResearchFieldObservatories';
+import ROUTES from '@/constants/routes';
 
 type ObservatoriesBoxProps = {
     researchFieldId: string;

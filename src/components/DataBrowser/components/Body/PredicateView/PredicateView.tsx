@@ -1,10 +1,11 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'next/link';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
-import { Predicate } from 'services/backend/types';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ROUTES from '@/constants/routes';
+import { Predicate } from '@/services/backend/types';
 
 type PredicateViewProps = {
     predicate: Predicate;

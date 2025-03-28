@@ -1,15 +1,16 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
-import LLM_TASK_NAMES from 'constants/llmTasks';
-import ROUTES from 'constants/routes';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
-import { getLlmResponse } from 'services/orkgNlp';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import LLM_TASK_NAMES from '@/constants/llmTasks';
+import ROUTES from '@/constants/routes';
+import { getLlmResponse } from '@/services/orkgNlp';
 
 type SmartDescriptivePropertyProps = {
     propertyLabel: string;

@@ -1,8 +1,9 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentTypeSubFieldsFilter from 'components/ContentTypeList/ContentTypeSubFieldsFilter';
-import ContentTypeVisibilityFilter from 'components/ContentTypeList/ContentTypeVisibilityFilter';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+
+import ContentTypeSubFieldsFilter from '@/components/ContentTypeList/ContentTypeSubFieldsFilter';
+import ContentTypeVisibilityFilter from '@/components/ContentTypeList/ContentTypeVisibilityFilter';
+import { SubTitle, SubtitleSeparator } from '@/components/styled';
 
 type ContentTypeListHeaderProps = {
     label?: string;

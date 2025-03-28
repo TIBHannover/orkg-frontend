@@ -1,8 +1,9 @@
-import useReview from 'components/Review/hooks/useReview';
-import useScroll from 'components/Review/hooks/useScroll';
 import Link from 'next/link';
 import propTypes from 'prop-types';
 import styled from 'styled-components';
+
+import useReview from '@/components/Review/hooks/useReview';
+import useScroll from '@/components/Review/hooks/useScroll';
 
 const Wrapper = styled.aside`
     position: absolute;

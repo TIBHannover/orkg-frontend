@@ -1,9 +1,10 @@
-import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
 import { FC } from 'react';
 import { Row } from 'reactstrap';
-import { Coordinates } from 'services/geoNames';
+
+import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Coordinates } from '@/services/geoNames';
 
 export type CoordinateDisplayProps = {
     coordinates?: Coordinates;

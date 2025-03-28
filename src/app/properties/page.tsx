@@ -2,16 +2,17 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ListPage from 'components/PaginatedContent/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { getPredicates, predicatesUrl } from 'services/backend/predicates';
-import { Predicate } from 'services/backend/types';
+
+import ListPage from '@/components/PaginatedContent/ListPage';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ShortRecord from '@/components/ShortRecord/ShortRecord';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getPredicates, predicatesUrl } from '@/services/backend/predicates';
+import { Predicate } from '@/services/backend/types';
 
 const Properties = () => {
     useEffect(() => {

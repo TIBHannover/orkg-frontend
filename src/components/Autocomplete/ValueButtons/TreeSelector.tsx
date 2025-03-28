@@ -1,11 +1,12 @@
 import { faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { OptionType } from 'components/Autocomplete/types';
-import TreeView from 'components/Class/TreeView';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import TreeView from '@/components/Class/TreeView';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 type TreeSelectorButtonProps = {
     value: SingleValue<OptionType>;

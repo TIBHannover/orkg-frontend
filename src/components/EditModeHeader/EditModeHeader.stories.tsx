@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 
 export default {
     title: 'EditModeHeader',

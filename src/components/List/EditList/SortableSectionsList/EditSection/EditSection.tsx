@@ -1,14 +1,15 @@
-import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
-import Confirm from 'components/Confirmation/Confirmation';
-import AddSection from 'components/List/EditList/AddSection/AddSection';
-import EditSectionList from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionList';
-import EditSectionText from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionText/EditSectionText';
-import { HandleManualSort } from 'components/List/EditList/SortableSectionsList/SortableSectionsList';
-import { isListSection, isTextSection } from 'components/List/helpers/typeGuards';
-import useList from 'components/List/hooks/useList';
 import { FC } from 'react';
 import { SortableElement } from 'react-sortable-hoc';
-import { LiteratureListSection } from 'services/backend/types';
+
+import SortableSection from '@/components/ArticleBuilder/SortableSection/SortableSection';
+import Confirm from '@/components/Confirmation/Confirmation';
+import AddSection from '@/components/List/EditList/AddSection/AddSection';
+import EditSectionList from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionList';
+import EditSectionText from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionText/EditSectionText';
+import { HandleManualSort } from '@/components/List/EditList/SortableSectionsList/SortableSectionsList';
+import { isListSection, isTextSection } from '@/components/List/helpers/typeGuards';
+import useList from '@/components/List/hooks/useList';
+import { LiteratureListSection } from '@/services/backend/types';
 
 type EditSectionProps = {
     section: LiteratureListSection;

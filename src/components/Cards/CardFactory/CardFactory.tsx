@@ -1,23 +1,24 @@
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import ListCard from 'components/Cards/ListCard/ListCard';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
 import { ChangeEvent, FC } from 'react';
+
+import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
+import ListCard from '@/components/Cards/ListCard/ListCard';
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
+import RSTemplateCard from '@/components/Cards/RSTemplateCard/RSTemplateCard';
+import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
+import VisualizationCard from '@/components/Cards/VisualizationCard/VisualizationCard';
+import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
 import {
     Comparison,
     Item,
     LiteratureList,
     Paper,
     Review,
+    RosettaStoneStatement,
+    RosettaStoneTemplate,
     Template,
     Visualization,
-    RosettaStoneTemplate,
-    RosettaStoneStatement,
-} from 'services/backend/types';
-import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
+} from '@/services/backend/types';
 
 type CardFactoryProps = {
     item: Item;

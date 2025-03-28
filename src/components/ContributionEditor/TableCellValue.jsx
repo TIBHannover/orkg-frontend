@@ -1,15 +1,16 @@
-import { deleteStatement } from 'slices/contributionEditorSlice';
-import { ItemInnerSeparator } from 'components/Comparison/Table/Cells/TableCell';
-import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
-import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
-import TableCellForm from 'components/ContributionEditor/TableCellForm/TableCellForm';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
+import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { env } from 'next-runtime-env';
 import styled from 'styled-components';
+
+import { ItemInnerSeparator } from '@/components/Comparison/Table/Cells/TableCell';
+import TableCellButtons from '@/components/ContributionEditor/TableCellButtons';
+import TableCellForm from '@/components/ContributionEditor/TableCellForm/TableCellForm';
+import TableCellValueResource from '@/components/ContributionEditor/TableCellValueResource';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import { deleteStatement } from '@/slices/contributionEditorSlice';
 
 const Value = styled.div`
     &:hover .cell-buttons {

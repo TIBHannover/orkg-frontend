@@ -1,8 +1,9 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
 import selectEvent from 'react-select-event';
-import { createMSWLiteral, createMSWResource, createMSWStatement } from 'services/mocks/helpers';
-import { fireEvent, render, screen, Screen, waitFor } from 'testUtils';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { createMSWLiteral, createMSWResource, createMSWStatement } from '@/services/mocks/helpers';
+import { fireEvent, render, Screen, screen, waitFor } from '@/testUtils';
 
 const VALUE_IDS = {
     Date: '2c9a364e-86e9-595c-deed-71c7e2b2ad75',

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { preprocessNumber } from 'constants/DataTypes';
+
+import { preprocessNumber } from '@/constants/DataTypes';
 
 export const validateCellMapping = (mapper, cellValue) => {
     if (mapper === undefined) {

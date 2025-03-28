@@ -1,8 +1,9 @@
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import { FC } from 'react';
-import { ContentType } from 'services/backend/types';
+
+import ROUTES from '@/constants/routes';
+import { ContentType } from '@/services/backend/types';
 
 type CoinsProps = {
     item: Partial<ContentType> & { _class?: string };

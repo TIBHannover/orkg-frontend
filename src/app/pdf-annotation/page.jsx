@@ -3,10 +3,10 @@
 import { Alert, Container } from 'reactstrap';
 
 // import { useState, useEffect } from 'react';
-// import Toolbar from 'components/PdfAnnotation/Toolbar';
-// import TableSelect from 'components/PdfAnnotation/TableSelect';
+// import Toolbar from '@/components/PdfAnnotation/Toolbar';
+// import TableSelect from '@/components/PdfAnnotation/TableSelect';
 // import styled, { createGlobalStyle } from 'styled-components';
-// import DragUpload from 'components/PdfAnnotation/DragUpload';
+// import DragUpload from '@/components/PdfAnnotation/DragUpload';
 // import { useSelector } from 'react-redux';
 
 // const PdfContainer = styled.div`

@@ -1,4 +1,4 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 
 const useSnapshotStatement = () => {
     const { config } = useDataBrowserState();

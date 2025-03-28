@@ -2,21 +2,22 @@
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import { supportedContentTypes } from 'components/ContentType/types';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useAuthentication from 'components/hooks/useAuthentication';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Unauthorized from 'components/Unauthorized/Unauthorized';
-import useParams from 'components/useParams/useParams';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { upperFirst } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Button, Container } from 'reactstrap';
-import { getResource } from 'services/backend/resources';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import { supportedContentTypes } from '@/components/ContentType/types';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import Unauthorized from '@/components/Unauthorized/Unauthorized';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { getResource } from '@/services/backend/resources';
 
 function ContentType() {
     const [error, setError] = useState(null);

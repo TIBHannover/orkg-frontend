@@ -1,15 +1,16 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SectionStyled } from 'components/ArticleBuilder/styled';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import EditMetadataModal from 'components/List/EditList/EditMetadata/EditMetadataModal/EditMetadataModal';
-import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';
-import SustainableDevelopmentGoals from 'components/List/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
-import useList from 'components/List/hooks/useList';
-import ObservatoryBox from 'components/ObservatoryBox/ObservatoryBox';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
+
+import { SectionStyled } from '@/components/ArticleBuilder/styled';
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import EditMetadataModal from '@/components/List/EditList/EditMetadata/EditMetadataModal/EditMetadataModal';
+import useList from '@/components/List/hooks/useList';
+import ListEntryAmount from '@/components/List/ListEntryAmount/ListEntryAmount';
+import SustainableDevelopmentGoals from '@/components/List/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
+import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
 
 const EditMetadata = () => {
     const { list, observatory, organization, mutate } = useList();

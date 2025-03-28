@@ -1,15 +1,16 @@
-import useComparison from 'components/Comparison/hooks/useComparison';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
-import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import Tooltip from 'components/Utils/Tooltip';
-import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import dayjs from 'dayjs';
 import { FC, useEffect, useId, useState } from 'react';
 import Select from 'react-select';
 import { Button, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getConferencesSeries } from 'services/backend/conferences-series';
-import { Author, ConferenceSeries, Node } from 'services/backend/types';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
+import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import Tooltip from '@/components/Utils/Tooltip';
+import { CONFERENCE_REVIEW_MISC } from '@/constants/organizationsTypes';
+import { getConferencesSeries } from '@/services/backend/conferences-series';
+import { Author, ConferenceSeries, Node } from '@/services/backend/types';
 
 const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ toggle, comparisonId }) => {
     const isLoadingEdit = false;

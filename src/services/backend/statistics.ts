@@ -1,8 +1,9 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { VisibilityOptions } from 'services/backend/types';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { VisibilityOptions } from '@/services/backend/types';
 
 export const statisticsUrl = `${url}statistics/`;
 export const statisticsApi = backendApi.extend(() => ({ prefixUrl: statisticsUrl }));

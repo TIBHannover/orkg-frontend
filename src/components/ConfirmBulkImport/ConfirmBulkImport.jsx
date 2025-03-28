@@ -1,13 +1,14 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PaperList from 'components/ConfirmBulkImport/PaperList';
-import useImportBulkData from 'components/ConfirmBulkImport/useImportBulkData';
-import Link from 'next/link';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader, Progress } from 'reactstrap';
+
+import PaperList from '@/components/ConfirmBulkImport/PaperList';
+import useImportBulkData from '@/components/ConfirmBulkImport/useImportBulkData';
+import ROUTES from '@/constants/routes';
 
 const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = () => {} }) => {
     const onFinish = () => {

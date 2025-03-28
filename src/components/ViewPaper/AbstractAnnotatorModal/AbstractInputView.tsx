@@ -1,9 +1,10 @@
-import Tooltip from 'components/Utils/Tooltip';
 import { ClipboardEvent, FC } from 'react';
 import { useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { Alert, FormFeedback, Label } from 'reactstrap';
-import { RootStore } from 'slices/types';
+
+import Tooltip from '@/components/Utils/Tooltip';
+import { RootStore } from '@/slices/types';
 
 type AbstractInputViewProps = {
     validation: boolean;

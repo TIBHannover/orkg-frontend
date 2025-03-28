@@ -2,27 +2,28 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
-import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import ComparisonTable from 'components/Comparison/Comparison';
-import ComparisonCarousel from 'components/Comparison/ComparisonCarousel/ComparisonCarousel';
-import AppliedFilters from 'components/Comparison/ComparisonHeader/AppliedFilters';
-import ComparisonHeaderMenu from 'components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
-import ComparisonMetaData from 'components/Comparison/ComparisonHeader/ComparisonMetaData';
-import LiveComparisonHeader from 'components/Comparison/ComparisonHeader/LiveComparisonHeader';
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import References from 'components/Comparison/References/References';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import useComparisonOld from 'components/Comparison/hooks/useComparisonOld';
-import { ContainerAnimated } from 'components/Comparison/styled';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import useParams from 'components/useParams/useParams';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { Alert, Button, Container } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
+import ComparisonTable from '@/components/Comparison/Comparison';
+import ComparisonCarousel from '@/components/Comparison/ComparisonCarousel/ComparisonCarousel';
+import AppliedFilters from '@/components/Comparison/ComparisonHeader/AppliedFilters';
+import ComparisonHeaderMenu from '@/components/Comparison/ComparisonHeader/ComparisonHeaderMenu';
+import ComparisonMetaData from '@/components/Comparison/ComparisonHeader/ComparisonMetaData';
+import LiveComparisonHeader from '@/components/Comparison/ComparisonHeader/LiveComparisonHeader';
+import ComparisonLoadingComponent from '@/components/Comparison/ComparisonLoadingComponent';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import useComparisonOld from '@/components/Comparison/hooks/useComparisonOld';
+import References from '@/components/Comparison/References/References';
+import { ContainerAnimated } from '@/components/Comparison/styled';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const Comparison = () => {
     const [isOpenAddContributionModal, setIsOpenAddContributionModal] = useState(false);

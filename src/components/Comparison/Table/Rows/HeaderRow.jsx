@@ -1,10 +1,11 @@
 import arrayMove from 'array-move';
-import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonSlice';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import { updateContributionOrder, updatePropertyOrder } from '@/slices/comparisonSlice';
 
 const HeaderRow = ({ scrollContainerHead, headerGroups }) => {
     const transpose = useSelector((state) => state.comparison.configuration.transpose);

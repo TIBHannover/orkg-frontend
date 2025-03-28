@@ -2,27 +2,28 @@
 
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
-import CreateProperty from 'components/ContributionEditor/CreateProperty';
-import EditorTable from 'components/ContributionEditor/EditorTable';
-import PropertySuggestions from 'components/ContributionEditor/PropertySuggestions/PropertySuggestions';
-import RelatedPapersCarousel from 'components/ContributionEditor/RelatedPapers/RelatedPaperCarousel';
-import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
-import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';
-import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
-import AddPaperModal from 'components/PaperForm/AddPaperModal';
-import TitleBar from 'components/TitleBar/TitleBar';
-import routes from 'constants/routes';
 import { reverse } from 'named-urls';
-import { env } from 'next-runtime-env';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Container } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
+
+import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
+import TableScrollContainer from '@/components/Comparison/Table/TableScrollContainer';
+import CreateProperty from '@/components/ContributionEditor/CreateProperty';
+import EditorTable from '@/components/ContributionEditor/EditorTable';
+import PropertySuggestions from '@/components/ContributionEditor/PropertySuggestions/PropertySuggestions';
+import RelatedPapersCarousel from '@/components/ContributionEditor/RelatedPapers/RelatedPaperCarousel';
+import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
+import TableLoadingIndicator from '@/components/ContributionEditor/TableLoadingIndicator';
+import CreateContributionModal from '@/components/CreateContributionModal/CreateContributionModal';
+import AddPaperModal from '@/components/PaperForm/AddPaperModal';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import routes from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
+import { contributionsRemoved, loadContributions } from '@/slices/contributionEditorSlice';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);

@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
-import { BackendError } from 'services/backend/error';
-import { ApiError } from 'services/backend/types';
+
+import { BackendError } from '@/services/backend/error';
+import { ApiError } from '@/services/backend/types';
 
 const errorHandler = ({
     error,

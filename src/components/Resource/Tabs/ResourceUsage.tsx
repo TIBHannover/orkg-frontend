@@ -1,8 +1,8 @@
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ListPage from 'components/PaginatedContent/ListPage';
-import { getPaper, getPapersLinkedToResource, papersUrl } from 'services/backend/papers';
-import { PaginatedResponse, PaginationParams, Paper, Resource } from 'services/backend/types';
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import { getPaper, getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
+import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
 
 function ResourceUsage({ id }: { id: string }) {
     const renderListItem = (object: Paper & { path: Resource[][] }) => {

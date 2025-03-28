@@ -1,11 +1,12 @@
-import { z } from 'zod';
-import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
-import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { components } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { Col, FormFeedback, FormGroup, Input, Label, ModalBody } from 'reactstrap';
+import { z } from 'zod';
+
+import FilterModalFooter from '@/components/Comparison/Filters/FilterModalFooter';
+import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 const createOption = (label) => ({
     label,

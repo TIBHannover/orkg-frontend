@@ -16,9 +16,10 @@ import {
     useRole,
     useTransitionStatus,
 } from '@floating-ui/react';
-import { FloatingContentStyled } from 'components/FloatingUI/styled';
-import { BaseFloatingOptions, FloatingComponentProps, FloatingContentProps, FloatingTriggerProps } from 'components/FloatingUI/types';
 import { cloneElement, createContext, forwardRef, isValidElement, useContext, useMemo, useRef, useState } from 'react';
+
+import { FloatingContentStyled } from '@/components/FloatingUI/styled';
+import { BaseFloatingOptions, FloatingComponentProps, FloatingContentProps, FloatingTriggerProps } from '@/components/FloatingUI/types';
 
 export function useTooltip({
     initialOpen = false,

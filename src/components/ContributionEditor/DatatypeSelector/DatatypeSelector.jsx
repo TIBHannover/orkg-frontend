@@ -1,15 +1,16 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useCallback, useContext } from 'react';
 import Select, { components } from 'react-select';
 import { ThemeContext } from 'styled-components';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import DATA_TYPES, { getConfigByType } from '@/constants/DataTypes';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
     <>

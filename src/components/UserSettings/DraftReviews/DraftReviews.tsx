@@ -1,16 +1,17 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ListPage from 'components/PaginatedContent/ListPage';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { Alert } from 'reactstrap';
-import { getReviews, reviewUrl } from 'services/backend/reviews';
-import { Review } from 'services/backend/types';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import ShortRecord from '@/components/ShortRecord/ShortRecord';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getReviews, reviewUrl } from '@/services/backend/reviews';
+import { Review } from '@/services/backend/types';
 
 const DraftReviews = () => {
     const { user } = useAuthentication();

@@ -1,13 +1,15 @@
-import PropTypes from 'prop-types';
 import 'handsontable/dist/handsontable.full.css';
+
 import { HotTable } from '@handsontable/react';
-import { updateTableData } from 'slices/pdfAnnotationSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import Handsontable from 'handsontable';
-import { isString } from 'lodash';
 import { registerAllModules } from 'handsontable/registry';
-import EditorComponent from 'components/PdfAnnotation/EditorComponent';
-import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
+import { isString } from 'lodash';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
+import EditorComponent from '@/components/PdfAnnotation/EditorComponent';
+import useTableEditor from '@/components/PdfAnnotation/hooks/useTableEditor';
+import { updateTableData } from '@/slices/pdfAnnotationSlice';
 
 // register Handsontable's modules
 registerAllModules();

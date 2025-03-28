@@ -1,7 +1,8 @@
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import { findIndex } from 'lodash';
 import { parseAsJson, useQueryState } from 'nuqs';
 import { z } from 'zod';
+
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 
 const schemaHistory = z.array(
     z.object({

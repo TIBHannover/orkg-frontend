@@ -1,11 +1,11 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 const DragPdf = styled.div`
     width: 300px;

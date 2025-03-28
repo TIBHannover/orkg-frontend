@@ -1,15 +1,16 @@
 'use client';
 
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
-import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
-import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import ResearchFieldHeader from 'components/ResearchField/ResearchFieldHeader';
-import ResearchFieldTabsContainer from 'components/ResearchField/ResearchFieldTabsContainer';
-import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
-import useParams from 'components/useParams/useParams';
 import { Col, Container, Row } from 'reactstrap';
+
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
+import ObservatoriesCarousel from '@/components/ObservatoriesCarousel/ObservatoriesCarousel';
+import useResearchFieldObservatories from '@/components/ResearchField/hooks/useResearchFieldObservatories';
+import ResearchFieldHeader from '@/components/ResearchField/ResearchFieldHeader';
+import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
+import ResearchProblemsBox from '@/components/ResearchProblemsBox/ResearchProblemsBox';
+import useParams from '@/components/useParams/useParams';
 
 const ResearchField = () => {
     const { researchFieldId } = useParams();

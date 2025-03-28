@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import Link from 'components/ValuePlugins/Link/Link';
+
+import Link from '@/components/ValuePlugins/Link/Link';
 
 export default {
     title: 'ValuePlugins/Link',

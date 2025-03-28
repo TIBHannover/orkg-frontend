@@ -1,6 +1,7 @@
-import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
 import { FC } from 'react';
 import { Modal } from 'reactstrap';
+
+import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 
 type ModalWithLoadingProps = {
     children: React.ReactNode;

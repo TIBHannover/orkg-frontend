@@ -1,12 +1,13 @@
-import { SelectGlobalStyle, customClassNames, customStyles } from 'components/Autocomplete/styled';
-import DatatypeOption from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeOption';
-import DisabledTooltipContent from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DisabledTooltipContent';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import Select from 'react-select';
-import { Node } from 'services/backend/types';
+
+import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import DatatypeOption from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeOption';
+import DisabledTooltipContent from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DisabledTooltipContent';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import DATA_TYPES, { getConfigByType } from '@/constants/DataTypes';
+import { Node } from '@/services/backend/types';
 
 type DatatypeSelectorProps = {
     range?: Node;

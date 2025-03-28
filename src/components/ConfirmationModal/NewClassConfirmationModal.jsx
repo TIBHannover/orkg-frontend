@@ -1,16 +1,17 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
 import { Button, Form, FormFeedback, FormGroup, FormText, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createClass, setParentClassByID } from 'services/backend/classes';
-import { createLiteral } from 'services/backend/literals';
-import { createLiteralStatement } from 'services/backend/statements';
-import { getErrorMessage } from 'utils';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import { createClass, setParentClassByID } from '@/services/backend/classes';
+import { createLiteral } from '@/services/backend/literals';
+import { createLiteralStatement } from '@/services/backend/statements';
+import { getErrorMessage } from '@/utils';
 
 function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentField = true }) {
     const isURI = new RegExp(REGEX.URL).test(newLabel.trim());

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import { classifySentence } from 'services/orkgNlp';
+
+import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
+import { classifySentence } from '@/services/orkgNlp';
 
 const SCORE_THRESHOLD = 0.05;
 

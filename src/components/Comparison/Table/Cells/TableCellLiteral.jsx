@@ -1,13 +1,14 @@
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useMeasure } from 'react-use';
 import { Button } from 'reactstrap';
+
+import PathTooltipContent from '@/components/Comparison/Table/Cells/PathTooltipContent';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 
 const TableCellLiteral = ({ entity }) => {
     const [isExpanded, setIsExpanded] = useState(false);

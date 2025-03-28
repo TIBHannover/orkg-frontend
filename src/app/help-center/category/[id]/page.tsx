@@ -1,15 +1,16 @@
 'use client';
 
-import NotFound from 'app/not-found';
 import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
-import { getHelpCategory } from 'services/cms';
-import { HelpCategory } from 'services/cms/types';
-import { reverseWithSlug } from 'utils';
+
+import NotFound from '@/app/not-found';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { getHelpCategory } from '@/services/cms';
+import { HelpCategory } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const HelpCenterCategory = () => {
     const [category, setCategory] = useState<HelpCategory | null>(null);

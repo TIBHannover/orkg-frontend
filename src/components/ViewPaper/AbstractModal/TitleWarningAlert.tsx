@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Alert } from 'reactstrap';
-import { RootStore } from 'slices/types';
+
+import { RootStore } from '@/slices/types';
 
 const TitleWarningAlert = () => {
     const fetchAbstractTitle = useSelector((state: RootStore) => state.viewPaper.fetchAbstractTitle);

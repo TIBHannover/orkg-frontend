@@ -1,18 +1,19 @@
 /* eslint-disable guard-for-in */
 import { Cite } from '@citation-js/core';
-import useMembership from 'components/hooks/useMembership';
-import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';
-import { CLASSES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import { EXTRACTION_METHODS } from 'constants/misc';
-import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getPaperByDoi } from 'services/backend/papers';
-import { createPredicate, getPredicate, getPredicates } from 'services/backend/predicates';
-import { createResource, getResource, getResources } from 'services/backend/resources';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { parseCiteResult } from 'utils';
+
+import useMembership from '@/components/hooks/useMembership';
+import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from '@/constants/DataTypes';
+import { CLASSES, MISC, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
+import { getPaperByDoi } from '@/services/backend/papers';
+import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
+import { createResource, getResource, getResources } from '@/services/backend/resources';
+import { getStatementsBySubject } from '@/services/backend/statements';
+import { parseCiteResult } from '@/utils';
 
 const PREDEFINED_COLUMNS = [
     'paper:title',

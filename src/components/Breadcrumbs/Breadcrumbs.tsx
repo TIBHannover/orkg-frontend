@@ -1,18 +1,19 @@
 import { faAngleDoubleDown, faAngleDoubleRight, faHome, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { Card, CardFooter, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { getResource, resourcesUrl } from 'services/backend/resources';
-import { getParentResearchFields, getStatements, statementsUrl } from 'services/backend/statements';
-import { Literal, Resource } from 'services/backend/types';
 import styled from 'styled-components';
 import useSWR from 'swr';
-import { reverseWithSlug } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import { PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+import { getParentResearchFields, getStatements, statementsUrl } from '@/services/backend/statements';
+import { Literal, Resource } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 const StyledDropdownItem = styled(DropdownItem)`
     &:active,

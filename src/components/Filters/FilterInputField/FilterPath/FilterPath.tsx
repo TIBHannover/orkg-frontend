@@ -1,16 +1,17 @@
 import { faAngleDoubleRight, faEllipsis, faRoute, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { BreadcrumbStyled, TippyContentStyled } from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { getPredicatesByIds, predicatesUrl } from 'services/backend/predicates';
-import { FilterConfig } from 'services/backend/types';
 import useSWR from 'swr';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { BreadcrumbStyled, TippyContentStyled } from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getPredicatesByIds, predicatesUrl } from '@/services/backend/predicates';
+import { FilterConfig } from '@/services/backend/types';
 
 type FilterPathProps = {
     filter: FilterConfig;

@@ -1,11 +1,12 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from 'components/ArticleBuilder/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { sortableHandle } from 'react-sortable-hoc';
 import { Button } from 'reactstrap';
+
+import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from '@/components/ArticleBuilder/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const SortableSection = ({ handleDelete, handleSort, children }) => {
     const [isHovering, setIsHovering] = useState(false);

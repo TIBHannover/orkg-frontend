@@ -1,12 +1,13 @@
 'use client';
 
+import { faBug } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBug } from '@fortawesome/free-solid-svg-icons';
-import TitleBar from 'components/TitleBar/TitleBar';
+
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
 
 const NotFound = () => {
     useEffect(() => {

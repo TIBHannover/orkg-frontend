@@ -1,22 +1,23 @@
 'use client';
 
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import useAuthentication from 'components/hooks/useAuthentication';
-import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
-import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { PaginatedResponse, Statement } from 'services/backend/types';
 import useSWR from 'swr';
-import { guid } from 'utils';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import RosettaTemplateEditor from '@/components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
+import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { PaginatedResponse, Statement } from '@/services/backend/types';
+import { guid } from '@/utils';
 
 const RSTemplateEditPage = () => {
     const { id } = useParams<{ id: string; activeTab: string }>();

@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
+
+import ColoredStatsBox from '@/components/Stats/ColoredStatsBox';
 
 export default {
     title: 'ColoredStatsBox',

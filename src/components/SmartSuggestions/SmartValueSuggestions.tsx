@@ -1,18 +1,19 @@
 import { faLightbulb, faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import LLM_TASK_NAMES from 'constants/llmTasks';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
-import { createResource, getResources } from 'services/backend/resources';
-import { createResourceStatement } from 'services/backend/statements';
-import { Resource } from 'services/backend/types';
-import { getLlmResponse } from 'services/orkgNlp';
+
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import LLM_TASK_NAMES from '@/constants/llmTasks';
+import { createResource, getResources } from '@/services/backend/resources';
+import { createResourceStatement } from '@/services/backend/statements';
+import { Resource } from '@/services/backend/types';
+import { getLlmResponse } from '@/services/orkgNlp';
 
 type SmartValueSuggestionsProps = {
     paperTitle: string;

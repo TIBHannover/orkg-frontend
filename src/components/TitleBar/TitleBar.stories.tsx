@@ -1,9 +1,10 @@
-import Link from 'next/link';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import TitleBar from 'components/TitleBar/TitleBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Container } from 'reactstrap';
 import { StoryFn } from '@storybook/react';
+import Link from 'next/link';
+import { Button, Container } from 'reactstrap';
+
+import TitleBar from '@/components/TitleBar/TitleBar';
 
 export default {
     title: 'TitleBar',

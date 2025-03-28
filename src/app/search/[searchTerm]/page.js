@@ -1,9 +1,10 @@
 'use client';
 
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { redirect, useSearchParams } from 'next/navigation';
+
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
 
 const Search = () => {
     const { searchTerm } = useParams();

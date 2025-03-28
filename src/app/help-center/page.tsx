@@ -1,17 +1,18 @@
 'use client';
 
-import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
-import Link from 'next/link';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { times } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Alert, Col, Container, Row } from 'reactstrap';
-import { getHelpCategories } from 'services/cms';
-import { HelpArticle } from 'services/cms/types';
-import { reverseWithSlug } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import HelpCenterSearchInput from '@/components/HelpCenterSearchInput/HelpCenterSearchInput';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
+import { getHelpCategories } from '@/services/cms';
+import { HelpArticle } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const HelpCenter = () => {
     const [categories, setCategories] = useState<HelpArticle[]>([]);

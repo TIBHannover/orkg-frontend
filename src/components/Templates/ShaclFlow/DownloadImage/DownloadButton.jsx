@@ -1,8 +1,9 @@
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { toPng } from 'html-to-image';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getRectOfNodes, getTransformForBounds, useReactFlow } from 'reactflow';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 
 function downloadImage(dataUrl, imageName) {
     const a = document.createElement('a');

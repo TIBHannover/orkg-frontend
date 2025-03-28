@@ -1,7 +1,8 @@
-import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/hooks/feedbackQuestions';
-import InviteResearchersButton from 'components/Comparison/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
 import { FC } from 'react';
 import { Alert, ListGroup, ListGroupItem, Progress } from 'reactstrap';
+
+import FEEDBACK_QUESTIONS from '@/components/Comparison/QualityReportModal/hooks/feedbackQuestions';
+import InviteResearchersButton from '@/components/Comparison/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
 
 type FeedbackTabProps = {
     feedbacks: {

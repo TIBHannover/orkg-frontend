@@ -4,6 +4,7 @@
 import ky from 'ky';
 import { env } from 'next-runtime-env';
 import qs from 'qs';
+
 import {
     AboutPageCategory,
     Alert,
@@ -14,7 +15,7 @@ import {
     HelpArticle,
     HelpCategory,
     NewsCard,
-} from 'services/cms/types';
+} from '@/services/cms/types';
 
 export const url = env('NEXT_PUBLIC_CMS_URL');
 const cmsApi = ky.create({ prefixUrl: url });

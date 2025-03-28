@@ -1,9 +1,9 @@
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import DbpediaAbstract from 'components/ExternalDescription/DbpediaAbstract';
-import GeonameDescription from 'components/ExternalDescription/GeonameDescription';
-import WikidataDescription from 'components/ExternalDescription/WikidataDescription';
-import WikipediaSummary from 'components/ExternalDescription/WikipediaSummary';
-import { PREDICATES } from 'constants/graphSettings';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import DbpediaAbstract from '@/components/ExternalDescription/DbpediaAbstract';
+import GeonameDescription from '@/components/ExternalDescription/GeonameDescription';
+import WikidataDescription from '@/components/ExternalDescription/WikidataDescription';
+import WikipediaSummary from '@/components/ExternalDescription/WikipediaSummary';
+import { PREDICATES } from '@/constants/graphSettings';
 
 // eslint-disable-next-line prefer-regex-literals
 const REG_DPPEDIA = new RegExp(/^(https?:)?\/\/dbpedia\.org(\/resource(\?.*)?)\//);

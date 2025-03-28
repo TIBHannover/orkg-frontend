@@ -1,15 +1,16 @@
-import Confirm from 'components/Confirmation/Confirmation';
-import CustomEdge from 'components/DiagramEditor/CustomEdge';
-import CustomGroup from 'components/DiagramEditor/CustomGroup';
-import CustomNode from 'components/DiagramEditor/CustomNode';
-import { DIAGRAM_CONTEXT_MENU_ID } from 'constants/misc';
-import THING_TYPES from 'constants/thingTypes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
-import { getResource } from 'services/backend/resources';
-import { getThing } from 'services/simcomp';
-import { asyncLocalStorage, guid } from 'utils';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import CustomEdge from '@/components/DiagramEditor/CustomEdge';
+import CustomGroup from '@/components/DiagramEditor/CustomGroup';
+import CustomNode from '@/components/DiagramEditor/CustomNode';
+import { DIAGRAM_CONTEXT_MENU_ID } from '@/constants/misc';
+import THING_TYPES from '@/constants/thingTypes';
+import { getResource } from '@/services/backend/resources';
+import { getThing } from '@/services/simcomp';
+import { asyncLocalStorage, guid } from '@/utils';
 
 function useDiagramEditor({ id }) {
     const { show } = useContextMenu({

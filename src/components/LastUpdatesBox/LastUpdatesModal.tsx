@@ -1,15 +1,16 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { StyledActivity } from 'components/LastUpdatesBox/styled';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { RESOURCES } from 'constants/graphSettings';
 import dayjs from 'dayjs';
 import { truncate } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { contentTypesUrl, getGenericContentTypes } from 'services/backend/contentTypes';
-import { getResourceLink } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import { StyledActivity } from '@/components/LastUpdatesBox/styled';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { RESOURCES } from '@/constants/graphSettings';
+import { contentTypesUrl, getGenericContentTypes } from '@/services/backend/contentTypes';
+import { getResourceLink } from '@/utils';
 
 type LastUpdatesBoxProps = {
     researchFieldId: string;

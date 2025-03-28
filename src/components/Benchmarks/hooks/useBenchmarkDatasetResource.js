@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { PREDICATES } from 'constants/graphSettings';
+import { useCallback, useEffect, useState } from 'react';
+
+import { PREDICATES } from '@/constants/graphSettings';
+import { getResource } from '@/services/backend/resources';
+import { getStatementsBySubject } from '@/services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 function useBenchmarkDatasetResource({ datasetId = null, problemId = null }) {
     const [data, setData] = useState(null);

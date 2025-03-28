@@ -1,7 +1,8 @@
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import PropTypes from 'prop-types';
 import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { convertPaperToNewFormat } from 'utils';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import { convertPaperToNewFormat } from '@/utils';
 
 const ExistingDoiModal = ({ existingPaper, toggle }) => (
     <Modal size="lg" isOpen backdrop="static">

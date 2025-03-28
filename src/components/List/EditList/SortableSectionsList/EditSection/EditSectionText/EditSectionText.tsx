@@ -1,9 +1,10 @@
-import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
-import { EditableTitle } from 'components/ArticleBuilder/styled';
-import useList from 'components/List/hooks/useList';
 import { FC, FocusEvent, useState } from 'react';
 import { Input } from 'reactstrap';
-import { LiteratureListSectionText } from 'services/backend/types';
+
+import MarkdownEditor from '@/components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
+import { EditableTitle } from '@/components/ArticleBuilder/styled';
+import useList from '@/components/List/hooks/useList';
+import { LiteratureListSectionText } from '@/services/backend/types';
 
 type EditSectionTextProps = {
     section: LiteratureListSectionText;

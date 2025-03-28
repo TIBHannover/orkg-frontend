@@ -1,22 +1,23 @@
 import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Coins from 'components/Coins/Coins';
-import Thumbnail from 'components/Cards/VisualizationCard/Thumbnail';
-import useVisualizationResearchField from 'components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CardBadge } from 'components/styled';
-import { VISIBILITY } from 'constants/contentTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Visualization } from 'services/backend/types';
 import styled from 'styled-components';
+
+import useVisualizationResearchField from '@/components/Cards/VisualizationCard/hooks/useVisualizationResearchField';
+import Thumbnail from '@/components/Cards/VisualizationCard/Thumbnail';
+import Coins from '@/components/Coins/Coins';
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { VISIBILITY } from '@/constants/contentTypes';
+import ROUTES from '@/constants/routes';
+import { Visualization } from '@/services/backend/types';
 
 const VisualizationCardStyled = styled.div`
     a {

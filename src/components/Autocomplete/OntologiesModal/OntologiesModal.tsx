@@ -1,17 +1,18 @@
 import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useAutocompleteDispatch, useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
-import { CustomOption } from 'components/Autocomplete/OntologiesModal/CustomOption';
-import { AdditionalType, Ontology } from 'components/Autocomplete/types';
-import { AUTOCOMPLETE_SOURCE, DEFAULT_SOURCES, STORAGE_NAME } from 'constants/autocompleteSources';
 import { isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 import { MultiValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { toast } from 'react-toastify';
 import { Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { loadOntologiesOptions } from 'services/ols';
-import { asyncLocalStorage } from 'utils';
+
+import { useAutocompleteDispatch, useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
+import { CustomOption } from '@/components/Autocomplete/OntologiesModal/CustomOption';
+import { AdditionalType, Ontology } from '@/components/Autocomplete/types';
+import { AUTOCOMPLETE_SOURCE, DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
+import { loadOntologiesOptions } from '@/services/ols';
+import { asyncLocalStorage } from '@/utils';
 
 const defaultAdditional: AdditionalType = {
     page: 0,

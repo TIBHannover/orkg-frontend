@@ -1,12 +1,13 @@
-import HierarchyIndicator from 'components/DataBrowser/components/Body/Statement/HierarchyIndicator';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { StatementWrapperStyled } from 'components/DataBrowser/styles/styled';
-import { getBackgroundColor } from 'components/DataBrowser/utils/dataBrowserUtils';
-import { ENTITIES } from 'constants/graphSettings';
 import { isEqual, range } from 'lodash';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { useHash } from 'react-use';
-import { Statement } from 'services/backend/types';
+
+import HierarchyIndicator from '@/components/DataBrowser/components/Body/Statement/HierarchyIndicator';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import { StatementWrapperStyled } from '@/components/DataBrowser/styles/styled';
+import { getBackgroundColor } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
 
 type LayoutTripleObjectProps = {
     level: number;

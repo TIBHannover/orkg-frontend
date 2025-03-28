@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
-import { addResourceToObservatory } from 'services/backend/resources';
-import { toast } from 'react-toastify';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
-import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
+import { addResourceToObservatory } from '@/services/backend/resources';
 
 const AddResearchProblem = (props) => {
     const [problem, setProblem] = useState(null);

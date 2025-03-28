@@ -1,13 +1,14 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useList from 'components/List/hooks/useList';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { Paper } from 'services/backend/types';
+
+import useList from '@/components/List/hooks/useList';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { Paper } from '@/services/backend/types';
 
 const bibtexOptions = {
     output: {

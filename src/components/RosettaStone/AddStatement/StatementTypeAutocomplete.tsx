@@ -1,13 +1,14 @@
-import { SelectGlobalStyle, customClassNames, customStyles } from 'components/Autocomplete/styled';
-import SelectOption, { type RosettaStoneTemplateOption } from 'components/RosettaStone/AddStatement/SelectOption';
 import { uniqBy } from 'lodash';
 import { FC, useId } from 'react';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 import { ActionMeta, SingleValue } from 'react-select';
-import { withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
-import { getRSTemplates } from 'services/backend/rosettaStone';
-import { RosettaStoneTemplate } from 'services/backend/types';
+import { withAsyncPaginate } from 'react-select-async-paginate';
+
+import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import SelectOption, { type RosettaStoneTemplateOption } from '@/components/RosettaStone/AddStatement/SelectOption';
+import { getRSTemplates } from '@/services/backend/rosettaStone';
+import { RosettaStoneTemplate } from '@/services/backend/types';
 
 type AdditionalType = {
     page: number;

@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 
 export default {
     title: 'ButtonWithLoading',

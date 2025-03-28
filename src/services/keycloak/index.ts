@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { env } from 'next-runtime-env';
 import { signOut } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 
 export const ROLES = {
     ROLE_ADMIN: 'admin',

@@ -2,18 +2,19 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import { createResource } from 'services/backend/resources';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { CLASSES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { createResource } from '@/services/backend/resources';
 
 const ListNew = () => {
     const [title, setTitle] = useState('');

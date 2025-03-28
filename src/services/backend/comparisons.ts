@@ -1,8 +1,9 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
 import {
     Author,
     Comparison,
@@ -13,11 +14,11 @@ import {
     PaginatedResponse,
     PaginationParams,
     PublishedParam,
+    ResearchFieldIdParams,
     SdgParam,
     VerifiedParam,
     VisibilityParam,
-    ResearchFieldIdParams,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const comparisonUrl = `${url}comparisons/`;
 export const comparisonsApi = backendApi.extend(() => ({ prefixUrl: comparisonUrl }));

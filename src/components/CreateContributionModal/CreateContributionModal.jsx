@@ -1,15 +1,16 @@
-import Link from 'next/link';
 import { faExternalLinkAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useCreateContribution from 'components/CreateContributionModal/hooks/useCreateContribution';
-import Tooltip from 'components/Utils/Tooltip';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useCreateContribution from '@/components/CreateContributionModal/hooks/useCreateContribution';
+import Tooltip from '@/components/Utils/Tooltip';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
 
 // TODO: accepted paper data as props:
 // it is not really needed to fetch the contribution data, it could be passed as props as well

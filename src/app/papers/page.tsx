@@ -2,21 +2,22 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ListPage from 'components/PaginatedContent/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { getPapers, papersUrl } from 'services/backend/papers';
-import { Paper, VisibilityOptions } from 'services/backend/types';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getPapers, papersUrl } from '@/services/backend/papers';
+import { Paper, VisibilityOptions } from '@/services/backend/types';
 
 const Papers: FC = () => {
     const [verified, setVerified] = useQueryState<boolean | null>('verified', {

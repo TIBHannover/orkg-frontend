@@ -1,10 +1,11 @@
-import useParams from 'components/useParams/useParams';
-import { PREDICATES } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
-import { getFieldChildren } from 'services/backend/researchFields';
-import { getResource } from 'services/backend/resources';
-import { getStatements } from 'services/backend/statements';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+
+import useParams from '@/components/useParams/useParams';
+import { PREDICATES } from '@/constants/graphSettings';
+import { getFieldChildren } from '@/services/backend/researchFields';
+import { getResource } from '@/services/backend/resources';
+import { getStatements } from '@/services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 function useResearchField(initialVal = {}) {
     const [data, setData] = useState({ initialVal });

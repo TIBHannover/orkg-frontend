@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
+
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
 
 const meta: Meta<typeof SdgBox> = {
     title: 'SDG Box',

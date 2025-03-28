@@ -1,7 +1,8 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
-import { convertAuthorsToNewFormat, filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from 'utils';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getStatementsByObjectAndPredicate, getStatementsBySubject } from '@/services/backend/statements';
+import { convertAuthorsToNewFormat, filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from '@/utils';
 
 function useCardData({ id, initResearchField = undefined, initAuthors = [], isList = false }) {
     const [researchField, setResearchField] = useState(initResearchField);

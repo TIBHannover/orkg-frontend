@@ -5,8 +5,9 @@ import { FC, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import { getCitationByDOI } from 'services/datacite/index';
 import styled from 'styled-components';
+
+import { getCitationByDOI } from '@/services/datacite/index';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';

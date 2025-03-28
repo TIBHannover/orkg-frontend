@@ -1,12 +1,13 @@
 'use client';
 
-import DiffView from 'components/DiffView/DiffView';
-import useDiff from 'components/DiffView/useDiff';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import { getComparison } from 'services/backend/comparisons';
-import { Comparison } from 'services/backend/types';
+
+import DiffView from '@/components/DiffView/DiffView';
+import useDiff from '@/components/DiffView/useDiff';
+import ROUTES from '@/constants/routes';
+import { getComparison } from '@/services/backend/comparisons';
+import { Comparison } from '@/services/backend/types';
 
 const ComparisonDiff = () => {
     const { comparisonToPlainText } = useDiff();

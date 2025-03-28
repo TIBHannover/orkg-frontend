@@ -1,9 +1,10 @@
 import userEvent from '@testing-library/user-event';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
 import selectEvent from 'react-select-event';
-import { createMSWResource } from 'services/mocks/helpers';
-import { fireEvent, render, screen, Screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { createMSWResource } from '@/services/mocks/helpers';
+import { fireEvent, render, Screen, screen, waitFor, waitForElementToBeRemoved } from '@/testUtils';
 
 const setup = async (
     props: DataBrowserProps = {

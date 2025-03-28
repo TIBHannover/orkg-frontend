@@ -1,17 +1,18 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TabLabel from 'components/Tabs/TabLabel';
-import Tabs from 'components/Tabs/Tabs';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
 import { Container } from 'reactstrap';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { Item, VisibilityOptions } from 'services/backend/types';
+
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TabLabel from '@/components/Tabs/TabLabel';
+import Tabs from '@/components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
+import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
+import { Item, VisibilityOptions } from '@/services/backend/types';
 
 type SgdTabsContainerProps = {
     sdgId: string;

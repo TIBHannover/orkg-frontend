@@ -1,14 +1,15 @@
 import capitalize from 'capitalize';
-import { OptionType } from 'components/Autocomplete/types';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import TooltipQuestion from 'components/Utils/Tooltip';
-import AbstractAnnotator from 'components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
-import TitleWarningAlert from 'components/ViewPaper/AbstractModal/TitleWarningAlert';
 import toArray from 'lodash/toArray';
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert, Badge } from 'reactstrap';
-import { RootStore } from 'slices/types';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import TooltipQuestion from '@/components/Utils/Tooltip';
+import AbstractAnnotator from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
+import TitleWarningAlert from '@/components/ViewPaper/AbstractModal/TitleWarningAlert';
+import { RootStore } from '@/slices/types';
 
 type AbstractAnnotatorViewProps = {
     predicateOptions: OptionType[];

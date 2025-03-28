@@ -1,13 +1,14 @@
-import { faDiagramProject, faPen, faSave, faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Title } from 'components/EditModeHeader/EditModeHeader';
-import useParams from 'components/useParams/useParams';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { Button, ButtonGroup, Container } from 'reactstrap';
-import { saveTemplate, setDiagramMode, loadTemplate } from 'slices/templateEditorSlice';
 import styled from 'styled-components';
+
+import { Title } from '@/components/EditModeHeader/EditModeHeader';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { loadTemplate, saveTemplate, setDiagramMode } from '@/slices/templateEditorSlice';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;

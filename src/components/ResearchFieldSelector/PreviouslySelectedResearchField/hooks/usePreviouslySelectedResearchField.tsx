@@ -1,8 +1,9 @@
-import useAuthentication from 'components/hooks/useAuthentication';
 import { uniqBy } from 'lodash';
-import { getPapers, papersUrl } from 'services/backend/papers';
-import { SortDirectionOptions } from 'services/backend/types';
 import useSWR from 'swr';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { getPapers, papersUrl } from '@/services/backend/papers';
+import { SortDirectionOptions } from '@/services/backend/types';
 
 const usePreviouslySelectedResearchField = () => {
     const { user } = useAuthentication();

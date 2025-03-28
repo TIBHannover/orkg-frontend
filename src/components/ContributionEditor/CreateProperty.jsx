@@ -1,16 +1,17 @@
 import { faPlusCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
-import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
-import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
-import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
-import { StyledButton } from 'components/StatementBrowser/styled';
-import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonGroup, InputGroup } from 'reactstrap';
-import { createProperty } from 'slices/contributionEditorSlice';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import TemplatesModal from '@/components/ContributionEditor/TemplatesModal/TemplatesModal';
+import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPropertyGuidelinesCheck';
+import SmartPropertySuggestions from '@/components/SmartSuggestions/SmartPropertySuggestions';
+import { StyledButton } from '@/components/StatementBrowser/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import { createProperty } from '@/slices/contributionEditorSlice';
 
 export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);

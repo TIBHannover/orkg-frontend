@@ -1,12 +1,13 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { env } from 'next-runtime-env';
 import { FC, useId } from 'react';
 import { useCookies } from 'react-cookie';
 import { Button, Input, Label } from 'reactstrap';
 import styled from 'styled-components';
+
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 
 export const PreferencesStyle = styled.div`
     overflow-wrap: break-word;

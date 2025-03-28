@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getObservatoryStatsById } from 'services/backend/stats';
+
+import { getObservatoryStatsById } from '@/services/backend/stats';
 
 type ObservatoryStats = {
     comparisons: number;

@@ -1,13 +1,14 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { find, flatten, intersection } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import {
     getStatementsByObject,
     getStatementsByObjectAndPredicate,
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjects,
-} from 'services/backend/statements';
-import { addAuthorsToStatementBundle, getDataBasedOnType } from 'utils';
+} from '@/services/backend/statements';
+import { addAuthorsToStatementBundle, getDataBasedOnType } from '@/utils';
 
 function useAuthorWorks({ authorId, authorString }) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);

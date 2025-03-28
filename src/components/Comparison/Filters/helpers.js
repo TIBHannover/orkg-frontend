@@ -1,4 +1,4 @@
-import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 /**
  * get Rules by property id

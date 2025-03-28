@@ -1,9 +1,10 @@
-import ContributionCell from 'components/Comparison/Table/Cells/ContributionCell';
-import PropertyCell from 'components/Comparison/Table/Cells/PropertyCell';
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { getCellPadding } from 'slices/comparisonSlice';
+
+import { Properties, PropertiesInner } from '@/components/Comparison/styled';
+import ContributionCell from '@/components/Comparison/Table/Cells/ContributionCell';
+import PropertyCell from '@/components/Comparison/Table/Cells/PropertyCell';
+import { getCellPadding } from '@/slices/comparisonSlice';
 
 const RowHeader = ({ cell, property }) => {
     const transpose = useSelector((state) => state.comparison.configuration.transpose);

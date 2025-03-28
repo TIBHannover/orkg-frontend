@@ -1,6 +1,7 @@
-import useAuthentication from 'components/hooks/useAuthentication';
-import { getUserInformation, userUrl } from 'services/backend/users';
 import useSWR from 'swr';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { getUserInformation, userUrl } from '@/services/backend/users';
 
 const useMembership = () => {
     const { user } = useAuthentication();

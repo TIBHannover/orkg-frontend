@@ -1,8 +1,9 @@
 import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { saveFeedback, SERVICE_MAPPING } from 'services/orkgNlp';
 import useSWR from 'swr';
+
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { saveFeedback, SERVICE_MAPPING } from '@/services/orkgNlp';
 
 const useBioassays = ({ selectedResource }) => {
     const { bioassayRawResponse, bioassayText } = useSelector((state) => state.viewPaper);

@@ -1,12 +1,13 @@
-import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import useReview from 'components/Review/hooks/useReview';
 import { sortBy, upperFirst } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select, { components, OptionProps, SingleValue } from 'react-select';
-import { ReviewSection } from 'services/backend/types';
+
+import { SectionTypeContainerStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
+import useReview from '@/components/Review/hooks/useReview';
+import { ReviewSection } from '@/services/backend/types';
 
 type OptionType = {
     label: string | null;

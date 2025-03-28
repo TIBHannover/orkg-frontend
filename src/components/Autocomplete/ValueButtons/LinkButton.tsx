@@ -1,8 +1,9 @@
-import { OptionType } from 'components/Autocomplete/types';
 import Link from 'next/link';
 import { FC } from 'react';
 import { SingleValue } from 'react-select';
-import { getLinkByEntityType } from 'utils';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import { getLinkByEntityType } from '@/utils';
 
 type LinkButtonProps = {
     value: SingleValue<OptionType>;

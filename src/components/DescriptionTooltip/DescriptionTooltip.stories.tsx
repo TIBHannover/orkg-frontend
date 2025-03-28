@@ -1,6 +1,7 @@
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { StoryFn } from '@storybook/react';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 
 export default {
     title: 'DescriptionTooltip',

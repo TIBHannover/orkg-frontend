@@ -1,17 +1,18 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CopyId from 'components/CopyId/CopyId';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
-import { getResourceLink } from 'utils';
+
+import CopyId from '@/components/CopyId/CopyId';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getResourceLink } from '@/utils';
 
 const StyledBox = styled.div`
     position: absolute;

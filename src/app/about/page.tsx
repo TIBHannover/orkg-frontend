@@ -1,10 +1,10 @@
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { getAboutPages } from 'services/cms';
-
-import NotFound from 'app/not-found';
 import { redirect } from 'next/navigation';
-import { slugify } from 'utils';
+
+import NotFound from '@/app/not-found';
+import ROUTES from '@/constants/routes';
+import { getAboutPages } from '@/services/cms';
+import { slugify } from '@/utils';
 
 const About = async () => {
     const pages = await getAboutPages();

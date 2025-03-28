@@ -3,12 +3,13 @@
 import { faQuestionCircle, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import Popover from 'components/FloatingUI/Popover';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import Feedback from 'components/SmartSuggestions/Feedback';
 import { forwardRef, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import Popover from '@/components/FloatingUI/Popover';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import Feedback from '@/components/SmartSuggestions/Feedback';
 
 const TippyContentStyle = styled.div`
     border-radius: 0.25rem;

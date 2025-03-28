@@ -1,6 +1,7 @@
+import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
 import useSWR from 'swr';
-import { useQueryState, parseAsInteger, parseAsString } from 'nuqs';
-import { PaginatedResponse } from 'services/backend/types';
+
+import { PaginatedResponse } from '@/services/backend/types';
 
 type UsePaginateProps<ItemType, FetchFunctionParams> = {
     fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType>>;

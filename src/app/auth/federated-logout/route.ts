@@ -1,6 +1,6 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { getToken, JWT } from 'next-auth/jwt';
 import { env } from 'next-runtime-env';
-import { NextRequest, NextResponse } from 'next/server';
 
 function logoutParams(token: JWT): Record<string, string> {
     return {

@@ -2,14 +2,15 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
-import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import StepContainer from 'components/StepContainer';
 import { useEffect, useState } from 'react';
 import { useCSVReader } from 'react-papaparse';
 import { Alert, Button, Form, FormGroup, InputGroup, Label, Table } from 'reactstrap';
 import styled from 'styled-components';
+
+import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
+import checkDataValidation from '@/components/ConfirmBulkImport/CSVSchema';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import StepContainer from '@/components/StepContainer';
 
 const TableContainerStyled = styled.div`
     overflow: auto;

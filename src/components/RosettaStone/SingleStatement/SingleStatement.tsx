@@ -1,17 +1,4 @@
 import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { OptionType } from 'components/Autocomplete/types';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
-import removeEmptySegments from 'components/RosettaStone/SingleStatement/hooks/helpers';
-import useEditStatement from 'components/RosettaStone/SingleStatement/hooks/useEditStatement';
-import useRosettaTemplate from 'components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
-import InfoBox from 'components/RosettaStone/SingleStatement/InfoBox';
-import StatementInputField from 'components/RosettaStone/SingleStatement/StatementInputField';
-import StatementValue from 'components/RosettaStone/SingleStatement/StatementValue';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -19,9 +6,23 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import ReactStringReplace from 'react-string-replace';
 import { Badge, FormGroup, Input, Label, ListGroupItem } from 'reactstrap';
-import { getPaper, papersUrl } from 'services/backend/papers';
-import { RosettaStoneStatement } from 'services/backend/types';
 import useSWR from 'swr';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import { OptionType } from '@/components/Autocomplete/types';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import removeEmptySegments from '@/components/RosettaStone/SingleStatement/hooks/helpers';
+import useEditStatement from '@/components/RosettaStone/SingleStatement/hooks/useEditStatement';
+import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
+import InfoBox from '@/components/RosettaStone/SingleStatement/InfoBox';
+import StatementInputField from '@/components/RosettaStone/SingleStatement/StatementInputField';
+import StatementValue from '@/components/RosettaStone/SingleStatement/StatementValue';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ROUTES from '@/constants/routes';
+import { getPaper, papersUrl } from '@/services/backend/papers';
+import { RosettaStoneStatement } from '@/services/backend/types';
 
 type SingleStatementProps = {
     statement: RosettaStoneStatement;

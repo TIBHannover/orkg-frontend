@@ -1,22 +1,23 @@
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import PaperTitleInput from 'components/Input/PaperTitleInput/PaperTitleInput';
-import PublicationMonthInput from 'components/Input/PublicationMonthInput/PublicationMonthInput';
-import PublicationYearInput from 'components/Input/PublicationYearInput/PublicationYearInput';
-import PublishedInInput from 'components/Input/PublishedInInput/PublishedInInput';
-import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
-import useOverwriteValuesModal from 'components/PaperForm/hooks/useOverwriteValuesModal';
-import Tooltip from 'components/Utils/Tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useId } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, FormGroup, FormText, Input, InputGroup, Label, Row } from 'reactstrap';
-import { getAbstractByDoi } from 'services/semanticScholar';
-import { parseCiteResult } from 'utils';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
+import PaperTitleInput from '@/components/Input/PaperTitleInput/PaperTitleInput';
+import PublicationMonthInput from '@/components/Input/PublicationMonthInput/PublicationMonthInput';
+import PublicationYearInput from '@/components/Input/PublicationYearInput/PublicationYearInput';
+import PublishedInInput from '@/components/Input/PublishedInInput/PublishedInInput';
+import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import useOverwriteValuesModal from '@/components/PaperForm/hooks/useOverwriteValuesModal';
+import Tooltip from '@/components/Utils/Tooltip';
+import { getAbstractByDoi } from '@/services/semanticScholar';
+import { parseCiteResult } from '@/utils';
 
 const PaperForm = ({
     isLoadingParsing,

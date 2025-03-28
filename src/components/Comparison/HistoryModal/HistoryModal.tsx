@@ -1,8 +1,9 @@
-import useComparison from 'components/Comparison/hooks/useComparison';
-import HistoryModalComponent from 'components/HistoryModal/HistoryModal';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC } from 'react';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import HistoryModalComponent from '@/components/HistoryModal/HistoryModal';
+import ROUTES from '@/constants/routes';
 
 type HistoryModalProps = {
     comparisonId: string;

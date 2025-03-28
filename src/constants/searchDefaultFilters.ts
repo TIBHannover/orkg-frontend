@@ -1,4 +1,4 @@
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 
 const DEFAULT_FILTERS = [
     {

@@ -1,12 +1,13 @@
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { OptionType } from 'components/Autocomplete/types';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { truncate } from 'lodash';
 import { FC, useContext, useState } from 'react';
-import { getStatements, statementsUrl } from 'services/backend/statements';
 import { ThemeContext } from 'styled-components';
 import useSWR from 'swr';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
 
 type InfoBoxProps = {
     data: OptionType;

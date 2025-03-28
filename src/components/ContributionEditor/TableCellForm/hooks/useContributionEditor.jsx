@@ -1,18 +1,19 @@
-import useComparison from 'components/Comparison/hooks/useComparison';
-import Confirm from 'components/Confirmation/Confirmation';
-import TableCell from 'components/ContributionEditor/TableCell';
-import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
-import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';
-import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
-import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
-import ROUTES from 'constants/routes';
 import { difference, intersection, sortBy, uniq, without } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { getResource, updateResourceClasses } from 'services/backend/resources';
-import { getTemplates } from 'services/backend/templates';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import Confirm from '@/components/Confirmation/Confirmation';
+import TableCell from '@/components/ContributionEditor/TableCell';
+import TableHeaderColumn from '@/components/ContributionEditor/TableHeaderColumn';
+import TableHeaderColumnFirst from '@/components/ContributionEditor/TableHeaderColumnFirst';
+import TableHeaderRow from '@/components/ContributionEditor/TableHeaderRow';
+import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import ROUTES from '@/constants/routes';
+import { getResource, updateResourceClasses } from '@/services/backend/resources';
+import { getTemplates } from '@/services/backend/templates';
 
 const useContributionEditor = () => {
     const router = useRouter();

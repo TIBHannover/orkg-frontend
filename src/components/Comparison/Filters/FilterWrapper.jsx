@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { stringifyType } from 'components/Comparison/Filters/helpers';
 import PropTypes from 'prop-types';
-import Tooltip from 'components/FloatingUI/Tooltip';
+import { useEffect, useState } from 'react';
+
+import { stringifyType } from '@/components/Comparison/Filters/helpers';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const FilterWrapper = (props) => {
     const { rules, disabled } = props.data;

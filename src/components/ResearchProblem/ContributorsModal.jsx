@@ -1,11 +1,12 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
-import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
-import useResearchProblemContributors from 'components/ResearchProblem/hooks/useResearchProblemContributors';
+import PropTypes from 'prop-types';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import useResearchProblemContributors from '@/components/ResearchProblem/hooks/useResearchProblemContributors';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({

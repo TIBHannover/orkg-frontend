@@ -1,12 +1,13 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import TableCellForm from 'components/ContributionEditor/TableCellForm/TableCellForm';
-import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import styled from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import useTableCellForm from '@/components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import TableCellForm from '@/components/ContributionEditor/TableCellForm/TableCellForm';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const CreateButtonContainer = styled.div`
     position: absolute;

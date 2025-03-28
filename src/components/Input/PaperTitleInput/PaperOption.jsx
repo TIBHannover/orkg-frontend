@@ -1,10 +1,11 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { components } from 'react-select';
 import { Badge } from 'reactstrap';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
 
 const PaperOption = ({ children, ...innerProps }) => {
     const firstAuthor = innerProps?.data?.authors?.[0]?.name;

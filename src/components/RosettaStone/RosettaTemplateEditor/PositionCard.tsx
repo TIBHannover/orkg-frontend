@@ -1,7 +1,8 @@
 import capitalize from 'capitalize';
 import { FC } from 'react';
-import { RSPropertyShape } from 'services/backend/types';
 import styled from 'styled-components';
+
+import { RSPropertyShape } from '@/services/backend/types';
 
 const PositionCardStyled = styled.div`
     background-color: white;

@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup } from 'reactstrap';
-import { createLiteralStatement } from 'services/backend/statements';
-import { createLiteral } from 'services/backend/literals';
-import { createResource } from 'services/backend/resources';
-import { PREDICATES } from 'constants/graphSettings';
 import { useCSVReader } from 'react-papaparse';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
+import { Button, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import { PREDICATES } from '@/constants/graphSettings';
+import { createLiteral } from '@/services/backend/literals';
+import { createResource } from '@/services/backend/resources';
+import { createLiteralStatement } from '@/services/backend/statements';
 
 export default function ImportCSVInstances(props) {
     const [data, setData] = useState([]);

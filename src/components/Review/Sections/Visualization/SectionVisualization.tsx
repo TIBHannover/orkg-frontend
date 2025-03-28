@@ -1,10 +1,11 @@
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import useReview from 'components/Review/hooks/useReview';
-import THING_TYPES from 'constants/thingTypes';
-import Visualization from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { FC } from 'react';
-import { getThing, simCompServiceUrl } from 'services/simcomp';
 import useSWR from 'swr';
+
+import ComparisonLoadingComponent from '@/components/Comparison/ComparisonLoadingComponent';
+import useReview from '@/components/Review/hooks/useReview';
+import THING_TYPES from '@/constants/thingTypes';
+import Visualization from '@/libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import { getThing, simCompServiceUrl } from '@/services/simcomp';
 
 type SectionVisualizationProps = {
     id?: string;

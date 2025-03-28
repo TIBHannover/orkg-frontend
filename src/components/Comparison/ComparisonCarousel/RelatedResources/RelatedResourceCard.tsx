@@ -1,6 +1,7 @@
-import REGEX from 'constants/regex';
 import { FC } from 'react';
 import { Card, CardBody, CardText, CardTitle } from 'reactstrap';
+
+import REGEX from '@/constants/regex';
 
 type RelatedResourceCardProps = {
     url?: string;

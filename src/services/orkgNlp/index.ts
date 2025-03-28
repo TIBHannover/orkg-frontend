@@ -3,15 +3,16 @@
  * https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api
  */
 
-import { PREDICATES } from 'constants/graphSettings';
-import { AGRICULTURE_FIELDS_LIST, COMPUTER_SCIENCE_FIELDS_LIST } from 'constants/nlpFieldLists';
 import ky from 'ky';
 import { keyBy, mapValues, uniq } from 'lodash';
 import { env } from 'next-runtime-env';
-import { getPredicate } from 'services/backend/predicates';
-import { getResources } from 'services/backend/resources';
-import { getParentResearchFields } from 'services/backend/statements';
-import { Resource } from 'services/backend/types';
+
+import { PREDICATES } from '@/constants/graphSettings';
+import { AGRICULTURE_FIELDS_LIST, COMPUTER_SCIENCE_FIELDS_LIST } from '@/constants/nlpFieldLists';
+import { getPredicate } from '@/services/backend/predicates';
+import { getResources } from '@/services/backend/resources';
+import { getParentResearchFields } from '@/services/backend/statements';
+import { Resource } from '@/services/backend/types';
 
 type NlpResponse<T> = {
     timestamp: string;

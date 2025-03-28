@@ -1,7 +1,8 @@
-import CSVWTable from 'components/DataBrowser/components/Body/ValuePreviewFactory/CSVWTable/CSVTable';
-import { CLASSES } from 'constants/graphSettings';
 import { FC } from 'react';
-import { Statement } from 'services/backend/types';
+
+import CSVWTable from '@/components/DataBrowser/components/Body/ValuePreviewFactory/CSVWTable/CSVTable';
+import { CLASSES } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
 
 type ValuePreviewFactoryProps = {
     value: Statement['object'];

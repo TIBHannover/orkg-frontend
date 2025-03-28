@@ -1,18 +1,19 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import CheckSlug from 'components/CheckSlug/CheckSlug';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import PageContentLoader from 'components/Page/PageContentLoader';
-import usePage from 'components/Page/usePage';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CmsPage } from 'components/styled';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
-import { getHelpArticle } from 'services/cms';
+
+import NotFound from '@/app/not-found';
+import CheckSlug from '@/components/CheckSlug/CheckSlug';
+import PageContentLoader from '@/components/Page/PageContentLoader';
+import usePage from '@/components/Page/usePage';
+import { CmsPage } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { getHelpArticle } from '@/services/cms';
 
 const HelpCenterArticle = () => {
     const { loadPage, page, isLoading, isNotFound } = usePage();

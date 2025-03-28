@@ -1,11 +1,12 @@
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import BioassaysModal from 'components/ViewPaper/BioassaysModal/BioassaysModal';
-import { BIOASSAYS_FIELDS_LIST } from 'constants/nlpFieldLists';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
+
+import BioassaysModal from '@/components/ViewPaper/BioassaysModal/BioassaysModal';
+import { BIOASSAYS_FIELDS_LIST } from '@/constants/nlpFieldLists';
 
 const Bioassays = ({ resourceId }) => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);

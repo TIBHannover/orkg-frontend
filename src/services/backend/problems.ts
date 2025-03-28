@@ -1,13 +1,14 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getComparison } from 'services/backend/comparisons';
-import { mergePaginateResponses } from 'services/backend/misc';
-import { getPaper } from 'services/backend/papers';
-import { Contributor, Item, PaginatedResponse, PaginationParams, Resource, VerifiedParam, VisibilityParam } from 'services/backend/types';
-import { getVisualization } from 'services/backend/visualizations';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getComparison } from '@/services/backend/comparisons';
+import { mergePaginateResponses } from '@/services/backend/misc';
+import { getPaper } from '@/services/backend/papers';
+import { Contributor, Item, PaginatedResponse, PaginationParams, Resource, VerifiedParam, VisibilityParam } from '@/services/backend/types';
+import { getVisualization } from '@/services/backend/visualizations';
 
 export const problemsUrl = `${url}problems/`;
 export const problemsApi = backendApi.extend(() => ({ prefixUrl: problemsUrl }));

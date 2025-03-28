@@ -1,7 +1,8 @@
-import ExistingPaperModal from 'components/ExistingPaperModal/ExistingPaperModal';
-import getExistingPaper from 'helpers/getExistingPaper';
 import { useCallback, useState } from 'react';
-import { Paper } from 'services/backend/types';
+
+import ExistingPaperModal from '@/components/ExistingPaperModal/ExistingPaperModal';
+import getExistingPaper from '@/helpers/getExistingPaper';
+import { Paper } from '@/services/backend/types';
 
 const useExistingPaper = () => {
     const [existingPaper, setExistingPaper] = useState<Paper | null>(null);

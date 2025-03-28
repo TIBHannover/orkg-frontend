@@ -1,16 +1,17 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import MembersModal from 'components/Organization/MembersModal';
-import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { CardTitle } from 'reactstrap';
-import { getUsersByOrganizationId } from 'services/backend/organizations';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import MembersModal from '@/components/Organization/MembersModal';
+import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from '@/components/styled';
+import ROUTES from '@/constants/routes';
+import { getUsersByOrganizationId } from '@/services/backend/organizations';
 
 const Members = ({ organizationsId }) => {
     const [members, setMembers] = useState([]);

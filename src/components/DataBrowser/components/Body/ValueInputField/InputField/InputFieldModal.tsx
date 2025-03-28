@@ -1,8 +1,9 @@
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { getConfigByType } from 'constants/DataTypes';
-import { ENTITIES } from 'constants/graphSettings';
 import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { getConfigByType } from '@/constants/DataTypes';
+import { ENTITIES } from '@/constants/graphSettings';
 
 type InputFieldModalProps = {
     isOpen: boolean;

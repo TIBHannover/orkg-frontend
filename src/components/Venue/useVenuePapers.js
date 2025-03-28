@@ -1,8 +1,9 @@
-import { PREDICATES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { addAuthorsToStatementBundle, getPaperData } from 'utils';
+
+import { PREDICATES } from '@/constants/graphSettings';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from '@/services/backend/statements';
+import { addAuthorsToStatementBundle, getPaperData } from '@/utils';
 
 function useVenuePapers({ venueId }) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);

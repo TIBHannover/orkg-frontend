@@ -1,4 +1,4 @@
-import { GregorianType } from 'constants/DataTypes';
+import { GregorianType } from '@/constants/DataTypes';
 
 export type GregorianValues = {
     year: string;

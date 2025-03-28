@@ -1,22 +1,23 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { OptionType } from 'components/Autocomplete/types';
-import useAuthentication from 'components/hooks/useAuthentication';
-import useMembership from 'components/hooks/useMembership';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import AddStatement from 'components/RosettaStone/AddStatement/AddStatement';
-import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { CERTAINTY, VISIBILITY } from 'constants/contentTypes';
-import { MISC } from 'constants/graphSettings';
-import { EXTRACTION_METHODS } from 'constants/misc';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { RosettaStoneStatement } from 'services/backend/types';
-import { guid } from 'utils';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import useMembership from '@/components/hooks/useMembership';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import AddStatement from '@/components/RosettaStone/AddStatement/AddStatement';
+import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { CERTAINTY, VISIBILITY } from '@/constants/contentTypes';
+import { MISC } from '@/constants/graphSettings';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import { getRSStatements, rosettaStoneUrl } from '@/services/backend/rosettaStone';
+import { RosettaStoneStatement } from '@/services/backend/types';
+import { guid } from '@/utils';
 
 type RosettaStoneStatementsProps = { context: string };
 

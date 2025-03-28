@@ -1,8 +1,9 @@
-import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, FormEvent, useEffect, useId, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import useRelatedResources from '@/components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
 type AddEditRelatedResourceModalProps = {
     toggle: () => void;

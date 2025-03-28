@@ -1,17 +1,18 @@
 'use client';
 
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
-import errorHandler from 'helpers/errorHandler';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { createPredicate } from 'services/backend/predicates';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import errorHandler from '@/helpers/errorHandler';
+import requireAuthentication from '@/requireAuthentication';
+import { createPredicate } from '@/services/backend/predicates';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');

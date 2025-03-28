@@ -1,21 +1,22 @@
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import LayoutTripleObject from 'components/DataBrowser/components/Body/Statement/Object/LayoutTripleObject';
-import SortableValueItem from 'components/DataBrowser/components/Body/Statement/SortableValueItem/SortableValueItem';
-import ValueDatatype from 'components/DataBrowser/components/Body/Statement/ValueDatatype/ValueDatatype';
-import ValueInputField from 'components/DataBrowser/components/Body/ValueInputField/ValueInputField';
-import ValueOptions from 'components/DataBrowser/components/Body/ValueOptions/ValueOptions';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import { Button } from 'reactstrap';
-import { Statement } from 'services/backend/types';
 import styled from 'styled-components';
-import { getResourceLink } from 'utils';
+
+import LayoutTripleObject from '@/components/DataBrowser/components/Body/Statement/Object/LayoutTripleObject';
+import SortableValueItem from '@/components/DataBrowser/components/Body/Statement/SortableValueItem/SortableValueItem';
+import ValueDatatype from '@/components/DataBrowser/components/Body/Statement/ValueDatatype/ValueDatatype';
+import ValueInputField from '@/components/DataBrowser/components/Body/ValueInputField/ValueInputField';
+import ValueOptions from '@/components/DataBrowser/components/Body/ValueOptions/ValueOptions';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
+import { getResourceLink } from '@/utils';
 
 type SingleStatementProps = {
     path: string[];

@@ -1,11 +1,12 @@
 'use client';
 
-import EditSectionAcknowledgements from 'components/Review/Sections/Acknowledgements/EditSectionAcknowledgements/EditSectionAcknowledgements';
-import AddSection from 'components/Review/EditReview/AddSection/AddSection';
-import EditMetadata from 'components/Review/EditReview/EditMetadata/EditMetadata';
-import SortableSections from 'components/Review/EditReview/SortableSections/SortableSections';
-import EditSectionReferences from 'components/Review/Sections/References/EditSectionReferences/EditSectionReferences';
 import { Container } from 'reactstrap';
+
+import AddSection from '@/components/Review/EditReview/AddSection/AddSection';
+import EditMetadata from '@/components/Review/EditReview/EditMetadata/EditMetadata';
+import SortableSections from '@/components/Review/EditReview/SortableSections/SortableSections';
+import EditSectionAcknowledgements from '@/components/Review/Sections/Acknowledgements/EditSectionAcknowledgements/EditSectionAcknowledgements';
+import EditSectionReferences from '@/components/Review/Sections/References/EditSectionReferences/EditSectionReferences';
 
 const EditReview = () => {
     return (

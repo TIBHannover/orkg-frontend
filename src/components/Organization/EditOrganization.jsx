@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateOrganization } from 'services/backend/organizations';
-import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import capitalize from 'capitalize';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { updateOrganization } from '@/services/backend/organizations';
 
 const EditOrganization = ({ toggle, showDialog, label, id, url, previewSrc, updateOrganizationMetadata, typeName }) => {
     const [organizationLabel, setOrganizationLabel] = useState('');

@@ -1,9 +1,10 @@
-import StatementCard from 'components/Cards/StatementCard/StatementCard';
-import ListPage from 'components/PaginatedContent/ListPage';
 import { useQueryState } from 'nuqs';
 import { FormGroup, Input, Label } from 'reactstrap';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
+
+import StatementCard from '@/components/Cards/StatementCard/StatementCard';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
 
 const ObjectStatements = ({ id }: { id: string }) => {
     const renderListItem = (statement: Statement) => <StatementCard key={statement.id} statement={statement} />;

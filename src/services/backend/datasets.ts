@@ -1,8 +1,9 @@
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
-import { PaginatedResponse, PaginationParams } from 'services/backend/types';
+
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
+import { PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const datasetsUrl = `${url}datasets/`;
 export const datasetsApi = backendApi.extend(() => ({ prefixUrl: datasetsUrl }));

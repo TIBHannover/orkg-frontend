@@ -1,6 +1,6 @@
-import { FC } from 'react';
-import { sanitize } from 'isomorphic-dompurify';
 import { MathJax as MathJaxPreview } from 'better-react-mathjax';
+import { sanitize } from 'isomorphic-dompurify';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 type PaperTitleProps = {

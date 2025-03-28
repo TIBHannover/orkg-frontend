@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
-import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
+import TableHeaderRow from '@/components/ContributionEditor/TableHeaderRow';
+import { fireEvent, render, screen, waitFor } from '@/testUtils';
 
 const setup = () => {
     const property = {

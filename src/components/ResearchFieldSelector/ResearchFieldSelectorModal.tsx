@@ -1,8 +1,9 @@
-import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
-import { RESOURCES } from 'constants/graphSettings';
 import { FC, useCallback, useState } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { Node } from 'services/backend/types';
+
+import ResearchFieldSelector from '@/components/ResearchFieldSelector/ResearchFieldSelector';
+import { RESOURCES } from '@/constants/graphSettings';
+import { Node } from '@/services/backend/types';
 
 type ResearchFieldSelectorModalProps = {
     isOpen: boolean;

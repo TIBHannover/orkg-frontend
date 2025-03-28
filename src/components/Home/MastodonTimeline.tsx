@@ -6,8 +6,9 @@ import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
-import { Message, loadMastodonTimeline } from 'services/mastodon';
 import styled from 'styled-components';
+
+import { loadMastodonTimeline, Message } from '@/services/mastodon';
 
 const COOKIE_NAME = 'loadMastodonTimeline';
 

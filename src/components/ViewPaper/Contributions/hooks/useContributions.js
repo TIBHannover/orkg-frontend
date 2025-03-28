@@ -1,21 +1,22 @@
-import Confirm from 'components/Confirmation/Confirmation';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { EXTRACTION_METHODS } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createResource, updateResource } from 'services/backend/resources';
-import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { createResource, updateResource } from '@/services/backend/resources';
+import { createResourceStatement, deleteStatementById } from '@/services/backend/statements';
 import {
     setContributionExtractionMethod,
     setIsAddingContribution,
     setIsDeletingContribution,
     setIsSavingContribution,
     setPaperContributions,
-} from 'slices/viewPaperSlice';
+} from '@/slices/viewPaperSlice';
 
 const useContributions = ({ paperId }) => {
     const contributions = useSelector((state) => state.viewPaper.contributions);

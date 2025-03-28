@@ -1,19 +1,5 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import OpenCitations from 'components/ViewPaper/OpenCitations/OpenCitations';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { VISIBILITY } from 'constants/contentTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -21,8 +7,23 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Alert, Button } from 'reactstrap';
-import { getAltMetrics } from 'services/altmetric/index';
-import { loadPaper } from 'slices/viewPaperSlice';
+
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import EditPaperModal from '@/components/PaperForm/EditPaperModal';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
+import OpenCitations from '@/components/ViewPaper/OpenCitations/OpenCitations';
+import { VISIBILITY } from '@/constants/contentTypes';
+import ROUTES from '@/constants/routes';
+import { getAltMetrics } from '@/services/altmetric/index';
+import { loadPaper } from '@/slices/viewPaperSlice';
 
 const PaperHeader = (props) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);

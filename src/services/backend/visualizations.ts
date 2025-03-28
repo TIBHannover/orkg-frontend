@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
 import {
     CreatedByParam,
     ObservatoryIdParam,
@@ -13,7 +13,7 @@ import {
     VerifiedParam,
     VisibilityParam,
     Visualization,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const visualizationsUrl = `${url}visualizations/`;
 export const visualizationsApi = backendApi.extend(() => ({ prefixUrl: visualizationsUrl }));

@@ -1,4 +1,4 @@
-import { AutocompleteSource, Ontology } from 'components/Autocomplete/types';
+import { AutocompleteSource, Ontology } from '@/components/Autocomplete/types';
 
 export const AUTOCOMPLETE_SOURCE: { [key: string]: AutocompleteSource } = {
     ORKG: 'orkg',

@@ -1,8 +1,9 @@
-import { getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 import PropTypes from 'prop-types';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ENTITIES } from 'constants/graphSettings';
+import { EdgeLabelRenderer, getSmoothStepPath } from 'reactflow';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const getMarkerEnd = (arrowHeadType, markerEndId) => {
     if (typeof markerEndId !== 'undefined' && markerEndId) {

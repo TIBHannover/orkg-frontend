@@ -1,10 +1,11 @@
 import { FC, useState } from 'react';
-import ObservatoryItem from 'components/ObservatoriesCarousel/ObservatoryItem';
-import { CarouselIndicatorsStyled } from 'components/styled';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Carousel } from 'reactstrap';
 import styled from 'styled-components';
-import { Observatory } from 'services/backend/types';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ObservatoryItem from '@/components/ObservatoriesCarousel/ObservatoryItem';
+import { CarouselIndicatorsStyled } from '@/components/styled';
+import { Observatory } from '@/services/backend/types';
 
 const CarouselContainer = styled.div`
     width: 100%;

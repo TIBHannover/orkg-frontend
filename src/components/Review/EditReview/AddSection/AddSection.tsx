@@ -1,11 +1,12 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useReview from 'components/Review/hooks/useReview';
 import { FC, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { Button, ButtonGroup } from 'reactstrap';
-import { ReviewSectionType } from 'services/backend/types';
 import styled from 'styled-components';
+
+import useReview from '@/components/Review/hooks/useReview';
+import { ReviewSectionType } from '@/services/backend/types';
 
 const InvisibleByDefault = styled.div`
     button {

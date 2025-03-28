@@ -1,19 +1,20 @@
 import { Cite } from '@citation-js/core';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { OptionType } from 'components/Autocomplete/types';
-import useReview from 'components/Review/hooks/useReview';
-import SectionComparison from 'components/Review/Sections/Comparison/SectionComparison';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
-import { getComparison } from 'services/backend/comparisons';
-import { getPaper } from 'services/backend/papers';
-import { createResourceStatement, getStatements, updateStatement } from 'services/backend/statements';
-import { ReviewSection, Statement } from 'services/backend/types';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { OptionType } from '@/components/Autocomplete/types';
+import useReview from '@/components/Review/hooks/useReview';
+import SectionComparison from '@/components/Review/Sections/Comparison/SectionComparison';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { getComparison } from '@/services/backend/comparisons';
+import { getPaper } from '@/services/backend/papers';
+import { createResourceStatement, getStatements, updateStatement } from '@/services/backend/statements';
+import { ReviewSection, Statement } from '@/services/backend/types';
 
 type EditSectionComparisonProps = {
     section: ReviewSection;

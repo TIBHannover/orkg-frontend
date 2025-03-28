@@ -1,25 +1,26 @@
 'use client';
 
 import { Cite } from '@citation-js/core';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import useAuthentication from 'components/hooks/useAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { getClassById } from 'services/backend/classes';
-import { createLiteral } from 'services/backend/literals';
-import { createResource } from 'services/backend/resources';
-import { createLiteralStatement } from 'services/backend/statements';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
+import { getClassById } from '@/services/backend/classes';
+import { createLiteral } from '@/services/backend/literals';
+import { createResource } from '@/services/backend/resources';
+import { createLiteralStatement } from '@/services/backend/statements';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI_ID);

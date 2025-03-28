@@ -1,6 +1,7 @@
-import { OptionType } from 'components/Autocomplete/types';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { components, MultiValueGenericProps } from 'react-select';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const CustomMultiValueLabel = (props: MultiValueGenericProps<OptionType>) => {
     const { data } = props;

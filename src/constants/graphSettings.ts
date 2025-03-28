@@ -1,4 +1,4 @@
-import { EntityType } from 'services/backend/types';
+import { EntityType } from '@/services/backend/types';
 
 export const PREDICATES: {
     [key: string]: string;

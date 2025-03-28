@@ -1,20 +1,21 @@
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
-import THING_TYPES from 'constants/thingTypes';
-import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createResource } from 'services/backend/resources';
-import { createResourceStatement } from 'services/backend/statements';
-import { createThing } from 'services/simcomp';
-import { asyncLocalStorage } from 'utils';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { CLASSES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import THING_TYPES from '@/constants/thingTypes';
+import { createResource } from '@/services/backend/resources';
+import { createResourceStatement } from '@/services/backend/statements';
+import { createThing } from '@/services/simcomp';
+import { asyncLocalStorage } from '@/utils';
 
 function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagram, diagramResource }) {
     const [value, setValue] = useState(diagramResource?.label ?? '');

@@ -1,27 +1,28 @@
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Coins from 'components/Coins/Coins';
-import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
-import Authors from 'components/Cards/PaperCard/Authors';
-import Description from 'components/Cards/PaperCard/Description/Description';
-import Paths from 'components/Cards/PaperCard/Paths';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CardBadge } from 'components/styled';
-import { VISIBILITY } from 'constants/contentTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
 import { Input } from 'reactstrap';
-import { Paper, Resource } from 'services/backend/types';
 import styled from 'styled-components';
+
+import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
+import Authors from '@/components/Cards/PaperCard/Authors';
+import Description from '@/components/Cards/PaperCard/Description/Description';
+import Paths from '@/components/Cards/PaperCard/Paths';
+import Coins from '@/components/Coins/Coins';
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { VISIBILITY } from '@/constants/contentTypes';
+import ROUTES from '@/constants/routes';
+import { Paper, Resource } from '@/services/backend/types';
 
 const PaperCardStyled = styled.div`
     &.selected {

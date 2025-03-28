@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import Select, { components } from 'react-select';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 
 const ClassesBadgesFilter = ({ disabled = false, classesFilter, setClassesFilter, initialClassFilterOptions }) => {
     const handleSelect = (value) => {

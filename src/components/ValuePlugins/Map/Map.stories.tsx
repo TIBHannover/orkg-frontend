@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import MapComponent from 'components/ValuePlugins/Map/Map';
-import { ENTITIES } from 'constants/graphSettings';
+
+import MapComponent from '@/components/ValuePlugins/Map/Map';
+import { ENTITIES } from '@/constants/graphSettings';
 
 export default {
     title: 'ValuePlugins/Map',

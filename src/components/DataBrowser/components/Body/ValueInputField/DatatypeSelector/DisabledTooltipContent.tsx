@@ -1,9 +1,10 @@
-import Link from 'next/link';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
-import { Node } from 'services/backend/types';
+
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { Node } from '@/services/backend/types';
 
 type DisabledTooltipContentProps = {
     range?: Node;

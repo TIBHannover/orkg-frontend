@@ -1,5 +1,5 @@
-import ContributorsComponent from 'components/Contributors/Contributors';
-import useList from 'components/List/hooks/useList';
+import ContributorsComponent from '@/components/Contributors/Contributors';
+import useList from '@/components/List/hooks/useList';
 
 const Contributors = () => {
     const { list } = useList();

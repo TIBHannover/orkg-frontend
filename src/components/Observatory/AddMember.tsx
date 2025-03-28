@@ -1,14 +1,15 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { observatoriesUrl } from 'services/backend/observatories';
-import { Organization } from 'services/backend/types';
-import { addUserToObservatory } from 'services/backend/users';
 import { mutate } from 'swr';
-import { getErrorMessage } from 'utils';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { observatoriesUrl } from '@/services/backend/observatories';
+import { Organization } from '@/services/backend/types';
+import { addUserToObservatory } from '@/services/backend/users';
+import { getErrorMessage } from '@/utils';
 
 type AddMemberProps = {
     showDialog: boolean;

@@ -1,17 +1,18 @@
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
-import AddMember from 'components/Observatory/AddMember';
-import MembersModal from 'components/Observatory/MembersModal';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import useAuthentication from 'components/hooks/useAuthentication';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { getUsersByObservatoryId, observatoriesUrl } from 'services/backend/observatories';
-import { Contributor, Organization } from 'services/backend/types';
-import { deleteUserFromObservatoryById } from 'services/backend/users';
 import { mutate } from 'swr';
+
+import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import AddMember from '@/components/Observatory/AddMember';
+import MembersModal from '@/components/Observatory/MembersModal';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import { getUsersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
+import { Contributor, Organization } from '@/services/backend/types';
+import { deleteUserFromObservatoryById } from '@/services/backend/users';
 
 type MembersBoxProps = {
     observatoryId: string;

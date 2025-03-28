@@ -2,18 +2,19 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import SortableAuthorItem from 'components/Input/AuthorsInput/SortableAuthorItem';
-import { AddAuthor, AuthorTags, GlobalStyle } from 'components/Input/AuthorsInput/styled';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import getPersonFullNameByORCID from 'services/ORCID/index';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import SortableAuthorItem from '@/components/Input/AuthorsInput/SortableAuthorItem';
+import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import REGEX from '@/constants/regex';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import getPersonFullNameByORCID from '@/services/ORCID/index';
 
 function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
     const [showAuthorForm, setShowAuthorForm] = useState(false);

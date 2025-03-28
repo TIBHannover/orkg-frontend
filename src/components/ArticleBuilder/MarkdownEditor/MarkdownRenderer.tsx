@@ -1,10 +1,11 @@
-import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 import { sanitize } from 'isomorphic-dompurify';
 import PropTypes from 'prop-types';
+import { FC } from 'react';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
-import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styled';
-import { FC } from 'react';
+
+import showdownVideoPlugin from '@/components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
+import { MarkdownContainer } from '@/components/ArticleBuilder/MarkdownEditor/styled';
 
 type MarkdownRendererProps = {
     text?: string;

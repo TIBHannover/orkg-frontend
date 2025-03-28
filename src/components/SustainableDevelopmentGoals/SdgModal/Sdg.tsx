@@ -1,14 +1,15 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getImage, getSdgNumber } from 'components/SustainableDevelopmentGoals/helpers';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import { FC } from 'react';
 import { Button } from 'reactstrap';
-import { Node } from 'services/backend/types';
 import styled from 'styled-components';
+
+import { getImage, getSdgNumber } from '@/components/SustainableDevelopmentGoals/helpers';
+import ROUTES from '@/constants/routes';
+import { Node } from '@/services/backend/types';
 
 const SdgStyled = styled.div`
     background-color: #e9ecef;

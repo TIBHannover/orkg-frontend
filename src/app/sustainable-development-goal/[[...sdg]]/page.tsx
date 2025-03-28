@@ -1,18 +1,19 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import Image from 'next/image';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import SgdTabsContainer from 'components/SustainableDevelopmentGoals/SgdTabsContainer';
-import { getImage } from 'components/SustainableDevelopmentGoals/helpers';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { motion } from 'framer-motion';
 import { reverse } from 'named-urls';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import { getImage } from '@/components/SustainableDevelopmentGoals/helpers';
+import SgdTabsContainer from '@/components/SustainableDevelopmentGoals/SgdTabsContainer';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const SustainableDevelopmentGoal = () => {
     const { sdg: selectedSdg } = useParams();

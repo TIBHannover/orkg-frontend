@@ -1,11 +1,12 @@
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDropzone } from 'react-dropzone';
-import { useSelector, useDispatch } from 'react-redux';
-import { convertPdf, failedToConvertPdf } from 'slices/pdfAnnotationSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+
+import { convertPdf, failedToConvertPdf } from '@/slices/pdfAnnotationSlice';
 
 const DragPdf = styled.div`
     margin: 20% auto 0;

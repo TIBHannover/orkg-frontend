@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import styled from 'styled-components';
 
 export const TabHeaderStyle = styled.div`
     align-items: center;

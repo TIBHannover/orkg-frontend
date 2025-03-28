@@ -1,6 +1,7 @@
-import TableCellValue from 'components/ContributionEditor/TableCellValue';
-import { fireEvent, render, screen } from 'testUtils';
 import { vi } from 'vitest';
+
+import TableCellValue from '@/components/ContributionEditor/TableCellValue';
+import { fireEvent, render, screen } from '@/testUtils';
 
 const setup = (className) => {
     const label = 'example label';

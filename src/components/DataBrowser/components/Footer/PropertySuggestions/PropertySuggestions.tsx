@@ -1,11 +1,12 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import PredicatesRecommendations from 'components/DataBrowser/components/Footer/PropertySuggestions/PredicatesRecommendations';
-import SuggestionsList from 'components/DataBrowser/components/Footer/PropertySuggestions/SuggestionsList/SuggestionsList';
-import { getListPropertiesFromTemplate } from 'components/DataBrowser/utils/dataBrowserUtils';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
 import { groupBy } from 'lodash';
 import { ListGroup } from 'reactstrap';
+
+import PredicatesRecommendations from '@/components/DataBrowser/components/Footer/PropertySuggestions/PredicatesRecommendations';
+import SuggestionsList from '@/components/DataBrowser/components/Footer/PropertySuggestions/SuggestionsList/SuggestionsList';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 
 const PropertySuggestions = () => {
     const { templates } = useTemplates();

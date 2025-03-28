@@ -1,11 +1,12 @@
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
 import { uniq } from 'lodash';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { memo, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
-import { generatedFormattedLabel, updateResourceStatementsAction } from 'slices/contributionEditorSlice';
+
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import { generatedFormattedLabel, updateResourceStatementsAction } from '@/slices/contributionEditorSlice';
 
 const TableCellValueResource = ({ value }) => {
     const [isModelOpen, setIsModalOpen] = useState(false);

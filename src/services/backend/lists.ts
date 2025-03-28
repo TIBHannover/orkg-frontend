@@ -1,6 +1,6 @@
-import { url } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { List } from 'services/backend/types';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { List } from '@/services/backend/types';
 
 export const listsUrl = `${url}lists/`;
 export const listsApi = backendApi.extend(() => ({ prefixUrl: listsUrl }));

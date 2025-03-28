@@ -1,5 +1,5 @@
-import TableScrollContainer from 'components/Comparison/Table/TableScrollContainer';
-import ComparisonTable from 'components/Comparison/Table/ComparisonTable';
+import ComparisonTable from '@/components/Comparison/Table/ComparisonTable';
+import TableScrollContainer from '@/components/Comparison/Table/TableScrollContainer';
 
 const Comparison = (props) => (
     <TableScrollContainer>

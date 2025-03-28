@@ -1,4 +1,6 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
+import PropTypes from 'prop-types';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
 import {
     ContributionCell,
     MetaCell,
@@ -7,8 +9,7 @@ import {
     PropertyCell,
     TippyContainer,
     ValueCell,
-} from 'libs/selfVisModel/RenderingComponents/styledComponents';
-import PropTypes from 'prop-types';
+} from '@/libs/selfVisModel/RenderingComponents/styledComponents';
 
 export default function CellRenderer(props) {
     return (

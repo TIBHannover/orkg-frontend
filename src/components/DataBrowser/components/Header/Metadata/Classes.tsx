@@ -1,19 +1,20 @@
 import { faPen, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import ClassesInput from 'components/DataBrowser/components/Header/Metadata/ClassesInput/ClassesInput';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useClasses from 'components/DataBrowser/hooks/useClasses';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Link from 'next/link';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { Fragment, useState } from 'react';
-import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
+import styled from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import ClassesInput from '@/components/DataBrowser/components/Header/Metadata/ClassesInput/ClassesInput';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useClasses from '@/components/DataBrowser/hooks/useClasses';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 export const BadgeTagsStyle = styled.div`
     background-color: ${(props) => props.theme.lightDarker};

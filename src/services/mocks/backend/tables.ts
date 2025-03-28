@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
-import { tablesUrl } from 'services/backend/tables';
-import { tableResource } from 'services/mocks/backend/__mocks__/Tables';
+
+import { tablesUrl } from '@/services/backend/tables';
+import { tableResource } from '@/services/mocks/backend/__mocks__/Tables';
 
 const tables = [
     http.get(`${tablesUrl}:id`, ({ params }) => {

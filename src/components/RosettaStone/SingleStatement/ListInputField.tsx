@@ -1,8 +1,9 @@
-import { customClassNames, customStyles } from 'components/Autocomplete/styled';
 import { FC } from 'react';
-import { InputProps, components } from 'react-select';
+import { components, InputProps } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { Node } from 'services/backend/types';
+
+import { customClassNames, customStyles } from '@/components/Autocomplete/styled';
+import { Node } from '@/services/backend/types';
 
 type ListInputFieldProps = {
     value: Node[];

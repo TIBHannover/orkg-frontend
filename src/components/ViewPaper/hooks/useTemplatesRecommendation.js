@@ -1,9 +1,10 @@
-import { CLASSES } from 'constants/graphSettings';
 import { differenceBy } from 'lodash';
-import { getResource, resourcesUrl } from 'services/backend/resources';
-import { getTemplate, getTemplates, templatesUrl } from 'services/backend/templates';
-import { getTemplateRecommendations, nlpServiceUrl } from 'services/orkgNlp';
 import useSWR from 'swr';
+
+import { CLASSES } from '@/constants/graphSettings';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+import { getTemplate, getTemplates, templatesUrl } from '@/services/backend/templates';
+import { getTemplateRecommendations, nlpServiceUrl } from '@/services/orkgNlp';
 
 const useTemplatesRecommendation = ({ title, abstract, resourceId }) => {
     const { data: resource } = useSWR([resourceId, resourcesUrl, 'getResource'], ([params]) => getResource(params));

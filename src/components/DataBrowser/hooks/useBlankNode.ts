@@ -1,8 +1,9 @@
-import { LITERAL_DATA_TYPES_CLASS_IDS } from 'constants/DataTypes';
-import { createResource } from 'services/backend/resources';
-import { getTemplates, templatesUrl } from 'services/backend/templates';
-import { Node } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { LITERAL_DATA_TYPES_CLASS_IDS } from '@/constants/DataTypes';
+import { createResource } from '@/services/backend/resources';
+import { getTemplates, templatesUrl } from '@/services/backend/templates';
+import { Node } from '@/services/backend/types';
 
 const useBlankNode = (ranges: Node[]) => {
     const rangesNoLiterals = ranges.filter((r) => !LITERAL_DATA_TYPES_CLASS_IDS.includes(r.id));

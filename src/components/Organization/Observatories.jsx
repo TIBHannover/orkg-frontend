@@ -1,12 +1,13 @@
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Container, ListGroup } from 'reactstrap';
-import { getAllObservatoriesByOrganizationId } from 'services/backend/organizations';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Dotdotdot from 'react-dotdotdot';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import Dotdotdot from 'react-dotdotdot';
+import { Container, ListGroup } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ROUTES from '@/constants/routes';
+import { getAllObservatoriesByOrganizationId } from '@/services/backend/organizations';
 
 const Observatories = ({ organizationsId }) => {
     const [isLoadingObservatories, setIsLoadingObservatories] = useState(null);

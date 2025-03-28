@@ -2,23 +2,24 @@
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import CopyId from 'components/CopyId/CopyId';
-import ResearchFieldTabsContainer from 'components/ResearchField/ResearchFieldTabsContainer';
-import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES, RESOURCES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
-import { getResource, resourcesUrl } from 'services/backend/resources';
-import { Node, VisibilityOptions } from 'services/backend/types';
 import useSWR from 'swr';
-import { reverseWithSlug } from 'utils';
+
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import CopyId from '@/components/CopyId/CopyId';
+import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
+import ResearchFieldSelector from '@/components/ResearchFieldSelector/ResearchFieldSelector';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES, RESOURCES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+import { Node, VisibilityOptions } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);

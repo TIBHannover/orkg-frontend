@@ -1,7 +1,7 @@
-import { ReactNode, useState, type CSSProperties } from 'react';
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { type CSSProperties, ReactNode, useState } from 'react';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 type VideoExplainerProps = {
     previewStyle?: CSSProperties;

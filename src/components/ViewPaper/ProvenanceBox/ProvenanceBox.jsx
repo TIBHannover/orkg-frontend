@@ -1,13 +1,14 @@
-import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import { env } from 'next-runtime-env';
-import Provenance from 'components/ViewPaper/ProvenanceBox/Provenance';
-import Timeline from 'components/ViewPaper/ProvenanceBox/Timeline';
-import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs, SidebarStyledBox } from 'components/ViewPaper/ProvenanceBox/styled';
-import useProvenance from 'components/ViewPaper/hooks/useProvenance';
-import useTimeline from 'components/ViewPaper/hooks/useTimeline';
 import { orderBy, uniqBy } from 'lodash';
+import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
+
+import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import useProvenance from '@/components/ViewPaper/hooks/useProvenance';
+import useTimeline from '@/components/ViewPaper/hooks/useTimeline';
+import Provenance from '@/components/ViewPaper/ProvenanceBox/Provenance';
+import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs, SidebarStyledBox } from '@/components/ViewPaper/ProvenanceBox/styled';
+import Timeline from '@/components/ViewPaper/ProvenanceBox/Timeline';
 
 const ProvenanceBox = () => {
     const { viewPaper, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();

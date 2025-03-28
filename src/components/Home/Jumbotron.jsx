@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { Container } from 'reactstrap';
-
 import styled from 'styled-components';
 import Typed from 'typed.js';
-import Video from 'components/Home/Video';
+
+import Video from '@/components/Home/Video';
 
 const JumbotronStyled = styled.div`
     color: hsla(0, 0%, 100%, 0.6);

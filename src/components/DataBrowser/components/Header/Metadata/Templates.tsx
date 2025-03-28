@@ -1,20 +1,21 @@
 import { faPen, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { BadgeTagsStyle } from 'components/DataBrowser/components/Header/Metadata/Classes';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import TemplatesModal from 'components/DataBrowser/components/TemplatesModal/TemplatesModal';
-import Link from 'next/link';
-import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import { Fragment, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import { BadgeTagsStyle } from '@/components/DataBrowser/components/Header/Metadata/Classes';
+import TemplatesModal from '@/components/DataBrowser/components/TemplatesModal/TemplatesModal';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const Templates = () => {
     const { config } = useDataBrowserState();

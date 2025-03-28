@@ -1,9 +1,10 @@
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { FC } from 'react';
 import { Card, CardBody } from 'reactstrap';
 import styled from 'styled-components';
-import { reverseWithSlug } from 'utils';
+
+import ROUTES from '@/constants/routes';
+import { reverseWithSlug } from '@/utils';
 
 const BenchmarkCardStyled = styled.div`
     cursor: initial;

@@ -1,18 +1,19 @@
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SlotForms from 'components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
-import {
-    useRosettaTemplateEditorDispatch,
-    useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import ActionButton from 'components/ActionButton/ActionButton';
 import type { Identifier } from 'dnd-core';
 import { parseInt } from 'lodash';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
-import { RSPropertyShape } from 'services/backend/types';
-import { handleSortableHoverReactDnd } from 'utils';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import SlotForms from '@/components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
+import {
+    useRosettaTemplateEditorDispatch,
+    useRosettaTemplateEditorState,
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { RSPropertyShape } from '@/services/backend/types';
+import { handleSortableHoverReactDnd } from '@/utils';
 
 type PositionItemProps = {
     i: number;

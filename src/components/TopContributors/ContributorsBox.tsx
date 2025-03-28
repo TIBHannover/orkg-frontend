@@ -1,10 +1,11 @@
-import { FC, useState } from 'react';
-import useContributors from 'components/TopContributors/hooks/useContributors';
-import ContributorCard from 'components/Cards/ContributorCard/ContributorCard';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { Button } from 'reactstrap';
 import pluralize from 'pluralize';
-import ContributorsModal from 'components/TopContributors/ContributorsModal';
+import { FC, useState } from 'react';
+import { Button } from 'reactstrap';
+
+import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ContributorsModal from '@/components/TopContributors/ContributorsModal';
+import useContributors from '@/components/TopContributors/hooks/useContributors';
 
 type ContributorsBoxProps = {
     researchFieldId: string;

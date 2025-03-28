@@ -1,12 +1,13 @@
-import { SmartDescriptiveProperty } from 'components/SmartSuggestions/DescriptivePropertySuggestions';
-import { PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
-import { createLiteralStatement } from 'services/backend/statements';
+
+import { SmartDescriptiveProperty } from '@/components/SmartSuggestions/DescriptivePropertySuggestions';
+import { PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { createLiteral } from '@/services/backend/literals';
+import { createPredicate } from '@/services/backend/predicates';
+import { createLiteralStatement } from '@/services/backend/statements';
 
 type ConfirmCreatePropertyModalProps = {
     label: string;

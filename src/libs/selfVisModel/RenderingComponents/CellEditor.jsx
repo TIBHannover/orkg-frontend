@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Alert } from 'reactstrap';
+
+import CellVE from '@/libs/selfVisModel/RenderingComponents/CellVE';
+import DropDownMapperSelector from '@/libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
-import CellVE from 'libs/selfVisModel/RenderingComponents/CellVE';
-import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 const CellEditor = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());

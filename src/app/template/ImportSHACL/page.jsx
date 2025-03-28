@@ -3,17 +3,18 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TemplateCard from 'components/Cards/TemplateCard/TemplateCard';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import StepContainer from 'components/StepContainer';
-import ViewShapes from 'components/Templates/ImportSHACL/ViewShapes';
-import useImportSHACL from 'components/Templates/ImportSHACL/hooks/useImportSHACL';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import { Accordion, Button, ListGroup } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
 import styled from 'styled-components';
+
+import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import StepContainer from '@/components/StepContainer';
+import useImportSHACL from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
+import ViewShapes from '@/components/Templates/ImportSHACL/ViewShapes';
+import requireAuthentication from '@/requireAuthentication';
 
 const DragRDF = styled.div`
     margin: 0 auto 0;

@@ -1,14 +1,15 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
-import { useRouter } from 'next/navigation';
-import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+
+import { InputStyled, SearchButtonStyled, SearchStyled } from '@/components/styled';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
 
 const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);

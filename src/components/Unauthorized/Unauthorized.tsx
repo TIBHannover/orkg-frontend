@@ -1,12 +1,13 @@
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuthentication from 'components/hooks/useAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
 
 /**
  * Unauthorized can mean both unauthenticated and unauthorized. So when a user is not signed in,

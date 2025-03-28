@@ -1,4 +1,4 @@
-import { RosettaStoneStatement } from 'services/backend/types';
+import { RosettaStoneStatement } from '@/services/backend/types';
 
 const removeEmptySegments = (label: string, s?: RosettaStoneStatement) => {
     let count = 0;

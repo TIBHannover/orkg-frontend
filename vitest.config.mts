@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { loadEnv } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 function stubNextAssetImport() {
     return {
@@ -32,17 +32,6 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
-            app: path.resolve(__dirname, './src/app'),
-            testUtils: path.resolve(__dirname, './src/testUtils.tsx'),
-            services: path.resolve(__dirname, './src/services'),
-            slices: path.resolve(__dirname, './src/slices'),
-            store: path.resolve(__dirname, './src/store'),
-            utils: path.resolve(__dirname, './src/utils'),
-            assets: path.resolve(__dirname, './src/assets'),
-            constants: path.resolve(__dirname, './src/constants'),
-            components: path.resolve(__dirname, './src/components'),
-            helpers: path.resolve(__dirname, './src/helpers'),
-            libs: path.resolve(__dirname, './src/libs'),
         },
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },

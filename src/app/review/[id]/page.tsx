@@ -1,19 +1,20 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import EditReview from 'components/Review/EditReview/EditReview';
-import TitleBar from 'components/Review/TitleBar/TitleBar';
-import ViewReview from 'components/Review/ViewReview/ViewReview';
-import ReviewContextProvider from 'components/Review/context/ReviewContext';
-import useReview from 'components/Review/hooks/useReview';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { LICENSE_URL } from 'constants/misc';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { createGlobalStyle } from 'styled-components';
+
+import NotFound from '@/app/not-found';
+import LoadingArticle from '@/components/ArticleBuilder/LoadingArticle';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import ReviewContextProvider from '@/components/Review/context/ReviewContext';
+import EditReview from '@/components/Review/EditReview/EditReview';
+import useReview from '@/components/Review/hooks/useReview';
+import TitleBar from '@/components/Review/TitleBar/TitleBar';
+import ViewReview from '@/components/Review/ViewReview/ViewReview';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { LICENSE_URL } from '@/constants/misc';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements

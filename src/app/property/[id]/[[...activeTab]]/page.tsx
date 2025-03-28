@@ -2,27 +2,28 @@
 
 import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import EditableHeader from 'components/EditableHeader';
-import PropertyStatements from 'components/Property/PropertyStatements/PropertyStatements';
-import useDeleteProperty from 'components/Property/hooks/useDeleteProperty';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import Tabs from 'components/Tabs/Tabs';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import useAuthentication from 'components/hooks/useAuthentication';
-import useParams from 'components/useParams/useParams';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { Button, Container } from 'reactstrap';
-import { getPredicate, predicatesUrl } from 'services/backend/predicates';
 import useSWR from 'swr';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import EditableHeader from '@/components/EditableHeader';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import useDeleteProperty from '@/components/Property/hooks/useDeleteProperty';
+import PropertyStatements from '@/components/Property/PropertyStatements/PropertyStatements';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import Tabs from '@/components/Tabs/Tabs';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getPredicate, predicatesUrl } from '@/services/backend/predicates';
 
 const Property = () => {
     const { id: propertyId, activeTab } = useParams();

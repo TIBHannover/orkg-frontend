@@ -1,16 +1,17 @@
+import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Badge, ListGroupItem } from 'reactstrap';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Mentioning } from 'services/backend/types';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { ENTITIES } from 'constants/graphSettings';
 import styled from 'styled-components';
-import Link from 'next/link';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { classesUrl, getClassById } from 'services/backend/classes';
 import useSWR from 'swr';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { classesUrl, getClassById } from '@/services/backend/classes';
+import { Mentioning } from '@/services/backend/types';
 
 type MentioningItemProps = {
     item: Mentioning;

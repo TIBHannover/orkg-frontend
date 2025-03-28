@@ -10,21 +10,6 @@ import {
     faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Confirm from 'components/Confirmation/Confirmation';
-import ExportCitation from 'components/ExportCitation/ExportCitation';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import GraphViewModal from 'components/GraphView/GraphViewModal';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PublishModal from 'components/Review/EditReview/PublishModal/PublishModal';
-import ReferencesModal from 'components/Review/EditReview/ReferencesModal/ReferencesModal';
-import ShouldPublishModal from 'components/Review/EditReview/ShouldPublishModal/ShouldPublishModal';
-import HistoryModal from 'components/Review/HistoryModal/HistoryModal';
-import useReview from 'components/Review/hooks/useReview';
-import TitleBarOriginal from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { SubTitle } from 'components/styled';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -32,6 +17,22 @@ import { useRouter } from 'next/navigation';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import ExportCitation from '@/components/ExportCitation/ExportCitation';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import GraphViewModal from '@/components/GraphView/GraphViewModal';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import PublishModal from '@/components/Review/EditReview/PublishModal/PublishModal';
+import ReferencesModal from '@/components/Review/EditReview/ReferencesModal/ReferencesModal';
+import ShouldPublishModal from '@/components/Review/EditReview/ShouldPublishModal/ShouldPublishModal';
+import HistoryModal from '@/components/Review/HistoryModal/HistoryModal';
+import useReview from '@/components/Review/hooks/useReview';
+import { SubTitle } from '@/components/styled';
+import TitleBarOriginal from '@/components/TitleBar/TitleBar';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 type TitleBarProps = {
     isOpenHistoryModal: boolean;

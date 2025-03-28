@@ -1,18 +1,19 @@
-import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
-import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
-import { EditableTitle } from 'components/ArticleBuilder/styled';
-import Confirm from 'components/Confirmation/Confirmation';
-import AddSection from 'components/Review/EditReview/AddSection/AddSection';
-import SectionType from 'components/Review/EditReview/SortableSections/Section/SectionType/SectionType';
-import useReview from 'components/Review/hooks/useReview';
-import EditSectionComparison from 'components/Review/Sections/Comparison/EditSectionComparison/EditSectionComparison';
-import { SectionContentLinkTypes } from 'components/Review/Sections/ContentLink/ContentLink';
-import SectionOntology from 'components/Review/Sections/Ontology/SectionOntology';
-import EditSectionResourceProperty from 'components/Review/Sections/ResourceProperty/EditSectionResourceProperty/EditSectionResourceProperty';
-import EditSectionVisualization from 'components/Review/Sections/Visualization/EditSectionVisualization/EditSectionVisualization';
 import { FC, FocusEvent, useState } from 'react';
 import { SortableElement } from 'react-sortable-hoc';
-import { ReviewSection } from 'services/backend/types';
+
+import MarkdownEditor from '@/components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
+import SortableSection from '@/components/ArticleBuilder/SortableSection/SortableSection';
+import { EditableTitle } from '@/components/ArticleBuilder/styled';
+import Confirm from '@/components/Confirmation/Confirmation';
+import AddSection from '@/components/Review/EditReview/AddSection/AddSection';
+import SectionType from '@/components/Review/EditReview/SortableSections/Section/SectionType/SectionType';
+import useReview from '@/components/Review/hooks/useReview';
+import EditSectionComparison from '@/components/Review/Sections/Comparison/EditSectionComparison/EditSectionComparison';
+import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLink/ContentLink';
+import SectionOntology from '@/components/Review/Sections/Ontology/SectionOntology';
+import EditSectionResourceProperty from '@/components/Review/Sections/ResourceProperty/EditSectionResourceProperty/EditSectionResourceProperty';
+import EditSectionVisualization from '@/components/Review/Sections/Visualization/EditSectionVisualization/EditSectionVisualization';
+import { ReviewSection } from '@/services/backend/types';
 
 export type HandleManualSort = ({ id, direction }: { id: string; direction: 'up' | 'down' }) => void;
 

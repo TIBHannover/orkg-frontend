@@ -1,16 +1,17 @@
-import Link from 'next/link';
-import { Button, Input, Modal, ModalBody, ModalHeader, FormGroup, Label } from 'reactstrap';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { updateResource } from 'services/backend/resources';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useEditResource from 'components/EditResourceDialog/hooks/useEditResource';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useEditResource from '@/components/EditResourceDialog/hooks/useEditResource';
+import { ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { updateResource } from '@/services/backend/resources';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, showResourceLink = false, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);

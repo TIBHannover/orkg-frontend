@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
+import { faHeart, faQuestionCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faTrash, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
-import Completion from 'components/PdfTextAnnotation/ProgressBar';
-import { discardChanges } from 'slices/pdfTextAnnotationSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Help from 'components/PdfTextAnnotation/Help';
-import Save from 'components/PdfTextAnnotation/Save';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import styled from 'styled-components';
+
+import AnnotationCategory from '@/components/PdfTextAnnotation/AnnotationCategory';
+import Help from '@/components/PdfTextAnnotation/Help';
+import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
+import Completion from '@/components/PdfTextAnnotation/ProgressBar';
+import Save from '@/components/PdfTextAnnotation/Save';
+import { discardChanges } from '@/slices/pdfTextAnnotationSlice';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);

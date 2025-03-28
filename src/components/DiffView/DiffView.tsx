@@ -1,17 +1,18 @@
 import { faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ContainerAnimated } from 'components/Comparison/styled';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import DiffTitle, { type TitleData } from 'components/DiffView/DiffTitle';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CSSProperties, FC, useEffect, useState } from 'react';
 import ReactDiffViewer from 'react-diff-viewer-continued';
 import { Alert, Button } from 'reactstrap';
-import { getResource, resourcesUrl } from 'services/backend/resources';
 import useSWR from 'swr';
+
+import { ContainerAnimated } from '@/components/Comparison/styled';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import DiffTitle, { type TitleData } from '@/components/DiffView/DiffTitle';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
 
 type DiffViewProps = {
     type: string;

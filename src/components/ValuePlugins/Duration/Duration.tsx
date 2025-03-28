@@ -1,5 +1,6 @@
-import { parseDurationString } from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/helpers';
 import { FC } from 'react';
+
+import { parseDurationString } from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/helpers';
 
 export const isDurationValue = ({ text, datatype }: { text: string; datatype?: string }) =>
     !!(datatype?.startsWith('xsd:') && datatype?.toLowerCase().includes('duration') && parseDurationString(text));

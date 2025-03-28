@@ -1,9 +1,10 @@
-import CreateComparisonModal from 'components/Comparison/ComparisonHeader/CreateComparisonModal/CreateComparisonModal';
-import { SubTitle } from 'components/styled';
-import TitleBar from 'components/TitleBar/TitleBar';
 import pluralize from 'pluralize';
 import { FC, useState } from 'react';
 import { Alert, Button } from 'reactstrap';
+
+import CreateComparisonModal from '@/components/Comparison/ComparisonHeader/CreateComparisonModal/CreateComparisonModal';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
 
 type LiveComparisonHeaderProps = {
     contributionIds: string[];

@@ -1,10 +1,11 @@
+import { isEmpty } from 'lodash';
+import rdf from 'rdf';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import rdf from 'rdf';
-import { isEmpty } from 'lodash';
-import { loadTemplateFlowByID } from 'services/backend/statements';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { convertTreeToFlat } from 'utils';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { loadTemplateFlowByID } from '@/services/backend/statements';
+import { convertTreeToFlat } from '@/utils';
 
 function downloadN3(graph, turtleName) {
     const a = document.createElement('a');

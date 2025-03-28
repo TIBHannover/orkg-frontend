@@ -1,16 +1,17 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import HelpIcon from 'components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
-import PositionItem from 'components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
-import StatementPlaceholder from 'components/RosettaStone/RosettaTemplateEditor/StatementPlaceholder';
-import {
-    useRosettaTemplateEditorDispatch,
-    useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Accordion, Button, FormGroup, Input, Label } from 'reactstrap';
-import { guid } from 'utils';
+
+import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
+import PositionItem from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
+import StatementPlaceholder from '@/components/RosettaStone/RosettaTemplateEditor/StatementPlaceholder';
+import {
+    useRosettaTemplateEditorDispatch,
+    useRosettaTemplateEditorState,
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { guid } from '@/utils';
 
 function StepThree() {
     const { examples, lockedExamples, numberLockedProperties, properties } = useRosettaTemplateEditorState();

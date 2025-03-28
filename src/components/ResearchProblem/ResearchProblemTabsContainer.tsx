@@ -1,13 +1,14 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import Tabs from 'components/Tabs/Tabs';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
 import { useQueryState } from 'nuqs';
-import { getResearchProblemContent, problemsUrl } from 'services/backend/problems';
-import { Item, VisibilityOptions } from 'services/backend/types';
+
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import Tabs from '@/components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { getResearchProblemContent, problemsUrl } from '@/services/backend/problems';
+import { Item, VisibilityOptions } from '@/services/backend/types';
 
 export const RESEARCH_PROBLEM_CONTENT_TABS = [
     { id: CLASSES.PAPER, label: 'Papers' },

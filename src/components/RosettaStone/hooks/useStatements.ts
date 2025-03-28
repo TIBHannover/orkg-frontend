@@ -1,5 +1,6 @@
-import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import useSWR from 'swr';
+
+import { getRSStatements, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 
 const useStatements = ({ context }: { context: string }) => {
     const {

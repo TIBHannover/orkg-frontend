@@ -1,14 +1,15 @@
-import Link from 'next/link';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { supportedContentTypes } from 'components/ContentType/types';
-import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
+
+import { supportedContentTypes } from '@/components/ContentType/types';
+import ROUTES from '@/constants/routes';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {

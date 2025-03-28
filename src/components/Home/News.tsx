@@ -1,11 +1,12 @@
-import { CarouselIndicatorsStyled } from 'components/styled';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
-import { getNewsCards } from 'services/cms';
-import { NewsCard } from 'services/cms/types';
 import Showdown from 'showdown';
 import styled from 'styled-components';
+
+import { CarouselIndicatorsStyled } from '@/components/styled';
+import { getNewsCards } from '@/services/cms';
+import { NewsCard } from '@/services/cms/types';
 
 const CarouselContainer = styled.div`
     width: 100%;

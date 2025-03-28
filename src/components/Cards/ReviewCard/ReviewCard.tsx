@@ -1,23 +1,24 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Coins from 'components/Coins/Coins';
-import Authors from 'components/Cards/PaperCard/Authors';
-import useCardData from 'components/Cards/hooks/useCardData';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CardBadge } from 'components/styled';
-import { VISIBILITY } from 'constants/contentTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Review } from 'services/backend/types';
 import styled from 'styled-components';
+
+import useCardData from '@/components/Cards/hooks/useCardData';
+import Authors from '@/components/Cards/PaperCard/Authors';
+import Coins from '@/components/Coins/Coins';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { VISIBILITY } from '@/constants/contentTypes';
+import ROUTES from '@/constants/routes';
+import { Review } from '@/services/backend/types';
 
 const ReviewCardStyled = styled('div')<{ rounded?: string }>`
     &:last-child {

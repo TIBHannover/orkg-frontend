@@ -1,6 +1,7 @@
 import useSWR from 'swr';
-import { getContributorInformationById, contributorsUrl } from 'services/backend/contributors';
-import { MISC } from 'constants/graphSettings';
+
+import { MISC } from '@/constants/graphSettings';
+import { contributorsUrl, getContributorInformationById } from '@/services/backend/contributors';
 
 const useContributor = ({ userId }: { userId?: string }) => {
     const { data: contributor, isLoading } = useSWR(

@@ -1,13 +1,14 @@
-import DateTimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
-import DurationInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
-import GregorianInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
-import InputFieldModal from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
-import TimeInput from 'components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
-import { getConfigByClassId, getConfigByType } from 'constants/DataTypes';
-import { ENTITIES, MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import { Input } from 'reactstrap';
+
+import DateTimeInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
+import DurationInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
+import GregorianInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
+import InputFieldModal from '@/components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
+import TimeInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
+import { getConfigByClassId, getConfigByType } from '@/constants/DataTypes';
+import { ENTITIES, MISC } from '@/constants/graphSettings';
 
 export default function InputField(props) {
     const { inputFieldModalIsOpen: isModalOpen, setInputFieldModalIsOpen: setIsModalOpen } = props;

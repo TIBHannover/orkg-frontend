@@ -1,10 +1,11 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
-import Popover from 'components/FloatingUI/Popover';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC, ReactNode, useState } from 'react';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from '@/components/FloatingUI/Popover';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 export type ActionButtonProps = {
     title: ReactNode;

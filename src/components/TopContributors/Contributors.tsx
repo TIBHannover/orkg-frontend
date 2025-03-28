@@ -1,17 +1,18 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from 'components/styled';
-import ContributorsDropdownFilter from 'components/TopContributors/ContributorsDropdownFilter';
-import ContributorsModal from 'components/TopContributors/ContributorsModal';
-import useContributors from 'components/TopContributors/hooks/useContributors';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { FC, useState } from 'react';
 import { CardTitle } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from '@/components/styled';
+import ContributorsDropdownFilter from '@/components/TopContributors/ContributorsDropdownFilter';
+import ContributorsModal from '@/components/TopContributors/ContributorsModal';
+import useContributors from '@/components/TopContributors/hooks/useContributors';
+import ROUTES from '@/constants/routes';
 
 type ContributorsProps = {
     researchFieldId: string;

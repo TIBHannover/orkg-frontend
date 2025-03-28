@@ -1,12 +1,6 @@
 import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
-import THING_TYPES from 'constants/thingTypes';
 import dayjs from 'dayjs';
-import { downloadJPG, downloadPDF } from 'libs/googleChartDownloadFunctions';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -26,9 +20,16 @@ import {
     PopoverHeader,
     UncontrolledPopover,
 } from 'reactstrap';
-import { getVisualization, visualizationsUrl } from 'services/backend/visualizations';
-import { getThing, simCompServiceUrl } from 'services/simcomp';
 import useSWR from 'swr';
+
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
+import THING_TYPES from '@/constants/thingTypes';
+import { downloadJPG, downloadPDF } from '@/libs/googleChartDownloadFunctions';
+import GDCVisualizationRenderer from '@/libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import { getVisualization, visualizationsUrl } from '@/services/backend/visualizations';
+import { getThing, simCompServiceUrl } from '@/services/simcomp';
 
 const ViewVisualizationModal = ({ isOpen, toggle, id }) => {
     const { data: visualization } = useSWR([id, visualizationsUrl, 'getVisualization'], ([id]) => getVisualization(id));

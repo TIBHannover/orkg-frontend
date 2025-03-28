@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import { classesUrl } from 'services/backend/classes';
-import db from 'services/mocks/db';
-import { createMSWClass } from 'services/mocks/helpers';
+
+import { classesUrl } from '@/services/backend/classes';
+import db from '@/services/mocks/db';
+import { createMSWClass } from '@/services/mocks/helpers';
 
 const resources = [
     http.get(classesUrl, ({ request }) => {

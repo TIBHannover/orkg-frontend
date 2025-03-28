@@ -1,8 +1,9 @@
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
+
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const Row = ({ row, index }) => {
     const { isEditMode } = useIsEditMode();

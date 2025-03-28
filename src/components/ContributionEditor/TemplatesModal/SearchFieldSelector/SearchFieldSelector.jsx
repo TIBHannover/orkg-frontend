@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import Select from 'react-select';
 import { ThemeContext } from 'styled-components';
-import PropTypes from 'prop-types';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 
 const SearchFieldSelector = ({ disableBorderRadiusLeft = false, disableBorderRadiusRight = true, options, value, setValue }) => {
     const theme = useContext(ThemeContext);

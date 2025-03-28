@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import styled, { keyframes } from 'styled-components';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
-import VisualizationSelector from 'libs/selfVisModel/VisRenderer/VisualizationSelector';
-import AbstractRenderer from 'libs/selfVisModel/VisRenderer/AbstractRenderer';
-import AbstractCustomizationWidget from 'libs/selfVisModel/VisRenderer/AbstractCustomizationWidget';
-import TableInput from 'libs/selfVisModel/VisRenderer/tableInput';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import AbstractCustomizationWidget from '@/libs/selfVisModel/VisRenderer/AbstractCustomizationWidget';
+import AbstractRenderer from '@/libs/selfVisModel/VisRenderer/AbstractRenderer';
+import TableInput from '@/libs/selfVisModel/VisRenderer/tableInput';
+import VisualizationSelector from '@/libs/selfVisModel/VisRenderer/VisualizationSelector';
 
 export default class VisualizationWidget extends Component {
     constructor(props) {

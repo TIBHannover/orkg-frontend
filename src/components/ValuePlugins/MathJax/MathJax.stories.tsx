@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import MathJax from 'components/ValuePlugins/MathJax/MathJax';
+
+import MathJax from '@/components/ValuePlugins/MathJax/MathJax';
 
 export default {
     title: 'ValuePlugins/MathJax',

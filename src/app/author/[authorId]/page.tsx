@@ -1,20 +1,21 @@
 'use client';
 
-import AuthorHeader from 'components/Author/AuthorHeader';
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import Tabs from 'components/Tabs/Tabs';
-import useParams from 'components/useParams/useParams';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { useQueryState } from 'nuqs';
 import { Container } from 'reactstrap';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { Item, VisibilityOptions } from 'services/backend/types';
+
+import AuthorHeader from '@/components/Author/AuthorHeader';
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import Tabs from '@/components/Tabs/Tabs';
+import useParams from '@/components/useParams/useParams';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
+import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
+import { Item, VisibilityOptions } from '@/services/backend/types';
 
 const AUTHOR_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All' },

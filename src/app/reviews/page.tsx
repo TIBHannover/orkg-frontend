@@ -2,22 +2,23 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import reviewsThumbnail from 'assets/img/video_thumbnails/reviews.png';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ListPage from 'components/PaginatedContent/ListPage';
-import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { getReviews, reviewUrl } from 'services/backend/reviews';
-import { Review, VisibilityOptions } from 'services/backend/types';
+
+import reviewsThumbnail from '@/assets/img/video_thumbnails/reviews.png';
+import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import VideoExplainer from '@/components/PaginatedContent/VideoExplainer';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getReviews, reviewUrl } from '@/services/backend/reviews';
+import { Review, VisibilityOptions } from '@/services/backend/types';
 
 const Reviews = () => {
     const { user } = useAuthentication();

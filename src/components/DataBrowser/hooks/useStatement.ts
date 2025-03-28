@@ -1,15 +1,16 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { getStatementsBySubjectId } from 'components/DataBrowser/utils/dataBrowserUtils';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
-import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { groupBy, uniqWith, isEqual } from 'lodash';
+import { groupBy, isEqual, uniqWith } from 'lodash';
 import { useEffect, useState } from 'react';
-import { deleteStatementById, getStatements, statementsUrl } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
 import useSWR from 'swr';
-import { getList, listsUrl, updateList } from 'services/backend/lists';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import { getStatementsBySubjectId } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { getList, listsUrl, updateList } from '@/services/backend/lists';
+import { deleteStatementById, getStatements, statementsUrl } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
 
 const useStatement = (statement: Statement, path: string[], level: number) => {
     const { isUsingSnapshot } = useSnapshotStatement();

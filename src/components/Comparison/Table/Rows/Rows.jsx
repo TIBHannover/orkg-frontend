@@ -1,11 +1,12 @@
 import arrayMove from 'array-move';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import Row from 'components/Comparison/Table/Rows/Row';
 import PropTypes from 'prop-types';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Scrollbar } from 'react-scrollbars-custom';
-import { updateContributionOrder, updatePropertyOrder } from 'slices/comparisonSlice';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import Row from '@/components/Comparison/Table/Rows/Row';
+import { updateContributionOrder, updatePropertyOrder } from '@/slices/comparisonSlice';
 
 const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
     const { comparison, updateComparison } = useComparison();

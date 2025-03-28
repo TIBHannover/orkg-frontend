@@ -1,14 +1,15 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
-import AddEntryModal from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/AddEntryModal';
-import EditSectionListItem from 'components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionListItem/EditSectionListItem';
-import useList from 'components/List/hooks/useList';
 import { FC, useState } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { Alert, Button, ListGroup } from 'reactstrap';
-import { LiteratureListSectionList, LiteratureListSectionListEntry } from 'services/backend/types';
 import { createGlobalStyle } from 'styled-components';
+
+import AddEntryModal from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/AddEntryModal';
+import EditSectionListItem from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionListItem/EditSectionListItem';
+import useList from '@/components/List/hooks/useList';
+import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';
 
 const GlobalStyle = createGlobalStyle`
     .sortable-helper{

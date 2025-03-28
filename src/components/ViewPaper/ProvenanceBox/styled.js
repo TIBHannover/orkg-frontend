@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 
 export const StyledActivity = styled.div`
     border-left: 3px solid #e9ebf2;

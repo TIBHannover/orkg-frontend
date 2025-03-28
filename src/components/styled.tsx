@@ -1,6 +1,6 @@
+import Gravatar from 'react-gravatar';
 import { Button, CarouselIndicators } from 'reactstrap';
 import styled from 'styled-components';
-import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
     @media (max-width: 480px) {

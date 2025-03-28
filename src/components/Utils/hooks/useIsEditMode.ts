@@ -1,5 +1,6 @@
-import useAuthentication from 'components/hooks/useAuthentication';
 import { parseAsBoolean, useQueryState } from 'nuqs';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
 
 const useIsEditMode = () => {
     const { status } = useAuthentication();

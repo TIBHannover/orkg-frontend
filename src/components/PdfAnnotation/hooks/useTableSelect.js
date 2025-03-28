@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
-import { addTableRegion, deleteTableRegion } from 'slices/pdfAnnotationSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { addTableRegion, deleteTableRegion } from '@/slices/pdfAnnotationSlice';
 
 function useTableSelect(props) {
     const [isDragging, setIsDragging] = useState(false);

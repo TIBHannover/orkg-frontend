@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import type { GroupBase } from 'react-select';
-import { OptionProps, components } from 'react-select';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import { Organization } from 'services/backend/types';
+import { components, OptionProps } from 'react-select';
 import styled from 'styled-components';
+
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
+import { Organization } from '@/services/backend/types';
 
 const LogoContainer = styled.div`
     overflow: hidden;

@@ -1,14 +1,15 @@
 import { faEllipsis, faPen } from '@fortawesome/free-solid-svg-icons';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import SdgModal from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
-import { getImage, getSdgNumber, sortSdgs } from 'components/SustainableDevelopmentGoals/helpers';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { Node } from 'services/backend/types';
 import styled from 'styled-components';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import { getImage, getSdgNumber, sortSdgs } from '@/components/SustainableDevelopmentGoals/helpers';
+import SdgModal from '@/components/SustainableDevelopmentGoals/SdgModal/SdgModal';
+import ROUTES from '@/constants/routes';
+import { Node } from '@/services/backend/types';
 
 const Box = styled.div`
     border: 1px solid ${(props) => props.theme.lightDarker};

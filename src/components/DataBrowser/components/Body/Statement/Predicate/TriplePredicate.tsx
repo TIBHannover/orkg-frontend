@@ -1,13 +1,14 @@
 import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import PredicateView from 'components/DataBrowser/components/Body/PredicateView/PredicateView';
-import HierarchyIndicator from 'components/DataBrowser/components/Body/Statement/HierarchyIndicator';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import { StatementWrapperStyled } from 'components/DataBrowser/styles/styled';
 import { range } from 'lodash';
 import { FC, useState } from 'react';
-import { Statement } from 'services/backend/types';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import PredicateView from '@/components/DataBrowser/components/Body/PredicateView/PredicateView';
+import HierarchyIndicator from '@/components/DataBrowser/components/Body/Statement/HierarchyIndicator';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import { StatementWrapperStyled } from '@/components/DataBrowser/styles/styled';
+import { Statement } from '@/services/backend/types';
 
 type TriplePredicateProps = {
     level: number;

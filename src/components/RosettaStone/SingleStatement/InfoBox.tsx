@@ -1,22 +1,23 @@
 import { faCheck, faClock, faClose, faInfo, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import CopyId from 'components/CopyId/CopyId';
-import Popover from 'components/FloatingUI/Popover';
-import VersionsModal from 'components/RosettaStone/SingleStatement/VersionsModal';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CERTAINTY } from 'constants/contentTypes';
-import { MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { findKey, toInteger } from 'lodash';
 import dayjs from 'dayjs';
+import { findKey, toInteger } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
-import { Range, getTrackBackground } from 'react-range';
-import { getRSStatementVersions } from 'services/backend/rosettaStone';
-import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from 'services/backend/types';
+import { getTrackBackground, Range } from 'react-range';
 import { ThemeContext } from 'styled-components';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import CopyId from '@/components/CopyId/CopyId';
+import Popover from '@/components/FloatingUI/Popover';
+import VersionsModal from '@/components/RosettaStone/SingleStatement/VersionsModal';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { CERTAINTY } from '@/constants/contentTypes';
+import { MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getRSStatementVersions } from '@/services/backend/rosettaStone';
+import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from '@/services/backend/types';
 
 type InfoBoxProps = {
     statement: RosettaStoneStatement;

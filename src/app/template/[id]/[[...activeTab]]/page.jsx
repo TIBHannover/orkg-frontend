@@ -2,25 +2,6 @@
 
 import { faClose, faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
-import EditableHeader from 'components/EditableHeader';
-import ExportCitation from 'components/ExportCitation/ExportCitation';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import ShaclFlowModal from 'components/Templates/ShaclFlow/ShaclFlowModal';
-import useExportSHACL from 'components/Templates/ShaclFlow/hooks/useExportSHACL';
-import TabsContainer from 'components/Templates/TabsContainer';
-import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import useContributor from 'components/hooks/useContributor';
-import useParams from 'components/useParams/useParams';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -39,7 +20,27 @@ import {
     ModalBody,
     ModalHeader,
 } from 'reactstrap';
-import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from 'slices/templateEditorSlice';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import EditableHeader from '@/components/EditableHeader';
+import { EditModeContainer, Title } from '@/components/EditModeHeader/EditModeHeader';
+import ExportCitation from '@/components/ExportCitation/ExportCitation';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useContributor from '@/components/hooks/useContributor';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import useExportSHACL from '@/components/Templates/ShaclFlow/hooks/useExportSHACL';
+import ShaclFlowModal from '@/components/Templates/ShaclFlow/ShaclFlowModal';
+import TabsContainer from '@/components/Templates/TabsContainer';
+import TemplateEditorHeaderBar from '@/components/Templates/TemplateEditorHeaderBar';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from '@/slices/templateEditorSlice';
 
 const Template = () => {
     const { id } = useParams();

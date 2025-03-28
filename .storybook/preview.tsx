@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react';
-import 'assets/scss/CustomBootstrap.scss';
-import 'assets/scss/DefaultLayout.scss';
+import '@/assets/scss/CustomBootstrap.scss';
+import '@/assets/scss/DefaultLayout.scss';
 import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { DndProvider } from 'react-dnd';

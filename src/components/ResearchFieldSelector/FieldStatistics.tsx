@@ -1,8 +1,9 @@
-import { type ResearchField } from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import Skeleton from 'react-loading-skeleton';
 import { Badge } from 'reactstrap';
-import { getStatistics, statisticsUrl } from 'services/backend/statistics';
 import useSWR from 'swr';
+
+import { type ResearchField } from '@/components/ResearchFieldSelector/ResearchFieldSelector';
+import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 const FieldStatistics = ({ field }: { field: ResearchField }) => {
     const { data: statistics, isLoading } = useSWR(

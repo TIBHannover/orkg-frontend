@@ -1,20 +1,21 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
-import { OptionType } from 'components/Autocomplete/types';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ModalWithLoading from 'components/ModalWithLoading/ModalWithLoading';
-import useAuthentication from 'components/hooks/useAuthentication';
-import DATA_TYPES from 'constants/DataTypes';
-import { FILTER_SOURCE } from 'constants/filters';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { motion } from 'framer-motion';
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, FormText, Input, InputGroup, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getClassById } from 'services/backend/classes';
-import { getPredicatesByIds } from 'services/backend/predicates';
-import { Class, FilterConfig, Predicate } from 'services/backend/types';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import DATA_TYPES from '@/constants/DataTypes';
+import { FILTER_SOURCE } from '@/constants/filters';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { getClassById } from '@/services/backend/classes';
+import { getPredicatesByIds } from '@/services/backend/predicates';
+import { Class, FilterConfig, Predicate } from '@/services/backend/types';
 
 type FilterCurationFormProps = {
     isOpen: boolean;

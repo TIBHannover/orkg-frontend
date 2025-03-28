@@ -1,13 +1,14 @@
-import Body from 'components/DataBrowser/components/Body/Body';
-import EditorHelpModal from 'components/DataBrowser/components/EditorHelpModal/EditorHelpModal';
-import Footer from 'components/DataBrowser/components/Footer/Footer';
-import Header from 'components/DataBrowser/components/Header/Header';
-import DataBrowserProvider from 'components/DataBrowser/context/DataBrowserContext';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
-import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
-import { CLASSES } from 'constants/graphSettings';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import Body from '@/components/DataBrowser/components/Body/Body';
+import EditorHelpModal from '@/components/DataBrowser/components/EditorHelpModal/EditorHelpModal';
+import Footer from '@/components/DataBrowser/components/Footer/Footer';
+import Header from '@/components/DataBrowser/components/Header/Header';
+import DataBrowserProvider from '@/components/DataBrowser/context/DataBrowserContext';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
+import { CLASSES } from '@/constants/graphSettings';
 
 const DataBrowserContentStyled = styled.div`
     background: ${(props) => props.theme.lightLighter};

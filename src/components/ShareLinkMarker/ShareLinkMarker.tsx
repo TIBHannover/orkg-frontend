@@ -1,13 +1,14 @@
 import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from 'components/ShareLinkMarker/helpers';
 import { usePathname } from 'next/navigation';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from '@/components/ShareLinkMarker/helpers';
 
 export const ShareSideBox = styled.div`
     position: absolute;

@@ -1,8 +1,9 @@
-import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
-import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Badge, Button, Input, ModalBody, Label, FormGroup } from 'reactstrap';
+import { Badge, Button, FormGroup, Input, Label, ModalBody } from 'reactstrap';
+
+import FilterModalFooter from '@/components/Comparison/Filters/FilterModalFooter';
+import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 const CategoricalFilterRule = (props) => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;

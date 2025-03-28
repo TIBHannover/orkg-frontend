@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import Tabs from 'components/Tabs/Tabs';
 import { useState } from 'react';
+
+import Tabs from '@/components/Tabs/Tabs';
 
 export default {
     title: 'Tabs',

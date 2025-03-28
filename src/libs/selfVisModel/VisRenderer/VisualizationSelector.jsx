@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 export default class VisualizationSelector extends Component {
     constructor(props) {

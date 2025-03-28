@@ -1,16 +1,17 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import THING_TYPES from 'constants/thingTypes';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { memo, useEffect, useState } from 'react';
-import { getStatements } from 'services/backend/statements';
-import { getThing } from 'services/simcomp';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import THING_TYPES from '@/constants/thingTypes';
+import GDCVisualizationRenderer from '@/libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import { getStatements } from '@/services/backend/statements';
+import { getThing } from '@/services/simcomp';
 
 const ResourceItem = styled.div`
     overflow: hidden;

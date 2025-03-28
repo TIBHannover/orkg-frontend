@@ -1,13 +1,14 @@
 'use client';
 
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { getParentResearchFields, statementsUrl } from 'services/backend/statements';
-import { getFeaturedTemplates, templatesUrl } from 'services/backend/templates';
-import { Resource } from 'services/backend/types';
 import useSWR from 'swr';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { getParentResearchFields, statementsUrl } from '@/services/backend/statements';
+import { getFeaturedTemplates, templatesUrl } from '@/services/backend/templates';
+import { Resource } from '@/services/backend/types';
+import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 /**
  * featuredTemplates are templates linked to the selected research field and its parents and the research problems

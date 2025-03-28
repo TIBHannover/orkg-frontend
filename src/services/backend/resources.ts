@@ -1,10 +1,11 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { MISC } from 'constants/graphSettings';
-import { url } from 'constants/misc';
 import { uniq, uniqBy } from 'lodash';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getContributorInformationById } from 'services/backend/contributors';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { MISC } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getContributorInformationById } from '@/services/backend/contributors';
 import {
     CreatedByParam,
     FilterConfig,
@@ -16,7 +17,7 @@ import {
     SdgParam,
     VerifiedParam,
     VisibilityParam,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
 export const resourcesApi = backendApi.extend(() => ({ prefixUrl: resourcesUrl }));

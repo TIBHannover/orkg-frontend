@@ -1,11 +1,12 @@
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { Steps } from 'intro.js-react';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 type HelpButtonProps = {
     id: string;

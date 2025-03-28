@@ -1,7 +1,7 @@
-import { url } from 'constants/misc';
-import { MISC } from 'constants/graphSettings';
-import { Literal } from 'services/backend/types';
-import backendApi from 'services/backend/backendApi';
+import { MISC } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { Literal } from '@/services/backend/types';
 
 export const literalsUrl = `${url}literals/`;
 export const literalsApi = backendApi.extend(() => ({ prefixUrl: literalsUrl }));

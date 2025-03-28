@@ -1,15 +1,16 @@
 'use client';
 
-import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
 import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
-import { getHelpArticles } from 'services/cms';
-import { HelpArticle } from 'services/cms/types';
-import { reverseWithSlug } from 'utils';
+
+import HelpCenterSearchInput from '@/components/HelpCenterSearchInput/HelpCenterSearchInput';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { getHelpArticles } from '@/services/cms';
+import { HelpArticle } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const HelpCenterSearch = () => {
     const [articles, setArticles] = useState<HelpArticle[]>([]);

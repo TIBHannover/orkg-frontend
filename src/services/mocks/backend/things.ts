@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
-import { thingsUrl } from 'services/backend/things';
-import db from 'services/mocks/db';
+
+import { thingsUrl } from '@/services/backend/things';
+import db from '@/services/mocks/db';
 
 const findResource = (id: string) =>
     db.resources.findFirst({

@@ -1,13 +1,14 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
-import ResearchProblemAuthorsModal from 'components/TopAuthors/ResearchProblemAuthorsModal';
-import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Button } from 'reactstrap';
-import { ResearchProblemTopAuthor } from 'services/backend/problems';
+
+import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import useResearchProblemAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import ResearchProblemAuthorsModal from '@/components/TopAuthors/ResearchProblemAuthorsModal';
+import { ResearchProblemTopAuthor } from '@/services/backend/problems';
 
 type AuthorsBoxProps = {
     researchProblemId: string;

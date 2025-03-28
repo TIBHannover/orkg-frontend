@@ -1,12 +1,13 @@
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { isNaN } from 'lodash';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Badge } from 'reactstrap';
-import { getCitationCount } from 'services/openCitations';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getCitationCount } from '@/services/openCitations';
 
 function OpenCitations({ doi }) {
     const [citationCount, setCitationCount] = useState(null);

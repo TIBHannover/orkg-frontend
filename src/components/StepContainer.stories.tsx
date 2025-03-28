@@ -1,5 +1,6 @@
-import StepContainer from 'components/StepContainer';
 import { StoryFn } from '@storybook/react';
+
+import StepContainer from '@/components/StepContainer';
 
 export default {
     title: 'StepContainer',

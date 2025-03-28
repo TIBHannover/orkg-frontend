@@ -1,15 +1,16 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
 import Link from 'next/link';
-import usePage from 'components/Page/usePage';
-import { CmsPage } from 'components/styled';
-import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
 import { Alert, Col, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
-import { getHelpArticle, getHelpArticles } from 'services/cms';
-import { HelpArticle } from 'services/cms/types';
-import { reverseWithSlug } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import usePage from '@/components/Page/usePage';
+import { CmsPage } from '@/components/styled';
+import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
+import ROUTES from '@/constants/routes';
+import { getHelpArticle, getHelpArticles } from '@/services/cms';
+import { HelpArticle } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const EditorHelpModal = () => {
     const { isHelpModalOpen, helpCenterArticleId } = useDataBrowserState();

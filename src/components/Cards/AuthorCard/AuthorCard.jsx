@@ -1,16 +1,17 @@
 import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
-import { isString } from 'lodash';
 import dayjs from 'dayjs';
+import { isString } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Badge, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
-import { getAuthorsByLabel } from 'services/semanticScholar';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
+import { getAuthorsByLabel } from '@/services/semanticScholar';
 
 const GOOGLE_SCHOLAR_URL = 'https://scholar.google.com/scholar?q=';
 

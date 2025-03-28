@@ -1,8 +1,9 @@
 import Image from 'next/image';
-import { OptionType } from 'components/SustainableDevelopmentGoals/SdgModal/SdgModal';
-import { getImage, getSdgNumber } from 'components/SustainableDevelopmentGoals/helpers';
 import { FC } from 'react';
-import { OptionProps, components } from 'react-select';
+import { components, OptionProps } from 'react-select';
+
+import { getImage, getSdgNumber } from '@/components/SustainableDevelopmentGoals/helpers';
+import { OptionType } from '@/components/SustainableDevelopmentGoals/SdgModal/SdgModal';
 
 const SelectOption: FC<OptionProps<OptionType, false>> = ({ children, data, ...props }) => (
     <components.Option data={data} {...props}>

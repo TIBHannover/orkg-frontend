@@ -1,10 +1,11 @@
-import { redirect } from 'next/navigation';
-import useParams from 'components/useParams/useParams';
 import { reverse } from 'named-urls';
+import { redirect } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { usePrevious } from 'react-use';
-import { slugify } from 'utils';
+
+import useParams from '@/components/useParams/useParams';
+import { slugify } from '@/utils';
 
 /**
  * Component to check if query param slug is valid, and makes a redirect if not

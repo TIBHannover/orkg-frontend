@@ -1,8 +1,9 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import BenchmarksCarousel from 'components/ResearchProblem/Benchmarks/BenchmarksCarousel';
 import { Container } from 'reactstrap';
-import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 import useSWRInfinite from 'swr/infinite';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import BenchmarksCarousel from '@/components/ResearchProblem/Benchmarks/BenchmarksCarousel';
+import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';
 
 type BenchmarksProps = {
     id: string;

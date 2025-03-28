@@ -1,5 +1,6 @@
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+
+import { ENTITIES } from '@/constants/graphSettings';
 
 const PathTooltipContent = ({ data, cellDataValue, openStatementBrowser }) => {
     const isEqualPaths = data?.length > 0 ? data[0].path_labels?.length === data[0].path?.length : true;

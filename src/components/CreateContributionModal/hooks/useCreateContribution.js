@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { createResource } from 'services/backend/resources';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { createResource } from '@/services/backend/resources';
+import { createResourceStatement, getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
 
 const useCreateContribution = ({ paperId, isOpen }) => {
     const [isLoading, setIsLoading] = useState(false);

@@ -1,40 +1,41 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import { createAuthorsList } from 'components/Input/AuthorsInput/helpers';
-import Link from 'next/link';
-import Tooltip from 'components/Utils/Tooltip';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
-import THING_TYPES from 'constants/thingTypes';
 import { flatten, isEqual, uniqWith } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createLiteral } from 'services/backend/literals';
-import { createObject, generateDoi } from 'services/backend/misc';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
+import { createAuthorsList } from '@/components/Input/AuthorsInput/helpers';
+import Tooltip from '@/components/Utils/Tooltip';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import THING_TYPES from '@/constants/thingTypes';
+import { createLiteral } from '@/services/backend/literals';
+import { createObject, generateDoi } from '@/services/backend/misc';
 import {
     createResourceStatement,
     deleteStatementById,
     getStatementsBundleBySubject,
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
-} from 'services/backend/statements';
-import { createThing } from 'services/simcomp';
+} from '@/services/backend/statements';
+import { createThing } from '@/services/simcomp';
 import {
     convertAuthorsToNewFormat,
     convertAuthorsToOldFormat,
     filterObjectOfStatementsByPredicateAndClass,
     getErrorMessage,
     getPublicUrl,
-} from 'utils';
+} from '@/utils';
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);

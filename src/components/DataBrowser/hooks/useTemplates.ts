@@ -1,7 +1,8 @@
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { getTemplates, templatesUrl } from 'services/backend/templates';
 import useSWR from 'swr';
+
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { getTemplates, templatesUrl } from '@/services/backend/templates';
 
 const useTemplates = () => {
     const { entity, isLoadingEntity } = useEntity();

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
-import { Row, Col } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 const StyledShortRecord = styled.div`

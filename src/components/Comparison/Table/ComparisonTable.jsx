@@ -1,10 +1,3 @@
-import ColumnHeader from 'components/Comparison/Table/Cells/ColumnHeader/ColumnHeader';
-import ColumnHeaderFirstColumn from 'components/Comparison/Table/Cells/ColumnHeader/ColumnHeaderFirstColumn';
-import RowHeader from 'components/Comparison/Table/Cells/RowHeader/RowHeader';
-import TableCell from 'components/Comparison/Table/Cells/TableCell';
-import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from 'components/Comparison/hooks/helpers';
-import HeaderRow from 'components/Comparison/Table/Rows/HeaderRow';
-import Rows from 'components/Comparison/Table/Rows/Rows';
 import { cloneDeep, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useMemo, useRef } from 'react';
@@ -14,9 +7,17 @@ import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { useMedia } from 'react-use';
 import { Alert } from 'reactstrap';
-import { ReactTableWrapper } from 'components/Comparison/styled';
-import { DEFAULT_COLUMN_WIDTH } from 'components/Comparison/ComparisonHeader/ColumnWidth';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
+
+import { DEFAULT_COLUMN_WIDTH } from '@/components/Comparison/ComparisonHeader/ColumnWidth';
+import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from '@/components/Comparison/hooks/helpers';
+import { ReactTableWrapper } from '@/components/Comparison/styled';
+import ColumnHeader from '@/components/Comparison/Table/Cells/ColumnHeader/ColumnHeader';
+import ColumnHeaderFirstColumn from '@/components/Comparison/Table/Cells/ColumnHeader/ColumnHeaderFirstColumn';
+import RowHeader from '@/components/Comparison/Table/Cells/RowHeader/RowHeader';
+import TableCell from '@/components/Comparison/Table/Cells/TableCell';
+import HeaderRow from '@/components/Comparison/Table/Rows/HeaderRow';
+import Rows from '@/components/Comparison/Table/Rows/Rows';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const ComparisonTable = (props) => {
     const filterControlData = useSelector((state) => state.comparison.filterControlData);

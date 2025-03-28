@@ -1,15 +1,16 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useReview from 'components/Review/hooks/useReview';
-import Tooltip from 'components/Utils/Tooltip';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { publishReview } from 'services/backend/reviews';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useReview from '@/components/Review/hooks/useReview';
+import Tooltip from '@/components/Utils/Tooltip';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { publishReview } from '@/services/backend/reviews';
 
 type PublishModalProps = {
     toggle: () => void;

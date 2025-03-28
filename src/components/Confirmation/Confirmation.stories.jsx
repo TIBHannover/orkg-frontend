@@ -1,4 +1,4 @@
-import Confirm from 'components/Confirmation/Confirmation';
+import Confirm from '@/components/Confirmation/Confirmation';
 
 const Demo = (props) => {
     const handleConfirm = async () => {
