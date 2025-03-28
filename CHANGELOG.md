@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.162.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.1...v0.162.2) - 2025-03-28
+
+### Changes
+
+- refactor: add @ path alias pointing to src directory [`#1531`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1531)
+- fix(DataBrowser): enable auto-focus on the autocomplete [`#1527`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1527)
+- fix(DataBrowser): add Paper class to collapsed classes [`#1525`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1525)
+- refactor: convert header component to typescript [`#1521`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1521)
+- chore: sync with backend by migrating to snake_case query parameters [`#1530`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1530)
+- fix: observatory filters config initial value [`#1533`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1533)
+- fix: comparison page server component [`#1529`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1529)
+
+---
 ## [v0.162.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.0...v0.162.1) - 2025-03-24
 
 ### Changes
