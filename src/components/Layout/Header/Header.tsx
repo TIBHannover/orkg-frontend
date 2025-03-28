@@ -1,30 +1,32 @@
+'use client';
+
 import { faChevronDown, faExternalLinkAlt, faGift, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import Logo from 'assets/img/birthday/logo.svg';
 import LogoWhite from 'assets/img/birthday/logo_white.svg';
-import HomeBannerBg from 'assets/img/graph-background.svg';
 import Jumbotron from 'components/Home/Jumbotron';
+import useAuthentication from 'components/hooks/useAuthentication';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import AddNew from 'components/Layout/Header/AddNew';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
 import SearchForm from 'components/Layout/Header/SearchForm';
+import { GlobalStyle, StyledNavbar, StyledTopBar } from 'components/Layout/Header/styled';
 import UserTooltip from 'components/Layout/Header/UserTooltip';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { signIn } from 'next-auth/react';
-import useAuthentication from 'components/hooks/useAuthentication';
 import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
 import { Cookies } from 'react-cookie';
-import { useDispatch } from 'react-redux';
+import { useMountedState, useWindowScroll } from 'react-use';
 import {
     Badge,
     Button,
@@ -34,154 +36,12 @@ import {
     DropdownMenu,
     DropdownToggle,
     Nav,
-    Navbar,
     NavbarToggler,
     NavItem,
     NavLink,
 } from 'reactstrap';
-import styled, { createGlobalStyle } from 'styled-components';
 
 const cookies = new Cookies();
-
-// determine the scroll bar width and compensate the width when a modal is opened
-const GlobalStyle = createGlobalStyle`
-    body.modal-open {
-        #main-navbar, #paperHeaderBar {
-            right: ${(props) => props.$scrollbarWidth}px
-        }
-        #helpIcon {
-            padding-right: ${(props) => props.$scrollbarWidth}px
-        }
-        .woot-widget-bubble, .woot-widget-holder {
-            margin-right: ${(props) => props.$scrollbarWidth}px
-        }
-    }
-    @media (min-width: 481px) and (max-width: 1100px) {
-        .woot-widget-bubble.woot-elements--right{
-            bottom: ${(props) => (!props.$cookieInfoDismissed ? '80px' : '14px')}
-        }
-    }  
-    @media (max-width: 480px) {
-        .woot-widget-bubble.woot-elements--right{
-            bottom: ${(props) => (!props.$cookieInfoDismissed ? '150px' : '14px')}
-        }
-    }  
-    
-`;
-
-const StyledTopBar = styled.div`
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.xl}) {
-        .navlink-ask {
-            display: none;
-        }
-    }
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
-        .navbar-collapse {
-            margin-top: 0.4rem;
-        }
-        .nav-item {
-            border-top: 1px solid ${(props) => props.theme.light};
-        }
-        .btn:not(.search-icon) {
-            width: 100%;
-        }
-        .btn-group {
-            display: block !important;
-        }
-        .dropdown-menu {
-            width: 100%;
-        }
-        .label {
-            display: inline;
-        }
-        .input-group {
-            width: 100%;
-        }
-        &.home-page {
-            .nav-item {
-                border-top-color: ${(props) => props.theme.secondaryDarker};
-            }
-        }
-    }
-
-    margin-bottom: 0;
-    padding-top: 72px;
-
-    &.home-page {
-        // For the background
-        background: #5f6474 url(${HomeBannerBg.src});
-        background-position-x: 0%, 0%;
-        background-position-y: 0%, 0%;
-        background-size: auto, auto;
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center 10%;
-        background-repeat: no-repeat;
-    }
-    position: relative;
-`;
-
-const StyledNavbar = styled(Navbar)`
-    &&& {
-        background: transparent;
-        border: 0;
-
-        .nav-link {
-            color: ${(props) => props.theme.secondary};
-
-            &:hover {
-                color: ${(props) => props.theme.primary};
-            }
-        }
-
-        .search-box {
-            input {
-                border-right: 0;
-            }
-
-            .search-icon {
-                color: ${(props) => props.theme.primary};
-            }
-
-            button {
-                border: 1px solid #ced4da;
-                border-left: 0 !important;
-                background: ${(props) => props.theme.inputBg};
-            }
-        }
-
-        &:not(.transparent-navbar) {
-            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
-            background: white;
-        }
-
-        &.transparent-navbar {
-            & .nav-link {
-                color: white;
-                &:hover {
-                    color: #bbbbbb;
-                }
-            }
-            & .sign-in {
-                color: white;
-                background: #32303b;
-                border-color: #32303b;
-                &:hover {
-                    color: white;
-                    background: #100f13;
-                    border-color: #100f13;
-                }
-            }
-            .search-box .search-icon {
-                color: ${(props) => props.theme.secondary};
-            }
-
-            @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
-                background: #5f6474;
-            }
-        }
-    }
-`;
 
 const Header = () => {
     const { user, status } = useAuthentication();
@@ -190,47 +50,15 @@ const Header = () => {
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
     const [isExploding, setIsExploding] = useState(false);
 
+    const isMounted = useMountedState();
+    const { y: scrollPosition } = useWindowScroll();
     const pathname = usePathname();
-    const isHomePath = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
-    const [isTransparentNavbar, setIsTransparentNavbar] = useState(isHomePath);
-    const [isHomePage, setIsHomePage] = useState(isHomePath);
 
-    const dispatch = useDispatch();
+    const toggleNavBar = () => setIsOpenNavBar((v) => !v);
 
-    useEffect(() => {
-        setIsHomePage(isHomePath);
-        setIsTransparentNavbar(isHomePath);
-    }, [isHomePath]);
+    const toggleAboutMenu = () => setIsOpenAboutMenu((v) => !v);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 0) {
-                if (isTransparentNavbar) {
-                    setIsTransparentNavbar(false);
-                }
-            } else if (!isTransparentNavbar && isHomePath) {
-                setIsTransparentNavbar(true);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [dispatch, isTransparentNavbar, pathname]);
-
-    const toggleNavBar = () => {
-        setIsOpenNavBar(!isOpenNavBar);
-    };
-
-    const toggleAboutMenu = () => {
-        setIsOpenAboutMenu(!isOpenAboutMenu);
-    };
-
-    const toggleViewMenu = () => {
-        setIsOpenViewMenu(!isOpenViewMenu);
-    };
+    const toggleViewMenu = () => setIsOpenViewMenu((v) => !v);
 
     const closeMenu = () => {
         setIsOpenViewMenu(false);
@@ -238,7 +66,7 @@ const Header = () => {
         setIsOpenAboutMenu(false);
     };
 
-    const requireAuthentication = (e, redirectRoute) => {
+    const requireAuthentication = (e: MouseEvent<HTMLElement>, redirectRoute: string) => {
         if (!user) {
             const redirectUri = `${env('NEXT_PUBLIC_URL')}${redirectRoute}`;
             signIn('keycloak', { callbackUrl: redirectUri });
@@ -250,23 +78,18 @@ const Header = () => {
     };
 
     const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
-
-    const navbarClasses = `
-            ${isTransparentNavbar ? 'transparent-navbar' : ''}
-            ${isTransparentNavbar && isOpenNavBar ? 'shadow' : ''}
-        `;
+    const isHomePage = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
+    const isTransparentNavbar = isMounted() ? isHomePage && scrollPosition === 0 : true;
 
     return (
         <StyledTopBar className={isHomePage ? 'home-page' : ''}>
             <StyledNavbar
-                light={!isTransparentNavbar}
-                dark={isTransparentNavbar}
-                className={navbarClasses}
+                {...(isTransparentNavbar ? { light: false, dark: true } : { light: true, dark: false })}
                 expand="md"
                 fixed="top"
+                transparent={isTransparentNavbar.toString()}
                 id="main-navbar"
                 container={!isTransparentNavbar ? true : 'sm'}
-                style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
             >
                 <GlobalStyle $scrollbarWidth={scrollbarWidth(true)} $cookieInfoDismissed={cookieInfoDismissed} />
 
@@ -276,8 +99,7 @@ const Header = () => {
                     onClick={closeMenu}
                     style={{ color: isTransparentNavbar ? '#545a71' : '#EF815E' }}
                 >
-                    {!isTransparentNavbar && <Image src={Logo} alt="Logo ORKG" />}
-                    {isTransparentNavbar && <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
+                    {!isTransparentNavbar ? <Image src={Logo} alt="Logo ORKG" /> : <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
                     {
                         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                         <div
@@ -366,9 +188,6 @@ const Header = () => {
                                     Sustainable <br />
                                     development goals
                                 </DropdownItem>
-                                {/** <DropdownItem tag={Link} href={ROUTES.DIAGRAMS} onClick={closeMenu}>
-                                    Diagrams
-                                </DropdownItem> */}
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />
@@ -387,7 +206,7 @@ const Header = () => {
                                 <DropdownItem
                                     tag={Link}
                                     href={reverse(ROUTES.ORGANIZATIONS, {
-                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.GENERAL).label,
+                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.GENERAL)?.label,
                                     })}
                                     onClick={closeMenu}
                                 >
@@ -396,7 +215,7 @@ const Header = () => {
                                 <DropdownItem
                                     tag={Link}
                                     href={reverse(ROUTES.ORGANIZATIONS, {
-                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.EVENT).label,
+                                        id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.EVENT)?.label,
                                     })}
                                     onClick={closeMenu}
                                 >
@@ -475,7 +294,7 @@ const Header = () => {
 
                         {/* about menu */}
                         <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} id="about">
-                            <DropdownToggle className="ms-2 nav-link bg-transparent border-0 text-start" onClick={toggleAboutMenu}>
+                            <DropdownToggle className="ms-2 nav-link bg-transparent border-0 text-start">
                                 About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
