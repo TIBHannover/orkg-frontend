@@ -38,7 +38,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
     });
 
     // Set Default filters
-    if (filterConfig && contentType !== CLASSES.PAPER) {
+    if (filterConfig && filterConfig.length > 0 && contentType !== CLASSES.PAPER) {
         toast.dismiss();
         toast.info('Filters are only available on the paper type');
         setContentType(CLASSES.PAPER, { scroll: false });
