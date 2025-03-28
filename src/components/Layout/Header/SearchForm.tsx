@@ -6,8 +6,7 @@ import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Form, Input, InputGroup } from 'reactstrap';
 import { getThing } from 'services/backend/things';
 import styled from 'styled-components';
@@ -22,7 +21,13 @@ const InputStyled = styled(Input)`
         max-width: 250px;
     }
 `;
-const SearchForm = ({ placeholder, onSearch = null }) => {
+
+type SearchFormProps = {
+    placeholder: string;
+    onSearch?: () => void;
+};
+
+const SearchForm: FC<SearchFormProps> = ({ placeholder, onSearch = undefined }) => {
     const [value, setValue] = useState('');
 
     const router = useRouter();
@@ -33,11 +38,11 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         setValue(decodedValue || '');
     }, [urlSearchQuery]);
 
-    const handleChange = (event) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         let route = '';
@@ -46,16 +51,16 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
             const entity = await getThing(id);
             const link = getLinkByEntityType(entity?._class, id);
             setValue('');
-            route = router.push(link);
+            router.push(link);
         } else if (isString(value) && value) {
-            const types = searchParams.get('types')?.split(',');
-            const createdBy = searchParams.get('createdBy');
-            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&types=${`${types?.length > 0 ? types.join(',') : ''}`}&createdBy=${
+            const types: string[] | undefined = searchParams.get('types')?.split(',');
+            const createdBy: string | null = searchParams.get('createdBy');
+            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&types=${`${types?.length ? types.join(',') : ''}`}&createdBy=${
                 createdBy ?? ''
             }
                     `;
         }
-        onSearch && onSearch();
+        onSearch?.();
 
         return route ? router.push(route) : null;
     };
@@ -79,11 +84,6 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
             </InputGroup>
         </Form>
     );
-};
-
-SearchForm.propTypes = {
-    placeholder: PropTypes.string.isRequired,
-    onSearch: PropTypes.func,
 };
 
 export default SearchForm;
