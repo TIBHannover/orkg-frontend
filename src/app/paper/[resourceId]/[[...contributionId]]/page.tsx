@@ -1,3 +1,4 @@
+import NotFound from 'app/not-found';
 import Coins from 'components/Coins/Coins';
 import ViewPaper from 'components/ViewPaper/Page/ViewPaper';
 
@@ -9,7 +10,7 @@ import { sanitize } from 'isomorphic-dompurify';
 import { Metadata } from 'next';
 import { getPaper } from 'services/backend/papers';
 import { getResource } from 'services/backend/resources';
-import { Paper } from 'services/backend/types';
+import { Paper, Resource } from 'services/backend/types';
 
 const getDescription = (paper?: Paper) =>
     `ORKG structured paper description. Published: ${
@@ -25,6 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ resourceI
         paper = await getPaper(resourceId);
     } catch (e) {
         console.error(e);
+    }
+    if (!paper) {
+        return {};
     }
     const title = `${paper?.title ?? 'Paper'} - ORKG`;
     const description = getDescription(paper);
@@ -46,7 +50,15 @@ export async function generateMetadata({ params }: { params: Promise<{ resourceI
 export default async function CheckPaperVersion(props: { params: Promise<{ resourceId: string }> }) {
     const params = await props.params;
 
-    const paperResource = await getResource(params.resourceId);
+    let paperResource: Resource | undefined;
+    try {
+        paperResource = await getResource(params.resourceId);
+    } catch (e) {
+        console.error(e);
+    }
+    if (!paperResource || (!paperResource.classes.includes(CLASSES.PAPER) && !paperResource.classes.includes(CLASSES.PAPER_VERSION))) {
+        return <NotFound />;
+    }
     const paperType = paperResource.classes.find((c) => c === CLASSES.PAPER || c === CLASSES.PAPER_VERSION);
 
     if (paperType === CLASSES.PAPER_VERSION) {
