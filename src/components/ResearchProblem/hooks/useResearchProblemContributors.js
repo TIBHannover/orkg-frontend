@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getContributorsByResearchProblemId } from 'services/backend/problems';
+
+import { getContributorsByResearchProblemId } from '@/services/backend/problems';
 
 function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);

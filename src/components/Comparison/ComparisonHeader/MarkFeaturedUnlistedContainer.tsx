@@ -1,7 +1,8 @@
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { FC } from 'react';
+
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 
 type MarkFeaturedUnlistedContainerProps = {
     id: string;

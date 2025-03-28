@@ -1,4 +1,4 @@
-import { LiteratureListSection, LiteratureListSectionList, LiteratureListSectionText } from 'services/backend/types';
+import { LiteratureListSection, LiteratureListSectionList, LiteratureListSectionText } from '@/services/backend/types';
 
 export const isListSection = (section: LiteratureListSection): section is LiteratureListSectionList => {
     return section.type === 'list';

@@ -1,13 +1,14 @@
-import useUsedTemplates from 'components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { debounce, differenceBy, uniqBy } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getParentResearchFields, statementsUrl } from 'services/backend/statements';
-import { getTemplates, templatesUrl, getFeaturedTemplates } from 'services/backend/templates';
-import { getCommonClasses, getResearchFields, getResearchProblems } from 'slices/contributionEditorSlice';
-import useSWRInfinite from 'swr/infinite';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
+
+import useUsedTemplates from '@/components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { getParentResearchFields, statementsUrl } from '@/services/backend/statements';
+import { getFeaturedTemplates, getTemplates, templatesUrl } from '@/services/backend/templates';
+import { getCommonClasses, getResearchFields, getResearchProblems } from '@/slices/contributionEditorSlice';
 
 const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [

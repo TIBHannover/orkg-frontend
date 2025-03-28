@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { wikidataUrl } from 'services/wikidata';
+
+import { wikidataUrl } from '@/services/wikidata';
 
 const searchEntity = ({ request }: { request: Request }) => {
     const url = new URL(request.url);

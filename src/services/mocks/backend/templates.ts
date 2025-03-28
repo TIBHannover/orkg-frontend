@@ -1,14 +1,15 @@
 import { http, HttpResponse } from 'msw';
-import { templatesUrl } from 'services/backend/templates';
-import { Template } from 'services/backend/types';
+
+import { templatesUrl } from '@/services/backend/templates';
+import { Template } from '@/services/backend/types';
 import {
+    strictTemplate,
     templateR0TemplateR40006,
     templateR35077,
     templateR35087,
     templateR44415,
     templateR48000,
-    strictTemplate,
-} from 'services/mocks/backend/__mocks__/Templates';
+} from '@/services/mocks/backend/__mocks__/Templates';
 
 const templates = [
     http.get(`${templatesUrl}:id`, ({ params }) => {

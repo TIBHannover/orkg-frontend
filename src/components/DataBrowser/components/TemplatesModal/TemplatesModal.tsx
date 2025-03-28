@@ -1,21 +1,22 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TemplateButton from 'components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useFeaturedTemplates from 'components/DataBrowser/hooks/useFeaturedTemplates';
-import useRecommendedTemplates from 'components/DataBrowser/hooks/useRecommendedTemplates';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TemplatesFilters from 'components/Templates/TemplatesFilters/TemplatesFilters';
-import useTemplateGallery from 'components/Templates/TemplatesFilters/useTemplateGallery';
-import Tooltip from 'components/Utils/Tooltip';
-import { CLASSES } from 'constants/graphSettings';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { Template } from 'services/backend/types';
 import styled from 'styled-components';
+
+import TemplateButton from '@/components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useFeaturedTemplates from '@/components/DataBrowser/hooks/useFeaturedTemplates';
+import useRecommendedTemplates from '@/components/DataBrowser/hooks/useRecommendedTemplates';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
+import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
+import Tooltip from '@/components/Utils/Tooltip';
+import { CLASSES } from '@/constants/graphSettings';
+import { Template } from '@/services/backend/types';
 
 const AnimationContainer = styled(CSSTransition)`
     &.zoom-enter {

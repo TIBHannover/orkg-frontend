@@ -1,6 +1,11 @@
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { usePrevious } from 'react-use';
+import { Button } from 'reactstrap';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
 import {
     ContributionCell,
     ContributionCellInput,
@@ -12,13 +17,9 @@ import {
     TippyContainer,
     ValueCellInput,
     ValueCellValidator,
-} from 'libs/selfVisModel/RenderingComponents/styledComponents';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { validateCellMapping } from 'libs/selfVisModel/validateCellMapping';
-import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
-import { usePrevious } from 'react-use';
-import { Button } from 'reactstrap';
+} from '@/libs/selfVisModel/RenderingComponents/styledComponents';
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import { validateCellMapping } from '@/libs/selfVisModel/validateCellMapping';
 
 const CellVE = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());

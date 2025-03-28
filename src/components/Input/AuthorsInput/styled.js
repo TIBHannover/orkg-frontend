@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
 import { Button } from 'reactstrap';
+import styled, { createGlobalStyle } from 'styled-components';
 
 export const AuthorTags = styled.div`
     display: flex;

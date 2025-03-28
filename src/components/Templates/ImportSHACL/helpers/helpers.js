@@ -1,9 +1,10 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import rdf from 'rdf';
-import { createClass, getClassById, getClasses } from 'services/backend/classes';
-import { createPredicate, getPredicate, getPredicates } from 'services/backend/predicates';
-import { getResource } from 'services/backend/resources';
-import { getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { createClass, getClassById, getClasses } from '@/services/backend/classes';
+import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
+import { getResource } from '@/services/backend/resources';
+import { getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
 
 export const isORKGDefaultPredicate = (id) => Object.keys(PREDICATES).find((c) => PREDICATES[c] === id);
 

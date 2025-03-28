@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { geonamesUrl } from 'services/geoNames';
+
+import { geonamesUrl } from '@/services/geoNames';
 
 const getGeoNames = ({ request }: { request: Request }) => {
     const url = new URL(request.url);

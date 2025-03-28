@@ -1,7 +1,8 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { createResource } from 'services/backend/resources';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { createResource } from '@/services/backend/resources';
 
 const PublishedInInput = ({ value = '', onChange, inputId = null, isDisabled = false }) => (
     <Autocomplete

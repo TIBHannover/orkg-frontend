@@ -1,4 +1,4 @@
-import { DurationType } from 'constants/DataTypes';
+import { DurationType } from '@/constants/DataTypes';
 
 export type DurationValues = {
     years: string;

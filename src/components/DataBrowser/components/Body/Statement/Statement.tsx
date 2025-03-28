@@ -1,17 +1,18 @@
-import TripleObject from 'components/DataBrowser/components/Body/Statement/Object/TripleObject';
-import TriplePredicate from 'components/DataBrowser/components/Body/Statement/Predicate/TriplePredicate';
-import ValuePreviewFactory from 'components/DataBrowser/components/Body/ValuePreviewFactory/ValuePreviewFactory';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { getBackgroundColor } from 'components/DataBrowser/utils/dataBrowserUtils';
-import useStatement from 'components/DataBrowser/hooks/useStatement';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
+import { isEqual } from 'lodash';
 import { FC, Fragment, ReactElement, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { Statement } from 'services/backend/types';
 import styled from 'styled-components';
-import { isEqual } from 'lodash';
-import { ENTITIES } from 'constants/graphSettings';
+
+import TripleObject from '@/components/DataBrowser/components/Body/Statement/Object/TripleObject';
+import TriplePredicate from '@/components/DataBrowser/components/Body/Statement/Predicate/TriplePredicate';
+import ValuePreviewFactory from '@/components/DataBrowser/components/Body/ValuePreviewFactory/ValuePreviewFactory';
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useStatement from '@/components/DataBrowser/hooks/useStatement';
+import { getBackgroundColor } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
 
 type SingleStatementProps = {
     path: string[];

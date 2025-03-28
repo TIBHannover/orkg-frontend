@@ -1,15 +1,16 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useFilters from 'components/Search/hooks/useFilters';
-import OrkgAskBanner from 'components/Search/OrkgAskBanner/OrkgAskBanner';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { isString } from 'lodash';
 import { Button, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useFilters from '@/components/Search/hooks/useFilters';
+import OrkgAskBanner from '@/components/Search/OrkgAskBanner/OrkgAskBanner';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import DEFAULT_FILTERS from '@/constants/searchDefaultFilters';
 
 const Filters = () => {
     const { user, value, selectedFilters, createdBy, isLoadingFilterClasses, setValue, setCreatedBy, toggleFilter, submitSearch } = useFilters();

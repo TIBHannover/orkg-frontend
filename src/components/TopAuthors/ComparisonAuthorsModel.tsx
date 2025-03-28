@@ -1,8 +1,9 @@
-import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
-import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
-import useTopAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { ComparisonTopAuthor } from 'services/backend/comparisons';
+
+import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
+import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
+import useTopAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import { ComparisonTopAuthor } from '@/services/backend/comparisons';
 
 type ComparisonAuthorsModelProps = {
     comparisonId: string;

@@ -1,8 +1,9 @@
 /* eslint-disable import/prefer-default-export */
-import { Cite } from '@citation-js/core';
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';
 import '@citation-js/plugin-doi';
+
+import { Cite } from '@citation-js/core';
 
 export async function POST(request: Request) {
     const res = await request.json();

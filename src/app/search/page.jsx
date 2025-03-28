@@ -1,15 +1,16 @@
 'use client';
 
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Filters from 'components/Search/Filters';
-import { useSearch } from 'components/Search/hooks/useSearch';
-import Results from 'components/Search/Results';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { ENTITIES } from 'constants/graphSettings';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { unionBy } from 'lodash';
 import { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Filters from '@/components/Search/Filters';
+import { useSearch } from '@/components/Search/hooks/useSearch';
+import Results from '@/components/Search/Results';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { ENTITIES } from '@/constants/graphSettings';
+import DEFAULT_FILTERS from '@/constants/searchDefaultFilters';
 
 export default function Search() {
     const { searchTerm, selectedFilters, results, isNextPageLoading, hasNextPage, isLoading, loadMoreResults, currentPage } = useSearch();

@@ -1,5 +1,5 @@
-import { getPaperByDoi, getPaperByTitle } from 'services/backend/papers';
-import { Paper } from 'services/backend/types';
+import { getPaperByDoi, getPaperByTitle } from '@/services/backend/papers';
+import { Paper } from '@/services/backend/types';
 
 const getExistingPaper = async ({ doi, title }: { doi?: string; title?: string }): Promise<Paper | null> => {
     // check if DOI exists

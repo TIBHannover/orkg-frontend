@@ -1,21 +1,22 @@
-import Link from 'next/link';
-import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import ExtractReferencesModal from 'components/PdfAnnotation/ExtractReferencesModal';
-import useExtractionModal from 'components/PdfAnnotation/hooks/useExtractionModal';
-import useTableEditor from 'components/PdfAnnotation/hooks/useTableEditor';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import ExtractReferencesModal from '@/components/PdfAnnotation/ExtractReferencesModal';
+import useExtractionModal from '@/components/PdfAnnotation/hooks/useExtractionModal';
+import useTableEditor from '@/components/PdfAnnotation/hooks/useTableEditor';
+import ROUTES from '@/constants/routes';
 
 // CRA-CODE
-// import TableEditor from 'components/PdfAnnotation/TableEditor';
+// import TableEditor from '@/components/PdfAnnotation/TableEditor';
 
 // NEXT-CODE
-const TableEditor = dynamic(() => import('components/PdfAnnotation/TableEditor'), {
+const TableEditor = dynamic(() => import('@/components/PdfAnnotation/TableEditor'), {
     ssr: false,
 });
 

@@ -1,4 +1,4 @@
-import Cell from 'libs/selfVisModel/Cell';
+import Cell from '@/libs/selfVisModel/Cell';
 
 export default class MachineReadableRepresentation {
     constructor(inputData) {

@@ -1,9 +1,5 @@
 import { faCubes, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { CarouselIndicatorsStyled } from 'components/styled';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -11,8 +7,13 @@ import { useState } from 'react';
 import Dotdotdot from 'react-dotdotdot';
 import Gravatar from 'react-gravatar';
 import { Card, CardBody, CardFooter, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { CarouselIndicatorsStyled } from '@/components/styled';
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const CarouselContainer = styled.div`
     width: 100%;

@@ -1,18 +1,19 @@
-import AddStatement from 'components/DataBrowser/components/Body/AddStatement/AddStatement';
-import NoData from 'components/DataBrowser/components/Body/NoData/NoData';
-import SingleStatement from 'components/DataBrowser/components/Body/Statement/Statement';
-import ValuePreviewFactory from 'components/DataBrowser/components/Body/ValuePreviewFactory/ValuePreviewFactory';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
-import { getListPropertiesFromTemplate, prioritizeDescriptionStatements } from 'components/DataBrowser/utils/dataBrowserUtils';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { groupBy, sortBy, uniqBy } from 'lodash';
 import { Fragment, ReactElement } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { Predicate, Resource, Statement } from 'services/backend/types';
+
+import AddStatement from '@/components/DataBrowser/components/Body/AddStatement/AddStatement';
+import NoData from '@/components/DataBrowser/components/Body/NoData/NoData';
+import SingleStatement from '@/components/DataBrowser/components/Body/Statement/Statement';
+import ValuePreviewFactory from '@/components/DataBrowser/components/Body/ValuePreviewFactory/ValuePreviewFactory';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import { getListPropertiesFromTemplate, prioritizeDescriptionStatements } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { Predicate, Resource, Statement } from '@/services/backend/types';
 
 const Body = () => {
     const { error, entity, statements, isLoadingStatements } = useEntity();

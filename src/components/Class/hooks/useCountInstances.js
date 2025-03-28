@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getCountInstances } from 'services/backend/classes';
+
+import { getCountInstances } from '@/services/backend/classes';
 
 const useCountInstances = (id) => {
     const [isLoading, setIsLoading] = useState(false);

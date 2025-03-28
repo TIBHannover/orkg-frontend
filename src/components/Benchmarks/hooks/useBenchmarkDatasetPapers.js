@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getDatasetBenchmarksByDatasetId, getResearchProblemsByDatasetId } from 'services/backend/datasets';
 import { groupBy, sortBy } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+
+import { getDatasetBenchmarksByDatasetId, getResearchProblemsByDatasetId } from '@/services/backend/datasets';
 
 // Loading summary for a dataset
 function useBenchmarkDatasetPapers({ datasetId, problemId }) {

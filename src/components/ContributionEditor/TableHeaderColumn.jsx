@@ -1,26 +1,27 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
-import useContributionEditor from 'components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
-import useUsedTemplates from 'components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
-import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import EditPaperModal from 'components/PaperForm/EditPaperModal';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { env } from 'next-runtime-env';
 import Link from 'next/link';
+import { env } from 'next-runtime-env';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { getPaper } from 'services/backend/papers';
-import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from 'slices/contributionEditorSlice';
+
+import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from '@/components/Comparison/styled';
+import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
+import useUsedTemplates from '@/components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
+import EditResourceDialog from '@/components/EditResourceDialog/EditResourceDialog';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import EditPaperModal from '@/components/PaperForm/EditPaperModal';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getPaper } from '@/services/backend/papers';
+import { contributionUpdated, fetchTemplatesOfClassIfNeeded, paperUpdated } from '@/slices/contributionEditorSlice';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);

@@ -1,8 +1,9 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
-import { generateGraphMLFile, generateJSONFile } from 'components/DiagramEditor/helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import { generateGraphMLFile, generateJSONFile } from '@/components/DiagramEditor/helpers';
 
 function ExportDiagram({ isExportDiagramModalOpen, setIsExportDiagramModalOpen, diagram, diagramResource }) {
     return (

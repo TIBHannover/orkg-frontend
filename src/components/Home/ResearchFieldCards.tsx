@@ -1,21 +1,22 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CLASSES, ENTITIES, RESOURCES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import pluralize from 'pluralize';
 import { AnchorHTMLAttributes, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
-import { ResearchFieldStat } from 'services/backend/stats';
-import { Node } from 'services/backend/types';
 import styled from 'styled-components';
-import { reverseWithSlug } from 'utils';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { ResearchFieldStat } from '@/services/backend/stats';
+import { Node } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */

@@ -1,7 +1,8 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import { getTemplate, templatesUrl } from 'services/backend/templates';
-import { getTemplateRecommendations, nlpServiceUrl } from 'services/orkgNlp';
 import useSWR from 'swr';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import { getTemplate, templatesUrl } from '@/services/backend/templates';
+import { getTemplateRecommendations, nlpServiceUrl } from '@/services/orkgNlp';
 
 const useRecommendedTemplates = () => {
     const { context } = useDataBrowserState();

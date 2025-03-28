@@ -1,15 +1,16 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { OptionType } from 'components/Autocomplete/types';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { StyledButton } from 'components/StatementBrowser/styled';
-import { ENTITIES } from 'constants/graphSettings';
 import { FC, useState } from 'react';
 import type { ActionMeta, SingleValue } from 'react-select';
 import { ButtonGroup, InputGroup } from 'reactstrap';
-import { createResource } from 'services/backend/resources';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { OptionType } from '@/components/Autocomplete/types';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { StyledButton } from '@/components/StatementBrowser/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import { createResource } from '@/services/backend/resources';
 
 type AddMentioningProps = {
     handleAddMentioning: (newMentioningId: string) => Promise<void>;

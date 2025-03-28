@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
-import db from 'services/mocks/db';
-import { Resource, Predicate, Literal, Class, Statement } from 'services/backend/types';
-import { MISC } from 'constants/graphSettings';
+
+import { MISC } from '@/constants/graphSettings';
+import { Class, Literal, Predicate, Resource, Statement } from '@/services/backend/types';
+import db from '@/services/mocks/db';
 
 export const findEntityById = (id: string) => {
     const tables = [db.resources, db.literals, db.classes, db.lists];

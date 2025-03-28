@@ -1,15 +1,16 @@
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import ResearchProblemsModal from 'components/Conference/ResearchProblemsModal';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
-import { getProblemsByOrganizationId } from 'services/backend/organizations';
-import { reverseWithSlug } from 'utils';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import ResearchProblemsModal from '@/components/Conference/ResearchProblemsModal';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
+import { getProblemsByOrganizationId } from '@/services/backend/organizations';
+import { reverseWithSlug } from '@/utils';
 
 const ResearchProblemBox = ({ id }) => {
     const [error, setError] = useState(null);

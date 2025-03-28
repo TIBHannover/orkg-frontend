@@ -1,11 +1,12 @@
-import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
-import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styled';
-import { reviewContext } from 'components/Review/context/ReviewContext';
-import useReview from 'components/Review/hooks/useReview';
 import { sanitize } from 'isomorphic-dompurify';
 import { FC, useCallback, useContext, useEffect, useMemo } from 'react';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
+
+import showdownVideoPlugin from '@/components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
+import { MarkdownContainer } from '@/components/ArticleBuilder/MarkdownEditor/styled';
+import { reviewContext } from '@/components/Review/context/ReviewContext';
+import useReview from '@/components/Review/hooks/useReview';
 
 /**
  *

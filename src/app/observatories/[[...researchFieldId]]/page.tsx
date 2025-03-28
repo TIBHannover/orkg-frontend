@@ -1,27 +1,28 @@
 'use client';
 
-import ObservatoryCard from 'components/Cards/ObservatoryCard/ObservatoryCard';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
-import SortingSelector from 'components/Observatory/SortingSelector/SortingSelector';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import PreventModal from 'components/Resource/PreventModal/PreventModal';
-import Tabs from 'components/Tabs/Tabs';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 import { Button, Container, Row } from 'reactstrap';
-import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from 'services/backend/observatories';
-import { getResource, resourcesUrl } from 'services/backend/resources';
-import { Observatory } from 'services/backend/types';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+
+import ObservatoryCard from '@/components/Cards/ObservatoryCard/ObservatoryCard';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import SortingSelector from '@/components/Observatory/SortingSelector/SortingSelector';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import PreventModal from '@/components/Resource/PreventModal/PreventModal';
+import Tabs from '@/components/Tabs/Tabs';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import ROUTES from '@/constants/routes';
+import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from '@/services/backend/observatories';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+import { Observatory } from '@/services/backend/types';
 
 const defaultSortBy = 'name';
 const defaultSortDirection = 'asc';

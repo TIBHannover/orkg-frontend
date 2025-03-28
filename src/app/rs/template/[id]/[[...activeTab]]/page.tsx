@@ -2,22 +2,6 @@
 
 import { faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import Confirm from 'components/Confirmation/Confirmation';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
-import { SlotTooltip } from 'components/RosettaStone/SlotTooltip/SlotTooltip';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import Tabs from 'components/Tabs/Tabs';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -26,8 +10,25 @@ import { useEffect } from 'react';
 import ReactStringReplace from 'react-string-replace';
 import { toast } from 'react-toastify';
 import { Badge, Button, Container, ListGroup } from 'reactstrap';
-import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import useSWR from 'swr';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import Confirm from '@/components/Confirmation/Confirmation';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import { SlotTooltip } from '@/components/RosettaStone/SlotTooltip/SlotTooltip';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import Tabs from '@/components/Tabs/Tabs';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 
 const RSTemplatePage = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();

@@ -1,13 +1,14 @@
-import useMembership from 'components/hooks/useMembership';
+import { toast } from 'react-toastify';
+import { mutate } from 'swr';
+
+import useMembership from '@/components/hooks/useMembership';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { CLASSES } from 'constants/graphSettings';
-import errorHandler from 'helpers/errorHandler';
-import { toast } from 'react-toastify';
-import { createRSTemplate, rosettaStoneUrl, updateRSTemplate } from 'services/backend/rosettaStone';
-import { mutate } from 'swr';
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { CLASSES } from '@/constants/graphSettings';
+import errorHandler from '@/helpers/errorHandler';
+import { createRSTemplate, rosettaStoneUrl, updateRSTemplate } from '@/services/backend/rosettaStone';
 
 const useSaveStatementType = () => {
     const { id, examples, label, description, properties } = useRosettaTemplateEditorState();

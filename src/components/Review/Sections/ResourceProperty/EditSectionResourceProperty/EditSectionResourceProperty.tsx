@@ -1,6 +1,7 @@
-import ContentLink from 'components/Review/Sections/ContentLink/ContentLink';
 import { FC } from 'react';
-import { ReviewSection } from 'services/backend/types';
+
+import ContentLink from '@/components/Review/Sections/ContentLink/ContentLink';
+import { ReviewSection } from '@/services/backend/types';
 
 type EditSectionResourcePropertyProps = {
     section: ReviewSection;

@@ -1,9 +1,10 @@
 import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from 'components/ShareLinkMarker/helpers';
 import { usePathname } from 'next/navigation';
 import { FC } from 'react';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from '@/components/ShareLinkMarker/helpers';
 
 type ShareCreatedContentProps = {
     typeOfLink: string;

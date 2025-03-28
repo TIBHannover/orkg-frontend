@@ -1,9 +1,10 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { stringifyType } from 'components/Comparison/Filters/helpers';
-import { Badge, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Badge, Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import { stringifyType } from '@/components/Comparison/Filters/helpers';
 
 const DeleteButton = styled(Button)`
     &&& {

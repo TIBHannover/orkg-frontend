@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import Video from 'components/ValuePlugins/Video/Video';
-import { ENTITIES } from 'constants/graphSettings';
+
+import Video from '@/components/ValuePlugins/Video/Video';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const NODE_TYPES = [ENTITIES.RESOURCE, ENTITIES.LITERAL];
 

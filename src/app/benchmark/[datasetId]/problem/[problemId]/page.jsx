@@ -2,17 +2,6 @@
 
 import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
-import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
-import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { SubTitle } from 'components/styled';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -31,9 +20,21 @@ import {
     Table,
     UncontrolledButtonDropdown,
 } from 'reactstrap';
-import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from 'services/backend/datasets';
 import useSWRInfinite from 'swr/infinite';
-import { reverseWithSlug } from 'utils';
+
+import CodeURLsTooltip from '@/components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
+import useBenchmarkDatasetPapers from '@/components/Benchmarks/hooks/useBenchmarkDatasetPapers';
+import useBenchmarkDatasetResource from '@/components/Benchmarks/hooks/useBenchmarkDatasetResource';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';
+import { reverseWithSlug } from '@/utils';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map((value) => value[0]);

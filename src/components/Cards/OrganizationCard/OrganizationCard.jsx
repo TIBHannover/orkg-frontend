@@ -1,10 +1,11 @@
-import Link from 'next/link';
-import { Card, CardBody, CardTitle } from 'reactstrap';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import styled from 'styled-components';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
+import { Card, CardBody, CardTitle } from 'reactstrap';
+import styled from 'styled-components';
+
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const StyledOrganizationCard = styled.div`
     .logoContainer {

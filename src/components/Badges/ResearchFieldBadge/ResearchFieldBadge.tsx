@@ -1,11 +1,12 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { FC } from 'react';
 import { Badge } from 'reactstrap';
-import { Node } from 'services/backend/types';
-import { reverseWithSlug } from 'utils';
+
+import ROUTES from '@/constants/routes';
+import { Node } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 type ResearchFieldBadgeProps = {
     researchField: Node;

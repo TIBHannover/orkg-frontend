@@ -1,10 +1,11 @@
 'use client';
 
-import ListPage from 'components/PaginatedContent/ListPage';
-import SingleStatement from 'components/RosettaStone/SingleStatement/SingleStatement';
 import { useEffect } from 'react';
-import { getRSStatements, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { RosettaStoneStatement } from 'services/backend/types';
+
+import ListPage from '@/components/PaginatedContent/ListPage';
+import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import { getRSStatements, rosettaStoneUrl } from '@/services/backend/rosettaStone';
+import { RosettaStoneStatement } from '@/services/backend/types';
 
 const StatementsPage = () => {
     useEffect(() => {

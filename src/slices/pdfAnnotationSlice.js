@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { parse } from 'node-html-parser';
 import { toast } from 'react-toastify';
-import { convertPdf as convertPdfAPI } from 'services/orkgNlp/index';
-import { guid } from 'utils';
-import processPdf from 'services/grobid';
+
+import processPdf from '@/services/grobid';
+import { convertPdf as convertPdfAPI } from '@/services/orkgNlp/index';
+import { guid } from '@/utils';
 
 /*
     This state is used mostly by handsontable package. and it require to disable immutableCheck of redux in development mode.

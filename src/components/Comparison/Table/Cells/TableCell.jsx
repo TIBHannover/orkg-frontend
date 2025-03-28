@@ -1,18 +1,19 @@
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PathTooltipContent from 'components/Comparison/Table/Cells/PathTooltipContent';
-import TableCellLiteral from 'components/Comparison/Table/Cells/TableCellLiteral';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
-import { getCellPadding } from 'slices/comparisonSlice';
 import styled from 'styled-components';
+
+import PathTooltipContent from '@/components/Comparison/Table/Cells/PathTooltipContent';
+import TableCellLiteral from '@/components/Comparison/Table/Cells/TableCellLiteral';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import { getCellPadding } from '@/slices/comparisonSlice';
 
 export const Item = styled.div`
     margin: 0;

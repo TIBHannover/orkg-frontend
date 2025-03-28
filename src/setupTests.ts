@@ -1,10 +1,12 @@
-import { drop } from '@mswjs/data';
 import '@testing-library/jest-dom/extend-expect';
+
+import { drop } from '@mswjs/data';
 import { useRouter } from 'next-router-mock';
-import db from 'services/mocks/db';
-import seed from 'services/mocks/seed';
-import server from 'services/mocks/server';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
+
+import db from '@/services/mocks/db';
+import seed from '@/services/mocks/seed';
+import server from '@/services/mocks/server';
 
 vi.mock('next-client-cookies', () => {
     return {
@@ -39,7 +41,7 @@ vi.mock('react-dnd', () => ({
     useDrop: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),
 }));
 
-vi.mock('components/UserAvatar/UserAvatar', () => ({
+vi.mock('@/components/UserAvatar/UserAvatar', () => ({
     default: () => null,
 }));
 

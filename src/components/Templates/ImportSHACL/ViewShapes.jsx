@@ -1,13 +1,14 @@
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { AccordionBody, AccordionHeader, AccordionItem, Badge, Table } from 'reactstrap';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const ViewShapes = ({ data }) => (
     <div>

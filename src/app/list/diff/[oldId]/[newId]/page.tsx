@@ -1,14 +1,15 @@
 'use client';
 
-import DiffView from 'components/DiffView/DiffView';
-import useDiff from 'components/DiffView/useDiff';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useList from 'components/List/hooks/useList';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import { LiteratureList } from 'services/backend/types';
+
+import DiffView from '@/components/DiffView/DiffView';
+import useDiff from '@/components/DiffView/useDiff';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useList from '@/components/List/hooks/useList';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { LiteratureList } from '@/services/backend/types';
 
 const ListDiff = () => {
     const { listToPlainText } = useDiff();

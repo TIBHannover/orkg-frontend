@@ -1,6 +1,7 @@
-import useAuthentication from 'components/hooks/useAuthentication';
 import { useEffect, useState } from 'react';
-import { markAsFeatured, markAsUnlisted, removeFeaturedFlag, removeUnlistedFlag } from 'services/backend/resources';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { markAsFeatured, markAsUnlisted, removeFeaturedFlag, removeUnlistedFlag } from '@/services/backend/resources';
 
 function useMarkFeaturedUnlisted({ resourceId, unlisted, featured }) {
     const [isFeatured, setIsFeatured] = useState(featured);

@@ -1,7 +1,8 @@
-import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
-import { z, ZodType } from 'zod';
 import { orderBy } from 'lodash';
-import { EntityType } from 'services/backend/types';
+import { z, ZodType } from 'zod';
+
+import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
+import { EntityType } from '@/services/backend/types';
 // https://www.w3.org/TR/xmlschema-2
 
 export type StandardInputType =

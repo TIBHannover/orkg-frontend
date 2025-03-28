@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
-import CustomizationColumnChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationColumnChart';
-import CustomizationBarChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationBarChart';
-import CustomizationScatterChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationScatterChart';
-import CustomizationLineChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationLineChart';
-import CustomizationPieChart from 'libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationPieChart';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import CustomizationBarChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationBarChart';
+import CustomizationColumnChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationColumnChart';
+import CustomizationLineChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationLineChart';
+import CustomizationPieChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationPieChart';
+import CustomizationScatterChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationScatterChart';
 
 export default class AbstractCustomizationWidget extends Component {
     constructor(props) {

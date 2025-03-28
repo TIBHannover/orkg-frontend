@@ -1,7 +1,8 @@
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { PaginatedResponse, PaginationParams, Predicate } from 'services/backend/types';
+
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { PaginatedResponse, PaginationParams, Predicate } from '@/services/backend/types';
 
 export const predicatesUrl = `${url}predicates/`;
 export const predicatesApi = backendApi.extend(() => ({ prefixUrl: predicatesUrl }));

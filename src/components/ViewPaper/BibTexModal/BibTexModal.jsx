@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { parseCiteResult } from 'utils';
+
+import { parseCiteResult } from '@/utils';
 
 const BibTexModal = ({ toggle, onUpdateData }) => {
     const [bibTex, setBibTex] = useState('');

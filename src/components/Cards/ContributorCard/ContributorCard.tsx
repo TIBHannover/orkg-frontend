@@ -1,12 +1,13 @@
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import ActionButton, { ActionButtonProps } from 'components/ActionButton/ActionButton';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import Gravatar from 'react-gravatar';
-import { TopContributor } from 'services/backend/types';
 import styled from 'styled-components';
+
+import ActionButton, { ActionButtonProps } from '@/components/ActionButton/ActionButton';
+import ROUTES from '@/constants/routes';
+import { TopContributor } from '@/services/backend/types';
 
 export const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};

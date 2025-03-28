@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import AuthorBadgesComponent from 'components/Badges/AuthorBadges/AuthorBadges';
+
+import AuthorBadgesComponent from '@/components/Badges/AuthorBadges/AuthorBadges';
 
 export default {
     title: 'Badges/AuthorBadges',

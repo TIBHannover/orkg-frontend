@@ -1,19 +1,20 @@
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContextMenu from 'components/GraphView/ContextMenu';
-import GraphSearch from 'components/GraphView/GraphSearch';
-import Node from 'components/GraphView/Node';
-import SelectedEdgeBox from 'components/GraphView/SelectedEdgeBox';
-import SelectedNodeBox from 'components/GraphView/SelectedNodeBox';
-import useGraphView from 'components/GraphView/hooks/useGraphView';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
-// import RobotoFont from 'components/GraphView/roboto-medium-webfont.woff';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import Popover from 'components/FloatingUI/Popover';
-import { ENTITIES } from 'constants/graphSettings';
+
+// import RobotoFont from '@/components/GraphView/roboto-medium-webfont.woff';
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import Popover from '@/components/FloatingUI/Popover';
+import ContextMenu from '@/components/GraphView/ContextMenu';
+import GraphSearch from '@/components/GraphView/GraphSearch';
+import useGraphView from '@/components/GraphView/hooks/useGraphView';
+import Node from '@/components/GraphView/Node';
+import SelectedEdgeBox from '@/components/GraphView/SelectedEdgeBox';
+import SelectedNodeBox from '@/components/GraphView/SelectedNodeBox';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const LazyGraphViewModal = ({ toggle, resourceId }) => {
     const [layoutType, setLayoutType] = useState('forceDirected2d');

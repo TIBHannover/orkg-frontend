@@ -1,14 +1,15 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import PaperTitle from 'components/PaperTitle/PaperTitle';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import { Card, Table } from 'reactstrap';
-import { Author, UpdateAuthor } from 'services/backend/types';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import ROUTES from '@/constants/routes';
+import { Author, UpdateAuthor } from '@/services/backend/types';
 
 type MetadataTableProps = {
     title?: string;

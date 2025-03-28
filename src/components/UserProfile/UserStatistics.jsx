@@ -1,11 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { CLASSES } from 'constants/graphSettings';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Col, Row } from 'reactstrap';
-import { getResources } from 'services/backend/resources';
+
+import { CLASSES } from '@/constants/graphSettings';
+import { getResources } from '@/services/backend/resources';
 
 const STATISTICS = [
     {

@@ -1,10 +1,11 @@
-import { MISC } from 'constants/graphSettings';
-import { url as baseUrl } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
-import { getResource } from 'services/backend/resources';
-import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from 'services/backend/types';
+
+import { MISC } from '@/constants/graphSettings';
+import { url as baseUrl } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
+import { getResource } from '@/services/backend/resources';
+import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
 export const observatoriesApi = backendApi.extend(() => ({ prefixUrl: observatoriesUrl }));

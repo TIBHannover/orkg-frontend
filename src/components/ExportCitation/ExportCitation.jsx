@@ -1,14 +1,15 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { getResourceLink } from 'utils';
+
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { getResourceLink } from '@/utils';
 
 const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
     const bibtexOptions = {

@@ -1,19 +1,20 @@
 import { faArrowRight, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InfoBox from 'components/Autocomplete/CustomComponents/InfoBox';
-import { SourceBadge } from 'components/Autocomplete/styled';
-import { OptionType } from 'components/Autocomplete/types';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
 import { useContext } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import type { GroupBase } from 'react-select';
-import { OptionProps, components } from 'react-select';
+import { components, OptionProps } from 'react-select';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
-import { getLinkByEntityType } from 'utils';
+
+import InfoBox from '@/components/Autocomplete/CustomComponents/InfoBox';
+import { SourceBadge } from '@/components/Autocomplete/styled';
+import { OptionType } from '@/components/Autocomplete/types';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { getLinkByEntityType } from '@/utils';
 
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
 

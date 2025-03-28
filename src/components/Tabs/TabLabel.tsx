@@ -1,10 +1,11 @@
-import { CLASSES } from 'constants/graphSettings';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Badge } from 'reactstrap';
-import { getStatistics, statisticsUrl } from 'services/backend/statistics';
-import { VisibilityOptions } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { CLASSES } from '@/constants/graphSettings';
+import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
+import { VisibilityOptions } from '@/services/backend/types';
 
 interface TabLabelProps {
     label: string;

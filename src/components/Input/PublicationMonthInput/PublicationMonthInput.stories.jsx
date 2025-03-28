@@ -1,5 +1,6 @@
-import PublicationMonthInput from 'components/Input/PublicationMonthInput/PublicationMonthInput';
 import { useState } from 'react';
+
+import PublicationMonthInput from '@/components/Input/PublicationMonthInput/PublicationMonthInput';
 
 export default {
     title: 'Input/PublicationMonthInput',

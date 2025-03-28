@@ -1,15 +1,16 @@
-import EmbeddedComparison from 'components/Comparison/EmbeddedComparison/EmbeddedComparison';
-import { reviewContext } from 'components/Review/context/ReviewContext';
-import useReview from 'components/Review/hooks/useReview';
-import ROUTES from 'constants/routes';
 import { isEqual } from 'lodash';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Alert } from 'reactstrap';
-import { ReviewSection } from 'services/backend/types';
-import { setupStore } from 'store';
+
+import EmbeddedComparison from '@/components/Comparison/EmbeddedComparison/EmbeddedComparison';
+import { reviewContext } from '@/components/Review/context/ReviewContext';
+import useReview from '@/components/Review/hooks/useReview';
+import ROUTES from '@/constants/routes';
+import { ReviewSection } from '@/services/backend/types';
+import { setupStore } from '@/store';
 
 type SectionComparisonProps = {
     section: ReviewSection;

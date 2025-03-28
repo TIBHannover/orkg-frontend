@@ -1,14 +1,15 @@
 'use client';
 
-import useParams from 'components/useParams/useParams';
-import { PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
 import { Container } from 'reactstrap';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
 import useSWR from 'swr';
+
+import useParams from '@/components/useParams/useParams';
+import { PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
 
 /**
  * Component for redirecting visualization IDs to the comparison view

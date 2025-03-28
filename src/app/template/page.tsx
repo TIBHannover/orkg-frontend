@@ -2,20 +2,6 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
-import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
-import { OptionType } from 'components/Autocomplete/types';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import TitleBar from 'components/TitleBar/TitleBar';
-import Unauthorized from 'components/Unauthorized/Unauthorized';
-import useAuthentication from 'components/hooks/useAuthentication';
-import useMembership from 'components/hooks/useMembership';
-import { ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,8 +9,23 @@ import { useEffect, useRef, useState } from 'react';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Container, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
-import { createClass, getClassById } from 'services/backend/classes';
-import { createTemplate } from 'services/backend/templates';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import useMembership from '@/components/hooks/useMembership';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import Unauthorized from '@/components/Unauthorized/Unauthorized';
+import { ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { createClass, getClassById } from '@/services/backend/classes';
+import { createTemplate } from '@/services/backend/templates';
 
 const TemplateNew = () => {
     const [label, setLabel] = useState('');

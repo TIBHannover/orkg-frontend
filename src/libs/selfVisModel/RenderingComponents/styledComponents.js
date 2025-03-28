@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Input } from 'reactstrap';
+import styled from 'styled-components';
 
 export const TippyContainer = styled.div`
     overflow: visible;

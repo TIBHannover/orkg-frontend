@@ -1,5 +1,5 @@
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {

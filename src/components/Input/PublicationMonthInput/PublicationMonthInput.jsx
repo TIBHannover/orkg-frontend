@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { Input } from 'reactstrap';
 
 const PublicationMonthInput = ({ value = '', onChange, inputId = null, isDisabled = false }) => (
     <Input id={inputId} type="select" value={value} onChange={(e) => onChange(e.target.value)} disabled={isDisabled}>

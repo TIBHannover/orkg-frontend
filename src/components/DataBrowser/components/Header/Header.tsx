@@ -1,18 +1,19 @@
 import { faQuestionCircle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Breadcrumbs from 'components/DataBrowser/components/Header/Breadcrumbs/Breadcrumbs';
-import Metadata from 'components/DataBrowser/components/Header/Metadata/Metadata';
-import Preferences from 'components/DataBrowser/components/Header/Preferences/Preferences';
-import NotFound from 'components/DataBrowser/components/NotFound/NotFound';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import Popover from 'components/FloatingUI/Popover';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Alert, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+
+import Breadcrumbs from '@/components/DataBrowser/components/Header/Breadcrumbs/Breadcrumbs';
+import Metadata from '@/components/DataBrowser/components/Header/Metadata/Metadata';
+import Preferences from '@/components/DataBrowser/components/Header/Preferences/Preferences';
+import NotFound from '@/components/DataBrowser/components/NotFound/NotFound';
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import Popover from '@/components/FloatingUI/Popover';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const Header = () => {
     const { isUsingSnapshot } = useSnapshotStatement();

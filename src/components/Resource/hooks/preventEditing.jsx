@@ -1,8 +1,9 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
-import { CLASSES } from 'constants/graphSettings';
 import { Alert } from 'reactstrap';
+
+import { CLASSES } from '@/constants/graphSettings';
 
 const PREVENT_EDIT_CASES = [
     {

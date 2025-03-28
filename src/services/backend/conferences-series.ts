@@ -1,6 +1,6 @@
-import { url } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { ConferenceSeries, PaginatedResponse } from 'services/backend/types';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { ConferenceSeries, PaginatedResponse } from '@/services/backend/types';
 
 export const conferenceSeriesUrl = `${url}conference-series/`;
 export const conferenceSeriesApi = backendApi.extend(() => ({ prefixUrl: conferenceSeriesUrl }));

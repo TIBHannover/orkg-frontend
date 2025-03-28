@@ -1,9 +1,3 @@
-import FEEDBACK_QUESTIONS from 'components/Comparison/QualityReportModal/hooks/feedbackQuestions';
-import { getPropertyObjectFromData } from 'components/Comparison/hooks/helpers';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import THING_TYPES from 'constants/thingTypes';
 import dayjs from 'dayjs';
 import { flattenDeep, isEmpty, reject, values } from 'lodash';
 import { reverse } from 'named-urls';
@@ -11,9 +5,16 @@ import Link from 'next/link';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
-import { getThing } from 'services/simcomp';
+
+import { getPropertyObjectFromData } from '@/components/Comparison/hooks/helpers';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import FEEDBACK_QUESTIONS from '@/components/Comparison/QualityReportModal/hooks/feedbackQuestions';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import THING_TYPES from '@/constants/thingTypes';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
+import { getThing } from '@/services/simcomp';
 
 type Property = {
     id: string;

@@ -1,4 +1,4 @@
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
 
 const useCanAddProperty = () => {
     const { templates } = useTemplates();

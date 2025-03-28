@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert, Form, FormGroup, Label, Input } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { updateTableData } from 'slices/pdfAnnotationSlice';
-import { toast } from 'react-toastify';
-import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep, isString } from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Alert, Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import { updateTableData } from '@/slices/pdfAnnotationSlice';
 
 const ExtractReferencesModal = (props) => {
     const [columns, setColumns] = useState([]);

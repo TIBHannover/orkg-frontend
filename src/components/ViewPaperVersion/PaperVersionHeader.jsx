@@ -1,14 +1,15 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { getAltMetrics } from 'services/altmetric/index';
+
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import ROUTES from '@/constants/routes';
+import { getAltMetrics } from '@/services/altmetric/index';
 
 const PaperVersionHeader = () => {
     const viewPaper = useSelector((state) => state.viewPaper.paper, shallowEqual);

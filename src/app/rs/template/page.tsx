@@ -1,14 +1,15 @@
 'use client';
 
-import RosettaTemplateEditor from 'components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
-import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import TitleBar from 'components/TitleBar/TitleBar';
+import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { useRouter } from 'next/navigation';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import requireAuthentication from 'requireAuthentication';
+
+import RosettaTemplateEditor from '@/components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
+import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
 
 const NewRSTemplatePage = () => {
     useEffect(() => {

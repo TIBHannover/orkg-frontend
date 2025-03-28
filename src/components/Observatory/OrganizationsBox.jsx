@@ -1,19 +1,20 @@
 import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
-import ActionButton from 'components/ActionButton/ActionButton';
-import useAuthentication from 'components/hooks/useAuthentication';
-import AddOrganization from 'components/Observatory/AddOrganization';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { updateObservatory } from 'services/backend/observatories';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import AddOrganization from '@/components/Observatory/AddOrganization';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { updateObservatory } from '@/services/backend/observatories';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem, isEditMode }) => {
     const { user } = useAuthentication();

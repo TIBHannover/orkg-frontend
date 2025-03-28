@@ -1,11 +1,12 @@
 import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
 
 const StyledIcon = styled(FontAwesomeIcon)`
     cursor: pointer;

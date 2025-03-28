@@ -1,12 +1,13 @@
-import Confirm from 'components/Confirmation/Confirmation';
-import { areFiltersEqual, loadFiltersFromLocalStorage } from 'components/Filters/helpers';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { FILTERS_LOCAL_STORAGE_NAME, FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
-import { createFiltersInObservatory, deleteFilterOfObservatory, updateFiltersOfObservatory } from 'services/backend/observatories';
-import { FilterConfig } from 'services/backend/types';
-import { asyncLocalStorage, getErrorMessage, guid } from 'utils';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import { areFiltersEqual, loadFiltersFromLocalStorage } from '@/components/Filters/helpers';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { FILTER_SOURCE, FILTERS_LOCAL_STORAGE_NAME } from '@/constants/filters';
+import { createFiltersInObservatory, deleteFilterOfObservatory, updateFiltersOfObservatory } from '@/services/backend/observatories';
+import { FilterConfig } from '@/services/backend/types';
+import { asyncLocalStorage, getErrorMessage, guid } from '@/utils';
 
 const useCurateFilters = ({
     oId,

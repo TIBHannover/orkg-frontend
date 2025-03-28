@@ -1,6 +1,6 @@
-import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import Acknowledgements from 'components/Review/Sections/Acknowledgements/Acknowledgements';
+import { SectionStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import Acknowledgements from '@/components/Review/Sections/Acknowledgements/Acknowledgements';
 
 const EditSectionAcknowledgements = () => (
     <SectionStyled className="box rounded mb-4">

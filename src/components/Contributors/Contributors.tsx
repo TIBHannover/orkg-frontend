@@ -1,9 +1,10 @@
 import { faClose, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { StyledDotGravatar } from 'components/styled';
 import { FC, useState } from 'react';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { StyledDotGravatar } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
 
 const PERCENTAGE_THRESHOLD = 3;
 

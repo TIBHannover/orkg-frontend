@@ -2,26 +2,27 @@
 
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
-import LinkButton from 'components/Autocomplete/ValueButtons/LinkButton';
-import TreeSelector from 'components/Autocomplete/ValueButtons/TreeSelector';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import useAuthentication from 'components/hooks/useAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Container, Form, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { createClass, setParentClassByID } from 'services/backend/classes';
-import { getErrorMessage } from 'utils';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
+import TreeSelector from '@/components/Autocomplete/ValueButtons/TreeSelector';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
+import { createClass, setParentClassByID } from '@/services/backend/classes';
+import { getErrorMessage } from '@/utils';
 
 const AddClass = () => {
     const isURI = new RegExp(REGEX.URL);

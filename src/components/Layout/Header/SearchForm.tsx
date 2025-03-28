@@ -1,16 +1,17 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { isString } from 'lodash';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Form, Input, InputGroup } from 'reactstrap';
-import { getThing } from 'services/backend/things';
 import styled from 'styled-components';
-import { getLinkByEntityType } from 'utils';
+
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import { getThing } from '@/services/backend/things';
+import { getLinkByEntityType } from '@/utils';
 
 const InputStyled = styled(Input)`
     max-width: 130px;

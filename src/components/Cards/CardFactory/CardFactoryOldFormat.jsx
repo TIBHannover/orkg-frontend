@@ -1,18 +1,19 @@
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import ListCard from 'components/Cards/ListCard/ListCard';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ReviewCard from 'components/Cards/ReviewCard/ReviewCard';
-import VisualizationCard from 'components/Cards/VisualizationCard/VisualizationCard';
-import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
+
+import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
+import ListCard from '@/components/Cards/ListCard/ListCard';
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
+import VisualizationCard from '@/components/Cards/VisualizationCard/VisualizationCard';
+import { CLASSES } from '@/constants/graphSettings';
 import {
     convertComparisonToNewFormat,
     convertListToNewFormat,
     convertPaperToNewFormat,
     convertReviewToNewFormat,
     convertVisualizationToNewFormat,
-} from 'utils';
+} from '@/utils';
 
 const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }) => {
     const findClass = useCallback((classId) => item?.classes?.includes(classId), [item?.classes]);

@@ -1,17 +1,18 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartPropertyGuidelinesCheck from 'components/SmartSuggestions/SmartPropertyGuidelinesCheck';
-import SmartPropertySuggestions from 'components/SmartSuggestions/SmartPropertySuggestions';
-import { AddPropertyContentStyle, AddPropertyFormStyle, AddPropertyStyle, StyledButton } from 'components/StatementBrowser/styled';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import defaultProperties from 'constants/defaultProperties';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { ButtonGroup, InputGroup } from 'reactstrap';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPropertyGuidelinesCheck';
+import SmartPropertySuggestions from '@/components/SmartSuggestions/SmartPropertySuggestions';
+import { AddPropertyContentStyle, AddPropertyFormStyle, AddPropertyStyle, StyledButton } from '@/components/StatementBrowser/styled';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import defaultProperties from '@/constants/defaultProperties';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const AddPropertyView = ({
     isDisabled = false,

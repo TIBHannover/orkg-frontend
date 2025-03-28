@@ -3,25 +3,12 @@
 import { faChevronDown, faExternalLinkAlt, faGift, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
-import Logo from 'assets/img/birthday/logo.svg';
-import LogoWhite from 'assets/img/birthday/logo_white.svg';
-import Jumbotron from 'components/Home/Jumbotron';
-import useAuthentication from 'components/hooks/useAuthentication';
-import AboutMenu from 'components/Layout/Header/AboutMenu';
-import AddNew from 'components/Layout/Header/AddNew';
-import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
-import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
-import SearchForm from 'components/Layout/Header/SearchForm';
-import { GlobalStyle, StyledNavbar, StyledTopBar } from 'components/Layout/Header/styled';
-import UserTooltip from 'components/Layout/Header/UserTooltip';
-import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { signIn } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 import { match } from 'path-to-regexp';
 import { MouseEvent, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
@@ -30,7 +17,6 @@ import { useMountedState, useWindowScroll } from 'react-use';
 import {
     Badge,
     Button,
-    UncontrolledButtonDropdown as ButtonDropdown,
     Collapse,
     DropdownItem,
     DropdownMenu,
@@ -39,7 +25,22 @@ import {
     NavbarToggler,
     NavItem,
     NavLink,
+    UncontrolledButtonDropdown as ButtonDropdown,
 } from 'reactstrap';
+
+import Logo from '@/assets/img/birthday/logo.svg';
+import LogoWhite from '@/assets/img/birthday/logo_white.svg';
+import Jumbotron from '@/components/Home/Jumbotron';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import AboutMenu from '@/components/Layout/Header/AboutMenu';
+import AddNew from '@/components/Layout/Header/AddNew';
+import ContentTypesMenu from '@/components/Layout/Header/ContentTypesMenu';
+import Nfdi4dsButton from '@/components/Layout/Header/Nfdi4dsButton';
+import SearchForm from '@/components/Layout/Header/SearchForm';
+import { GlobalStyle, StyledNavbar, StyledTopBar } from '@/components/Layout/Header/styled';
+import UserTooltip from '@/components/Layout/Header/UserTooltip';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
 
 const cookies = new Cookies();
 

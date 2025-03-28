@@ -1,15 +1,16 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Alert, Button } from 'reactstrap';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import {
-    createValueSelectors,
-    createLabelSelectors,
-    createLabelEditor,
     addYAxisSelector,
+    createLabelEditor,
+    createLabelSelectors,
     createValueEditor,
+    createValueSelectors,
     initializeFromCustomizer,
-} from 'libs/selfVisModel/VisRenderer/ChartRenderers/HelperFunctions';
+} from '@/libs/selfVisModel/VisRenderer/ChartRenderers/HelperFunctions';
 
 class CustomizationScatterChart extends Component {
     constructor(props) {

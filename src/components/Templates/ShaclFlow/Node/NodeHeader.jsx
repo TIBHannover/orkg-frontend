@@ -1,12 +1,13 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import ROUTES from '@/constants/routes';
 
 const NodeHeaderStyled = styled.div`
     background: ${(props) => props.theme.secondary};

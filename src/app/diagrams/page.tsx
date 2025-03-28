@@ -2,15 +2,16 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import DiagramCard from 'components/Cards/DiagramCard/DiagramCard';
-import ListPage from 'components/PaginatedContent/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { getResources, resourcesUrl } from 'services/backend/resources';
-import { Resource } from 'services/backend/types';
+
+import DiagramCard from '@/components/Cards/DiagramCard/DiagramCard';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getResources, resourcesUrl } from '@/services/backend/resources';
+import { Resource } from '@/services/backend/types';
 
 const Diagrams = () => {
     useEffect(() => {

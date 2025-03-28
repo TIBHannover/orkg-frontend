@@ -1,5 +1,6 @@
-import { CLASSES } from 'constants/graphSettings';
 import { faSave, faTable, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
+import { CLASSES } from '@/constants/graphSettings';
 
 export type ContentType = {
     id: string;

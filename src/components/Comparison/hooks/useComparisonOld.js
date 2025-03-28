@@ -1,12 +1,13 @@
-import { generateFilterControlData } from 'components/Comparison/hooks/helpers';
-import useComparisonNew from 'components/Comparison/hooks/useComparison';
-import useParams from 'components/useParams/useParams';
-import THING_TYPES from 'constants/thingTypes';
 import { isEmpty, uniq, without } from 'lodash';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getComparison, getThing } from 'services/simcomp/index';
+
+import { generateFilterControlData } from '@/components/Comparison/hooks/helpers';
+import useComparisonNew from '@/components/Comparison/hooks/useComparison';
+import useParams from '@/components/useParams/useParams';
+import THING_TYPES from '@/constants/thingTypes';
+import { getComparison, getThing } from '@/services/simcomp/index';
 import {
     extendAndSortProperties,
     setComparisonId,
@@ -21,8 +22,8 @@ import {
     setIsFailedLoadingResult,
     setIsLoadingResult,
     setProperties,
-} from 'slices/comparisonSlice';
-import { asyncLocalStorage, getErrorMessage } from 'utils';
+} from '@/slices/comparisonSlice';
+import { asyncLocalStorage, getErrorMessage } from '@/utils';
 
 const DEFAULT_COMPARISON_METHOD = 'PATH';
 

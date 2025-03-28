@@ -2,22 +2,23 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import comparisonsThumbnail from 'assets/img/video_thumbnails/comparisons.png';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ListPage from 'components/PaginatedContent/ListPage';
-import VideoExplainer from 'components/PaginatedContent/VideoExplainer';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { comparisonUrl, getComparisons } from 'services/backend/comparisons';
-import { Comparison, VisibilityOptions } from 'services/backend/types';
+
+import comparisonsThumbnail from '@/assets/img/video_thumbnails/comparisons.png';
+import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import VideoExplainer from '@/components/PaginatedContent/VideoExplainer';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { comparisonUrl, getComparisons } from '@/services/backend/comparisons';
+import { Comparison, VisibilityOptions } from '@/services/backend/types';
 
 const Comparisons = () => {
     const { user } = useAuthentication();

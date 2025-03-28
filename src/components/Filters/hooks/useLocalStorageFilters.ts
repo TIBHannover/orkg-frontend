@@ -1,6 +1,7 @@
-import { loadFiltersFromLocalStorage } from 'components/Filters/helpers';
 import { useEffect, useState } from 'react';
-import { FilterConfig } from 'services/backend/types';
+
+import { loadFiltersFromLocalStorage } from '@/components/Filters/helpers';
+import { FilterConfig } from '@/services/backend/types';
 
 const useLocalStorageFilters = (): {
     localStorageFilters: FilterConfig[];

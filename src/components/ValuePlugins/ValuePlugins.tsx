@@ -1,18 +1,19 @@
-import Boolean, { isBooleanValue } from 'components/ValuePlugins/Boolean/Boolean';
-import Code, { isCodeValue } from 'components/ValuePlugins/Code/Code';
-import Doi, { isDoiValue } from 'components/ValuePlugins/Doi/Doi';
-import Duration, { isDurationValue } from 'components/ValuePlugins/Duration/Duration';
-import Gregorian, { isGregorianValue } from 'components/ValuePlugins/Gregorian/Gregorian';
-import ImageAsFigure, { isImageValue } from 'components/ValuePlugins/Images/ImageAsFigures';
-import Link, { isLinkValue } from 'components/ValuePlugins/Link/Link';
-import Map, { isMapValue } from 'components/ValuePlugins/Map/Map';
-import MathJax, { isMathJaxValue } from 'components/ValuePlugins/MathJax/MathJax';
-import Video, { isVideoValue } from 'components/ValuePlugins/Video/Video';
-import { ENTITIES } from 'constants/graphSettings';
 import { isEqual, isString } from 'lodash';
 import { FC, isValidElement, memo, ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
-import { EntityType } from 'services/backend/types';
+
+import Boolean, { isBooleanValue } from '@/components/ValuePlugins/Boolean/Boolean';
+import Code, { isCodeValue } from '@/components/ValuePlugins/Code/Code';
+import Doi, { isDoiValue } from '@/components/ValuePlugins/Doi/Doi';
+import Duration, { isDurationValue } from '@/components/ValuePlugins/Duration/Duration';
+import Gregorian, { isGregorianValue } from '@/components/ValuePlugins/Gregorian/Gregorian';
+import ImageAsFigure, { isImageValue } from '@/components/ValuePlugins/Images/ImageAsFigures';
+import Link, { isLinkValue } from '@/components/ValuePlugins/Link/Link';
+import Map, { isMapValue } from '@/components/ValuePlugins/Map/Map';
+import MathJax, { isMathJaxValue } from '@/components/ValuePlugins/MathJax/MathJax';
+import Video, { isVideoValue } from '@/components/ValuePlugins/Video/Video';
+import { ENTITIES } from '@/constants/graphSettings';
+import { EntityType } from '@/services/backend/types';
 
 type ValuePluginsProps = {
     children: ReactNode;

@@ -1,12 +1,13 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
-import { getTable, tablesUrl } from 'services/backend/tables';
-import { Resource, Statement } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import REGEX from '@/constants/regex';
+import { getTable, tablesUrl } from '@/services/backend/tables';
+import { Resource, Statement } from '@/services/backend/types';
 
 export type ColType = {
     id: string;

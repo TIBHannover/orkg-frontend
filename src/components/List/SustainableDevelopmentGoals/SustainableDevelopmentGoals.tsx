@@ -1,7 +1,8 @@
-import useList from 'components/List/hooks/useList';
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
 import { FC } from 'react';
-import { Node } from 'services/backend/types';
+
+import useList from '@/components/List/hooks/useList';
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import { Node } from '@/services/backend/types';
 
 type SustainableDevelopmentGoalsProps = {
     isEditable?: boolean;

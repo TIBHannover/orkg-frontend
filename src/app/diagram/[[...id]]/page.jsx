@@ -2,25 +2,26 @@
 
 import { faEllipsisV, faPen, faQuestionCircle, faRefresh, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContextMenu from 'components/DiagramEditor/ContextMenu';
-import EditEdge from 'components/DiagramEditor/EditEdge';
-import EditGroup from 'components/DiagramEditor/EditGroup';
-import EditNode from 'components/DiagramEditor/EditNode';
-import ExportDiagram from 'components/DiagramEditor/ExportDiagram';
-import HelpModal from 'components/DiagramEditor/HelpModal';
-import useDiagramEditor from 'components/DiagramEditor/hooks/useDiagramEditor';
-import SaveDiagram from 'components/DiagramEditor/SaveDiagram';
-import StyledReactFlow from 'components/DiagramEditor/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Controls, MarkerType, MiniMap } from 'reactflow';
 import { Alert, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+
+import ContextMenu from '@/components/DiagramEditor/ContextMenu';
+import EditEdge from '@/components/DiagramEditor/EditEdge';
+import EditGroup from '@/components/DiagramEditor/EditGroup';
+import EditNode from '@/components/DiagramEditor/EditNode';
+import ExportDiagram from '@/components/DiagramEditor/ExportDiagram';
+import HelpModal from '@/components/DiagramEditor/HelpModal';
+import useDiagramEditor from '@/components/DiagramEditor/hooks/useDiagramEditor';
+import SaveDiagram from '@/components/DiagramEditor/SaveDiagram';
+import StyledReactFlow from '@/components/DiagramEditor/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
 
 function Diagram() {
     const { id } = useParams();

@@ -1,10 +1,11 @@
 import { faAdd, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AddEditRelatedResourceModal from 'components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourcesModal/AddEditRelatedResourceModal/AddEditRelatedResourceModal';
-import useRelatedResources from 'components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
-import ActionButton from 'components/ActionButton/ActionButton';
 import { FC, useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import useRelatedResources from '@/components/Comparison/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
+import AddEditRelatedResourceModal from '@/components/Comparison/ComparisonCarousel/RelatedResources/RelatedResourcesModal/AddEditRelatedResourceModal/AddEditRelatedResourceModal';
 
 type RelatedResourcesModalProps = {
     toggle: () => void;

@@ -1,7 +1,8 @@
 import arrayMove from 'array-move';
-import { Dispatch, FC, ReactNode, createContext, useContext, useReducer } from 'react';
-import { RSPropertyShape } from 'services/backend/types';
-import { guid } from 'utils';
+import { createContext, Dispatch, FC, ReactNode, useContext, useReducer } from 'react';
+
+import { RSPropertyShape } from '@/services/backend/types';
+import { guid } from '@/utils';
 
 export type RosettaTemplateEditorType = {
     id?: string;

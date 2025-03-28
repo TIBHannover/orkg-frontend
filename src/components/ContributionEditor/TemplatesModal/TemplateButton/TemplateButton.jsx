@@ -1,13 +1,14 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TemplateTooltip from 'components/TemplateTooltip/TemplateTooltip';
 import PropTypes from 'prop-types';
 import { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
-import { fillContributionsWithTemplate, removeClassFromContributionResource, removeEmptyPropertiesOfClass } from 'slices/contributionEditorSlice';
 import styled from 'styled-components';
+
+import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import { fillContributionsWithTemplate, removeClassFromContributionResource, removeEmptyPropertiesOfClass } from '@/slices/contributionEditorSlice';
 
 const IconWrapper = styled.span`
     background-color: ${(props) => (props.addMode ? '#d1d5e4' : '#dc3545')};

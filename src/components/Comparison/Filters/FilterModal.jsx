@@ -1,9 +1,10 @@
-import CategoricalFilterRule from 'components/Comparison/Filters/CategoricalFilterRule';
-import OrdinalFilterRule from 'components/Comparison/Filters/OrdinalFilterRule';
-import TextFilterRule from 'components/Comparison/Filters/TextFilterRule';
 import PropTypes from 'prop-types';
 import { Modal, ModalHeader } from 'reactstrap';
 import { z } from 'zod';
+
+import CategoricalFilterRule from '@/components/Comparison/Filters/CategoricalFilterRule';
+import OrdinalFilterRule from '@/components/Comparison/Filters/OrdinalFilterRule';
+import TextFilterRule from '@/components/Comparison/Filters/TextFilterRule';
 
 function FilterModal(props) {
     const { data, updateRulesOfProperty, showFilterDialog, toggleFilterDialog } = props;

@@ -1,14 +1,15 @@
 'use client';
 
+import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getImage } from 'components/SustainableDevelopmentGoals/helpers';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
+
+import { getImage } from '@/components/SustainableDevelopmentGoals/helpers';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const SustainableDevelopmentGoals = () => {
     useEffect(() => {

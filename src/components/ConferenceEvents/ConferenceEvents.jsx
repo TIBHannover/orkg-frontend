@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Container, ListGroup } from 'reactstrap';
-import { getSeriesListByConferenceId } from 'services/backend/conferences-series';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import PropTypes from 'prop-types';
-import EventsCard from 'components/Organization/EventsCard';
+import { useEffect, useState } from 'react';
+import { Container, ListGroup } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import EventsCard from '@/components/Organization/EventsCard';
+import { getSeriesListByConferenceId } from '@/services/backend/conferences-series';
 
 const ConferenceEvents = ({ conferenceId, conferenceName }) => {
     const [isLoadingConferences, setIsLoadingConferences] = useState(null);

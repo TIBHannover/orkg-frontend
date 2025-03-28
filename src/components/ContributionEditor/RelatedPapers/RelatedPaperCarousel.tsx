@@ -1,15 +1,16 @@
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AddContribution from 'components/Comparison/AddContribution/AddContribution';
-import RelatedPaperModal from 'components/ContributionEditor/RelatedPapers/RelatedPaperModal';
-import AddPaperModal from 'components/PaperForm/AddPaperModal';
-import StyledSlider from 'components/ResearchProblem/Benchmarks/styled';
 import { isArray } from 'lodash';
 import React, { useState } from 'react';
 import { Button, Card, CardBody, CardText, CardTitle } from 'reactstrap';
-import { GetSimilarPapersParams, getSimilarPapers, similarPaperURL } from 'services/orkgSimpaper';
-import { SimilarPaper } from 'services/orkgSimpaper/types';
 import useSWR from 'swr';
+
+import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
+import RelatedPaperModal from '@/components/ContributionEditor/RelatedPapers/RelatedPaperModal';
+import AddPaperModal from '@/components/PaperForm/AddPaperModal';
+import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
+import { getSimilarPapers, GetSimilarPapersParams, similarPaperURL } from '@/services/orkgSimpaper';
+import { SimilarPaper } from '@/services/orkgSimpaper/types';
 
 type RelatedPapersCarouselProps = {
     contributionIds: string[];

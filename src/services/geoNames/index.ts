@@ -1,7 +1,8 @@
-import { ExternalServiceResponse, OptionType } from 'components/Autocomplete/types';
 import { env } from 'next-runtime-env';
-import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
-import { CLASSES } from 'constants/graphSettings';
+
+import { ExternalServiceResponse, OptionType } from '@/components/Autocomplete/types';
+import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';
+import { CLASSES } from '@/constants/graphSettings';
 
 export const geonamesUrl = env('NEXT_PUBLIC_GEONAMES_API_URL');
 export const geonamesUsername = env('NEXT_PUBLIC_GEONAMES_API_USERNAME');

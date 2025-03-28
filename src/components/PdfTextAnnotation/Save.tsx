@@ -1,11 +1,6 @@
 import { Cite } from '@citation-js/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useMembership from 'components/hooks/useMembership';
-import { CLASSES, PREDICATES, RESOURCES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
-import createPaperMergeIfExists from 'helpers/createPaperMergeIfExists';
 import { uniqueId } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -14,8 +9,14 @@ import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { Author, CreateContributionData, NewContribution } from 'services/backend/types';
-import { parseCiteResult } from 'utils';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useMembership from '@/components/hooks/useMembership';
+import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
+import { Author, CreateContributionData, NewContribution } from '@/services/backend/types';
+import { parseCiteResult } from '@/utils';
 
 type SaveProps = {
     toggle: () => void;

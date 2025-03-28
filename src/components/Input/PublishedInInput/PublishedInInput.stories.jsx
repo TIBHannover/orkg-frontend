@@ -1,4 +1,4 @@
-import PublishedInInput from 'components/Input/PublishedInInput/PublishedInInput';
+import PublishedInInput from '@/components/Input/PublishedInInput/PublishedInInput';
 
 export default {
     title: 'Input/PublishedInInput',

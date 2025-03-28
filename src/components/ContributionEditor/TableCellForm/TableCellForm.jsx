@@ -1,20 +1,21 @@
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import DatatypeSelector from 'components/ContributionEditor/DatatypeSelector/DatatypeSelector';
-import InputField from 'components/ContributionEditor/InputField/InputField';
-import useTableCellForm from 'components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
-import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
-import Popover from 'components/FloatingUI/Popover';
-import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import a from 'indefinite';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useClickAway } from 'react-use';
 import { FormFeedback, InputGroup } from 'reactstrap';
-import { addValue, setPreviousInputDataType } from 'slices/contributionEditorSlice';
-import { compareOption } from 'utils';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import DatatypeSelector from '@/components/ContributionEditor/DatatypeSelector/DatatypeSelector';
+import InputField from '@/components/ContributionEditor/InputField/InputField';
+import useTableCellForm from '@/components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from '@/components/FloatingUI/Popover';
+import { getConfigByType, getSuggestionByTypeAndValue } from '@/constants/DataTypes';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { addValue, setPreviousInputDataType } from '@/slices/contributionEditorSlice';
+import { compareOption } from '@/utils';
 
 const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const refContainer = useRef(null);

@@ -2,20 +2,21 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ListCard from 'components/Cards/ListCard/ListCard';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ListPage from 'components/PaginatedContent/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import VisibilityFilter from 'components/VisibilityFilter/VisibilityFilter';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { getLiteratureLists, listsUrl } from 'services/backend/literatureLists';
-import { LiteratureList, VisibilityOptions } from 'services/backend/types';
+
+import ListCard from '@/components/Cards/ListCard/ListCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ListPage from '@/components/PaginatedContent/ListPage';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getLiteratureLists, listsUrl } from '@/services/backend/literatureLists';
+import { LiteratureList, VisibilityOptions } from '@/services/backend/types';
 
 const Lists = () => {
     useEffect(() => {

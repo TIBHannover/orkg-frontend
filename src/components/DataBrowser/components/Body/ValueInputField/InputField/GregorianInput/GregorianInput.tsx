@@ -1,13 +1,14 @@
+import { FC, useEffect, useState } from 'react';
+import { Input, InputGroupText } from 'reactstrap';
+
 import {
     daysOptions,
     formatGregorianValue,
+    type GregorianValues,
     monthsOptions,
     parseGregorianString,
-    type GregorianValues,
-} from 'components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
-import { GregorianType } from 'constants/DataTypes';
-import { FC, useEffect, useState } from 'react';
-import { Input, InputGroupText } from 'reactstrap';
+} from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
+import { GregorianType } from '@/constants/DataTypes';
 
 type GregorianInputProps = {
     value: string;

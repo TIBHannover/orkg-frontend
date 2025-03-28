@@ -1,11 +1,4 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import ClassInlineItem from 'components/Class/ClassInlineItem/ClassInlineItem';
-import useCountInstances from 'components/Class/hooks/useCountInstances';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -13,10 +6,18 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Table } from 'reactstrap';
-import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from 'services/backend/classes';
-import { getStatements, statementsUrl } from 'services/backend/statements';
 import useSWR from 'swr';
-import { getErrorMessage } from 'utils';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import ClassInlineItem from '@/components/Class/ClassInlineItem/ClassInlineItem';
+import useCountInstances from '@/components/Class/hooks/useCountInstances';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from '@/services/backend/classes';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { getErrorMessage } from '@/utils';
 
 function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(id);

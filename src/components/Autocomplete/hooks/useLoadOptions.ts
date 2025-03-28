@@ -1,8 +1,9 @@
-import { useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
-import { IdMatch, addAdditionalData, getExternalData, orkgLookup } from 'components/Autocomplete/hooks/helpers';
-import { AdditionalType, OptionType, OptionsSettings } from 'components/Autocomplete/types';
-import { CLASSES } from 'constants/graphSettings';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
+
+import { useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
+import { addAdditionalData, getExternalData, IdMatch, orkgLookup } from '@/components/Autocomplete/hooks/helpers';
+import { AdditionalType, OptionsSettings, OptionType } from '@/components/Autocomplete/types';
+import { CLASSES } from '@/constants/graphSettings';
 
 const useLoadOptions = ({
     entityType,

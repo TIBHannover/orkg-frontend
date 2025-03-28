@@ -1,15 +1,16 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { getTemplate } from 'services/backend/templates';
 import format from 'string-format';
 import styled from 'styled-components';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getTemplate } from '@/services/backend/templates';
 
 export const HeaderStyled = styled.div`
     border-bottom: 1px ${(props) => props.theme.secondaryDarker} solid;

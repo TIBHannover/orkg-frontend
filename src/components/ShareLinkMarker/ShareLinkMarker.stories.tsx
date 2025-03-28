@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
+
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 
 export default {
     title: 'ShareLinkMarker',

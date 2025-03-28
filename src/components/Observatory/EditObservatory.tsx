@@ -1,13 +1,14 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import { isEqual } from 'lodash';
-import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { updateObservatory } from 'services/backend/observatories';
-import { Node } from 'services/backend/types';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { updateObservatory } from '@/services/backend/observatories';
+import { Node } from '@/services/backend/types';
 
 type EditObservatoryProps = {
     showDialog: boolean;

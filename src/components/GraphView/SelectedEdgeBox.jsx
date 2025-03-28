@@ -1,12 +1,13 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CopyId from 'components/CopyId/CopyId';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import CopyId from '@/components/CopyId/CopyId';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
 
 const StyledBox = styled.div`
     position: absolute;

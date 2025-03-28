@@ -1,10 +1,11 @@
-import ContributionCell from 'components/Comparison/Table/Cells/ContributionCell';
-import PropertyCell from 'components/Comparison/Table/Cells/PropertyCell';
-import { ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
+
+import { ItemHeader, ItemHeaderInner } from '@/components/Comparison/styled';
+import ContributionCell from '@/components/Comparison/Table/Cells/ContributionCell';
+import PropertyCell from '@/components/Comparison/Table/Cells/PropertyCell';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const ColumnHeader = ({ headerData, columnId, columnStyle, property, index }) => {
     const transpose = useSelector((state) => state.comparison.configuration.transpose);

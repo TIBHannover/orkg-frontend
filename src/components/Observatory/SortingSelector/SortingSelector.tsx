@@ -1,7 +1,8 @@
 import { parseAsString, useQueryStates } from 'nuqs';
 import { FC } from 'react';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { SortByOptions } from 'services/backend/types';
+
+import { SortByOptions } from '@/services/backend/types';
 
 type SortingSelectorProps = {
     isLoading: boolean;

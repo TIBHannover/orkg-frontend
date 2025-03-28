@@ -1,14 +1,15 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import WIKIDATA_LOGO from 'assets/img/sameas/wikidatawiki.png';
-import { wikidataSparql } from 'services/wikidata/index';
-import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { groupBy } from 'lodash';
-import { useEffect, useState, FC } from 'react';
-import { Row } from 'reactstrap';
 import Image from 'next/image';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
+import { FC, useEffect, useState } from 'react';
+import { Row } from 'reactstrap';
+
+import WIKIDATA_LOGO from '@/assets/img/sameas/wikidatawiki.png';
+import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import { wikidataSparql } from '@/services/wikidata/index';
 
 type WikidataDescriptionProp = {
     externalResource: string;

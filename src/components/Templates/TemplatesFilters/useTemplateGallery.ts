@@ -1,9 +1,10 @@
 'use client';
 
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
 import { useQueryState } from 'nuqs';
 import { useState } from 'react';
-import { getTemplates, templatesUrl } from 'services/backend/templates';
+
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import { getTemplates, templatesUrl } from '@/services/backend/templates';
 
 const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
     const [searchTerm, setSearchTerm] = useQueryState('q', {

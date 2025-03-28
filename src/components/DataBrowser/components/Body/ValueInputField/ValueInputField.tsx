@@ -1,17 +1,18 @@
 import { faCheck, faClose, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DatatypeSelector from 'components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
-import InputField from 'components/DataBrowser/components/Body/ValueInputField/InputField/InputField';
-import useAddValue from 'components/DataBrowser/hooks/useAddValue';
-import ConfirmationTooltip from 'components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
-import Popover from 'components/FloatingUI/Popover';
-import SmartLiteralTypeCheck from 'components/SmartSuggestions/SmartLiteralTypeCheck';
-import SmartResourceLabelCheck from 'components/SmartSuggestions/SmartResourceLabelCheck';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import a from 'indefinite';
 import { FC } from 'react';
 import { Button, FormFeedback, InputGroup } from 'reactstrap';
-import { Literal, Node, Predicate } from 'services/backend/types';
+
+import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
+import InputField from '@/components/DataBrowser/components/Body/ValueInputField/InputField/InputField';
+import useAddValue from '@/components/DataBrowser/hooks/useAddValue';
+import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
+import Popover from '@/components/FloatingUI/Popover';
+import SmartLiteralTypeCheck from '@/components/SmartSuggestions/SmartLiteralTypeCheck';
+import SmartResourceLabelCheck from '@/components/SmartSuggestions/SmartResourceLabelCheck';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { Literal, Node, Predicate } from '@/services/backend/types';
 
 type ValueInputFieldProps = {
     predicate: Predicate;

@@ -1,8 +1,9 @@
-import { MISC } from 'constants/graphSettings';
 import { http, HttpResponse } from 'msw';
-import { literalsUrl } from 'services/backend/literals';
-import db from 'services/mocks/db';
-import { createMSWLiteral } from 'services/mocks/helpers';
+
+import { MISC } from '@/constants/graphSettings';
+import { literalsUrl } from '@/services/backend/literals';
+import db from '@/services/mocks/db';
+import { createMSWLiteral } from '@/services/mocks/helpers';
 
 const literalPut = async ({ request, params }: { request: Request; params: { id?: string } }) => {
     const { label, datatype = MISC.DEFAULT_LITERAL_DATATYPE } = await request.json();

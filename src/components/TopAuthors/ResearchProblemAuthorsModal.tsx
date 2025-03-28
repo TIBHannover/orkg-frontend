@@ -1,12 +1,13 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorCard from 'components/Cards/AuthorCard/AuthorCard';
-import AuthorsContentLoader from 'components/TopAuthors/AuthorsContentLoader';
-import useResearchProblemAuthors from 'components/TopAuthors/hooks/useTopAuthors';
 import pluralize from 'pluralize';
 import { Dispatch, SetStateAction } from 'react';
 import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { ResearchProblemTopAuthor } from 'services/backend/problems';
+
+import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
+import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
+import useResearchProblemAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import { ResearchProblemTopAuthor } from '@/services/backend/problems';
 
 type ResearchProblemAuthorsModalProps = {
     researchProblemId: string;

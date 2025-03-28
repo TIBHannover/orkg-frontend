@@ -1,21 +1,22 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useCountInstances from 'components/Class/hooks/useCountInstances';
-import ClassInstances from 'components/ClassInstances/ClassInstances';
-import LoadingOverlay from 'components/LoadingOverlay/LoadingOverlay';
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
-import Tabs from 'components/Tabs/Tabs';
-import Format from 'components/Templates/Tabs/Format/Format';
-import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
-import PropertyShapesTab from 'components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
+
+import useCountInstances from '@/components/Class/hooks/useCountInstances';
+import ClassInstances from '@/components/ClassInstances/ClassInstances';
+import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
+import Tabs from '@/components/Tabs/Tabs';
+import Format from '@/components/Templates/Tabs/Format/Format';
+import GeneralSettings from '@/components/Templates/Tabs/GeneralSettings/GeneralSettings';
+import PropertyShapesTab from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ROUTES from '@/constants/routes';
 
 export const StyledContainer = styled(Container)`
     fieldset.scheduler-border {

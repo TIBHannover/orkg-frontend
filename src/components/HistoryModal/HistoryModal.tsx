@@ -1,8 +1,5 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -10,9 +7,13 @@ import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import Select, { components, GroupBase, OptionProps } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { getResource, resourcesUrl } from 'services/backend/resources';
 import styled from 'styled-components';
 import useSWR from 'swr';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import MarkFeaturedUnlistedContainer from '@/components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
 
 const Option = ({ children, ...props }: OptionProps<VersionOption, false, GroupBase<VersionOption>>) => (
     <components.Option {...props}>

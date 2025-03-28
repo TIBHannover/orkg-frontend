@@ -1,10 +1,11 @@
-import useComparison from 'components/Comparison/hooks/useComparison';
-import { PREDICATES } from 'constants/graphSettings';
-import useParams from 'components/useParams/useParams';
-import { deleteStatementById, getStatements } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
-import { getVisualization, visualizationsUrl } from 'services/backend/visualizations';
 import useSWR from 'swr';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import useParams from '@/components/useParams/useParams';
+import { PREDICATES } from '@/constants/graphSettings';
+import { deleteStatementById, getStatements } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
+import { getVisualization, visualizationsUrl } from '@/services/backend/visualizations';
 
 const useVisualizations = () => {
     const { comparisonId } = useParams<{ comparisonId: string }>();

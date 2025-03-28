@@ -1,16 +1,16 @@
-import NotFound from 'app/not-found';
-import Coins from 'components/Coins/Coins';
-import ViewPaper from 'components/ViewPaper/Page/ViewPaper';
-
-import ViewPaperVersion from 'components/ViewPaper/Page/ViewPaperVersion';
-import { CLASSES } from 'constants/graphSettings';
-import { LICENSE_URL } from 'constants/misc';
 import dayjs from 'dayjs';
 import { sanitize } from 'isomorphic-dompurify';
 import { Metadata } from 'next';
-import { getPaper } from 'services/backend/papers';
-import { getResource } from 'services/backend/resources';
-import { Paper, Resource } from 'services/backend/types';
+
+import NotFound from '@/app/not-found';
+import Coins from '@/components/Coins/Coins';
+import ViewPaper from '@/components/ViewPaper/Page/ViewPaper';
+import ViewPaperVersion from '@/components/ViewPaper/Page/ViewPaperVersion';
+import { CLASSES } from '@/constants/graphSettings';
+import { LICENSE_URL } from '@/constants/misc';
+import { getPaper } from '@/services/backend/papers';
+import { getResource } from '@/services/backend/resources';
+import { Paper, Resource } from '@/services/backend/types';
 
 const getDescription = (paper?: Paper) =>
     `ORKG structured paper description. Published: ${

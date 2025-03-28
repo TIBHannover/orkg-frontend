@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { Chart } from 'react-google-charts';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Chart } from 'react-google-charts';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 export default class TableInput extends Component {
     constructor(props) {

@@ -1,20 +1,21 @@
 import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import PredicateView from 'components/DataBrowser/components/Body/PredicateView/PredicateView';
-import HierarchyIndicator from 'components/DataBrowser/components/Body/Statement/HierarchyIndicator';
-import ValueInputField from 'components/DataBrowser/components/Body/ValueInputField/ValueInputField';
-import { useDataBrowserDispatch, useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useBlankNode from 'components/DataBrowser/hooks/useBlankNode';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import useConstraints from 'components/DataBrowser/hooks/useConstraints';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
-import { StatementWrapperStyled } from 'components/DataBrowser/styles/styled';
-import SmartValueSuggestions from 'components/SmartSuggestions/SmartValueSuggestions';
-import { PREDICATES } from 'constants/graphSettings';
 import { FC, useState } from 'react';
-import { createResourceStatement } from 'services/backend/statements';
-import { Predicate } from 'services/backend/types';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import PredicateView from '@/components/DataBrowser/components/Body/PredicateView/PredicateView';
+import HierarchyIndicator from '@/components/DataBrowser/components/Body/Statement/HierarchyIndicator';
+import ValueInputField from '@/components/DataBrowser/components/Body/ValueInputField/ValueInputField';
+import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useBlankNode from '@/components/DataBrowser/hooks/useBlankNode';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import useConstraints from '@/components/DataBrowser/hooks/useConstraints';
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import { StatementWrapperStyled } from '@/components/DataBrowser/styles/styled';
+import SmartValueSuggestions from '@/components/SmartSuggestions/SmartValueSuggestions';
+import { PREDICATES } from '@/constants/graphSettings';
+import { createResourceStatement } from '@/services/backend/statements';
+import { Predicate } from '@/services/backend/types';
 
 type AddStatementProps = {
     shift?: boolean;

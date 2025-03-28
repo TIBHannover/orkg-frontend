@@ -1,13 +1,14 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { getConfigByType } from 'constants/DataTypes';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Badge, ListGroup } from 'reactstrap';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import { getConfigByType } from '@/constants/DataTypes';
+import ROUTES from '@/constants/routes';
 
 const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) => (
     <StatementsGroupStyle className="list-group-item" style={{ marginBottom: -1 }}>

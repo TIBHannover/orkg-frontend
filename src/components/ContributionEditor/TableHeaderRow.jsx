@@ -1,16 +1,17 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
-import Confirm from 'components/Confirmation/Confirmation';
-import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import { env } from 'next-runtime-env';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
-import { canDeletePropertyAction, deleteProperty, updateProperty } from 'slices/contributionEditorSlice';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { Properties, PropertiesInner } from '@/components/Comparison/styled';
+import Confirm from '@/components/Confirmation/Confirmation';
+import TableCellButtons from '@/components/ContributionEditor/TableCellButtons';
+import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import { ENTITIES } from '@/constants/graphSettings';
+import { canDeletePropertyAction, deleteProperty, updateProperty } from '@/slices/contributionEditorSlice';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);

@@ -1,9 +1,10 @@
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import { upperFirst } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { upperFirst } from 'lodash';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
 
 const Container = styled.div`
     background: #333333;

@@ -1,16 +1,17 @@
 import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
-import useProvenance from 'components/Resource/hooks/useProvenance';
-import { MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Badge } from 'reactstrap';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
+import useProvenance from '@/components/Resource/hooks/useProvenance';
+import { MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 function ProvenanceBox({ item, editMode = false }) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);

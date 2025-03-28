@@ -1,10 +1,11 @@
-import CellRenderer from 'libs/selfVisModel/RenderingComponents/CellRenderer';
-import CheckboxSelector from 'libs/selfVisModel/RenderingComponents/CheckBoxSelector';
-import DropDownMapperSelector from 'libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Alert, Button, ButtonGroup } from 'reactstrap';
+
+import CellRenderer from '@/libs/selfVisModel/RenderingComponents/CellRenderer';
+import CheckboxSelector from '@/libs/selfVisModel/RenderingComponents/CheckBoxSelector';
+import DropDownMapperSelector from '@/libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 const CellSelector = (props) => {
     const [selfVisModel] = useState(new SelfVisDataModel());

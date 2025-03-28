@@ -1,21 +1,22 @@
-import { ExternalServiceResponse, Ontology, OptionType, OptionsSettings } from 'components/Autocomplete/types';
-import { AUTOCOMPLETE_SOURCE } from 'constants/autocompleteSources';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
 import { uniqBy } from 'lodash';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 import { MultiValue } from 'react-select';
-import { getClasses } from 'services/backend/classes';
-import { importClassByURI, importPredicateByURI, importResourceByURI } from 'services/backend/import';
-import { createLiteral } from 'services/backend/literals';
-import { getEntities } from 'services/backend/misc';
-import { createResource, getResources } from 'services/backend/resources';
-import { createLiteralStatement, getStatements } from 'services/backend/statements';
-import { getThing } from 'services/backend/things';
-import { Class, EntityType, PaginatedResponse, Predicate, Resource, Statement } from 'services/backend/types';
-import getGeoNames from 'services/geoNames';
-import { getOntologyEntities, selectEntities, EntityPath } from 'services/ols';
-import { searchEntity } from 'services/wikidata';
+
+import { ExternalServiceResponse, Ontology, OptionsSettings, OptionType } from '@/components/Autocomplete/types';
+import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import REGEX from '@/constants/regex';
+import { getClasses } from '@/services/backend/classes';
+import { importClassByURI, importPredicateByURI, importResourceByURI } from '@/services/backend/import';
+import { createLiteral } from '@/services/backend/literals';
+import { getEntities } from '@/services/backend/misc';
+import { createResource, getResources } from '@/services/backend/resources';
+import { createLiteralStatement, getStatements } from '@/services/backend/statements';
+import { getThing } from '@/services/backend/things';
+import { Class, EntityType, PaginatedResponse, Predicate, Resource, Statement } from '@/services/backend/types';
+import getGeoNames from '@/services/geoNames';
+import { EntityPath, getOntologyEntities, selectEntities } from '@/services/ols';
+import { searchEntity } from '@/services/wikidata';
 
 /**
  * Lookup in ORKG backend

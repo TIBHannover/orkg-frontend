@@ -1,7 +1,8 @@
-import { getPropertyShapesByPredicateID, isLiteral } from 'components/DataBrowser/utils/dataBrowserUtils';
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import useTemplates from 'components/DataBrowser/hooks/useTemplates';
 import { compact, flatten } from 'lodash';
+
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import { getPropertyShapesByPredicateID, isLiteral } from '@/components/DataBrowser/utils/dataBrowserUtils';
 
 const useConstraints = (predicateId: string) => {
     const { statements } = useEntity();

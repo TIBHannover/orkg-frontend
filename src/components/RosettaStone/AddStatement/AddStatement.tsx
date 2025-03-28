@@ -1,15 +1,16 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import { type RosettaStoneTemplateOption } from 'components/RosettaStone/AddStatement/SelectOption';
-import StatementTypeAutocomplete from 'components/RosettaStone/AddStatement/StatementTypeAutocomplete';
-import useUsedStatementTypes from 'components/RosettaStone/hooks/useUsedStatementTypes';
-import NewStatementTypeModal from 'components/RosettaStone/NewStatementTypeModal/NewStatementTypeModal';
-import RosettaTemplateEditorProvider from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { StyledButton } from 'components/StatementBrowser/styled';
 import { FC, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 import { ButtonGroup, InputGroup } from 'reactstrap';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { type RosettaStoneTemplateOption } from '@/components/RosettaStone/AddStatement/SelectOption';
+import StatementTypeAutocomplete from '@/components/RosettaStone/AddStatement/StatementTypeAutocomplete';
+import useUsedStatementTypes from '@/components/RosettaStone/hooks/useUsedStatementTypes';
+import NewStatementTypeModal from '@/components/RosettaStone/NewStatementTypeModal/NewStatementTypeModal';
+import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { StyledButton } from '@/components/StatementBrowser/styled';
 
 type AddStatementProps = {
     context: string;

@@ -1,4 +1,4 @@
-import { Statement } from 'services/backend/types';
+import { Statement } from '@/services/backend/types';
 
 export type DataBrowserConfig = {
     /**

@@ -1,20 +1,21 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import {
+    CreatedByParam,
     CreateRosettaStoneStatementParams,
     CreateRosettaStoneTemplateParams,
+    ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
     RosettaStoneStatement,
     RosettaStoneTemplate,
-    VisibilityParam,
     UpdateRosettaStoneStatementParams,
     UpdateRosettaStoneTemplateParams,
-    CreatedByParam,
-    ObservatoryIdParam,
-} from 'services/backend/types';
+    VisibilityParam,
+} from '@/services/backend/types';
 
 export const rosettaStoneUrl = `${url}rosetta-stone/`;
 export const rosettaStoneApi = backendApi.extend(() => ({ prefixUrl: rosettaStoneUrl }));

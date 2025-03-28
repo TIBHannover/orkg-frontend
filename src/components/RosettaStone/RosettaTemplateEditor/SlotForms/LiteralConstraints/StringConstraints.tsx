@@ -1,11 +1,12 @@
+import { FC } from 'react';
+import { FormGroup, Input, Label } from 'reactstrap';
+
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import { FC } from 'react';
-import { FormGroup, Input, Label } from 'reactstrap';
-import { PropertyShapeStringType } from 'services/backend/types';
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { PropertyShapeStringType } from '@/services/backend/types';
 
 type ValidationRulesNumberProps = {
     index: number;

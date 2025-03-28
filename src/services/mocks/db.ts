@@ -1,4 +1,4 @@
-import { factory, primaryKey, nullable } from '@mswjs/data';
+import { factory, nullable, primaryKey } from '@mswjs/data';
 
 const thing = {
     id: primaryKey(String),

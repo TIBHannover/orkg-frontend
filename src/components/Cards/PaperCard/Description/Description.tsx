@@ -1,7 +1,8 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
 import { useEffect, useState } from 'react';
 import ReactTextareaAutosize from 'react-textarea-autosize';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
 
 type DescriptionProps = {
     description: string | null;

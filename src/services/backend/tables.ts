@@ -1,6 +1,6 @@
-import { url } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { ExtractionMethod, Visibility } from 'services/backend/types';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { ExtractionMethod, Visibility } from '@/services/backend/types';
 
 export const tablesUrl = `${url}tables/`;
 export const tablesApi = backendApi.extend(() => ({ prefixUrl: tablesUrl }));

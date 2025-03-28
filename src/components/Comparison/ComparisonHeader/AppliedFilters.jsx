@@ -1,7 +1,8 @@
-import AppliedRule from 'components/Comparison/Filters/AppliedRule';
-import { areAllRulesEmpty } from 'components/Comparison/Filters/helpers';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeRule } from 'slices/comparisonSlice';
+
+import AppliedRule from '@/components/Comparison/Filters/AppliedRule';
+import { areAllRulesEmpty } from '@/components/Comparison/Filters/helpers';
+import { removeRule } from '@/slices/comparisonSlice';
 
 export default function AppliedFilters() {
     const dispatch = useDispatch();

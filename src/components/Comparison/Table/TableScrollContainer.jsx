@@ -1,12 +1,13 @@
-import { cloneElement, useEffect, useRef, useState } from 'react';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { debounce } from 'lodash';
-import { ScrollSync } from 'react-scroll-sync';
-import useResizeObserver from 'use-resize-observer';
 import PropTypes from 'prop-types';
+import { cloneElement, useEffect, useRef, useState } from 'react';
+import { ScrollSync } from 'react-scroll-sync';
 import { useMedia } from 'react-use';
-import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from 'components/Comparison/styled';
+import useResizeObserver from 'use-resize-observer';
+
+import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from '@/components/Comparison/styled';
 
 const SCROLL_AMOUNT = 500;
 

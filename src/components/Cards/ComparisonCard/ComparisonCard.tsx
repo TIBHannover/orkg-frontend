@@ -1,23 +1,24 @@
 import { faCalendar, faChartBar, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Coins from 'components/Coins/Coins';
-import Thumbnail from 'components/Cards/ComparisonCard/Thumbnail';
-import Versions from 'components/Cards/ComparisonCard/Versions';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
-import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { CardBadge } from 'components/styled';
-import { VISIBILITY } from 'constants/contentTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { truncate } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Comparison } from 'services/backend/types';
 import styled from 'styled-components';
+
+import Thumbnail from '@/components/Cards/ComparisonCard/Thumbnail';
+import Versions from '@/components/Cards/ComparisonCard/Versions';
+import Coins from '@/components/Coins/Coins';
+import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { VISIBILITY } from '@/constants/contentTypes';
+import ROUTES from '@/constants/routes';
+import { Comparison } from '@/services/backend/types';
 
 const ComparisonCardStyled = styled.li<{ $rounded: string }>`
     &:last-child {

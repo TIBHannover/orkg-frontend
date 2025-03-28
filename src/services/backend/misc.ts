@@ -1,10 +1,11 @@
-import { ENTITIES } from 'constants/graphSettings';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getClasses } from 'services/backend/classes';
-import { getPredicates } from 'services/backend/predicates';
-import { getResources } from 'services/backend/resources';
+
+import { ENTITIES } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getClasses } from '@/services/backend/classes';
+import { getPredicates } from '@/services/backend/predicates';
+import { getResources } from '@/services/backend/resources';
 import {
     AuthorIdParam,
     Class,
@@ -21,8 +22,8 @@ import {
     SdgParam,
     VerifiedParam,
     VisibilityParam,
-} from 'services/backend/types';
-import { mergeAlternate } from 'utils';
+} from '@/services/backend/types';
+import { mergeAlternate } from '@/utils';
 
 export const doisUrl = `${url}dois/`;
 export const doisApi = backendApi.extend(() => ({ prefixUrl: doisUrl }));

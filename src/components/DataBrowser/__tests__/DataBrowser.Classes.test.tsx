@@ -1,7 +1,8 @@
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import { DataBrowserProps } from 'components/DataBrowser/types/DataBrowserTypes';
 import selectEvent from 'react-select-event';
-import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from '@/testUtils';
 
 const setup = async (
     props: DataBrowserProps = {

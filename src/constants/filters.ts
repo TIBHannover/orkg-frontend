@@ -1,4 +1,4 @@
-import { FilterConfigOperator } from 'services/backend/types';
+import { FilterConfigOperator } from '@/services/backend/types';
 
 export const FILTER_SOURCE = {
     URL: 'URL',

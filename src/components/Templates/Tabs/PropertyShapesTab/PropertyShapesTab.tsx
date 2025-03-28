@@ -1,16 +1,17 @@
 import arrayMove from 'array-move';
-import { OptionType } from 'components/Autocomplete/types';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import AddPropertyView from 'components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
-import ConfirmCreatePropertyModal from 'components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
-import PropertyShape from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
 import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
-import { PropertyShapeLiteralType, PropertyShapeResourceType, PropertyShape as PropertyShapeType } from 'services/backend/types';
-import { updateIsClosed, updatePropertyShapes } from 'slices/templateEditorSlice';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import AddPropertyView from '@/components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
+import PropertyShape from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
+import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';
 
 const PropertyShapesTab: FC<{}> = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);

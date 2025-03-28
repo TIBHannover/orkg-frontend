@@ -1,15 +1,16 @@
-import InformationTab from 'components/Class/InformationTab';
-import TreeView from 'components/Class/TreeView';
-import ClassInstances from 'components/ClassInstances/ClassInstances';
-import Tabs from 'components/Tabs/Tabs';
-import { TabHeaderStyle } from 'components/Tabs/styled';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import { Class } from 'services/backend/types';
+
+import InformationTab from '@/components/Class/InformationTab';
+import TreeView from '@/components/Class/TreeView';
+import ClassInstances from '@/components/ClassInstances/ClassInstances';
+import { TabHeaderStyle } from '@/components/Tabs/styled';
+import Tabs from '@/components/Tabs/Tabs';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { Class } from '@/services/backend/types';
 
 type TabsContainerProps = {
     id: string;

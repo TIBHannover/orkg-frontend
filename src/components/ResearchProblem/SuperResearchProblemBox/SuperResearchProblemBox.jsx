@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import ROUTES from 'constants/routes';
-import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
+
+import ROUTES from '@/constants/routes';
+import { reverseWithSlug } from '@/utils';
 
 const SuperResearchProblemBox = ({ isLoading, superProblems }) => (
     <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">

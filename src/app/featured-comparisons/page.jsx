@@ -1,19 +1,20 @@
 'use client';
 
-import Link from 'next/link';
-import { Fragment, useState, useEffect, useCallback } from 'react';
-import { Container, Alert, Row } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResources } from 'services/backend/resources';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { kebabCase, isString } from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isString, kebabCase } from 'lodash';
+import Link from 'next/link';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Alert, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
+
+import FeaturedComparisonsItem from '@/components/FeaturedComparisons/FeaturedComparisonsItem';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getResources } from '@/services/backend/resources';
+import { getStatementsBySubjects } from '@/services/backend/statements';
 
 const Header = styled.h2`
     &:hover a {

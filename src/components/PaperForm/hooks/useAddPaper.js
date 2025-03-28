@@ -1,12 +1,13 @@
-import useExistingPaper from 'components/ExistingPaperModal/useExistingPaper';
-import useMembership from 'components/hooks/useMembership';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { createPaper } from 'services/backend/papers';
-import { createResource } from 'services/backend/resources';
-import { createResourceStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getErrorMessage } from 'utils';
+
+import useExistingPaper from '@/components/ExistingPaperModal/useExistingPaper';
+import useMembership from '@/components/hooks/useMembership';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { createPaper } from '@/services/backend/papers';
+import { createResource } from '@/services/backend/resources';
+import { createResourceStatement, getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getErrorMessage } from '@/utils';
 
 const useAddPaper = ({ onCreate = null }) => {
     const [doi, setDoi] = useState('');

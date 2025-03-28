@@ -1,4 +1,4 @@
-import References from 'components/Review/Sections/References/References';
+import References from '@/components/Review/Sections/References/References';
 
 const SectionReferences = () => {
     return (

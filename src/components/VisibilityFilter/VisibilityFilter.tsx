@@ -1,8 +1,9 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { VisibilityOptions } from 'services/backend/types';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { VisibilityOptions } from '@/services/backend/types';
 
 type VisibilityFilterProps = {
     defaultValue?: VisibilityOptions;

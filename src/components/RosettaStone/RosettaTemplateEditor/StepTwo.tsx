@@ -1,9 +1,10 @@
-import HelpIcon from 'components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
+import { FormGroup, Input, Label } from 'reactstrap';
+
+import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
-} from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { FormGroup, Input, Label } from 'reactstrap';
+} from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 
 function StepTwo() {
     const { description, numberLockedProperties } = useRosettaTemplateEditorState();

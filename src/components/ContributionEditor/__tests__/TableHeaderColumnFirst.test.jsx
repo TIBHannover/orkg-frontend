@@ -1,5 +1,5 @@
-import { render, screen } from 'testUtils';
-import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';
+import TableHeaderColumnFirst from '@/components/ContributionEditor/TableHeaderColumnFirst';
+import { render, screen } from '@/testUtils';
 
 describe('TableHeaderColumnFirst', () => {
     it('should show saved label by default', () => {

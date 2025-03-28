@@ -1,7 +1,8 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
-import { Author } from 'services/backend/types';
+
+import { Author } from '@/services/backend/types';
 
 type AuthorsProps = {
     authors?: Author[];

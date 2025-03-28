@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { getAbstractByDoi, getAbstractByTitle } from 'services/semanticScholar';
-import { setAbstract, setFetchAbstractTitle, setIsAbstractFetched, setIsAbstractFailedFetching, setIsAbstractLoading } from 'slices/viewPaperSlice';
+
+import { getAbstractByDoi, getAbstractByTitle } from '@/services/semanticScholar';
+import { setAbstract, setFetchAbstractTitle, setIsAbstractFailedFetching, setIsAbstractFetched, setIsAbstractLoading } from '@/slices/viewPaperSlice';
 
 const removeLineBreaks = (text) => text.replace(/(\r\n|\n|\r)/gm, ' ');
 

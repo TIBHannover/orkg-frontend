@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import { statementsUrl } from 'services/backend/statements';
-import db from 'services/mocks/db';
-import { createMSWStatement, findEntityById } from 'services/mocks/helpers';
+
+import { statementsUrl } from '@/services/backend/statements';
+import db from '@/services/mocks/db';
+import { createMSWStatement, findEntityById } from '@/services/mocks/helpers';
 
 const statements = [
     http.get(statementsUrl, ({ request }) => {

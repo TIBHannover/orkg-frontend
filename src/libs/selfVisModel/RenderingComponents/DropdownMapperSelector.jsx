@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import styled from 'styled-components';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 const StyledDropdownToggle = styled(DropdownToggle)`
     border-bottom-left-radius: 0;

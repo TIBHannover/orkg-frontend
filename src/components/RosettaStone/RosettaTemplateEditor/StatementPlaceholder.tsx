@@ -1,9 +1,10 @@
-import PositionCard from 'components/RosettaStone/RosettaTemplateEditor/PositionCard';
-import { useRosettaTemplateEditorState } from 'components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { parseInt } from 'lodash';
 import { useContext } from 'react';
-import { RSPropertyShape } from 'services/backend/types';
 import { ThemeContext } from 'styled-components';
+
+import PositionCard from '@/components/RosettaStone/RosettaTemplateEditor/PositionCard';
+import { useRosettaTemplateEditorState } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { RSPropertyShape } from '@/services/backend/types';
 
 function StatementPlaceholder() {
     const { properties } = useRosettaTemplateEditorState();

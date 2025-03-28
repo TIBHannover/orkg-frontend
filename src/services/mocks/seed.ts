@@ -1,4 +1,4 @@
-import { createMSWClass, createMSWPredicate, createMSWResource, createMSWStatement } from 'services/mocks/helpers';
+import { createMSWClass, createMSWPredicate, createMSWResource, createMSWStatement } from '@/services/mocks/helpers';
 
 // Seed database with initials entities
 const seed = () => {

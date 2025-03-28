@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { getResource, resourcesUrl } from 'services/backend/resources';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { Resource } from 'services/backend/types';
-import { searchAuthorOnWikidataByORCID, wikidataUrl } from 'services/wikidata';
 import useSWR from 'swr';
-import { getAuthorData } from 'utils';
+
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { Resource } from '@/services/backend/types';
+import { searchAuthorOnWikidataByORCID, wikidataUrl } from '@/services/wikidata';
+import { getAuthorData } from '@/utils';
 
 const useAuthor = ({ authorId }: { authorId: string }) => {
     const {

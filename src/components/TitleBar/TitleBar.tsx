@@ -1,9 +1,10 @@
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SubtitleSeparator } from 'components/styled';
-import { FC, useState, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
+
+import { SubtitleSeparator } from '@/components/styled';
 
 const ContainerStyled = styled(Container)`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {

@@ -1,6 +1,6 @@
-import { url as backendURL } from 'constants/misc';
-import backendApi from 'services/backend/backendApi';
-import { Contributor, Observatory, Organization, PaginatedResponse, Resource } from 'services/backend/types';
+import { url as backendURL } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { Contributor, Observatory, Organization, PaginatedResponse, Resource } from '@/services/backend/types';
 
 export const organizationsUrl = `${backendURL}organizations/`;
 export const organizationsApi = backendApi.extend(() => ({ prefixUrl: organizationsUrl }));

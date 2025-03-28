@@ -1,13 +1,14 @@
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useHistory from 'components/DataBrowser/hooks/useHistory';
-import useSnapshotStatement from 'components/DataBrowser/hooks/useSnapshotStatement';
-import { getResourceFromStatementsById, getStatementsBySubjectId } from 'components/DataBrowser/utils/dataBrowserUtils';
-import { CLASSES } from 'constants/graphSettings';
 import { isEqual, uniqWith } from 'lodash';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { getThing, thingsUrl } from 'services/backend/things';
-import { Class, Literal, Predicate, Resource, Statement } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import { getResourceFromStatementsById, getStatementsBySubjectId } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { CLASSES } from '@/constants/graphSettings';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { getThing, thingsUrl } from '@/services/backend/things';
+import { Class, Literal, Predicate, Resource, Statement } from '@/services/backend/types';
 
 const useEntity = () => {
     const { currentId } = useHistory();

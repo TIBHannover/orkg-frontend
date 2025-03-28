@@ -1,10 +1,11 @@
-import { MISC, PREDICATES } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getOrganization } from 'services/backend/organizations';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+
+import { MISC, PREDICATES } from '@/constants/graphSettings';
+import { getContributorInformationById } from '@/services/backend/contributors';
+import { getObservatoryById } from '@/services/backend/observatories';
+import { getOrganization } from '@/services/backend/organizations';
+import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
 
 function useProvenance() {
     const viewPaper = useSelector((state) => state.viewPaper.paper);

@@ -1,22 +1,23 @@
 import { faCalendar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import EditMetadataModal from 'components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
-import MarkFeaturedUnlistedContainer from 'components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import ObservatoryBox from 'components/Comparison/ObservatoryBox/ObservatoryBox';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import LinkValuePlugins from 'components/ValuePlugins/Link/Link';
-import { VISIBILITY } from 'constants/contentTypes';
-import { MISC } from 'constants/graphSettings';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import { Badge, Button } from 'reactstrap';
+
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import EditMetadataModal from '@/components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
+import MarkFeaturedUnlistedContainer from '@/components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import ObservatoryBox from '@/components/Comparison/ObservatoryBox/ObservatoryBox';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import LinkValuePlugins from '@/components/ValuePlugins/Link/Link';
+import { VISIBILITY } from '@/constants/contentTypes';
+import { MISC } from '@/constants/graphSettings';
 
 const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
     const { comparison, isPublished, updateComparison, isAnonymized } = useComparison(comparisonId);

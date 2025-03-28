@@ -1,18 +1,19 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Table } from 'reactstrap';
-import { getStatements, statementsUrl } from 'services/backend/statements';
-import { EntityType, Statement } from 'services/backend/types';
 import styled from 'styled-components';
 import useSWR from 'swr';
-import { getLinkByEntityType, getResourceLink } from 'utils';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { EntityType, Statement } from '@/services/backend/types';
+import { getLinkByEntityType, getResourceLink } from '@/utils';
 
 const TableContentStyle = styled(Table)`
     border-collapse: collapse;

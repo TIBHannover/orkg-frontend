@@ -2,17 +2,18 @@
 
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import BenchmarkCard from 'components/Benchmarks/BenchmarkCard/BenchmarkCard';
-import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TitleBar from 'components/TitleBar/TitleBar';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
-import { benchmarksUrl, getAllBenchmarks } from 'services/backend/benchmarks';
-import { BenchmarkSummary } from 'services/backend/types';
+
+import BenchmarkCard from '@/components/Benchmarks/BenchmarkCard/BenchmarkCard';
+import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { benchmarksUrl, getAllBenchmarks } from '@/services/backend/benchmarks';
+import { BenchmarkSummary } from '@/services/backend/types';
 
 const Benchmarks = () => {
     const {

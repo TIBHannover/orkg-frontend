@@ -1,5 +1,5 @@
-import { Paper } from 'services/backend/types';
-import type { AppStore } from 'store';
+import { Paper } from '@/services/backend/types';
+import type { AppStore } from '@/store';
 
 // TODO: not complete yet
 export type ContributionEditor = {

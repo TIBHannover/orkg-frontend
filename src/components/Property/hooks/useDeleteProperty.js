@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import Confirm from 'components/Confirmation/Confirmation';
-import { deletePredicate as deletePredicateNetwork } from 'services/backend/predicates';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import ROUTES from 'constants/routes';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import ROUTES from '@/constants/routes';
+import { deletePredicate as deletePredicateNetwork } from '@/services/backend/predicates';
 
 function useDeleteProperty({ propertyId, redirect = false }) {
     const router = useRouter();

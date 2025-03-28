@@ -1,14 +1,15 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
-import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
+import { getStatementsByObjectAndPredicate } from '@/services/backend/statements';
 import {
     CreateContribution,
-    CreatePaperParams,
     CreatedByParam,
+    CreatePaperParams,
     ExtractionMethod,
     ObservatoryIdParam,
     PaginatedResponse,
@@ -21,7 +22,7 @@ import {
     UpdatePaperParams,
     VerifiedParam,
     VisibilityParam,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const papersUrl = `${url}papers/`;
 export const papersApi = backendApi.extend(() => ({ prefixUrl: papersUrl }));

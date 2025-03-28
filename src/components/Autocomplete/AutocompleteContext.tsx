@@ -1,8 +1,9 @@
-import { Ontology } from 'components/Autocomplete/types';
-import { DEFAULT_SOURCES, STORAGE_NAME } from 'constants/autocompleteSources';
-import { Dispatch, FC, ReactNode, createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import { MultiValue } from 'react-select';
-import { asyncLocalStorage } from 'utils';
+
+import { Ontology } from '@/components/Autocomplete/types';
+import { DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
+import { asyncLocalStorage } from '@/utils';
 
 type AutocompleteState = {
     isOntologySelectorIsOpen: boolean;

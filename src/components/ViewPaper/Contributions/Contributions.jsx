@@ -1,27 +1,28 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AddToComparison from 'components/Cards/PaperCard/AddToComparison';
-import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
-import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import RosettaStoneStatements from 'components/RosettaStone/Statements/RosettaStoneStatements';
-import Tabs from 'components/Tabs/Tabs';
-import ContributionComparisons from 'components/ViewPaper/ContributionComparisons/ContributionComparisons';
-import AutomaticContributionWarning from 'components/ViewPaper/Contributions/AutomaticContributionWarning';
-import useContributions from 'components/ViewPaper/Contributions/hooks/useContributions';
-import Mentionings from 'components/ViewPaper/Mentionings/Mentionings';
-import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import SmartSuggestions from 'components/ViewPaper/SmartSuggestions/SmartSuggestions';
-import SustainableDevelopmentGoals from 'components/ViewPaper/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
-import useFetchAbstract from 'components/ViewPaper/hooks/useFetchAbstract';
-import useParams from 'components/useParams/useParams';
-import { EXTRACTION_METHODS } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
+
+import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
+import AddContributionButton from '@/components/ContributionTabs/AddContributionButton';
+import ContributionTab from '@/components/ContributionTabs/ContributionTab';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import RosettaStoneStatements from '@/components/RosettaStone/Statements/RosettaStoneStatements';
+import Tabs from '@/components/Tabs/Tabs';
+import useParams from '@/components/useParams/useParams';
+import ContributionComparisons from '@/components/ViewPaper/ContributionComparisons/ContributionComparisons';
+import AutomaticContributionWarning from '@/components/ViewPaper/Contributions/AutomaticContributionWarning';
+import useContributions from '@/components/ViewPaper/Contributions/hooks/useContributions';
+import useFetchAbstract from '@/components/ViewPaper/hooks/useFetchAbstract';
+import Mentionings from '@/components/ViewPaper/Mentionings/Mentionings';
+import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import SmartSuggestions from '@/components/ViewPaper/SmartSuggestions/SmartSuggestions';
+import SustainableDevelopmentGoals from '@/components/ViewPaper/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
 
 const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();

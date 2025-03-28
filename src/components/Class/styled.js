@@ -1,6 +1,7 @@
+import 'rc-tree/assets/index.css';
+
 import Tree from 'rc-tree';
 import styled from 'styled-components';
-import 'rc-tree/assets/index.css';
 
 export const motion = {
     motionName: 'node-motion',

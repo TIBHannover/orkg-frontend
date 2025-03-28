@@ -1,20 +1,21 @@
-import AutocompleteProvider, { useAutocompleteState } from 'components/Autocomplete/AutocompleteContext';
-import CustomMultiValueLabel from 'components/Autocomplete/CustomComponents/CustomMultiValueLabel';
-import Input from 'components/Autocomplete/CustomComponents/Input';
-import Menu from 'components/Autocomplete/CustomComponents/Menu';
-import { Option as CustomOption } from 'components/Autocomplete/CustomComponents/Option';
-import OntologiesModal from 'components/Autocomplete/OntologiesModal/OntologiesModal';
-import { importExternalSelectedOption } from 'components/Autocomplete/hooks/helpers';
-import useLoadOptions from 'components/Autocomplete/hooks/useLoadOptions';
-import { SelectGlobalStyle, customClassNames, customStyles } from 'components/Autocomplete/styled';
-import { AdditionalType, AutocompleteProps, OptionType } from 'components/Autocomplete/types';
 import { findIndex, uniqBy } from 'lodash';
 import { useEffect, useId, useMemo, useState } from 'react';
 import type { GroupBase, OnChangeValue } from 'react-select';
-import { AsyncPaginate, ComponentProps, UseAsyncPaginateParams, withAsyncPaginate } from 'react-select-async-paginate';
 import type {} from 'react-select/base';
 import Creatable, { CreatableProps } from 'react-select/creatable';
-import { getThing } from 'services/backend/things';
+import { AsyncPaginate, ComponentProps, UseAsyncPaginateParams, withAsyncPaginate } from 'react-select-async-paginate';
+
+import AutocompleteProvider, { useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
+import CustomMultiValueLabel from '@/components/Autocomplete/CustomComponents/CustomMultiValueLabel';
+import Input from '@/components/Autocomplete/CustomComponents/Input';
+import Menu from '@/components/Autocomplete/CustomComponents/Menu';
+import { Option as CustomOption } from '@/components/Autocomplete/CustomComponents/Option';
+import { importExternalSelectedOption } from '@/components/Autocomplete/hooks/helpers';
+import useLoadOptions from '@/components/Autocomplete/hooks/useLoadOptions';
+import OntologiesModal from '@/components/Autocomplete/OntologiesModal/OntologiesModal';
+import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { AdditionalType, AutocompleteProps, OptionType } from '@/components/Autocomplete/types';
+import { getThing } from '@/services/backend/things';
 
 // This import is necessary for module augmentation.
 // It allows us to extend the 'Props' interface in the 'react-select/base' module

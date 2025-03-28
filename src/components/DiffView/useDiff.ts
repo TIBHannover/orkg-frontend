@@ -1,7 +1,8 @@
-import { isListSection, isTextSection } from 'components/List/helpers/typeGuards';
-import { SectionContentLinkTypes } from 'components/Review/Sections/ContentLink/ContentLink';
 import { useCallback } from 'react';
-import { Comparison, LiteratureList, Review } from 'services/backend/types';
+
+import { isListSection, isTextSection } from '@/components/List/helpers/typeGuards';
+import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLink/ContentLink';
+import { Comparison, LiteratureList, Review } from '@/services/backend/types';
 
 const useDiff = () => {
     const reviewToPlainText = useCallback((article: Review) => {

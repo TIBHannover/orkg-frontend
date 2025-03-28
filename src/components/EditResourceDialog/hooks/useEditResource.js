@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { getClassById } from 'services/backend/classes';
-import Confirm from 'components/ConfirmationModal/ConfirmationModal';
+import { useEffect, useState } from 'react';
+
+import Confirm from '@/components/ConfirmationModal/ConfirmationModal';
+import { getClassById } from '@/services/backend/classes';
 
 const useEditResource = (resource) => {
     const [isLoading, setIsLoading] = useState(false);

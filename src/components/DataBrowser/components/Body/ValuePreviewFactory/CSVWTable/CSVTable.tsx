@@ -11,12 +11,13 @@ import {
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-import useTableData, { TableRow } from 'components/DataBrowser/hooks/useTableData';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { FC, ReactElement, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { Button, ButtonGroup, Input, InputGroup, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
-import { sortMethod } from 'utils';
+
+import useTableData, { TableRow } from '@/components/DataBrowser/hooks/useTableData';
+import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+import { sortMethod } from '@/utils';
 
 const sortColumnFn: SortingFn<TableRow> = (rowA, rowB, _columnId) => sortMethod(rowA.original[_columnId].value, rowB.original[_columnId].value);
 

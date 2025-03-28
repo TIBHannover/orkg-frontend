@@ -1,12 +1,13 @@
-import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { Alert, Button } from 'reactstrap';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import { MISC } from 'constants/graphSettings';
+import Link from 'next/link';
 import { env } from 'next-runtime-env';
-import { StyledActivity } from 'components/ViewPaper/ProvenanceBox/styled';
+import PropTypes from 'prop-types';
+import { Alert, Button } from 'reactstrap';
+
+import { StyledActivity } from '@/components/ViewPaper/ProvenanceBox/styled';
+import { MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (
     <div>

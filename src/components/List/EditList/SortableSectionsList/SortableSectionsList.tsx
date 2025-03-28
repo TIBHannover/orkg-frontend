@@ -1,11 +1,12 @@
 import arrayMove from 'array-move';
-import EditSection from 'components/List/EditList/SortableSectionsList/EditSection/EditSection';
-import useList from 'components/List/hooks/useList';
 import { useState } from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import { Container } from 'reactstrap';
-import { LiteratureListSection } from 'services/backend/types';
 import { createGlobalStyle } from 'styled-components';
+
+import EditSection from '@/components/List/EditList/SortableSectionsList/EditSection/EditSection';
+import useList from '@/components/List/hooks/useList';
+import { LiteratureListSection } from '@/services/backend/types';
 
 export type HandleManualSort = (params: { id: string; direction: 'up' | 'down' }) => void;
 

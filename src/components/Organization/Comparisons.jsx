@@ -1,14 +1,15 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
 import { find, flatten } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { Container, ListGroup } from 'reactstrap';
-import { getResources } from 'services/backend/resources';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { convertComparisonToNewFormat, getComparisonData, groupVersionsOfComparisons } from 'utils';
+
+import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import { getResources } from '@/services/backend/resources';
+import { getStatementsBySubjects } from '@/services/backend/statements';
+import { convertComparisonToNewFormat, getComparisonData, groupVersionsOfComparisons } from '@/utils';
 
 const Comparisons = ({ organizationsId }) => {
     const [isLoadingComparisons, setIsLoadingComparisons] = useState(null);

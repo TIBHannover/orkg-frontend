@@ -1,4 +1,4 @@
-import type { Class, EntityType, Node, Predicate, Resource } from 'services/backend/types';
+import type { Class, EntityType, Node, Predicate, Resource } from '@/services/backend/types';
 
 export type AdditionalType = {
     page: number;

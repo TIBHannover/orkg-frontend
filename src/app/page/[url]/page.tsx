@@ -1,14 +1,15 @@
 'use client';
 
-import PageContentLoader from 'components/Page/PageContentLoader';
-import usePage from 'components/Page/usePage';
-import { CmsPage } from 'components/styled';
-import TitleBar from 'components/TitleBar/TitleBar';
-import NotFound from 'app/not-found';
 import { useEffect } from 'react';
-import useParams from 'components/useParams/useParams';
 import { Container } from 'reactstrap';
-import { getPageByUrl } from 'services/cms';
+
+import NotFound from '@/app/not-found';
+import PageContentLoader from '@/components/Page/PageContentLoader';
+import usePage from '@/components/Page/usePage';
+import { CmsPage } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { getPageByUrl } from '@/services/cms';
 
 const Page = () => {
     const { loadPage, page, isLoading, isNotFound } = usePage();

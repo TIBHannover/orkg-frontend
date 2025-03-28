@@ -1,14 +1,15 @@
 'use client';
 
-import DiffView from 'components/DiffView/DiffView';
-import useDiff from 'components/DiffView/useDiff';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useReview from 'components/Review/hooks/useReview';
-import useParams from 'components/useParams/useParams';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import { Review } from 'services/backend/types';
+
+import DiffView from '@/components/DiffView/DiffView';
+import useDiff from '@/components/DiffView/useDiff';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useReview from '@/components/Review/hooks/useReview';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { Review } from '@/services/backend/types';
 
 const ReviewDiff = () => {
     const { reviewToPlainText } = useDiff();

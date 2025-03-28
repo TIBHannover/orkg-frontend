@@ -1,15 +1,16 @@
 import { faAngleDoubleRight, faEllipsisH, faHome, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { getFieldParents, researchFieldUrl } from 'services/backend/researchFields';
-import { Node } from 'services/backend/types';
 import styled from 'styled-components';
 import useSWR from 'swr';
-import { reverseWithSlug } from 'utils';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
+import { getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
+import { Node } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 export const BreadcrumbStyled = styled.ul`
     list-style: none;

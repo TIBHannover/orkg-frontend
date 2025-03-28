@@ -2,21 +2,22 @@ import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
 import capitalize from 'capitalize';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import useReview from 'components/Review/hooks/useReview';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { flattenDeep, uniqBy } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { toast } from 'react-toastify';
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { comparisonUrl, getComparison } from 'services/backend/comparisons';
-import { getPredicate } from 'services/backend/predicates';
-import { getResource } from 'services/backend/resources';
-import { getStatements } from 'services/backend/statements';
-import { EntityType, ReviewSection, ReviewSectionData } from 'services/backend/types';
 import styled, { createGlobalStyle } from 'styled-components';
 import useSWR from 'swr';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import useReview from '@/components/Review/hooks/useReview';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
+import { getPredicate } from '@/services/backend/predicates';
+import { getResource } from '@/services/backend/resources';
+import { getStatements } from '@/services/backend/statements';
+import { EntityType, ReviewSection, ReviewSectionData } from '@/services/backend/types';
 
 const DragHandle = styled.div`
     cursor: move;

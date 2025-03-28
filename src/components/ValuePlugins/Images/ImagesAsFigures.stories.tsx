@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import ImageAsFigure from 'components/ValuePlugins/Images/ImageAsFigures';
-import { ENTITIES } from 'constants/graphSettings';
+
+import ImageAsFigure from '@/components/ValuePlugins/Images/ImageAsFigures';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const NODE_TYPES = [ENTITIES.RESOURCE, ENTITIES.LITERAL];
 

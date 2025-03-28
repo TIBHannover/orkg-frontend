@@ -1,8 +1,9 @@
 import { isArray } from 'lodash';
 import { ReactElement, useCallback, useState } from 'react';
-import { CmsResponsePaginated, CmsResponseSingle, HelpArticle } from 'services/cms/types';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
+
+import { CmsResponsePaginated, CmsResponseSingle, HelpArticle } from '@/services/cms/types';
 
 const converter = new Showdown.Converter();
 converter.setFlavor('github');

@@ -1,10 +1,11 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
+import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import WIKIPEDIA_LOGO from 'assets/img/sameas/wikipedia.png';
-import PropTypes from 'prop-types';
-import Image from 'next/image';
+
+import WIKIPEDIA_LOGO from '@/assets/img/sameas/wikipedia.png';
 
 class WikipediaSummary extends Component {
     constructor(props) {

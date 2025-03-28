@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
-import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
+import TableHeaderColumn from '@/components/ContributionEditor/TableHeaderColumn';
+import { fireEvent, render, screen, waitFor } from '@/testUtils';
 
 const setup = (paperTitle) => {
     const paper = {

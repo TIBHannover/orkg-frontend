@@ -1,14 +1,15 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { publishComparison } from 'services/backend/comparisons';
-import { getComparison } from 'services/simcomp';
-import { getErrorMessage } from 'utils';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import ROUTES from '@/constants/routes';
+import { publishComparison } from '@/services/backend/comparisons';
+import { getComparison } from '@/services/simcomp';
+import { getErrorMessage } from '@/utils';
 
 function usePublish() {
     const [shouldAssignDoi, setShouldAssignDoi] = useState(false);

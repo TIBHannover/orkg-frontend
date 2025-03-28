@@ -1,9 +1,10 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import REGEX from 'constants/regex';
 import Linkify from 'linkify-react';
 import * as linkify from 'linkifyjs';
 import { FC } from 'react';
+
+import REGEX from '@/constants/regex';
 
 export const isLinkValue = (text: string) => {
     const excludeMatch =

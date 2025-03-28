@@ -2,21 +2,22 @@
 
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RSTemplateCard from 'components/Cards/RSTemplateCard/RSTemplateCard';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { debounce } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
-import { getRSTemplates, rosettaStoneUrl } from 'services/backend/rosettaStone';
-import { RosettaStoneTemplate } from 'services/backend/types';
+
+import RSTemplateCard from '@/components/Cards/RSTemplateCard/RSTemplateCard';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { getRSTemplates, rosettaStoneUrl } from '@/services/backend/rosettaStone';
+import { RosettaStoneTemplate } from '@/services/backend/types';
 
 const Templates = () => {
     const [searchTerm, setSearchTerm] = useQueryState('q', {

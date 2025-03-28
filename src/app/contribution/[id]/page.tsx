@@ -1,14 +1,15 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import useParams from 'components/useParams/useParams';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import { getStatements } from 'services/backend/statements';
+
+import NotFound from '@/app/not-found';
+import useParams from '@/components/useParams/useParams';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getStatements } from '@/services/backend/statements';
 
 /**
  * Component for redirecting contribution IDs to the paper view

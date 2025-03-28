@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
+
+import ShareCreatedContent from '@/components/ShareLinkMarker/ShareCreatedContent';
 
 export default {
     title: 'ShareCreatedContent',

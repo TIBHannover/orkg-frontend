@@ -1,11 +1,12 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import Link from 'next/link';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
-import { getResourceLink } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { getResourceLink } from '@/utils';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;

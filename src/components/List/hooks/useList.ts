@@ -1,7 +1,10 @@
-import useParams from 'components/useParams/useParams';
-import { CLASSES, MISC } from 'constants/graphSettings';
-import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
+import useSWR from 'swr';
+import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
+
+import useParams from '@/components/useParams/useParams';
+import { CLASSES, MISC } from '@/constants/graphSettings';
+import errorHandler from '@/helpers/errorHandler';
 import {
     createLiteratureListSection,
     deleteLiteratureListSection,
@@ -12,10 +15,10 @@ import {
     updateLiteratureListSection,
     UpdateLiteratureListSectionList,
     UpdateLiteratureListSectionText,
-} from 'services/backend/literatureLists';
-import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
-import { getOrganization, organizationsUrl } from 'services/backend/organizations';
-import { getPaper, papersUrl } from 'services/backend/papers';
+} from '@/services/backend/literatureLists';
+import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
+import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
+import { getPaper, papersUrl } from '@/services/backend/papers';
 import {
     LiteratureList,
     LiteratureListSectionList,
@@ -23,9 +26,7 @@ import {
     LiteratureListSectionType,
     Organization,
     Paper,
-} from 'services/backend/types';
-import useSWR from 'swr';
-import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
+} from '@/services/backend/types';
 
 const useList = (listId?: string) => {
     let { id } = useParams<{ id: string }>();

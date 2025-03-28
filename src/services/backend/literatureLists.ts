@@ -1,22 +1,22 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
 import {
     CreatedByParam,
     LiteratureList,
     LiteratureListSectionText,
+    ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
     Paper,
     PublishedParam,
+    ResearchFieldIdParams,
     Resource,
     SdgParam,
     VerifiedParam,
     VisibilityParam,
-    ObservatoryIdParam,
-    ResearchFieldIdParams,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const listsUrl = `${url}literature-lists/`;
 export const listsApi = backendApi.extend(() => ({ prefixUrl: listsUrl }));

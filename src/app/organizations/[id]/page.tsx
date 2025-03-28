@@ -2,21 +2,22 @@
 
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import OrganizationCard from 'components/Cards/OrganizationCard/OrganizationCard';
-import useAuthentication from 'components/hooks/useAuthentication';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { capitalize } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { getAllOrganizations, getConferences, organizationsUrl } from 'services/backend/organizations';
 import useSWR from 'swr';
+
+import OrganizationCard from '@/components/Cards/OrganizationCard/OrganizationCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getAllOrganizations, getConferences, organizationsUrl } from '@/services/backend/organizations';
 
 const Organizations = () => {
     const params = useParams();

@@ -1,16 +1,17 @@
 import { faGoogle, faLinkedin, faOrcid, faResearchgate } from '@fortawesome/free-brands-svg-icons';
 import { faEllipsisV, faExternalLinkAlt, faGlobe, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
-import useAuthor from 'components/Author/hooks/useAuthor';
-import DataBrowserDialog from 'components/DataBrowser/DataBrowserDialog';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import useAuthor from '@/components/Author/hooks/useAuthor';
+import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import ROUTES from '@/constants/routes';
 
 type AuthorHeaderProps = {
     authorId: string;

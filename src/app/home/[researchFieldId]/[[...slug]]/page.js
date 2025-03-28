@@ -1,5 +1,5 @@
 'use client';
 
-import Home from 'app/page';
+import Home from '@/app/page';
 
 export default Home;

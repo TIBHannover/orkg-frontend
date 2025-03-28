@@ -1,7 +1,8 @@
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
 import PropTypes from 'prop-types';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { convertPaperToNewFormat } from 'utils';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import { convertPaperToNewFormat } from '@/utils';
 
 const ExistingTitleModal = ({ existingPaper, toggle, onContinue }) => (
     <Modal size="lg" isOpen backdrop="static">

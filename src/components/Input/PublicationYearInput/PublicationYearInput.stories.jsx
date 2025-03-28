@@ -1,5 +1,6 @@
-import PublicationYearInput from 'components/Input/PublicationYearInput/PublicationYearInput';
 import { useState } from 'react';
+
+import PublicationYearInput from '@/components/Input/PublicationYearInput/PublicationYearInput';
 
 export default {
     title: 'Input/PublicationYearInput',

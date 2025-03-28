@@ -1,14 +1,15 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import THING_TYPES from 'constants/thingTypes';
 import { uniqBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getOriginalPaperId } from 'services/backend/papers';
-import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
-import { getThing } from 'services/simcomp';
-import { loadPaper, setDataCiteDoi, setOriginalPaperId } from 'slices/viewPaperSlice';
-import { convertPaperToNewFormat, filterSubjectOfStatementsByPredicateAndClass, getPaperDataViewPaper } from 'utils';
+
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import THING_TYPES from '@/constants/thingTypes';
+import { getOriginalPaperId } from '@/services/backend/papers';
+import { getResource } from '@/services/backend/resources';
+import { getStatementsBundleBySubject } from '@/services/backend/statements';
+import { getThing } from '@/services/simcomp';
+import { loadPaper, setDataCiteDoi, setOriginalPaperId } from '@/slices/viewPaperSlice';
+import { convertPaperToNewFormat, filterSubjectOfStatementsByPredicateAndClass, getPaperDataViewPaper } from '@/utils';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);

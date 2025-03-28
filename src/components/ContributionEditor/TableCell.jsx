@@ -1,13 +1,14 @@
-import TableCellValue from 'components/ContributionEditor/TableCellValue';
-import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
-import { Item, ItemInner } from 'components/Comparison/Table/Cells/TableCell';
 import { isEqual } from 'lodash';
+import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import { env } from 'next-runtime-env';
-import { useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
-import { EXTRACTION_METHODS } from 'constants/misc';
+import { useSelector } from 'react-redux';
+
+import { Item, ItemInner } from '@/components/Comparison/Table/Cells/TableCell';
+import TableCellValue from '@/components/ContributionEditor/TableCellValue';
+import TableCellValueCreate from '@/components/ContributionEditor/TableCellValueCreate';
+import { EXTRACTION_METHODS } from '@/constants/misc';
 
 const TableCell = ({ values, contributionId, propertyId }) => {
     const [disableCreate, setDisableCreate] = useState(false);

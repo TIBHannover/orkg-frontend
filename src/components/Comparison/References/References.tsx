@@ -1,11 +1,12 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import ReferencesModal from 'components/Comparison/References/ReferencesModal/ReferencesModal';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import ReferencesModal from '@/components/Comparison/References/ReferencesModal/ReferencesModal';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
 
 function References() {
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);

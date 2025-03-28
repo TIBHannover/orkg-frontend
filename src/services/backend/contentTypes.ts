@@ -1,17 +1,18 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID, url as baseUrl } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { getComparisons } from 'services/backend/comparisons';
-import { getLiteratureLists } from 'services/backend/literatureLists';
-import { mergePaginateResponses, prepareParams } from 'services/backend/misc';
-import { observatoriesApi } from 'services/backend/observatories';
-import { getPaper, getPapers } from 'services/backend/papers';
-import { getResources } from 'services/backend/resources';
-import { getReviews } from 'services/backend/reviews';
-import { getRSStatements, getRSTemplates } from 'services/backend/rosettaStone';
-import { getTemplates } from 'services/backend/templates';
+
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID, url as baseUrl } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { getComparisons } from '@/services/backend/comparisons';
+import { getLiteratureLists } from '@/services/backend/literatureLists';
+import { mergePaginateResponses, prepareParams } from '@/services/backend/misc';
+import { observatoriesApi } from '@/services/backend/observatories';
+import { getPaper, getPapers } from '@/services/backend/papers';
+import { getResources } from '@/services/backend/resources';
+import { getReviews } from '@/services/backend/reviews';
+import { getRSStatements, getRSTemplates } from '@/services/backend/rosettaStone';
+import { getTemplates } from '@/services/backend/templates';
 import {
     AuthorIdParam,
     CreatedByParam,
@@ -27,8 +28,8 @@ import {
     SdgParam,
     VerifiedParam,
     VisibilityParam,
-} from 'services/backend/types';
-import { getVisualizations } from 'services/backend/visualizations';
+} from '@/services/backend/types';
+import { getVisualizations } from '@/services/backend/visualizations';
 
 export const contentTypesUrl = `${baseUrl}content-types/`;
 export const contentTypesApi = backendApi.extend(() => ({ prefixUrl: contentTypesUrl }));

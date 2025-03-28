@@ -1,17 +1,18 @@
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { isEmpty } from 'lodash';
 import { reverse } from 'named-urls';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getClassById, getClasses } from 'services/backend/classes';
-import { getPaperByDoi } from 'services/backend/papers';
-import { getPredicates } from 'services/backend/predicates';
-import { getResources } from 'services/backend/resources';
-import { getStatementsByObject, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import DEFAULT_FILTERS from '@/constants/searchDefaultFilters';
+import { getClassById, getClasses } from '@/services/backend/classes';
+import { getPaperByDoi } from '@/services/backend/papers';
+import { getPredicates } from '@/services/backend/predicates';
+import { getResources } from '@/services/backend/resources';
+import { getStatementsByObject, getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
 
 const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT];
 

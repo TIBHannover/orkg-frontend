@@ -1,14 +1,15 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useList from 'components/List/hooks/useList';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { publishList } from 'services/backend/literatureLists';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useList from '@/components/List/hooks/useList';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { publishList } from '@/services/backend/literatureLists';
 
 type PublishModalProps = {
     show: boolean;

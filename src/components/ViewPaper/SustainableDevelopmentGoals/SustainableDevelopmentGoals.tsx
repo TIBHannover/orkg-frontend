@@ -1,10 +1,11 @@
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
-import { SUSTAINABLE_DEVELOPMENT_GOALS } from 'constants/graphSettings';
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePaper } from 'services/backend/papers';
-import { Node } from 'services/backend/types';
-import { loadPaper } from 'slices/viewPaperSlice';
+
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
+import { updatePaper } from '@/services/backend/papers';
+import { Node } from '@/services/backend/types';
+import { loadPaper } from '@/slices/viewPaperSlice';
 
 type SustainableDevelopmentGoalsProps = {
     isEditable: boolean;

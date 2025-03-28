@@ -1,6 +1,7 @@
-import REGEX from 'constants/regex';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import REGEX from '@/constants/regex';
 
 const ImageContainer = styled.div`
     position: relative;

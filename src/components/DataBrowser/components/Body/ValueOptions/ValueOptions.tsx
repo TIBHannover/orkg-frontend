@@ -1,12 +1,13 @@
 import { faPen, faRotateLeft, faSitemap, faTable } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import InfoTippy from 'components/DataBrowser/components/Body/ValueOptions/InfoTippy';
-import { useDataBrowserState } from 'components/DataBrowser/context/DataBrowserContext';
-import useCanEdit from 'components/DataBrowser/hooks/useCanEdit';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
 import { FC, useCallback } from 'react';
-import { Statement } from 'services/backend/types';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import InfoTippy from '@/components/DataBrowser/components/Body/ValueOptions/InfoTippy';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { Statement } from '@/services/backend/types';
 
 type ValueOptionsProps = {
     path: string[];

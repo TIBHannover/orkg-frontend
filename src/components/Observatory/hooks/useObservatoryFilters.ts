@@ -1,7 +1,8 @@
-import { FILTER_SOURCE } from 'constants/filters';
-import { getFiltersByObservatoryId, observatoriesUrl } from 'services/backend/observatories';
-import { FilterConfig } from 'services/backend/types';
 import useSWR from 'swr';
+
+import { FILTER_SOURCE } from '@/constants/filters';
+import { getFiltersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
+import { FilterConfig } from '@/services/backend/types';
 
 const useObservatoryFilters = ({
     id,

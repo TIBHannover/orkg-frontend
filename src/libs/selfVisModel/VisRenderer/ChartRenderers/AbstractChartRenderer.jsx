@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Chart } from 'react-google-charts';
-import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PropTypes from 'prop-types';
+
+import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
 class AbstractChartRenderer extends Component {
     constructor(props) {

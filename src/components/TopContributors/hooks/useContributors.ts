@@ -1,7 +1,8 @@
-import { RESOURCES } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
-import { getTopContributors, statsUrl } from 'services/backend/stats';
 import useSWR from 'swr';
+
+import { RESOURCES } from '@/constants/graphSettings';
+import { getTopContributors, statsUrl } from '@/services/backend/stats';
 
 function useContributors({
     researchFieldId,

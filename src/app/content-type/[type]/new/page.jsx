@@ -2,22 +2,23 @@
 
 import { faBars, faComments, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { supportedContentTypes } from 'components/ContentType/types';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import { useRouter } from 'next/navigation';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { createResource } from 'services/backend/resources';
+
+import { supportedContentTypes } from '@/components/ContentType/types';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { CLASSES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
+import { createResource } from '@/services/backend/resources';
 
 const TYPES = [
     ...supportedContentTypes,

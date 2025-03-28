@@ -1,12 +1,13 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select, { components } from 'react-select';
 import { FormGroup, Input, Label } from 'reactstrap';
-import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
 import styled from 'styled-components';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { addToComparison, removeFromComparison } from '@/slices/viewPaperSlice';
 
 const Option = ({ children, data, ...props }) => (
     <components.Option {...props}>

@@ -1,19 +1,20 @@
 'use client';
 
-import NotFound from 'app/not-found';
-import CheckSlug from 'components/CheckSlug/CheckSlug';
 import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import PageContentLoader from 'components/Page/PageContentLoader';
-import usePage from 'components/Page/usePage';
-import TitleBar from 'components/TitleBar/TitleBar';
-import { CmsPage } from 'components/styled';
-import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import { Alert, Container, Nav, NavItem, Navbar } from 'reactstrap';
-import { getAboutPage, getAboutPages } from 'services/cms';
-import { HelpArticle } from 'services/cms/types';
-import { reverseWithSlug } from 'utils';
+import { Alert, Container, Nav, Navbar, NavItem } from 'reactstrap';
+
+import NotFound from '@/app/not-found';
+import CheckSlug from '@/components/CheckSlug/CheckSlug';
+import PageContentLoader from '@/components/Page/PageContentLoader';
+import usePage from '@/components/Page/usePage';
+import { CmsPage } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import ROUTES from '@/constants/routes';
+import { getAboutPage, getAboutPages } from '@/services/cms';
+import { HelpArticle } from '@/services/cms/types';
+import { reverseWithSlug } from '@/utils';
 
 const About = () => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(false);

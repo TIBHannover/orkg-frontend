@@ -1,18 +1,19 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import BioassaySelectItem from 'components/ViewPaper/BioassaysModal/BioassaySelectItem';
-import useBioassays from 'components/ViewPaper/hooks/useBioassays';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useCSVReader } from 'react-papaparse';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, FormFeedback, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { createResourceStatement, statementsUrl } from 'services/backend/statements';
-import { semantifyBioassays } from 'services/orkgNlp/index';
-import { setBioassayRawResponse, setBioassayText } from 'slices/viewPaperSlice';
 import { mutate } from 'swr';
+
+import BioassaySelectItem from '@/components/ViewPaper/BioassaysModal/BioassaySelectItem';
+import useBioassays from '@/components/ViewPaper/hooks/useBioassays';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
+import { semantifyBioassays } from '@/services/orkgNlp/index';
+import { setBioassayRawResponse, setBioassayText } from '@/slices/viewPaperSlice';
 
 const BioassaysModal = ({ selectedResource, toggle, showDialog }) => {
     const dispatch = useDispatch();

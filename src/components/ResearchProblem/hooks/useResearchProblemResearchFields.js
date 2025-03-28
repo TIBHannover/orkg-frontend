@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getResearchFieldsByResearchProblemId } from 'services/backend/problems';
+import { useCallback, useEffect, useState } from 'react';
+
+import { getResearchFieldsByResearchProblemId } from '@/services/backend/problems';
 
 function useResearchProblemResearchFields({ researchProblemId }) {
     const [researchFields, setResearchFields] = useState([]);

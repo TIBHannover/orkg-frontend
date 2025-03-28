@@ -1,18 +1,19 @@
-import CardFactory from 'components/Cards/CardFactory/CardFactory';
-import ContentTypeListHeader from 'components/ContentTypeList/ContentTypeListHeader';
-import Filters from 'components/Filters/Filters';
-import usePaginate from 'components/PaginatedContent/hooks/usePaginate';
-import ListPaginatedContent from 'components/PaginatedContent/ListPaginatedContent';
-import TabLabel from 'components/Tabs/TabLabel';
-import Tabs from 'components/Tabs/Tabs';
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { CLASSES } from 'constants/graphSettings';
-import { ALL_CONTENT_TYPES_ID } from 'constants/misc';
 import { parseAsJson, useQueryState } from 'nuqs';
 import { toast } from 'react-toastify';
-import { contentTypesUrl, getContentTypes } from 'services/backend/contentTypes';
-import { FilterConfig, Item, VisibilityOptions } from 'services/backend/types';
-import { schemaFilterConfig } from 'components/Filters/hooks/useFilterConfig';
+
+import CardFactory from '@/components/Cards/CardFactory/CardFactory';
+import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
+import Filters from '@/components/Filters/Filters';
+import { schemaFilterConfig } from '@/components/Filters/hooks/useFilterConfig';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import TabLabel from '@/components/Tabs/TabLabel';
+import Tabs from '@/components/Tabs/Tabs';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
+import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
+import { FilterConfig, Item, VisibilityOptions } from '@/services/backend/types';
 
 export const OBSERVATORY_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All', params: { published: undefined } },

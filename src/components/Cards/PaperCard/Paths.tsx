@@ -1,13 +1,14 @@
-import Link from 'next/link';
-import { Button } from 'reactstrap';
+import { faAnglesRight, faChevronCircleDown, faChevronCircleUp, faRoute } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { faRoute, faAnglesRight, faChevronCircleUp, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import { ENTITIES } from 'constants/graphSettings';
+import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import { getLinkByEntityType } from 'utils';
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
-import { Resource } from 'services/backend/types';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Resource } from '@/services/backend/types';
+import { getLinkByEntityType } from '@/utils';
 
 const StyledPaths = styled.div`
     & .typeCircle {

@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { Badge } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
+import { Badge } from 'reactstrap';
+
+import ROUTES from '@/constants/routes';
+import { reverseWithSlug } from '@/utils';
 
 const AuthorsBox = ({ isLoading, researchFields }) => (
     <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">

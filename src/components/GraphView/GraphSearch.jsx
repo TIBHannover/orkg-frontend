@@ -1,8 +1,9 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import Select from 'react-select';
 import { getVisibleEntities, useCollapse } from 'reagraph';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 
 const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, graphRef }) => {
     const [foundNodeId, setFoundNodeId] = useState(null);

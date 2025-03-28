@@ -1,6 +1,7 @@
-import useEntity from 'components/DataBrowser/hooks/useEntity';
-import { classesUrl, getClassById } from 'services/backend/classes';
 import useSWR from 'swr';
+
+import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { classesUrl, getClassById } from '@/services/backend/classes';
 
 const useClasses = () => {
     const { entity } = useEntity();

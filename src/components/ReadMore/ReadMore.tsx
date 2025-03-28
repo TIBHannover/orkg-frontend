@@ -1,10 +1,10 @@
 'use client';
 
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
-
 import { Button } from 'reactstrap';
+
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
 
 type ReadMoreProps = {
     text?: string;

@@ -1,10 +1,11 @@
-import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { createProperty, getSuggestedProperties } from 'slices/contributionEditorSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { ENTITIES } from 'constants/graphSettings';
+import { useDispatch, useSelector } from 'react-redux';
+import { Badge, ListGroup, ListGroupItem } from 'reactstrap';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import { createProperty, getSuggestedProperties } from '@/slices/contributionEditorSlice';
 
 const PropertySuggestions = () => {
     const dispatch = useDispatch();

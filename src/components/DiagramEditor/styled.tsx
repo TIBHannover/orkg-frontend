@@ -1,6 +1,7 @@
-import styled from 'styled-components';
-import ReactFlow from 'reactflow';
 import 'reactflow/dist/style.css';
+
+import ReactFlow from 'reactflow';
+import styled from 'styled-components';
 
 const StyledReactFlow = styled(ReactFlow)`
     path.react-flow__edge-path {

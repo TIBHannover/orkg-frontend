@@ -1,13 +1,5 @@
 import { faCheck, faGripVertical, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { PropertyStyle } from 'components/StatementBrowser/styled';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
@@ -16,6 +8,15 @@ import { useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import { PropertyStyle } from '@/components/StatementBrowser/styled';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const DragHandler = styled.div`
     width: 30px;

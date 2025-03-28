@@ -2,20 +2,21 @@
 
 import { faAngleDoubleDown, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PaperCard from 'components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import Link from 'next/link';
-import useParams from 'components/useParams/useParams';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useVenuePapers from 'components/Venue/useVenuePapers';
-import { SubTitle } from 'components/styled';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle, ListGroup, ListGroupItem } from 'reactstrap';
-import { getResource } from 'services/backend/resources';
-import { convertPaperToNewFormat } from 'utils';
+
+import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useVenuePapers from '@/components/Venue/useVenuePapers';
+import ROUTES from '@/constants/routes';
+import { getResource } from '@/services/backend/resources';
+import { convertPaperToNewFormat } from '@/utils';
 
 const VenuePage = () => {
     const params = useParams();

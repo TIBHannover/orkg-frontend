@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import logo from 'components/Search/OrkgAskBanner/logo.png';
-import useSWR from 'swr';
-import { getLlmResponse, nlpServiceUrl } from 'services/orkgNlp';
-import { FC } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { FC } from 'react';
+import useSWR from 'swr';
+
+import logo from '@/components/Search/OrkgAskBanner/logo.png';
+import { getLlmResponse, nlpServiceUrl } from '@/services/orkgNlp';
 
 type OrkgAskBannerProps = {
     searchQuery?: string;

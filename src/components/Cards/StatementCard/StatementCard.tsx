@@ -1,16 +1,17 @@
 import { faClock, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { ENTITIES, MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { Statement } from 'services/backend/types';
-import { getLinkByEntityType } from 'utils';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { ENTITIES, MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { Statement } from '@/services/backend/types';
+import { getLinkByEntityType } from '@/utils';
 
 function StatementCard({ statement }: { statement: Statement }) {
     return (

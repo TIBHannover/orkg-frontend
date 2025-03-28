@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import { predicatesUrl } from 'services/backend/predicates';
-import db from 'services/mocks/db';
-import { createMSWPredicate } from 'services/mocks/helpers';
+
+import { predicatesUrl } from '@/services/backend/predicates';
+import db from '@/services/mocks/db';
+import { createMSWPredicate } from '@/services/mocks/helpers';
 
 const predicates = [
     http.get(predicatesUrl, ({ request }: { request: Request }) => {

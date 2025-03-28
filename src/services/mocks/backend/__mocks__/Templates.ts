@@ -1,4 +1,4 @@
-import { Visibility } from 'services/backend/types';
+import { Visibility } from '@/services/backend/types';
 
 export const strictTemplate = {
     id: 'StrictTemplateResource',

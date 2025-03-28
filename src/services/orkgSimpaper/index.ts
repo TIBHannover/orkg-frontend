@@ -1,7 +1,8 @@
 import ky from 'ky';
 import { env } from 'next-runtime-env';
 import qs from 'qs';
-import { SimilarPaper } from 'services/orkgSimpaper/types';
+
+import { SimilarPaper } from '@/services/orkgSimpaper/types';
 
 export const similarPaperURL = env('NEXT_PUBLIC_SIMILAR_PAPER_URL');
 const similarPaperApi = ky.create({

@@ -1,10 +1,11 @@
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import { FC } from 'react';
 import { Button } from 'reactstrap';
+
+import ROUTES from '@/constants/routes';
 
 type InviteResearchersButtonProps = {
     comparisonId: string;

@@ -1,19 +1,20 @@
 import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
-import AddResearchProblem from 'components/Observatory/AddResearchProblem';
-import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
-import ResearchProblemsModal from 'components/ResearchProblemsBox/ResearchProblemsModal';
-import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import { reverseWithSlug } from 'utils';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import AddResearchProblem from '@/components/Observatory/AddResearchProblem';
+import useResearchProblems from '@/components/ResearchProblemsBox/hooks/useResearchProblems';
+import ResearchProblemsModal from '@/components/ResearchProblemsBox/ResearchProblemsModal';
+import ROUTES from '@/constants/routes';
+import { reverseWithSlug } from '@/utils';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
     const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({

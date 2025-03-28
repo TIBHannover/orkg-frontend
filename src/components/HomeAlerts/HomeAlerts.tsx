@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
-import { getHomeAlerts } from 'services/cms';
-import { Alert as AlertType } from 'services/cms/types';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
+
+import { getHomeAlerts } from '@/services/cms';
+import { Alert as AlertType } from '@/services/cms/types';
 
 const converter = new Showdown.Converter();
 converter.setFlavor('github');

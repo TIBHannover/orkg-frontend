@@ -1,17 +1,18 @@
 import Link from 'next/link';
-import usePage from 'components/Page/usePage';
-import { CmsPage } from 'components/styled';
-import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Col, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
-import { getHelpArticle, getHelpArticles } from 'services/cms';
-import { HelpArticle } from 'services/cms/types';
-import { setIsHelpModalOpen } from 'slices/contributionEditorSlice';
-import { RootStore } from 'slices/types';
-import { reverseWithSlug } from 'utils';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import usePage from '@/components/Page/usePage';
+import { CmsPage } from '@/components/styled';
+import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
+import ROUTES from '@/constants/routes';
+import { getHelpArticle, getHelpArticles } from '@/services/cms';
+import { HelpArticle } from '@/services/cms/types';
+import { setIsHelpModalOpen } from '@/slices/contributionEditorSlice';
+import { RootStore } from '@/slices/types';
+import { reverseWithSlug } from '@/utils';
 
 const SBEditorHelpModal = () => {
     const isHelpModalOpen = useSelector((state: RootStore) => state.contributionEditor.isHelpModalOpen);

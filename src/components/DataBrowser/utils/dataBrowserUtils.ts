@@ -1,13 +1,14 @@
-import { preprocessNumber } from 'constants/DataTypes';
-import { ENTITIES, MISC, RESOURCES } from 'constants/graphSettings';
 import { Cookies } from 'react-cookie';
-import { createClass } from 'services/backend/classes';
-import { createList } from 'services/backend/lists';
-import { createLiteral, updateLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
-import { createResource, getResource, updateResource } from 'services/backend/resources';
-import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement, Template } from 'services/backend/types';
 import { z, ZodTypeAny } from 'zod';
+
+import { preprocessNumber } from '@/constants/DataTypes';
+import { ENTITIES, MISC, RESOURCES } from '@/constants/graphSettings';
+import { createClass } from '@/services/backend/classes';
+import { createList } from '@/services/backend/lists';
+import { createLiteral, updateLiteral } from '@/services/backend/literals';
+import { createPredicate } from '@/services/backend/predicates';
+import { createResource, getResource, updateResource } from '@/services/backend/resources';
+import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement, Template } from '@/services/backend/types';
 
 const cookies = new Cookies();
 

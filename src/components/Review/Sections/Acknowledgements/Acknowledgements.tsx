@@ -1,6 +1,7 @@
-import Contributors from 'components/Contributors/Contributors';
-import useReview from 'components/Review/hooks/useReview';
 import { Alert } from 'reactstrap';
+
+import Contributors from '@/components/Contributors/Contributors';
+import useReview from '@/components/Review/hooks/useReview';
 
 const Acknowledgements = () => {
     const { review } = useReview();

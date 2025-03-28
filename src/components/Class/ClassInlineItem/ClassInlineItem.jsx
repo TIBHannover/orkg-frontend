@@ -1,19 +1,20 @@
 import { faCheck, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import CopyIdButton from 'components/Autocomplete/ValueButtons/CopyIdButton';
-import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { StyledButton } from 'components/StatementBrowser/styled';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { StyledButton } from '@/components/StatementBrowser/styled';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 const ItemContainer = styled.div`
     line-height: 27px;

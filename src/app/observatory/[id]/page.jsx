@@ -2,28 +2,29 @@
 
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import EditObservatory from 'components/Observatory/EditObservatory';
-import MembersBox from 'components/Observatory/MembersBox';
-import ObservatoryModal from 'components/Observatory/ObservatoryModal/ObservatoryModal';
-import ObservatoryTabsContainer from 'components/Observatory/ObservatoryTabsContainer';
-import OrganizationsBox from 'components/Observatory/OrganizationsBox';
-import ReadMore from 'components/ReadMore/ReadMore';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
-import SdgBox from 'components/SustainableDevelopmentGoals/SdgBox';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { SubTitle } from 'components/styled';
-import useParams from 'components/useParams/useParams';
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'reactstrap';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getOrganization } from 'services/backend/organizations';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import EditObservatory from '@/components/Observatory/EditObservatory';
+import MembersBox from '@/components/Observatory/MembersBox';
+import ObservatoryModal from '@/components/Observatory/ObservatoryModal/ObservatoryModal';
+import ObservatoryTabsContainer from '@/components/Observatory/ObservatoryTabsContainer';
+import OrganizationsBox from '@/components/Observatory/OrganizationsBox';
+import ReadMore from '@/components/ReadMore/ReadMore';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ResearchProblemsBox from '@/components/ResearchProblemsBox/ResearchProblemsBox';
+import { SubTitle } from '@/components/styled';
+import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { getObservatoryById } from '@/services/backend/observatories';
+import { getOrganization } from '@/services/backend/organizations';
 
 const Observatory = () => {
     const [error, setError] = useState(null);

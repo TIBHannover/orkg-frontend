@@ -1,5 +1,5 @@
-import getExistingPaper from 'helpers/getExistingPaper';
-import { createContribution, createPaper } from 'services/backend/papers';
+import getExistingPaper from '@/helpers/getExistingPaper';
+import { createContribution, createPaper } from '@/services/backend/papers';
 import {
     CreateContribution,
     CreateContributionData,
@@ -7,7 +7,7 @@ import {
     CreatePaperParams,
     ExtractionMethod,
     NewContribution,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 type CreatePaperMergeIfExistsParams = {
     paper: CreatePaperParams;

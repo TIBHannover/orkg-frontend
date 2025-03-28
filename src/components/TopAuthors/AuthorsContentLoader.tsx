@@ -1,4 +1,4 @@
-import ContentLoader from 'components/ContentLoader/ContentLoader';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
 
 const AuthorsContentLoader = () => (
     <div className="mt-4 mb-4">

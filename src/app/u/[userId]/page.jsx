@@ -2,28 +2,29 @@
 
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NotFound from 'app/not-found';
 import capitalize from 'capitalize';
-import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
-import useParams from 'components/useParams/useParams';
-import UserProfileTabsContainer from 'components/UserProfile/UserProfileTabsContainer';
-import UserStatistics from 'components/UserProfile/UserStatistics';
-import { MISC } from 'constants/graphSettings';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
-import useAuthentication from 'components/hooks/useAuthentication';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Gravatar from 'react-gravatar';
 import { Container, Row } from 'reactstrap';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
+
+import NotFound from '@/app/not-found';
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import useParams from '@/components/useParams/useParams';
+import UserProfileTabsContainer from '@/components/UserProfile/UserProfileTabsContainer';
+import UserStatistics from '@/components/UserProfile/UserStatistics';
+import { MISC } from '@/constants/graphSettings';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getContributorInformationById } from '@/services/backend/contributors';
+import { getObservatoryById } from '@/services/backend/observatories';
+import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};

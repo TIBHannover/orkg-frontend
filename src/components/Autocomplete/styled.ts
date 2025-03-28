@@ -1,6 +1,7 @@
-import { OptionType } from 'components/Autocomplete/types';
 import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
 import styled, { createGlobalStyle } from 'styled-components';
+
+import { OptionType } from '@/components/Autocomplete/types';
 
 export const SelectGlobalStyle = createGlobalStyle`
     // react-select

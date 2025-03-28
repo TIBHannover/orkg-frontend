@@ -1,6 +1,7 @@
-import { MISC } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
-import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
+
+import { MISC } from '@/constants/graphSettings';
+import { getObservatoryAndOrganizationInformation } from '@/services/backend/observatories';
 
 function useProvenance({ orgId, obsId }) {
     const [provenance, setProvenance] = useState(null);

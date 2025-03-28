@@ -1,22 +1,23 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import { StyledItemProvenanceBox } from 'components/ViewPaper/ProvenanceBox/styled';
-import { MISC } from 'constants/graphSettings';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
-import { Contributor, Observatory, Organization, Paper } from 'services/backend/types';
-import { setPaperObservatory } from 'slices/viewPaperSlice';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { StyledItemProvenanceBox } from '@/components/ViewPaper/ProvenanceBox/styled';
+import { MISC } from '@/constants/graphSettings';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
+import { Contributor, Observatory, Organization, Paper } from '@/services/backend/types';
+import { setPaperObservatory } from '@/slices/viewPaperSlice';
 
 type ProvenanceProps = {
     observatoryInfo: Observatory;

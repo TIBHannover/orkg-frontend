@@ -1,11 +1,12 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
+import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
-import PropTypes from 'prop-types';
-import { getAbstractByURI } from 'services/dbpedia';
-import Image from 'next/image';
+
+import DBPEDIA_LOGO from '@/assets/img/sameas/dbpedia.png';
+import { getAbstractByURI } from '@/services/dbpedia';
 
 class DbpediaAbstract extends Component {
     constructor(props) {

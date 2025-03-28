@@ -1,8 +1,9 @@
 'use client';
 
-import DynamicLeaflet from 'components/ValuePlugins/Map/DynamicLeaflet';
 import { LatLngTuple } from 'leaflet';
 import { FC } from 'react';
+
+import DynamicLeaflet from '@/components/ValuePlugins/Map/DynamicLeaflet';
 
 const extractCoordinates = (value: string): LatLngTuple | null => {
     if (value?.startsWith('Point(') && value.endsWith(')')) {

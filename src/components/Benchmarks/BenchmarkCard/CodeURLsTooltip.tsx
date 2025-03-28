@@ -1,10 +1,11 @@
 import { faFirefox, faGithub, faGitlab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, Table } from 'reactstrap';
+
+import ROUTES from '@/constants/routes';
 
 function getCodeIconByURL(url: string) {
     let faIcon = faFirefox;

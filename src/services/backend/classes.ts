@@ -1,9 +1,10 @@
 'use client';
 
-import { url } from 'constants/misc';
 import qs from 'qs';
-import backendApi from 'services/backend/backendApi';
-import { Class, PaginatedResponse, PaginationParams } from 'services/backend/types';
+
+import { url } from '@/constants/misc';
+import backendApi from '@/services/backend/backendApi';
+import { Class, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const classesUrl = `${url}classes/`;
 export const classesApi = backendApi.extend(() => ({ prefixUrl: classesUrl }));

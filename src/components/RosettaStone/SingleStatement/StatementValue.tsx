@@ -1,14 +1,15 @@
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import ActionButton from 'components/ActionButton/ActionButton';
-import { OptionType } from 'components/Autocomplete/types';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import StatementTypeModal from 'components/RosettaStone/AddStatement/StatementTypeModal';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from 'constants/graphSettings';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import { RosettaStoneTemplate, RSPropertyShape } from 'services/backend/types';
-import { getLinkByEntityType } from 'utils';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import { OptionType } from '@/components/Autocomplete/types';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import StatementTypeModal from '@/components/RosettaStone/AddStatement/StatementTypeModal';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from '@/constants/graphSettings';
+import { RosettaStoneTemplate, RSPropertyShape } from '@/services/backend/types';
+import { getLinkByEntityType } from '@/utils';
 
 type StatementValueProps = {
     template: RosettaStoneTemplate;

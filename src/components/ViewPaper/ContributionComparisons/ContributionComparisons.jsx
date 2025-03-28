@@ -1,11 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ComparisonCard from 'components/Cards/ComparisonCard/ComparisonCard';
-import useContributionComparison from 'components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
 import PropTypes from 'prop-types';
 import { Button, Container, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
-import { convertComparisonToNewFormat } from 'utils';
+
+import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
+import useContributionComparison from '@/components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
+import { convertComparisonToNewFormat } from '@/utils';
 
 const Title = styled.div`
     font-size: 18px;

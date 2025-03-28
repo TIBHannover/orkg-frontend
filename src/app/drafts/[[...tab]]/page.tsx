@@ -1,17 +1,18 @@
 'use client';
 
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
-import DraftLists from 'components/UserSettings/DraftLists/DraftLists';
-import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Container, Row } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
 import styled from 'styled-components';
+
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import DraftComparisons from '@/components/UserSettings/DraftComparisons/DraftComparisons';
+import DraftLists from '@/components/UserSettings/DraftLists/DraftLists';
+import DraftReviews from '@/components/UserSettings/DraftReviews/DraftReviews';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
 
 const StyledSettingsMenu = styled.div`
     padding: 0;

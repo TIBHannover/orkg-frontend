@@ -1,13 +1,14 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
-import { getAllOrganizations } from 'services/backend/organizations';
-import { useState, useEffect } from 'react';
-import { updateObservatory } from 'services/backend/observatories';
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Select from 'react-select';
 import { differenceBy } from 'lodash';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import Select from 'react-select';
+import { toast } from 'react-toastify';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { updateObservatory } from '@/services/backend/observatories';
+import { getAllOrganizations } from '@/services/backend/organizations';
 
 function AddOrganization(props) {
     const [organizations, setOrganizations] = useState([]);

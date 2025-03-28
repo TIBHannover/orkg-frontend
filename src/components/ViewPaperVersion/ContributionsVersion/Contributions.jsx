@@ -1,17 +1,18 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
-import ContributionTab from 'components/ContributionTabs/ContributionTab';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import Tabs from 'components/Tabs/Tabs';
-import useParams from 'components/useParams/useParams';
-import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import useContributions from 'components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { Alert, Col, FormGroup, Row } from 'reactstrap';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ContributionTab from '@/components/ContributionTabs/ContributionTab';
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import Tabs from '@/components/Tabs/Tabs';
+import useParams from '@/components/useParams/useParams';
+import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import useContributions from '@/components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
+import ROUTES from '@/constants/routes';
 
 const Contributions = (props) => {
     const { resourceId, contributionId } = useParams();

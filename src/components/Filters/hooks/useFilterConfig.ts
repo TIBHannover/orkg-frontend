@@ -1,12 +1,13 @@
-import { mergeFilters } from 'components/Filters/helpers';
-import useLocalStorageFilters from 'components/Filters/hooks/useLocalStorageFilters';
-import useObservatoryFilters from 'components/Observatory/hooks/useObservatoryFilters';
-import { FILTER_SOURCE } from 'constants/filters';
 import { orderBy } from 'lodash';
 import { parseAsJson, useQueryState } from 'nuqs';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { FilterConfig, FilterConfigValue } from 'services/backend/types';
 import { z } from 'zod';
+
+import { mergeFilters } from '@/components/Filters/helpers';
+import useLocalStorageFilters from '@/components/Filters/hooks/useLocalStorageFilters';
+import useObservatoryFilters from '@/components/Observatory/hooks/useObservatoryFilters';
+import { FILTER_SOURCE } from '@/constants/filters';
+import { FilterConfig, FilterConfigValue } from '@/services/backend/types';
 
 export const schemaFilterConfig = z.array(
     z.object({

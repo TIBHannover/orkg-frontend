@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ComparisonTopAuthor, getAuthorsByComparisonId } from 'services/backend/comparisons';
-import { ResearchProblemTopAuthor, getAuthorsByResearchProblemId } from 'services/backend/problems';
+
+import { ComparisonTopAuthor, getAuthorsByComparisonId } from '@/services/backend/comparisons';
+import { getAuthorsByResearchProblemId, ResearchProblemTopAuthor } from '@/services/backend/problems';
 
 function useTopAuthors({
     researchProblemId = null,

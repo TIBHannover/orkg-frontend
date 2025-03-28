@@ -2,25 +2,26 @@
 
 import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import ConferenceEvents from 'components/ConferenceEvents/ConferenceEvents';
-import EditOrganization from 'components/Organization/EditOrganization';
-import Members from 'components/Organization/Members';
-import Observatories from 'components/Organization/Observatories';
-import { SubTitle } from 'components/styled';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
-import useAuthentication from 'components/hooks/useAuthentication';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'reactstrap';
-import { getOrganization, getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import ConferenceEvents from '@/components/ConferenceEvents/ConferenceEvents';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import EditOrganization from '@/components/Organization/EditOrganization';
+import Members from '@/components/Organization/Members';
+import Observatories from '@/components/Organization/Observatories';
+import { SubTitle } from '@/components/styled';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {

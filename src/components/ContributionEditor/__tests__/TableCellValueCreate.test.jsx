@@ -1,6 +1,7 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
 import selectEvent from 'react-select-event';
-import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
+
+import TableCellValueCreate from '@/components/ContributionEditor/TableCellValueCreate';
+import { fireEvent, render, screen, waitFor } from '@/testUtils';
 
 const setup = () => {
     render(<TableCellValueCreate contributionId="R1" propertyId="P1" isEmptyCell isVisible />);

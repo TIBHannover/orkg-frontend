@@ -1,9 +1,10 @@
-import Confirm from 'components/Confirmation/Confirmation';
 import { useRouter } from 'next/navigation';
-import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
+
+import Confirm from '@/components/Confirmation/Confirmation';
+import ROUTES from '@/constants/routes';
+import { deleteResource as deleteResourceNetwork } from '@/services/backend/resources';
 
 function useDeleteResource({ resourceId, redirect = false }) {
     const router = useRouter();

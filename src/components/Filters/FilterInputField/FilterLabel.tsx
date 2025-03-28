@@ -1,8 +1,9 @@
-import FilterPath from 'components/Filters/FilterInputField/FilterPath/FilterPath';
 import { FC } from 'react';
-import { getPredicate, predicatesUrl } from 'services/backend/predicates';
-import { FilterConfig } from 'services/backend/types';
 import useSWR from 'swr';
+
+import FilterPath from '@/components/Filters/FilterInputField/FilterPath/FilterPath';
+import { getPredicate, predicatesUrl } from '@/services/backend/predicates';
+import { FilterConfig } from '@/services/backend/types';
 
 type FilterLabelProps = {
     filter: FilterConfig;

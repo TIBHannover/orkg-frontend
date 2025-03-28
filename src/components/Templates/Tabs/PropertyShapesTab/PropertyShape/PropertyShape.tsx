@@ -1,13 +1,14 @@
-import { OptionType } from 'components/Autocomplete/types';
-import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
-import TemplateComponentProperty from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
-import TemplateComponentValue from 'components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ItemTypes from 'constants/dndTypes';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ActionMeta, SingleValue } from 'react-select';
-import { handleSortableHoverReactDnd } from 'utils';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import { StatementsGroupStyle } from '@/components/StatementBrowser/styled';
+import TemplateComponentProperty from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
+import TemplateComponentValue from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ItemTypes from '@/constants/dndTypes';
+import { handleSortableHoverReactDnd } from '@/utils';
 
 type PropertyShapeProps = {
     id: number;

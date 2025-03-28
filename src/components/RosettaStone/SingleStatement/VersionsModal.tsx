@@ -1,8 +1,9 @@
-import HistoryModalComponent from 'components/HistoryModal/HistoryModal';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { FC } from 'react';
-import { RosettaStoneStatement } from 'services/backend/types';
+
+import HistoryModalComponent from '@/components/HistoryModal/HistoryModal';
+import ROUTES from '@/constants/routes';
+import { RosettaStoneStatement } from '@/services/backend/types';
 
 type VersionsModalProps = {
     id: string;

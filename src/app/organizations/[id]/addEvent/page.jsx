@@ -2,24 +2,25 @@
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonWithLoading from 'components/ButtonWithLoading/ButtonWithLoading';
-import useAuthentication from 'components/hooks/useAuthentication';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useParams from 'components/useParams/useParams';
-import Tooltip from 'components/Utils/Tooltip';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import { CONFERENCE_REVIEW_TYPE } from 'constants/organizationsTypes';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
-import { createConference } from 'services/backend/conferences-series';
 import slugify from 'slugify';
-import { getPublicUrl } from 'utils';
+
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import Tooltip from '@/components/Utils/Tooltip';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { CONFERENCE_REVIEW_TYPE } from '@/constants/organizationsTypes';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import { createConference } from '@/services/backend/conferences-series';
+import { getPublicUrl } from '@/utils';
 
 const AddConference = () => {
     const params = useParams();

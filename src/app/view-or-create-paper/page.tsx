@@ -1,8 +1,9 @@
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
-import { getPaperByDoi, getPaperByTitle } from 'services/backend/papers';
-import { Paper } from 'services/backend/types';
+
+import ROUTES from '@/constants/routes';
+import { getPaperByDoi, getPaperByTitle } from '@/services/backend/papers';
+import { Paper } from '@/services/backend/types';
 
 const ViewOrCreatePaper = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     let paper: Paper | null = null;

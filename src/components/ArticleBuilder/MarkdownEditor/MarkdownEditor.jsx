@@ -1,3 +1,5 @@
+import '@webscopeio/react-textarea-autocomplete/style.css';
+
 import {
     faBold,
     faCode,
@@ -14,12 +16,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import '@webscopeio/react-textarea-autocomplete/style.css';
-import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import TextSection from 'components/Review/Sections/Text/TextSection';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
@@ -27,8 +23,14 @@ import { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
-import { getResource, getResources } from 'services/backend/resources';
 import styled from 'styled-components';
+
+import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
+import { MarkdownPlaceholder } from '@/components/ArticleBuilder/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import TextSection from '@/components/Review/Sections/Text/TextSection';
+import ROUTES from '@/constants/routes';
+import { getResource, getResources } from '@/services/backend/resources';
 
 const Toolbar = styled.div`
     position: sticky;

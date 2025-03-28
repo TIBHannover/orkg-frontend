@@ -1,9 +1,10 @@
-import { ButtonGroup, Container } from 'reactstrap';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { CSSTransition } from 'react-transition-group';
 import { useSelector } from 'react-redux';
-import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
+import { CSSTransition } from 'react-transition-group';
+import { ButtonGroup, Container } from 'reactstrap';
+import styled from 'styled-components';
+
+import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;

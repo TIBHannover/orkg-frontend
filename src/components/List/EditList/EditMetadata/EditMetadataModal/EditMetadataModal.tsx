@@ -1,10 +1,11 @@
-import AuthorsInput from 'components/Input/AuthorsInput/AuthorsInput';
-import ResearchFieldInput from 'components/Input/ResearchFieldInput/ResearchFieldInput';
-import useList from 'components/List/hooks/useList';
-import Tooltip from 'components/Utils/Tooltip';
 import { FC, useEffect, useId, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { Author, Node } from 'services/backend/types';
+
+import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
+import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import useList from '@/components/List/hooks/useList';
+import Tooltip from '@/components/Utils/Tooltip';
+import { Author, Node } from '@/services/backend/types';
 
 type EditMetadataModalProps = {
     toggle: () => void;

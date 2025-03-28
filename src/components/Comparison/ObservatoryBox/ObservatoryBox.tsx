@@ -1,18 +1,19 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import capitalize from 'capitalize';
-import ActionButtonView from 'components/ActionButton/ActionButtonView';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { getOrganizationLogoUrl } from 'services/backend/organizations';
 import styled from 'styled-components';
+
+import ActionButtonView from '@/components/ActionButton/ActionButtonView';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import ROUTES from '@/constants/routes';
+import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 
 const OrganizationBannerStyled = styled.div`
     float: right;

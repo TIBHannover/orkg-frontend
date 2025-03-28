@@ -1,9 +1,10 @@
-import DragUploadPdf from 'components/DragUploadPdf/DragUploadPdf';
 import PropTypes from 'prop-types';
 import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { getResource } from 'services/backend/resources';
-import processPdf from 'services/grobid';
-import { extractMetadataPdf } from 'services/orkgNlp';
+
+import DragUploadPdf from '@/components/DragUploadPdf/DragUploadPdf';
+import { getResource } from '@/services/backend/resources';
+import processPdf from '@/services/grobid';
+import { extractMetadataPdf } from '@/services/orkgNlp';
 
 const UploadPdfModal = ({ toggle, onUpdateData }) => {
     const handleOnDrop = async (files) => {

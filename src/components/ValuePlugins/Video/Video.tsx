@@ -1,9 +1,10 @@
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import REGEX from 'constants/regex';
 import { FC, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+
+import REGEX from '@/constants/regex';
 
 const VideoContainer = styled.div`
     position: relative;

@@ -1,10 +1,11 @@
-import { OptionType } from 'components/Autocomplete/types';
-import AnnotationTooltip from 'components/ViewPaper/AbstractAnnotatorModal/AnnotationTooltip';
 import rangy from 'rangy';
 import { FC, ReactElement, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Range, RootStore } from 'slices/types';
-import { createAnnotation } from 'slices/viewPaperSlice';
+
+import { OptionType } from '@/components/Autocomplete/types';
+import AnnotationTooltip from '@/components/ViewPaper/AbstractAnnotatorModal/AnnotationTooltip';
+import { Range, RootStore } from '@/slices/types';
+import { createAnnotation } from '@/slices/viewPaperSlice';
 
 function getAllIndexes(arr: string, val: string) {
     const indexes = [];

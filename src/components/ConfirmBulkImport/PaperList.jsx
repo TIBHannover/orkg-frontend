@@ -1,8 +1,5 @@
 import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import StatementList from 'components/ConfirmBulkImport/StatementList';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -10,6 +7,10 @@ import PropTypes from 'prop-types';
 import { Fragment, useState } from 'react';
 import { Alert, Badge, Button, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
+
+import StatementList from '@/components/ConfirmBulkImport/StatementList';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ROUTES from '@/constants/routes';
 
 const PaperCardStyled = styled.div`
     & .options {

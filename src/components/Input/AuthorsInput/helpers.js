@@ -1,9 +1,10 @@
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { isEqual } from 'lodash';
-import { createList, updateList } from 'services/backend/lists';
-import { createLiteral } from 'services/backend/literals';
-import { createObject } from 'services/backend/misc';
-import { createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { createList, updateList } from '@/services/backend/lists';
+import { createLiteral } from '@/services/backend/literals';
+import { createObject } from '@/services/backend/misc';
+import { createResourceStatement, getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
 
 /**
  * Save the authors of a resource

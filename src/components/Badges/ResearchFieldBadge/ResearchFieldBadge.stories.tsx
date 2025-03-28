@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import ResearchFieldBadgeComponent from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+
+import ResearchFieldBadgeComponent from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

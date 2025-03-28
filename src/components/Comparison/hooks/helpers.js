@@ -1,7 +1,8 @@
-import { DEFAULT_COMPARISON_METHOD, LICENSE_URL } from 'constants/misc';
 import { find, flatten, flattenDepth, groupBy, isEmpty, last, uniq } from 'lodash';
 import qs from 'qs';
 import rdf from 'rdf';
+
+import { DEFAULT_COMPARISON_METHOD, LICENSE_URL } from '@/constants/misc';
 
 // returns the position of the first differing character between
 // $left and $right, or -1 if either is empty

@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { useSession as useNextAuthSession } from 'next-auth/react';
 import { useMemo } from 'react';
-import { decodeToken, hasRealmRole, ROLES } from 'services/keycloak';
+
+import { decodeToken, hasRealmRole, ROLES } from '@/services/keycloak';
 
 const useAuthentication = () => {
     const { data: session, status } = useNextAuthSession();

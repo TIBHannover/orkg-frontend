@@ -1,6 +1,7 @@
-import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
-import { fireEvent, render, screen } from 'testUtils';
 import { vi } from 'vitest';
+
+import TableCellButtons from '@/components/ContributionEditor/TableCellButtons';
+import { fireEvent, render, screen } from '@/testUtils';
 
 const setup = () => {
     const onEdit = vi.fn();

@@ -1,6 +1,7 @@
-import useStatements from 'components/RosettaStone/hooks/useStatements';
-import { getRSTemplate, rosettaStoneUrl } from 'services/backend/rosettaStone';
 import useSWR from 'swr';
+
+import useStatements from '@/components/RosettaStone/hooks/useStatements';
+import { getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 
 const useUsedStatementTypes = ({ context }: { context: string }) => {
     const { statements } = useStatements({ context });

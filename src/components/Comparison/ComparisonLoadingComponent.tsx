@@ -1,6 +1,7 @@
 import { times } from 'lodash';
-import ContentLoader from 'components/ContentLoader/ContentLoader';
 import styled from 'styled-components';
+
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
 
 const BorderTopRadius = styled.div`
     width: 250px;

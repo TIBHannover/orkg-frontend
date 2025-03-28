@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react';
-import Boolean from 'components/ValuePlugins/Boolean/Boolean';
+
+import Boolean from '@/components/ValuePlugins/Boolean/Boolean';
 
 export default {
     title: 'ValuePlugins/Boolean',

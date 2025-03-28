@@ -1,15 +1,16 @@
-import useAuthentication from 'components/hooks/useAuthentication';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
-import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import dotProp from 'dot-prop-immutable';
 import { isEmpty, isString } from 'lodash';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { getClassById } from 'services/backend/classes';
-import { getThing } from 'services/backend/things';
-import { getLinkByEntityType } from 'utils';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import DEFAULT_FILTERS from '@/constants/searchDefaultFilters';
+import { getClassById } from '@/services/backend/classes';
+import { getThing } from '@/services/backend/things';
+import { getLinkByEntityType } from '@/utils';
 
 export const useFilters = () => {
     const searchParams = useSearchParams();

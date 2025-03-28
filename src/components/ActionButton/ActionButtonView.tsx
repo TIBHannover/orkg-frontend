@@ -1,7 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString } from 'lodash';
-import { MouseEvent, ReactNode, forwardRef } from 'react';
+import { forwardRef, MouseEvent, ReactNode } from 'react';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 

@@ -1,5 +1,5 @@
-import Tooltip from 'components/FloatingUI/Tooltip';
-import Acknowledgements from 'components/Review/Sections/Acknowledgements/Acknowledgements';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import Acknowledgements from '@/components/Review/Sections/Acknowledgements/Acknowledgements';
 
 const SectionAcknowledgements = () => {
     return (

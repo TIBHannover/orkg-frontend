@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
 // From: https://nextjs.org/docs/app/building-your-application/styling/css-in-js#styled-components
 const StyledComponentsRegistry = ({ children }) => {

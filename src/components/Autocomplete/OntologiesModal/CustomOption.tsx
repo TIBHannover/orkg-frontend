@@ -1,14 +1,15 @@
 import { faExternalLink, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SourceBadge } from 'components/Autocomplete/styled';
-import { Ontology } from 'components/Autocomplete/types';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { MAXIMUM_DESCRIPTION_LENGTH } from 'constants/autocompleteSources';
 import { truncate } from 'lodash';
 import { useContext } from 'react';
 import type { GroupBase } from 'react-select';
-import { OptionProps, components } from 'react-select';
+import { components, OptionProps } from 'react-select';
 import { ThemeContext } from 'styled-components';
+
+import { SourceBadge } from '@/components/Autocomplete/styled';
+import { Ontology } from '@/components/Autocomplete/types';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { MAXIMUM_DESCRIPTION_LENGTH } from '@/constants/autocompleteSources';
 
 export const CustomOption = <OptionT extends Ontology, Group extends GroupBase<OptionT>, IsMulti extends boolean = false>(
     props: OptionProps<OptionT, IsMulti, Group>,

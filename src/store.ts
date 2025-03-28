@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import combinedReducers from 'slices/rootReducer';
+
+import combinedReducers from '@/slices/rootReducer';
 
 export function setupStore(initialState = {}) {
     const store = configureStore({

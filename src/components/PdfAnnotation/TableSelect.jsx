@@ -1,11 +1,12 @@
-import { Button } from 'reactstrap';
-import styled from 'styled-components';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import ExtractionModal from 'components/PdfAnnotation/ExtractionModal';
-import useTableSelect from 'components/PdfAnnotation/hooks/useTableSelect';
+import { Button } from 'reactstrap';
+import styled from 'styled-components';
+
+import ExtractionModal from '@/components/PdfAnnotation/ExtractionModal';
+import useTableSelect from '@/components/PdfAnnotation/hooks/useTableSelect';
 
 const TableSelectContainer = styled.div`
     &.enable-table-select {

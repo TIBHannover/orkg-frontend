@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getTimelineByResourceId } from 'services/backend/resources';
+import { useCallback, useEffect, useState } from 'react';
+
+import { getTimelineByResourceId } from '@/services/backend/resources';
 
 function useTimeline(id) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);

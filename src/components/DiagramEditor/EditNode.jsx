@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { ENTITIES } from '@/constants/graphSettings';
 
 function EditNode({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNode, node }) {
     const [value, setValue] = useState(!node ? null : { label: node.data.label, id: node.data.id });

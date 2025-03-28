@@ -1,7 +1,8 @@
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
 import { redirect } from 'next/navigation';
+import PropTypes from 'prop-types';
+
+import ROUTES from '@/constants/routes';
 
 /**
  * Component to check if classes of the resource and the route are valid, and makes a redirect to resource page if not

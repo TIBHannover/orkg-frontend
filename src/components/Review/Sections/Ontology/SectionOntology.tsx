@@ -1,18 +1,19 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import OntologyItem from 'components/Review/Sections/Ontology/OntologyItem/OntologyItem';
-import SelectEntitiesModal from 'components/Review/Sections/Ontology/SelectEntitiesModal/SelectEntitiesModal';
-import useReview from 'components/Review/hooks/useReview';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { capitalize, orderBy, times } from 'lodash';
 import React, { FC, useMemo, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Button, Table } from 'reactstrap';
-import { getReviewPublishedContents, reviewUrl } from 'services/backend/reviews';
-import { getStatements } from 'services/backend/statements';
-import { ReviewSection, Statement } from 'services/backend/types';
 import useSWR from 'swr';
+
+import useReview from '@/components/Review/hooks/useReview';
+import OntologyItem from '@/components/Review/Sections/Ontology/OntologyItem/OntologyItem';
+import SelectEntitiesModal from '@/components/Review/Sections/Ontology/SelectEntitiesModal/SelectEntitiesModal';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
+import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
+import { getStatements } from '@/services/backend/statements';
+import { ReviewSection, Statement } from '@/services/backend/types';
 
 type SectionOntologyProps = {
     section: ReviewSection;

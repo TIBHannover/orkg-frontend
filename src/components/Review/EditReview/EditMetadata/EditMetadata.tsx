@@ -1,15 +1,16 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
-import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
-import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import ObservatoryBox from 'components/ObservatoryBox/ObservatoryBox';
-import EditMetadataModal from 'components/Review/EditReview/EditMetadata/EditMetadataModal/EditMetadataModal';
-import useReview from 'components/Review/hooks/useReview';
-import SustainableDevelopmentGoals from 'components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
+
+import { SectionStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
+import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
+import EditMetadataModal from '@/components/Review/EditReview/EditMetadata/EditMetadataModal/EditMetadataModal';
+import useReview from '@/components/Review/hooks/useReview';
+import SustainableDevelopmentGoals from '@/components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 
 const EditMetadata = () => {
     const { review, observatory, organization, mutate } = useReview();

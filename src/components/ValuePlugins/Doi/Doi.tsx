@@ -1,7 +1,8 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import REGEX from 'constants/regex';
 import { FC } from 'react';
+
+import REGEX from '@/constants/regex';
 
 const supportedValues = new RegExp(REGEX.DOI_ID);
 

@@ -1,4 +1,4 @@
-import { ApiError } from 'services/backend/types';
+import { ApiError } from '@/services/backend/types';
 
 export class BackendError extends Error {
     public apiError: ApiError;

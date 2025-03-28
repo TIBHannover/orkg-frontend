@@ -1,7 +1,8 @@
-import { preprocessNumber } from 'constants/DataTypes';
-import { EXTRACTION_METHODS } from 'constants/misc';
-import REGEX from 'constants/regex';
 import { z } from 'zod';
+
+import { preprocessNumber } from '@/constants/DataTypes';
+import { EXTRACTION_METHODS } from '@/constants/misc';
+import REGEX from '@/constants/regex';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];

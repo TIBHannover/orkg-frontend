@@ -1,9 +1,10 @@
-import ROUTES from 'constants/routes';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { Node } from 'services/backend/types';
-import { reverseWithSlug } from 'utils';
+
+import ROUTES from '@/constants/routes';
+import { Node } from '@/services/backend/types';
+import { reverseWithSlug } from '@/utils';
 
 type ResearchProblemsModalProps = {
     problems: Node[];

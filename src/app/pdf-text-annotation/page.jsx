@@ -1,19 +1,25 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import Sidebar from 'components/PdfTextAnnotation/SideBar';
-import AnnotationTooltipNew from 'components/PdfTextAnnotation/AnnotationTooltipNew';
-import AnnotationTooltipExisting from 'components/PdfTextAnnotation/AnnotationTooltipExisting';
-import { useDispatch, useSelector } from 'react-redux';
-import { createAnnotation, setIsLoadedPdfViewer } from 'slices/pdfTextAnnotationSlice';
-import Highlight from 'components/PdfTextAnnotation/Highlight';
-import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
-import DragUpload from 'components/PdfTextAnnotation/DragUpload';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import dynamic from 'next/dynamic';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import { PdfLoader, PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+import AnnotationTooltipExisting from '@/components/PdfTextAnnotation/AnnotationTooltipExisting';
+import AnnotationTooltipNew from '@/components/PdfTextAnnotation/AnnotationTooltipNew';
+import DragUpload from '@/components/PdfTextAnnotation/DragUpload';
+import Highlight from '@/components/PdfTextAnnotation/Highlight';
+import useDeleteAnnotation from '@/components/PdfTextAnnotation/hooks/useDeleteAnnotation';
+import Sidebar from '@/components/PdfTextAnnotation/SideBar';
+import { createAnnotation, setIsLoadedPdfViewer } from '@/slices/pdfTextAnnotationSlice';
+
+const PdfHighlighter = dynamic(() => import('react-pdf-highlighter').then((mod) => mod.PdfHighlighter), { ssr: false });
+const PdfLoader = dynamic(() => import('react-pdf-highlighter').then((mod) => mod.PdfLoader), { ssr: false });
+const AreaHighlight = dynamic(() => import('react-pdf-highlighter').then((mod) => mod.AreaHighlight), { ssr: false });
+const Popup = dynamic(() => import('react-pdf-highlighter').then((mod) => mod.Popup), { ssr: false });
 
 const Wrapper = styled.div`
     margin-top: -30px;

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsByPredicate } from 'services/backend/statements';
+
+import { getStatementsByPredicate } from '@/services/backend/statements';
 
 function usePropertyStatements({ propertyId, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);

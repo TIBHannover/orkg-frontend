@@ -1,8 +1,8 @@
 'use client';
 
+import { LatLngTuple } from 'leaflet';
 import { FC } from 'react';
 import { AttributionControl, MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import { LatLngTuple } from 'leaflet';
 
 type LeafletProps = {
     coordinates: LatLngTuple;

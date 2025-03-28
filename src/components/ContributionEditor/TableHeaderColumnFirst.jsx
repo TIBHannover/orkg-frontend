@@ -1,9 +1,10 @@
 import { faCheck, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
+
+import { Properties, PropertiesInner } from '@/components/Comparison/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const TableHeaderColumnFirst = () => {
     const isLoading = useSelector((state) => state.contributionEditor.isLoading);

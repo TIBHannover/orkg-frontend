@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import Slider from 'react-slick';
+import styled from 'styled-components';
 
 const StyledSlider = styled(Slider)`
     /* slick.css */

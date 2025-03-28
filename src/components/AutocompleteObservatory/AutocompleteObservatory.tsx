@@ -1,13 +1,14 @@
-import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import Option from 'components/AutocompleteObservatory/CustomComponents/Option';
 import { truncate } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select, { components, GroupBase, OptionProps, OptionsOrGroups, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { FormGroup, Label } from 'reactstrap';
-import { getObservatories } from 'services/backend/observatories';
-import { getConferences, getOrganization } from 'services/backend/organizations';
-import { Observatory, Organization } from 'services/backend/types';
+
+import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
+import { getObservatories } from '@/services/backend/observatories';
+import { getConferences, getOrganization } from '@/services/backend/organizations';
+import { Observatory, Organization } from '@/services/backend/types';
 
 const PAGE_SIZE = 10;
 const MAXIMUM_DESCRIPTION_LENGTH = 120;

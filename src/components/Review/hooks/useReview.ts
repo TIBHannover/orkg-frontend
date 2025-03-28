@@ -1,11 +1,14 @@
 import { Cite } from '@citation-js/core';
-import useParams from 'components/useParams/useParams';
-import { MISC } from 'constants/graphSettings';
-import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
-import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
-import { getOrganization, organizationsUrl } from 'services/backend/organizations';
+import useSWR, { useSWRConfig } from 'swr';
+import { PublicConfiguration } from 'swr/dist/_internal';
+
+import useParams from '@/components/useParams/useParams';
+import { MISC } from '@/constants/graphSettings';
+import errorHandler from '@/helpers/errorHandler';
+import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
+import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
 import {
     createReviewSection,
     deleteReviewSection,
@@ -14,7 +17,7 @@ import {
     updateReview as updateReviewBackend,
     updateReviewSection,
     UpdateSectionPayload,
-} from 'services/backend/reviews';
+} from '@/services/backend/reviews';
 import {
     Organization,
     Review,
@@ -25,9 +28,7 @@ import {
     ReviewSectionTextPayload,
     ReviewSectionType,
     ReviewSectionVisualizationPayload,
-} from 'services/backend/types';
-import useSWR, { useSWRConfig } from 'swr';
-import { PublicConfiguration } from 'swr/dist/_internal';
+} from '@/services/backend/types';
 
 const useReview = (reviewId?: string) => {
     let { id } = useParams<{ id: string }>();

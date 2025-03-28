@@ -1,10 +1,11 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import usePreviouslySelectedResearchField from 'components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
 import { FC } from 'react';
 import { Button } from 'reactstrap';
-import { Node } from 'services/backend/types';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import usePreviouslySelectedResearchField from '@/components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
+import { Node } from '@/services/backend/types';
 
 type PreviouslySelectedResearchFieldProps = {
     handleFieldSelect: (selected: Node, submit: boolean) => void;

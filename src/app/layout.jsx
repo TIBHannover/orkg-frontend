@@ -1,14 +1,16 @@
-import 'assets/scss/CustomBootstrap.scss';
-import Providers from 'components/Providers/Providers';
+import '@/assets/scss/CustomBootstrap.scss';
 import 'fast-text-encoding/text.min';
 import 'intro.js/introjs.css';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 import { CookiesProvider } from 'next-client-cookies/server';
 import { PublicEnvScript } from 'next-runtime-env';
 import NextTopLoader from 'nextjs-toploader';
-import PropTypes from 'prop-types';
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-loading-skeleton/dist/skeleton.css';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import PropTypes from 'prop-types';
+
+import Providers from '@/components/Providers/Providers';
 
 const RootLayout = ({ children }) => (
     <html lang="en">

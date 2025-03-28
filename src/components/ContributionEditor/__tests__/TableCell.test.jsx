@@ -1,5 +1,5 @@
-import { render, screen } from 'testUtils';
-import TableCell from 'components/ContributionEditor/TableCell';
+import TableCell from '@/components/ContributionEditor/TableCell';
+import { render, screen } from '@/testUtils';
 
 const setup = () => {
     const label = 'resource label';

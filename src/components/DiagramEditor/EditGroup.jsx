@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) {
     const [value, setValue] = useState(!currentGroup?.id ? '' : currentGroup.data.label);

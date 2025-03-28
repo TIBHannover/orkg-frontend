@@ -1,8 +1,9 @@
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AddContribution } from 'components/ContributionTabs/styled';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { FC } from 'react';
+
+import { AddContribution } from '@/components/ContributionTabs/styled';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 type AddContributionButtonProps = {
     onClick: () => void;

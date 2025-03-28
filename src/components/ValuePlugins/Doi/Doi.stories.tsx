@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react';
-import Doi from 'components/ValuePlugins/Doi/Doi';
-import { ENTITIES } from 'constants/graphSettings';
+
+import Doi from '@/components/ValuePlugins/Doi/Doi';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const NODE_TYPES = [ENTITIES.RESOURCE, ENTITIES.LITERAL];
 

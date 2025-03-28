@@ -1,17 +1,18 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import SmartSuggestions from 'components/SmartSuggestions/SmartSuggestions';
-import { ENTITIES } from 'constants/graphSettings';
-import LLM_TASK_NAMES from 'constants/llmTasks';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
-import { createPredicate, getPredicates } from 'services/backend/predicates';
-import { getLlmResponse } from 'services/orkgNlp';
+
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import { ENTITIES } from '@/constants/graphSettings';
+import LLM_TASK_NAMES from '@/constants/llmTasks';
+import { createPredicate, getPredicates } from '@/services/backend/predicates';
+import { getLlmResponse } from '@/services/orkgNlp';
 
 const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     const [recommendedProperties, setRecommendedProperties] = useState([]);

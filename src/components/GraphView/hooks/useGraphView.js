@@ -1,9 +1,10 @@
 import { uniqWith } from 'lodash';
 import uniqBy from 'lodash/uniqBy';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject, getStatementsByObject } from 'services/backend/statements';
-import { CLASSES } from 'constants/graphSettings';
+
+import { CLASSES } from '@/constants/graphSettings';
+import { getResource } from '@/services/backend/resources';
+import { getStatementsBundleBySubject, getStatementsByObject } from '@/services/backend/statements';
 
 const COLOR_NODE = '#80869B';
 const COLOR_NODE_START = '#E86161';

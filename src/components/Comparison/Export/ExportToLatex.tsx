@@ -1,11 +1,6 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/Utils/Tooltip';
-import ROUTES from 'constants/routes';
-import { activatedContributionsToList, getComparisonURLConfigOfReduxState } from 'components/Comparison/hooks/helpers';
-import useComparison from 'components/Comparison/hooks/useComparison';
-import { PREDICATES } from 'constants/graphSettings';
 import dayjs from 'dayjs';
 import { clone } from 'lodash';
 // @ts-expect-error package doesn't support typescript
@@ -16,11 +11,17 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
-import { getStatementsBySubject } from 'services/backend/statements';
-import { Statement } from 'services/backend/types';
-import { getMatrixOfComparison } from 'slices/comparisonSlice';
 import styled from 'styled-components';
-import { addAuthorsToStatements, getPublicUrl } from 'utils';
+
+import { activatedContributionsToList, getComparisonURLConfigOfReduxState } from '@/components/Comparison/hooks/helpers';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import Tooltip from '@/components/Utils/Tooltip';
+import { PREDICATES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { getStatementsBySubject } from '@/services/backend/statements';
+import { Statement } from '@/services/backend/types';
+import { getMatrixOfComparison } from '@/slices/comparisonSlice';
+import { addAuthorsToStatements, getPublicUrl } from '@/utils';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';

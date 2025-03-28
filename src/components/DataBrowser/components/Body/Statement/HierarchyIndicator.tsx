@@ -1,6 +1,7 @@
-import { getBackgroundColor } from 'components/DataBrowser/utils/dataBrowserUtils';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { getBackgroundColor } from '@/components/DataBrowser/utils/dataBrowserUtils';
 
 const LineContainer = styled.div`
     width: 12px;

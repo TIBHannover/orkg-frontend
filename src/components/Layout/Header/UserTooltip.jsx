@@ -1,7 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuthentication from 'components/hooks/useAuthentication';
-import ROUTES from 'constants/routes';
 import { AnimatePresence, motion } from 'framer-motion';
 import greetingTime from 'greeting-time';
 import { reverse } from 'named-urls';
@@ -10,10 +8,13 @@ import { useEffect, useRef, useState } from 'react';
 import Gravatar from 'react-gravatar';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row } from 'reactstrap';
-import { getUserInformation, userUrl } from 'services/backend/users';
-import { federatedLogout, visitAccountUrl } from 'services/keycloak';
 import styled from 'styled-components';
 import useSWR from 'swr';
+
+import useAuthentication from '@/components/hooks/useAuthentication';
+import ROUTES from '@/constants/routes';
+import { getUserInformation, userUrl } from '@/services/backend/users';
+import { federatedLogout, visitAccountUrl } from '@/services/keycloak';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};

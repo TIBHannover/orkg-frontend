@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import { MISC } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { match } from 'path-to-regexp';
-import { asyncLocalStorage, guid } from 'utils';
+
+import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+import { MISC } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { asyncLocalStorage, guid } from '@/utils';
 
 const initialState = {
     paper: {

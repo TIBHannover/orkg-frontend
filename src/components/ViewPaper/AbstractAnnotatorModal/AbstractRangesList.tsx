@@ -1,17 +1,18 @@
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import capitalize from 'capitalize';
-import ActionButton from 'components/ActionButton/ActionButton';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import { ENTITIES } from 'constants/graphSettings';
 import toArray from 'lodash/toArray';
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { Badge, ListGroup, ListGroupItem } from 'reactstrap';
-import { Range, RootStore } from 'slices/types';
-import { removeAnnotation, toggleEditAnnotation, updateAnnotationPredicate } from 'slices/viewPaperSlice';
 import { useTheme } from 'styled-components';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import { ENTITIES } from '@/constants/graphSettings';
+import { Range, RootStore } from '@/slices/types';
+import { removeAnnotation, toggleEditAnnotation, updateAnnotationPredicate } from '@/slices/viewPaperSlice';
 
 type AbstractRangesListProps = {
     predicateOptions: Array<{

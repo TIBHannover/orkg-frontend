@@ -1,25 +1,26 @@
 'use client';
 
-import Link from 'next/link';
 import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import InternalServerError from 'app/error';
-import NotFound from 'app/not-found';
-import TabsContainer from 'components/Class/TabsContainer';
-import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
-import useParams from 'components/useParams/useParams';
-import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import EditableHeader from 'components/EditableHeader';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ItemMetadata from 'components/Search/ItemMetadata';
-import TitleBar from 'components/TitleBar/TitleBar';
-import useIsEditMode from 'components/Utils/hooks/useIsEditMode';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
+import Link from 'next/link';
 import { useState } from 'react';
 import { Button, Container } from 'reactstrap';
-import { classesUrl, getClassById } from 'services/backend/classes';
 import useSWR from 'swr';
+
+import InternalServerError from '@/app/error';
+import NotFound from '@/app/not-found';
+import TabsContainer from '@/components/Class/TabsContainer';
+import ImportCSVInstances from '@/components/ClassInstances/ImportCSVInstances';
+import EditableHeader from '@/components/EditableHeader';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ItemMetadata from '@/components/Search/ItemMetadata';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import useParams from '@/components/useParams/useParams';
+import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
+import { classesUrl, getClassById } from '@/services/backend/classes';
 
 function ClassDetails() {
     const [keyInstances, setKeyInstances] = useState(1);

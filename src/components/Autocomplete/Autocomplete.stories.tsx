@@ -1,9 +1,10 @@
 import { StoryFn } from '@storybook/react';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import { ENTITIES } from 'constants/graphSettings';
 import { useState } from 'react';
 import { SingleValue } from 'react-select';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import { ENTITIES } from '@/constants/graphSettings';
 
 export default {
     title: 'Input/Autocomplete',

@@ -1,14 +1,15 @@
 import { faCalendar, faLock, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { CardBadge } from 'components/styled';
-import UserAvatar from 'components/UserAvatar/UserAvatar';
-import ROUTES from 'constants/routes';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Template } from 'services/backend/types';
+
+import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from '@/components/styled';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import ROUTES from '@/constants/routes';
+import { Template } from '@/services/backend/types';
 
 type TemplateCardProps = {
     template: Template;

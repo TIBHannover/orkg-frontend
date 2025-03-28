@@ -1,12 +1,13 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DataBrowser from 'components/DataBrowser/DataBrowser';
-import Link from 'next/link';
-import { ENTITIES } from 'constants/graphSettings';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { FC } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import DataBrowser from '@/components/DataBrowser/DataBrowser';
+import { ENTITIES } from '@/constants/graphSettings';
+import ROUTES from '@/constants/routes';
 
 type DataBrowserDialogProps = {
     isEditMode?: boolean;

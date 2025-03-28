@@ -1,15 +1,16 @@
 import { faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ActionButton from 'components/ActionButton/ActionButton';
-import FilterInputField from 'components/Filters/FilterInputField/FilterInputField';
-import FilterLabel from 'components/Filters/FilterInputField/FilterLabel';
-import FilterCurationForm from 'components/Filters/Panel/FilterCurationForm';
-import useCurateFilters from 'components/Filters/hooks/useCurateFilters';
-import useAuthentication from 'components/hooks/useAuthentication';
-import { FILTER_SOURCE } from 'constants/filters';
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { Alert, Badge, Button, Label, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';
-import { FilterConfig, FilterConfigValue } from 'services/backend/types';
+
+import ActionButton from '@/components/ActionButton/ActionButton';
+import FilterInputField from '@/components/Filters/FilterInputField/FilterInputField';
+import FilterLabel from '@/components/Filters/FilterInputField/FilterLabel';
+import useCurateFilters from '@/components/Filters/hooks/useCurateFilters';
+import FilterCurationForm from '@/components/Filters/Panel/FilterCurationForm';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import { FILTER_SOURCE } from '@/constants/filters';
+import { FilterConfig, FilterConfigValue } from '@/services/backend/types';
 
 type AllFiltersOffCanvasProps = {
     id: string;

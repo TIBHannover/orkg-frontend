@@ -1,10 +1,11 @@
 import { faLock, faLockOpen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useCountInstances from 'components/Class/hooks/useCountInstances';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import PropTypes from 'prop-types';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
+
+import useCountInstances from '@/components/Class/hooks/useCountInstances';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 
 const NodeFooterStyled = styled.div`
     background: ${(props) => props.theme.lightDarker};

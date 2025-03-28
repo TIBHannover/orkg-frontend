@@ -1,21 +1,22 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BaseEditorComponent } from '@handsontable/react';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import Tooltip from 'components/FloatingUI/Tooltip';
-import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
 import dayjs from 'dayjs';
 import { isString } from 'lodash';
 import { createRef } from 'react';
 import NativeListener from 'react-native-listener';
 import { connect } from 'react-redux';
 import { Dropdown, DropdownMenu, Input, InputGroup } from 'reactstrap';
-import { createPredicate } from 'services/backend/predicates';
-import { createResource } from 'services/backend/resources';
-import { setLabelCache } from 'slices/pdfAnnotationSlice';
-import { range } from 'utils';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { StyledDropdownItem, StyledDropdownToggle } from '@/components/StatementBrowser/styled';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { createPredicate } from '@/services/backend/predicates';
+import { createResource } from '@/services/backend/resources';
+import { setLabelCache } from '@/slices/pdfAnnotationSlice';
+import { range } from '@/utils';
 
 class EditorComponent extends BaseEditorComponent {
     constructor(props) {

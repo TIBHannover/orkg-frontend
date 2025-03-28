@@ -1,12 +1,13 @@
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from 'components/FloatingUI/Tooltip';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, DropdownItem, Input } from 'reactstrap';
-import { setConfigurationAttribute } from 'slices/comparisonSlice';
+
+import Tooltip from '@/components/FloatingUI/Tooltip';
+import { setConfigurationAttribute } from '@/slices/comparisonSlice';
 
 export const DEFAULT_COLUMN_WIDTH = 250;
 

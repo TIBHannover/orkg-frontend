@@ -1,27 +1,27 @@
-import { VISIBILITY_FILTERS } from 'constants/contentTypes';
-import { url } from 'constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from 'services/backend/backendApi';
-import { prepareParams } from 'services/backend/misc';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { url } from '@/constants/misc';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { prepareParams } from '@/services/backend/misc';
 import {
     CreatedByParam,
     ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
     PublishedParam,
+    ResearchFieldIdParams,
     Review,
+    ReviewPublishedContents,
+    ReviewSectionComparisonPayload,
+    ReviewSectionOntologyPayload,
+    ReviewSectionPredicatePayload,
+    ReviewSectionResourcePayload,
+    ReviewSectionTextPayload,
+    ReviewSectionVisualizationPayload,
     SdgParam,
+    Statement,
     VerifiedParam,
     VisibilityParam,
-    ResearchFieldIdParams,
-    ReviewSectionComparisonPayload,
-    ReviewSectionVisualizationPayload,
-    ReviewSectionResourcePayload,
-    ReviewSectionPredicatePayload,
-    ReviewSectionOntologyPayload,
-    ReviewSectionTextPayload,
-    Statement,
-    ReviewPublishedContents,
-} from 'services/backend/types';
+} from '@/services/backend/types';
 
 export const reviewUrl = `${url}smart-reviews/`;
 export const reviewApi = backendApi.extend(() => ({ prefixUrl: reviewUrl }));

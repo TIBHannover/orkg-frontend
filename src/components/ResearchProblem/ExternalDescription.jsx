@@ -1,8 +1,9 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
-import DbpediaAbstract from 'components/ExternalDescription/DbpediaAbstract';
-import WikidataDescription from 'components/ExternalDescription/WikidataDescription';
-import WikipediaSummary from 'components/ExternalDescription/WikipediaSummary';
+import { Component } from 'react';
+
+import DbpediaAbstract from '@/components/ExternalDescription/DbpediaAbstract';
+import WikidataDescription from '@/components/ExternalDescription/WikidataDescription';
+import WikipediaSummary from '@/components/ExternalDescription/WikipediaSummary';
 
 class ExternalDescription extends Component {
     constructor(props) {

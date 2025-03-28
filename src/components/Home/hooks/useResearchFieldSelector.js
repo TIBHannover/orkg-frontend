@@ -1,9 +1,10 @@
-import useParams from 'components/useParams/useParams';
-import { RESOURCES } from 'constants/graphSettings';
 import { useEffect, useState } from 'react';
-import { getFieldChildren } from 'services/backend/researchFields';
-import { getResource } from 'services/backend/resources';
-import { getResearchFieldsStatsWithSubfields } from 'services/backend/stats';
+
+import useParams from '@/components/useParams/useParams';
+import { RESOURCES } from '@/constants/graphSettings';
+import { getFieldChildren } from '@/services/backend/researchFields';
+import { getResource } from '@/services/backend/resources';
+import { getResearchFieldsStatsWithSubfields } from '@/services/backend/stats';
 
 function useResearchFieldSelector() {
     const params = useParams();

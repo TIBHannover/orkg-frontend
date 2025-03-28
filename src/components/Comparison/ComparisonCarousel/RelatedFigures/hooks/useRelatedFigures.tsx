@@ -1,15 +1,16 @@
-import useComparison from 'components/Comparison/hooks/useComparison';
-import errorHandler from 'helpers/errorHandler';
 import { uniqueId } from 'lodash';
+import useSWR from 'swr';
+
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import errorHandler from '@/helpers/errorHandler';
 import {
     comparisonUrl,
     createComparisonRelatedFigure,
     deleteComparisonRelatedFigure,
     getComparisonRelatedFigure,
     updateComparisonRelatedFigure,
-} from 'services/backend/comparisons';
-import { ComparisonRelatedFigure } from 'services/backend/types';
-import useSWR from 'swr';
+} from '@/services/backend/comparisons';
+import { ComparisonRelatedFigure } from '@/services/backend/types';
 
 const useRelatedFigures = () => {
     const { comparison, mutate } = useComparison();

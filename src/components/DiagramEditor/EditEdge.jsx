@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, InputGroup } from 'reactstrap';
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { ENTITIES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
 import capitalize from 'capitalize';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Button, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { ENTITIES } from '@/constants/graphSettings';
 
 const StyledEntitySelector = styled.div`
     select {

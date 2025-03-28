@@ -1,15 +1,16 @@
-import useParams from 'components/useParams/useParams';
-import { MISC } from 'constants/graphSettings';
-import { CONFERENCE_REVIEW_MISC } from 'constants/organizationsTypes';
 import dayjs from 'dayjs';
-import errorHandler from 'helpers/errorHandler';
-import { comparisonUrl, getComparison, updateComparison as updateComparisonBackend } from 'services/backend/comparisons';
-import { conferenceSeriesUrl, getConferenceById } from 'services/backend/conferences-series';
-import { getObservatoryById, observatoriesUrl } from 'services/backend/observatories';
-import { getOrganization, organizationsUrl } from 'services/backend/organizations';
-import { Comparison, ConferenceSeries, Organization } from 'services/backend/types';
 import useSWR from 'swr';
 import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
+
+import useParams from '@/components/useParams/useParams';
+import { MISC } from '@/constants/graphSettings';
+import { CONFERENCE_REVIEW_MISC } from '@/constants/organizationsTypes';
+import errorHandler from '@/helpers/errorHandler';
+import { comparisonUrl, getComparison, updateComparison as updateComparisonBackend } from '@/services/backend/comparisons';
+import { conferenceSeriesUrl, getConferenceById } from '@/services/backend/conferences-series';
+import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
+import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
+import { Comparison, ConferenceSeries, Organization } from '@/services/backend/types';
 
 const useComparison = (comparisonId?: string) => {
     let { comparisonId: id } = useParams<{ comparisonId: string }>();

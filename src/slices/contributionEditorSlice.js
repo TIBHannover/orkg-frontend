@@ -1,19 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import DATA_TYPES from 'constants/DataTypes';
-import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from 'constants/graphSettings';
 import { flatten, intersection, uniq, uniqBy } from 'lodash';
 import { toast } from 'react-toastify';
-import { createClass } from 'services/backend/classes';
-import { createList } from 'services/backend/lists';
-import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from 'services/backend/literals';
-import { createPredicate, getPredicate } from 'services/backend/predicates';
+import format from 'string-format';
+
+import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
+import DATA_TYPES from '@/constants/DataTypes';
+import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { createClass } from '@/services/backend/classes';
+import { createList } from '@/services/backend/lists';
+import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from '@/services/backend/literals';
+import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import {
     createResource as createResourceApi,
     getResource,
     updateResource as updateResourceApi,
     updateResourceClasses as updateResourceClassesApi,
-} from 'services/backend/resources';
+} from '@/services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
@@ -25,10 +27,9 @@ import {
     getStatementsBySubjectAndPredicate,
     getTemplatesByClass,
     updateStatement,
-} from 'services/backend/statements';
-import { getTemplate } from 'services/backend/templates';
-import format from 'string-format';
-import { filterObjectOfStatementsByPredicateAndClass, guid } from 'utils';
+} from '@/services/backend/statements';
+import { getTemplate } from '@/services/backend/templates';
+import { filterObjectOfStatementsByPredicateAndClass, guid } from '@/utils';
 
 const initialState = {
     contributions: {},

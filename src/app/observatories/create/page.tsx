@@ -1,29 +1,30 @@
 'use client';
 
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { OptionType } from 'components/Autocomplete/types';
-import Option from 'components/AutocompleteObservatory/CustomComponents/Option';
-import useAuthentication from 'components/hooks/useAuthentication';
-import Unauthorized from 'components/Unauthorized/Unauthorized';
-import Tooltip from 'components/Utils/Tooltip';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
-import { MAX_LENGTH_INPUT } from 'constants/misc';
-import REGEX from 'constants/regex';
-import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
-import requireAuthentication from 'requireAuthentication';
-import { createObservatory } from 'services/backend/observatories';
-import { getAllOrganizations, getOrganization, organizationsUrl } from 'services/backend/organizations';
-import { Organization } from 'services/backend/types';
 import slugify from 'slugify';
 import useSWR from 'swr';
-import { getPublicUrl } from 'utils';
 import { z } from 'zod';
+
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
+import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import Unauthorized from '@/components/Unauthorized/Unauthorized';
+import Tooltip from '@/components/Utils/Tooltip';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
+import ROUTES from '@/constants/routes';
+import requireAuthentication from '@/requireAuthentication';
+import { createObservatory } from '@/services/backend/observatories';
+import { getAllOrganizations, getOrganization, organizationsUrl } from '@/services/backend/organizations';
+import { Organization } from '@/services/backend/types';
+import { getPublicUrl } from '@/utils';
 
 const observatorySchema = z.object({
     observatoryName: z.string().min(1, 'Please enter an observatory name').max(MAX_LENGTH_INPUT),
