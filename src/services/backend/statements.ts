@@ -183,7 +183,7 @@ export const getStatementsBySubject = ({
  */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }: { id: string; maxLevel?: number; blacklist?: string[] }) => {
     const searchParams = qs.stringify(
-        { maxLevel, blacklist: blacklist?.join(',') },
+        { max_level: maxLevel, blacklist: blacklist?.join(',') },
         {
             skipNulls: true,
         },
