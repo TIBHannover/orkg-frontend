@@ -49,12 +49,13 @@ const Organizations = () => {
                             className="btn btn-secondary btn-sm flex-shrink-0"
                             href={reverse(ROUTES.ADD_ORGANIZATION, { type: params.id })}
                         >
-                            <FontAwesomeIcon icon={faPlus} /> Create {label}
+                            <FontAwesomeIcon icon={faPlus} /> Create{' '}
+                            {label?.toLowerCase() === ORGANIZATIONS_MISC.GENERAL.toLowerCase() ? 'organization' : 'conference'}
                         </RequireAuthentication>
                     )
                 }
             >
-                {capitalize(pluralize(label ?? ''))}
+                {capitalize(pluralize(label?.toLowerCase() === ORGANIZATIONS_MISC.GENERAL.toLowerCase() ? 'organization' : 'conference'))}
             </TitleBar>
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                 {organizations && organizations.length > 0 && (

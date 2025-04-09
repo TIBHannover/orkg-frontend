@@ -3,11 +3,12 @@ import Skeleton from 'react-loading-skeleton';
 import { Badge } from 'reactstrap';
 import useSWR from 'swr';
 
+import Tooltip from '@/components/FloatingUI/Tooltip';
 import { CLASSES } from '@/constants/graphSettings';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { VisibilityOptions } from '@/services/backend/types';
 
-interface TabLabelProps {
+type TabLabelProps = {
     label: string;
     showCount?: boolean;
     classId: string;
@@ -20,7 +21,8 @@ interface TabLabelProps {
         published?: boolean;
         sdgId?: string;
     };
-}
+    description?: string;
+};
 
 const getStatsName = (classId: string) => {
     switch (classId) {
@@ -45,7 +47,7 @@ const getStatsName = (classId: string) => {
     }
 };
 
-const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countParams }) => {
+const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countParams, description }) => {
     const { data: count, isLoading: isStatisticsLoading } = useSWR(
         showCount
             ? [
@@ -63,15 +65,18 @@ const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countP
     );
 
     return (
-        <>
-            {label}
-            {showCount && (isStatisticsLoading || count) && (
-                <Badge color="light" pill className="ms-1 px-2">
-                    {isStatisticsLoading && <Skeleton width={10} />}
-                    {!isStatisticsLoading && count?.value.toLocaleString('en-US', { notation: 'compact' })}
-                </Badge>
-            )}
-        </>
+        <Tooltip content={description} disabled={!description}>
+            <span className="cursor-pointer">
+                {label}
+
+                {showCount && (isStatisticsLoading || count) && (
+                    <Badge color="light" pill className="ms-1 px-2">
+                        {isStatisticsLoading && <Skeleton width={10} />}
+                        {!isStatisticsLoading && count?.value.toLocaleString('en-US', { notation: 'compact' })}
+                    </Badge>
+                )}
+            </span>
+        </Tooltip>
     );
 };
 export default TabLabel;
