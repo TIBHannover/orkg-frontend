@@ -21,6 +21,8 @@ const RootLayout = ({ children }) => (
             <meta name="theme-color" content="#000000" />
             <link rel="manifest" href="/manifest.json" />
             <link rel="shortcut icon" href="/favicon.ico" />
+            {/* eslint-disable-next-line react/no-invalid-html-attribute */}
+            <link href="https://mastodon.social/@orkg" rel="me" />
             <title>Open Research Knowledge Graph</title>
             <meta property="og:image" content="/og_image.png" />
             <link
