@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.162.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.3...v0.162.4) - 2025-04-14
+
+### Changes
+
+- fix(AbstractAnnotator): last character of each field is missing [`#1537`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1537)
+
+---
 ## [v0.162.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.2...v0.162.3) - 2025-04-11
 
 ### Changes
