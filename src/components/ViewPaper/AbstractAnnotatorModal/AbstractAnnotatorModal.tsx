@@ -96,7 +96,7 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                 const nRanges: Range[] = [];
                 if (data && data.values) {
                     data.values.map((entity: { span: [number, number]; id: string; class: string }) => {
-                        const text = abstractGlobal.substring(entity.span[0], entity.span[1]);
+                        const text = abstractGlobal.substring(entity.span[0], entity.span[1] + 1);
                         if (annotated.indexOf(text.toLowerCase()) < 0) {
                             annotated.push(text.toLowerCase());
                             let rangePredicate: { id: string; label: string } | null = null;
