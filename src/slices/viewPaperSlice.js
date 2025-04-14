@@ -142,14 +142,15 @@ export const viewPaperSlice = createSlice({
             state.bioassayRawResponse = payload;
         },
         createAnnotation: (state, { payload }) => {
-            const id = guid();
+            const id = payload.id || guid();
             state.ranges[id] = {
                 id,
                 ...payload,
             };
         },
         removeAnnotation: (state, { payload }) => {
-            delete state.ranges[payload.id];
+            const id = typeof payload === 'object' ? payload.id : payload;
+            delete state.ranges[id];
         },
         toggleEditAnnotation: (state, { payload }) => {
             state.ranges[payload].isEditing = !state.ranges[payload].isEditing;
