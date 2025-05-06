@@ -38,6 +38,7 @@ const getAccessToken = async (): Promise<string | null> => {
 
 const backendApi = ky.create({
     timeout: 1000 * 60 * 10, // 10 minutes
+    credentials: 'omit', // prevent cookies from being sent to the backend (we handle auth manually via the header)
     hooks: {
         beforeRequest: [
             async (request) => {
