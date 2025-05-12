@@ -14,7 +14,11 @@ import { Paper, Resource } from '@/services/backend/types';
 
 const getDescription = (paper?: Paper) =>
     `ORKG structured paper description. Published: ${
-        paper?.publication_info?.published_month ? dayjs(paper.publication_info?.published_month, 'M').format('MMMM') : ''
+        paper?.publication_info?.published_month
+            ? dayjs()
+                  .month(paper.publication_info?.published_month - 1)
+                  .format('MMMM')
+            : ''
     } ${paper?.publication_info?.published_year ? paper.publication_info?.published_year : ''} • Research field: ${
         paper?.research_fields?.[0]?.label
     } • Authors: ${paper?.authors?.map((author) => author.name).join(', ')}`;
@@ -76,9 +80,13 @@ export default async function CheckPaperVersion(props: { params: Promise<{ resou
                 ...(author?.identifiers?.orcid?.[0] ? { url: `http://orcid.org/${author?.identifiers?.orcid?.[0]}` } : {}),
                 '@type': 'Person',
             })),
-            datePublished: `${paper.publication_info?.published_month ? dayjs(paper.publication_info?.published_month, 'M').format('MMMM') : ''} ${
-                paper.publication_info?.published_year ? paper.publication_info?.published_year : ''
-            }`,
+            datePublished: `${
+                paper.publication_info?.published_month
+                    ? dayjs()
+                          .month(paper.publication_info?.published_month - 1)
+                          .format('MMMM')
+                    : ''
+            } ${paper.publication_info?.published_year ? paper.publication_info?.published_year : ''}`,
             about: paper?.research_fields?.[0]?.label,
             license: LICENSE_URL,
             '@type': 'ScholarlyArticle',

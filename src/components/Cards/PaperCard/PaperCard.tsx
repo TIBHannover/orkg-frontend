@@ -148,7 +148,9 @@ const PaperCard: FC<PaperCardType> = ({
                                 <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
                             )}
                             {paper.publication_info?.published_month && paper.publication_info?.published_month > 0
-                                ? dayjs(paper.publication_info?.published_month, 'M').format('MMMM')
+                                ? dayjs()
+                                      .month(paper.publication_info?.published_month - 1)
+                                      .format('MMMM')
                                 : ''}{' '}
                             {paper.publication_info?.published_year ?? null}
                         </small>

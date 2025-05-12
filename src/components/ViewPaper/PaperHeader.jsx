@@ -92,7 +92,11 @@ const PaperHeader = (props) => {
             {(viewPaper.publication_info?.published_month || viewPaper.publication_info?.published_year) && (
                 <span className="badge bg-light me-2">
                     <FontAwesomeIcon icon={faCalendar} />{' '}
-                    {viewPaper.publication_info?.published_month ? dayjs(viewPaper.publication_info?.published_month, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publication_info?.published_month
+                        ? dayjs()
+                              .month(viewPaper.publication_info?.published_month - 1)
+                              .format('MMMM')
+                        : ''}{' '}
                     {viewPaper.publication_info?.published_year ? viewPaper.publication_info?.published_year : ''}
                 </span>
             )}

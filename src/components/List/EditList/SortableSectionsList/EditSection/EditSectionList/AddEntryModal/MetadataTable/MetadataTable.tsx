@@ -61,7 +61,12 @@ const MetadataTable: FC<MetadataTableProps> = ({
                     {(publicationYear || publicationMonth) && (
                         <tr>
                             <td>
-                                <strong>Publication date:</strong> {publicationMonth ? dayjs(publicationMonth, 'M').format('MMMM') : ''}{' '}
+                                <strong>Publication date:</strong>{' '}
+                                {publicationMonth
+                                    ? dayjs()
+                                          .month(publicationMonth - 1)
+                                          .format('MMMM')
+                                    : ''}{' '}
                                 {publicationYear} {!publicationMonth && !publicationYear && <i>Not available</i>}
                             </td>
                         </tr>

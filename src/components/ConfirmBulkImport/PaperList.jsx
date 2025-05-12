@@ -118,7 +118,11 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                                 {(paper.publicationMonth || paper.publicationYear) && (
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
                                 )}
-                                {paper.publicationMonth && paper.publicationMonth > 0 ? dayjs(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
+                                {paper.publicationMonth && paper.publicationMonth > 0
+                                    ? dayjs()
+                                          .month(paper.publicationMonth - 1)
+                                          .format('MMMM')
+                                    : ''}{' '}
                                 {paper.publicationYear}
                             </small>
                         </PaperCardStyled>
