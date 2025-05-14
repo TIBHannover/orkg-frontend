@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CLASSES } from '@/constants/graphSettings';
 import { getResource } from '@/services/backend/resources';
-import { getStatementsBundleBySubject, getStatementsByObject } from '@/services/backend/statements';
+import { getStatements, getStatementsBundleBySubject } from '@/services/backend/statements';
 
 const COLOR_NODE = '#80869B';
 const COLOR_NODE_START = '#E86161';
@@ -158,7 +158,7 @@ const useGraphView = ({ resourceId }) => {
 
         setIsLoadingNode({ nodeId, isLoading: true });
 
-        const statements = await getStatementsByObject({ id: nodeId, returnContent: true });
+        const statements = await getStatements({ objectId: nodeId, returnContent: true });
         const result = processStatements({ statements, isFetchingIncoming: true });
         setNodes(uniqBy([...nodes, ...result.nodes], 'id'));
         setIsLoadingNode({ nodeId, isLoading: false });

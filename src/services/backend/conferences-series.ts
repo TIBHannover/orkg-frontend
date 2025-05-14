@@ -1,5 +1,5 @@
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { ConferenceSeries, PaginatedResponse } from '@/services/backend/types';
 
 export const conferenceSeriesUrl = `${url}conference-series/`;
@@ -8,13 +8,16 @@ export const conferenceSeriesApi = backendApi.extend(() => ({ prefixUrl: confere
 export const createConference = (
     organization_id: string,
     name: string,
-    url: string,
+    _url: string,
     display_id: string,
     metadata: {
         start_date: string;
         review_type: string;
     },
-) => conferenceSeriesApi.post<ConferenceSeries>('', { json: { organization_id, name, display_id, url, metadata } }).json();
+) =>
+    conferenceSeriesApi
+        .post<ConferenceSeries>('', { json: { organization_id, name, display_id, url: _url, metadata } })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const getConferencesSeries = () => conferenceSeriesApi.get<PaginatedResponse<ConferenceSeries>>('').json();
 

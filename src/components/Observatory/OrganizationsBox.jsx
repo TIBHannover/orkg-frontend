@@ -27,12 +27,12 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
 
     const deleteOrganization = async (organization) => {
         await updateObservatory(observatoryId, { organizations: organizationsList.filter((o) => o.id !== organization?.id).map((o) => o.id) })
-            .then((_) => {
+            .then(() => {
                 toggleOrganizationItem(organization);
                 toast.success('Organization deleted successfully');
             })
             .catch(() => {
-                toast.error('error deleting an organization');
+                toast.error('Error deleting an organization');
             });
     };
 

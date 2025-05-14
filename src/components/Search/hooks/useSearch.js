@@ -12,7 +12,7 @@ import { getClassById, getClasses } from '@/services/backend/classes';
 import { getPaperByDoi } from '@/services/backend/papers';
 import { getPredicates } from '@/services/backend/predicates';
 import { getResources } from '@/services/backend/resources';
-import { getStatementsByObject, getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 
 const IGNORED_CLASSES = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT];
 
@@ -92,13 +92,13 @@ export const useSearch = () => {
 
             // try to find an author by literal
             if (filterType === CLASSES.AUTHOR) {
-                const listStatements = await getStatementsByPredicateAndLiteral({
-                    literal: searchQuery,
+                const listStatements = await getStatements({
+                    objectLabel: searchQuery,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     size: 1,
                     returnContent: true,
                 });
-                const statements = listStatements.length > 0 ? await getStatementsByObject({ id: listStatements[0].subject.id }) : null;
+                const statements = listStatements.length > 0 ? await getStatements({ objectId: listStatements[0].subject.id }) : null;
                 if (statements) {
                     const hasAuthorsStatements = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS);
                     if (hasAuthorsStatements) {

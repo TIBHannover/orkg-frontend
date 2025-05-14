@@ -5,8 +5,8 @@ import format from 'string-format';
 import useMembership from '@/components/hooks/useMembership';
 import { extractConcept, extractLabelFromRdfURI, mapClass, mapPredicate, mapResource } from '@/components/Templates/ImportSHACL/helpers/helpers';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import { createClass, getClasses } from '@/services/backend/classes';
-import { createPredicate } from '@/services/backend/predicates';
+import { createClass, getClassById, getClasses } from '@/services/backend/classes';
+import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { getTemplatesByClass } from '@/services/backend/statements';
 import { createTemplate, getTemplate } from '@/services/backend/templates';
 
@@ -130,16 +130,19 @@ const useImportSHACL = () => {
             .map(async (nodesShape) => {
                 let { targetClass, templatePredicate } = nodesShape;
                 if (!targetClass.id) {
-                    targetClass = await createClass(nodesShape.targetClass.label, nodesShape.targetClass.uri);
+                    const targetClassId = await createClass(nodesShape.targetClass.label, nodesShape.targetClass.uri);
+                    targetClass = await getClassById(targetClassId);
                 }
                 if (templatePredicate?.label && !templatePredicate.id) {
-                    templatePredicate = await createPredicate(nodesShape.templatePredicate?.label);
+                    const newPredicateId = await createPredicate(nodesShape.templatePredicate?.label);
+                    templatePredicate = await getPredicate(newPredicateId);
                 }
 
                 const mappingPredicates = await Promise.all(
                     nodesShape.propertyShapes.map(async (propertyShape) => {
                         if (!propertyShape.path.id) {
-                            return createPredicate(propertyShape.path.label).then((r) => ({ ...propertyShape.path, ...r }));
+                            const newPid = await createPredicate(propertyShape.path.label);
+                            return getPredicate(newPid).then((r) => ({ ...propertyShape.path, ...r }));
                         }
                         return propertyShape.path;
                     }),
@@ -159,7 +162,8 @@ const useImportSHACL = () => {
                                     return fetchedClass;
                                 }
                             }
-                            return createClass(propertyShape.range.label, propertyShape.range.uri);
+                            const newClassId = await createClass(propertyShape.range.label, propertyShape.range.uri);
+                            return getClassById(newClassId);
                         }
                         return range;
                     }),

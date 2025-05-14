@@ -51,7 +51,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const addTemplate = async () => {
         setIsSaving(true);
         if (resource && 'classes' in resource) {
-            await updateResource(resourceId, undefined, [...(resource.classes ?? []), template.target_class.id]);
+            await updateResource(resourceId, { classes: [...(resource.classes ?? []), template.target_class.id] });
             // revalidate the cache of the selected contribution
             mutate();
         }
@@ -61,7 +61,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const deleteTemplate = async () => {
         setIsSaving(true);
         if (resource && 'classes' in resource) {
-            await updateResource(resourceId, undefined, [...(resource.classes.filter((c) => c !== template.target_class.id) ?? [])]);
+            await updateResource(resourceId, { classes: [...(resource.classes.filter((c) => c !== template.target_class.id) ?? [])] });
             // revalidate the cache of the selected contribution
             mutate();
         }

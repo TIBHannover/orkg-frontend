@@ -2,7 +2,7 @@ import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
 import { PREDICATES } from '@/constants/graphSettings';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from '@/services/backend/statements';
+import { getStatements, getStatementsBySubjects } from '@/services/backend/statements';
 import { addAuthorsToStatementBundle, getPaperData } from '@/utils';
 
 function useVenuePapers({ venueId }) {
@@ -18,13 +18,12 @@ function useVenuePapers({ venueId }) {
         (p) => {
             setIsNextPageLoading(true);
             // Get the statements that contains the author as an object
-            getStatementsByObjectAndPredicate({
+            getStatements({
                 objectId: venueId,
                 predicateId: PREDICATES.HAS_VENUE,
                 page: p,
                 size: pageSize,
-                sortBy: 'created_at',
-                desc: true,
+                sortBy: [{ property: 'created_at', direction: 'desc' }],
                 returnContent: false,
             }).then((result) => {
                 // Fetch the data of each work

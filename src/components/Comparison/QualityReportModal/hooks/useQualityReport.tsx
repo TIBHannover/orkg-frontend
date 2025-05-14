@@ -12,7 +12,7 @@ import FEEDBACK_QUESTIONS from '@/components/Comparison/QualityReportModal/hooks
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import THING_TYPES from '@/constants/thingTypes';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 import { getThing } from '@/services/simcomp';
 
@@ -65,9 +65,8 @@ const useQualityReport = () => {
             setIsLoading(true);
             // get the feedbacks from all different comparison versions
             const feedbackStatementsPromises =
-                comparison.versions.published.map((version) =>
-                    getStatementsBySubjectAndPredicate({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK }),
-                ) ?? [];
+                comparison.versions.published.map((version) => getStatements({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK })) ??
+                [];
 
             const feedbackIds = (await Promise.all(feedbackStatementsPromises)).flatMap((feedbackStatements) =>
                 feedbackStatements.map((feedback) => feedback.object.id),
@@ -87,7 +86,7 @@ const useQualityReport = () => {
                 .filter((property: Property) => property.active)
                 .map((property: Property) => getPropertyObjectFromData(data, property));
             const descriptionPromises = activeProperties.map((property: Property) =>
-                getStatementsBySubjectAndPredicate({ subjectId: property.id, predicateId: PREDICATES.DESCRIPTION }),
+                getStatements({ subjectId: property.id, predicateId: PREDICATES.DESCRIPTION }),
             );
             const propertiesWithoutDescription = (await Promise.all(descriptionPromises))
                 .map((property: Statement[], index: number) => ({

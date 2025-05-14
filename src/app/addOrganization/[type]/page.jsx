@@ -19,7 +19,7 @@ import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
-import { createOrganization } from '@/services/backend/organizations';
+import { createOrganization, getOrganization } from '@/services/backend/organizations';
 import { getPublicUrl } from '@/utils';
 
 const AddOrganization = () => {
@@ -72,8 +72,9 @@ const AddOrganization = () => {
         }
 
         try {
-            const responseJson = await createOrganization(name, logo[0], user.id, website, permalink, organizationType?.id);
-            navigateToOrganization(responseJson.display_id);
+            const organizationId = await createOrganization(name, logo[0], user.id, website, permalink, organizationType?.id);
+            const organization = await getOrganization(organizationId);
+            navigateToOrganization(organization.display_id);
         } catch (error) {
             setEditorState('edit');
             console.log(error);

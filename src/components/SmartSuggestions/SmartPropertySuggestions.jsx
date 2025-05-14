@@ -61,8 +61,8 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     const handleProblemClick = async (property) => {
         const selectedProperty = property;
         if (!property.id) {
-            const _property = await createPredicate(property.label);
-            selectedProperty.id = _property.id;
+            const _propertyId = await createPredicate(property.label);
+            selectedProperty.id = _propertyId;
         }
         trackEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: LLM_TASK_NAMES.RECOMMEND_PROPERTIES });
         handleCreate(selectedProperty);

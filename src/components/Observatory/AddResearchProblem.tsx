@@ -1,46 +1,55 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
-import { addResourceToObservatory } from '@/services/backend/resources';
+import { updateResource } from '@/services/backend/resources';
+import { Resource } from '@/services/backend/types';
 
-const AddResearchProblem = (props) => {
-    const [problem, setProblem] = useState(null);
+type AddResearchProblemProps = {
+    showDialog: boolean;
+    toggle: () => void;
+    id: string;
+    setProblems: Dispatch<SetStateAction<Resource[]>>;
+    setTotalElements: Dispatch<SetStateAction<number>>;
+};
+
+const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, id, setProblems, setTotalElements }) => {
+    const [problem, setProblem] = useState<OptionType | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async () => {
         if (problem && problem.id) {
             setIsSaving(true);
-            addResourceToObservatory({ observatory_id: props.id, organization_id: MISC.UNKNOWN_ID, id: problem.id })
-                .then((a) => {
-                    toast.success('Research problem added successfully');
-                    setIsSaving(false);
-                    props.setProblems((v) => [problem, ...v]);
-                    props.setTotalElements((t) => t + 1);
-                    props.toggle();
-                    setProblem(null);
-                })
-                .catch((error) => {
-                    setIsSaving(false);
-                    console.error(error);
-                    toast.error(`Error updating an observatory ${error.message}`);
-                });
+            try {
+                await updateResource(problem.id, { observatory_id: id, organization_id: MISC.UNKNOWN_ID });
+                toast.success('Research problem added successfully');
+                setIsSaving(false);
+                setProblems((v) => [problem as Resource, ...v]);
+                setTotalElements((t) => t + 1);
+                toggle();
+                setProblem(null);
+            } catch (error: unknown) {
+                setIsSaving(false);
+                console.error(error);
+                toast.error(`Error updating an observatory ${error instanceof Error ? error.message : 'Unknown error'}`);
+            }
         } else {
             toast.error('Please select a research problem');
         }
     };
 
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Add research problem</ModalHeader>
+        <Modal size="lg" isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Add research problem</ModalHeader>
             <ModalBody>
                 <FormGroup>
                     <Label for="ResearchProblem">Research problem</Label>
                     <Autocomplete
+                        allowCreate={false}
                         entityType={ENTITIES.RESOURCE}
                         includeClasses={[CLASSES.PROBLEM]}
                         placeholder="Select a research problem"
@@ -63,14 +72,6 @@ const AddResearchProblem = (props) => {
             </ModalFooter>
         </Modal>
     );
-};
-
-AddResearchProblem.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    id: PropTypes.string,
-    setProblems: PropTypes.func.isRequired,
-    setTotalElements: PropTypes.func.isRequired,
 };
 
 export default AddResearchProblem;

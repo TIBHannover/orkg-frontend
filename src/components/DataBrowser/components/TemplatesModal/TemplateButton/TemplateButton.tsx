@@ -48,7 +48,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const addTemplate = async () => {
         setIsSaving(true);
         if (entity) {
-            await updateResource(entity?.id, undefined, [...((entity as Resource).classes ?? []), template.target_class.id]);
+            await updateResource(entity?.id, { classes: [...((entity as Resource).classes ?? []), template.target_class.id] });
             mutateEntity();
         }
         setIsSaving(false);
@@ -57,7 +57,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const deleteTemplate = async () => {
         setIsSaving(true);
         if (entity) {
-            await updateResource(entity?.id, undefined, [...((entity as Resource).classes.filter((c) => c !== template.target_class.id) ?? [])]);
+            await updateResource(entity?.id, { classes: [...((entity as Resource).classes ?? []).filter((c) => c !== template.target_class.id)] });
             mutateEntity();
         }
         setIsSaving(false);

@@ -1,3 +1,4 @@
+import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FC } from 'react';
 
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -8,7 +9,7 @@ type MarkFeaturedUnlistedContainerProps = {
     id: string;
     featured: boolean;
     unlisted: boolean;
-    size: string;
+    size: SizeProp;
 };
 const MarkFeaturedUnlistedContainer: FC<MarkFeaturedUnlistedContainerProps> = ({ id, unlisted, featured, size = 'xs' }) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({

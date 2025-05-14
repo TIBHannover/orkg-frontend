@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import REGEX from '@/constants/regex';
-import { getPaper, markAsUnverified, markAsVerified, updatePaper } from '@/services/backend/papers';
+import { getPaper, updatePaper } from '@/services/backend/papers';
 
 const useEditPaper = ({ paperData, afterUpdate }) => {
     const [title, setTitle] = useState('');
@@ -51,7 +51,7 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
             }
 
             setIsLoadingEdit(true);
-
+            console.log('isVerified', isVerified);
             const data = {
                 title,
                 identifiers: {
@@ -65,17 +65,10 @@ const useEditPaper = ({ paperData, afterUpdate }) => {
                     url: url ?? null,
                     published_in: publishedIn.label,
                 },
+                ...(!!user && user.isCurationAllowed && { verified: isVerified }),
             };
 
             await updatePaper(paperData.id, data);
-
-            if (!!user && user.isCurationAllowed) {
-                if (isVerified) {
-                    await markAsVerified(paperData.id, isVerified).catch(() => {});
-                } else {
-                    await markAsUnverified(paperData.id, isVerified).catch(() => {});
-                }
-            }
 
             if (afterUpdate) {
                 toast.success('Paper updated successfully');

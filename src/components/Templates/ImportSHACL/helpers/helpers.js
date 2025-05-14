@@ -4,7 +4,7 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createClass, getClassById, getClasses } from '@/services/backend/classes';
 import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
 import { getResource } from '@/services/backend/resources';
-import { getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 
 export const isORKGDefaultPredicate = (id) => Object.keys(PREDICATES).find((c) => PREDICATES[c] === id);
 
@@ -65,14 +65,15 @@ export const mapPredicate = async (g, predicateNode) => {
     if (predicateNode?.value?.toString().includes('orkg.org') && isORKGDefaultPredicate(extractedId)) {
         let fetchedPredicate = await getPredicate(extractedId);
         if (!fetchedPredicate) {
-            fetchedPredicate = await createPredicate(labelNode?.value ?? extractedId, extractedId);
+            const fetchedPredicateId = await createPredicate(labelNode?.value ?? extractedId, extractedId);
+            fetchedPredicate = await getPredicate(fetchedPredicateId);
         }
         return { ...fetchedPredicate, extractedId };
     }
     if (labelNode) {
         // Search for a predicate with the exact label
         const fetchedPredicate = await getPredicates({ q: labelNode?.value, exact: true });
-        if (fetchedPredicate.totalElements) {
+        if (fetchedPredicate.page.total_elements) {
             [result] = fetchedPredicate.content;
         } else {
             return {
@@ -83,12 +84,12 @@ export const mapPredicate = async (g, predicateNode) => {
         }
     } else {
         // Search for a predicate using the same as statement
-        const fetchedPredicate = await getStatementsByPredicateAndLiteral({
-            literal: predicateNode.value,
+        const fetchedPredicate = await getStatements({
+            objectLabel: predicateNode.value,
             predicateId: PREDICATES.SAME_AS,
-            subjectClass: 'Predicate',
+            subjectClasses: ['Predicate'],
         });
-        if (fetchedPredicate.totalElements) {
+        if (fetchedPredicate.page.total_elements) {
             [result] = fetchedPredicate.content;
             result = result.subject;
         } else {
@@ -115,7 +116,8 @@ export const mapClass = async (g, classNode) => {
         let fetchedClass = await getClassById(extractedId);
         if (!fetchedClass) {
             try {
-                fetchedClass = await createClass(labelNode?.value ?? extractedId, classURI?.value ?? null, extractedId);
+                const fetchedClassId = await createClass(labelNode?.value ?? extractedId, classURI?.value ?? null, extractedId);
+                fetchedClass = await getClassById(fetchedClassId);
             } catch {
                 fetchedClass = null;
             }

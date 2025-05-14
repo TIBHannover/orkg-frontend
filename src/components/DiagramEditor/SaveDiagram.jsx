@@ -23,13 +23,13 @@ function SaveDiagram({ isSaveDiagramModalOpen, setIsSaveDiagramModalOpen, diagra
     const router = useRouter();
     const save = async () => {
         setIsSaving(true);
-        const sResource = await createResource(value, [CLASSES.DIAGRAM]);
-        createThing({ thingType: THING_TYPES.DIAGRAM, thingKey: sResource.id, data: diagram })
+        const sResourceId = await createResource({ label: value, classes: [CLASSES.DIAGRAM] });
+        createThing({ thingType: THING_TYPES.DIAGRAM, thingKey: sResourceId, data: diagram })
             .then(async () => {
                 if (diagramResource?.id) {
-                    await createResourceStatement(sResource.id, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);
+                    await createResourceStatement(sResourceId, PREDICATES.HAS_PREVIOUS_VERSION, diagramResource?.id);
                 }
-                router.push(reverse(ROUTES.DIAGRAM, { id: sResource.id }));
+                router.push(reverse(ROUTES.DIAGRAM, { id: sResourceId }));
                 toast.success('Diagram published successfully');
                 setIsSaving(false);
                 setIsSaveDiagramModalOpen(false);

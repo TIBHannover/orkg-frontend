@@ -25,7 +25,7 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
 
     const submitChanges = async () => {
         if (entity) {
-            await updateResource(entity?.id, undefined, localClasses?.map((c) => c.id) ?? []);
+            await updateResource(entity?.id, { classes: localClasses?.map((c) => c.id) ?? [] });
             mutateEntity();
             setIsEditing(false);
         }

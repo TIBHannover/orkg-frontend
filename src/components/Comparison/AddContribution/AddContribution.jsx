@@ -19,7 +19,7 @@ import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
 import { getPaperByDoi } from '@/services/backend/papers';
 import { getResources } from '@/services/backend/resources';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -80,7 +80,7 @@ export default function AddContribution({
         if (doi?.trim().match(new RegExp(REGEX.DOI_ID))) {
             getPaperByDoi(doi.trim())
                 .then((result) =>
-                    getStatementsBySubjectAndPredicate({
+                    getStatements({
                         subjectId: result.id,
                         predicateId: PREDICATES.HAS_CONTRIBUTION,
                     })
@@ -116,7 +116,7 @@ export default function AddContribution({
                 .then((results) => {
                     if (results.length > 0) {
                         const paper = results.map((resource) =>
-                            getStatementsBySubjectAndPredicate({
+                            getStatements({
                                 subjectId: resource.id,
                                 predicateId: PREDICATES.HAS_CONTRIBUTION,
                             }).then((contributions) => ({

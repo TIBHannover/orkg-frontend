@@ -3,7 +3,7 @@
 import qs from 'qs';
 
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { Class, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const classesUrl = `${url}classes/`;
@@ -20,7 +20,7 @@ export const createClass = (label: string, uri: string | null = null, id: string
                 id,
             },
         })
-        .json();
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const updateClass = (id: string, label: string) =>
     classesApi
@@ -85,30 +85,6 @@ export const getChildrenByID = ({ id, page = 0, size = 9999 }: { id: string; pag
         })
         .json();
 };
-
-/**
- * Create a class-subclass relation
- */
-export const createChildrenForID = (id: string, childIds: string[]) =>
-    classesApi
-        .post<Class>(`${encodeURIComponent(id)}/children`, {
-            json: {
-                child_ids: childIds,
-            },
-        })
-        .json();
-
-/**
- * Update a class-subclass relation
- */
-export const updateChildrenForID = (id: string, childIds: string[]) =>
-    classesApi
-        .patch<Class>(`${encodeURIComponent(id)}/children`, {
-            json: {
-                child_ids: childIds,
-            },
-        })
-        .json();
 
 /**
  * Get parent class

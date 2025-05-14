@@ -56,7 +56,11 @@ const predicates = [
         const newPredicate = createMSWPredicate({
             label,
         });
-        return HttpResponse.json(newPredicate);
+        return new HttpResponse(null, {
+            headers: {
+                Location: `${predicatesUrl}${newPredicate?.id}`,
+            },
+        });
     }),
 ];
 

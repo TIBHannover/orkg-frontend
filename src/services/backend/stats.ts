@@ -8,63 +8,6 @@ import { PaginatedResponse, TopContributor } from '@/services/backend/types';
 export const statsUrl = `${url}stats/`;
 export const statsApi = backendApi.extend(() => ({ prefixUrl: statsUrl }));
 
-export type ResearchFieldStat = {
-    id: string;
-    total: number;
-    papers: number;
-    comparisons: number;
-};
-
-export type Statistics = {
-    statements: number;
-    resources: number;
-    predicates: number;
-    literals: number;
-    papers: number;
-    classes: number;
-    contributions: number;
-    fields: number;
-    problems: number;
-    comparisons: number;
-    visualizations: number;
-    templates: number;
-    smart_reviews: number;
-    users: number;
-    observatories: number;
-    organizations: number;
-    orphaned_nodes: number;
-    extras: { [key: string]: number };
-};
-
-export const getStats = (extra: string[] = []) =>
-    statsApi
-        .get<Statistics>('', {
-            searchParams: `extra=${extra.join(',')}`,
-        })
-        .json();
-
-export const getResearchFieldsStatsWithSubfields = (fieldId: string) =>
-    statsApi
-        .get<ResearchFieldStat>(`research-fields/${fieldId}`, {
-            searchParams: 'includeSubfields=true',
-        })
-        .json();
-
-/**
- * Get statistics of an observatory by id
- * @param {Number} id Observatory id
- * @return {Object} Stats of observatory
- */
-export const getObservatoryStatsById = (id: string) =>
-    statsApi
-        .get<{
-            observatory_id: string;
-            papers: number;
-            comparisons: number;
-            total: number;
-        }>(`observatories/${id}`)
-        .json();
-
 /**
  * Get top contributors
  * @param {String} researchFieldId Research field id

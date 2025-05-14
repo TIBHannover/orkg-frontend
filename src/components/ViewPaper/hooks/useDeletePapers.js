@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
 import Confirm from '@/components/Confirmation/Confirmation';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { updateResourceClasses } from '@/services/backend/resources';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { updateResource } from '@/services/backend/resources';
+import { getStatements } from '@/services/backend/statements';
 
 function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = () => {} }) {
     const router = useRouter();
@@ -28,13 +28,15 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
 
             const promises = paperIds.map((id) => {
                 // set the class of paper to DeletedPapers
-                const promisePaper = updateResourceClasses(id, [CLASSES.PAPER_DELETED]);
+                const promisePaper = updateResource(id, { classes: [CLASSES.PAPER_DELETED] });
                 // set the class of paper of contributions to DeletedContribution
-                const promisesContributions = getStatementsBySubjectAndPredicate({
+                const promisesContributions = getStatements({
                     subjectId: id,
                     predicateId: PREDICATES.HAS_CONTRIBUTION,
                 }).then((contributions) =>
-                    Promise.all(contributions.map((contribution) => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED]))),
+                    Promise.all(
+                        contributions.map((contribution) => updateResource(contribution.object.id, { classes: [CLASSES.CONTRIBUTION_DELETED] })),
+                    ),
                 );
                 return Promise.all([promisePaper, promisesContributions]);
             });

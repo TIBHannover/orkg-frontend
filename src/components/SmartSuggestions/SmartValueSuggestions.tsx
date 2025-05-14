@@ -87,8 +87,8 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
         if ('id' in value) {
             await createResourceStatement(resourceId, predicateId, value.id);
         } else {
-            const newResourceId = await createResource(value.label, classId ? [classId] : []);
-            await createResourceStatement(resourceId, predicateId, newResourceId.id);
+            const newResourceId = await createResource({ label: value.label, classes: classId ? [classId] : [] });
+            await createResourceStatement(resourceId, predicateId, newResourceId);
         }
         mutateStatements();
         setIsOpenSmartTooltip(false);

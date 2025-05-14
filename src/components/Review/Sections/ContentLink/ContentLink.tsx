@@ -52,8 +52,8 @@ const ContentLink: FC<ContentLinkProps> = ({ section }) => {
         let { id } = selected;
 
         if (action === 'create-option') {
-            const newResource = await createResource(label);
-            id = newResource.id;
+            const newResourceId = await createResource({ label, classes: [] });
+            id = newResourceId;
         }
 
         if (!id) {

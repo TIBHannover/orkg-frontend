@@ -69,7 +69,11 @@ const resources = [
             label,
             classes,
         });
-        return HttpResponse.json({ ...newResource, classes: newResource.classes.split(',').filter((c) => c !== '') ?? [] });
+        return new HttpResponse(null, {
+            headers: {
+                Location: `${resourcesUrl}${newResource.id}`,
+            },
+        });
     }),
     http.put(`${resourcesUrl}:id`, async ({ request, params }: { request: Request; params: { id?: string } }) => {
         const { label, classes } = await request.json();
@@ -85,7 +89,11 @@ const resources = [
                 classes: classes.join(','),
             },
         });
-        return HttpResponse.json({ ...updatedResource, classes: updatedResource?.classes?.split(',').filter((c) => c !== '') ?? [] });
+        return new HttpResponse(null, {
+            headers: {
+                Location: `${resourcesUrl}${updatedResource?.id}`,
+            },
+        });
     }),
 ];
 

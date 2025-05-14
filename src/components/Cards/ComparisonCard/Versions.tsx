@@ -22,7 +22,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
     const [isActive, setIsActive] = useState(false);
 
     const { data, isLoading } = useSWR(
-        isActive && version.id ? [{ subjectId: version.id, returnContent: true }, statementsUrl, 'getStatementsBySubject'] : null,
+        isActive && version.id ? [{ subjectId: version.id, returnContent: true }, statementsUrl, 'getStatements'] : null,
         ([params]) => getStatements(params) as Promise<Statement[]>,
     );
 

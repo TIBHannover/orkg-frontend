@@ -1,5 +1,5 @@
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { List } from '@/services/backend/types';
 
 export const listsUrl = `${url}lists/`;
@@ -11,4 +11,4 @@ export const updateList = ({ id, label = null, elements }: { id: string; label?:
     listsApi.patch<void>(id, { json: { label, elements } }).json();
 
 export const createList = ({ label = '', elements = [] }: { label?: string; elements?: string[] }) =>
-    listsApi.post<List>('', { json: { label, elements } }).json();
+    listsApi.post<List>('', { json: { label, elements } }).then(({ headers }) => getCreatedIdFromHeaders(headers));

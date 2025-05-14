@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import { getStatementsByObjectAndPredicate, getStatementsBySubject } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { convertAuthorsToNewFormat, filterObjectOfStatementsByPredicateAndClass, getAuthorStatements } from '@/utils';
 
 function useCardData({ id, initResearchField = undefined, initAuthors = [], isList = false }) {
@@ -11,13 +11,13 @@ function useCardData({ id, initResearchField = undefined, initAuthors = [], isLi
 
     const loadSubject = useCallback(() => {
         setIsLoading(true);
-        getStatementsByObjectAndPredicate({
+        getStatements({
             objectId: id,
             predicateId: PREDICATES.HAS_PUBLISHED_VERSION,
         })
             .then(async (subject) => {
                 if (subject?.length > 0) {
-                    const statements = await getStatementsBySubject({ id: subject[0].subject.id });
+                    const statements = await getStatements({ subjectId: subject[0].subject.id });
                     setResearchField(
                         filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
                     );

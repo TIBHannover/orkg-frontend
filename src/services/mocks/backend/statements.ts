@@ -70,18 +70,10 @@ const statements = [
 
         const newStatement = createMSWStatement({ subject: subjectId, predicate: predicateId, object: objectId });
 
-        const subject = findEntityById(subjectId);
-        const predicate = db.predicates.findFirst({
-            where: {
-                id: { equals: predicateId },
+        return new HttpResponse(null, {
+            headers: {
+                Location: `${statementsUrl}${newStatement?.id}`,
             },
-        });
-        const object = findEntityById(objectId);
-        return HttpResponse.json({
-            ...newStatement,
-            subject: subject && 'classes' in subject ? { ...subject, classes: subject?.classes.split(',') } : subject,
-            predicate,
-            object: object && 'classes' in object ? { ...object, classes: object?.classes.split(',') } : object,
         });
     }),
     http.delete(`${statementsUrl}:id`, ({ params }) => {

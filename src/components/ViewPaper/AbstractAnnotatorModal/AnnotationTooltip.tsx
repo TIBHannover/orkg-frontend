@@ -6,7 +6,7 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import Popover from '@/components/FloatingUI/Popover';
 import { ENTITIES } from '@/constants/graphSettings';
-import { createPredicate } from '@/services/backend/predicates';
+import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { Range } from '@/slices/types';
 import { removeAnnotation, updateAnnotationPredicate } from '@/slices/viewPaperSlice';
 
@@ -30,7 +30,8 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
         if (action === 'select-option' && selectedOption) {
             dispatch(updateAnnotationPredicate({ range, selectedOption }));
         } else if (action === 'create-option' && selectedOption) {
-            const predicate = await createPredicate(selectedOption.label);
+            const predicateId = await createPredicate(selectedOption.label);
+            const predicate = await getPredicate(predicateId);
             dispatch(updateAnnotationPredicate({ range, selectedOption: predicate }));
             setDefaultOptions([...defaultOptions, predicate]);
         } else if (action === 'clear') {

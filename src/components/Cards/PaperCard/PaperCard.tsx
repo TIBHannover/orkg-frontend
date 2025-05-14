@@ -73,7 +73,7 @@ const PaperCard: FC<PaperCardType> = ({
 }) => {
     const showActionButtons = showAddToComparison || selectable || showCurationFlags;
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: paper.id,
+        resourceId: paper.id ?? '',
         unlisted: paper?.visibility === VISIBILITY.UNLISTED,
         featured: paper?.visibility === VISIBILITY.FEATURED,
     });

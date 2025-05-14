@@ -19,7 +19,7 @@ import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { CONFERENCE_REVIEW_TYPE } from '@/constants/organizationsTypes';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
-import { createConference } from '@/services/backend/conferences-series';
+import { createConference, getConferenceById } from '@/services/backend/conferences-series';
 import { getPublicUrl } from '@/utils';
 
 const AddConference = () => {
@@ -80,11 +80,12 @@ const AddConference = () => {
         }
 
         try {
-            const responseJson = await createConference(params.id, name, website, permalink, {
+            const conferenceId = await createConference(params.id, name, website, permalink, {
                 start_date: startDate,
                 review_type: reviewType,
             });
-            navigateToConference(responseJson.display_id);
+            const conference = await getConferenceById(conferenceId);
+            navigateToConference(conference.display_id);
         } catch (error) {
             setEditorState('edit');
             console.error(error);

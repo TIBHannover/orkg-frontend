@@ -3,10 +3,10 @@ import { z, ZodTypeAny } from 'zod';
 
 import { preprocessNumber } from '@/constants/DataTypes';
 import { ENTITIES, MISC, RESOURCES } from '@/constants/graphSettings';
-import { createClass } from '@/services/backend/classes';
-import { createList } from '@/services/backend/lists';
-import { createLiteral, updateLiteral } from '@/services/backend/literals';
-import { createPredicate } from '@/services/backend/predicates';
+import { createClass, getClassById } from '@/services/backend/classes';
+import { createList, getList } from '@/services/backend/lists';
+import { createLiteral, getLiteral, updateLiteral } from '@/services/backend/literals';
+import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { createResource, getResource, updateResource } from '@/services/backend/resources';
 import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement, Template } from '@/services/backend/types';
 
@@ -75,36 +75,38 @@ export const isLiteral = (propertyShapes: PropertyShape[]) => {
     return !!propertyShapes.find((ps) => 'datatype' in ps && ps.datatype?.id);
 };
 
-export const createValue = (_class: EntityType | 'empty', value: Resource | Predicate | Node | { label: string; datatype: string } | Class) => {
+export const createValue = async (_class: EntityType | 'empty', value: Resource | Predicate | Node | { label: string; datatype: string } | Class) => {
     let apiCall;
     switch (_class) {
         case ENTITIES.RESOURCE:
             if ('datatype' in value && value.datatype === 'list') {
-                apiCall = createList({ label: value.label });
+                apiCall = getList(await createList({ label: value.label }));
             } else {
-                apiCall = createResource(value.label, 'classes' in value && value.classes ? value.classes : []);
+                apiCall = getResource(
+                    await createResource({ label: value.label, classes: 'classes' in value && value.classes ? value.classes : [] }),
+                );
             }
             break;
         case ENTITIES.PREDICATE:
-            apiCall = createPredicate(value.label);
+            apiCall = getPredicate(await createPredicate(value.label));
             break;
         case ENTITIES.LITERAL:
-            apiCall = createLiteral(value.label, 'datatype' in value ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE);
+            apiCall = getLiteral(await createLiteral(value.label, 'datatype' in value ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE));
             break;
         case ENTITIES.CLASS:
-            apiCall = createClass(value.label);
+            apiCall = getClassById(await createClass(value.label));
             break;
         case 'empty':
             apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
             break;
         default:
-            apiCall = createLiteral(value.label, 'datatype' in value ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE);
+            apiCall = getLiteral(await createLiteral(value.label, 'datatype' in value ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE));
     }
     return apiCall;
 };
 
 export const commitChangeLabel = (valueId: string, _class: EntityType, label: string, datatype: string) => {
-    const apiCall = _class === ENTITIES.LITERAL ? updateLiteral(valueId, label, datatype) : updateResource(valueId, label);
+    const apiCall = _class === ENTITIES.LITERAL ? updateLiteral(valueId, label, datatype) : updateResource(valueId, { label });
     return apiCall;
 };
 

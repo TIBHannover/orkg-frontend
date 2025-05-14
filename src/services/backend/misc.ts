@@ -2,7 +2,7 @@ import qs from 'qs';
 
 import { ENTITIES } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getClasses } from '@/services/backend/classes';
 import { getPredicates } from '@/services/backend/predicates';
 import { getResources } from '@/services/backend/resources';
@@ -25,37 +25,11 @@ import {
 } from '@/services/backend/types';
 import { mergeAlternate } from '@/utils';
 
-export const doisUrl = `${url}dois/`;
-export const doisApi = backendApi.extend(() => ({ prefixUrl: doisUrl }));
 export const objectsUrl = `${url}objects/`;
 export const objectsApi = backendApi.extend(() => ({ prefixUrl: objectsUrl }));
 
-export const generateDoi = ({
-    type,
-    resource_type,
-    resource_id,
-    title,
-    subject,
-    description,
-    related_resources = [],
-    authors = [],
-    url,
-}: {
-    type: string;
-    resource_type: string;
-    resource_id: string;
-    title: string;
-    subject: string;
-    description: string;
-    related_resources?: string[];
-    authors?: string[];
-    url: string;
-}): Promise<{ doi: string }> =>
-    doisApi
-        .post<{ doi: string }>('', { json: { type, resource_type, resource_id, title, subject, description, related_resources, authors, url } })
-        .json();
-
-export const createObject = (payload: object) => objectsApi.post<Resource>('', { json: payload }).json();
+export const createObject = (payload: object) =>
+    objectsApi.post<Resource>('', { json: payload }).then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const getEntities = (
     entityType: string,

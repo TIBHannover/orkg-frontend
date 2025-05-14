@@ -47,9 +47,9 @@ function NERSuggestions({ title = '', abstract = '', resourceId }) {
     );
 
     const handleInsert = async ({ property, resource }) => {
-        const obj = await createResource(resource.label);
+        const objId = await createResource({ label: resource.label, classes: [] });
         // Add the statements to the selected contribution
-        await createResourceStatement(resourceId, property, obj.id);
+        await createResourceStatement(resourceId, property, objId);
         // revalidate the cache of the selected contribution
         mutate([
             {

@@ -210,12 +210,12 @@ const findOrCreateResource = async (value: OptionType) => {
         : [];
     resource = resource.length > 0 ? resource[0].subject : null;
     if (!resource) {
-        resource = await createResource(value.label, [CLASSES.EXTERNAL, ...(value.classes ?? [])]);
+        const resourceId = await createResource({ label: value.label, classes: [CLASSES.EXTERNAL, ...(value.classes ?? [])] });
         if (value.uri) {
-            createLiteralStatement(resource.id, PREDICATES.SAME_AS, (await createLiteral(value.uri, 'xsd:anyURI')).id);
+            createLiteralStatement(resourceId, PREDICATES.SAME_AS, await createLiteral(value.uri, 'xsd:anyURI'));
         }
         if (value.description) {
-            createLiteralStatement(resource.id, PREDICATES.DESCRIPTION, (await createLiteral(value.description)).id);
+            createLiteralStatement(resourceId, PREDICATES.DESCRIPTION, await createLiteral(value.description));
         }
     }
     return resource;
@@ -223,7 +223,7 @@ const findOrCreateResource = async (value: OptionType) => {
 
 export const importStatements = async (id: string, value: OptionType) => {
     for (const s of value.statements ?? []) {
-        createLiteralStatement(id, s.predicate, (await createLiteral(s.value.label)).id);
+        createLiteralStatement(id, s.predicate, await createLiteral(s.value.label));
     }
 };
 

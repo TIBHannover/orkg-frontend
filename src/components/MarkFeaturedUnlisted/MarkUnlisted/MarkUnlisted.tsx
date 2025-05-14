@@ -1,18 +1,26 @@
+import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { faEyeSlash as faEmptyEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import { VISIBILITY } from '@/constants/contentTypes';
+import { Visibility } from '@/services/backend/types';
 
-const StyledIcon = styled(FontAwesomeIcon)`
+const StyledIcon = styled(FontAwesomeIcon)<{ $isButton: boolean }>`
     cursor: ${(props) => (props.$isButton ? 'pointer' : 'initial')};
 `;
 
-const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => {
+type MarkUnlistedProps = {
+    unlisted: boolean;
+    size: SizeProp;
+    handleChangeStatus: (flagName: Visibility) => void;
+};
+
+const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }: MarkUnlistedProps) => {
     const [over, setOver] = useState(false);
 
     const { isCurationAllowed } = useAuthentication();
@@ -41,10 +49,10 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
         >
             <span
                 role="checkbox"
-                tabIndex="0"
+                tabIndex={0}
                 aria-checked={unlisted}
-                onClick={isCurationAllowed ? handleChangeStatus : undefined}
-                onKeyDown={isCurationAllowed ? handleChangeStatus : undefined}
+                onClick={isCurationAllowed ? () => handleChangeStatus(VISIBILITY.UNLISTED) : undefined}
+                onKeyDown={isCurationAllowed ? () => handleChangeStatus(VISIBILITY.UNLISTED) : undefined}
             >
                 <StyledIcon
                     $isButton={isCurationAllowed}
@@ -58,12 +66,6 @@ const MarkUnlisted = ({ unlisted = false, size = '1x', handleChangeStatus }) => 
             </span>
         </Tooltip>
     );
-};
-
-MarkUnlisted.propTypes = {
-    unlisted: PropTypes.bool,
-    size: PropTypes.string.isRequired,
-    handleChangeStatus: PropTypes.func.isRequired,
 };
 
 export default MarkUnlisted;
