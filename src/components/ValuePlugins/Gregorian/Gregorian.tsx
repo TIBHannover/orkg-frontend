@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { parseGregorianString } from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
+import { parseGregorianString } from '@/components/InputField/GregorianInput/helpers';
 import { GregorianType } from '@/constants/DataTypes';
 
 export const isGregorianValue = ({ text, datatype }: { text: string; datatype?: string }) =>

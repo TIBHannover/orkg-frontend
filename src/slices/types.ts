@@ -3,8 +3,21 @@ import type { AppStore } from '@/store';
 
 // TODO: not complete yet
 export type ContributionEditor = {
+    contributions: any;
+    statements: any;
+    resources: any;
+    literals: any;
+    properties: any;
+    papers: any;
+    templates: any;
+    classes: any;
+    isLoading: boolean;
+    hasFailed: boolean;
+    previousInputDataType: string;
     isHelpModalOpen: boolean;
     helpCenterArticleId: string;
+    isTemplatesModalOpen: boolean;
+    currentSementifyCell: string[];
 };
 
 export type Range = {

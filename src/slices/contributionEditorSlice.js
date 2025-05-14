@@ -46,12 +46,16 @@ const initialState = {
     isHelpModalOpen: false,
     helpCenterArticleId: null,
     isTemplatesModalOpen: false,
+    currentSementifyCell: [], // propertyid, contributionid,
 };
 
 export const contributionEditorSlice = createSlice({
     name: 'contributionEditor',
     initialState,
     reducers: {
+        setCurrentSementifyCell: (state, { payload }) => {
+            state.currentSementifyCell = payload;
+        },
         setIsHelpModalOpen: (state, { payload: { isOpen, articleId } }) => {
             state.isHelpModalOpen = isOpen;
             state.helpCenterArticleId = articleId;
@@ -188,6 +192,7 @@ export const contributionEditorSlice = createSlice({
 });
 
 export const {
+    setCurrentSementifyCell,
     setIsHelpModalOpen,
     setIsTemplateModalOpen,
     contributionsAdded,
@@ -307,11 +312,12 @@ export const loadContributions = (contributionIds) => async (dispatch) => {
             papers,
         }),
     );
-
+    /*
     // create properties
     await Promise.all(templatesOfClassesLoading).then(() => {
         Object.keys(contributions).map((c) => dispatch(createRequiredPropertiesInContribution(contributions[c].id)));
     });
+    */
     dispatch(setIsLoading(false));
 };
 
@@ -621,7 +627,7 @@ export function fetchTemplateIfNeeded(templateID) {
             dispatch(setIsLoadingTemplate({ templateID, status: true }));
             const template = await getTemplate(templateID);
             // Add template to the global state
-            dispatch(templateAdded(template));
+            dispatch(templateAdded(template)); // TODO comment when loading takes too long
             return template;
         }
         // Let the calling code know there's nothing to wait for.

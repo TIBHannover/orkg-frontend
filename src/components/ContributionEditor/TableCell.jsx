@@ -25,6 +25,7 @@ const TableCell = ({ values, contributionId, propertyId }) => {
                         return (
                             <TableCellValue
                                 propertyId={propertyId}
+                                contributionId={contributionId}
                                 key={`value-${value.statementId}`}
                                 value={value}
                                 index={index}

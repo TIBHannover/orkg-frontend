@@ -7,7 +7,7 @@ import {
     type GregorianValues,
     monthsOptions,
     parseGregorianString,
-} from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/helpers';
+} from '@/components/InputField/GregorianInput/helpers';
 import { GregorianType } from '@/constants/DataTypes';
 
 type GregorianInputProps = {

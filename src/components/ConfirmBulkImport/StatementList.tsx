@@ -2,7 +2,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { Badge, ListGroup } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -10,10 +10,17 @@ import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from
 import { getConfigByType } from '@/constants/DataTypes';
 import ROUTES from '@/constants/routes';
 
-const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) => (
+type ListStatementsProps = {
+    property: string;
+    idToLabel: Record<string, string>;
+    values: { id: string; label: string; text: string; datatype: string }[];
+    validationErrors?: boolean[];
+};
+
+const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, values, validationErrors = [] }) => (
     <StatementsGroupStyle className="list-group-item" style={{ marginBottom: -1 }}>
         <div className="row gx-0">
-            <PropertyStyle className="col-4" tabIndex="0">
+            <PropertyStyle className="col-4" tabIndex={0}>
                 <div>
                     <span className="propertyLabel">
                         {idToLabel[property] ? (
@@ -78,12 +85,5 @@ const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) 
         </div>
     </StatementsGroupStyle>
 );
-
-ListStatements.propTypes = {
-    property: PropTypes.string.isRequired,
-    idToLabel: PropTypes.object.isRequired,
-    values: PropTypes.array.isRequired,
-    validationErrors: PropTypes.array,
-};
 
 export default ListStatements;

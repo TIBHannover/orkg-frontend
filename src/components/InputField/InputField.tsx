@@ -1,21 +1,20 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { Input } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import DateTimeInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/DateTimeInput';
-import DurationInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DurationInput/DurationInput';
-import GregorianInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/GregorianInput/GregorianInput';
-import InputFieldModal from '@/components/DataBrowser/components/Body/ValueInputField/InputField/InputFieldModal';
-import TimeInput from '@/components/DataBrowser/components/Body/ValueInputField/InputField/TimeInput/TimeInput';
+import DateTimeInput from '@/components/InputField/DateTimeInput/DateTimeInput';
+import DurationInput from '@/components/InputField/DurationInput/DurationInput';
+import GregorianInput from '@/components/InputField/GregorianInput/GregorianInput';
+import InputFieldModal from '@/components/InputField/InputFieldModal';
+import TimeInput from '@/components/InputField/TimeInput/TimeInput';
 import { InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Node } from '@/services/backend/types';
 
 type InputFieldProps = {
-    value?: Node;
     range?: Node;
-    setInputValue: Dispatch<SetStateAction<string>>;
+    setInputValue: (value: string) => void;
     inputValue: string;
     dataType: string;
     isValid: boolean;
@@ -28,7 +27,6 @@ type InputFieldProps = {
 };
 
 const InputField: FC<InputFieldProps> = ({
-    value,
     range,
     setInputValue,
     inputValue,

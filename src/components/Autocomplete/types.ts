@@ -1,4 +1,4 @@
-import type { Class, EntityType, Node, Predicate, Resource } from '@/services/backend/types';
+import type { Class, EntityType, Literal, Node, Predicate, Resource } from '@/services/backend/types';
 
 export type AdditionalType = {
     page: number;
@@ -41,7 +41,8 @@ export type OptionType = Node & {
     // To indicate whether the option is loaded from orkg knowledge graph or some external service
     external?: boolean;
     source?: AutocompleteSource;
-} & Omit<Partial<Resource> | Partial<Predicate> | Partial<Class>, 'id' | 'label'>;
+    hideLink?: boolean;
+} & Omit<Partial<Literal> | Partial<Resource> | Partial<Predicate> | Partial<Class>, 'id' | 'label'>;
 
 export type ExternalServiceResponse = { options: OptionType[]; hasMore: boolean };
 

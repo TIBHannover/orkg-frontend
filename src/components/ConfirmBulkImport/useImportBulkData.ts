@@ -1,87 +1,63 @@
-/* eslint-disable guard-for-in */
 import { Cite } from '@citation-js/core';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { DEFAULT_HEADERS } from '@/app/csv-import/steps/helpers';
+import {
+    cleanLabel,
+    cleanLabelProperty,
+    cleanNewResource,
+    getExistingPaperId,
+    getFirstValue,
+    hasMapping,
+    isNewResource,
+    parseDataTypes,
+    propertyHasMapping,
+} from '@/components/ConfirmBulkImport/helpers';
 import useMembership from '@/components/hooks/useMembership';
-import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from '@/constants/DataTypes';
-import { CLASSES, MISC, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { getConfigByType } from '@/constants/DataTypes';
+import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
-import { getPaperByDoi } from '@/services/backend/papers';
 import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
 import { createResource, getResource, getResources } from '@/services/backend/resources';
-import { getStatementsBySubject } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
+import { ExtractionMethod } from '@/services/backend/types';
 import { parseCiteResult } from '@/utils';
 
-const PREDEFINED_COLUMNS = [
-    'paper:title',
-    'paper:authors',
-    'paper:publication_month',
-    'paper:publication_year',
-    'paper:doi',
-    'paper:url',
-    'paper:research_field',
-    'paper:published_in',
-    'contribution:extraction_method',
-];
+type ImportBulkDataProps = {
+    data: string[][];
+    onFinish: () => void;
+};
 
-const useImportBulkData = ({ data, onFinish }) => {
-    const [papers, setPapers] = useState([]);
-    const [existingPaperIds, setExistingPaperIds] = useState([]);
+const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
+    const [papers, setPapers] = useState<any[]>([]);
+    const [existingPaperIds, setExistingPaperIds] = useState<string[]>([]);
     const [idToLabel, setIdToLabel] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
-    const [createdContributions, setCreatedContributions] = useState([]);
+    const [createdContributions, setCreatedContributions] = useState<{ paperId: string; contributionId: string }[]>([]);
     const { observatoryId, organizationId } = useMembership();
 
-    const getFirstValue = (object, key, defaultValue = '') => (key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue);
-
-    const findDataType = (literal) => DATA_TYPES.find((type) => literal.endsWith(`<${type.name.toLowerCase()}>`));
-
-    const removeDataTypeLiteral = ({ literal, datatype }) => literal.replace(new RegExp(`<${datatype.name.toLowerCase()}>$`), '');
-
-    const removeDataTypeHeader = useCallback((label) => {
-        const datatype = findDataType(label);
-        return datatype ? removeDataTypeLiteral({ literal: label, datatype }) : label;
-    }, []);
-
-    const parseDataTypes = useCallback(({ value: literal, property }) => {
-        const datatype = findDataType(literal) || findDataType(property) || getSuggestionByValue(literal)?.[0];
-
-        return {
-            text: datatype ? removeDataTypeLiteral({ literal, datatype }) : literal,
-            datatype: datatype ? datatype.type : MISC.DEFAULT_LITERAL_DATATYPE,
-        };
-    }, []);
-
-    const cleanLabelProperty = useCallback(
-        (label) =>
-            removeDataTypeHeader(label)
-                .replace(/^(resource:)/, '')
-                .replace(/^(orkg:)/, ''),
-        [removeDataTypeHeader],
-    );
-
     const makePaperList = useCallback(async () => {
-        const _papers = [];
-        const _validationErrors = {};
+        const _papers: any[] = [];
+        const _validationErrors: Record<number, Record<string, boolean[]>> = {};
         const header = data[0];
         const rows = data.slice(1);
-        const _existingPaperIds = [];
+        const _existingPaperIds: string[] = [];
         // used to map resource/property IDs to their labels
         const _idToLabel = {
             [PREDICATES.HAS_RESEARCH_PROBLEM]: 'has research problem',
         };
         // used to map property values to their IDs (not the inverse of _idToLabel!)
-        const valueToId = {};
+        const valueToId: Record<string, string> = {};
 
         setIsLoading(true);
 
         for (const [i, row] of rows.entries()) {
             // make use of an array for cells, in case multiple columns exist with the same label
-            let rowObject = {};
+            let rowObject: Record<string, string[]> = {};
             for (const [index, headerItem] of header.entries()) {
                 if (!(headerItem in rowObject)) {
                     rowObject[headerItem] = [];
@@ -89,19 +65,20 @@ const useImportBulkData = ({ data, onFinish }) => {
                 rowObject[headerItem].push(row[index]);
             }
 
-            let title = getFirstValue(rowObject, 'paper:title');
-            let authors = getFirstValue(rowObject, 'paper:authors', []);
-            authors = authors.length ? authors.split(';').map((name) => ({ name })) : [];
-            let publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
-            let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
-            const doi = getFirstValue(rowObject, 'paper:doi');
-            const url = getFirstValue(rowObject, 'paper:url');
-            let researchField = getFirstValue(rowObject, 'paper:research_field', RESOURCES.RESEARCH_FIELD_MAIN);
-            let publishedIn = getFirstValue(rowObject, 'paper:published_in');
-            const extractionMethod = getFirstValue(rowObject, 'contribution:extraction_method', EXTRACTION_METHODS.UNKNOWN).toUpperCase();
+            let title = getFirstValue(rowObject, 'title');
+            const _authors = getFirstValue(rowObject, PREDICATES.HAS_AUTHORS, '');
+            let authors = _authors.length ? _authors.split(';').map((name: string) => ({ name })) : [];
+            let publicationMonth = getFirstValue(rowObject, PREDICATES.HAS_PUBLICATION_MONTH);
+            let publicationYear = getFirstValue(rowObject, PREDICATES.HAS_PUBLICATION_YEAR);
+            const doi = getFirstValue(rowObject, PREDICATES.HAS_DOI);
+            let url = getFirstValue(rowObject, PREDICATES.URL);
+            let researchField = getFirstValue(rowObject, PREDICATES.HAS_RESEARCH_FIELD, RESOURCES.RESEARCH_FIELD_MAIN);
+            let publishedIn = getFirstValue(rowObject, PREDICATES.HAS_VENUE);
+            const extractionMethod = getFirstValue(rowObject, 'extraction_method', EXTRACTION_METHODS.UNKNOWN).toUpperCase();
             let paperMetadata = null;
             if (doi) {
                 try {
+                    // eslint-disable-next-line no-await-in-loop
                     paperMetadata = await Cite.async(doi);
                 } catch (error) {
                     paperMetadata = null;
@@ -114,12 +91,16 @@ const useImportBulkData = ({ data, onFinish }) => {
                     publicationMonth = paperMetadata.paperPublicationMonth;
                     publicationYear = paperMetadata.paperPublicationYear;
                     publishedIn = paperMetadata.publishedIn;
+                    url = url || paperMetadata.url;
                 }
             }
 
-            rowObject = omit(rowObject, PREDEFINED_COLUMNS);
+            rowObject = omit(
+                rowObject,
+                DEFAULT_HEADERS.map((h) => h.id).filter((id) => id !== PREDICATES.HAS_RESEARCH_PROBLEM),
+            );
 
-            const contributionStatements = {};
+            const contributionStatements: Record<string, any[]> = {};
 
             // replace :orkg prefix in research field
             if (isString(researchField) && researchField.startsWith('orkg:')) {
@@ -127,8 +108,9 @@ const useImportBulkData = ({ data, onFinish }) => {
             }
 
             for (const property in rowObject) {
+                if (!Object.prototype.hasOwnProperty.call(rowObject, property)) continue;
                 let propertyId;
-                if (property !== 'contribution:research_problem') {
+                if (property !== PREDICATES.HAS_RESEARCH_PROBLEM) {
                     propertyId = valueToId[property] || undefined;
                 } else {
                     propertyId = PREDICATES.HAS_RESEARCH_PROBLEM;
@@ -138,6 +120,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 if (!propertyId && propertyHasMapping(property)) {
                     const id = cleanLabelProperty(property);
                     try {
+                        // eslint-disable-next-line no-await-in-loop
                         const fetchedPredicate = await getPredicate(id);
                         if (fetchedPredicate) {
                             propertyId = fetchedPredicate.id;
@@ -150,14 +133,16 @@ const useImportBulkData = ({ data, onFinish }) => {
                 // no property id found
                 if (!propertyId) {
                     // property label already exists, get the ID
-                    const fetchedPredicate = await getPredicates({ q: cleanLabelProperty(property), exact: true });
-                    if (fetchedPredicate.totalElements) {
+                    const cleanedProperty = cleanLabelProperty(property);
+                    // eslint-disable-next-line no-await-in-loop
+                    const fetchedPredicate = await getPredicates({ q: cleanedProperty, exact: true });
+                    if (fetchedPredicate.page.total_elements) {
                         propertyId = fetchedPredicate.content[0].id;
-                        _idToLabel[propertyId] = cleanLabelProperty(property);
+                        _idToLabel[propertyId] = cleanedProperty;
                         valueToId[property] = propertyId;
                     } else {
                         // property does not exist, it will be created when saving the papers
-                        propertyId = cleanLabelProperty(property);
+                        propertyId = cleanedProperty;
                         valueToId[property] = propertyId;
                     }
                 }
@@ -183,6 +168,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                         // get the label if it isn't yet fetched
                         if (!(value in _idToLabel)) {
                             try {
+                                // eslint-disable-next-line no-await-in-loop
                                 const resource = await getResource(value);
                                 if (resource) {
                                     _idToLabel[value] = resource.label;
@@ -207,12 +193,14 @@ const useImportBulkData = ({ data, onFinish }) => {
 
                         let fetchedResource;
                         if (property.startsWith('resource:')) {
+                            // eslint-disable-next-line no-await-in-loop
                             fetchedResource = await getResources({ q: cleanNewResource(value), exact: true });
                         }
                         if (propertyId === PREDICATES.HAS_RESEARCH_PROBLEM) {
+                            // eslint-disable-next-line no-await-in-loop
                             fetchedResource = await getResources({ include: [CLASSES.PROBLEM], q: cleanNewResource(value), exact: true });
                         }
-                        if (fetchedResource?.totalElements) {
+                        if (fetchedResource?.page.total_elements) {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
                             _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
                             valueObject = {
@@ -228,15 +216,16 @@ const useImportBulkData = ({ data, onFinish }) => {
                     let error = false;
                     if (!valueObject) {
                         const { text, datatype } = parseDataTypes({ value, property });
+                        const { error: _error, data: parsedValue } = getConfigByType(datatype).schema?.safeParse(text) || { error: true, data: text };
+                        error = !!_error;
                         valueObject = {
-                            text,
+                            text: parsedValue.toString(),
                             datatype,
                         };
-                        error = checkDataTypeIsInValid({ dataType: datatype, value: text });
                     }
                     contributionStatements[propertyId].push(valueObject);
                     if (!(i in _validationErrors)) {
-                        _validationErrors[i] = [];
+                        _validationErrors[i] = {};
                     }
                     if (!(propertyId in _validationErrors[i])) {
                         _validationErrors[i][propertyId] = [];
@@ -245,8 +234,11 @@ const useImportBulkData = ({ data, onFinish }) => {
                 }
             }
 
+            // eslint-disable-next-line no-await-in-loop
             const paperId = await getExistingPaperId(title, doi);
-            _existingPaperIds.push(paperId);
+            if (paperId) {
+                _existingPaperIds.push(paperId);
+            }
 
             const paper = {
                 title,
@@ -267,7 +259,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 authors,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                extraction_method: extractionMethod,
+                extraction_method: extractionMethod as ExtractionMethod,
                 contents: [
                     {
                         label: 'Contribution',
@@ -283,40 +275,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         setExistingPaperIds(_existingPaperIds);
         setIdToLabel(_idToLabel);
         setValidationErrors(_validationErrors);
-    }, [cleanLabelProperty, data, parseDataTypes]);
-
-    const getExistingPaperId = async (title, doi) => {
-        // first check if there is a paper with this DOI
-        if (doi) {
-            try {
-                const paper = await getPaperByDoi(doi);
-
-                if (paper) {
-                    return paper.id;
-                }
-            } catch (e) {}
-        }
-
-        // if no paper is found, check if there is a paper with this title
-        const paperResources = await getResources({
-            include: [CLASSES.PAPER],
-            q: title,
-            exact: true,
-            returnContent: true,
-        });
-
-        return paperResources.length ? paperResources[0].id : null;
-    };
-
-    const cleanLabel = (label) => label.replace(/^(orkg:)/, '');
-
-    const propertyHasMapping = (value) => isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
-
-    const hasMapping = (value) => isString(value) && value.startsWith('orkg:');
-
-    const isNewResource = (value) => isString(value) && value.startsWith('resource:');
-
-    const cleanNewResource = (label) => label.replace(/^(resource:)/, '');
+    }, [data, observatoryId, organizationId]);
 
     const handleImport = async () => {
         if (createdContributions.length > 0) {
@@ -328,16 +287,18 @@ const useImportBulkData = ({ data, onFinish }) => {
 
         // make a local copy to ensure changes are directly applied (and don't require a rerender)
         const _idToLabel = { ...idToLabel };
-        const newProperties = {};
-        const newResources = {};
-        const newLiterals = {};
+        const newProperties: Record<string, string> = {};
+        const newResources: Record<string, string> = {};
+        const newLiterals: Record<string, { label: string; data_type: string }> = {};
 
         for (const paper of papers.filter((_paper) => Object.keys(_paper.contents[0].statements).length > 0)) {
             try {
                 // create new properties for the ones that do not yet exist
                 for (let property in paper.contents[0].statements) {
+                    if (!Object.prototype.hasOwnProperty.call(paper.contents[0].statements, property)) continue;
                     // property does not yet exist, create a new one
                     if (!(property in _idToLabel) && !(property in newProperties)) {
+                        // eslint-disable-next-line no-await-in-loop
                         const newProperty = await createPredicate(property);
                         newProperties[property] = newProperty.id;
                     }
@@ -357,6 +318,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                         if ('label' in value) {
                             const { label } = value;
                             if (!(label in newResources)) {
+                                // eslint-disable-next-line no-await-in-loop
                                 const newResource = await createResource(label);
                                 newResources[label] = newResource.id;
                             }
@@ -385,6 +347,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 delete paper.extraction_method;
 
                 // only create the paper if there is contribution data (backend endpoint requirement)
+                // eslint-disable-next-line no-await-in-loop
                 const _paper = await createPaperMergeIfExists({
                     paper,
                     contribution,
@@ -395,7 +358,8 @@ const useImportBulkData = ({ data, onFinish }) => {
                 });
 
                 // get paper statements so it is possible to list the contribution IDs and make a comparison
-                const paperStatements = await getStatementsBySubject({ id: _paper });
+                // eslint-disable-next-line no-await-in-loop
+                const paperStatements = await getStatements({ subjectId: _paper });
 
                 for (const statement of paperStatements) {
                     if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
