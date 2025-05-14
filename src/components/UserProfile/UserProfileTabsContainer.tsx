@@ -20,7 +20,7 @@ import { contentTypesUrl, getContentTypes } from '@/services/backend/contentType
 import { Item, Paper, VisibilityOptions } from '@/services/backend/types';
 
 export const USER_PROFILE_CONTENT_TABS = [
-    { id: ALL_CONTENT_TYPES_ID, label: 'All' },
+    { id: ALL_CONTENT_TYPES_ID, label: 'All', description: 'All content types except statements and statements types' },
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
     { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
@@ -124,6 +124,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                         <TabLabel
                             label={tab.label}
                             classId={tab.id}
+                            description={tab.description}
                             showCount
                             countParams={{
                                 createdBy: id,

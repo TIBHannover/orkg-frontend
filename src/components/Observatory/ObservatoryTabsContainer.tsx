@@ -16,7 +16,12 @@ import { contentTypesUrl, getContentTypes } from '@/services/backend/contentType
 import { FilterConfig, Item, VisibilityOptions } from '@/services/backend/types';
 
 export const OBSERVATORY_CONTENT_TABS = [
-    { id: ALL_CONTENT_TYPES_ID, label: 'All', params: { published: undefined } },
+    {
+        id: ALL_CONTENT_TYPES_ID,
+        label: 'All',
+        params: { published: undefined },
+        description: 'All content types except statements and statements types',
+    },
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
     { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
@@ -94,6 +99,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
                         <TabLabel
                             label={tab.label}
                             classId={tab.id}
+                            description={tab.description}
                             showCount
                             countParams={{ visibility: sort, observatoryId: id, published: tab.params?.published }}
                         />
