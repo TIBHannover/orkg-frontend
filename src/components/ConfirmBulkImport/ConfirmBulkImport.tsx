@@ -2,7 +2,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader, Progress } from 'reactstrap';
 
@@ -10,7 +9,16 @@ import PaperList from '@/components/ConfirmBulkImport/PaperList';
 import useImportBulkData from '@/components/ConfirmBulkImport/useImportBulkData';
 import ROUTES from '@/constants/routes';
 
-const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = () => {} }) => {
+type ConfirmBulkImportProps = {
+    data: string[][];
+    isOpen: boolean;
+    toggle: () => void;
+    onFinish: () => void;
+};
+
+const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = () => {} }: ConfirmBulkImportProps) => {
+    const [isFinished, setIsFinished] = useState(false);
+
     const onFinish = () => {
         setIsFinished(true);
         onFinishParent();
@@ -21,7 +29,6 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
             onFinish,
         },
     );
-    const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
         makePaperList();
@@ -80,13 +87,6 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
             )}
         </Modal>
     );
-};
-
-ConfirmBulkImport.propTypes = {
-    data: PropTypes.array.isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    onFinish: PropTypes.func,
 };
 
 export default ConfirmBulkImport;

@@ -12,20 +12,22 @@ import DATA_TYPES, { getConfigByType } from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
-const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => (
-    <>
-        {valueClass || !switchEntityType ? 'Type is determined by the template.' : 'Changing the type is not possible'}
-        {valueClass && entity === ENTITIES.RESOURCE && (
-            <div>
-                Only instances of{' '}
-                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: valueClass.id })}>
-                    {valueClass.label}
-                </Link>{' '}
-                are valid.
-            </div>
-        )}
-    </>
-);
+const TypeTooltipContent = ({ valueClass, entity, switchEntityType }) => {
+    return (
+        <>
+            {valueClass || !switchEntityType ? 'Type is determined by the template.' : 'Changing the type is not possible'}
+            {valueClass && entity === ENTITIES.RESOURCE && (
+                <div>
+                    Only instances of{' '}
+                    <Link target="_blank" href={reverse(ROUTES.CLASS, { id: valueClass.id })}>
+                        {valueClass.label}
+                    </Link>{' '}
+                    are valid.
+                </div>
+            )}
+        </>
+    );
+};
 
 TypeTooltipContent.propTypes = {
     entity: PropTypes.string,

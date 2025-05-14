@@ -5,10 +5,10 @@ import { FC } from 'react';
 import { Button, FormFeedback, InputGroup } from 'reactstrap';
 
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
-import InputField from '@/components/DataBrowser/components/Body/ValueInputField/InputField/InputField';
 import useAddValue from '@/components/DataBrowser/hooks/useAddValue';
 import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
 import Popover from '@/components/FloatingUI/Popover';
+import InputField from '@/components/InputField/InputField';
 import SmartLiteralTypeCheck from '@/components/SmartSuggestions/SmartLiteralTypeCheck';
 import SmartResourceLabelCheck from '@/components/SmartSuggestions/SmartResourceLabelCheck';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
@@ -64,7 +64,6 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                 />
                 <InputField
                     range={range}
-                    value={value}
                     inputValue={inputValue}
                     setInputValue={setInputValue}
                     inputFormType={inputFormType}

@@ -59,7 +59,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                         )}
                     </div>
                 </div>
-                {!data.__isNew__ && (
+                {!data.__isNew__ && !data.hideLink && (
                     <div className="d-flex">
                         {(!data.external || (data.tooltipData && data.tooltipData?.length > 0)) && (
                             <div className="d-inline-block me-1">

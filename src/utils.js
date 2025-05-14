@@ -562,17 +562,17 @@ export const parseCiteResult = (paper) => {
             paperTitle = unescape(`${paperTitle}: ${subtitle[0]}`);
         }
         if (author) {
-            paperAuthors = author.map((author) => {
-                let fullname = [author.given, author.family].join(' ').trim();
+            paperAuthors = author.map((_author) => {
+                let fullname = [_author.given, _author.family].join(' ').trim();
                 if (!fullname) {
-                    fullname = author.literal ? author.literal : '';
+                    fullname = _author.literal ? _author.literal : '';
                 }
                 return {
                     name: unescape(fullname),
-                    ...(author.ORCID
+                    ...(_author.ORCID
                         ? {
                               identifiers: {
-                                  orcid: [author.ORCID?.split('/')?.[1]],
+                                  orcid: [_author.ORCID?.split('/')?.[1]],
                               },
                           }
                         : {}),

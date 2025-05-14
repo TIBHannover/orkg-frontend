@@ -1,11 +1,7 @@
 import { FC, useEffect, useId, useState } from 'react';
 import { Input, Label } from 'reactstrap';
 
-import {
-    DateTimeValues,
-    formatDateTimeValue,
-    parseDateTimeString,
-} from '@/components/DataBrowser/components/Body/ValueInputField/InputField/DateTimeInput/helpers';
+import { DateTimeValues, formatDateTimeValue, parseDateTimeString } from '@/components/InputField/DateTimeInput/helpers';
 import { DateTimeType } from '@/constants/DataTypes';
 
 type DateTimeInputProps = {

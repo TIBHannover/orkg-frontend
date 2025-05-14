@@ -18,7 +18,8 @@ const Value = styled.div`
     }
 `;
 
-const TableCellValue = forwardRef(({ value, index, setDisableCreate }, ref) => {
+// eslint-disable-next-line react/display-name
+const TableCellValue = forwardRef(({ value, index, setDisableCreate, contributionId, propertyId }, ref) => {
     const [isEditing, setIsEditing] = useState(false);
     const dispatch = useDispatch();
 
@@ -58,7 +59,14 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate }, ref) => {
                             </div>
                         )}
 
-                        <TableCellButtons value={value} onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
+                        <TableCellButtons
+                            contributionId={contributionId}
+                            propertyId={propertyId}
+                            value={value}
+                            onEdit={handleStartEdit}
+                            onDelete={handleDelete}
+                            backgroundColor="rgba(240, 242, 247, 0.8)"
+                        />
                     </Value>
                 </>
             ) : (
@@ -73,6 +81,7 @@ TableCellValue.propTypes = {
     index: PropTypes.number.isRequired,
     setDisableCreate: PropTypes.func.isRequired,
     propertyId: PropTypes.string.isRequired,
+    contributionId: PropTypes.string,
 };
 
 export default memo(TableCellValue);

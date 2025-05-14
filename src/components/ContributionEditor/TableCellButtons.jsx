@@ -9,6 +9,9 @@ import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
+import useTableCellForm from '@/components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
+import SemantifyButton from '@/components/SemantifyButton/SemantifyButton';
+import { ENTITIES } from '@/constants/graphSettings';
 import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 import { setIsHelpModalOpen } from '@/slices/contributionEditorSlice';
 
@@ -25,13 +28,15 @@ const ButtonsContainer = styled.div`
     }
 `;
 
-const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, style = {}, value }) => {
+const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, style = {}, value, contributionId, propertyId }) => {
     const [disableHover, setDisableHover] = useState(false);
     const dispatch = useDispatch();
     const buttonClasses = classNames({
         'cell-buttons': true,
         disableHover,
     });
+
+    const { valueClass } = useTableCellForm({ value, contributionId, propertyId });
 
     return (
         <ButtonsContainer style={{ backgroundColor, ...style }} className={buttonClasses}>
@@ -56,6 +61,27 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                     action={() => null}
                 />
             )}
+            {value &&
+                (value?._class === ENTITIES.LITERAL && value?.datatype !== 'xsd:string' ? (
+                    <SemantifyButton
+                        contributionId={contributionId}
+                        propertyId={propertyId}
+                        isDisabled
+                        title="Literal datatypes, except strings, cannot be semantified"
+                        cellValue={value}
+                    />
+                ) : (
+                    onEdit && (
+                        <SemantifyButton
+                            contributionId={contributionId}
+                            propertyId={propertyId}
+                            isDisabled={!!valueClass}
+                            title={valueClass ? 'Entities defined by templates cannot be semantified' : 'Semantify'}
+                            cellValue={value}
+                        />
+                    )
+                ))}
+
             {onEdit && (value?.shared ?? 0) <= 1 && (
                 <ActionButton
                     appendTo={document.body}
@@ -65,7 +91,6 @@ const TableCellButtons = ({ onEdit = null, onDelete = null, backgroundColor, sty
                     isDisabled={env('NEXT_PUBLIC_PWC_USER_ID') === value?.created_by}
                 />
             )}
-
             <ActionButton
                 title={onDelete ? 'Delete' : 'This item cannot be deleted'}
                 icon={faTrash}
@@ -99,6 +124,8 @@ TableCellButtons.propTypes = {
     backgroundColor: PropTypes.string.isRequired,
     style: PropTypes.object,
     value: PropTypes.object,
+    contributionId: PropTypes.string,
+    propertyId: PropTypes.string,
 };
 
 export default memo(TableCellButtons);

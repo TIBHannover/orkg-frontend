@@ -57,7 +57,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).inputFormType
             : getConfigByClassId(valueClass.id).inputFormType,
     );
-    const [isModelOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
@@ -160,7 +160,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
     return {
         propertyShape,
         createBlankNode,
-        isModelOpen,
+        isModalOpen,
         dialogResourceId,
         dialogResourceLabel,
         setIsModalOpen,

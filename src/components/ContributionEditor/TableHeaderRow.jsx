@@ -58,15 +58,18 @@ const TableHeaderRow = ({ property }) => {
     };
 
     const handleCreate = ({ id }) => {
-        dispatch(
-            updateProperty({
-                id: property.id,
-                statementIds,
-                action: 'select-option',
-                newId: id,
-                newLabel: inputValue,
-            }),
-        );
+        if (id !== property.id) {
+            dispatch(
+                updateProperty({
+                    id: property.id,
+                    statementIds,
+                    action: 'select-option',
+                    newId: id,
+                    newLabel: inputValue,
+                }),
+            );
+        }
+        setIsEditing(false);
         setIsOpenConfirmModal(false);
     };
 

@@ -23,7 +23,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
 
     const {
         createBlankNode,
-        isModelOpen,
+        isModalOpen,
         dialogResourceId,
         dialogResourceLabel,
         setIsModalOpen,
@@ -69,7 +69,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     </CreateButtonContainer>
                 </div>
             )}
-            {isModelOpen && (
+            {isModalOpen && (
                 <DataBrowserDialog
                     show
                     toggleModal={(v) => setIsModalOpen(!v)}

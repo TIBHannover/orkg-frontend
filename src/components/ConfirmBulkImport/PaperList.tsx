@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { Fragment, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { Alert, Badge, Button, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -27,10 +26,17 @@ const PaperCardStyled = styled.div`
     }
 `;
 
-const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} }) => {
-    const [showContributions, setShowContributions] = useState([]);
+type PaperListProps = {
+    papers: any[];
+    existingPaperIds: string[];
+    idToLabel: Record<string, string>;
+    validationErrors: Record<number, Record<string, boolean[]>>;
+};
 
-    const handleCardClick = (i) => {
+const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, validationErrors = {} }) => {
+    const [showContributions, setShowContributions] = useState<number[]>([]);
+
+    const handleCardClick = (i: number) => {
         if (showContributions.includes(i)) {
             setShowContributions((state) => state.filter((j) => j !== i));
         } else {
@@ -46,7 +52,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
         setShowContributions([]);
     };
 
-    const hasValidationErrorsForPaper = (i) =>
+    const hasValidationErrorsForPaper = (i: number) =>
         validationErrors?.[i] && Object.keys(validationErrors?.[i]).find((property) => validationErrors?.[i][property]?.find((error) => error));
 
     const hasValidationErrors = validationErrors && Object.keys(validationErrors).find((_, i) => hasValidationErrorsForPaper(i));
@@ -111,7 +117,7 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
                             <small>
                                 <FontAwesomeIcon size="sm" icon={faUser} />{' '}
                                 {paper.authors.length > 0 ? (
-                                    paper.authors.map((a) => a.name).join(' • ')
+                                    paper.authors.map((a: any) => a.name).join(' • ')
                                 ) : (
                                     <i className="ms-1">No authors provided</i>
                                 )}
@@ -147,13 +153,6 @@ const PaperList = ({ papers, existingPaperIds, idToLabel, validationErrors = {} 
             </ListGroup>
         </>
     );
-};
-
-PaperList.propTypes = {
-    papers: PropTypes.array.isRequired,
-    existingPaperIds: PropTypes.array.isRequired,
-    idToLabel: PropTypes.object.isRequired,
-    validationErrors: PropTypes.object,
 };
 
 export default PaperList;

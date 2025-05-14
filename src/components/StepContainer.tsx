@@ -50,7 +50,7 @@ const TitleStyled = styled.h1`
 `;
 type StepContainerProps = {
     step?: string;
-    title?: string;
+    title?: ReactNode;
     topLine?: boolean;
     bottomLine?: boolean;
     active?: boolean;

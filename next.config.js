@@ -40,6 +40,7 @@ const cspHeader = `default-src 'self' ;
                       ;
                       frame-src 'self'
                           localhost:*
+                          https://*.netlify.com
                           https://orkg.org
                           https://*.orkg.org
                           https://av.tib.eu
@@ -56,6 +57,7 @@ const cspHeader = `default-src 'self' ;
                           blob:
                           localhost:*
                           127.0.0.1:*
+                          https://*.netlify.com
                           https://orkg.org
                           https://*.orkg.org
                           https://support.tib.eu

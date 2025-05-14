@@ -1,0 +1,19 @@
+"title","xyz<String>","orkg:P15249<String>","orkg:P18021<Integer>","orkg:P156047<String>","orkg:P58072<String>","orkg:P156048<String>","orkg:P156044<Integer>","orkg:P161001<Integer>","P29"
+"Hunter Prey Optimization with Hybrid Deep Learning for Fake News Detection on Arabic Corpus - Contribution 1","present a new hunterprey optimization with hybrid deep learning-based fake news detection
+(HPOHDL-FND) model on the Arabic corpus","Saudi ArabiA, Egypt","5737","recurrent neural network, long short-term memory","Satirical dataset, Covid19Fakes dataset","0.3sdfgsd","8196","2459","2010"
+"A Fake News Detection System based on Combination of Word Embedded Techniques and Hybrid Deep Learning Model - Contribution 1","present a new deep
+learning method to detect fake news based on a combination of
+different word embedding techniques and a hybrid
+Convolutional Neural Network (CNN) and Bidirectional Long
+Short-Term Memory (BILSTM) model","M0rocco","57229","bidirectional long short-term memory","WELFake Dataset","GloVe, Word2vec","s","14308","2020"
+"Fake News Detection Related to the COVID-19 in Slovak Language Using Deep Learning Methods - Contribution 1","focuses on
+using the deep learning models for the automatic detection of fake news written in the
+Slovak language","slovakia","9615","bidirectional long short-term memory, long short-term memory","news articles related to the COVID-19 pandemic","Word2vec","13736","4121","12.3<integer>"
+"Fake News Detection Using Machine Learning and Deep Learning Algorithms - Contribution 1","present the classification fake news on social media with
+textual content (text classification) using different machine learning and deep learning classifiers","Turkey & Iraq","","convolutional neural network, long short-term memory, recurrent neural network","Fake News dataset","","","TRUE<boolean>","test<boolean>"
+"Hybrid weakly supervised learning with deep learning technique for detection of fake news from cyber propaganda - Contribution 1","propose a hybrid approach to detect fake news, novel weakly supervised learning is applied to provide labels
+to the unlabeled data, and detection of fake news is performed using Bi- GRU and Bi-LSTM deep learning
+techniques","Saudi Arabia","960"," bidirectional gated recurrent unit, bidirectional long short-term memory, long short-term memory, convolutional neural network","authors' developed dataset","GloVe, Word2vec","1200A <text>","240",""
+"Fake news detection in Slovak language using deep learning techniques - Contribution 1","focuses on the detection of fake
+news from the news articles written in the Slovak language","Slovakia","11410.000x","long short-term memory, convolutional neural network","dataset of articles from Slovak websites
+","GloVe","15214","3804",""
