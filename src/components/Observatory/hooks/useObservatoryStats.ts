@@ -8,7 +8,7 @@ type ObservatoryStats = {
     papers: number;
 };
 
-export const useObservatoryStats = ({ id }: { id: string }) => {
+const useObservatoryStats = ({ id }: { id: string }) => {
     const { data: observatoryStats, isLoading } = useSWR([id, statisticsUrl, 'getStatistics'], ([params]) =>
         Promise.all([
             getStatistics({ observatoryId: params, group: 'content-types', name: 'paper-count' }),

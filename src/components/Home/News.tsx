@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
 import Showdown from 'showdown';
 import styled from 'styled-components';
+import { EffectFade, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { CarouselIndicatorsStyled } from '@/components/styled';
 import { getNewsCards } from '@/services/cms';
 import { NewsCard } from '@/services/cms/types';
 
@@ -23,8 +24,6 @@ const converter = new Showdown.Converter();
 converter.setFlavor('github');
 
 export default function News() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [animating, setAnimating] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<NewsCard[]>([]);
 
@@ -36,26 +35,6 @@ export default function News() {
         };
         loadNews();
     }, []);
-
-    const next = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const previous = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const goToIndex = (newIndex: number) => {
-        setActiveIndex(newIndex);
-    };
 
     return !isLoading && dayjs(items?.[0]?.attributes?.publishedAt) > dayjs().subtract(2, 'month') ? (
         <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
@@ -70,9 +49,20 @@ export default function News() {
             <CarouselContainer>
                 {items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
                 {items?.length > 0 && (
-                    <Carousel activeIndex={activeIndex} next={next} previous={previous}>
-                        {items.map((item, index) => (
-                            <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={index}>
+                    <Swiper
+                        spaceBetween={30}
+                        speed={1000}
+                        centeredSlides
+                        effect="fade"
+                        pagination={{
+                            clickable: true,
+                        }}
+                        navigation
+                        modules={[EffectFade, Pagination, Navigation]}
+                        className="orkgSwiper"
+                    >
+                        {items.map((item) => (
+                            <SwiperSlide key={`news-${item.id}`} className="px-3 mb-3">
                                 <Card style={{ border: 0, minHeight: 150 }}>
                                     <CardBody className="pt-0 mb-0 d-flex justify-content-center flex-column">
                                         <CardTitle tag="h5" className="pt-0 d-flex">
@@ -85,10 +75,9 @@ export default function News() {
                                         />
                                     </CardBody>
                                 </Card>
-                            </CarouselItem>
+                            </SwiperSlide>
                         ))}
-                        <CarouselIndicatorsStyled items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                    </Carousel>
+                    </Swiper>
                 )}
             </CarouselContainer>
         </div>

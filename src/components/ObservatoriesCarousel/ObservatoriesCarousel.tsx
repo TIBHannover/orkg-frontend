@@ -1,72 +1,35 @@
-import { FC, useState } from 'react';
-import { Carousel } from 'reactstrap';
-import styled from 'styled-components';
+import { FC } from 'react';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ObservatoryItem from '@/components/ObservatoriesCarousel/ObservatoryItem';
-import { CarouselIndicatorsStyled } from '@/components/styled';
 import { Observatory } from '@/services/backend/types';
 
-const CarouselContainer = styled.div`
-    width: 100%;
-    & .carousel-item.active {
-        display: flex;
-        flex-wrap: wrap;
-        min-height: 100%;
-    }
-
-    & li {
-        width: 10px !important;
-        height: 10px !important;
-        border-radius: 100% !important;
-        background-color: ${(props) => props.theme.primary} !important;
-    }
-`;
 type ObservatoriesCarouselProps = {
     isLoading: boolean;
     observatories: Observatory[];
 };
 
 const ObservatoriesCarousel: FC<ObservatoriesCarouselProps> = ({ isLoading, observatories }) => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [animating, setAnimating] = useState(false);
-
-    const next = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === observatories.length - 1 ? 0 : activeIndex + 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const previous = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === 0 ? observatories.length - 1 : activeIndex - 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const goToIndex = (newIndex: number) => {
-        setActiveIndex(newIndex);
-    };
-
     return (
-        <CarouselContainer className="flex-grow-1 d-flex">
+        <div>
             {!isLoading &&
                 (observatories?.length ? (
-                    <Carousel className="flex-grow-1 d-flex" activeIndex={activeIndex} next={next} previous={previous}>
-                        {observatories.map((observatory, index) => (
-                            <ObservatoryItem
-                                key={observatory.id}
-                                observatory={observatory}
-                                onExiting={() => setAnimating(true)}
-                                onExited={() => setAnimating(false)}
-                                active={activeIndex === index}
-                            />
+                    <Swiper
+                        pagination={{
+                            dynamicBullets: true,
+                        }}
+                        navigation
+                        modules={[Pagination, Navigation]}
+                        className="orkgSwiper"
+                    >
+                        {observatories.map((observatory) => (
+                            <SwiperSlide key={`observatory-${observatory.id}`} className="px-4">
+                                <ObservatoryItem observatory={observatory} />
+                            </SwiperSlide>
                         ))}
-                        <CarouselIndicatorsStyled items={observatories.slice(0, 15)} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                    </Carousel>
+                    </Swiper>
                 ) : (
                     <div className="flex-grow-1 mt-4 text-center">
                         No observatories yet
@@ -86,7 +49,7 @@ const ObservatoriesCarousel: FC<ObservatoriesCarouselProps> = ({ isLoading, obse
                     </ContentLoader>
                 </div>
             )}
-        </CarouselContainer>
+        </div>
     );
 };
 

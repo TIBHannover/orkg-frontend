@@ -15,3 +15,9 @@
     --color-smart: #17a2b8;
     --color-smart-darker: #148da0;
 }
+
+.orkgSwiper {
+    --swiper-theme-color: #e86161;
+    --swiper-pagination-color: #e86161;
+    --swiper-navigation-size: 18px;
+}

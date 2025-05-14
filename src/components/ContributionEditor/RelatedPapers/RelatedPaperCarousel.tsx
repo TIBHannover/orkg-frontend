@@ -1,14 +1,13 @@
-import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isArray } from 'lodash';
 import React, { useState } from 'react';
 import { Button, Card, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
 
 import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
 import RelatedPaperModal from '@/components/ContributionEditor/RelatedPapers/RelatedPaperModal';
 import AddPaperModal from '@/components/PaperForm/AddPaperModal';
-import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
 import { getSimilarPapers, GetSimilarPapersParams, similarPaperURL } from '@/services/orkgSimpaper';
 import { SimilarPaper } from '@/services/orkgSimpaper/types';
 
@@ -23,40 +22,6 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
     const [isOpenRelatedPaperModal, setIsOpenRelatedPaperModal] = useState(false);
     const [currentSimilarPaper, setCurrentSimilarPaper] = useState<SimilarPaper>();
-    const settings = {
-        dots: false,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 4,
-        centerMode: false,
-        slidesToScroll: 4,
-        nextArrow: <FontAwesomeIcon icon={faArrowCircleRight} />,
-        prevArrow: <FontAwesomeIcon icon={faArrowCircleLeft} />,
-        rows: 1,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                },
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                },
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
-            },
-        ],
-    };
 
     const handleCreatePaper = (ids: string[] | { contributionId: string }) => {
         handleAddContributions(isArray(ids) ? ids : [ids.contributionId]);
@@ -102,9 +67,17 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
             </div>
 
             <div>
-                <StyledSlider {...settings}>
+                <Swiper
+                    slidesPerView={3}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    navigation
+                    modules={[Pagination, Navigation]}
+                    className="orkgSwiper"
+                >
                     {similarPaperList.map((paper) => (
-                        <div className="w-100 mx-1" key={paper?.title}>
+                        <SwiperSlide className="pb-4" key={paper?.title} style={{ width: '33%' }}>
                             <Card>
                                 <CardBody
                                     className="bg-smart"
@@ -171,9 +144,9 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                                     </CardText>
                                 </CardBody>
                             </Card>
-                        </div>
+                        </SwiperSlide>
                     ))}
-                </StyledSlider>
+                </Swiper>
             </div>
             {isOpenAddContribution && (
                 <AddContribution
