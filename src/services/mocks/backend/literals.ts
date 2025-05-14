@@ -19,7 +19,11 @@ const literalPut = async ({ request, params }: { request: Request; params: { id?
             datatype,
         },
     });
-    return HttpResponse.json(updatedLiteral);
+    return new HttpResponse(null, {
+        headers: {
+            Location: `${literalsUrl}${updatedLiteral?.id}`,
+        },
+    });
 };
 
 const literalPost = async ({ request }: { request: Request }) => {
@@ -28,9 +32,38 @@ const literalPost = async ({ request }: { request: Request }) => {
         label,
         datatype,
     });
-    return HttpResponse.json(createdLiteral);
+    return new HttpResponse(null, {
+        headers: {
+            Location: `${literalsUrl}${createdLiteral?.id}`,
+        },
+    });
 };
 
-const literals = [http.put(`${literalsUrl}:id`, literalPut), http.post(literalsUrl, literalPost)];
+const literals = [
+    http.get(`${literalsUrl}:id`, ({ params }) => {
+        const { id } = params as { id: string };
+        const literalItem = db.literals.findFirst({
+            where: {
+                id: {
+                    equals: id,
+                },
+            },
+        });
+        if (!literalItem) {
+            return HttpResponse.json({
+                id: `L${id}`,
+                label: 'Literal label',
+                datatype: MISC.DEFAULT_LITERAL_DATATYPE,
+                created_at: '2020-06-03T20:21:11.980177+02:00',
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'class',
+                description: null,
+            });
+        }
+        return HttpResponse.json(literalItem);
+    }),
+    http.put(`${literalsUrl}:id`, literalPut),
+    http.post(literalsUrl, literalPost),
+];
 
 export default literals;

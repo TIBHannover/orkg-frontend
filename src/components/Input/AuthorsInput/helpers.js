@@ -2,9 +2,10 @@ import { isEqual } from 'lodash';
 
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { createList, updateList } from '@/services/backend/lists';
-import { createLiteral } from '@/services/backend/literals';
+import { createLiteral, getLiteral } from '@/services/backend/literals';
 import { createObject } from '@/services/backend/misc';
-import { createResourceStatement, getStatementsByPredicateAndLiteral } from '@/services/backend/statements';
+import { getResource } from '@/services/backend/resources';
+import { createResourceStatement, getStatements } from '@/services/backend/statements';
 
 /**
  * Save the authors of a resource
@@ -23,10 +24,10 @@ const prepareNewAuthors = async (newAuthors) => {
     authors = await Promise.all(
         authors.map(async (author) => {
             if (author.orcid) {
-                const s = await getStatementsByPredicateAndLiteral({
+                const s = await getStatements({
                     predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
+                    objectLabel: author.orcid,
+                    subjectClass: [CLASSES.AUTHOR],
                     size: 1,
                 });
                 return s.length > 0 ? { ...s[0].subject, orcid: author.orcid } : author;
@@ -38,7 +39,7 @@ const prepareNewAuthors = async (newAuthors) => {
     authors = await Promise.all(
         authors.map(async (author) => {
             if (author.orcid && author._class !== ENTITIES.RESOURCE) {
-                const newAuthor = await createObject({
+                const newAuthorId = await createObject({
                     predicates: [],
                     resource: {
                         name: author.label,
@@ -52,6 +53,7 @@ const prepareNewAuthors = async (newAuthors) => {
                         },
                     },
                 });
+                const newAuthor = await getResource(newAuthorId);
                 return {
                     orcid: author.orcid,
                     ...newAuthor,
@@ -62,9 +64,9 @@ const prepareNewAuthors = async (newAuthors) => {
     );
     // Create the new literals for authors
     authors = await Promise.all(
-        authors.map((author) => {
+        authors.map(async (author) => {
             if (!author.orcid && author._class !== ENTITIES.RESOURCE) {
-                return createLiteral(author.label);
+                return getLiteral(await createLiteral(author.label));
             }
             return Promise.resolve(author);
         }),
@@ -85,10 +87,10 @@ export const updateAuthorsList = async ({ prevAuthors, newAuthors, listId }) => 
 
 export const createAuthorsList = async ({ resourceId, authors }) => {
     const preparedAuthors = await prepareNewAuthors(authors);
-    const list = await createList({ label: 'authors', elements: preparedAuthors.map((author) => author.id) });
-    await createResourceStatement(resourceId, PREDICATES.HAS_AUTHORS, list.id);
+    const listId = await createList({ label: 'authors', elements: preparedAuthors.map((author) => author.id) });
+    await createResourceStatement(resourceId, PREDICATES.HAS_AUTHORS, listId);
     return {
         authors: preparedAuthors,
-        list,
+        listId,
     };
 };

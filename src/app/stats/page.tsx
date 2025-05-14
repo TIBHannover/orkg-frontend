@@ -8,20 +8,68 @@ import useSWR from 'swr';
 
 import ColoredStatsBox from '@/components/Stats/ColoredStatsBox';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import { CLASSES } from '@/constants/graphSettings';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
-import { getStats, statsUrl } from '@/services/backend/stats';
+import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
+
+const CONTENT_TYPES_NAMES = [
+    'benchmark-count',
+    'comparison-count',
+    'contribution-count',
+    'paper-count',
+    'problem-count',
+    'published-comparison-version-count',
+    'published-literature-list-version-count',
+    'research-field-count',
+    'smart-review-count',
+    'template-count',
+    'visualization-count',
+    'rosetta-stone-statement-count',
+    'rosetta-stone-statement-version-count',
+    'rosetta-stone-template-count',
+];
+
+const COMMUNITY_NAMES = ['contributors-count', 'observatory-count', 'organization-count'];
+
+const THINGS_NAMES = ['resource-count', 'predicate-count', 'statement-count', 'literal-count', 'class-count'];
 
 const Stats = () => {
-    const { data: stats, isLoading } = useSWR(
-        [[CLASSES.BENCHMARK, CLASSES.COMPARISON_PUBLISHED, CLASSES.LITERATURE_LIST_PUBLISHED], statsUrl, 'getStats'],
-        ([params]) => getStats(params),
+    const { data: contentTypesStats, isLoading: isLoadingContentTypes } = useSWR([CONTENT_TYPES_NAMES, statisticsUrl, 'getStatistics'], ([params]) =>
+        Promise.all(
+            params.map((name) =>
+                getStatistics({
+                    group: 'content-types',
+                    name,
+                    ...(['comparison-count', 'smart-review-count'].includes(name) && { published: true }),
+                }),
+            ),
+        ),
+    );
+
+    const { data: communityStats, isLoading: isLoadingCommunity } = useSWR([COMMUNITY_NAMES, statisticsUrl, 'getStatistics'], ([params]) =>
+        Promise.all(params.map((name) => getStatistics({ group: 'community', name }))),
+    );
+
+    const { data: thingsStats, isLoading: isLoadingThings } = useSWR([THINGS_NAMES, statisticsUrl, 'getStatistics'], ([params]) =>
+        Promise.all(params.map((name) => getStatistics({ group: 'things', name }))),
     );
 
     useEffect(() => {
         document.title = 'Stats - ORKG';
     }, []);
+
+    const getStatisticsByName = (group: string, name: string) => {
+        if (group === 'content-types') {
+            return contentTypesStats?.find((stat) => stat.name === name)?.value;
+        }
+        if (group === 'community') {
+            return communityStats?.find((stat) => stat.name === name)?.value;
+        }
+        if (group === 'things') {
+            return thingsStats?.find((stat) => stat.name === name)?.value;
+        }
+        return undefined;
+    };
 
     return (
         <div>
@@ -29,49 +77,107 @@ const Stats = () => {
 
             <Container>
                 <Row>
-                    <ColoredStatsBox link={reverse(ROUTES.PAPERS)} number={stats?.papers} label="Papers" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.COMPARISONS)} number={stats?.comparisons} label="Comparisons" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.PAPERS)}
+                        number={getStatisticsByName('content-types', 'paper-count')}
+                        label="Papers"
+                        isLoading={isLoadingContentTypes}
+                    />
                     <ColoredStatsBox
                         link={reverse(ROUTES.COMPARISONS)}
-                        number={stats?.extras?.[CLASSES.COMPARISON_PUBLISHED]}
+                        number={getStatisticsByName('content-types', 'comparison-count')}
+                        label="Comparisons"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.COMPARISONS)}
+                        number={getStatisticsByName('content-types', 'published-comparison-version-count')}
                         label="Comparison versions"
-                        isLoading={isLoading}
+                        isLoading={isLoadingContentTypes}
                     />
                     <ColoredStatsBox
                         link={reverse(ROUTES.VISUALIZATIONS)}
-                        number={stats?.visualizations}
+                        number={getStatisticsByName('content-types', 'visualization-count')}
                         label="Visualizations"
-                        isLoading={isLoading}
+                        isLoading={isLoadingContentTypes}
                     />
                 </Row>
                 <Row>
-                    <ColoredStatsBox number={stats?.contributions} label="Contributions" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.RESEARCH_FIELDS)} number={stats?.fields} label="Research fields" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.TEMPLATES)} number={stats?.templates} label="Templates" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.REVIEWS)} number={stats?.smart_reviews} label="Reviews" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.RESEARCH_FIELDS)}
+                        number={getStatisticsByName('content-types', 'research-field-count')}
+                        label="Research fields"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.TEMPLATES)}
+                        number={getStatisticsByName('content-types', 'template-count')}
+                        label="Templates"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.REVIEWS)}
+                        number={getStatisticsByName('content-types', 'smart-review-count')}
+                        label="Reviews"
+                        isLoading={isLoadingContentTypes}
+                    />
                     <ColoredStatsBox
                         link={reverse(ROUTES.LISTS)}
-                        number={stats?.extras?.[CLASSES.LITERATURE_LIST_PUBLISHED]}
+                        number={getStatisticsByName('content-types', 'published-literature-list-version-count')}
                         label="Lists"
-                        isLoading={isLoading}
+                        isLoading={isLoadingContentTypes}
                     />
                 </Row>
                 <Row>
-                    <ColoredStatsBox number={stats?.users} label="Users" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        number={getStatisticsByName('content-types', 'contribution-count')}
+                        label="Contributions"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.RS_STATEMENTS)}
+                        number={getStatisticsByName('content-types', 'rosetta-stone-statement-count')}
+                        label="Rosetta statements"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.RS_STATEMENTS)}
+                        number={getStatisticsByName('content-types', 'rosetta-stone-statement-version-count')}
+                        label="Rosetta statement versions"
+                        isLoading={isLoadingContentTypes}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.RS_TEMPLATES)}
+                        number={getStatisticsByName('content-types', 'rosetta-stone-template-count')}
+                        label="Statement types"
+                        isLoading={isLoadingContentTypes}
+                    />
+                </Row>
+                <Row>
+                    <ColoredStatsBox number={getStatisticsByName('community', 'contributors-count')} label="Users" isLoading={isLoadingCommunity} />
                     <ColoredStatsBox
                         link={reverse(ROUTES.ORGANIZATIONS, { id: capitalize(ORGANIZATIONS_MISC.GENERAL) })}
-                        number={stats?.organizations}
+                        number={getStatisticsByName('community', 'organization-count')}
                         label="Organizations"
-                        isLoading={isLoading}
+                        isLoading={isLoadingCommunity}
                     />
-                    <ColoredStatsBox link={reverse(ROUTES.OBSERVATORIES)} number={stats?.observatories} label="Observatories" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.OBSERVATORIES)}
+                        number={getStatisticsByName('community', 'observatory-count')}
+                        label="Observatories"
+                        isLoading={isLoadingCommunity}
+                    />
                     <ColoredStatsBox
                         link={reverse(ROUTES.BENCHMARKS)}
-                        number={stats?.extras?.[CLASSES.BENCHMARK]}
+                        number={getStatisticsByName('content-types', 'benchmark-count')}
                         label="Benchmarks"
-                        isLoading={isLoading}
+                        isLoading={isLoadingContentTypes}
                     />
-                    <ColoredStatsBox number={stats?.problems} label="Research problems" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        number={getStatisticsByName('content-types', 'problem-count')}
+                        label="Research problems"
+                        isLoading={isLoadingContentTypes}
+                    />
                 </Row>
             </Container>
             <Container>
@@ -80,11 +186,26 @@ const Stats = () => {
 
             <Container>
                 <Row>
-                    <ColoredStatsBox link={reverse(ROUTES.BENCHMARKS)} number={stats?.resources} label="Resources" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.PROPERTIES)} number={stats?.predicates} label="Properties" isLoading={isLoading} />
-                    <ColoredStatsBox number={stats?.statements} label="Statements" isLoading={isLoading} />
-                    <ColoredStatsBox number={stats?.literals} label="Literals" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.CLASSES)} number={stats?.classes} label="Classes" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.BENCHMARKS)}
+                        number={getStatisticsByName('things', 'resource-count')}
+                        label="Resources"
+                        isLoading={isLoadingThings}
+                    />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.PROPERTIES)}
+                        number={getStatisticsByName('things', 'predicate-count')}
+                        label="Properties"
+                        isLoading={isLoadingThings}
+                    />
+                    <ColoredStatsBox number={getStatisticsByName('things', 'statement-count')} label="Statements" isLoading={isLoadingThings} />
+                    <ColoredStatsBox number={getStatisticsByName('things', 'literal-count')} label="Literals" isLoading={isLoadingThings} />
+                    <ColoredStatsBox
+                        link={reverse(ROUTES.CLASSES)}
+                        number={getStatisticsByName('things', 'class-count')}
+                        label="Classes"
+                        isLoading={isLoadingThings}
+                    />
                 </Row>
             </Container>
         </div>

@@ -200,7 +200,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                             // eslint-disable-next-line no-await-in-loop
                             fetchedResource = await getResources({ include: [CLASSES.PROBLEM], q: cleanNewResource(value), exact: true });
                         }
-                        if (fetchedResource?.page.total_elements) {
+                        if (fetchedResource?.page?.total_elements) {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
                             _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
                             valueObject = {
@@ -298,9 +298,8 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                     if (!Object.prototype.hasOwnProperty.call(paper.contents[0].statements, property)) continue;
                     // property does not yet exist, create a new one
                     if (!(property in _idToLabel) && !(property in newProperties)) {
-                        // eslint-disable-next-line no-await-in-loop
-                        const newProperty = await createPredicate(property);
-                        newProperties[property] = newProperty.id;
+                        const newPropertyId = await createPredicate(property);
+                        newProperties[property] = newPropertyId;
                     }
                     // assign the newly created property id to the contribution
                     if (property in newProperties) {
@@ -318,9 +317,8 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                         if ('label' in value) {
                             const { label } = value;
                             if (!(label in newResources)) {
-                                // eslint-disable-next-line no-await-in-loop
-                                const newResource = await createResource(label);
-                                newResources[label] = newResource.id;
+                                const newResourceId = await createResource({ label, classes: [] });
+                                newResources[label] = newResourceId;
                             }
                             if (label in newResources) {
                                 const newId = newResources[label];
@@ -358,7 +356,6 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                 });
 
                 // get paper statements so it is possible to list the contribution IDs and make a comparison
-                // eslint-disable-next-line no-await-in-loop
                 const paperStatements = await getStatements({ subjectId: _paper });
 
                 for (const statement of paperStatements) {

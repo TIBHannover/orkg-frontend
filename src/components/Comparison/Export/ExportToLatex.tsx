@@ -18,7 +18,7 @@ import useComparison from '@/components/Comparison/hooks/useComparison';
 import Tooltip from '@/components/Utils/Tooltip';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getStatementsBySubject } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 import { getMatrixOfComparison } from '@/slices/comparisonSlice';
 import { addAuthorsToStatements, getPublicUrl } from '@/utils';
@@ -225,7 +225,7 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
         }
         const contributionsCalls = contributions.map((contribution: { paper_id: string; title: string; bibtex: string }) =>
             // Fetch the data of each contribution
-            getStatementsBySubject({ id: contribution.paper_id })
+            getStatements({ subjectId: contribution.paper_id })
                 .then((_statements) => addAuthorsToStatements(_statements))
                 .then((paperStatements) => {
                     const _contribution = clone(contribution);

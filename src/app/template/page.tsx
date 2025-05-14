@@ -61,8 +61,8 @@ const TemplateNew = () => {
         }
         let targetClassId = targetClass?.id;
         if (!targetClassId) {
-            const newClass = await createClass(`${label} [C]`);
-            targetClassId = newClass.id;
+            const newClassId = await createClass(`${label} [C]`);
+            targetClassId = newClassId;
         }
         const data = {
             label,

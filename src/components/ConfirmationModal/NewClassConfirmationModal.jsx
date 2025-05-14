@@ -8,7 +8,7 @@ import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
-import { createClass, setParentClassByID } from '@/services/backend/classes';
+import { createClass, getClassById, setParentClassByID } from '@/services/backend/classes';
 import { createLiteral } from '@/services/backend/literals';
 import { createLiteralStatement } from '@/services/backend/statements';
 import { getErrorMessage } from '@/utils';
@@ -28,14 +28,15 @@ function CreateClassModal({ label: newLabel, uri: newUri, onClose, showParentFie
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
-                    const newClass = await createClass(label, uri || null);
+                    const newClassId = await createClass(label, uri || null);
                     if (description && description.trim() !== '') {
-                        const descriptionLiteral = await createLiteral(description);
-                        createLiteralStatement(newClass.id, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+                        const descriptionLiteralId = await createLiteral(description);
+                        createLiteralStatement(newClassId, PREDICATES.DESCRIPTION, descriptionLiteralId);
                     }
                     if (parentClass) {
-                        await setParentClassByID(newClass.id, parentClass.id);
+                        await setParentClassByID(newClassId, parentClass.id);
                     }
+                    const newClass = await getClassById(newClassId);
                     onClose(newClass);
                     setErrors(null);
                 } catch (error) {

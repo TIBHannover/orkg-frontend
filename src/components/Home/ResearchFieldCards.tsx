@@ -2,8 +2,7 @@ import { faStream } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import pluralize from 'pluralize';
-import { AnchorHTMLAttributes, useState } from 'react';
+import { useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
@@ -12,66 +11,11 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ResearchFieldCard, { Card } from '@/components/Home/ResearchFieldCard';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { ResearchFieldStat } from '@/services/backend/stats';
 import { Node } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utils';
-
-/* Bootstrap card column is not working correctly working with vertical alignment,
-thus used custom styling here */
-
-type CardProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
-    disabled?: boolean;
-};
-
-const Card = styled(Link)<CardProps>`
-    cursor: pointer;
-    background: #e86161 !important;
-    color: #fff !important;
-    border: 0 !important;
-    border-radius: 12px !important;
-    min-height: 85px;
-    flex: 0 0 calc(20% - 20px) !important;
-    margin: 10px;
-    transition: opacity 0.2s;
-    justify-content: center;
-    display: flex;
-    flex: 1 1 auto;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 140px;
-    overflow-wrap: anywhere;
-
-    &:hover {
-        opacity: 0.8;
-    }
-    &[disabled] {
-        opacity: 0.5;
-        cursor: default;
-        pointer-events: none;
-    }
-    &:active {
-        top: 4px;
-    }
-
-    @media (max-width: 400px) {
-        flex: 0 0 80% !important;
-    }
-`;
-
-const CardTitle = styled.h5`
-    color: #fff;
-    font-size: 16px;
-    padding: 0 5px;
-`;
-
-const PaperAmount = styled.div`
-    opacity: 0.5;
-    font-size: 80%;
-    text-align: center;
-`;
 
 const ArrowCards = styled.div`
     background: transparent;
@@ -113,16 +57,12 @@ const ResearchFieldCards = ({
     selectedFieldId,
     selectedFieldLabel,
     researchFields,
-    researchFieldStats,
     isLoading,
-    isLoadingStats,
 }: {
     selectedFieldId: string;
     selectedFieldLabel: string;
     researchFields: Node[];
-    researchFieldStats: ResearchFieldStat[];
     isLoading: boolean;
-    isLoadingStats: boolean;
 }) => {
     const [showMoreFields, setShowMoreFields] = useState(false);
     const router = useRouter();
@@ -193,27 +133,9 @@ const ResearchFieldCards = ({
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFieldsSliced?.map((field, index) => (
+                            {researchFieldsSliced?.map((field) => (
                                 <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                    <Card
-                                        disabled={researchFieldStats?.[index]?.total === 0}
-                                        href={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
-                                            researchFieldId: field.id,
-                                            slug: field.label,
-                                        })}
-                                    >
-                                        <CardTitle className="card-title m-0 text-center"> {field.label}</CardTitle>
-                                        <PaperAmount>
-                                            {!isLoadingStats ? (
-                                                <>
-                                                    {pluralize('paper', researchFieldStats?.[index]?.papers ?? 0, true)} -{' '}
-                                                    {pluralize('comparison', researchFieldStats?.[index]?.comparisons ?? 0, true)}
-                                                </>
-                                            ) : (
-                                                'Loading...'
-                                            )}
-                                        </PaperAmount>
-                                    </Card>
+                                    <ResearchFieldCard field={field} />
                                 </AnimationContainer>
                             ))}
                             {researchFields.length > MAX_FIELDS && (

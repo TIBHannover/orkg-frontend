@@ -12,7 +12,7 @@ import TableHeaderColumnFirst from '@/components/ContributionEditor/TableHeaderC
 import TableHeaderRow from '@/components/ContributionEditor/TableHeaderRow';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
 import ROUTES from '@/constants/routes';
-import { getResource, updateResourceClasses } from '@/services/backend/resources';
+import { getResource, updateResource } from '@/services/backend/resources';
 import { getTemplates } from '@/services/backend/templates';
 
 const useContributionEditor = () => {
@@ -64,7 +64,9 @@ const useContributionEditor = () => {
                 });
                 if (isConfirmed) {
                     await Promise.all(
-                        newContributionObjects.map((newCont) => updateResourceClasses(newCont.id, uniq([...newCont.classes, ...classesNeedToApply]))),
+                        newContributionObjects.map((newCont) =>
+                            updateResource(newCont.id, { classes: uniq([...newCont.classes, ...classesNeedToApply]) }),
+                        ),
                     );
                 }
             }

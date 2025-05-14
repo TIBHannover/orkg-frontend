@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import useSWR from 'swr';
 
-import { getObservatoryStatsById } from '@/services/backend/stats';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 type ObservatoryStats = {
     comparisons: number;
@@ -8,30 +9,24 @@ type ObservatoryStats = {
 };
 
 export const useObservatoryStats = ({ id }: { id: string }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [stats, setStats] = useState<ObservatoryStats>({ comparisons: 0, papers: 0 });
+    const { data: observatoryStats, isLoading } = useSWR([id, statisticsUrl, 'getStatistics'], ([params]) =>
+        Promise.all([
+            getStatistics({ observatoryId: params, group: 'content-types', name: 'paper-count' }),
+            getStatistics({
+                observatoryId: params,
+                group: 'content-types',
+                name: 'comparison-count',
+                published: true,
+                visibility: VISIBILITY_FILTERS.ALL_LISTED,
+            }),
+        ]),
+    );
 
-    const loadObservatoryStats = useCallback((oId: string) => {
-        if (oId) {
-            setIsLoading(true);
-            // Get the observatory stats
-            getObservatoryStatsById(oId)
-                .then((result) => {
-                    setStats(result);
-                    setIsLoading(false);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                });
-        }
-    }, []);
-
-    useEffect(() => {
-        if (id !== undefined) {
-            loadObservatoryStats(id);
-        }
-    }, [id, loadObservatoryStats]);
-
+    const stats: ObservatoryStats = { comparisons: 0, papers: 0 };
+    if (observatoryStats) {
+        stats.papers = observatoryStats[0].value;
+        stats.comparisons = observatoryStats[1].value;
+    }
     return { isLoading, stats };
 };
 

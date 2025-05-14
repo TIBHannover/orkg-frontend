@@ -9,7 +9,7 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { createResource, updateResource } from '@/services/backend/resources';
-import { createResourceStatement, deleteStatementById } from '@/services/backend/statements';
+import { createResourceStatement, deleteStatementById, getStatement } from '@/services/backend/statements';
 import {
     setContributionExtractionMethod,
     setIsAddingContribution,
@@ -35,7 +35,7 @@ const useContributions = ({ paperId }) => {
             // update the contributions array
             const newContributions = [...contributions.slice(0, objIndex), updatedObj, ...contributions.slice(objIndex + 1)];
             dispatch(setIsSavingContribution({ id: cId, status: true }));
-            updateResource(cId, label)
+            updateResource(cId, { label })
                 .then(() => {
                     dispatch(setPaperContributions(newContributions));
                     dispatch(setIsSavingContribution({ id: cId, status: false }));
@@ -51,7 +51,7 @@ const useContributions = ({ paperId }) => {
     const handleAutomaticContributionVerification = (cId) => {
         dispatch(setContributionExtractionMethod({ id: cId, extractionMethod: EXTRACTION_METHODS.MANUAL }));
         dispatch(setIsSavingContribution({ id: cId, status: true }));
-        updateResource(cId, undefined, null, EXTRACTION_METHODS.MANUAL)
+        updateResource(cId, { extraction_method: EXTRACTION_METHODS.MANUAL })
             .then(() => {
                 dispatch(setIsSavingContribution({ id: cId, status: false }));
                 toast.success('Contribution extraction method updated successfully.');
@@ -64,9 +64,10 @@ const useContributions = ({ paperId }) => {
 
     const handleCreateContribution = () => {
         dispatch(setIsAddingContribution(true));
-        createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION])
-            .then((newContribution) => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id))
-            .then((statement) => {
+        createResource({ label: `Contribution ${contributions.length + 1}`, classes: [CLASSES.CONTRIBUTION] })
+            .then((newContributionId) => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContributionId))
+            .then(async (statementId) => {
+                const statement = await getStatement(statementId);
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
                 dispatch(setIsAddingContribution(false));
                 router.push(

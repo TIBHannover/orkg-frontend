@@ -48,10 +48,10 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
             answers,
         };
         try {
-            const feedbackResource = await createResource('feedback', [CLASSES.QUALITY_FEEDBACK]);
-            createResourceStatement(comparison.id, PREDICATES.QUALITY_FEEDBACK, feedbackResource.id);
+            const feedbackResourceId = await createResource({ label: 'feedback', classes: [CLASSES.QUALITY_FEEDBACK] });
+            createResourceStatement(comparison.id, PREDICATES.QUALITY_FEEDBACK, feedbackResourceId);
             // @ts-expect-error awaiting migration simcomp
-            createThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackResource.id, data });
+            createThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackResourceId, data });
             setIsSubmitted(true);
         } catch (e) {
             toast.error('Something went wrong');

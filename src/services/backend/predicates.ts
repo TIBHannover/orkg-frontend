@@ -1,7 +1,7 @@
 import qs from 'qs';
 
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { PaginatedResponse, PaginationParams, Predicate } from '@/services/backend/types';
 
 export const predicatesUrl = `${url}predicates/`;
@@ -19,7 +19,7 @@ export const createPredicate = (label: string, id: string | undefined = undefine
                 id,
             },
         })
-        .json();
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const updatePredicate = (id: string, label: string) => predicatesApi.put<Predicate>(encodeURIComponent(id), { json: { label } }).json();
 

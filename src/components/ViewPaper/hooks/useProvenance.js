@@ -5,7 +5,7 @@ import { MISC, PREDICATES } from '@/constants/graphSettings';
 import { getContributorInformationById } from '@/services/backend/contributors';
 import { getObservatoryById } from '@/services/backend/observatories';
 import { getOrganization } from '@/services/backend/organizations';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 
 function useProvenance() {
     const viewPaper = useSelector((state) => state.viewPaper.paper);
@@ -50,7 +50,7 @@ function useProvenance() {
         };
 
         const loadVersions = (resourceId, list) => {
-            getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
+            getStatements({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
                 .then((response) => {
                     if (response.length > 0) {
                         getContributorInformationById(response[0].object.created_by).then((user) => {

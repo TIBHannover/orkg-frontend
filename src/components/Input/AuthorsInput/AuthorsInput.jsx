@@ -13,7 +13,7 @@ import SortableAuthorItem from '@/components/Input/AuthorsInput/SortableAuthorIt
 import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import getPersonFullNameByORCID from '@/services/ORCID/index';
 
 function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
@@ -68,7 +68,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
             } else {
                 let orcids = [];
                 if (_authorInput.id) {
-                    orcids = (await getStatementsBySubjectAndPredicate({ subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })).map(
+                    orcids = (await getStatements({ subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })).map(
                         (statement) => statement.object.label,
                     );
                 }

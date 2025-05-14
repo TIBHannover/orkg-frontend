@@ -9,7 +9,7 @@ import slugifyString from 'slugify';
 import { VISIBILITY } from '@/constants/contentTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getStatementsByObjectAndPredicate, getStatementsBySubject, getStatementsBySubjects } from '@/services/backend/statements';
+import { getStatements, getStatementsBySubjects } from '@/services/backend/statements';
 
 const cookies = new Cookies();
 
@@ -137,10 +137,9 @@ export const getAuthorStatements = async (statements) => {
     if (!listId) {
         return [];
     }
-    return getStatementsBySubject({
-        id: listId,
-        sortBy: 'index',
-        desc: false,
+    return getStatements({
+        subjectId: listId,
+        sortBy: [{ property: 'index', direction: 'asc' }],
     });
 };
 
@@ -234,8 +233,7 @@ export const getPaperData = (resource, paperStatements) => {
  */
 export const getReviewData = async (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const paperId = (await getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject
-        ?.id;
+    const paperId = (await getStatements({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject?.id;
 
     return {
         ...resource,
@@ -253,8 +251,7 @@ export const getReviewData = async (resource, statements) => {
  */
 export const getListData = async (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const listId = (await getStatementsByObjectAndPredicate({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject
-        ?.id;
+    const listId = (await getStatements({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject?.id;
 
     return {
         ...resource,

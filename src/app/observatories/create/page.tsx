@@ -21,7 +21,7 @@ import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
-import { createObservatory } from '@/services/backend/observatories';
+import { createObservatory, getObservatoryById } from '@/services/backend/observatories';
 import { getAllOrganizations, getOrganization, organizationsUrl } from '@/services/backend/organizations';
 import { Organization } from '@/services/backend/types';
 import { getPublicUrl } from '@/utils';
@@ -72,13 +72,14 @@ const CreateObservatory = () => {
                 organization,
             });
 
-            const observatory = await createObservatory({
+            const newObservatoryId = await createObservatory({
                 observatory_name: validatedData.observatoryName,
                 organization_id: validatedData.organization?.id ?? '',
                 description: validatedData.description,
                 research_field: validatedData.researchField?.id ?? '',
                 display_id: validatedData.permalink,
             });
+            const observatory = await getObservatoryById(newObservatoryId);
             setEditorState('edit');
             setObservatoryName('');
             setDescription('');

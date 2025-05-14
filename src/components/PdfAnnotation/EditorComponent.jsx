@@ -125,8 +125,8 @@ class EditorComponent extends BaseEditorComponent {
         const result = window.confirm('Are you sure you want to create a new property?');
 
         if (result) {
-            const newPredicate = await createPredicate(label);
-            return newPredicate.id;
+            const newPredicateId = await createPredicate(label);
+            return newPredicateId;
         }
 
         return false;
@@ -136,8 +136,8 @@ class EditorComponent extends BaseEditorComponent {
         const result = window.confirm('Are you sure you want to create a new resource?');
 
         if (result) {
-            const newResource = await createResource(label, valueClass ? [valueClass] : []);
-            return newResource.id;
+            const newResourceId = await createResource({ label, classes: valueClass ? [valueClass] : [] });
+            return newResourceId;
         }
 
         return false;

@@ -2,7 +2,7 @@ import { find, flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from '@/services/backend/statements';
+import { getStatements, getStatementsBySubjects } from '@/services/backend/statements';
 import { getComparisonData, groupVersionsOfComparisons } from '@/utils';
 
 function useContributionComparison(contributionId) {
@@ -18,13 +18,13 @@ function useContributionComparison(contributionId) {
             setIsLoading(true);
 
             // Get the statements that contains the contribution as an object
-            getStatementsByObjectAndPredicate({
+            getStatements({
                 objectId: contributionId,
                 predicateId: PREDICATES.COMPARE_CONTRIBUTION,
                 page,
                 size: pageSize,
-                sortBy: 'created_at',
-                desc: true,
+                returnContent: true,
+                sortBy: [{ property: 'created_at', direction: 'desc' }],
             }).then((result) => {
                 // Comparisons
                 if (result.filter((contribution) => contribution.subject.classes.includes(CLASSES.COMPARISON)).length > 0) {

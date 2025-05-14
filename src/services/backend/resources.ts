@@ -1,13 +1,14 @@
-import { uniq, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import qs from 'qs';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getContributorInformationById } from '@/services/backend/contributors';
 import {
     CreatedByParam,
+    ExtractionMethod,
     FilterConfig,
     ObservatoryIdParam,
     OrganizationIdParam,
@@ -16,29 +17,45 @@ import {
     Resource,
     SdgParam,
     VerifiedParam,
+    Visibility,
     VisibilityParam,
 } from '@/services/backend/types';
 
 export const resourcesUrl = `${url}resources/`;
 export const resourcesApi = backendApi.extend(() => ({ prefixUrl: resourcesUrl }));
 
-export const updateResource = (id: string, label?: string, classes: string[] | null = null, extractionMethod?: string) =>
+export const updateResource = (
+    id: string,
+    {
+        label,
+        classes,
+        extractionMethod,
+        visibility,
+        organization_id,
+        observatory_id,
+    }: {
+        label?: string;
+        classes?: string[];
+        extractionMethod?: ExtractionMethod;
+        visibility?: Visibility;
+    } & OrganizationIdParam &
+        ObservatoryIdParam,
+) =>
     resourcesApi
         .put<Resource>(id, {
             json: {
-                ...(label ? { label } : null),
-                ...(classes ? { classes } : null),
-                ...(extractionMethod ? { extraction_method: extractionMethod } : null),
+                ...(label && { label }),
+                ...(classes && { classes }),
+                ...(extractionMethod && { extraction_method: extractionMethod }),
+                ...(visibility && { visibility }),
+                ...(organization_id && { organization_id }),
+                ...(observatory_id && { observatory_id }),
             },
         })
         .json();
 
-/* Can be replaced with updateResource */
-export const updateResourceClasses = (id: string, classes: string[] | null = null) =>
-    resourcesApi.put<Resource>(id, { json: { ...(classes ? { classes } : null) } }).json();
-
-export const createResource = (label: string, classes: string[] = [], id: string | undefined = undefined) =>
-    resourcesApi.post<Resource>('', { json: { label, classes, id } }).json();
+export const createResource = ({ label, classes, id }: { label: string; classes: string[]; id?: string }) =>
+    resourcesApi.post<Resource>('', { json: { label, classes, id } }).then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const getResource = (id: string) => resourcesApi.get<Resource>(id).json();
 
@@ -139,33 +156,6 @@ export const getResources = <T extends boolean = false>({
         .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Resource[] : PaginatedResponse<Resource>>;
 };
 
-export const getContributorsByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return resourcesApi
-        .get<PaginatedResponse<string>>(`${encodeURIComponent(id)}/contributors`, {
-            searchParams,
-        })
-        .json()
-        .then(async (contributors) => {
-            const uniqContributors = uniq(contributors.content);
-            const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
-                contributor === MISC.UNKNOWN_ID
-                    ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
-                    : getContributorInformationById(contributor).catch(() => ({ id: contributor, display_name: 'User not found' })),
-            );
-            const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
-            return {
-                ...contributors,
-                content: contributors.content.map((u) => uniqContributorsInfos.find((i) => u === i.id)),
-            };
-        });
-};
-
 export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
     const searchParams = qs.stringify(
         { page, size },
@@ -200,14 +190,3 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
             };
         });
 };
-
-export const addResourceToObservatory = ({ observatory_id, organization_id, id }: { observatory_id: string; organization_id: string; id: string }) =>
-    resourcesApi.put<void>(`${id}/observatory`, { json: { observatory_id, organization_id } }).json();
-
-export const markAsFeatured = (id: string) => resourcesApi.put<void>(`${id}/metadata/featured`).json();
-
-export const removeFeaturedFlag = (id: string) => resourcesApi.delete<void>(`${id}/metadata/featured`).json();
-
-export const markAsUnlisted = (id: string) => resourcesApi.put<void>(`${id}/metadata/unlisted`).json();
-
-export const removeUnlistedFlag = (id: string) => resourcesApi.delete<void>(`${id}/metadata/unlisted`).json();

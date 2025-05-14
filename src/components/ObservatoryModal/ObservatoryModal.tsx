@@ -4,7 +4,7 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import AutoCompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory';
 import { MISC } from '@/constants/graphSettings';
-import { addResourceToObservatory } from '@/services/backend/resources';
+import { updateResource } from '@/services/backend/resources';
 import { Observatory, Organization } from '@/services/backend/types';
 
 type ObservatoryModalProps = {
@@ -44,17 +44,15 @@ const ObservatoryModal: FC<ObservatoryModalProps> = ({
     };
 
     const handleSubmit = async () => {
-        await addResourceToObservatory({
+        await updateResource(resourceId, {
             observatory_id: observatory?.id ?? MISC.UNKNOWN_ID,
             organization_id: organization?.id ?? MISC.UNKNOWN_ID,
-            id: resourceId,
-        }).then(() => {
-            toast.success('Observatory assigned to resource successfully');
-            if (callBack) {
-                callBack?.(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
-            }
-            toggle();
         });
+        toast.success('Observatory assigned to resource successfully');
+        if (callBack) {
+            callBack?.(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
+        }
+        toggle();
     };
 
     return (

@@ -162,9 +162,12 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
         if (rangesArray.length > 0) {
             await Promise.all(
                 rangesArray.map(async (range) => {
-                    const object = await createResource(range.text, range.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []);
+                    const object = await createResource({
+                        label: range.text,
+                        classes: range.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : [],
+                    });
                     // Add the statements to the selected contribution
-                    return createResourceStatement(resourceId, range.predicate.id, object.id);
+                    return createResourceStatement(resourceId, range.predicate.id, object);
                 }),
             );
         }

@@ -33,7 +33,7 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
 
         try {
             if (entityType === ENTITIES.RESOURCE) {
-                await updateResource(id, label);
+                await updateResource(id, { label });
             } else if (entityType === ENTITIES.PREDICATE) {
                 await updatePredicate(id, label);
             } else if (entityType === ENTITIES.CLASS) {

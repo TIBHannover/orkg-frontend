@@ -64,10 +64,10 @@ const AddResource = () => {
         if (label.trim() !== '') {
             if (!isDOI.test(label)) {
                 try {
-                    const newResource = await createResource(label.trim(), classes ? classes.map((c) => c.id) : []);
+                    const newResourceId = await createResource({ label: label.trim(), classes: classes ? classes.map((c) => c.id) : [] });
                     toast.success('Resource created successfully');
                     setIsLoading(false);
-                    router.push(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect&isEditMode=true`);
+                    router.push(`${reverse(ROUTES.RESOURCE, { id: newResourceId })}?noRedirect&isEditMode=true`);
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -79,12 +79,15 @@ const AddResource = () => {
                     try {
                         const responseJson = await Cite.async(doi);
                         setLabel(responseJson.data[0].title);
-                        const newResource = await createResource(responseJson.data[0].title, classes ? classes.map((c) => c.id) : []);
-                        const responseJsonDoi = await createLiteral(doi);
-                        await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
+                        const newResourceId = await createResource({
+                            label: responseJson.data[0].title,
+                            classes: classes ? classes.map((c) => c.id) : [],
+                        });
+                        const literalDoiId = await createLiteral(doi);
+                        await createLiteralStatement(newResourceId, PREDICATES.HAS_DOI, literalDoiId);
                         toast.success('Resource created successfully');
                         setIsLoading(false);
-                        router.push(`${reverse(ROUTES.RESOURCE, { id: newResource.id })}?noRedirect&isEditMode=true`);
+                        router.push(`${reverse(ROUTES.RESOURCE, { id: newResourceId })}?noRedirect&isEditMode=true`);
                     } catch (error) {
                         console.error(error);
                         toast.error(`Error finding DOI : ${error.message}`);

@@ -18,7 +18,7 @@ import ContributorsBox from '@/components/TopContributors/ContributorsBox';
 import { RESOURCES } from '@/constants/graphSettings';
 
 export default function Home() {
-    const { selectedFieldId, selectedFieldLabel, researchFields, researchFieldStats, isLoadingFields, isLoadingStats } = useResearchFieldSelector();
+    const { selectedFieldId, selectedFieldLabel, researchFields, isLoadingFields } = useResearchFieldSelector();
 
     return (
         <Container style={{ marginTop: env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' ? 20 : -70 }}>
@@ -39,9 +39,7 @@ export default function Home() {
                             selectedFieldLabel={selectedFieldLabel}
                             selectedFieldId={selectedFieldId.toString()}
                             researchFields={researchFields}
-                            researchFieldStats={researchFieldStats}
                             isLoading={isLoadingFields}
-                            isLoadingStats={isLoadingStats}
                         />
                     </div>
                 </Col>

@@ -32,7 +32,7 @@ const ListNew = () => {
         }
 
         setIsLoading(true);
-        const { id } = await createResource(title, [CLASSES.LITERATURE_LIST]);
+        const id = await createResource({ label: title, classes: [CLASSES.LITERATURE_LIST] });
         router.push(reverse(ROUTES.LIST, { id }));
         setIsLoading(false);
     };

@@ -8,7 +8,7 @@ import { VisibilityOptions } from '@/services/backend/types';
 export const statisticsUrl = `${url}statistics/`;
 export const statisticsApi = backendApi.extend(() => ({ prefixUrl: statisticsUrl }));
 
-type StatisticsResponse = {
+export type StatisticsResponse = {
     name: string;
     description: string;
     group: string;

@@ -1,6 +1,5 @@
 import { differenceBy } from 'lodash';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -9,37 +8,46 @@ import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import { updateObservatory } from '@/services/backend/observatories';
 import { getAllOrganizations } from '@/services/backend/organizations';
+import { Organization } from '@/services/backend/types';
 
-function AddOrganization(props) {
-    const [organizations, setOrganizations] = useState([]);
-    const [selectedOrganization, setSelectedOrganization] = useState(null);
+type AddOrganizationProps = {
+    showDialog: boolean;
+    toggle: () => void;
+    id: string;
+    organizations: Organization[];
+    toggleOrganizationItem: (organization: Organization) => void;
+};
+
+const AddOrganization: FC<AddOrganizationProps> = ({ showDialog, toggle, id, organizations, toggleOrganizationItem }) => {
+    const [localOrganizations, setLocalOrganizations] = useState<Organization[]>([]);
+    const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loadOrganizations = async () => {
             await getAllOrganizations()
-                .then((organizations) => {
-                    setOrganizations(differenceBy(organizations, props.organizations, 'id'));
+                .then((orgs) => {
+                    setLocalOrganizations(differenceBy(orgs, organizations, 'id'));
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.error(error);
                 });
         };
         loadOrganizations();
-    }, [props.organizations]);
+    }, [organizations]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async () => {
         setIsLoading(true);
         if (selectedOrganization) {
-            await updateObservatory(props.id, { organizations: [...props.organizations.map((o) => o.id), selectedOrganization?.id] })
-                .then((_) => {
+            await updateObservatory(id, { organizations: [...organizations.map((o) => o.id), selectedOrganization?.id] })
+                .then(() => {
                     toast.success('Organization added successfully');
                     setIsLoading(false);
-                    props.toggleOrganizationItem(selectedOrganization);
+                    toggleOrganizationItem(selectedOrganization);
                     setSelectedOrganization(null);
-                    props.toggle();
+                    toggle();
                 })
-                .catch((error) => {
+                .catch(() => {
                     toast.error('Organization cannot be added');
                     setIsLoading(false);
                 });
@@ -50,14 +58,14 @@ function AddOrganization(props) {
     };
 
     return (
-        <Modal isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Add an organization</ModalHeader>
+        <Modal isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Add an organization</ModalHeader>
             <ModalBody>
                 <>
                     <Select
-                        options={organizations}
+                        options={localOrganizations}
                         onChange={(selected) => setSelectedOrganization(selected)}
-                        getOptionValue={({ id }) => id}
+                        getOptionValue={({ id: _id }) => _id}
                         getOptionLabel={({ name }) => name}
                         classNamePrefix="react-select"
                     />
@@ -73,14 +81,6 @@ function AddOrganization(props) {
             </ModalFooter>
         </Modal>
     );
-}
-
-AddOrganization.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    id: PropTypes.string,
-    organizations: PropTypes.array,
-    toggleOrganizationItem: PropTypes.func.isRequired,
 };
 
 export default AddOrganization;

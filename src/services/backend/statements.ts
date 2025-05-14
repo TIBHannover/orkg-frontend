@@ -2,12 +2,14 @@ import qs from 'qs';
 
 import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getTemplate } from '@/services/backend/templates';
 import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from '@/services/backend/types';
 
 export const statementsUrl = `${url}statements/`;
 export const statementsApi = backendApi.extend(() => ({ prefixUrl: statementsUrl }));
+
+export const getStatement = (id: string) => statementsApi.get<Statement>(id).json();
 
 export type GetStatementsParams<T extends boolean = true> = {
     subjectClasses?: string[];
@@ -88,7 +90,7 @@ export const createResourceStatement = (subjectId: string, predicateId: string, 
                 object_id: objectId,
             },
         })
-        .json();
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const createLiteralStatement = (subjectId: string, predicateId: string, literalId: string) =>
     statementsApi
@@ -99,7 +101,7 @@ export const createLiteralStatement = (subjectId: string, predicateId: string, l
                 object_id: literalId,
             },
         })
-        .json();
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const updateStatement = (
     id: string,
@@ -146,32 +148,6 @@ export const deleteStatementsByIds = (ids: string[]) =>
             searchParams: `ids=${ids.join()}`,
         })
         .json();
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsBySubject = ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-}): Promise<Statement[]> => {
-    return getStatements({
-        subjectId: id,
-        page,
-        size,
-        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
-        returnContent: true,
-    }) as Promise<Statement[]>;
-};
 
 /**
  * Fetching statements for a thing as a bundle
@@ -230,146 +206,6 @@ export const getStatementsBySubjects = ({
                 statements: subjectStatements.statements.content,
             })),
         );
-};
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsByObject = async ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    returnContent = true,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({ objectId: id, page, size, sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }], returnContent });
-};
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsByPredicate = ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    returnContent = true,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({ predicateId: id, page, size, sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }], returnContent });
-};
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsBySubjectAndPredicate = ({
-    subjectId,
-    predicateId,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-}: {
-    subjectId: string;
-    predicateId: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-}): Promise<Statement[]> => {
-    return getStatements({
-        subjectId,
-        predicateId,
-        page,
-        size,
-        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
-        returnContent: true,
-    }) as Promise<Statement[]>;
-};
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsByObjectAndPredicate = ({
-    objectId,
-    predicateId,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    returnContent = true,
-}: {
-    objectId: string;
-    predicateId: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({
-        objectId,
-        predicateId,
-        page,
-        size,
-        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
-        returnContent,
-    });
-};
-
-/**
- * @deprecated This function is deprecated. Use the getStatements function instead.
- * @see getStatements
- */
-export const getStatementsByPredicateAndLiteral = ({
-    literal,
-    predicateId,
-    subjectClass = null,
-    size = 9999,
-    page = 0,
-    sortBy = 'created_at',
-    desc = true,
-    returnContent = true,
-}: {
-    literal: string;
-    predicateId: string;
-    subjectClass?: string | null;
-    size?: number;
-    page?: number;
-    sortBy?: string;
-    desc?: boolean;
-    returnContent?: boolean;
-}): Promise<PaginatedResponse<Statement> | Statement[]> => {
-    return getStatements({
-        objectLabel: literal,
-        subjectClasses: subjectClass ? [subjectClass] : [],
-        objectClasses: ['Literal'],
-        predicateId,
-        page,
-        size,
-        sortBy: [{ property: sortBy, direction: desc ? 'desc' : 'asc' }],
-
-        returnContent,
-    });
 };
 
 /**

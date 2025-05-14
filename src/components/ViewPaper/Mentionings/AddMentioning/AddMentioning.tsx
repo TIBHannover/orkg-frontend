@@ -27,7 +27,7 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
         let resource = selected.id;
 
         if (action === 'create-option') {
-            resource = (await createResource(selected.label)).id;
+            resource = await createResource({ label: selected.label, classes: [] });
         }
 
         handleAddMentioning(resource);

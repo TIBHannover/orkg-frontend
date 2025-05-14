@@ -17,12 +17,9 @@ const useBlankNode = (ranges: Node[]) => {
     const blankNodeLabel = (templates && templates?.filter((t) => t.formatted_label).map((t) => t.label)?.[0]) ?? null;
 
     const createBlankNode = async () => {
-        const newResource = await createResource(
-            blankNodeLabel,
-            ranges.map((r) => r.id),
-        );
+        const newResourceId = await createResource({ label: blankNodeLabel, classes: ranges.map((r) => r.id) });
 
-        return newResource.id;
+        return newResourceId;
     };
 
     return { isBlankNode, createBlankNode, blankNodeLabel };

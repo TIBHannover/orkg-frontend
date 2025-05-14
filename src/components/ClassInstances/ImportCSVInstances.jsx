@@ -6,7 +6,7 @@ import { Button, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from '
 
 import { PREDICATES } from '@/constants/graphSettings';
 import { createLiteral } from '@/services/backend/literals';
-import { createResource } from '@/services/backend/resources';
+import { createResource, getResource } from '@/services/backend/resources';
 import { createLiteralStatement } from '@/services/backend/statements';
 
 export default function ImportCSVInstances(props) {
@@ -32,14 +32,14 @@ export default function ImportCSVInstances(props) {
     const handleImport = () => {
         if (data.length >= 2) {
             setIsImporting(true);
-            const dataCalls = data.slice(1).map((r) => createResource(r[0], [props.classId]));
+            const dataCalls = data.slice(1).map((r) => createResource({ label: r[0], classes: [props.classId] }).then((id) => getResource(id)));
             Promise.all(dataCalls)
                 .then((instances) => {
                     const statements = instances.map((newResource, index) => {
                         if (data[index + 1][1]) {
                             // add statement for URI
-                            return createLiteral(data[index + 1][1]).then((literal) =>
-                                createLiteralStatement(newResource.id, PREDICATES.URL, literal.id),
+                            return createLiteral(data[index + 1][1]).then((literalId) =>
+                                createLiteralStatement(newResource.id, PREDICATES.URL, literalId),
                             );
                         }
                         return Promise.resolve();

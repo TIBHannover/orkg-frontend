@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
-import { createResourceStatement, getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { createResourceStatement, getStatements } from '@/services/backend/statements';
 
 const useCreateContribution = ({ paperId, isOpen }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ const useCreateContribution = ({ paperId, isOpen }) => {
         }
         const fetchPaperData = async () => {
             setIsLoadingPaper(true);
-            const contributionStatements = await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+            const contributionStatements = await getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
             const contributionCount = contributionStatements.length;
             const title = contributionStatements.length ? contributionStatements[0].subject.label : '';
             setContributionCount(contributionCount);
@@ -29,7 +29,7 @@ const useCreateContribution = ({ paperId, isOpen }) => {
 
     const createContribution = async (title) => {
         setIsLoading(true);
-        const { id } = await createResource(title, [CLASSES.CONTRIBUTION]);
+        const id = await createResource({ label: title, classes: [CLASSES.CONTRIBUTION] });
         await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, id);
         setIsLoading(false);
         return id;

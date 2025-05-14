@@ -5,8 +5,9 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { prepareParams } from '@/services/backend/misc';
-import { getStatementsByObjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import {
+    Author,
     CreateContribution,
     CreatedByParam,
     CreatePaperParams,
@@ -61,13 +62,9 @@ export const createPaper = (data: CreatePaperParams): Promise<string> =>
         })
         .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
-export const markAsVerified = (id: string) => papersApi.put<void>(`${id}/metadata/verified`).json();
-
-export const markAsUnverified = (id: string) => papersApi.delete<void>(`${id}/metadata/verified`).json();
-
 export const getOriginalPaperId = (paperId: string) => {
     const getPaperId = async (id: string): Promise<string> => {
-        const statements = (await getStatementsByObjectAndPredicate({
+        const statements = (await getStatements({
             objectId: id,
             predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
         })) as Statement[];
@@ -190,5 +187,18 @@ export const createContribution = ({ paperId, contributionStatements }: CreateCo
                 'Content-Type': CONTRIBUTIONS_CONTENT_TYPE,
                 Accept: CONTRIBUTIONS_CONTENT_TYPE,
             },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+
+type PublishPaperParams = {
+    subject: string;
+    description: string;
+    authors: Author[];
+};
+
+export const publishPaper = (paperId: string, data: PublishPaperParams) =>
+    papersApi
+        .post<string>(`${paperId}/publish`, {
+            json: data,
         })
         .then(({ headers }) => getCreatedIdFromHeaders(headers));

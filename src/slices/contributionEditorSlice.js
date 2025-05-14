@@ -6,25 +6,18 @@ import format from 'string-format';
 import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import DATA_TYPES from '@/constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES, RESOURCES } from '@/constants/graphSettings';
-import { createClass } from '@/services/backend/classes';
-import { createList } from '@/services/backend/lists';
-import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from '@/services/backend/literals';
+import { createClass, getClassById } from '@/services/backend/classes';
+import { createList, getList } from '@/services/backend/lists';
+import { createLiteral as createLiteralApi, getLiteral, updateLiteral as updateLiteralApi } from '@/services/backend/literals';
 import { createPredicate, getPredicate } from '@/services/backend/predicates';
-import {
-    createResource as createResourceApi,
-    getResource,
-    updateResource as updateResourceApi,
-    updateResourceClasses as updateResourceClassesApi,
-} from '@/services/backend/resources';
+import { createResource as createResourceApi, getResource, updateResource as updateResourceApi } from '@/services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
     deleteStatementById,
     deleteStatementsByIds,
+    getStatements,
     getStatementsBundleBySubject,
-    getStatementsByObjectAndPredicate,
-    getStatementsBySubject,
-    getStatementsBySubjectAndPredicate,
     getTemplatesByClass,
     updateStatement,
 } from '@/services/backend/statements';
@@ -223,7 +216,7 @@ export default contributionEditorSlice.reducer;
 const getOrCreateResource = async ({ action, id, label, classes = [] }) => {
     let resource;
     if (action === 'create-option') {
-        resource = await createResourceApi(label, classes);
+        resource = await getResource(await createResourceApi({ label, classes }));
     } else if (action === 'select-option') {
         resource = await getResource(id);
     }
@@ -234,7 +227,8 @@ const getOrCreateResource = async ({ action, id, label, classes = [] }) => {
 const getOrCreateProperty = async ({ action, id, label }) => {
     let property;
     if (action === 'create-option') {
-        property = await createPredicate(label);
+        const newPropertyId = await createPredicate(label);
+        property = await getPredicate(newPropertyId);
     } else if (action === 'select-option') {
         property = await getPredicate(id);
     }
@@ -258,9 +252,9 @@ export const loadContributions = (contributionIds) => async (dispatch) => {
     for (const contributionId of contributionIds) {
         // we are using getStatementsBundleBySubject to support formatted labels
         const contributionStatements = (await getStatementsBundleBySubject({ id: contributionId, maxLevel: 2, blacklist: [] })).statements;
-        const paperStatements = await getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+        const paperStatements = await getStatements({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION });
         const paper = paperStatements.find((statement) => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
-        const paperRF = await getStatementsBySubjectAndPredicate({ subjectId: paper?.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD });
+        const paperRF = await getStatements({ subjectId: paper?.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD });
         const researchField = filterObjectOfStatementsByPredicateAndClass(paperRF, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
         const contribution = paperStatements.find((statement) => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
 
@@ -339,7 +333,7 @@ export const updateLiteral = (payload) => async (dispatch) => {
 export const updateResourceLabel = (payload) => async (dispatch) => {
     const { id, label } = payload;
     dispatch(setIsLoading(true));
-    updateResourceApi(id, label)
+    updateResourceApi(id, { label })
         .then(() => {
             dispatch(resourceLabelUpdated(payload));
             toast.success('Resource label updated successfully');
@@ -396,25 +390,25 @@ export const addValue = (entityType, value, valueClass, contributionId, property
         switch (entityType) {
             case ENTITIES.RESOURCE:
                 if (newEntity.datatype === 'list') {
-                    apiCall = createList({ label: value.label });
+                    apiCall = getList(await createList({ label: value.label }));
                 } else {
-                    apiCall = createResourceApi(value.label, valueClass ? [valueClass.id] : []);
+                    apiCall = getResource(await createResourceApi({ label: value.label, classes: valueClass ? [valueClass.id] : [] }));
                 }
                 break;
             case ENTITIES.PREDICATE:
-                apiCall = createPredicate(value.label);
+                apiCall = getPredicate(await createPredicate(value.label));
                 break;
             case ENTITIES.LITERAL:
-                apiCall = createLiteralApi(value.label, value.datatype);
+                apiCall = getLiteral(await createLiteralApi(value.label, value.datatype));
                 break;
             case ENTITIES.CLASS:
-                apiCall = createClass(value.label);
+                apiCall = getClassById(await createClass(value.label));
                 break;
             case 'empty':
                 apiCall = getResource(RESOURCES.EMPTY_RESOURCE);
                 break;
             default:
-                apiCall = createLiteralApi(value.label, value.datatype);
+                apiCall = getLiteral(await createLiteralApi(value.label, value.datatype));
         }
     } else {
         apiCall = Promise.resolve(newEntity);
@@ -428,12 +422,12 @@ export const addValue = (entityType, value, valueClass, contributionId, property
             }
             return createResourceStatement(contributionId, propertyId, newEntity.id);
         })
-        .then((newStatement) => {
+        .then((newStatementId) => {
             switch (entityType) {
                 case ENTITIES.RESOURCE:
                     dispatch(
                         resourceAdded({
-                            statementId: newStatement.id,
+                            statementId: newStatementId,
                             contributionId,
                             propertyId,
                             resource: newEntity,
@@ -446,7 +440,7 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                 case ENTITIES.LITERAL:
                     dispatch(
                         literalAdded({
-                            statementId: newStatement.id,
+                            statementId: newStatementId,
                             contributionId,
                             propertyId,
                             literal: newEntity,
@@ -456,7 +450,7 @@ export const addValue = (entityType, value, valueClass, contributionId, property
                 default:
                     dispatch(
                         literalAdded({
-                            statementId: newStatement.id,
+                            statementId: newStatementId,
                             contributionId,
                             propertyId,
                             literal: newEntity,
@@ -524,7 +518,7 @@ export const createLiteral =
         dispatch(setIsLoading(true));
 
         // fetch the selected resource id
-        const literal = await createLiteralApi(label, datatype);
+        const literal = await getLiteral(await createLiteralApi(label, datatype));
 
         if (!literal) {
             return;
@@ -532,10 +526,10 @@ export const createLiteral =
 
         // create the new statement
         createLiteralStatement(contributionId, propertyId, literal.id)
-            .then((newStatement) => {
+            .then((newStatementId) => {
                 dispatch(
                     literalAdded({
-                        statementId: newStatement.id,
+                        statementId: newStatementId,
                         contributionId,
                         propertyId,
                         literal,
@@ -803,7 +797,7 @@ export const updateContributionClasses =
             // Add required properties
             Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInContribution(contributionId)));
 
-            return updateResourceClassesApi(contributionId, uniq(classes?.filter((c) => c) ?? []));
+            return updateResourceApi(contributionId, { classes: uniq(classes?.filter((c) => c) ?? []) });
         }
         return Promise.resolve();
     };
@@ -841,8 +835,10 @@ export function fillContributionsWithTemplate({ templateID }) {
                     // Add template to the contribution
                     dispatch(propertyAdded(template.relations.predicate));
                     contributionsIds.map(async (contributionId) => {
-                        const newObject = await createResourceApi(template.label, template.target_class ? [template.target_class.id] : []);
-                        const instanceResourceId = newObject.id;
+                        const instanceResourceId = await createResourceApi({
+                            label: template.label,
+                            classes: template.target_class ? [template.target_class.id] : [],
+                        });
                         await dispatch(
                             createResource({
                                 contributionId,
@@ -1049,8 +1045,8 @@ export const fillStatements =
     ({ statements, resourceId }) =>
     async () => {
         for (const statement of statements) {
-            const newObject = await createLiteralApi(statement.value.label, statement.value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE);
-            await createResourceStatement(resourceId, statement.propertyId, newObject.id);
+            const newObjectId = await createLiteralApi(statement.value.label, statement.value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE);
+            await createResourceStatement(resourceId, statement.propertyId, newObjectId);
         }
         return Promise.resolve();
     };
@@ -1081,7 +1077,7 @@ export function generatedFormattedLabel(resource, labelFormat) {
 export function updateResourceStatementsAction(resourceId) {
     return async (dispatch) => {
         const resource = await getResource(resourceId);
-        return getStatementsBySubject({ id: resourceId }).then(async (statements) => {
+        return getStatements({ subjectId: resourceId }).then(async (statements) => {
             dispatch(
                 resourceStatementsUpdated({
                     id: resourceId,

@@ -11,18 +11,15 @@ import useEditResource from '@/components/EditResourceDialog/hooks/useEditResour
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
-import { updateResource } from '@/services/backend/resources';
+import { getResource, updateResource } from '@/services/backend/resources';
 
 const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate = null, showResourceLink = false, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
 
     const handleSave = async () => {
         setIsLoading(true);
-        const updatedResource = await updateResource(
-            resource.id,
-            label,
-            classes.map((c) => c.id),
-        );
+        await updateResource(resource.id, { label, classes: classes.map((c) => c.id) });
+        const updatedResource = await getResource(resource.id);
         if (updatedResource && afterUpdate) {
             afterUpdate(updatedResource);
         }

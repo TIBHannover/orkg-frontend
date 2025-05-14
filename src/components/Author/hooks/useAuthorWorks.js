@@ -2,12 +2,7 @@ import { find, flatten, intersection } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import {
-    getStatementsByObject,
-    getStatementsByObjectAndPredicate,
-    getStatementsByPredicateAndLiteral,
-    getStatementsBySubjects,
-} from '@/services/backend/statements';
+import { getStatements, getStatementsBySubjects } from '@/services/backend/statements';
 import { addAuthorsToStatementBundle, getDataBasedOnType } from '@/utils';
 
 function useAuthorWorks({ authorId, authorString }) {
@@ -25,27 +20,26 @@ function useAuthorWorks({ authorId, authorString }) {
             // Get the statements that contains the author as an object
             let result = null;
             if (authorId) {
-                result = await getStatementsByObjectAndPredicate({
+                result = await getStatements({
                     objectId: authorId,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
                     page: p,
                     size: pageSize,
-                    sortBy: 'created_at',
-                    desc: true,
+                    sortBy: [{ property: 'created_at', direction: 'desc' }],
                     returnContent: false,
                 });
             } else {
-                result = await getStatementsByPredicateAndLiteral({
-                    literal: authorString,
+                result = await getStatements({
+                    objectLabel: authorString,
                     predicateId: PREDICATES.HAS_LIST_ELEMENT,
+                    objectClasses: ['Literal'],
                     page: p,
                     size: pageSize,
-                    sortBy: 'created_at',
-                    desc: true,
+                    sortBy: [{ property: 'created_at', direction: 'desc' }],
                     returnContent: false,
                 });
             }
-            const subjectPromises = result.content.map((list) => getStatementsByObject({ id: list.subject.id }));
+            const subjectPromises = result.content.map((list) => getStatements({ objectId: list.subject.id }));
             const subjects = await Promise.all(subjectPromises);
             result.content = flatten(subjects);
             const filteredResult = result.content.filter(

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PREDICATES } from '@/constants/graphSettings';
 import { getPaper } from '@/services/backend/papers';
-import { getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { loadPaper, setPaperContributions, setVersion } from '@/slices/viewPaperSlice';
 
 const useViewPaper = ({ paperId }) => {
@@ -21,7 +21,7 @@ const useViewPaper = ({ paperId }) => {
         try {
             const paper = await getPaper(paperId);
             dispatch(loadPaper(paper));
-            const contributions = await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+            const contributions = await getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
             dispatch(
                 setPaperContributions(
                     sortBy(
@@ -30,8 +30,7 @@ const useViewPaper = ({ paperId }) => {
                     ),
                 ),
             );
-            const versionStatement =
-                (await getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }))?.[0] ?? null;
+            const versionStatement = (await getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }))?.[0] ?? null;
             if (versionStatement) {
                 dispatch(setVersion({ ...versionStatement?.object, statementId: versionStatement.id }));
             }

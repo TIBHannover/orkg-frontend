@@ -29,10 +29,10 @@ const AddProperty = () => {
         setIsLoading(true);
         if (label.trim() !== '') {
             try {
-                const newProperty = await createPredicate(label);
+                const newPropertyId = await createPredicate(label);
                 toast.success('Property created successfully');
                 setIsLoading(false);
-                router.push(`${reverse(ROUTES.PROPERTY, { id: newProperty.id })}?isEditMode=true`);
+                router.push(`${reverse(ROUTES.PROPERTY, { id: newPropertyId })}?isEditMode=true`);
             } catch (error) {
                 errorHandler({ error, shouldShowToast: true });
                 setIsLoading(false);

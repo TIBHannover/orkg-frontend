@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { getResource } from '@/services/backend/resources';
-import { getStatementsByObjectAndPredicate, getStatementsBySubject } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { filterObjectOfStatementsByPredicateAndClass } from '@/utils';
 
 function useResearchProblem({ id }) {
@@ -28,7 +28,7 @@ function useResearchProblem({ id }) {
                 });
 
             // Get description, same as and sub-problems of the research problem
-            getStatementsBySubject({ id: rpId }).then((statements) => {
+            getStatements({ subjectId: rpId }).then((statements) => {
                 const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
                 const subProblems = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SUB_PROBLEM, false, CLASSES.PROBLEM);
@@ -36,7 +36,7 @@ function useResearchProblem({ id }) {
             });
 
             // Get super research problems
-            getStatementsByObjectAndPredicate({
+            getStatements({
                 objectId: rpId,
                 predicateId: PREDICATES.SUB_PROBLEM,
             }).then((superProblems) => {

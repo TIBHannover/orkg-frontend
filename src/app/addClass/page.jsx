@@ -55,13 +55,13 @@ const AddClass = () => {
                 return;
             }
             try {
-                const newClass = await createClass(label, uri || null);
+                const newClassId = await createClass(label, uri || null);
                 if (parentClass) {
-                    await setParentClassByID(newClass.id, parentClass.id);
+                    await setParentClassByID(newClassId, parentClass.id);
                 }
                 toast.success('Class created successfully');
                 setIsLoading(false);
-                router.push(`${reverse(ROUTES.CLASS, { id: newClass.id })}?isEditMode=true`);
+                router.push(`${reverse(ROUTES.CLASS, { id: newClassId })}?isEditMode=true`);
             } catch (error) {
                 console.error(error);
                 setIsLoading(false);

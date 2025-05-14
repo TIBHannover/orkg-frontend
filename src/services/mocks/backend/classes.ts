@@ -62,7 +62,11 @@ const resources = [
             label,
             uri,
         });
-        return HttpResponse.json(newClass);
+        return new HttpResponse(null, {
+            headers: {
+                Location: `${classesUrl}${newClass.id}`,
+            },
+        });
     }),
 ];
 

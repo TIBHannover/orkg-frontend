@@ -15,10 +15,10 @@ const PublishedInInput = ({ value = '', onChange, inputId = null, isDisabled = f
             if (action.action === 'select-option') {
                 onChange(selected);
             } else if (action.action === 'create-option') {
-                const newVenue = await createResource(selected.label, [CLASSES.VENUE]);
+                const newVenueId = await createResource({ label: selected.label, classes: [CLASSES.VENUE] });
                 onChange({
                     ...selected,
-                    id: newVenue.id,
+                    id: newVenueId,
                 });
             } else if (action.action === 'clear') {
                 onChange({

@@ -22,12 +22,12 @@ const ConfirmCreatePropertyModal: FC<ConfirmCreatePropertyModalProps> = ({ label
     const handleCreate = async () => {
         let id = null;
         try {
-            const property = await createPredicate(label);
+            const propertyId = await createPredicate(label);
             if (description && description.trim() !== '') {
-                const descriptionLiteral = await createLiteral(description);
-                await createLiteralStatement(property.id, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+                const descriptionLiteralId = await createLiteral(description);
+                await createLiteralStatement(propertyId, PREDICATES.DESCRIPTION, descriptionLiteralId);
             }
-            id = property.id;
+            id = propertyId;
             onCreate?.({ description, label, id });
             toggle();
         } catch (e) {

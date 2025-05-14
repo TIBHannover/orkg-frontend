@@ -1,19 +1,29 @@
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import ROUTES from '@/constants/routes';
+import { Resource } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utils';
 
-const ResearchProblemCard = (props) => {
+type ResearchProblemCardProps = {
+    problem: Resource;
+    options: {
+        label: string;
+        icon: IconDefinition;
+        requireConfirmation: boolean;
+        action: () => void;
+    }[];
+};
+
+const ResearchProblemCard = ({ problem, options }: ResearchProblemCardProps) => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: props.problem.id,
-        unlisted: props.problem.unlisted,
-        featured: props.problem.featured,
+        resourceId: problem.id,
+        unlisted: problem.unlisted,
+        featured: problem.featured,
     });
 
     return (
@@ -27,15 +37,13 @@ const ResearchProblemCard = (props) => {
                 </div>
             </div>
             <div className="flex-grow-1">
-                <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.problem.id, slug: props.problem.label })}>
-                    {props.problem.label}
-                </Link>{' '}
+                <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id, slug: problem.label })}>{problem.label}</Link>{' '}
                 <small>
-                    {props.options?.map?.((option) => (
+                    {options?.map?.((option) => (
                         <ActionButton
                             title={option.label}
                             icon={option.icon}
-                            key={`problem${props.problem.id}`}
+                            key={`problem${problem.id}`}
                             requireConfirmation={option.requireConfirmation}
                             confirmationMessage="Are you sure?"
                             confirmationButtons={[
@@ -57,11 +65,6 @@ const ResearchProblemCard = (props) => {
             </div>
         </div>
     );
-};
-
-ResearchProblemCard.propTypes = {
-    problem: PropTypes.object.isRequired,
-    options: PropTypes.array,
 };
 
 export default ResearchProblemCard;

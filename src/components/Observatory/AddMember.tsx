@@ -6,7 +6,6 @@ import { mutate } from 'swr';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import { observatoriesUrl } from '@/services/backend/observatories';
 import { Organization } from '@/services/backend/types';
 import { addUserToObservatory } from '@/services/backend/users';
 import { getErrorMessage } from '@/utils';

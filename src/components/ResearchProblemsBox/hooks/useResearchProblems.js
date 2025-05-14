@@ -5,7 +5,7 @@ import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES, MISC } from '@/constants/graphSettings';
 import { getContentTypes } from '@/services/backend/contentTypes';
 import { getResearchProblemsByResearchFieldId } from '@/services/backend/researchFields';
-import { addResourceToObservatory } from '@/services/backend/resources';
+import { updateResource } from '@/services/backend/resources';
 import { mergeAlternate } from '@/utils';
 
 function useResearchProblems({ id, by = 'ResearchField', initialSort, initialIncludeSubFields, pageSize = 10 }) {
@@ -51,7 +51,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
                     return {
                         content: combinedC,
                         page: {
-                            total_elements: _page === 0 ? newC.totalElements + featuredC.totalElements : total,
+                            total_elements: _page === 0 ? newC.page.total_elements + featuredC.page.total_elements : total,
                             number: _page,
                             total_pages: newC.page.number === newC.page.total_pages && featuredC.page.number === featuredC.page.total_pages ? 1 : 2,
                         },
@@ -89,15 +89,14 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
     );
 
     const deleteResearchProblem = async (researchProblem) => {
-        await addResourceToObservatory({ observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID, id: researchProblem.id })
-            .then(() => {
-                setProblems((v) => v.filter((t) => t.id !== researchProblem.id));
-                setTotalElements((r) => r - 1);
-                toast.success('Research problem deleted successfully');
-            })
-            .catch(() => {
-                toast.error('error deleting a research problem');
-            });
+        try {
+            await updateResource(researchProblem.id, { observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID });
+            setProblems((v) => v.filter((t) => t.id !== researchProblem.id));
+            setTotalElements((r) => r - 1);
+            toast.success('Research problem deleted successfully');
+        } catch (error) {
+            toast.error('error deleting a research problem');
+        }
     };
 
     // reset resources when the researchFieldId has changed

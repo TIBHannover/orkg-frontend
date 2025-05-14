@@ -18,7 +18,6 @@ import {
     ReviewSectionTextPayload,
     ReviewSectionVisualizationPayload,
     SdgParam,
-    Statement,
     VerifiedParam,
     VisibilityParam,
 } from '@/services/backend/types';

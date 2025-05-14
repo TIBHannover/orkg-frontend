@@ -6,7 +6,7 @@ import useMembership from '@/components/hooks/useMembership';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createPaper } from '@/services/backend/papers';
 import { createResource } from '@/services/backend/resources';
-import { createResourceStatement, getStatementsBySubjectAndPredicate } from '@/services/backend/statements';
+import { createResourceStatement, getStatements } from '@/services/backend/statements';
 import { getErrorMessage } from '@/utils';
 
 const useAddPaper = ({ onCreate = null }) => {
@@ -52,11 +52,10 @@ const useAddPaper = ({ onCreate = null }) => {
             let contributionId = null;
             // if there are no contributions created yet, create a new one
             if (!extractedContributionData) {
-                const contribution = await createResource('Contribution 1', [CLASSES.CONTRIBUTION]);
-                await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contribution.id);
-                contributionId = contribution.id;
+                const contributionId = await createResource({ label: 'Contribution 1', classes: [CLASSES.CONTRIBUTION] });
+                await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contributionId);
             } else {
-                const statements = getStatementsBySubjectAndPredicate({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+                const statements = getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
                 if (statements.length > 0) {
                     contributionId = statements[0].object.id;
                 }

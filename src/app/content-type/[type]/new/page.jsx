@@ -18,7 +18,7 @@ import { CLASSES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
-import { createResource } from '@/services/backend/resources';
+import { createResource, getResource } from '@/services/backend/resources';
 
 const TYPES = [
     ...supportedContentTypes,
@@ -60,7 +60,8 @@ const ContentTypeNew = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const _resource = await createResource(title, [selectedClassId]);
+            const _resourceId = await createResource({ label: title, classes: [selectedClassId] });
+            const _resource = await getResource(_resourceId);
             setResource(_resource);
             router.push(`${reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId })}?isEditMode=true`);
         } catch (error) {

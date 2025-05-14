@@ -2,7 +2,7 @@ import qs from 'qs';
 
 import { MISC } from '@/constants/graphSettings';
 import { url as baseUrl } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
 import { getResource } from '@/services/backend/resources';
 import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from '@/services/backend/types';
@@ -18,7 +18,6 @@ export const observatoriesApi = backendApi.extend(() => ({ prefixUrl: observator
  * @param {Number} size Number of items per page
  * @return {Object} List of observatories
  */
-
 export const getObservatories = ({
     researchFieldId = null,
     q = null,
@@ -128,7 +127,10 @@ export const createObservatory = ({
     description: string;
     research_field: string;
     display_id: string;
-}) => observatoriesApi.post<Observatory>('', { json: { observatory_name, organization_id, description, research_field, display_id } }).json();
+}) =>
+    observatoriesApi
+        .post<Observatory>('', { json: { observatory_name, organization_id, description, research_field, display_id } })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const getObservatoryAndOrganizationInformation = (
     observatoryId: string,
@@ -139,10 +141,10 @@ export const getObservatoryAndOrganizationInformation = (
     display_id: string | null;
     organization: {
         id: string;
-        name: any;
+        name: string;
         logo: string;
-        display_id: any;
-        type: any;
+        display_id: string;
+        type: string;
     } | null;
 } | null> => {
     if (observatoryId && observatoryId !== MISC.UNKNOWN_ID) {

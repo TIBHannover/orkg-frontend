@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import { getStatementsByObjectAndPredicate } from '@/services/backend/statements';
+import { getStatements } from '@/services/backend/statements';
 import { filterSubjectOfStatementsByPredicateAndClass, getResourceLink } from '@/utils';
 
 function CustomNode({ data }) {
     const [paper, setPaper] = useState(null);
     useEffect(() => {
         const loadPaper = () => {
-            getStatementsByObjectAndPredicate({ objectId: data.id, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
+            getStatements({ objectId: data.id, predicateId: PREDICATES.HAS_CONTRIBUTION }).then((statements) => {
                 setPaper(filterSubjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, true, CLASSES.PAPER));
             });
         };

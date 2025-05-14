@@ -39,7 +39,7 @@ const Label = () => {
 
     const handleUpdateLabel = async () => {
         if (entity) {
-            await updateResource(entity?.id, value);
+            await updateResource(entity?.id, { label: value });
             mutateEntity();
             // update the label in the redux store (if we are in paper view)
             const isPaperView = !!match(ROUTES.VIEW_PAPER)(pathname) || !!match(ROUTES.VIEW_PAPER_CONTRIBUTION)(pathname);

@@ -85,13 +85,13 @@ function PublishVisualization(props) {
                     if (description === '' || title === '') {
                         toast.error('Please enter a title and description');
                     } else {
-                        const newResource = await createResource(title || '', [CLASSES.VISUALIZATION]);
+                        const newResourceId = await createResource({ label: title || '', classes: [CLASSES.VISUALIZATION] });
                         // we need not to create a resource statement on the comparison;
-                        backendReferenceResource = newResource.id;
+                        backendReferenceResource = newResourceId;
                         await createResourceStatement(props.comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
                         const predicateId = PREDICATES.DESCRIPTION;
-                        const literalDescription = await createLiteral(description || '');
-                        await createLiteralStatement(backendReferenceResource, predicateId, literalDescription.id);
+                        const literalDescriptionId = await createLiteral(description || '');
+                        await createLiteralStatement(backendReferenceResource, predicateId, literalDescriptionId);
                         await createAuthorsList({ authors: visualizationCreators, resourceId: backendReferenceResource });
 
                         const reconstructionModel = createReconstructionModel(backendReferenceResource);
