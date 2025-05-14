@@ -1,5 +1,5 @@
 import Gravatar from 'react-gravatar';
-import { Button, CarouselIndicators } from 'reactstrap';
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 export const SubtitleSeparator = styled.div`
@@ -160,20 +160,5 @@ export const CmsPage = styled.div`
     img {
         max-width: 100%;
         height: auto;
-    }
-`;
-
-export const CarouselIndicatorsStyled = styled(CarouselIndicators)`
-    && {
-        margin: 0;
-    }
-
-    background: ${(props) => props.theme.lightLighter};
-    [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        background: ${(props) => props.theme.primary};
-        background-clip: padding-box;
     }
 `;

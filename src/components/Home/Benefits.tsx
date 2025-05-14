@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
+import { Button, Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
+import { Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import IconCited from '@/assets/img/benefits/cited.svg';
 import IconCommunity from '@/assets/img/benefits/community.svg';
@@ -12,18 +13,6 @@ import IconFeedback from '@/assets/img/benefits/feedback.svg';
 import IconReputation from '@/assets/img/benefits/reputation.svg';
 import IconVisibility from '@/assets/img/benefits/visibility.svg';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import { CarouselIndicatorsStyled } from '@/components/styled';
-
-const CarouselContainer = styled.div`
-    width: 100%;
-
-    & li {
-        width: 10px !important;
-        height: 10px !important;
-        border-radius: 100% !important;
-        background-color: ${(props) => props.theme.primary} !important;
-    }
-`;
 
 const ObservatoryCardStyled = styled.div`
     cursor: initial;
@@ -88,35 +77,13 @@ const ITEMS = [
 ];
 
 export default function Benefits() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [animating, setAnimating] = useState(false);
     const { user } = useAuthentication();
-
-    const next = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === ITEMS.length - 1 ? 0 : activeIndex + 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const previous = () => {
-        if (animating) {
-            return;
-        }
-        const nextIndex = activeIndex === 0 ? ITEMS.length - 1 : activeIndex - 1;
-        setActiveIndex(nextIndex);
-    };
-
-    const goToIndex = (newIndex: number) => {
-        setActiveIndex(newIndex);
-    };
 
     return (
         <>
             <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
-                    <h2 className="h5 mb-1 mt-0">{user ? 'Start contributing!' : 'Join ORKG!'}</h2>
+                    <h2 className="h5 mb-1 mt-0 d-flex justify-content-between">{user ? 'Start contributing!' : 'Join ORKG!'}</h2>
                 </div>
                 <div className="flex-shrink-0">
                     {!user && (
@@ -129,36 +96,34 @@ export default function Benefits() {
 
             <hr className="mx-3 mt-1" />
             <div>
-                <CarouselContainer>
-                    <Carousel activeIndex={activeIndex} next={next} previous={previous}>
-                        {ITEMS.map((item, index) => (
-                            <CarouselItem
-                                onExiting={() => setAnimating(true)}
-                                onExited={() => setAnimating(false)}
-                                className="pb-1 mb-4"
-                                key={`fp${index}`}
-                            >
-                                <ObservatoryCardStyled className="">
-                                    <Card style={{ border: 0, minHeight: 250 }}>
-                                        <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
-                                            <CardTitle tag="h5" className="pt-0 d-flex">
-                                                <div className="flex-shrink-0">
-                                                    <Image src={item.Icon} width="50" alt="Icon representing benefits of using ORKG" />
-                                                </div>
-                                                <div className="align-items-center d-flex">{item.title}</div>
-                                            </CardTitle>
-                                            <CardSubtitle tag="h6" className="mb-1 text-muted">
-                                                {item.description}
-                                            </CardSubtitle>
-                                        </CardBody>
-                                    </Card>
-                                </ObservatoryCardStyled>
-                            </CarouselItem>
-                        ))}
-
-                        <CarouselIndicatorsStyled items={ITEMS} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                    </Carousel>
-                </CarouselContainer>
+                <Swiper
+                    pagination={{
+                        dynamicBullets: true,
+                    }}
+                    navigation
+                    modules={[Pagination, Navigation]}
+                    className="orkgSwiper"
+                >
+                    {ITEMS.map((item) => (
+                        <SwiperSlide key={`fp${item.title}`}>
+                            <ObservatoryCardStyled className="px-3">
+                                <Card style={{ border: 0, minHeight: 250 }}>
+                                    <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
+                                        <CardTitle tag="h5" className="pt-0 d-flex">
+                                            <div className="flex-shrink-0">
+                                                <Image src={item.Icon} width="50" alt="Icon representing benefits of using ORKG" />
+                                            </div>
+                                            <div className="align-items-center d-flex">{item.title}</div>
+                                        </CardTitle>
+                                        <CardSubtitle tag="h6" className="mb-1 text-muted">
+                                            {item.description}
+                                        </CardSubtitle>
+                                    </CardBody>
+                                </Card>
+                            </ObservatoryCardStyled>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
         </>
     );

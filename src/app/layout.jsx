@@ -3,6 +3,9 @@ import 'fast-text-encoding/text.min';
 import 'intro.js/introjs.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 import { CookiesProvider } from 'next-client-cookies/server';
 import { PublicEnvScript } from 'next-runtime-env';
