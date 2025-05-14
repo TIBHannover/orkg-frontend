@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.163.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.5...v0.163.0) - 2025-05-14
+
+### Changes
+
+- fix: authors in edit paper modal lost when rerendered [`#1544`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1544)
+- fix: correct the titles of organization and conference pages [`#1535`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1535)
+- fix: papers all have "January" as publication month [`#1543`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1543)
+- refactor: semantify button in csv table with modal [`#1428`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1428)
+
+---
 ## [v0.162.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.4...v0.162.5) - 2025-05-06
 
 ### Changes
