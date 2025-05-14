@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Alert, Button } from 'reactstrap';
 
@@ -60,6 +60,19 @@ const PaperHeader = (props) => {
     };
     const hasDoi = viewPaper.identifiers?.doi?.[0] && viewPaper.identifiers?.doi?.[0]?.startsWith('10.');
     const isMetadataDisabled = viewPaper.verified && !isCurationAllowed;
+
+    const paperData = useMemo(
+        () => ({
+            id: viewPaper.id,
+            title: viewPaper.title,
+            research_fields: viewPaper.research_fields,
+            identifiers: viewPaper.identifiers,
+            publication_info: viewPaper.publication_info,
+            authors: viewPaper.authors,
+            verified: viewPaper.verified,
+        }),
+        [viewPaper],
+    );
 
     return (
         <>
@@ -172,15 +185,7 @@ const PaperHeader = (props) => {
             </div>
             {isOpenEditModal && (
                 <EditPaperModal
-                    paperData={{
-                        id: viewPaper.id,
-                        title: viewPaper.title,
-                        research_fields: viewPaper.research_fields,
-                        identifiers: viewPaper.identifiers,
-                        publication_info: viewPaper.publication_info,
-                        authors: viewPaper.authors,
-                        verified: viewPaper.verified,
-                    }}
+                    paperData={paperData}
                     afterUpdate={handleUpdatePaper}
                     isOpen={isOpenEditModal}
                     toggle={(v) => setIsOpenEditModal(!v)}
