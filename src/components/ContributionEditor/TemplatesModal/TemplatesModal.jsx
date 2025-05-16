@@ -90,7 +90,7 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
                                     key={`tr${template.id}`}
                                     id={template.id}
                                     label={template.label}
-                                    classId={template.classId}
+                                    classId={template.target_class.id}
                                 />
                             ))}
                             <hr />
