@@ -536,6 +536,8 @@ export type Visualization = {
     unlisted_by: string;
 };
 
+export type CreateVisualizationParams = Omit<Visualization, 'id' | 'created_at' | 'created_by' | 'visibility' | 'unlisted_by'>;
+
 export type ComparisonVersion = {
     created_at: string;
     created_by: string;

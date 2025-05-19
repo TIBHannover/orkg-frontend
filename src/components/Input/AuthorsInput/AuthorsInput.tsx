@@ -2,87 +2,93 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import arrayMove from 'array-move';
-import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
+import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import SortableAuthorItem from '@/components/Input/AuthorsInput/SortableAuthorItem';
 import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getStatements } from '@/services/backend/statements';
+import { Author } from '@/services/backend/types';
 import getPersonFullNameByORCID from '@/services/ORCID/index';
 
-function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabled, value }) {
+type AuthorInputProps = {
+    itemLabel?: string;
+    buttonId?: string;
+    handler: (value: Author[]) => void;
+    isDisabled?: boolean;
+    value: Author[];
+};
+
+const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = undefined, handler, isDisabled, value }) => {
     const [showAuthorForm, setShowAuthorForm] = useState(false);
-    const [authorInput, setAuthorInput] = useState('');
+    const [authorInput, setAuthorInput] = useState<OptionType | null>(null);
     const [authorNameLoading, setAuthorNameLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editIndex, setEditIndex] = useState(0);
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleChange = (selected) => {
-        let v;
-        if (selected.__isNew__) {
-            v = { ...selected, label: selected.value };
-        } else {
-            v = { ...selected, _class: ENTITIES.RESOURCE };
-        }
-        setAuthorInput(v);
+    const handleChange = (selected: SingleValue<OptionType>) => {
+        setAuthorInput(selected);
     };
 
-    const isORCID = (value) => Boolean(value && value.replaceAll('−', '-').match(REGEX.ORCID_URL));
+    const isORCID = (_value: string) => Boolean(_value && _value.replaceAll('−', '-').match(REGEX.ORCID_URL));
 
-    const saveAuthor = async (_authorInput) => {
+    const saveAuthor = async (_authorInput: OptionType | null) => {
         if (_authorInput && _authorInput.label) {
             if (isORCID(_authorInput.label)) {
                 setAuthorNameLoading(true);
                 // Get the full name from ORCID API
-                const orcid = _authorInput.label.replaceAll('−', '-').match(REGEX.ORCID)[0];
-                getPersonFullNameByORCID(orcid)
-                    .then((authorFullName) => {
-                        const newAuthor = {
-                            name: authorFullName,
-                            identifiers: {
-                                orcid: [orcid],
-                            },
-                        };
-                        if (editMode) {
-                            handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
-                        } else {
-                            handler([...value, newAuthor]);
-                        }
-
-                        setAuthorNameLoading(false);
-                        setAuthorInput('');
-                        setEditMode(false);
-                        setShowAuthorForm((v) => !v);
-                    })
-                    .catch(() => {
-                        setAuthorNameLoading(false);
-                        toast.error(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
-                    });
+                const orcid = _authorInput.label?.replaceAll('−', '-').match(REGEX.ORCID)?.[0];
+                if (orcid) {
+                    getPersonFullNameByORCID(orcid)
+                        .then((authorFullName) => {
+                            const newAuthor = {
+                                id: null,
+                                name: authorFullName,
+                                identifiers: {
+                                    orcid: [orcid],
+                                },
+                            };
+                            if (editMode) {
+                                handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
+                            } else {
+                                handler([...value, newAuthor]);
+                            }
+                            setAuthorNameLoading(false);
+                            setAuthorInput(null);
+                            setEditMode(false);
+                            setShowAuthorForm((v) => !v);
+                        })
+                        .catch(() => {
+                            setAuthorNameLoading(false);
+                            toast.error(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
+                        });
+                }
             } else {
-                let orcids = [];
-                if (_authorInput.id) {
-                    orcids = (await getStatements({ subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })).map(
-                        (statement) => statement.object.label,
-                    );
+                let orcids: string[] = [];
+                if (_authorInput.id && !_authorInput.__isNew__) {
+                    orcids = (
+                        await getStatements({ subjectClasses: [CLASSES.AUTHOR], subjectId: _authorInput.id, predicateId: PREDICATES.HAS_ORCID })
+                    ).map((statement) => statement.object.label);
                 }
                 const newAuthor = {
-                    id: _authorInput.id ?? null,
+                    id: _authorInput.__isNew__ ? null : _authorInput.id,
                     name: _authorInput.label,
-                    ...(orcids.length > 0 && { identifiers: { orcid: orcids } }),
+                    ...(orcids.length > 0 ? { identifiers: { orcid: orcids } } : { identifiers: { orcid: [] } }),
                 };
                 if (editMode) {
                     handler([...value.slice(0, editIndex), newAuthor, ...value.slice(editIndex + 1)]);
                 } else {
                     handler([...value, newAuthor]);
                 }
-                setAuthorInput('');
+                setAuthorInput(null);
                 setEditMode(false);
                 setShowAuthorForm((v) => !v);
             }
@@ -91,18 +97,22 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
         }
     };
 
-    const removeAuthor = (indexToRemove) => {
+    const removeAuthor = (indexToRemove: number) => {
         handler(value.filter((_, index) => index !== indexToRemove));
     };
 
-    const editAuthor = (key) => {
+    const editAuthor = (key: number) => {
         setEditIndex(key);
-        setAuthorInput({ ...value[key], label: value[key].identifiers?.orcid?.[0] ? value[key].identifiers?.orcid?.[0] : value[key].name });
+        setAuthorInput({
+            ...value[key],
+            label: value[key].identifiers?.orcid?.[0] ?? value[key].name,
+            hideLink: true,
+        } as OptionType);
         setEditMode(true);
         setShowAuthorForm((v) => !v);
     };
 
-    const handleUpdate = ({ dragIndex, hoverIndex }) => {
+    const handleUpdate = ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
         handler(arrayMove(value, dragIndex, hoverIndex));
     };
 
@@ -121,7 +131,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                                 editAuthor={editAuthor}
                                 removeAuthor={removeAuthor}
                                 handleUpdate={handleUpdate}
-                                isDisabled={isDisabled}
+                                isDisabled={isDisabled ?? false}
                             />
                         ))}
                     </AuthorTags>
@@ -135,7 +145,7 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                     className="w-100"
                     onClick={() => {
                         setAuthorNameLoading(false);
-                        setAuthorInput('');
+                        setAuthorInput(null);
                         setEditMode(false);
                         setShowAuthorForm((v) => !v);
                     }}
@@ -163,9 +173,9 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
                                 onChange={handleChange}
                                 value={authorInput}
                                 allowCreate
-                                innerRef={inputRef}
                                 inputId="authorInput"
                                 enableExternalSources={false}
+                                autoFocus
                             />
                         </FormGroup>
                     </ModalBody>
@@ -182,14 +192,6 @@ function AuthorsInput({ itemLabel = 'author', buttonId = null, handler, isDisabl
             </Modal>
         </div>
     );
-}
-
-AuthorsInput.propTypes = {
-    handler: PropTypes.func.isRequired,
-    value: PropTypes.array.isRequired,
-    itemLabel: PropTypes.string,
-    buttonId: PropTypes.string,
-    isDisabled: PropTypes.bool,
 };
 
 export default AuthorsInput;

@@ -97,7 +97,6 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
                         <Label for={`${formId}-authors`}>
                             <Tooltip message="The author or authors of the comparison. Enter both the first and last name">Authors</Tooltip>
                         </Label>
-                        {/* @ts-expect-error awaiting TS migration */}
                         <AuthorsInput value={authors} handler={setAuthors} buttonId={`${formId}-authors`} />
                     </FormGroup>
                     <FormGroup>

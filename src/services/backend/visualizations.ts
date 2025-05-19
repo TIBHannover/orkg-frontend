@@ -1,10 +1,10 @@
-/* eslint-disable import/prefer-default-export */
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { prepareParams } from '@/services/backend/misc';
 import {
     CreatedByParam,
+    CreateVisualizationParams,
     ObservatoryIdParam,
     PaginatedResponse,
     PaginationParams,
@@ -61,3 +61,14 @@ export const getVisualization = (id: string) =>
             },
         })
         .json();
+
+export const createVisualization = (data: CreateVisualizationParams): Promise<string> =>
+    visualizationsApi
+        .post<void>('', {
+            json: data,
+            headers: {
+                'Content-Type': VISUALIZATIONS_CONTENT_TYPE,
+                Accept: VISUALIZATIONS_CONTENT_TYPE,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
