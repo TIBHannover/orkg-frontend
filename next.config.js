@@ -5,84 +5,80 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 });
 
-const cspHeader = `default-src 'self' ;
-                      img-src 'self'
-                          *
-                          data:
-                      ;
-                      script-src 'self' 'unsafe-inline' 'unsafe-eval'
-                          blob:
-                          https://orkg.org
-                          https://*.orkg.org
-                          https://support.tib.eu
-                          https://tibhannover.gitlab.io
-                          https://www.gstatic.com
-                          https://platform.twitter.com
-                          https://cdn.syndication.twimg.com
-                          https://cdnjs.cloudflare.com
-                          https://app.chatwoot.com
-                      ;
-                      style-src 'self' 'unsafe-inline'
-                          https://orkg.org
-                          https://*.orkg.org
-                          https://maxcdn.bootstrapcdn.com
-                          https://www.gstatic.com
-                          https://platform.twitter.com
-                          https://*.twimg.com
-                          https://unpkg.com/leaflet@1.9.4/dist/leaflet.css 
-                      ;
-                      font-src 'self'
-                          data:
-                          https://orkg.org
-                          https://*.orkg.org
-                          https://maxcdn.bootstrapcdn.com
-                          https://cdnjs.cloudflare.com
-                      ;
-                      frame-src 'self'
-                          localhost:*
-                          https://*.netlify.com
-                          https://orkg.org
-                          https://*.orkg.org
-                          https://av.tib.eu
-                          http://av.tib.eu
-                          https://platform.twitter.com
-                          https://syndication.twitter.com
-                          https://www.youtube.com
-                          https://time.graphics
-                          https://app.chatwoot.com
-                          https://support.tib.eu   
-                      ;
-                      frame-ancestors 'self' https://accounts.orkg.org;
-                      connect-src 'self'
-                          blob:
-                          localhost:*
-                          127.0.0.1:*
-                          https://*.netlify.com
-                          https://orkg.org
-                          https://*.orkg.org
-                          https://support.tib.eu
-                          https://api.altmetric.com
-                          https://doi.org
-                          https://data.crosscite.org
-                          https://secure.geonames.org
-                          https://service.tib.eu
-                          https://pub.orcid.org
-                          https://api.semanticscholar.org
-                          https://api.datacite.org
-                          https://api.crossref.org
-                          https://app.chatwoot.com
-                          https://opencitations.net
-                          https://*.wikidata.org
-                          https://*.wikipedia.org/api/
-                          https://dbpedia.org/sparql
-                          https://api.unpaywall.org
-                          https://raw.githubusercontent.com
-                          https://fonts.gstatic.com
-                          https://mastodon.social
-                          https://dbpedia.org
-                          https://api.terminology.tib.eu
-                          https://www.ebi.ac.uk/ols4/api/
-                      ;`;
+const cspHeader = `
+    default-src 'self';
+    img-src 'self'
+        *
+        data:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'
+        blob:
+        https://orkg.org
+        https://*.orkg.org
+        https://support.tib.eu
+        https://tibhannover.gitlab.io
+        https://www.gstatic.com
+        https://platform.twitter.com
+        https://cdn.syndication.twimg.com
+        https://cdnjs.cloudflare.com
+        https://app.chatwoot.com;
+    style-src 'self' 'unsafe-inline'
+        https://orkg.org
+        https://*.orkg.org
+        https://maxcdn.bootstrapcdn.com
+        https://www.gstatic.com
+        https://platform.twitter.com
+        https://*.twimg.com
+        https://unpkg.com/leaflet@1.9.4/dist/leaflet.css;
+    font-src 'self'
+        data:
+        https://orkg.org
+        https://*.orkg.org
+        https://maxcdn.bootstrapcdn.com
+        https://cdnjs.cloudflare.com;
+    frame-src 'self'
+        localhost:*
+        https://*.netlify.com
+        https://orkg.org
+        https://*.orkg.org
+        https://av.tib.eu
+        http://av.tib.eu
+        https://platform.twitter.com
+        https://syndication.twitter.com
+        https://www.youtube.com
+        https://time.graphics
+        https://app.chatwoot.com
+        https://support.tib.eu;
+    frame-ancestors 'self' https://accounts.orkg.org;
+    connect-src 'self'
+        blob:
+        localhost:*
+        127.0.0.1:*
+        https://*.netlify.com
+        https://orkg.org
+        https://*.orkg.org
+        https://support.tib.eu
+        https://api.altmetric.com
+        https://doi.org
+        https://data.crosscite.org
+        https://secure.geonames.org
+        https://service.tib.eu
+        https://pub.orcid.org
+        https://api.semanticscholar.org
+        https://api.datacite.org
+        https://api.crossref.org
+        https://app.chatwoot.com
+        https://opencitations.net
+        https://*.wikidata.org
+        https://*.wikipedia.org/api/
+        https://dbpedia.org/sparql
+        https://api.unpaywall.org
+        https://raw.githubusercontent.com
+        https://fonts.gstatic.com
+        https://mastodon.social
+        https://dbpedia.org
+        https://api.terminology.tib.eu
+        https://www.ebi.ac.uk/ols4/api/;
+`;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -93,7 +89,10 @@ const nextConfig = {
                 headers: [
                     {
                         key: 'Content-Security-Policy',
-                        value: cspHeader.replace(/\n/g, ''),
+                        value: cspHeader
+                            .replace(/\n/g, ' ') // remove new lines
+                            .replace(/\s{2,}/g, ' ') // remove extra spaces
+                            .trim(),
                     },
                 ],
             },
