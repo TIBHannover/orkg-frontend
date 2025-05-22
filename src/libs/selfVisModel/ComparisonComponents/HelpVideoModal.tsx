@@ -1,10 +1,14 @@
-import PropTypes from 'prop-types';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
-function HelpVideoModal(props) {
+type HelpVideoModalProps = {
+    showDialog: boolean;
+    toggle: () => void;
+};
+
+const HelpVideoModal = ({ showDialog, toggle }: HelpVideoModalProps) => {
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Comparison visualization instruction video</ModalHeader>
+        <Modal size="lg" isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Comparison visualization instruction video</ModalHeader>
             <ModalBody>
                 <div className="ratio ratio-16x9">
                     <iframe
@@ -19,11 +23,6 @@ function HelpVideoModal(props) {
             </ModalBody>
         </Modal>
     );
-}
-
-HelpVideoModal.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
 };
 
 export default HelpVideoModal;

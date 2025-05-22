@@ -1,15 +1,25 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPen, faSort, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
 import { AuthorTag, StyledDragHandle } from '@/components/Input/AuthorsInput/styled';
 import ItemTypes from '@/constants/dndTypes';
+import { Author } from '@/services/backend/types';
 import { handleSortableHoverReactDnd } from '@/utils';
 
-const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, itemLabel, handleUpdate, isDisabled }) => {
+type SortableAuthorItemProps = {
+    author: Author;
+    authorIndex: number;
+    editAuthor: (index: number) => void;
+    removeAuthor: (index: number) => void;
+    itemLabel: string;
+    handleUpdate: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void;
+    isDisabled: boolean;
+};
+
+const SortableAuthorItem: FC<SortableAuthorItemProps> = ({ author, authorIndex, editAuthor, removeAuthor, itemLabel, handleUpdate, isDisabled }) => {
     const ref = useRef(null);
 
     const [, drop] = useDrop({
@@ -70,16 +80,6 @@ const SortableAuthorItem = ({ author, authorIndex, editAuthor, removeAuthor, ite
             )}
         </AuthorTag>
     );
-};
-
-SortableAuthorItem.propTypes = {
-    author: PropTypes.object.isRequired,
-    authorIndex: PropTypes.number.isRequired,
-    editAuthor: PropTypes.func,
-    removeAuthor: PropTypes.func,
-    handleUpdate: PropTypes.func,
-    itemLabel: PropTypes.string,
-    isDisabled: PropTypes.bool,
 };
 
 export default SortableAuthorItem;

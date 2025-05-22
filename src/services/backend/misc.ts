@@ -1,8 +1,6 @@
 import qs from 'qs';
 
 import { ENTITIES } from '@/constants/graphSettings';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getClasses } from '@/services/backend/classes';
 import { getPredicates } from '@/services/backend/predicates';
 import { getResources } from '@/services/backend/resources';
@@ -24,12 +22,6 @@ import {
     VisibilityParam,
 } from '@/services/backend/types';
 import { mergeAlternate } from '@/utils';
-
-export const objectsUrl = `${url}objects/`;
-export const objectsApi = backendApi.extend(() => ({ prefixUrl: objectsUrl }));
-
-export const createObject = (payload: object) =>
-    objectsApi.post<Resource>('', { json: payload }).then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 export const getEntities = (
     entityType: string,

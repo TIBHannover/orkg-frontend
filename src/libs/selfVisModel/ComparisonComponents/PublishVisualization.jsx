@@ -7,33 +7,30 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import useMembership from '@/components/hooks/useMembership';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
-import { createAuthorsList } from '@/components/Input/AuthorsInput/helpers';
 import Tooltip from '@/components/Utils/Tooltip';
-import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
-import { createLiteral } from '@/services/backend/literals';
-import { createResource } from '@/services/backend/resources';
-import { createLiteralStatement, createResourceStatement } from '@/services/backend/statements';
+import { createResourceStatement } from '@/services/backend/statements';
+import { createVisualization } from '@/services/backend/visualizations';
 import { createThing } from '@/services/simcomp';
-import { convertAuthorsToNewFormat, convertAuthorsToOldFormat } from '@/utils';
 
-function PublishVisualization(props) {
+function PublishVisualization({ showDialog, toggle, closeAllAndReloadVisualizations, comparisonId }) {
     const [isLoading, setIsLoading] = useState(false);
     const [title, setTitle] = useState('');
     const { mutate } = useComparison();
     const [description, setDescription] = useState('');
-    const { displayName } = useMembership();
+    const { displayName, organizationId, observatoryId } = useMembership();
 
-    const [visualizationCreators, setVisualizationCreators] = useState(
-        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '', __isNew__: true }],
-    );
-
-    const handleCreatorsChange = (creators) => {
-        const _creators = creators || [];
-        setVisualizationCreators(_creators);
-    };
+    const [authors, setAuthors] = useState([
+        {
+            name: displayName,
+            identifiers: {
+                orcid: [],
+            },
+        },
+    ]);
 
     const modelExists = () => {
         const currModel = new SelfVisDataModel();
@@ -70,14 +67,13 @@ function PublishVisualization(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        if (!props.comparisonId) {
+        if (!comparisonId) {
             //  ERROR
             setIsLoading(false);
-            console.log('ERROR, No contribution id provided');
+            console.error('ERROR, No contribution id provided');
             return;
         }
 
-        let backendReferenceResource = -1;
         if (modelExists()) {
             const execute = true;
             if (execute === true) {
@@ -85,21 +81,22 @@ function PublishVisualization(props) {
                     if (description === '' || title === '') {
                         toast.error('Please enter a title and description');
                     } else {
-                        const newResourceId = await createResource({ label: title || '', classes: [CLASSES.VISUALIZATION] });
-                        // we need not to create a resource statement on the comparison;
-                        backendReferenceResource = newResourceId;
-                        await createResourceStatement(props.comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
-                        const predicateId = PREDICATES.DESCRIPTION;
-                        const literalDescriptionId = await createLiteral(description || '');
-                        await createLiteralStatement(backendReferenceResource, predicateId, literalDescriptionId);
-                        await createAuthorsList({ authors: visualizationCreators, resourceId: backendReferenceResource });
+                        const backendReferenceResource = await createVisualization({
+                            title,
+                            description,
+                            authors,
+                            observatories: observatoryId ? [observatoryId] : [],
+                            organizations: organizationId ? [organizationId] : [],
+                        });
 
+                        // we need to create a resource statement on the comparison;
+                        await createResourceStatement(comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
                         const reconstructionModel = createReconstructionModel(backendReferenceResource);
                         await createReconstructionModelInBackend(backendReferenceResource, reconstructionModel);
                         setIsLoading(false);
                         mutate();
                         // close this modal
-                        props.closeAllAndReloadVisualizations();
+                        closeAllAndReloadVisualizations();
                     }
                 } catch (error) {
                     toast.error(`Error publishing a visualization : ${error.message}`);
@@ -113,8 +110,8 @@ function PublishVisualization(props) {
     };
 
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Publish visualization</ModalHeader>
+        <Modal size="lg" isOpen={showDialog} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Publish visualization</ModalHeader>
             <ModalBody>
                 <Alert color="info">Your visualization will be added to the comparison</Alert>
                 <>
@@ -152,15 +149,9 @@ function PublishVisualization(props) {
                                 Creators <span className="text-muted fst-italic">(optional)</span>
                             </Tooltip>
                         </Label>
-                        <AuthorsInput
-                            itemLabel="creator"
-                            handler={(authors) => handleCreatorsChange(convertAuthorsToOldFormat(authors))}
-                            value={convertAuthorsToNewFormat(visualizationCreators)}
-                        />
+                        <AuthorsInput itemLabel="creator" handler={setAuthors} value={authors} />
                     </FormGroup>
                 </>
-
-                <></>
             </ModalBody>
             <ModalFooter>
                 <div className="text-align-center mt-2">
@@ -178,8 +169,6 @@ PublishVisualization.propTypes = {
     toggle: PropTypes.func.isRequired,
     closeAllAndReloadVisualizations: PropTypes.func.isRequired,
     comparisonId: PropTypes.string,
-    // doi: PropTypes.string,
-    authors: PropTypes.array, // not necessary required
 };
 
 export default PublishVisualization;

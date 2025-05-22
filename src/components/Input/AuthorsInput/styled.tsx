@@ -1,4 +1,4 @@
-import { Button } from 'reactstrap';
+import { Button, ButtonProps } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
 
 export const AuthorTags = styled.div`
@@ -10,7 +10,7 @@ export const AuthorTags = styled.div`
     overflow: hidden;
 `;
 
-export const AddAuthor = styled(Button)`
+export const AddAuthor = styled(Button)<ButtonProps & { id?: string }>`
     margin: 0 0 2px 0;
     &:hover {
         background-color: #e9ecef;
