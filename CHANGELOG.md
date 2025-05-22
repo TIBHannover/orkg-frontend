@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.164.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.163.0...v0.164.0) - 2025-05-22
+
+### Changes
+
+- refactor: search page [`#1538`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1538)
+- fix: disable create button while creating a new template [`#1548`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1548)
+- fix: instances table style [`#1547`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1547)
+- refactor: migrate from objects endpoint and convert AuthorsInput to typescript [`#1546`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1546)
+- fix: remove template from contribution editor [`#1545`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1545)
+- fix: remove CSP white spaces [`#1550`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1550)
+- refactor: replace reactstrap carousel with swiperjs [`#1540`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1540)
+- refactor: migrate to location header paths and remove deprecated endpoints [`#1539`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1539)
+
+---
 ## [v0.163.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.5...v0.163.0) - 2025-05-14
 
 ### Changes
