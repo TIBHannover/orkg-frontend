@@ -30,7 +30,7 @@ import { createTemplate } from '@/services/backend/templates';
 const TemplateNew = () => {
     const [label, setLabel] = useState('');
     const [targetClass, setTargetClass] = useState<SingleValue<OptionType> | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
     const { user } = useAuthentication();
@@ -59,29 +59,37 @@ const TemplateNew = () => {
             toast.error('Enter a template name');
             return;
         }
-        let targetClassId = targetClass?.id;
-        if (!targetClassId) {
-            const newClassId = await createClass(`${label} [C]`);
-            targetClassId = newClassId;
-        }
-        const data = {
-            label,
-            target_class: targetClassId,
-            relations: { research_fields: [], research_problems: [] },
-            properties: [],
-            observatories: observatoryId ? [observatoryId] : [],
-            organizations: organizationId ? [organizationId] : [],
-        };
+        setIsSaving(true);
         try {
+            let targetClassId = targetClass?.id;
+            if (!targetClassId) {
+                try {
+                    const newClassId = await createClass(`${label} [C]`);
+                    targetClassId = newClassId;
+                } catch (e: any) {
+                    toast.error(e.message);
+                    setIsSaving(false);
+                    return;
+                }
+            }
+            const data = {
+                label,
+                target_class: targetClassId,
+                relations: { research_fields: [], research_problems: [] },
+                properties: [],
+                observatories: observatoryId ? [observatoryId] : [],
+                organizations: organizationId ? [organizationId] : [],
+            };
             const templateResource = await createTemplate(data);
             if (templateResource) {
                 router.push(`${reverse(ROUTES.TEMPLATE, { id: templateResource })}?isEditMode=true`);
+            } else {
+                throw new Error('Failed to create template');
             }
         } catch (e: any) {
-            toast.error(e.message);
-            setIsLoading(false);
+            toast.error(e.message || 'Failed to create template');
+            setIsSaving(false);
         }
-        setIsLoading(false);
     };
 
     const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
@@ -161,7 +169,7 @@ const TemplateNew = () => {
                 )}
 
                 <div className="text-end">
-                    <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isLoading}>
+                    <ButtonWithLoading color="primary" onClick={handleCreate} isLoading={isSaving}>
                         Create
                     </ButtonWithLoading>
                 </div>
