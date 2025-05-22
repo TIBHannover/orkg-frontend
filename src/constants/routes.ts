@@ -9,6 +9,7 @@ const routes = {
     RESOURCE: '/resource/:id',
     RESOURCE_TABS: '/resource/:id/:activeTab',
     ADD_RESOURCE: '/addResource',
+    LITERAL: '/literals/:id',
     PROPERTIES: '/properties',
     PROPERTY: '/property/:id',
     PROPERTY_TABS: '/property/:id/:activeTab',

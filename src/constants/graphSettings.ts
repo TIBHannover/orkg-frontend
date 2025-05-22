@@ -113,6 +113,7 @@ export const CLASSES: {
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',
+    COMPARISON_DELETED: 'ComparisonDeleted',
     NODE_SHAPE: 'NodeShape',
     ROSETTA_NODE_SHAPE: 'RosettaNodeShape',
     PROPERTY_SHAPE: 'PropertyShape',

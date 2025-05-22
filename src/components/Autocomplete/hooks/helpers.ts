@@ -12,7 +12,7 @@ import { createLiteral } from '@/services/backend/literals';
 import { getEntities } from '@/services/backend/misc';
 import { createResource, getResources } from '@/services/backend/resources';
 import { createLiteralStatement, getStatements } from '@/services/backend/statements';
-import { getThing } from '@/services/backend/things';
+import { getThing, Thing } from '@/services/backend/things';
 import { Class, EntityType, PaginatedResponse, Predicate, Resource, Statement } from '@/services/backend/types';
 import getGeoNames from '@/services/geoNames';
 import { EntityPath, getOntologyEntities, selectEntities } from '@/services/ols';
@@ -84,11 +84,11 @@ export const orkgLookup = async ({
 /**
  * Get Node by ID if the value starts with '#'
  */
-export const IdMatch = async (value: string): Promise<(Resource | Predicate | Class)[]> => {
+export const IdMatch = async (value: string): Promise<Thing[]> => {
     if (value.startsWith('#')) {
         const valueWithoutHashtag = value.substring(1);
         if (valueWithoutHashtag.length > 0) {
-            let responseJsonExact: Resource | Predicate | Class | undefined;
+            let responseJsonExact: Thing | undefined;
             try {
                 responseJsonExact = await getThing(valueWithoutHashtag);
             } catch (err) {

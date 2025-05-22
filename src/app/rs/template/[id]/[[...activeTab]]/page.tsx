@@ -18,10 +18,10 @@ import Confirm from '@/components/Confirmation/Confirmation';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
 import { SlotTooltip } from '@/components/RosettaStone/SlotTooltip/SlotTooltip';
-import ItemMetadata from '@/components/Search/ItemMetadata';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import useParams from '@/components/useParams/useParams';
@@ -29,6 +29,7 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
+import { Thing } from '@/services/backend/things';
 
 const RSTemplatePage = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
@@ -171,11 +172,13 @@ const RSTemplatePage = () => {
                         )}
 
                         <ItemMetadata
-                            item={{
-                                ...template,
-                                observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
-                                organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
-                            }}
+                            item={
+                                {
+                                    ...template,
+                                    observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
+                                    organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
+                                } as unknown as Thing
+                            }
                             showCreatedAt
                             showCreatedBy
                             showProvenance

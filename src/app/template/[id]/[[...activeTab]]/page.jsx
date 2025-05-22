@@ -29,8 +29,8 @@ import { EditModeContainer, Title } from '@/components/EditModeHeader/EditModeHe
 import ExportCitation from '@/components/ExportCitation/ExportCitation';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useContributor from '@/components/hooks/useContributor';
+import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import ItemMetadata from '@/components/Search/ItemMetadata';
 import useExportSHACL from '@/components/Templates/ShaclFlow/hooks/useExportSHACL';
 import ShaclFlowModal from '@/components/Templates/ShaclFlow/ShaclFlowModal';
 import TabsContainer from '@/components/Templates/TabsContainer';

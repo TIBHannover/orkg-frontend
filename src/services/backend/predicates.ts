@@ -2,7 +2,7 @@ import qs from 'qs';
 
 import { url } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { PaginatedResponse, PaginationParams, Predicate } from '@/services/backend/types';
+import { CreatedByParam, PaginatedResponse, PaginationParams, Predicate } from '@/services/backend/types';
 
 export const predicatesUrl = `${url}predicates/`;
 export const predicatesApi = backendApi.extend(() => ({ prefixUrl: predicatesUrl }));
@@ -29,7 +29,8 @@ export type GetPredicatesParams<T extends boolean = false> = {
     q?: string | null;
     exact?: boolean;
     returnContent?: T;
-} & PaginationParams;
+} & PaginationParams &
+    CreatedByParam;
 
 export const getPredicates = <T extends boolean = false>({
     page = 0,
@@ -38,10 +39,11 @@ export const getPredicates = <T extends boolean = false>({
     q = null,
     exact = false,
     returnContent = false as T,
+    created_by = undefined,
 }: GetPredicatesParams<T>) => {
     const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const searchParams = qs.stringify(
-        { page, size, exact, ...(q ? { q } : { sort }) },
+        { page, size, exact, created_by, ...(q ? { q } : { sort }) },
         {
             skipNulls: true,
             arrayFormat: 'repeat',

@@ -7,13 +7,14 @@ import { Button, Container, ListGroup } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
+import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hooks/useStatements';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
-import ItemMetadata from '@/components/Search/ItemMetadata';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { Thing } from '@/services/backend/things';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -64,7 +65,14 @@ const RSStatementPage = () => {
                                 </i>
                             )}
                         </h3>
-                        <ItemMetadata item={statement} showCreatedAt showCreatedBy showProvenance showExtractionMethod editMode={isEditMode} />
+                        <ItemMetadata
+                            item={statement as unknown as Thing}
+                            showCreatedAt
+                            showCreatedBy
+                            showProvenance
+                            showExtractionMethod
+                            editMode={isEditMode}
+                        />
                     </Container>
 
                     <Container className="mt-3 p-0">

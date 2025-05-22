@@ -2,7 +2,8 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString } from 'lodash';
 import { reverse } from 'named-urls';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { Button, Form, Input, InputGroup } from 'reactstrap';
 import styled from 'styled-components';
@@ -29,15 +30,17 @@ type SearchFormProps = {
 };
 
 const SearchForm: FC<SearchFormProps> = ({ placeholder, onSearch = undefined }) => {
+    const [searchTerm] = useQueryState('q', { defaultValue: '' });
+    const [type] = useQueryState('type', { defaultValue: '' });
+    const [createdBy] = useQueryState('createdBy', { defaultValue: '' });
+
     const [value, setValue] = useState('');
 
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const urlSearchQuery = searchParams.get('q') || '';
+
     useEffect(() => {
-        const decodedValue = isString(urlSearchQuery) ? decodeURIComponent(urlSearchQuery) : urlSearchQuery;
-        setValue(decodedValue || '');
-    }, [urlSearchQuery]);
+        setValue(searchTerm || '');
+    }, [searchTerm]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
@@ -54,12 +57,7 @@ const SearchForm: FC<SearchFormProps> = ({ placeholder, onSearch = undefined }) 
             setValue('');
             router.push(link);
         } else if (isString(value) && value) {
-            const types: string[] | undefined = searchParams.get('types')?.split(',');
-            const createdBy: string | null = searchParams.get('createdBy');
-            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&types=${`${types?.length ? types.join(',') : ''}`}&createdBy=${
-                createdBy ?? ''
-            }
-                    `;
+            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&type=${type}&createdBy=${createdBy}`;
         }
         onSearch?.();
 
