@@ -3,7 +3,7 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { Form, FormGroup, Input, Label, Table } from 'reactstrap';
+import { Form, FormGroup, Input, Label, ListGroup } from 'reactstrap';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
@@ -28,21 +28,21 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
     });
 
     const renderListItem = (item: Resource) => (
-        <tr key={item.id}>
-            <td className="col-4">
+        <div key={item.id} className="tw:grid tw:grid-cols-12 tw:gap-4 tw:p-3 tw:border-b tw:border-gray-200 tw:items-center">
+            <div className="tw:col-span-4 tw:break-all">
                 <DescriptionTooltip id={item.id} _class={item._class} classes={item.classes}>
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>{item.id}</Link>
                 </DescriptionTooltip>
-            </td>
-            <td className="align-left">
+            </div>
+            <div className="tw:col-span-6">
                 <DescriptionTooltip id={item.id} _class={item._class} classes={item.classes}>
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>
                         {isFormattedLabelEnabled && item.formatted_label ? item.formatted_label : item.label}
                     </Link>
                 </DescriptionTooltip>
-            </td>
-            <td className="col-2">{item.shared}</td>
-        </tr>
+            </div>
+            <div className="tw:col-span-2">{item.shared}</div>
+        </div>
     );
 
     const prefixParams = 'instances';
@@ -96,34 +96,32 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
             <p className="mt-2">Total number of instances: {!isLoading ? <b>{totalElements}</b> : 'Loading...'}</p>
 
             <div className="mt-3">
-                <Table size="sm" bordered className="text-break">
-                    <thead>
-                        <tr>
-                            <th className="col-4">Resource ID</th>
-                            <th>Label</th>
-                            <th className="col-2">Shared</th>
-                        </tr>
-                    </thead>
-                </Table>
-                <ListPaginatedContent<Resource>
-                    renderListItem={renderListItem}
-                    pageSize={pageSize}
-                    label={title}
-                    isLoading={isLoading}
-                    items={items ?? []}
-                    hasNextPage={hasNextPage}
-                    page={page}
-                    setPage={setPage}
-                    setPageSize={setPageSize}
-                    totalElements={totalElements}
-                    error={error}
-                    totalPages={totalPages}
-                    boxShadow={false}
-                    ListGroupComponent={Table}
-                    flush={false}
-                    listGroupProps={{ size: 'sm', bordered: true, className: 'text-break' }}
-                    prefixParams={prefixParams}
-                />
+                <div className="tw:border tw:border-gray-200 tw:rounded">
+                    <div className="tw:grid tw:grid-cols-12 tw:gap-4 tw:p-3 tw:bg-gray-50 tw:border-b tw:border-gray-200">
+                        <div className="tw:col-span-4 tw:font-medium">Resource ID</div>
+                        <div className="tw:col-span-6 tw:font-medium">Label</div>
+                        <div className="tw:col-span-2 tw:font-medium">Shared</div>
+                    </div>
+                    <ListPaginatedContent<Resource>
+                        renderListItem={renderListItem}
+                        pageSize={pageSize}
+                        label={title}
+                        isLoading={isLoading}
+                        items={items ?? []}
+                        hasNextPage={hasNextPage}
+                        page={page}
+                        setPage={setPage}
+                        setPageSize={setPageSize}
+                        totalElements={totalElements}
+                        error={error}
+                        totalPages={totalPages}
+                        boxShadow={false}
+                        ListGroupComponent={ListGroup}
+                        flush={false}
+                        listGroupProps={{ className: 'tw:border-0' }}
+                        prefixParams={prefixParams}
+                    />
+                </div>
             </div>
         </div>
     );
