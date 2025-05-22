@@ -11,7 +11,7 @@ import useContributor from '@/components/hooks/useContributor';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
-const StyledGravatar = styled(Gravatar)`
+export const StyledGravatar = styled(Gravatar)`
     border: 2px solid ${(props) => props.theme.lightDarker};
     cursor: pointer;
     &:hover {

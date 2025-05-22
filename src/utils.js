@@ -656,6 +656,7 @@ export const getResourceLink = (classId, id) => {
         [CLASSES.AUTHOR]: [ROUTES.AUTHOR_PAGE, 'authorId'],
         [CLASSES.COMPARISON]: [ROUTES.COMPARISON, 'comparisonId'],
         comparison: [ROUTES.COMPARISON, 'comparisonId'],
+        [CLASSES.COMPARISON_PUBLISHED]: [ROUTES.COMPARISON, 'comparisonId'],
         [CLASSES.VENUE]: [ROUTES.VENUE_PAGE, 'venueId'],
         [CLASSES.NODE_SHAPE]: [ROUTES.TEMPLATE, 'id'],
         template: [ROUTES.TEMPLATE, 'id'],
@@ -669,6 +670,7 @@ export const getResourceLink = (classId, id) => {
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
         [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
+        [ENTITIES.LITERAL]: [ROUTES.LITERAL, 'id'],
         [CLASSES.RESEARCH_FIELD]: [ROUTES.RESEARCH_FIELD_NO_SLUG, 'researchFieldId'],
         default: [ROUTES.RESOURCE, 'id'],
     };

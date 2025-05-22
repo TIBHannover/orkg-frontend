@@ -4,7 +4,7 @@ import qs from 'qs';
 
 import { url } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { Class, PaginatedResponse, PaginationParams } from '@/services/backend/types';
+import { Class, CreatedByParam, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
 export const classesUrl = `${url}classes/`;
 export const classesApi = backendApi.extend(() => ({ prefixUrl: classesUrl }));
@@ -36,7 +36,8 @@ export type GetClassesParams<T extends boolean = false, U extends string | null 
     exact?: boolean;
     returnContent?: T;
     uri?: U;
-} & PaginationParams;
+} & PaginationParams &
+    CreatedByParam;
 
 export const getClasses = <T extends boolean = false, U extends string | null = null>({
     page = 0,
@@ -46,10 +47,11 @@ export const getClasses = <T extends boolean = false, U extends string | null = 
     exact = false,
     uri = null as U,
     returnContent = false as T,
+    created_by = undefined,
 }: GetClassesParams<T, U>): Promise<U extends string ? Class : T extends true ? Class[] : PaginatedResponse<Class>> => {
     const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const searchParams = qs.stringify(
-        { page, size, exact, ...(q ? { q } : { sort }), uri },
+        { page, size, exact, created_by, ...(q ? { q } : { sort }), uri },
         {
             skipNulls: true,
             arrayFormat: 'repeat',

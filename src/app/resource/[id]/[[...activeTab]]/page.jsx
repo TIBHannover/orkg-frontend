@@ -14,6 +14,7 @@ import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import GraphViewModal from '@/components/GraphView/GraphViewModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
@@ -23,7 +24,6 @@ import DEDICATED_PAGE_LINKS from '@/components/Resource/hooks/redirectionSetting
 import useDeleteResource from '@/components/Resource/hooks/useDeleteResource';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import TabsContainer from '@/components/Resource/Tabs/TabsContainer';
-import ItemMetadata from '@/components/Search/ItemMetadata';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';

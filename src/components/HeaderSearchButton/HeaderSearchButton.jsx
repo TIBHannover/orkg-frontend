@@ -44,7 +44,7 @@ const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
     };
 
     const goToResults = () => {
-        router.push(`${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&types=${type ?? ''}&createdBy=${userId ?? ''}`);
+        router.push(`${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&type=${type ?? ''}&createdBy=${userId ?? ''}`);
     };
 
     return isSearchOpen ? (

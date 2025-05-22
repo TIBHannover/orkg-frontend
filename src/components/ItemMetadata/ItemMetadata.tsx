@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Badge, Input } from 'reactstrap';
 
@@ -14,28 +13,58 @@ import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import { updateResource } from '@/services/backend/resources';
+import { Thing } from '@/services/backend/things';
+import { ExtractionMethod } from '@/services/backend/types';
 
-const ItemMetadata = ({
+type ItemMetadataProps = {
+    editMode?: boolean;
+    showClasses?: boolean;
+    showDataType?: boolean;
+    showCreatedAt?: boolean;
+    showCreatedBy?: boolean;
+    showProvenance?: boolean;
+    showExtractionMethod?: boolean;
+    item: Thing;
+};
+
+const ItemMetadata: FC<ItemMetadataProps> = ({
     editMode = false,
     showClasses = false,
+    showDataType = false,
     showCreatedAt = false,
     showCreatedBy = false,
     showProvenance = false,
     showExtractionMethod = false,
     item,
 }) => {
-    const [extractionMethod, setExtractionMethod] = useState(item?.extraction_method);
+    const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(
+        'extraction_method' in item ? item.extraction_method : EXTRACTION_METHODS.UNKNOWN,
+    );
 
-    const handleSave = async (selectedOption) => {
+    const handleSave = async (selectedOption: ExtractionMethod) => {
         setExtractionMethod(selectedOption);
         // rosetta statement require the version_id to be updated
-        await updateResource(item.version_id ?? item.id, { label: item?.label, classes: item?.classes, extraction_method: selectedOption });
+        if ('version_id' in item) {
+            await updateResource(item.version_id as string, {
+                label: item?.label,
+                classes: 'classes' in item ? item.classes : undefined,
+                extractionMethod: selectedOption,
+            });
+        } else {
+            await updateResource(item.id as string, {
+                label: item?.label,
+                classes: 'classes' in item ? item.classes : undefined,
+                extractionMethod: selectedOption,
+            });
+        }
         toast.success('Resource extraction method updated successfully');
     };
 
     useEffect(() => {
-        setExtractionMethod(item?.extraction_method);
-    }, [item?.extraction_method]);
+        if ('extraction_method' in item) {
+            setExtractionMethod(item.extraction_method);
+        }
+    }, [item]);
 
     return (
         <div className="d-flex">
@@ -45,7 +74,7 @@ const ItemMetadata = ({
                         <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {dayjs(item.created_at).format('DD MMMM YYYY - H:mm')}
                     </Badge>
                 )}
-                {item.shared > 0 && (
+                {'shared' in item && item.shared > 0 && (
                     <Badge color="light" className="me-2">
                         <span>
                             <FontAwesomeIcon icon={faArrowRight} />
@@ -53,7 +82,13 @@ const ItemMetadata = ({
                         {` Referred ${pluralize('time', item.shared, true)}`}
                     </Badge>
                 )}
-                {showClasses && item.classes?.length > 0 && (
+                {showDataType && 'datatype' in item && item.datatype !== null && (
+                    <Badge color="light" className="me-2">
+                        <span>{' Datatype: '}</span>
+                        {item.datatype}
+                    </Badge>
+                )}
+                {showClasses && 'classes' in item && item.classes?.length > 0 && (
                     <Badge color="light" className="me-2">
                         <span>
                             <FontAwesomeIcon icon={faTags} /> {' Instance of '}
@@ -79,7 +114,7 @@ const ItemMetadata = ({
                                     className="mb-3 py-0"
                                     type="select"
                                     value={extractionMethod}
-                                    onChange={(e) => handleSave(e.target.value)}
+                                    onChange={(e) => handleSave(e.target.value as ExtractionMethod)}
                                 >
                                     {Object.values(EXTRACTION_METHODS).map((method) => (
                                         <option key={method} value={method}>
@@ -109,16 +144,6 @@ const ItemMetadata = ({
             )}
         </div>
     );
-};
-
-ItemMetadata.propTypes = {
-    item: PropTypes.object.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    showClasses: PropTypes.bool,
-    showCreatedAt: PropTypes.bool,
-    showCreatedBy: PropTypes.bool,
-    showProvenance: PropTypes.bool,
-    showExtractionMethod: PropTypes.bool,
 };
 
 export default ItemMetadata;

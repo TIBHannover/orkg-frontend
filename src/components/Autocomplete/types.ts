@@ -1,4 +1,5 @@
-import type { Class, EntityType, Literal, Node, Predicate, Resource } from '@/services/backend/types';
+import { Thing } from '@/services/backend/things';
+import type { EntityType, Node } from '@/services/backend/types';
 
 export type AdditionalType = {
     page: number;
@@ -42,7 +43,7 @@ export type OptionType = Node & {
     external?: boolean;
     source?: AutocompleteSource;
     hideLink?: boolean;
-} & Omit<Partial<Literal> | Partial<Resource> | Partial<Predicate> | Partial<Class>, 'id' | 'label'>;
+} & Omit<Partial<Thing>, 'id' | 'label'>;
 
 export type ExternalServiceResponse = { options: OptionType[]; hasMore: boolean };
 
