@@ -9,6 +9,7 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import useList from '@/components/List/hooks/useList';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import errorHandler from '@/helpers/errorHandler';
 import { publishList } from '@/services/backend/literatureLists';
 
 type PublishModalProps = {
@@ -37,7 +38,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
             trackEvent({ category: 'data-entry', action: 'publish-list' });
             toast.success('List published successfully');
         } catch (e) {
-            toast.error('An error occurred when publishing the list');
+            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
             console.error(e);
             return null;
         } finally {
@@ -64,6 +65,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
                                 value={changelog}
                                 onChange={(e) => setChangelog(e.target.value)}
                                 maxLength={MAX_LENGTH_INPUT}
+                                required
                             />
                         </FormGroup>
                     ) : (
