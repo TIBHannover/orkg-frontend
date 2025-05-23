@@ -136,13 +136,25 @@ const Header = () => {
                                 View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={Link} href={ROUTES.COMPARISONS} onClick={closeMenu} active={pathname === ROUTES.COMPARISONS}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.COMPARISONS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.COMPARISONS}
+                                    toggle={false}
+                                >
                                     Comparisons
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.PAPERS} onClick={closeMenu} active={pathname === ROUTES.PAPERS}>
+                                <DropdownItem tag={Link} href={ROUTES.PAPERS} onClick={closeMenu} active={pathname === ROUTES.PAPERS} toggle={false}>
                                     Papers
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.VISUALIZATIONS} onClick={closeMenu} active={pathname === ROUTES.VISUALIZATIONS}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.VISUALIZATIONS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.VISUALIZATIONS}
+                                    toggle={false}
+                                >
                                     Visualizations
                                 </DropdownItem>
                                 <DropdownItem
@@ -151,6 +163,7 @@ const Header = () => {
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
                                     active={pathname === ROUTES.REVIEWS}
+                                    toggle={false}
                                 >
                                     Reviews{' '}
                                     <small className="ms-2">
@@ -163,13 +176,20 @@ const Header = () => {
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
                                     active={pathname === ROUTES.LISTS}
+                                    toggle={false}
                                 >
                                     Lists{' '}
                                     <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.BENCHMARKS} onClick={closeMenu} active={pathname === ROUTES.BENCHMARKS}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.BENCHMARKS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.BENCHMARKS}
+                                    toggle={false}
+                                >
                                     Benchmarks
                                 </DropdownItem>
                                 <DropdownItem
@@ -177,6 +197,7 @@ const Header = () => {
                                     href={ROUTES.RESEARCH_FIELDS}
                                     onClick={closeMenu}
                                     active={pathname === ROUTES.RESEARCH_FIELDS}
+                                    toggle={false}
                                 >
                                     Research fields
                                 </DropdownItem>
@@ -185,6 +206,7 @@ const Header = () => {
                                     href={ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
                                     onClick={closeMenu}
                                     active={pathname === ROUTES.SUSTAINABLE_DEVELOPMENT_GOALS}
+                                    toggle={false}
                                 >
                                     Sustainable <br />
                                     development goals
@@ -198,6 +220,7 @@ const Header = () => {
                                     onClick={closeMenu}
                                     className="d-flex justify-content-between"
                                     active={pathname === ROUTES.OBSERVATORIES}
+                                    toggle={false}
                                 >
                                     Observatories{' '}
                                     <small className="ms-2">
@@ -210,6 +233,7 @@ const Header = () => {
                                         id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.GENERAL)?.label,
                                     })}
                                     onClick={closeMenu}
+                                    toggle={false}
                                 >
                                     Organizations
                                 </DropdownItem>
@@ -219,6 +243,7 @@ const Header = () => {
                                         id: ORGANIZATIONS_TYPES.find((o) => o.id === ORGANIZATIONS_MISC.EVENT)?.label,
                                     })}
                                     onClick={closeMenu}
+                                    toggle={false}
                                 >
                                     Conferences
                                 </DropdownItem>
@@ -226,16 +251,40 @@ const Header = () => {
 
                                 <DropdownItem header>Advanced views</DropdownItem>
 
-                                <DropdownItem tag={Link} href={ROUTES.RESOURCES} onClick={closeMenu} active={pathname === ROUTES.RESOURCES}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.RESOURCES}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.RESOURCES}
+                                    toggle={false}
+                                >
                                     Resources
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.PROPERTIES} onClick={closeMenu} active={pathname === ROUTES.PROPERTIES}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.PROPERTIES}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.PROPERTIES}
+                                    toggle={false}
+                                >
                                     Properties
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.CLASSES} onClick={closeMenu} active={pathname === ROUTES.CLASSES}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.CLASSES}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.CLASSES}
+                                    toggle={false}
+                                >
                                     Classes
                                 </DropdownItem>
-                                <DropdownItem tag={Link} href={ROUTES.RS_STATEMENTS} onClick={closeMenu} active={pathname === ROUTES.RS_STATEMENTS}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.RS_STATEMENTS}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.RS_STATEMENTS}
+                                    toggle={false}
+                                >
                                     Statements{' '}
                                     <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
@@ -301,10 +350,16 @@ const Header = () => {
                             <DropdownMenu>
                                 <AboutMenu closeMenu={closeMenu} />
                                 <DropdownItem divider />
-                                <DropdownItem tag={Link} href={ROUTES.HELP_CENTER} onClick={closeMenu} active={pathname === ROUTES.HELP_CENTER}>
+                                <DropdownItem
+                                    tag={Link}
+                                    href={ROUTES.HELP_CENTER}
+                                    onClick={closeMenu}
+                                    active={pathname === ROUTES.HELP_CENTER}
+                                    toggle={false}
+                                >
                                     Help center
                                 </DropdownItem>
-                                <DropdownItem tag="a" href="https://academy.orkg.org" target="_blank" rel="noreferrer">
+                                <DropdownItem tag="a" href="https://academy.orkg.org" target="_blank" rel="noreferrer" toggle={false}>
                                     Academy
                                 </DropdownItem>
                                 <DropdownItem
@@ -313,11 +368,12 @@ const Header = () => {
                                     rel="noopener noreferrer"
                                     href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
                                     onClick={closeMenu}
+                                    toggle={false}
                                 >
                                     GitLab <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
                                 </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem tag={Link} href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS}>
+                                <DropdownItem tag={Link} href={ROUTES.STATS} onClick={closeMenu} active={pathname === ROUTES.STATS} toggle={false}>
                                     Statistics
                                 </DropdownItem>
                             </DropdownMenu>
