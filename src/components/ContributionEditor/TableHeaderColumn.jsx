@@ -12,9 +12,9 @@ import { Button } from 'reactstrap';
 
 import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from '@/components/Comparison/styled';
 import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
-import useUsedTemplates from '@/components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
 import EditResourceDialog from '@/components/EditResourceDialog/EditResourceDialog';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
@@ -29,7 +29,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
     const [data, setData] = useState(null);
     const { handleRemoveContribution } = useContributionEditor();
     const dispatch = useDispatch();
-    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceObject: contribution });
+    const { usedTemplates, isLoading: isLoadingUsedTemplates } = useUsedTemplates({ resource: contribution });
 
     const handleEditPaper = async () => {
         setIsOpenEditModal(true);

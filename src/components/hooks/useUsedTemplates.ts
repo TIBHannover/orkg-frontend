@@ -4,12 +4,10 @@ import { getTemplates, templatesUrl } from '@/services/backend/templates';
 import { Resource } from '@/services/backend/types';
 
 type UseUsedTemplates = {
-    resourceObject?: Resource;
+    resource?: Resource;
 };
 
-const useUsedTemplates = ({ resourceObject = undefined }: UseUsedTemplates) => {
-    const resource = resourceObject;
-
+const useUsedTemplates = ({ resource = undefined }: UseUsedTemplates) => {
     const { data: usedTemplates, isLoading } = useSWR(
         resource?.classes && resource?.classes?.length > 0 ? [resource?.classes, templatesUrl, 'getTemplates'] : null,
         ([params]) => Promise.all(params.map((c) => getTemplates({ targetClass: c }))),
@@ -22,7 +20,7 @@ const useUsedTemplates = ({ resourceObject = undefined }: UseUsedTemplates) => {
 
     return {
         usedTemplates: _usedTemplates,
-        isLoadingUsedTemplates: isLoading,
+        isLoading,
     };
 };
 

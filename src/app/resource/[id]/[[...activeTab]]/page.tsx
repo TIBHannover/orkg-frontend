@@ -1,14 +1,18 @@
 'use client';
 
-import { faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { Alert, Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
+import PublishHistoryModal from '@/app/resources/[id]/[[...activeTab]]/PublishHistoryModal/PublishHistoryModal';
+import PublishResourceModal from '@/app/resources/[id]/[[...activeTab]]/PublishResourceModal/PublishResourceModal';
 import EditableHeader from '@/components/EditableHeader';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -19,7 +23,7 @@ import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/use
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import getPreventEditCase from '@/components/Resource/hooks/preventEditing';
+import getPreventEditCase, { PreventEditCase } from '@/components/Resource/hooks/preventEditing';
 import DEDICATED_PAGE_LINKS from '@/components/Resource/hooks/redirectionSettings';
 import useDeleteResource from '@/components/Resource/hooks/useDeleteResource';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
@@ -30,36 +34,47 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import CONTENT_TYPES from '@/constants/contentTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getResource } from '@/services/backend/resources';
+import { getResource, getSnapshots, resourcesUrl } from '@/services/backend/resources';
 import { reverseWithSlug } from '@/utils';
 
 function Resource() {
     const { id } = useParams();
+
+    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenPublishHistoryModal, setIsOpenPublishHistoryModal] = useState(false);
+    const { isEditMode, toggleIsEditMode } = useIsEditMode();
+    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
+    const [preventEditCase, setPreventEditCase] = useState<PreventEditCase | null>(null);
+    const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
+
+    const { user } = useAuthentication();
+    const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
     const router = useRouter();
     const searchParams = useSearchParams();
     const noRedirect = searchParams.get('noRedirect');
-    const [error, setError] = useState(null);
-    const [resource, setResource] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
-    const [preventEditCase, setPreventEditCase] = useState(null);
-    const { user } = useAuthentication();
-    const { deleteResource } = useDeleteResource({ resourceId: id, redirect: true });
-    const [isOpenPreventModal, setIsOpenPreventModal] = useState(false);
+
+    const { data: snapshots } = useSWR(id ? [id, resourcesUrl, 'getSnapshots'] : null, ([resourceId]) =>
+        getSnapshots({
+            id: resourceId,
+        }),
+    );
+
+    const { data: resource, isLoading, error, mutate } = useSWR(id ? [id, resourcesUrl, 'getResource'] : null, ([params]) => getResource(params));
+
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
-        unlisted: resource?.unlisted,
-        featured: resource?.featured,
+        unlisted: resource?.unlisted ?? false,
+        featured: resource?.featured ?? false,
     });
 
-    const isShared = resource?.shared > 0;
+    const isShared = resource && resource?.shared > 0;
     const isUserIsCreator = resource?.created_by === user?.id;
-    const isCurationAllowed = user && (user.isCurationAllowed || (user.id === resource.created_by && resource.classes?.includes(CLASSES.COMPARISON)));
+    const isCurationAllowed =
+        user && (user.isCurationAllowed || (user.id === resource?.created_by && resource?.classes?.includes(CLASSES.COMPARISON)));
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
-    const getDedicatedLink = useCallback((_classes) => {
-        for (const _class of _classes ?? []) {
+    const getDedicatedLink = useCallback((classes?: string[]) => {
+        for (const _class of classes ?? []) {
             if (_class in DEDICATED_PAGE_LINKS) {
                 // only for a link for the first class occurrence (to prevent problems when a
                 // resource has multiple classes form the list), so return
@@ -70,38 +85,26 @@ function Resource() {
     }, []);
 
     useEffect(() => {
-        const findResource = async () => {
-            setIsLoading(true);
-            getResource(id)
-                .then((responseJson) => {
-                    document.title = `${responseJson.label} - Resource - ORKG`;
-                    setResource(responseJson);
-                    const link = getDedicatedLink(responseJson.classes);
-                    if (noRedirect === null && link) {
-                        router.push(
-                            reverseWithSlug(link.route, {
-                                [link.routeParams]: id,
-                                slug: link.hasSlug ? responseJson.label : undefined,
-                            }),
-                            { replace: true },
-                        );
-                    }
-                    const prevent = getPreventEditCase(responseJson);
-                    setPreventEditCase(prevent);
-                    setIsLoading(false);
-                })
-                .catch((err) => {
-                    setResource(null);
-                    setError(err);
-                    setIsLoading(false);
-                });
-        };
-        findResource();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, isCurationAllowed, getDedicatedLink]);
+        if (!resource) {
+            return;
+        }
 
-    const handleHeaderChange = (val) => {
-        setResource((prev) => ({ ...prev, label: val }));
+        document.title = `${resource?.label || 'Resource'} - ORKG`;
+        const link = getDedicatedLink(resource.classes);
+        if (noRedirect === null && link) {
+            router.replace(
+                reverseWithSlug(link.route, {
+                    [link.routeParams]: id,
+                    slug: link.hasSlug ? resource.label : undefined,
+                }),
+            );
+        }
+        const prevent = getPreventEditCase(resource);
+        setPreventEditCase(prevent);
+    }, [getDedicatedLink, id, noRedirect, resource, router]);
+
+    const handleHeaderChange = () => {
+        mutate();
     };
 
     const dedicatedLink = getDedicatedLink(resource?.classes);
@@ -112,22 +115,34 @@ function Resource() {
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
-            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />}</>}
-            {!isLoading && !error && (
+            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && resource && !error && (
                 <>
                     <TitleBar
                         buttonGroup={
                             <>
-                                <RequireAuthentication
-                                    size="sm"
-                                    component={Button}
-                                    color="secondary"
-                                    style={{ marginRight: 2 }}
-                                    tag={Link}
-                                    href={ROUTES.ADD_RESOURCE}
-                                >
-                                    <FontAwesomeIcon icon={faPlus} className="me-1" /> Create resource
-                                </RequireAuthentication>
+                                {isEditMode ? (
+                                    <RequireAuthentication
+                                        size="sm"
+                                        component={Button}
+                                        color="secondary"
+                                        style={{ marginRight: 2 }}
+                                        onClick={() => setIsOpenPublishModal(true)}
+                                    >
+                                        <FontAwesomeIcon icon={faUpload} className="me-1" /> Publish
+                                    </RequireAuthentication>
+                                ) : (
+                                    <RequireAuthentication
+                                        size="sm"
+                                        component={Button}
+                                        color="secondary"
+                                        style={{ marginRight: 2 }}
+                                        tag={Link}
+                                        href={ROUTES.ADD_RESOURCE}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} className="me-1" /> Create resource
+                                    </RequireAuthentication>
+                                )}
                                 {dedicatedLink && (
                                     <Button
                                         color="secondary"
@@ -135,7 +150,7 @@ function Resource() {
                                         tag={Link}
                                         href={reverseWithSlug(dedicatedLink.route, {
                                             [dedicatedLink.routeParams]: id,
-                                            slug: dedicatedLink.hasSlug ? resource.label : undefined,
+                                            slug: dedicatedLink.hasSlug ? resource?.label : undefined,
                                         })}
                                         style={{ marginRight: 2 }}
                                     >
@@ -171,12 +186,34 @@ function Resource() {
                     >
                         Resource
                     </TitleBar>
+
+                    {snapshots?.content?.[0] && (
+                        <Alert color="warning" className="mt-1 container d-flex box-shadow" fade={false}>
+                            <div className="flex-grow-1">
+                                A published version of this resource is available.{' '}
+                                <Link
+                                    href={reverse(ROUTES.RESOURCE_SNAPSHOT, {
+                                        id: snapshots?.content?.[0].resource_id,
+                                        snapshotId: snapshots?.content?.[0].id,
+                                    })}
+                                >
+                                    View the latest published version
+                                </Link>{' '}
+                                or{' '}
+                                <Button color="link" className="p-0 border-0 align-baseline" onClick={() => setIsOpenPublishHistoryModal(true)}>
+                                    view publish history
+                                </Button>
+                                .
+                            </div>
+                        </Alert>
+                    )}
+
                     {isEditMode && preventEditCase?.warningOnEdit && preventEditCase.warningOnEdit}
                     <EditModeHeader isVisible={isEditMode} />
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
                         {!isEditMode ? (
                             <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                {resource.label || (
+                                {resource?.label || (
                                     <i>
                                         <small>No label</small>
                                     </i>
@@ -192,9 +229,9 @@ function Resource() {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={id} value={resource.label} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
+                                <EditableHeader id={id} value={resource?.label ?? ''} onChange={handleHeaderChange} entityType={ENTITIES.RESOURCE} />
 
-                                <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed}>
+                                <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed ?? false}>
                                     <span>
                                         <Button
                                             color="danger"
@@ -213,7 +250,7 @@ function Resource() {
 
                         <ItemMetadata item={resource} showCreatedAt showCreatedBy showProvenance showExtractionMethod editMode={isEditMode} />
                     </Container>
-                    <TabsContainer classes={resource?.classes} id={id} editMode={isEditMode} />
+                    <TabsContainer classes={resource.classes} id={id} editMode={isEditMode} />
 
                     {preventEditCase && (
                         <PreventModal
@@ -222,9 +259,11 @@ function Resource() {
                             toggle={() => setIsOpenPreventModal((v) => !v)}
                         />
                     )}
+                    {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={resource.id} />}
+                    {isOpenPublishModal && <PublishResourceModal toggle={() => setIsOpenPublishModal((v) => !v)} resource={resource} />}
+                    {isOpenPublishHistoryModal && <PublishHistoryModal toggle={() => setIsOpenPublishHistoryModal((v) => !v)} id={resource?.id} />}
                 </>
             )}
-            {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={resource.id} />}
         </>
     );
 }

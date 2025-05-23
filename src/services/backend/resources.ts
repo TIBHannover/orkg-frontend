@@ -16,6 +16,7 @@ import {
     PaginationParams,
     Resource,
     SdgParam,
+    Snapshot,
     VerifiedParam,
     Visibility,
     VisibilityParam,
@@ -189,4 +190,49 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
                 content: contributors.content.map((u) => ({ ...u, created_by: uniqContributorsInfos.find((i) => u.created_by === i.id) })),
             };
         });
+};
+
+export const createSnapshot = ({ id, template_id, register_handle }: { id: string; template_id: string; register_handle: boolean }) =>
+    resourcesApi
+        .post<void>(`${id}/snapshots`, {
+            json: {
+                template_id,
+                register_handle,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+
+export const getSnapshots = ({
+    id,
+    template_id,
+    sortBy = [
+        {
+            property: 'createdAt',
+            direction: 'desc',
+        },
+    ],
+    page = 0,
+    size = 9999,
+}: { id: string; template_id?: string } & PaginationParams) => {
+    const searchParams = qs.stringify(
+        {
+            ...(template_id ? { template_id } : {}),
+            sort: sortBy?.map((p) => `${p.property},${p.direction}`),
+            page,
+            size,
+        },
+        {
+            skipNulls: true,
+        },
+    );
+
+    return resourcesApi
+        .get<PaginatedResponse<Snapshot>>(`${id}/snapshots`, {
+            searchParams,
+        })
+        .json();
+};
+
+export const getSnapshot = ({ id, snapshotId }: { id: string; snapshotId: string }) => {
+    return resourcesApi.get<Snapshot>(`${id}/snapshots/${snapshotId}`).json();
 };

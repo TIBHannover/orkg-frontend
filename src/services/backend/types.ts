@@ -865,3 +865,24 @@ export type ContentType = Paper | Comparison | LiteratureList | Visualization | 
 export type Item = {
     _class: string;
 } & (ContentType | Resource | RosettaStoneStatement);
+
+export type Snapshot = {
+    created_at: string;
+    created_by: string;
+    id: string;
+    handle: string | null;
+    resource_id: string;
+    template_id: string;
+    data: {
+        root: Resource;
+        predicates: { [predicateId: string]: Predicate };
+        statements: {
+            [predicateId: string]: {
+                thing: Resource | Literal;
+                created_at: string;
+                created_by: string;
+                statements: object;
+            }[];
+        };
+    };
+};

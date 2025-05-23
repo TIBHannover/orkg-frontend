@@ -4,11 +4,21 @@ import { env } from 'next-runtime-env';
 import { Alert } from 'reactstrap';
 
 import { CLASSES } from '@/constants/graphSettings';
+import { Resource } from '@/services/backend/types';
 
-const PREVENT_EDIT_CASES = [
+export type PreventEditCase = {
+    condition: (resource: Resource) => boolean;
+    preventModalProps: (resource: Resource) => {
+        header: string;
+        content: JSX.Element;
+    };
+    warningOnEdit?: JSX.Element;
+};
+
+const PREVENT_EDIT_CASES: PreventEditCase[] = [
     {
-        condition: (resource) => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
-        preventModalProps: (resource) => ({
+        condition: (resource: Resource) => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
+        preventModalProps: (resource: Resource) => ({
             header: 'We are working on it!',
             content: (
                 <>
@@ -30,7 +40,7 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: (resource) => resource.classes.includes(CLASSES.RESEARCH_FIELD),
+        condition: (resource: Resource) => resource.classes.includes(CLASSES.RESEARCH_FIELD),
         preventModalProps: () => ({
             header: 'Research fields taxonomy!',
             content: (
@@ -45,7 +55,7 @@ const PREVENT_EDIT_CASES = [
         }),
     },
     {
-        condition: (resource) => resource.classes.includes(CLASSES.COMPARISON_PUBLISHED),
+        condition: (resource: Resource) => resource.classes.includes(CLASSES.COMPARISON_PUBLISHED),
         warningOnEdit: (
             <Alert className="container" color="danger">
                 This resource should not be edited because it is published, please make sure that you know what are you doing!
@@ -58,7 +68,7 @@ const PREVENT_EDIT_CASES = [
     },
 ];
 
-const getPreventEditCase = (resource) => {
+const getPreventEditCase = (resource: Resource) => {
     for (const preventCase of PREVENT_EDIT_CASES) {
         // eslint-disable-next-line no-await-in-loop
         const resultCondition = preventCase.condition(resource);
