@@ -1,7 +1,7 @@
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Alert, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
@@ -10,6 +10,7 @@ import useReview from '@/components/Review/hooks/useReview';
 import Tooltip from '@/components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import errorHandler from '@/helpers/errorHandler';
 import { publishReview } from '@/services/backend/reviews';
 
 type PublishModalProps = {
@@ -29,7 +30,9 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
     if (!review) {
         return null;
     }
-    const handlePublish = async () => {
+    const handlePublish = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
         if (shouldAssignDoi && (!description || description.trim() === '')) {
             toast.error('Please enter a description');
             return;
@@ -49,15 +52,16 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
             setPublishedId(newId);
             setIsLoading(false);
         } catch (e) {
-            toast.error('An error occurred when publishing the review');
+            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
             console.error(e);
+        } finally {
             setIsLoading(false);
         }
     };
 
     return (
         <Modal isOpen toggle={toggle}>
-            <Form onSubmit={(e) => e.preventDefault()}>
+            <Form onSubmit={handlePublish}>
                 <ModalHeader toggle={toggle}>Publish review</ModalHeader>
                 <ModalBody>
                     {!publishedId ? (
@@ -75,6 +79,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
                                     value={updateMessage}
                                     onChange={(e) => setUpdateMessage(e.target.value)}
                                     maxLength={MAX_LENGTH_INPUT}
+                                    required
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -119,7 +124,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
                 </ModalBody>
                 {!publishedId && (
                     <ModalFooter>
-                        <ButtonWithLoading type="submit" isLoading={isLoading} color="primary" onClick={handlePublish}>
+                        <ButtonWithLoading type="submit" isLoading={isLoading} color="primary">
                             Publish
                         </ButtonWithLoading>
                     </ModalFooter>
