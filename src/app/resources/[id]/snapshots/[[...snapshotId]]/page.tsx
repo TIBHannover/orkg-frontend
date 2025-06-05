@@ -68,7 +68,7 @@ const PublishedResource = () => {
                                 color="secondary"
                                 style={{ marginRight: 2 }}
                                 tag={Link}
-                                href={ROUTES.ADD_RESOURCE}
+                                href={ROUTES.CREATE_RESOURCE}
                             >
                                 <FontAwesomeIcon icon={faPlus} className="me-1" /> Create resource
                             </RequireAuthentication>

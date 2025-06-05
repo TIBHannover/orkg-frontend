@@ -162,7 +162,8 @@ const nextConfig = {
     env: {
         version, // ensure the version is available for display in the footer
     },
-    // redirects for legacy pages, could be removed after a while
+    // redirects for legacy pages, not all of them could be removed after a while
+    // the order of the redirects matters, e.g. ensure /list/new is before /list/:id to avoid conflicts
     async redirects() {
         return [
             {
@@ -228,6 +229,234 @@ const nextConfig = {
             {
                 source: '/open-call-curation-grant',
                 destination: 'https://www.orkg.org/about/28/Curation_Grants',
+                permanent: true,
+            },
+            {
+                source: '/addResource',
+                destination: '/resources/create',
+                permanent: true,
+            },
+            {
+                source: '/resource/:id',
+                destination: '/resources/:id',
+                permanent: true,
+            },
+            {
+                source: '/resource/:id/:activeTab',
+                destination: '/resources/:id/:activeTab',
+                permanent: true,
+            },
+            {
+                source: '/addProperty',
+                destination: '/properties/create',
+                permanent: true,
+            },
+            {
+                source: '/property/:id',
+                destination: '/properties/:id',
+                permanent: true,
+            },
+            {
+                source: '/property/:id/:activeTab',
+                destination: '/properties/:id/:activeTab',
+                permanent: true,
+            },
+            {
+                source: '/addClass',
+                destination: '/classes/create',
+                permanent: true,
+            },
+            {
+                source: '/class/:id',
+                destination: '/classes/:id',
+                permanent: true,
+            },
+            {
+                source: '/class/:id/:activeTab',
+                destination: '/classes/:id/:activeTab',
+                permanent: true,
+            },
+            {
+                source: '/add-comparison',
+                destination: '/comparisons/create/overview',
+                permanent: true,
+            },
+            {
+                source: '/add-paper',
+                destination: '/papers/create',
+                permanent: true,
+            },
+            {
+                source: '/author/:authorId',
+                destination: '/authors/:authorId',
+                permanent: true,
+            },
+            {
+                source: '/author-literal/:authorString',
+                destination: '/authors/literal/:authorString',
+                permanent: true,
+            },
+            {
+                source: '/benchmark/:datasetId/problem/:problemId',
+                destination: '/benchmarks/:datasetId/problem/:problemId',
+                permanent: true,
+            },
+            {
+                source: '/comparison',
+                destination: '/comparisons/unpublished',
+                permanent: true,
+            },
+            {
+                // NEVER REMOVE THIS REDIRECT (some registered doi links still point to this url)
+                source: '/comparison/:comparisonId',
+                destination: '/comparisons/:comparisonId',
+                permanent: true,
+            },
+            {
+                source: '/featured-comparisons',
+                destination: '/comparisons/featured',
+                permanent: true,
+            },
+            {
+                source: '/content-type/new',
+                destination: '/content-type/create',
+                permanent: true,
+            },
+            {
+                source: '/content-type/:type/new',
+                destination: '/content-type/:type/create',
+                permanent: true,
+            },
+            {
+                source: '/diagram/:id',
+                destination: '/diagrams/:id',
+                permanent: true,
+            },
+            {
+                source: '/field/:researchFieldId/:slug',
+                destination: '/fields/:researchFieldId/:slug',
+                permanent: true,
+            },
+            {
+                source: '/field/:researchFieldId',
+                destination: '/fields/:researchFieldId',
+                permanent: true,
+            },
+            {
+                source: '/list/:id/:embed',
+                destination: '/lists/:id/:embed',
+                permanent: true,
+            },
+            {
+                source: '/list/new',
+                destination: '/lists/create',
+                permanent: true,
+            },
+            {
+                source: '/list/:id',
+                destination: '/lists/:id',
+                permanent: true,
+            },
+            {
+                source: '/observatory/:id',
+                destination: '/observatories/:id',
+                permanent: true,
+            },
+            {
+                // NEVER REMOVE THIS REDIRECT (some registered doi links still point to this url)
+                source: '/paper/:resourceId',
+                destination: '/papers/:resourceId',
+                permanent: true,
+            },
+            {
+                source: '/paper/:resourceId/:contributionId',
+                destination: '/papers/:resourceId/:contributionId',
+                permanent: true,
+            },
+            {
+                source: '/problem/:researchProblemId/:slug',
+                destination: '/problems/:researchProblemId/:slug',
+                permanent: true,
+            },
+            {
+                source: '/problem/:researchProblemId',
+                destination: '/problems/:researchProblemId',
+                permanent: true,
+            },
+            {
+                source: '/review/new',
+                destination: '/reviews/create',
+                permanent: true,
+            },
+            {
+                // NEVER REMOVE THIS REDIRECT (some registered doi links still point to this url)
+                source: '/review/:id',
+                destination: '/reviews/:id',
+                permanent: true,
+            },
+            {
+                source: '/sustainable-development-goal/:sdg',
+                destination: '/sustainable-development-goals/:sdg',
+                permanent: true,
+            },
+            {
+                source: '/template/ImportSHACL',
+                destination: '/templates/ImportSHACL',
+                permanent: true,
+            },
+            {
+                source: '/template/:id',
+                destination: '/templates/:id',
+                permanent: true,
+            },
+            {
+                source: '/template/:id/:activeTab',
+                destination: '/templates/:id/:activeTab',
+                permanent: true,
+            },
+            {
+                source: '/template',
+                destination: '/templates/create',
+                permanent: true,
+            },
+            {
+                source: '/venue/:venueId',
+                destination: '/venues/:venueId',
+                permanent: true,
+            },
+            {
+                source: '/view-or-create-paper',
+                destination: '/papers/view-or-create',
+                permanent: true,
+            },
+            {
+                source: '/visualization/:id',
+                destination: '/visualizations/:id',
+                permanent: true,
+            },
+            {
+                source: '/rs/statement/:id',
+                destination: '/rs/statements/:id',
+                permanent: true,
+            },
+            {
+                source: '/rs/template/:id',
+                destination: '/rs/templates/:id',
+                permanent: true,
+            },
+            {
+                source: '/rs/template/:id/edit',
+                destination: '/rs/templates/:id/edit',
+                permanent: true,
+            },
+            {
+                source: '/rs/template/:id/:activeTab',
+                destination: '/rs/templates/:id/:activeTab',
+                permanent: true,
+            },
+            {
+                source: '/rs/template',
+                destination: '/rs/templates/create',
                 permanent: true,
             },
         ];

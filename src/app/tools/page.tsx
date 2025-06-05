@@ -61,7 +61,7 @@ const Header = styled.h2`
 
 const Tools = () => (
     <ToolsContainer>
-        <ToolContainer href={ROUTES.ADD_PAPER} className="box rounded text-decoration-none">
+        <ToolContainer href={ROUTES.CREATE_PAPER} className="box rounded text-decoration-none">
             <Header>Add paper form</Header>
             <ImgContainer>
                 <Image src={AddPaperWizard} style={{ width: '70%', height: 'auto' }} alt="Add paper form preview" />

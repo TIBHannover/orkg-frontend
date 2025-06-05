@@ -26,7 +26,7 @@ const Properties = () => {
     );
 
     const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.ADD_PROPERTY}>
+        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.CREATE_PROPERTY}>
             <FontAwesomeIcon icon={faPlus} /> Create property
         </RequireAuthentication>
     );
