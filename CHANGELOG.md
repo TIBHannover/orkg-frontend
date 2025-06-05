@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.165.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.164.0...v0.165.0) - 2025-06-05
+
+### Changes
+
+- refactor: more consistent URLs [`#1549`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1549)
+- feat: support publishing resources with handle [`#1541`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1541)
+- fix: show helpful error message when update message is empty for Lists and Reviews [`#1552`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1552)
+- fix: close header dropdown when item is clicked [`#1551`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1551)
+
+---
 ## [v0.164.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.163.0...v0.164.0) - 2025-05-22
 
 ### Changes
