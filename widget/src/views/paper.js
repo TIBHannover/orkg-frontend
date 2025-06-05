@@ -60,14 +60,14 @@ export function show(params) {
             .then((result) => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.open[language];
                 temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary.numStatements[language];
-                let url = `${process.env.FRONTEND_SERVER_URL}paper/${result.id}`;
+                let url = `${process.env.FRONTEND_SERVER_URL}papers/${result.id}`;
                 if (result.class === 'Paper') {
                     temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
                 } else if (result.class === 'Comparison') {
-                    url = `${process.env.FRONTEND_SERVER_URL}comparison/${result.id}`;
+                    url = `${process.env.FRONTEND_SERVER_URL}comparisons/${result.id}`;
                     temporary.getElementsByClassName('orkg-widget-description')[0].style.display = 'none';
                 } else {
-                    url = `${process.env.FRONTEND_SERVER_URL}resource/${result.id}`;
+                    url = `${process.env.FRONTEND_SERVER_URL}resources/${result.id}`;
                     temporary.getElementsByClassName('orkg-widget-description')[0].style.display = 'none';
                 }
                 temporary.getElementsByClassName('orkg-widget-link')[0].href = url;
@@ -78,7 +78,7 @@ export function show(params) {
             .catch(() => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.add[language];
 
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = `${process.env.FRONTEND_SERVER_URL}add-paper?entry=${doi}`;
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = `${process.env.FRONTEND_SERVER_URL}papers/create?entry=${doi}`;
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
                 while (temporary.children.length > 0) {

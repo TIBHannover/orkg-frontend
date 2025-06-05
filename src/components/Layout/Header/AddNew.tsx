@@ -102,7 +102,7 @@ const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
                             </p>
                         </TextContainer>
                     </ToolContainer>
-                    <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} href={ROUTES.ADD_PAPER} className="d-flex p-2">
+                    <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} href={ROUTES.CREATE_PAPER} className="d-flex p-2">
                         <ImgContainer>
                             <Image src={AddPaperWizard} style={{ width: '90%', height: 'auto' }} alt="Add paper wizard preview" />
                         </ImgContainer>

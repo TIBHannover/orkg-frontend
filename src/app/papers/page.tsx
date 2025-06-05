@@ -61,7 +61,7 @@ const Papers: FC = () => {
                 color="secondary"
                 size="sm"
                 className="btn btn-secondary btn-sm flex-shrink-0"
-                href={ROUTES.ADD_PAPER}
+                href={ROUTES.CREATE_PAPER}
             >
                 <FontAwesomeIcon icon={faPlus} /> Create paper
             </RequireAuthentication>

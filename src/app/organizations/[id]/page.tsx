@@ -47,7 +47,7 @@ const Organizations = () => {
                             color="secondary"
                             size="sm"
                             className="btn btn-secondary btn-sm flex-shrink-0"
-                            href={reverse(ROUTES.ADD_ORGANIZATION, { type: params.id })}
+                            href={reverse(ROUTES.CREATE_ORGANIZATION, { type: params.id })}
                         >
                             <FontAwesomeIcon icon={faPlus} /> Create{' '}
                             {label?.toLowerCase() === ORGANIZATIONS_MISC.GENERAL.toLowerCase() ? 'organization' : 'conference'}

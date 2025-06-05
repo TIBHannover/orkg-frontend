@@ -31,7 +31,7 @@ const Resources = () => {
             color="secondary"
             size="sm"
             className="btn btn-secondary btn-sm flex-shrink-0"
-            href={ROUTES.ADD_RESOURCE}
+            href={ROUTES.CREATE_RESOURCE}
         >
             <FontAwesomeIcon icon={faPlus} /> Create resource
         </RequireAuthentication>

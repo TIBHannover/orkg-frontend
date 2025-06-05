@@ -31,7 +31,7 @@ const Classes = () => {
             color="secondary"
             size="sm"
             className="btn btn-secondary btn-sm flex-shrink-0"
-            href={ROUTES.ADD_CLASS}
+            href={ROUTES.CREATE_CLASS}
         >
             <FontAwesomeIcon icon={faPlus} /> Create class
         </RequireAuthentication>
