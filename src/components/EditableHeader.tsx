@@ -18,7 +18,7 @@ type EditableHeaderProp = {
     value: string;
     onChange: (arg: string) => void;
     entityType: (typeof ENTITIES)[keyof typeof ENTITIES];
-    curatorsOnly: boolean;
+    curatorsOnly?: boolean;
 };
 const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
     const [label, setLabel] = useState<string>(value);

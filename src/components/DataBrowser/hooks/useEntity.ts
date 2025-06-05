@@ -1,11 +1,12 @@
 import { isEqual, uniqWith } from 'lodash';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useHistory from '@/components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
 import { getResourceFromStatementsById, getStatementsBySubjectId } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import { CLASSES } from '@/constants/graphSettings';
+import { resourcesUrl } from '@/services/backend/resources';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { getThing, thingsUrl } from '@/services/backend/things';
 import { Class, Literal, Predicate, Resource, Statement } from '@/services/backend/types';
@@ -23,10 +24,14 @@ const useEntity = () => {
         data: entity,
         isLoading: isLoadingEntity,
         error,
-        mutate: mutateEntity,
+        mutate: mutateThing,
         isValidating: isValidatingEntity,
     } = useSWR(!isUsingSnapshot ? [currentId, thingsUrl, 'getThing'] : null, ([params]) => getThing(params));
 
+    const mutateEntity = () => {
+        mutateThing();
+        mutate([currentId, resourcesUrl, 'getResource']); // not needed for the data browser, but ensure the cache is updated for other components
+    };
     if (!isUsingSnapshot) {
         _entity = entity;
     }

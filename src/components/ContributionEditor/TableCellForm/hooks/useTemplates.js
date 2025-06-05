@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
-import useUsedTemplates from '@/components/ContributionEditor/TableCellForm/hooks/useUsedTemplates';
+import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getParentResearchFields, statementsUrl } from '@/services/backend/statements';
 import { getFeaturedTemplates, getTemplates, templatesUrl } from '@/services/backend/templates';
@@ -71,7 +71,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
     );
 
     const isLoadingFeaturedTemplates = isLoadingFeatured || isValidatingFeatured;
-    const { usedTemplates, isLoadingUsedTemplates } = useUsedTemplates({ resourceObject: resource });
+    const { usedTemplates, isLoading: isLoadingUsedTemplates } = useUsedTemplates({ resource });
 
     const loadMoreTemplates = (sf, target, label) => {
         if (label || target || !onlyFeatured) {

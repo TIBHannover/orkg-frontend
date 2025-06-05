@@ -77,12 +77,12 @@ type VersionOption = {
 };
 
 type HistoryModalProps = {
-    id: string;
+    id?: string;
     show: boolean;
     toggle: () => void;
     title: string;
     versions?: Version[];
-    routeDiff: string;
+    routeDiff?: string;
     showFeaturedButtons?: boolean;
     isLoading?: boolean;
 };
@@ -106,8 +106,9 @@ const HistoryModal: FC<HistoryModalProps> = ({
         comment: version.changelog ?? '',
     }));
 
-    const { data: resources } = useSWR(versions.length > 0 ? [versions.map(({ id }) => id), resourcesUrl, 'getResource'] : null, ([params]) =>
-        Promise.all(params.map((_id) => getResource(_id))),
+    const { data: resources } = useSWR(
+        showFeaturedButtons && versions.length > 0 ? [versions.map(({ id }) => id), resourcesUrl, 'getResource'] : null,
+        ([params]) => Promise.all(params.map((_id) => getResource(_id))),
     );
 
     const handleCompare = () => {
@@ -128,7 +129,7 @@ const HistoryModal: FC<HistoryModalProps> = ({
                 {!isLoading && versions.length > 0 && (
                     <div>
                         <div className="p-2">
-                            {versions.length > 1 && (
+                            {routeDiff && versions.length > 1 && (
                                 <div className="mb-4">
                                     <h2 className="h6">Compare versions</h2>
                                     <div className="d-flex w-100">

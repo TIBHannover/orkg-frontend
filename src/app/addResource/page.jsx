@@ -166,7 +166,7 @@ const AddResource = () => {
                             {isLoadingDefaultClasses && <div>Loading default classes</div>}
                         </FormGroup>
                         <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
-                            Create Resource
+                            Create resource
                         </ButtonWithLoading>
                     </div>
                 </Form>
