@@ -1,6 +1,6 @@
 'use client';
 
-import { faChevronDown, faExternalLinkAlt, faGift, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faExternalLinkAlt, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import { reverse } from 'named-urls';
@@ -11,7 +11,6 @@ import { signIn } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 import { match } from 'path-to-regexp';
 import { MouseEvent, useState } from 'react';
-import ConfettiExplosion from 'react-confetti-explosion';
 import { Cookies } from 'react-cookie';
 import { useMountedState, useWindowScroll } from 'react-use';
 import {
@@ -28,8 +27,8 @@ import {
     UncontrolledButtonDropdown as ButtonDropdown,
 } from 'reactstrap';
 
-import Logo from '@/assets/img/birthday/logo.svg';
-import LogoWhite from '@/assets/img/birthday/logo_white.svg';
+import Logo from '@/assets/img/logo.svg';
+import LogoWhite from '@/assets/img/logo_white.svg';
 import Jumbotron from '@/components/Home/Jumbotron';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import AboutMenu from '@/components/Layout/Header/AboutMenu';
@@ -49,7 +48,6 @@ const Header = () => {
     const [isOpenNavBar, setIsOpenNavBar] = useState(false);
     const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
     const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
-    const [isExploding, setIsExploding] = useState(false);
 
     const isMounted = useMountedState();
     const { y: scrollPosition } = useWindowScroll();
@@ -101,29 +99,6 @@ const Header = () => {
                     style={{ color: isTransparentNavbar ? '#545a71' : '#EF815E' }}
                 >
                     {!isTransparentNavbar ? <Image src={Logo} alt="Logo ORKG" /> : <Image src={LogoWhite} alt="Logo ORKG in light colors" />}
-                    {
-                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                        <div
-                            className="position-absolute"
-                            style={{
-                                bottom: -3,
-                                right: 4,
-                                fontSize: '0.85rem',
-                                background: isTransparentNavbar ? '#C1C3CA' : '#FBE6E6',
-                                padding: '0 10px',
-                                borderRadius: '25px',
-                                fontWeight: '500',
-                                lineHeight: '1.3',
-                            }}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.nativeEvent.stopImmediatePropagation();
-                                setIsExploding(true);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faGift} size="sm" /> 5 years
-                        </div>
-                    }
                 </Link>
 
                 <NavbarToggler onClick={toggleNavBar} />
@@ -384,14 +359,6 @@ const Header = () => {
                             </NavLink>
                         </NavItem>
                         <Nfdi4dsButton />
-                        {isExploding && (
-                            <ConfettiExplosion
-                                onComplete={() => setIsExploding(false)}
-                                zIndex={10000}
-                                particleCount={200}
-                                colors={['#D4A9E9', '#9DF3C2', '#FDC3B1', '#FEE6A6', '#E86161']}
-                            />
-                        )}
                     </Nav>
 
                     <SearchForm placeholder="Search..." onSearch={closeMenu} />
