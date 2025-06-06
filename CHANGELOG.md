@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.166.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.165.0...v0.166.0) - 2025-06-06
+
+### Changes
+
+- feat: remove birthday label for header logo [`#1555`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1555)
+
+---
 ## [v0.165.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.164.0...v0.165.0) - 2025-06-05
 
 ### Changes
