@@ -26,7 +26,7 @@ const useFilters = () => {
     const [value, setValue] = useState(searchTerm ?? '');
 
     const handleSubmitSearch = (_value: string) => {
-        if (isString(_value) && _value) {
+        if (isString(_value)) {
             setSearchTerm(_value);
         }
     };
