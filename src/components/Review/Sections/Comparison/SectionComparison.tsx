@@ -1,14 +1,11 @@
 import { isEqual } from 'lodash';
-import { reverse } from 'named-urls';
-import { env } from 'next-runtime-env';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import { Alert } from 'reactstrap';
 
 import EmbeddedComparison from '@/components/Comparison/EmbeddedComparison/EmbeddedComparison';
 import { reviewContext } from '@/components/Review/context/ReviewContext';
 import useReview from '@/components/Review/hooks/useReview';
-import ROUTES from '@/constants/routes';
+import PrintView from '@/components/Review/Sections/Comparison/PrintView/PrintView';
 import { ReviewSection } from '@/services/backend/types';
 import { setupStore } from '@/store';
 
@@ -45,14 +42,10 @@ const SectionComparison: FC<SectionComparisonProps> = ({ section }) => {
         setStore(_store);
     }, []);
 
-    // full URL needed for printing view
-    const url = env('NEXT_PUBLIC_URL') + reverse(ROUTES.COMPARISON, { comparisonId: id });
-
     return (
         <>
-            <Alert color="info" fade={false} className="d-none d-print-block">
-                Comparison available via <a href={url}>{url}</a>
-            </Alert>
+            <PrintView comparisonId={id} />
+
             <div className="d-print-none">
                 {store && id && (
                     <Provider store={store}>
