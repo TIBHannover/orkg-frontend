@@ -1,4 +1,4 @@
-import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { Badge, Button, FormGroup, Input, InputGroup, Label } from 'reactstrap';
@@ -84,7 +84,7 @@ const Filters: FC<FiltersProps> = ({
     return (
         <FormGroup>
             <Label for="searchQuery">Search query</Label>
-            <InputGroup>
+            <InputGroup className="tw:relative">
                 <Input
                     type="text"
                     value={value}
@@ -95,6 +95,9 @@ const Filters: FC<FiltersProps> = ({
                     onKeyDown={(e) => e.key === 'Enter' && handleSubmitSearch(value)}
                     maxLength={MAX_LENGTH_INPUT}
                 />
+                <Button onClick={() => handleSubmitSearch('')} color="light-darker" className="ps-2 pe-2 tw:me-[2px]!" disabled={!value}>
+                    <FontAwesomeIcon icon={faCircleXmark} />
+                </Button>
                 <Button onClick={() => handleSubmitSearch(value)} color="secondary" className="ps-2 pe-2">
                     <FontAwesomeIcon icon={faSearch} />
                 </Button>

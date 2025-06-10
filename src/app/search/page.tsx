@@ -48,7 +48,7 @@ export default function Search() {
                     </Col>
                     <Col md="8">
                         <div className="tw:h-full tw:flex tw:flex-col">
-                            <OrkgAskBanner />
+                            {searchTerm && <OrkgAskBanner />}
 
                             {isLoading && (
                                 <div className="box rounded p-4">

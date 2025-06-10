@@ -56,7 +56,7 @@ const SearchForm: FC<SearchFormProps> = ({ placeholder, onSearch = undefined }) 
             const link = getLinkByEntityType(entity?._class, id);
             setValue('');
             router.push(link);
-        } else if (isString(value) && value) {
+        } else if (isString(value)) {
             route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&type=${type}&createdBy=${createdBy}`;
         }
         onSearch?.();
