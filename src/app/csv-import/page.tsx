@@ -19,12 +19,12 @@ import {
 import MapProperties from '@/app/csv-import/steps/MapProperties';
 import MapTypes from '@/app/csv-import/steps/MapTypes';
 import UploadForm from '@/app/csv-import/steps/UploadForm';
-import { validateColumns, validateValueOfCell } from '@/app/csv-import/steps/validation';
+import { validateColumns, validateRequiredFields, validateValueOfCell } from '@/app/csv-import/steps/validation';
 import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
 import DATA_TYPES from '@/constants/DataTypes';
-import { CLASSES } from '@/constants/graphSettings';
+import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import requireAuthentication from '@/requireAuthentication';
 import { getPredicate, getPredicates } from '@/services/backend/predicates';
 
@@ -47,13 +47,24 @@ const CsvImport = () => {
 
     const runValidation = (_data: string[][], columnTypes: (MappedColumn | null)[]) => {
         setColumnValidation(validateColumns(_data));
-        const _cellValidations = _data.slice(1).map((row) =>
-            row.map((cell, colIndex) => {
+
+        const _cellValidations = _data.slice(1).map((row) => {
+            // Validate required fields (title/doi) once per row
+            const requiredFieldsError = validateRequiredFields(row, columnTypes);
+
+            return row.map((cell, colIndex) => {
                 const currentColumn = columnTypes[colIndex];
                 if (!currentColumn) return false;
+
+                // If there's a required fields error and this is a title or doi column, return that error
+                if (requiredFieldsError && (currentColumn.predicate?.id === 'title' || currentColumn.predicate?.id === PREDICATES.HAS_DOI)) {
+                    return requiredFieldsError;
+                }
+
+                // Otherwise, validate the individual cell
                 return validateValueOfCell(cell, currentColumn, true);
-            }),
-        );
+            });
+        });
         setCellValidation(_cellValidations);
     };
 
