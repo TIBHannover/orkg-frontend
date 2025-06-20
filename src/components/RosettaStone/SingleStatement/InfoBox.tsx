@@ -4,9 +4,10 @@ import dayjs from 'dayjs';
 import { findKey, toInteger } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useContext, useState } from 'react';
 import { getTrackBackground, Range } from 'react-range';
 import { ThemeContext } from 'styled-components';
+import useSWR from 'swr';
 
 import ActionButtonView from '@/components/ActionButton/ActionButtonView';
 import CopyId from '@/components/CopyId/CopyId';
@@ -16,7 +17,7 @@ import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { CERTAINTY } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getRSStatementVersions } from '@/services/backend/rosettaStone';
+import { getRSStatementVersions, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from '@/services/backend/types';
 
 type InfoBoxProps = {
@@ -28,34 +29,16 @@ type InfoBoxProps = {
 };
 
 const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertainty, isEditing }) => {
-    const [versions, setVersions] = useState<RosettaStoneStatement[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const theme = useContext(ThemeContext);
 
-    const onTrigger = () => {
-        if (!isLoaded && statement.latest_version_id) {
-            setIsLoading(true);
-            getRSStatementVersions({ id: statement.id })
-                .then((_versions) => {
-                    if (_versions.length) {
-                        setVersions(_versions.reverse());
-                    }
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                });
-        }
-    };
+    const { data: _versions, isLoading } = useSWR(
+        isOpen && statement.latest_version_id ? [{ id: statement.latest_version_id }, rosettaStoneUrl, 'getRSStatementVersions'] : null,
+        ([params]) => getRSStatementVersions(params),
+    );
 
-    useEffect(() => {
-        setIsLoaded(false);
-    }, [statement.id, statement.latest_version_id, statement.version_id]);
+    const versions = _versions ?? [];
 
     const CertaintyVALUES: { [key: number]: Certainty } = {
         0: CERTAINTY.LOW,
@@ -74,7 +57,6 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
         <Popover
             open={isOpen}
             onOpenChange={setIsOpen}
-            onTrigger={onTrigger}
             contentStyle={{ maxWidth: '400px' }}
             content={
                 <div className="p-1">
@@ -103,7 +85,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                         </li>
                         {statement.created_by && (
                             <li className="mb-1">
-                                {versions.length > 1 ? 'Updated by:' : 'Created by:'}{' '}
+                                {versions && versions?.length > 1 ? 'Updated by:' : 'Created by:'}{' '}
                                 {statement.created_by !== MISC.UNKNOWN_ID ? (
                                     <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.created_by} />
                                 ) : (
@@ -118,11 +100,11 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                                     className="btn-link"
                                     onClick={showVersionsModal}
                                     style={{ cursor: 'pointer' }}
-                                    onKeyDown={(e) => (e.keyCode === 13 ? showVersionsModal() : undefined)}
+                                    onKeyDown={(e) => (e.key === 'Enter' ? showVersionsModal() : undefined)}
                                     role="button"
                                     tabIndex={0}
                                 >
-                                    {!isLoading ? versions.length : 'loading...'}
+                                    {!isLoading ? versions?.length : 'loading...'}
                                 </span>
                             </li>
                         )}
@@ -198,12 +180,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
         >
             <span>
                 <ActionButtonView action={() => setIsOpen((v) => !v)} title="Show information about this statement" icon={faInfo} />
-                <VersionsModal
-                    versions={versions}
-                    show={isHistoryModalOpen}
-                    id={statement.version_id ?? statement.id}
-                    toggle={() => setIsHistoryModalOpen((v) => !v)}
-                />
+                <VersionsModal show={isHistoryModalOpen} id={statement.version_id ?? statement.id} toggle={() => setIsHistoryModalOpen((v) => !v)} />
             </span>
         </Popover>
     );

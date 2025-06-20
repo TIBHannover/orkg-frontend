@@ -1,22 +1,28 @@
 import { reverse } from 'named-urls';
 import { FC } from 'react';
+import useSWR from 'swr';
 
 import HistoryModalComponent from '@/components/HistoryModal/HistoryModal';
 import ROUTES from '@/constants/routes';
-import { RosettaStoneStatement } from '@/services/backend/types';
+import { getRSStatementVersions, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 
 type VersionsModalProps = {
     id: string;
     show: boolean;
     toggle: () => void;
-    versions: RosettaStoneStatement[];
 };
 
-const VersionsModal: FC<VersionsModalProps> = ({ id, show, toggle, versions }) => {
-    const versionsWithLink = versions.map((version) => ({
-        ...version,
-        link: reverse(ROUTES.RESOURCE, { id: version.id }),
-    }));
+const VersionsModal: FC<VersionsModalProps> = ({ id, show, toggle }) => {
+    const { data: _versions } = useSWR(show && id ? [{ id }, rosettaStoneUrl, 'getRSStatementVersions'] : null, ([params]) =>
+        getRSStatementVersions(params),
+    );
+
+    const versionsWithLink = _versions
+        ? [..._versions].reverse().map((version) => ({
+              ...version,
+              link: reverse(ROUTES.RESOURCE, { id: version.id }),
+          }))
+        : [];
 
     return (
         <HistoryModalComponent
