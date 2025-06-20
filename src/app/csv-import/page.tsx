@@ -3,7 +3,6 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { CSVLink } from 'react-csv';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 import { ZodError } from 'zod';
 
@@ -19,7 +18,7 @@ import {
 import MapProperties from '@/app/csv-import/steps/MapProperties';
 import MapTypes from '@/app/csv-import/steps/MapTypes';
 import UploadForm from '@/app/csv-import/steps/UploadForm';
-import { validateColumns, validateRequiredFields, validateValueOfCell } from '@/app/csv-import/steps/validation';
+import { validateColumns, validateCsvStructure, validateRequiredFields, validateValueOfCell } from '@/app/csv-import/steps/validation';
 import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
@@ -39,11 +38,47 @@ const CsvImport = () => {
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [debugMode, setDebugMode] = useState(false);
     const [columnValidation, setColumnValidation] = useState<string | null>(null);
+    const [structuralValidation, setStructuralValidation] = useState<string | null>(null);
     const [cellValidation, setCellValidation] = useState<(boolean | ZodError<unknown> | null | undefined)[][]>([]);
 
     useEffect(() => {
         document.title = 'CSV import - ORKG';
     }, []);
+
+    // Function to properly escape CSV values
+    const escapeCsvValue = (value: string): string => {
+        // Convert to string if not already
+        const str = String(value);
+
+        // If the value contains double quotes, commas, newlines, or carriage returns, it needs to be quoted
+        if (str.includes('"') || str.includes(',') || str.includes('\n') || str.includes('\r')) {
+            // Escape double quotes by doubling them and wrap the entire value in quotes
+            return `"${str.replace(/"/g, '""')}"`;
+        }
+
+        return str;
+    };
+
+    // Function to generate properly escaped CSV content
+    const generateCsvContent = (csvData: string[][]): string => {
+        return csvData.map((row) => row.map((cell) => escapeCsvValue(cell)).join(',')).join('\n');
+    };
+
+    // Function to handle CSV download
+    const handleCsvDownload = () => {
+        const csvContent = generateCsvContent(data);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'ORKG UPDATED DATA.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
 
     const runValidation = (_data: string[][], columnTypes: (MappedColumn | null)[]) => {
         setColumnValidation(validateColumns(_data));
@@ -91,6 +126,21 @@ const CsvImport = () => {
     };
 
     const handleOnFileLoaded = async ({ _data }: { _data: string[][] }) => {
+        // First, validate the CSV structure
+        const structuralError = validateCsvStructure(_data);
+        setStructuralValidation(structuralError);
+
+        if (structuralError) {
+            // If there are structural issues, stop processing and clear existing data
+            setInitialHeaders([]);
+            setMappedColumns([]);
+            setData([]);
+            setColumnValidation(null);
+            setCellValidation([]);
+            setIsFinished(false);
+            return;
+        }
+
         setInitialHeaders(_data[0]);
         const newData = [..._data];
         // Step 1: determine column types either from header<type> or by auto-detection
@@ -179,6 +229,13 @@ const CsvImport = () => {
                 active
             >
                 <UploadForm handleOnFileLoaded={handleOnFileLoaded} />
+                {structuralValidation && (
+                    <div className="mt-3">
+                        <div className="alert alert-danger" role="alert">
+                            <strong>CSV Structure Error:</strong> {structuralValidation}
+                        </div>
+                    </div>
+                )}
             </StepContainer>
 
             <StepContainer step="2" title="Map properties" topLine bottomLine active={data && data.length > 0}>
@@ -216,14 +273,9 @@ const CsvImport = () => {
                                         <Input type="checkbox" onChange={() => setDebugMode((v) => !v)} checked={debugMode} /> Debug mode
                                     </Label>
                                 </FormGroup>
-                                <CSVLink
-                                    className="text-decoration-none btn-sm btn-secondary btn"
-                                    data={data}
-                                    filename="ORKG UPDATED DATA.csv"
-                                    target="_blank"
-                                >
+                                <Button className="text-decoration-none btn-sm btn-secondary btn" onClick={handleCsvDownload}>
                                     Export as CSV
-                                </CSVLink>
+                                </Button>
                             </div>
                         )}
                     </div>

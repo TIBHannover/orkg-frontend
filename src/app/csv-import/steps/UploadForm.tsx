@@ -15,7 +15,7 @@ const UploadForm = ({ handleOnFileLoaded }: UploadFormProps) => {
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
     const onDropRejected = () => {
-        toast.error('Error uploading your file, only N-Triples (.n3) files are accepted');
+        toast.error('Error uploading your file, only CSV (.csv) files are accepted');
         setIsLoading(false);
     };
 
