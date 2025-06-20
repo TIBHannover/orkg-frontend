@@ -57,6 +57,28 @@ export const validateColumns = (data: string[][]) => {
     return null;
 };
 
+export const validateRequiredFields = (row: string[], columnTypes: (MappedColumn | null)[]): z.ZodError<any> | null => {
+    // Find title and doi column indices
+    const titleColumnIndex = columnTypes.findIndex((col) => col?.predicate?.id === 'title');
+    const doiColumnIndex = columnTypes.findIndex((col) => col?.predicate?.id === PREDICATES.HAS_DOI);
+
+    const titleValue = titleColumnIndex >= 0 ? (row[titleColumnIndex] || '').trim() : '';
+    const doiValue = doiColumnIndex >= 0 ? (row[doiColumnIndex] || '').trim() : '';
+
+    // Create a Zod schema for the required fields validation
+    const requiredFieldsSchema = z
+        .object({
+            title: z.string(),
+            doi: z.string(),
+        })
+        .refine((data) => data.title.trim() !== '' || data.doi.trim() !== '', {
+            message: 'At least one of title or doi must have a value',
+        });
+
+    const result = requiredFieldsSchema.safeParse({ title: titleValue, doi: doiValue });
+    return result.error ?? null;
+};
+
 export const validateValueOfCell = <T extends boolean = true>(
     data: string,
     column: MappedColumn | null,
@@ -98,12 +120,9 @@ export const validateValueOfCell = <T extends boolean = true>(
                 .optional();
             break;
         case PREDICATES.HAS_RESEARCH_FIELD:
-            cellSchema = z
-                .string()
-                .regex(/^(orkg:)?R([0-9])+$|^$/, {
-                    message: "doesn't have a valid research field ID",
-                })
-                .optional();
+            cellSchema = z.string().regex(/^(orkg:)?R([0-9])+$/, {
+                message: "doesn't have a valid research field ID",
+            });
             break;
         case PREDICATES.HAS_DOI:
             cellSchema = z
@@ -141,7 +160,9 @@ export const validateValueOfCell = <T extends boolean = true>(
 
     if (!cellSchema) return returnOnlyError ? null : ({ error: null, data, success: true } as any);
 
-    if (data === '') return returnOnlyError ? null : ({ error: null, data, success: true } as any);
+    // For required fields like research field, don't skip validation for empty strings
+    const isRequiredField = column.predicate?.id === PREDICATES.HAS_RESEARCH_FIELD;
+    if (data === '' && !isRequiredField) return returnOnlyError ? null : ({ error: null, data, success: true } as any);
 
     // If the value has a type, validate the parsed label against the type
     const result = cellSchema.safeParse(hasTypeInfo && typeStr ? label : data);
