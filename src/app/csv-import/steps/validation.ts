@@ -1,3 +1,4 @@
+import pluralize from 'pluralize';
 import { z } from 'zod';
 
 import { findTypeByIdOrName, MappedColumn, parseCellString } from '@/app/csv-import/steps/helpers';
@@ -5,6 +6,55 @@ import { getConfigByType, preprocessNumber } from '@/constants/DataTypes';
 import { PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import REGEX from '@/constants/regex';
+
+export const validateCsvStructure = (data: string[][]) => {
+    if (!data || data.length === 0) {
+        return 'CSV file is empty or invalid.';
+    }
+
+    const header = data[0];
+    if (!header || header.length === 0) {
+        return 'CSV file must have a header row.';
+    }
+
+    // Check for rows with different number of fields from the header row
+    const headerLength = header.length;
+    const invalidRows: number[] = [];
+
+    for (let i = 1; i < data.length; i += 1) {
+        const row = data[i];
+        if (!row || row.length !== headerLength) {
+            invalidRows.push(i + 1); // +1 for 1-based indexing
+        }
+    }
+
+    if (invalidRows.length > 0) {
+        const rowCount = invalidRows.length;
+        const hasText = rowCount === 1 ? 'has' : 'have';
+
+        // Safe access to get the actual row length for single row errors
+        let foundLength = 'varying counts';
+        if (rowCount === 1) {
+            const rowIndex = invalidRows[0] - 1; // Convert back to 0-based indexing
+            const problemRow = data[rowIndex];
+            if (problemRow) {
+                foundLength = problemRow.length.toString();
+            }
+        }
+
+        return (
+            `${pluralize('Row', rowCount)} ${invalidRows.slice(0, 5).join(', ')}${
+                rowCount > 5 ? ` and ${rowCount - 5} more` : ''
+            } ${hasText} a different number of fields than the header row. Expected ${headerLength} ${pluralize(
+                'field',
+                headerLength,
+            )}, but found ${foundLength}. ` +
+            'Please fix your CSV file to ensure all rows have the same number of fields as the header before uploading.'
+        );
+    }
+
+    return null;
+};
 
 export const validateColumns = (data: string[][]) => {
     const header = data && data[0];
