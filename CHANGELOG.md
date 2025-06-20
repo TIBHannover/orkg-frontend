@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.167.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.166.0...v0.167.0) - 2025-06-20
+
+### Changes
+
+- fix(CSVImport): validate csv file structure [`#1560`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1560)
+- fix: rosetta stone statement version history [`#1561`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1561)
+- fix(CSVImport): ensure required fields are validated [`#1559`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1559)
+- fix: fetch count of class instances [`#1558`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1558)
+- fix: use RFC 3987 to validate xsd:anyURI [`#1557`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1557)
+- feat(Search): support search without query [`#1556`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1556)
+- feat(Review): show comparison metadata in print view [`#1554`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1554)
+
+---
 ## [v0.166.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.165.0...v0.166.0) - 2025-06-06
 
 ### Changes
