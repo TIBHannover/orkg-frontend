@@ -1,3 +1,4 @@
+import { isUri } from '@hyperjump/uri';
 import { orderBy } from 'lodash';
 import { z, ZodType } from 'zod';
 
@@ -166,7 +167,7 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:anyURI',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.URI,
-        schema: z.string().url(),
+        schema: z.string().refine((value) => isUri(value), { message: 'Invalid url' }),
         inputFormType: 'text',
         weight: 1,
     },
