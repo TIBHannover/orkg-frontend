@@ -15,7 +15,7 @@ export type ColType = {
     number?: number;
 };
 
-// the id is the column id
+// The id is the column id
 export type TableRow = Record<string, { id: string; value: string }>;
 
 const useTableData = ({ id }: { id: string }) => {
@@ -133,7 +133,7 @@ const useTableData = ({ id }: { id: string }) => {
                 .map((r) =>
                     Object.assign(
                         {},
-                        ...r.data.map((c, i) => ({ [cols[i].id ?? i]: { id: c.id ?? i.toString(), value: c.label } })),
+                        ...r.data.map((c, i) => ({ [cols[i]?.id ?? i]: { id: c?.id ?? i.toString(), value: c?.label ?? '' } })),
                         ...(isTitlesColumnsExist ? [{ titles: { id: 'titles', value: r.label } }] : []),
                     ),
                 ) ?? [];
