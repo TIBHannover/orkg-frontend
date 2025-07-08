@@ -62,7 +62,7 @@ const TableScrollContainer = ({ children, className = '' }) => {
         <>
             <ReactTableWrapper className={className}>
                 {showNextButton && <ClickableScrollButton className="right" onClick={scrollNext} />}
-                {showBackButton && <ClickableScrollButton className="left" leftOffset={!isSmallScreen ? '250px' : 0} onClick={scrollBack} />}
+                {showBackButton && <ClickableScrollButton className="left" $leftOffset={!isSmallScreen ? '250px' : 0} onClick={scrollBack} />}
 
                 <ScrollSync onSync={handleScrollCallback}>{cloneElement(children, { scrollContainerBody })}</ScrollSync>
             </ReactTableWrapper>

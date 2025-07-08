@@ -44,7 +44,7 @@ export type InputType = StandardInputType | 'autocomplete' | 'empty' | 'boolean'
 
 export type DataType = {
     name: string;
-    tooltip?: string | JSX.Element;
+    tooltip?: string | React.ReactNode;
     type: string;
     _class: EntityType | 'empty';
     classId: string;

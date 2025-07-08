@@ -7,7 +7,7 @@ const ColumnHeaderFirstColumn = () => {
 
     return (
         <Properties>
-            <PropertiesInner transpose={transpose} className="first">
+            <PropertiesInner $transpose={transpose} className="first">
                 Properties
             </PropertiesInner>
         </Properties>

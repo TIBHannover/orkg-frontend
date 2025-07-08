@@ -1,11 +1,10 @@
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CSSTransition } from 'react-transition-group';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import styled from 'styled-components';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
@@ -17,26 +16,6 @@ import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { setIsTemplateModalOpen } from '@/slices/contributionEditorSlice';
-
-const AnimationContainer = styled(CSSTransition)`
-    &.zoom-enter {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    &.zoom-enter-active {
-        opacity: 1;
-        transform: translateX(0);
-        transition: opacity 300ms, transform 300ms;
-    }
-    &.zoom-exit {
-        opacity: 1;
-    }
-    &.zoom-exit-active {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: opacity 300ms, transform 300ms;
-    }
-`;
 
 const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsTemplatesModalOpen = undefined }) => {
     const isTemplatesModalOpen = useSelector((state) => isTemplatesModalOpenProp ?? state.contributionEditor.isTemplatesModalOpen);
@@ -81,21 +60,30 @@ const TemplatesModal = ({ isTemplatesModalOpen: isTemplatesModalOpenProp, setIsT
             </ModalHeader>
             <ModalBody>
                 <div className="clearfix">
-                    <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
-                        <div>
-                            <p>Used templates:</p>
-                            {usedTemplates?.map((template) => (
-                                <TemplateButton
-                                    addMode={false}
-                                    key={`tr${template.id}`}
-                                    id={template.id}
-                                    label={template.label}
-                                    classId={template.target_class.id}
-                                />
-                            ))}
-                            <hr />
-                        </div>
-                    </AnimationContainer>
+                    <AnimatePresence>
+                        {usedTemplates?.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div>
+                                    <p>Used templates:</p>
+                                    {usedTemplates?.map((template) => (
+                                        <TemplateButton
+                                            addMode={false}
+                                            key={`tr${template.id}`}
+                                            id={template.id}
+                                            label={template.label}
+                                            classId={template.target_class.id}
+                                        />
+                                    ))}
+                                    <hr />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <FormGroup>
                         <Label for="labelFilter">Browse templates</Label>
                         <InputGroup>

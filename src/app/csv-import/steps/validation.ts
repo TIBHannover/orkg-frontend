@@ -139,7 +139,12 @@ export const validateValueOfCell = <T extends boolean = true>(
 
     const { label, hasTypeInfo, typeStr } = parseCellString(data);
 
-    if (!column) return returnOnlyError ? null : ({ error: null, data, success: true } as any);
+    if (!column) {
+        if (returnOnlyError) {
+            return null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+        }
+        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+    }
 
     switch (column.predicate?.id) {
         case 'title':
@@ -208,13 +213,25 @@ export const validateValueOfCell = <T extends boolean = true>(
         cellSchema = getConfigByType(column.type?.type).schema;
     }
 
-    if (!cellSchema) return returnOnlyError ? null : ({ error: null, data, success: true } as any);
+    if (!cellSchema) {
+        if (returnOnlyError) {
+            return null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+        }
+        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+    }
 
     // For required fields like research field, don't skip validation for empty strings
     const isRequiredField = column.predicate?.id === PREDICATES.HAS_RESEARCH_FIELD;
-    if (data === '' && !isRequiredField) return returnOnlyError ? null : ({ error: null, data, success: true } as any);
+    if (data === '' && !isRequiredField) {
+        return returnOnlyError
+            ? (null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>)
+            : ({ error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>);
+    }
 
     // If the value has a type, validate the parsed label against the type
     const result = cellSchema.safeParse(hasTypeInfo && typeStr ? label : data);
-    return returnOnlyError ? result?.error ?? null : (result as any);
+    if (returnOnlyError) {
+        return (result?.error ?? null) as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+    }
+    return result as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
 };

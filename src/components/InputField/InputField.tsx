@@ -40,7 +40,7 @@ const InputField: FC<InputFieldProps> = ({
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const Forms: { [key: string]: JSX.Element } = {
+    const Forms: { [key: string]: React.ReactNode } = {
         textarea: (
             <Textarea
                 placeholder={placeholder ?? 'Enter a value'}

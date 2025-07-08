@@ -81,7 +81,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
         <>
             <Tabs
                 className="box rounded"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={HOME_CONTENT_TABS.map((tab) => ({

@@ -40,6 +40,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
         id: review?.id,
         // @ts-expect-error
         initResearchField: review.research_fields?.[0],
+        // @ts-expect-error
         initAuthors: review.authors,
     });
 

@@ -1,9 +1,10 @@
 'use client';
 
+import 'react-pdf-highlighter/dist/style.css';
+
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dynamic from 'next/dynamic';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -117,7 +118,7 @@ const PdfTextAnnotation = () => {
 
             <Main>
                 {pdf ? (
-                    <PdfLoader url={pdf} beforeLoad={<FontAwesomeIcon icon={faSpinner} />} workerSrc={pdfjsWorker}>
+                    <PdfLoader url={pdf} beforeLoad={<FontAwesomeIcon icon={faSpinner} />}>
                         {(pdfDocument) => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}

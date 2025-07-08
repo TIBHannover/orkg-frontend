@@ -8,7 +8,14 @@ import Popover from '@/components/FloatingUI/Popover';
 import { RESOURCES } from '@/constants/graphSettings';
 import { stringifySort } from '@/utils';
 
-const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, setIncludeSubFields, researchFieldId }) => {
+const ContributorsDropdownFilter = ({
+    sort,
+    isLoading,
+    includeSubFields,
+    setSort,
+    setIncludeSubFields,
+    researchFieldId = RESOURCES.RESEARCH_FIELD_MAIN,
+}) => {
     const [isOpenPopover, setIsOpenPopover] = useState(false);
     return (
         <>

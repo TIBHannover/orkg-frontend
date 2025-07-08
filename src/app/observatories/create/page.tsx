@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import slugify from 'slugify';
 import useSWR from 'swr';
 import { z } from 'zod';
@@ -13,6 +13,7 @@ import { z } from 'zod';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Unauthorized from '@/components/Unauthorized/Unauthorized';
 import Tooltip from '@/components/Utils/Tooltip';
@@ -204,9 +205,9 @@ const CreateObservatory = () => {
                             {description?.length}/{MAX_LENGTH_INPUT}
                         </div>
                     </FormGroup>
-                    <Button color="primary" onClick={createNewObservatory} className="mt-2 mb-2" isLoading={loading}>
+                    <ButtonWithLoading color="primary" onClick={createNewObservatory} className="mt-2 mb-2" isLoading={loading}>
                         Create observatory
-                    </Button>
+                    </ButtonWithLoading>
                 </div>
             </Container>
         </>

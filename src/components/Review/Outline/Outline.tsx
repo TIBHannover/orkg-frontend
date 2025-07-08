@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import propTypes from 'prop-types';
 import styled from 'styled-components';
 
 import useReview from '@/components/Review/hooks/useReview';
@@ -16,15 +15,15 @@ const Wrapper = styled.aside`
     }
 `;
 
-const Box = styled.div<{ editMode: boolean }>`
+const Box = styled.div<{ $editMode: boolean }>`
     position: sticky;
     top: 150px;
     bottom: 250px;
     width: 200px;
     background: #d7dae3;
     margin-bottom: 50px;
-    border-radius: ${(props) => (props.editMode ? '6px' : '6px 0 0 6px')};
-    margin-top: ${(props) => (props.editMode ? '0px' : '150px')};
+    border-radius: ${(props) => (props.$editMode ? '6px' : '6px 0 0 6px')};
+    margin-top: ${(props) => (props.$editMode ? '0px' : '150px')};
     padding: 10px;
     max-height: calc(100vh - 190px);
     overflow-y: auto;
@@ -46,7 +45,7 @@ const ListItem = styled.li`
     }
 `;
 
-const Outline = ({ editMode = false }) => {
+const Outline = ({ editMode = false }: { editMode?: boolean }) => {
     useScroll();
     const { review } = useReview();
 
@@ -56,7 +55,7 @@ const Outline = ({ editMode = false }) => {
 
     return (
         <Wrapper>
-            <Box editMode={editMode}>
+            <Box $editMode={editMode}>
                 <ol style={{ listStyle: 'none' }} className="p-0 m-0">
                     {review.sections
                         .filter((section) => section.heading)
@@ -77,10 +76,6 @@ const Outline = ({ editMode = false }) => {
             </Box>
         </Wrapper>
     );
-};
-
-Outline.propTypes = {
-    editMode: propTypes.bool,
 };
 
 export default Outline;

@@ -124,6 +124,8 @@ const ComparisonTable = (props) => {
                                     columnId={column.column.id}
                                     columnStyle={column.column.getHeaderProps()?.style}
                                     property={getPropertyObjectFromData(data, headerData)}
+                                    instanceId={column.instanceId}
+                                    totalColumns={column.totalColumns}
                                 />
                             ),
                             accessor: (d) => d.values[index],

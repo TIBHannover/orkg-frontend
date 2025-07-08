@@ -16,8 +16,6 @@ import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { CookiesProvider } from 'react-cookie';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
@@ -77,23 +75,21 @@ const Providers = ({ children }) => (
     // The session provider would make sure that the session is kept alive by polling the nextjs server every 4 minutes
     <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
         <StyledComponentsRegistry>
-            <DndProvider backend={HTML5Backend}>
-                <CookiesProvider>
-                    <Provider store={store}>
-                        <ResetStoreOnNavigate>
-                            <ThemeProvider theme={theme}>
-                                <SWRConfig value={SWR_CONFIG}>
-                                    <MathJaxContext config={MATH_JAX_CONFIG}>
-                                        <MatomoProvider value={matomoInstance}>
-                                            <DefaultLayout>{children}</DefaultLayout>
-                                        </MatomoProvider>
-                                    </MathJaxContext>
-                                </SWRConfig>
-                            </ThemeProvider>
-                        </ResetStoreOnNavigate>
-                    </Provider>
-                </CookiesProvider>
-            </DndProvider>
+            <CookiesProvider>
+                <Provider store={store}>
+                    <ResetStoreOnNavigate>
+                        <ThemeProvider theme={theme}>
+                            <SWRConfig value={SWR_CONFIG}>
+                                <MathJaxContext config={MATH_JAX_CONFIG}>
+                                    <MatomoProvider value={matomoInstance}>
+                                        <DefaultLayout>{children}</DefaultLayout>
+                                    </MatomoProvider>
+                                </MathJaxContext>
+                            </SWRConfig>
+                        </ThemeProvider>
+                    </ResetStoreOnNavigate>
+                </Provider>
+            </CookiesProvider>
         </StyledComponentsRegistry>
     </SessionProvider>
 );

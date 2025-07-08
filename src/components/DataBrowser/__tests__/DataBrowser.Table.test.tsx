@@ -1,4 +1,4 @@
-import { MotionGlobalConfig } from 'framer-motion';
+import { MotionGlobalConfig } from 'motion/react';
 
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';

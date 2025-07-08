@@ -11,7 +11,7 @@ function StatementPlaceholder() {
     const theme = useContext(ThemeContext);
 
     const renderCard = (property: RSPropertyShape, index: number) => {
-        let color = '#5bafbd';
+        let color: string | undefined = '#5bafbd';
         let type = 'object';
         if (property && 'min_count' in property && property.min_count && parseInt(property.min_count.toString()) > 0) {
             color = '#107585';

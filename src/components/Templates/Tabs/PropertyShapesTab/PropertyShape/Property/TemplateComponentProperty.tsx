@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { ConnectDragSource } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 import { InputGroup } from 'reactstrap';
@@ -22,16 +21,23 @@ const DragHandler = styled.div`
     width: 30px;
     float: left;
     padding: 10px;
+    cursor: move;
+    color: #a5a5a5;
 `;
 
 type TemplateComponentPropertyProps = {
     id: number;
-    dragRef: ConnectDragSource;
+    onDragHandleRef: (element: HTMLElement | null) => void;
     handleDeletePropertyShape: (_index: number) => void;
     handlePropertiesSelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
 };
 
-const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dragRef, handleDeletePropertyShape, handlePropertiesSelect }) => {
+const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({
+    id,
+    onDragHandleRef,
+    handleDeletePropertyShape,
+    handlePropertiesSelect,
+}) => {
     const [isEditing, setIsEditing] = useState(false);
     // @ts-expect-error
     const property = useSelector((state) => state.templateEditor.properties[id].path);
@@ -40,7 +46,7 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({ id, dra
     return (
         <PropertyStyle className="col-4">
             {isEditMode && (
-                <DragHandler ref={dragRef}>
+                <DragHandler ref={onDragHandleRef} role="button" tabIndex={0} aria-label="Drag to reorder property">
                     <FontAwesomeIcon icon={faGripVertical} />
                 </DragHandler>
             )}

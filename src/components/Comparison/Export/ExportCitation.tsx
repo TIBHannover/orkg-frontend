@@ -1,9 +1,9 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zipObject } from 'lodash';
-import { FC, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -30,6 +30,14 @@ type ExportCitationProps = {
 const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
     const [selectedTab, setSelectedTab] = useState('APA');
     const [citations, setCitations] = useState<{ [key: string]: string }>({});
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Citation copied to clipboard');
+        }
+    }, [state.value]);
 
     const getCitation = () => {
         Promise.all(
@@ -78,17 +86,14 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
                                 />
                             </p>
 
-                            <CopyToClipboard
-                                text={citations[style.styleID] ? citations[style.styleID] : 'Loading...'}
-                                onCopy={() => {
-                                    toast.dismiss();
-                                    toast.success(`${style.styleLabel} citation copied`);
-                                }}
+                            <Button
+                                color="primary"
+                                className="pl-3 pr-3 float-right"
+                                size="sm"
+                                onClick={() => copyToClipboard(citations[style.styleID])}
                             >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
+                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                            </Button>
                         </TabPane>
                     ))}
                 </TabContent>

@@ -67,7 +67,7 @@ function TabsContainer({ id }) {
             >
                 <Tabs
                     className="box rounded"
-                    destroyInactiveTabPane={false}
+                    destroyOnHidden={false}
                     onChange={onTabChange}
                     activeKey={activeTab ?? 'description'}
                     items={[

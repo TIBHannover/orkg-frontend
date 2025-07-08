@@ -143,7 +143,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                                                         width: '100%',
                                                         background: getTrackBackground({
                                                             values: certaintyNumber,
-                                                            colors: [theme?.smart, theme?.lightDarker],
+                                                            colors: [theme?.smart ?? '', theme?.lightDarker ?? ''],
                                                             min: 0,
                                                             max: 2,
                                                         }),

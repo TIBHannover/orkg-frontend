@@ -1,6 +1,6 @@
+import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { CSSTransition } from 'react-transition-group';
 import { ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -20,25 +20,15 @@ const PaperHeaderBarContainer = styled.div`
     }
 `;
 
-const AnimationContainer = styled(CSSTransition)`
-    &.fade-appear {
-        max-height: 0;
-        transition: max-height 0.5s ease;
-        overflow: hidden;
-        padding: 0;
-    }
-
-    &.fade-appear-active {
-        transition: max-height 0.5s ease;
-        max-height: 50px;
-    }
+const AnimationContainer = styled(motion.div)`
+    overflow: hidden;
 `;
 
 function PaperHeaderBar(props) {
     const title = useSelector((state) => state.viewPaper.paper.title);
 
     return (
-        <AnimationContainer in appear classNames="fade" timeout={500}>
+        <AnimationContainer initial={{ maxHeight: 0 }} animate={{ maxHeight: 60 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
             <PaperHeaderBarContainer id="paperHeaderBar">
                 <Container className="d-flex align-items-center py-2">
                     <div className="title flex-grow-1 text-truncate">

@@ -1,5 +1,4 @@
-import arrayMove from 'array-move';
-import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
@@ -7,14 +6,16 @@ import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
 import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import AddPropertyView from '@/components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
-import PropertyShape from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
+import PropertyShape, { isPropertyShapeData } from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';
 
 const PropertyShapesTab: FC<{}> = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
+    const [instanceId] = useState(() => createInstanceId('property-shapes-tab'));
     const dispatch = useDispatch();
     // @ts-expect-error
     const propertyShapes: PropertyShapeType[] = useSelector((state) => state.templateEditor.properties);
@@ -24,6 +25,37 @@ const PropertyShapesTab: FC<{}> = () => {
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
+
+    const reorderPropertyShapes = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+            const reorderedShapes = performReorder({
+                items: propertyShapes,
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
+            });
+
+            if (reorderedShapes !== propertyShapes) {
+                dispatch(updatePropertyShapes(reorderedShapes));
+            }
+        },
+        [propertyShapes, dispatch],
+    );
+
+    useEffect(() => {
+        const cleanup = createListMonitor({
+            instanceId,
+            items: propertyShapes,
+            isDragData: isPropertyShapeData,
+            onReorder: reorderPropertyShapes,
+            getItemId: (shape) => shape.path?.id || `shape-${propertyShapes.indexOf(shape)}`,
+        });
+
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, propertyShapes, reorderPropertyShapes]);
 
     const handleDeletePropertyShape = (index: number) => {
         dispatch(updatePropertyShapes(propertyShapes.filter((item, j: number) => index !== j)));
@@ -123,13 +155,6 @@ const PropertyShapesTab: FC<{}> = () => {
         setPropertyIndex(null);
     };
 
-    const moveCard = useCallback(
-        (dragIndex: number, hoverIndex: number) => {
-            dispatch(updatePropertyShapes(arrayMove(propertyShapes, dragIndex, hoverIndex)));
-        },
-        [propertyShapes, dispatch],
-    );
-
     const handleSwitchIsClosedTemplate = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(updateIsClosed(e.target.checked));
     };
@@ -156,9 +181,10 @@ const PropertyShapesTab: FC<{}> = () => {
                     propertyShapes.map((templateProperty, index: number) => (
                         <PropertyShape
                             id={index}
-                            key={`tc${templateProperty.path?.id}`}
+                            key={`tc${templateProperty.path?.id || index}`}
+                            instanceId={instanceId}
+                            propertyShape={templateProperty}
                             handleDeletePropertyShape={handleDeletePropertyShape}
-                            moveCard={moveCard}
                             handlePropertiesSelect={handlePropertiesSelect}
                             handleClassOfPropertySelect={handleClassOfPropertySelect}
                         />

@@ -60,7 +60,7 @@ function ResearchProblemTabsContainer({ id }: { id: string }) {
 
             <Tabs
                 className="box rounded mt-2"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={RESEARCH_PROBLEM_CONTENT_TABS.map((tab) => ({

@@ -70,7 +70,7 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
 
             <Tabs
                 className={`rounded mt-2 ${boxShadow ? 'box' : ''}`}
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={RESEARCH_FIELD_CONTENT_TABS.map((tab) => ({

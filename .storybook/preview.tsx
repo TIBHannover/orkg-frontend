@@ -3,8 +3,6 @@ import '@/assets/scss/CustomBootstrap.scss';
 import '@/assets/scss/DefaultLayout.scss';
 import 'leaflet/dist/leaflet.css';
 import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import 'react-toastify/dist/ReactToastify.css';
 import { createGlobalStyle } from 'styled-components';
 import { Wrapper } from '../src/testUtils';
@@ -28,14 +26,12 @@ const GlobalStyle = createGlobalStyle`
 
 export const decorators: Preview['decorators'] = [
     (Story: React.ComponentType) => (
-        <DndProvider backend={HTML5Backend}>
-            <Wrapper>
-                <GlobalStyle />
-                <div className="bg-white" style={{ background: '#fff!important' }}>
-                    <Story />
-                </div>
-            </Wrapper>
-        </DndProvider>
+        <Wrapper>
+            <GlobalStyle />
+            <div className="bg-white" style={{ background: '#fff!important' }}>
+                <Story />
+            </div>
+        </Wrapper>
     ),
 ];
 export const tags = ['autodocs'];

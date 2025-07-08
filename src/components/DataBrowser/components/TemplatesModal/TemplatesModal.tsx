@@ -1,8 +1,8 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import pluralize from 'pluralize';
 import { FC } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -17,26 +17,6 @@ import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTempl
 import Tooltip from '@/components/Utils/Tooltip';
 import { CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
-
-const AnimationContainer = styled(CSSTransition)`
-    &.zoom-enter {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    &.zoom-enter-active {
-        opacity: 1;
-        transform: translateX(0);
-        transition: opacity 300ms, transform 300ms;
-    }
-    &.zoom-exit {
-        opacity: 1;
-    }
-    &.zoom-exit-active {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: opacity 300ms, transform 300ms;
-    }
-`;
 
 const FiltersWrapperStyled = styled.div`
     background: ${(props) => props.theme.light};
@@ -96,14 +76,23 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                 <ModalHeader toggle={toggle}>Template gallery</ModalHeader>
                 <ModalBody>
                     <div className="clearfix">
-                        <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
-                            <div>
-                                <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
-                                {usedTemplates?.map((template) => (
-                                    <TemplateButton template={template} key={`tr${template.id}`} />
-                                ))}
-                            </div>
-                        </AnimationContainer>
+                        <AnimatePresence>
+                            {usedTemplates?.length > 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <div>
+                                        <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
+                                        {usedTemplates?.map((template) => (
+                                            <TemplateButton template={template} key={`tr${template.id}`} />
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         {usedTemplates?.length === 0 && (
                             <Alert color="light">
                                 <i className="text-secondary-darker">No templates applied</i>

@@ -44,9 +44,9 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
     }
 
     const Forms: {
-        [key in InputType]?: JSX.Element;
+        [key in InputType]?: React.ReactNode;
     } & {
-        default: JSX.Element;
+        default: React.ReactNode;
     } = {
         boolean: (
             <Input

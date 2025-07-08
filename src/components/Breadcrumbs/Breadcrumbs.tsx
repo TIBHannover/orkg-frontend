@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
-import { PREDICATES } from '@/constants/graphSettings';
+import { PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { getParentResearchFields, getStatements, statementsUrl } from '@/services/backend/statements';
@@ -47,7 +47,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ disableLastField = false, backgroun
     if (parentResearchFields.length === 0 && data && researchFieldId) {
         parentResearchFields = [
             {
-                id: researchFieldId,
+                id: RESOURCES.RESEARCH_FIELD_MAIN,
                 label: 'Research Field',
                 classes: [],
                 shared: 0,

@@ -1,58 +1,95 @@
-import { FC, useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
+import { FC, useEffect, useRef, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
 import { OptionType } from '@/components/Autocomplete/types';
+import {
+    createDragDataFactory,
+    createDragDataKey,
+    createDragDataValidator,
+    createDraggableItem,
+    createEdgeChangeHandler,
+} from '@/components/shared/dnd/dragAndDropUtils';
 import { StatementsGroupStyle } from '@/components/StatementBrowser/styled';
 import TemplateComponentProperty from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
 import TemplateComponentValue from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import ItemTypes from '@/constants/dndTypes';
-import { handleSortableHoverReactDnd } from '@/utils';
+import { PropertyShape as PropertyShapeType } from '@/services/backend/types';
+
+// Create shared symbols and functions for property shape drag and drop
+export const propertyShapeKey = createDragDataKey('propertyShape');
+export const createPropertyShapeData = createDragDataFactory<PropertyShapeType>(propertyShapeKey);
+export const isPropertyShapeData = createDragDataValidator<PropertyShapeType>(propertyShapeKey);
 
 type PropertyShapeProps = {
     id: number;
-    moveCard: (_dragIndex: number, _hoverIndex: number) => void;
+    instanceId: symbol;
+    propertyShape: PropertyShapeType;
     handleDeletePropertyShape: (_index: number) => void;
     handlePropertiesSelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
     handleClassOfPropertySelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
 };
 
-const PropertyShape: FC<PropertyShapeProps> = ({ id, moveCard, handleDeletePropertyShape, handlePropertiesSelect, handleClassOfPropertySelect }) => {
-    const ref = useRef(null);
+const PropertyShape: FC<PropertyShapeProps> = ({
+    id,
+    instanceId,
+    propertyShape,
+    handleDeletePropertyShape,
+    handlePropertiesSelect,
+    handleClassOfPropertySelect,
+}) => {
     const { isEditMode } = useIsEditMode();
+    const [isDragging, setIsDragging] = useState(false);
+    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
+    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
-    const handleUpdate = ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
-        moveCard(dragIndex, hoverIndex);
-    };
+    useEffect(() => {
+        const element = ref.current;
+        if (!element || !isEditMode) return undefined;
 
-    const [, drop] = useDrop({
-        accept: ItemTypes.PROPERTY_SHAPE,
-        hover: (item, monitor) => handleSortableHoverReactDnd({ item, monitor, currentRef: ref.current, hoverIndex: id, handleUpdate }),
-    });
-    const [{ isDragging }, drag, preview] = useDrag({
-        type: ItemTypes.PROPERTY_SHAPE,
-        item: { index: id },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-        canDrag: () => isEditMode,
-    });
-    const opacity = isDragging ? 0 : 1;
+        const onEdgeChange = createEdgeChangeHandler({
+            targetElement: element,
+            sourceIndex: id,
+            targetIndex: id,
+            setClosestEdge,
+        });
 
-    preview(drop(ref));
+        return createDraggableItem({
+            element,
+            dragHandle: dragHandleElement || undefined,
+            item: propertyShape,
+            index: id,
+            instanceId,
+            createDragData: createPropertyShapeData,
+            isDragData: isPropertyShapeData,
+            onDragStart: () => {
+                setIsDragging(true);
+                setClosestEdge(null);
+            },
+            onDrop: () => {
+                setIsDragging(false);
+                setClosestEdge(null);
+            },
+            onEdgeChange,
+            onDragEnter: onEdgeChange,
+            onDragLeave: () => setClosestEdge(null),
+        });
+    }, [propertyShape, id, instanceId, dragHandleElement, isEditMode]);
 
     return (
-        <StatementsGroupStyle className="noTemplate list-group-item" style={{ opacity }}>
-            <div ref={ref} className="row gx-0">
+        <StatementsGroupStyle ref={ref} style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }} className="noTemplate list-group-item">
+            <div className="row gx-0">
                 <TemplateComponentProperty
                     id={id}
                     handleDeletePropertyShape={handleDeletePropertyShape}
                     handlePropertiesSelect={handlePropertiesSelect}
-                    dragRef={drag}
+                    onDragHandleRef={setDragHandleElement}
                 />
                 <TemplateComponentValue id={id} handleClassOfPropertySelect={handleClassOfPropertySelect} />
             </div>
+            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
         </StatementsGroupStyle>
     );
 };

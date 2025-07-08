@@ -1,37 +1,67 @@
-import arrayMove from 'array-move';
+import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import PropTypes from 'prop-types';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Scrollbar } from 'react-scrollbars-custom';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import Row from '@/components/Comparison/Table/Rows/Row';
+import Row, { isRowData } from '@/components/Comparison/Table/Rows/Row';
+import { createInstanceId, createListMonitor, performReorder } from '@/components/shared/dnd/dragAndDropUtils';
 import { updateContributionOrder, updatePropertyOrder } from '@/slices/comparisonSlice';
 
 const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
     const { comparison, updateComparison } = useComparison();
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
     const dispatch = useDispatch();
+    const [instanceId] = useState(() => createInstanceId('comparison-rows'));
 
-    const handleDragEnd = ({ source, destination }) => {
-        if (!transpose) {
-            dispatch(updatePropertyOrder({ from: source?.index, to: destination?.index }));
-            updateComparison({
-                config: {
-                    ...comparison.config,
-                    predicates: arrayMove(comparison.config.predicates, source?.index, destination?.index),
-                },
+    const reorder = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }) => {
+            if (!comparison?.config) {
+                return;
+            }
+
+            const finishIndex = getReorderDestinationIndex({
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
             });
-        } else {
-            dispatch(updateContributionOrder({ from: source?.index, to: destination?.index }));
-            updateComparison({
-                config: {
-                    ...comparison.config,
-                    contributions: arrayMove(comparison.config.contributions, source?.index, destination?.index),
-                },
-            });
-        }
-    };
+
+            if (finishIndex === startIndex) {
+                return;
+            }
+
+            if (!transpose) {
+                dispatch(updatePropertyOrder({ from: startIndex, to: finishIndex }));
+                updateComparison({
+                    config: {
+                        ...comparison.config,
+                        predicates: performReorder({ items: comparison.config.predicates, startIndex, indexOfTarget, closestEdgeOfTarget }),
+                    },
+                });
+            } else {
+                dispatch(updateContributionOrder({ from: startIndex, to: finishIndex }));
+                updateComparison({
+                    config: {
+                        ...comparison.config,
+                        contributions: performReorder({ items: comparison.config.contributions, startIndex, indexOfTarget, closestEdgeOfTarget }),
+                    },
+                });
+            }
+        },
+        [transpose, dispatch, updateComparison, comparison?.config],
+    );
+
+    useEffect(() => {
+        return createListMonitor({
+            instanceId,
+            items: rows,
+            isDragData: isRowData,
+            onReorder: reorder,
+            getItemId: (item) => item.id,
+        });
+    }, [instanceId, rows, reorder]);
 
     return (
         <Scrollbar
@@ -39,11 +69,12 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
             translateContentSizeYToHolder
             noScrollY
             wrapperProps={{
-                renderer: ({ elementRef, ...restProps }) => <div {...restProps} ref={elementRef} className="position-static" />,
+                renderer: ({ elementRef, key, ...restProps }) => <div key={key} {...restProps} ref={elementRef} className="position-static" />,
             }}
             scrollerProps={{
-                renderer: ({ elementRef, ...restProps }) => (
+                renderer: ({ elementRef, key, ...restProps }) => (
                     <div
+                        key={key}
                         {...restProps}
                         ref={(el) => {
                             elementRef(el);
@@ -54,49 +85,31 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
                 ),
             }}
             trackXProps={{
-                renderer: ({ elementRef, ...restProps }) => <div {...restProps} ref={elementRef} className="position-sticky d-block w-100" />,
+                renderer: ({ elementRef, key, ...restProps }) => (
+                    <div key={key} {...restProps} ref={elementRef} className="position-sticky d-block w-100" />
+                ),
             }}
             thumbXProps={{
-                renderer: ({ elementRef, ...restProps }) => (
-                    <div {...restProps} ref={elementRef} className="p-0" style={{ ...restProps.style, cursor: 'default' }} />
+                renderer: ({ elementRef, key, ...restProps }) => (
+                    <div key={key} {...restProps} ref={elementRef} className="p-0" style={{ ...restProps.style, cursor: 'default' }} />
                 ),
             }}
             contentProps={{
-                renderer: ({ elementRef, ...restProps }) => <div {...restProps} ref={elementRef} className="d-block" />,
+                renderer: ({ elementRef, key, ...restProps }) => <div key={key} {...restProps} ref={elementRef} className="d-block" />,
             }}
         >
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable
-                    droppableId="droppable-rows"
-                    direction="vertical"
-                    renderClone={(provided, snapshot, rubric) => (
-                        <div
-                            className={`tr p-0 ${snapshot.isDragging ? 'shadow' : ''}`}
-                            {...provided.draggableProps}
-                            {...rows[rubric.source.index].cells[0].getCellProps()}
-                            style={{
-                                ...rows[rubric.source.index].cells[0].getCellProps()?.style,
-                                ...provided.draggableProps?.style,
-                                width: 250,
-                            }}
-                            ref={provided.innerRef}
-                        >
-                            {rows[rubric.source.index].cells[0].render('Cell')}
-                        </div>
-                    )}
-                >
-                    {(providedDroppable) => (
-                        <div ref={providedDroppable.innerRef} {...getTableBodyProps()} {...providedDroppable.droppableProps}>
-                            {rows.map((row, index) => {
-                                prepareRow(row);
-                                return <Row row={row} index={index} key={row.getRowProps().key} />;
-                            })}
-
-                            {providedDroppable.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            <div
+                {...(() => {
+                    const { key, ...bodyProps } = getTableBodyProps();
+                    return bodyProps;
+                })()}
+            >
+                {rows.map((row, index) => {
+                    prepareRow(row);
+                    const { key, ...rowProps } = row.getRowProps();
+                    return <Row row={row} index={index} key={`row-${index}-${row.id}`} instanceId={instanceId} {...rowProps} />;
+                })}
+            </div>
         </Scrollbar>
     );
 };

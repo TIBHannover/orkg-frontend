@@ -1,25 +1,10 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
-const AnimationContainer = styled(CSSTransition)`
-    &.slide-enter {
-        max-height: 0;
-        overflow: hidden;
-    }
-
-    &.slide-enter.slide-enter-active,
-    &.slide-exit {
-        max-height: 50px;
-        transition: 0.2s ease-out;
-    }
-
-    &.slide-exit.slide-exit-active {
-        max-height: 0px;
-        overflow: hidden;
-        transition: 0.2s ease-in;
-    }
+const AnimationContainer = styled(motion.div)`
+    overflow: hidden;
 `;
 
 export const EditModeContainer = styled(Container)`
@@ -49,21 +34,33 @@ type EditModeHeaderProps = {
 
 function EditModeHeader({ isVisible, message = null }: EditModeHeaderProps) {
     return (
-        <AnimationContainer in={isVisible} unmountOnExit classNames="slide" timeout={{ enter: 800, exit: 800 }}>
-            <div>
-                <EditModeContainer className="rounded-top">
-                    <Title>
-                        {!message ? (
-                            <>
-                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
-                            </>
-                        ) : (
-                            message
-                        )}
-                    </Title>
-                </EditModeContainer>
-            </div>
-        </AnimationContainer>
+        <AnimatePresence>
+            {isVisible && (
+                <AnimationContainer
+                    initial={{ maxHeight: 0 }}
+                    animate={{ maxHeight: 50 }}
+                    exit={{ maxHeight: 0 }}
+                    transition={{
+                        duration: 0.8,
+                        ease: 'easeOut',
+                    }}
+                >
+                    <div>
+                        <EditModeContainer className="rounded-top">
+                            <Title>
+                                {!message ? (
+                                    <>
+                                        Edit mode <span className="ps-2">Every change you make is automatically saved</span>
+                                    </>
+                                ) : (
+                                    message
+                                )}
+                            </Title>
+                        </EditModeContainer>
+                    </div>
+                </AnimationContainer>
+            )}
+        </AnimatePresence>
     );
 }
 

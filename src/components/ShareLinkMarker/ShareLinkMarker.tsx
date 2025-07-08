@@ -2,8 +2,9 @@ import { faFacebook, faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { usePathname } from 'next/navigation';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -12,7 +13,7 @@ import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } fr
 
 export const ShareSideBox = styled.div`
     position: absolute;
-    right: -45px;
+    right: -60px;
     z-index: 20;
     background-color: #fff;
     border-top-right-radius: 4px;
@@ -29,11 +30,20 @@ export const ShareSideBox = styled.div`
 `;
 
 const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: string }) => {
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Link copied to clipboard');
+        }
+    }, [state.value]);
+
     const pathname = usePathname();
     const shareUrl = `${window.location.protocol}//${window.location.host}${pathname}`;
 
     return (
-        <ShareSideBox className="pt-2 ps-2 pe-2 pb-2">
+        <ShareSideBox className="pt-2 ps-0 pe-0 pb-2">
             <div className="text-muted mb-1">
                 <small>Share</small>
             </div>
@@ -54,20 +64,9 @@ const ShareLinkMarker = ({ typeOfLink, title }: { typeOfLink: string; title: str
             </Tooltip>
             <Tooltip placement="left" content="Copy link to clipboard">
                 <span>
-                    <CopyToClipboard
-                        text={shareUrl}
-                        // @ts-expect-error
-                        target="_blank"
-                        className="text-secondary p-0"
-                        onCopy={() => {
-                            toast.dismiss();
-                            toast.success('Link copied');
-                        }}
-                    >
-                        <Button color="link">
-                            <FontAwesomeIcon icon={faLink} />
-                        </Button>
-                    </CopyToClipboard>
+                    <Button color="link" onClick={() => copyToClipboard(shareUrl)}>
+                        <FontAwesomeIcon icon={faLink} />
+                    </Button>
                 </span>
             </Tooltip>
         </ShareSideBox>

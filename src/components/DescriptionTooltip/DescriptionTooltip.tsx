@@ -2,9 +2,9 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { FC, Fragment, useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button, ButtonGroup, Table } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -76,6 +76,14 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
     buttons,
 }) => {
     const [isActive, setIsActive] = useState(false);
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('ID copied to clipboard');
+        }
+    }, [state.value]);
 
     const { data, isLoading } = useSWR(
         isActive && id && _class !== ENTITIES.LITERAL
@@ -118,24 +126,19 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                                 <div className="flex-grow-1">
                                     <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
                                     {id && (
-                                        <CopyToClipboard
-                                            text={id}
-                                            onCopy={() => {
-                                                toast.dismiss();
-                                                toast.success('ID copied to clipboard');
+                                        <Button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                copyToClipboard(id);
                                             }}
+                                            title="Click to copy id"
+                                            className="py-0 px-0 ms-1"
+                                            size="sm"
+                                            color="link"
+                                            style={{ verticalAlign: 'middle' }}
                                         >
-                                            <Button
-                                                title="Click to copy id"
-                                                onClick={(e) => e.stopPropagation()}
-                                                className="py-0 px-0 ms-1"
-                                                size="sm"
-                                                color="link"
-                                                style={{ verticalAlign: 'middle' }}
-                                            >
-                                                <FontAwesomeIcon icon={faClipboard} size="xs" />
-                                            </Button>
-                                        </CopyToClipboard>
+                                            <FontAwesomeIcon icon={faClipboard} size="xs" />
+                                        </Button>
                                     )}
                                 </div>
                                 {id && showURL && (

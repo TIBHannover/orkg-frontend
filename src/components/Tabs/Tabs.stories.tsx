@@ -38,7 +38,7 @@ export const Default = Template.bind({});
 Default.args = {
     activeKey: '1',
     onChange: () => {},
-    destroyInactiveTabPane: true,
+    destroyOnHidden: true,
     more: { icon: '>' },
     items: [
         {

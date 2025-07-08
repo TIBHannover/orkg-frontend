@@ -1,7 +1,7 @@
+import { AnimatePresence } from 'framer-motion';
 import { orderBy, uniqBy } from 'lodash';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
-import { TransitionGroup } from 'react-transition-group';
 
 import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useProvenance from '@/components/ViewPaper/hooks/useProvenance';
@@ -57,9 +57,15 @@ const ProvenanceBox = () => {
                 {viewPaper.extraction_method === 'AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
-                <TransitionGroup exit={false}>
+                <AnimatePresence mode="wait">
                     {activeTab === 1 ? (
-                        <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <AnimationContainer
+                            key={1}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
                             <Provenance
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
@@ -71,7 +77,13 @@ const ProvenanceBox = () => {
                             />
                         </AnimationContainer>
                     ) : (
-                        <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <AnimationContainer
+                            key={2}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
                             <Timeline
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
@@ -84,7 +96,7 @@ const ProvenanceBox = () => {
                             />
                         </AnimationContainer>
                     )}
-                </TransitionGroup>
+                </AnimatePresence>
             </SidebarStyledBox>
         </div>
     );

@@ -74,7 +74,7 @@ const AuthorPage = () => {
 
             <Tabs
                 className="box rounded mt-2"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={AUTHOR_CONTENT_TABS.map((tab) => ({

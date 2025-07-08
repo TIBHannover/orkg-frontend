@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { isEqual } from 'lodash';
+import { AnimatePresence, motion } from 'motion/react';
 import { FC, Fragment, ReactElement, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import styled from 'styled-components';
@@ -88,8 +88,8 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0 
                             animate="open"
                             exit="collapsed"
                             variants={{
-                                open: { y: 0, x: 0, right: '0', scale: 1, height: 'auto', originX: '35%', originY: 0 },
-                                collapsed: { y: -10, x: 10, right: '50%', scale: 0, height: 0, originX: '35%', originY: 0 },
+                                open: { y: 0, x: 0, right: '0', scale: 1, height: 'auto' },
+                                collapsed: { y: -10, x: 10, right: '50%', scale: 0, height: 0 },
                             }}
                             transition={{ duration: 0.5, ease: 'easeInOut' }}
                         >

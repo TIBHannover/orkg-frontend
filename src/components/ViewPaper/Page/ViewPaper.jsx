@@ -37,7 +37,7 @@ const ViewPaper = () => {
                     )}
                     <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
 
-                    <InView as="div" onChange={(inView) => handleShowHeaderBar(inView)}>
+                    <InView as="div" onChange={(inView, entry) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={
                                 <PaperMenuBar

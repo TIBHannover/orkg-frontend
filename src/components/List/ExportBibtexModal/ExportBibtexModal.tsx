@@ -2,8 +2,8 @@ import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import useList from '@/components/List/hooks/useList';
@@ -25,6 +25,14 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
     const [bibtex, setBibtex] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { allPapers } = useList();
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Bibtex copied to clipboard');
+        }
+    }, [state.value]);
 
     const getCite = (paper: Paper) =>
         new Cite({
@@ -72,16 +80,10 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
                     rows="15"
                     disabled
                 />
-                <CopyToClipboard
-                    text={isLoading ? 'Loading...' : bibtex}
-                    onCopy={() => {
-                        toast.success('Copied to clipboard');
-                    }}
-                >
-                    <Button disabled={isLoading} color="primary" className="mt-2 float-end" size="sm">
-                        <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                    </Button>
-                </CopyToClipboard>
+
+                <Button disabled={isLoading} color="primary" className="mt-2 float-end" size="sm" onClick={() => copyToClipboard(bibtex)}>
+                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                </Button>
             </ModalBody>
         </Modal>
     );

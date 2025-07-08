@@ -49,9 +49,9 @@ const Contributions = (props) => {
                     )}
 
                     <Tabs
-                        moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
+                        more={{ icon: <FontAwesomeIcon size="lg" icon={faAngleDown} /> }}
                         activeKey={selectedContribution}
-                        destroyInactiveTabPane
+                        destroyOnHidden
                         onChange={onTabChange}
                         items={contributions.map((contribution) => ({
                             label: (

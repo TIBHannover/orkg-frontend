@@ -34,30 +34,45 @@ const ObservatoryItem = ({ observatory }: ObservatoryItemProps) => {
                 </Link>
                 <div className="my-3 px-2">
                     <Link className="text-center d-flex" href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>
-                        <Swiper
-                            spaceBetween={30}
-                            effect="fade"
-                            autoplay={{
-                                delay: 3000,
-                            }}
-                            loop
-                            modules={[Autoplay, EffectFade, EffectCube]}
-                            className="orkgSwiper"
-                        >
-                            {observatory.organization_ids.map((oId) => (
-                                <SwiperSlide key={`imageLogo${oId}`} className="text-center bg-white" style={{ height: '120px', width: '300px' }}>
-                                    <Image
-                                        className="p-2"
-                                        src={getOrganizationLogoUrl(oId)}
-                                        alt={`${oId} logo`}
-                                        fill
-                                        objectFit="contain"
-                                        unoptimized={!optimizedLogo}
-                                        onError={() => optimizedLogo && setOptimizedLogo(false)}
-                                    />
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                        {observatory.organization_ids.length > 1 && (
+                            <Swiper
+                                spaceBetween={30}
+                                effect="fade"
+                                autoplay={{
+                                    delay: 3000,
+                                }}
+                                loop
+                                modules={[Autoplay, EffectFade, EffectCube]}
+                                className="orkgSwiper"
+                            >
+                                {observatory.organization_ids.map((oId) => (
+                                    <SwiperSlide key={`imageLogo${oId}`} className="text-center bg-white" style={{ height: '120px', width: '300px' }}>
+                                        <Image
+                                            className="p-2 tw:object-contain"
+                                            src={getOrganizationLogoUrl(oId)}
+                                            alt={`${oId} logo`}
+                                            fill
+                                            unoptimized={!optimizedLogo}
+                                            onError={() => optimizedLogo && setOptimizedLogo(false)}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        )}
+                        {observatory.organization_ids.length === 1 && (
+                            <div className="text-center bg-white position-relative d-block flex-grow-1" style={{ height: '120px', width: '300px' }}>
+                                <Image
+                                    className="p-2 tw:object-contain text-center"
+                                    src={getOrganizationLogoUrl(observatory.organization_ids[0])}
+                                    alt={`${observatory.organization_ids[0]} logo`}
+                                    fill
+                                    unoptimized={!optimizedLogo}
+                                    onError={() => optimizedLogo && setOptimizedLogo(false)}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                />
+                            </div>
+                        )}
                     </Link>
                 </div>
             </div>

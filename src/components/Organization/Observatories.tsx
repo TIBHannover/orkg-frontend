@@ -1,37 +1,17 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
-import Dotdotdot from 'react-dotdotdot';
 import { Container, ListGroup } from 'reactstrap';
+import useSWR from 'swr';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ROUTES from '@/constants/routes';
-import { getAllObservatoriesByOrganizationId } from '@/services/backend/organizations';
+import { getAllObservatoriesByOrganizationId, organizationsUrl } from '@/services/backend/organizations';
 
-const Observatories = ({ organizationsId }) => {
-    const [isLoadingObservatories, setIsLoadingObservatories] = useState(null);
-    const [observatories, setObservatories] = useState([]);
-
-    useEffect(() => {
-        const loadObservatories = () => {
-            setIsLoadingObservatories(true);
-            getAllObservatoriesByOrganizationId(organizationsId)
-                .then((observatories) => {
-                    if (observatories.length > 0) {
-                        setObservatories(observatories);
-                        setIsLoadingObservatories(false);
-                    } else {
-                        setIsLoadingObservatories(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoadingObservatories(false);
-                });
-        };
-
-        loadObservatories();
-    }, [organizationsId]);
+const Observatories = ({ organizationsId }: { organizationsId: string }) => {
+    const { data: observatories, isLoading: isLoadingObservatories } = useSWR(
+        organizationsId ? [organizationsId, organizationsUrl, 'getAllObservatoriesByOrganizationId'] : null,
+        ([params]) => getAllObservatoriesByOrganizationId(params),
+    );
 
     return (
         <>
@@ -41,27 +21,27 @@ const Observatories = ({ organizationsId }) => {
                 </div>
             </Container>
             <Container className="p-0">
-                {observatories?.length > 0 && (
+                {observatories && observatories.length > 0 && (
                     <ListGroup className="box">
-                        {observatories.map((observatory, index) => (
-                            <div key={`c${index}`} className="list-group-item pe-2 p-3">
+                        {observatories.map((observatory) => (
+                            <div key={`c${observatory.display_id}`} className="list-group-item pe-2 p-3">
                                 <div>
                                     <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                 </div>
-                                <Dotdotdot clamp={3}>
+                                <div className="tw:line-clamp-3">
                                     <small className="text-muted">{observatory.description}</small>
-                                </Dotdotdot>
+                                </div>
                             </div>
                         ))}
                     </ListGroup>
                 )}
-                {observatories.length === 0 && !isLoadingObservatories && (
+                {observatories?.length === 0 && !isLoadingObservatories && (
                     <div className="container box rounded">
                         <div className="p-5 text-center mt-4 mb-4">No Observatories</div>
                     </div>
                 )}
                 {isLoadingObservatories && (
-                    <div className={"text-center mt-4 mb-4 p-5 container box rounded'"}>
+                    <div className="text-center mt-4 mb-4 p-5 container box rounded'">
                         <div className="text-start">
                             <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
                                 <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
@@ -73,10 +53,6 @@ const Observatories = ({ organizationsId }) => {
             </Container>
         </>
     );
-};
-
-Observatories.propTypes = {
-    organizationsId: PropTypes.string.isRequired,
 };
 
 export default Observatories;

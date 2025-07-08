@@ -73,7 +73,7 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
 
             <Tabs
                 className="box rounded"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={SDG_CONTENT_TABS.map((tab) => ({

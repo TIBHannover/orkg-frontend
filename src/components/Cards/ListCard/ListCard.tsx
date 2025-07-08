@@ -40,6 +40,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
         id: list.id,
         // @ts-expect-error
         initResearchField: list.research_fields?.[0],
+        // @ts-expect-error
         initAuthors: list.authors,
         isList: true,
     });

@@ -18,7 +18,7 @@ type StatementTypeModalProps = {
 };
 
 const StatementTypeModal = ({ template, isOpen, toggle, context, subject, handleAddStatement }: StatementTypeModalProps) => {
-    const addBtn = useRef<HTMLButtonElement | null>();
+    const addBtn = useRef<HTMLButtonElement | null>(null);
 
     const { usedStatementTypes } = useUsedStatementTypes({ context });
 

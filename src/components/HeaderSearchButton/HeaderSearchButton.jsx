@@ -11,7 +11,7 @@ import { InputStyled, SearchButtonStyled, SearchStyled } from '@/components/styl
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 
-const HeaderSearchButton = ({ placeholder = '', type, userId }) => {
+const HeaderSearchButton = ({ placeholder = '', type, userId = undefined }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [value, setValue] = useState('');
     const refContainer = useRef(null);

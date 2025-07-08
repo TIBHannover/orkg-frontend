@@ -1,13 +1,12 @@
-import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { uniqueId } from 'lodash';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import ReferenceItem from '@/components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
+import ReferenceItem, { isReferenceData } from '@/components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
+import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 
 type ReferencesModalProps = {
     toggle: () => void;
@@ -15,6 +14,7 @@ type ReferencesModalProps = {
 
 const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
     const [references, setReferences] = useState<{ text: string; id: string }[]>([]);
+    const [instanceId] = useState(() => createInstanceId('references-modal'));
     const { comparison, updateComparison } = useComparison();
 
     useEffect(() => {
@@ -28,25 +28,36 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
         }
     }, [comparison]);
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        }),
+    const reorderReferences = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+            const reorderedReferences = performReorder({
+                items: references,
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
+            });
+
+            if (reorderedReferences !== references) {
+                setReferences(reorderedReferences);
+            }
+        },
+        [references],
     );
 
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
+    useEffect(() => {
+        const cleanup = createListMonitor({
+            instanceId,
+            items: references,
+            isDragData: isReferenceData,
+            onReorder: reorderReferences,
+            getItemId: (reference) => reference.id,
+        });
 
-        if (active.id !== over?.id) {
-            setReferences((_references) => {
-                const oldIndex = _references.findIndex((item) => item.id === (active.id as string));
-                const newIndex = _references.findIndex((item) => item.id === (over?.id as string));
-
-                return arrayMove(_references, oldIndex, newIndex);
-            });
-        }
-    };
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, references, reorderReferences]);
 
     const handleDelete = (id: string) => {
         setReferences((_references) => _references.filter((reference) => reference.id !== id));
@@ -80,13 +91,17 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
                         No references added yet
                     </Alert>
                 )}
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={references.map(({ id }) => id)} strategy={verticalListSortingStrategy}>
-                        {references.map((reference) => (
-                            <ReferenceItem key={reference.id} reference={reference} onDelete={handleDelete} onChange={handleChange} />
-                        ))}
-                    </SortableContext>
-                </DndContext>
+                {references.map((reference, index) => (
+                    <ReferenceItem
+                        key={reference.id}
+                        reference={reference}
+                        index={index}
+                        instanceId={instanceId}
+                        onDelete={handleDelete}
+                        onChange={handleChange}
+                        totalItems={references.length}
+                    />
+                ))}
                 <Button color="secondary" size="sm" className="mt-2" onClick={handleAdd}>
                     <FontAwesomeIcon icon={faAdd} /> Add reference
                 </Button>

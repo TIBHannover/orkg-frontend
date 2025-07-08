@@ -1,40 +1,85 @@
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { memo } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import { memo, useEffect, useRef, useState } from 'react';
 
+import {
+    createDragDataFactory,
+    createDragDataKey,
+    createDragDataValidator,
+    createDraggableItem,
+    createEdgeChangeHandler,
+} from '@/components/shared/dnd/dragAndDropUtils';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
-const Row = ({ row, index }) => {
+export const rowKey = createDragDataKey('comparison-row');
+export const createRowData = createDragDataFactory(rowKey);
+export const isRowData = createDragDataValidator(rowKey);
+
+const Row = ({ row, index, instanceId }) => {
     const { isEditMode } = useIsEditMode();
+    const [isDragging, setIsDragging] = useState(false);
+    const [closestEdge, setClosestEdge] = useState(null);
+    const ref = useRef(null);
+    const [dragHandle, setDragHandle] = useState(null);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element || !isEditMode) return undefined;
+
+        const onEdgeChange = createEdgeChangeHandler({
+            targetElement: element,
+            sourceIndex: index,
+            targetIndex: index,
+            setClosestEdge,
+        });
+
+        return createDraggableItem({
+            element,
+            dragHandle,
+            item: row,
+            index,
+            instanceId,
+            createDragData: createRowData,
+            isDragData: isRowData,
+            onDragStart: () => setIsDragging(true),
+            onDrop: () => setIsDragging(false),
+            onEdgeChange,
+            onDragEnter: onEdgeChange,
+            onDragLeave: () => setClosestEdge(null),
+        });
+    }, [row, index, instanceId, isEditMode, dragHandle]);
 
     return (
-        <Draggable draggableId={row.id} key={row.getRowProps().key} index={index} isDragDisabled={!isEditMode}>
-            {(providedDraggable) => (
+        <div
+            ref={ref}
+            style={{
+                ...row.getRowProps()?.style,
+                position: 'relative',
+                opacity: isDragging ? 0.4 : 1,
+            }}
+            className={`comparisonRow tr p-0 ${isDragging ? 'shadow' : ''}`}
+        >
+            {row.cells.map((cell, cellIndex) => (
                 <div
-                    className="comparisonRow tr p-0"
-                    ref={providedDraggable.innerRef}
-                    {...providedDraggable.draggableProps}
-                    style={{
-                        ...row.getRowProps()?.style,
-                        ...providedDraggable.draggableProps?.style,
-                    }}
+                    {...cell.getCellProps()}
+                    className="td p-0"
+                    key={cell.column.id}
+                    ref={cellIndex === 0 ? setDragHandle : null}
+                    style={{ ...(cell.getCellProps().style ?? {}), ...(cellIndex === 0 && isEditMode ? { cursor: 'move' } : {}) }}
                 >
-                    {row.cells.map((cell, index) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <div {...cell.getCellProps()} className="td p-0" {...(index === 0 ? providedDraggable.dragHandleProps : {})}>
-                            {cell.render('Cell')}
-                        </div>
-                    ))}
+                    {cell.render('Cell')}
                 </div>
-            )}
-        </Draggable>
+            ))}
+            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
+        </div>
     );
 };
 
 Row.propTypes = {
     row: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
+    instanceId: PropTypes.symbol.isRequired,
 };
 
 export default memo(Row, (prevProps, nextProps) =>
