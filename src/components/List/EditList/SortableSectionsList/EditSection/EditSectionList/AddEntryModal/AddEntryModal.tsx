@@ -253,9 +253,10 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                             <div className="form-control form-control p-0 border-0">
                                 <PaperTitleInput
                                     key={contentType} // reset autocomplete when content type changes
+                                    // @ts-expect-error
                                     contentType={contentType}
                                     value={title}
-                                    onChange={(v) => setTitle(v)}
+                                    onChange={(v: string) => setTitle(v)}
                                     onOptionClick={handleAutocompleteSelect}
                                     performExistingPaperLookup={false}
                                     performOrkgLookup

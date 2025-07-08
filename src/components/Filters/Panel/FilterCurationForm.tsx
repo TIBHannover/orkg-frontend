@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';

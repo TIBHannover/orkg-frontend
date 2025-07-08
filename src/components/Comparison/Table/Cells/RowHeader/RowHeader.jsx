@@ -15,7 +15,7 @@ const RowHeader = ({ cell, property }) => {
             <PropertiesInner
                 className={`${!transpose ? 'd-flex flex-row align-items-start justify-content-between' : ''}`}
                 cellPadding={cellPadding}
-                transpose={transpose}
+                $transpose={transpose}
             >
                 {!transpose ? (
                     <PropertyCell

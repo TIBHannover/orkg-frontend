@@ -1,4 +1,4 @@
-import { FC, FocusEvent, useState } from 'react';
+import { ChangeEvent, FC, FocusEvent, useState } from 'react';
 import { Input } from 'reactstrap';
 
 import MarkdownEditor from '@/components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
@@ -62,11 +62,11 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
                     <option value="5">H5</option>
                     <option value="6">H6</option>
                 </Input>
-                <h2 id={`section-${section.id}`} className={`h${section.heading_size} flex-grow-1 m-0`} placeholder="trd">
+                <h2 id={`section-${section.id}`} className={`h${section.heading_size} flex-grow-1 m-0`}>
                     <EditableTitle
                         value={title}
                         className="focus-primary"
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                         onBlur={handleBlurTitle}
                         placeholder="Enter a section title..."
                         resize="false"

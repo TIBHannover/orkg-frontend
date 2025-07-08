@@ -37,7 +37,7 @@ export const LinkStyled = styled(Link)`
     }
 `;
 
-const TemplateTooltip = ({ children, id, extraContent, disabled = false }) => {
+const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = false }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [template, setTemplate] = useState({});

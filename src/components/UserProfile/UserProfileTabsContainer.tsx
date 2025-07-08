@@ -116,7 +116,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
 
             <Tabs
                 className="box rounded mt-2"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={USER_PROFILE_CONTENT_TABS.map((tab) => ({

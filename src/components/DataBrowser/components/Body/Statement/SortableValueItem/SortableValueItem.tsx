@@ -1,75 +1,86 @@
+import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import arrayMove from 'array-move';
-import { FC, ReactElement, useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import { toast } from 'react-toastify';
+import { FC, ReactElement, useEffect, useRef, useState } from 'react';
 
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
-import useOriginalOrder from '@/components/DataBrowser/hooks/useOriginalOrder';
-import DND_TYPES from '@/constants/dndTypes';
-import { updateList } from '@/services/backend/lists';
+import {
+    createDragDataFactory,
+    createDragDataKey,
+    createDraggableItem,
+    createEdgeChangeHandler,
+    createInstanceId,
+} from '@/components/shared/dnd/dragAndDropUtils';
 import { Statement } from '@/services/backend/types';
-import { handleSortableHoverReactDnd } from '@/utils';
 
 type SortableValueItemProps = {
     statement: Statement;
     children: ReactElement;
 };
 
+export const DRAG_DATA_KEY = createDragDataKey('sortable-value-item');
+export const INSTANCE_ID = createInstanceId('sortable-value-item');
+export const createDragData = createDragDataFactory<Statement>(DRAG_DATA_KEY);
+export const isDragData = (data: Record<string | symbol, unknown>): data is { item: Statement; index: number; instanceId: symbol } => {
+    return data[DRAG_DATA_KEY] === true;
+};
+
 const SortableValueItem: FC<SortableValueItemProps> = ({ statement, children }) => {
-    const { statements, mutateStatements } = useEntity();
+    const { statements } = useEntity();
     const index = statements?.map((s) => s.id).indexOf(statement.id);
-
-    const { originalOrder, mutateOriginalOrder } = useOriginalOrder(statement.subject.id);
-
     const { config } = useDataBrowserState();
     const { isEditMode } = config;
-    const ref = useRef(null);
-    const originalIndex = originalOrder?.elements?.indexOf(statement.id) ?? index;
+    const ref = useRef<HTMLDivElement>(null);
+    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
+    const currentIndex = index ?? 0;
 
-    const handleUpdate = ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
-        const _valueIds = arrayMove(statements?.map((s) => s.object.id) ?? [], dragIndex, hoverIndex);
-        if (statements) {
-            mutateStatements(_valueIds.map((id) => statements.find((s) => s.object.id === id) ?? null) as Statement[], { revalidate: false });
-        }
-    };
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return undefined;
 
-    const [, drop] = useDrop({
-        accept: DND_TYPES.LIST_ITEM,
-        hover: (item, monitor) => handleSortableHoverReactDnd({ item, monitor, currentRef: ref.current, hoverIndex: index, handleUpdate }),
-    });
+        const onEdgeChange = createEdgeChangeHandler({
+            targetElement: element,
+            sourceIndex: currentIndex,
+            targetIndex: currentIndex,
+            setClosestEdge,
+        });
 
-    const [{ isDragging }, drag, preview] = useDrag({
-        type: DND_TYPES.LIST_ITEM,
-        item: { index, originalIndex },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-        canDrag: isEditMode,
-        end: (item) => {
-            if (item.index !== item.originalIndex) {
-                updateList({ id: statement.subject.id, elements: statements?.map((s) => s.object.id) ?? [] });
-                mutateOriginalOrder();
-                toast.dismiss();
-                toast.success('Order updated successfully');
-            }
-        },
-    });
+        return createDraggableItem({
+            element,
+            dragHandle: dragHandleElement || undefined,
+            item: statement,
+            index: currentIndex,
+            instanceId: INSTANCE_ID,
+            createDragData,
+            isDragData,
+            onDragStart: () => {
+                setIsDragging(true);
+                setClosestEdge(null);
+            },
+            onDrop: () => {
+                setIsDragging(false);
+                setClosestEdge(null);
+            },
+            onEdgeChange,
+            onDragLeave: () => setClosestEdge(null),
+        });
+    }, [statement, isEditMode, currentIndex, dragHandleElement]);
 
     const opacity = isDragging ? 0 : 1;
 
-    preview(drop(ref));
-
     return (
-        <div ref={ref} className="d-flex align-items-center flex-grow-1 m-0 p-0" style={{ opacity }}>
+        <div ref={ref} className="d-flex align-items-center flex-grow-1 m-0 p-0 position-relative" style={{ opacity }}>
             {isEditMode && (
-                <div className="px-2" ref={drag} style={{ cursor: 'move' }}>
+                <div className="px-2" ref={setDragHandleElement} style={{ cursor: 'move' }}>
                     <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />
                 </div>
             )}
             {children}
+            {closestEdge && <DropIndicator edge={closestEdge} />}
         </div>
     );
 };

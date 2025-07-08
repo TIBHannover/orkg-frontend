@@ -10,9 +10,9 @@ export type PreventEditCase = {
     condition: (resource: Resource) => boolean;
     preventModalProps: (resource: Resource) => {
         header: string;
-        content: JSX.Element;
+        content: React.ReactNode;
     };
-    warningOnEdit?: JSX.Element;
+    warningOnEdit?: React.ReactNode;
 };
 
 const PREVENT_EDIT_CASES: PreventEditCase[] = [

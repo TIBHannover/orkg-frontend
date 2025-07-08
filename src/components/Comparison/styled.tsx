@@ -178,12 +178,12 @@ export const Properties = styled.div`
     }
 `;
 
-export const PropertiesInner = styled.div`
-    background: ${(props) => (props.transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
+export const PropertiesInner = styled.div<{ $transpose?: boolean; cellPadding?: number }>`
+    background: ${(props) => (props.$transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
     height: 100%;
     color: #fff;
     padding: ${(props) => props.cellPadding ?? 10}px 10px;
-    border-bottom: ${(props) => (props.transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
+    border-bottom: ${(props) => (props.$transpose ? 'thin solid #fff!important' : 'thin solid #8B91A5!important')};
     overflow-wrap: anywhere;
     white-space: normal;
     a {
@@ -208,9 +208,9 @@ export const ItemHeader = styled.div`
     position: relative;
 `;
 
-export const ItemHeaderInner = styled.div`
+export const ItemHeaderInner = styled.div<{ $transpose?: boolean }>`
     padding: 5px 10px;
-    background: ${(props) => (!props.transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
+    background: ${(props) => (!props.$transpose ? (props) => props.theme.primary : (props) => props.theme.secondary)};
     border-radius: 0 0 0 0;
     color: #fff;
     height: 100%;
@@ -272,7 +272,7 @@ export const Delete = styled.button`
     }
 `;
 
-export const ClickableScrollButton = styled.button`
+export const ClickableScrollButton = styled.button<{ $leftOffset?: string }>`
     width: 30px;
     position: absolute;
     z-index: 10;
@@ -295,7 +295,7 @@ export const ClickableScrollButton = styled.button`
 
     &.left {
         cursor: w-resize;
-        left: ${(props) => props.leftOffset};
+        left: ${(props) => props.$leftOffset};
         top: 10px;
         height: calc(100% - 12px);
 

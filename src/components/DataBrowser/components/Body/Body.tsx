@@ -9,6 +9,7 @@ import ValuePreviewFactory from '@/components/DataBrowser/components/Body/ValueP
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useListOrdering from '@/components/DataBrowser/hooks/useListOrdering';
 import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
 import { getListPropertiesFromTemplate, prioritizeDescriptionStatements } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
@@ -16,7 +17,8 @@ import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { Predicate, Resource, Statement } from '@/services/backend/types';
 
 const Body = () => {
-    const { error, entity, statements, isLoadingStatements } = useEntity();
+    const { error, entity, statements, isLoadingStatements, mutateStatements } = useEntity();
+
     const { templates } = useTemplates();
     const { newProperties, config } = useDataBrowserState();
     const { isEditMode } = config;
@@ -35,6 +37,13 @@ const Body = () => {
     const _statements2 = groupBy(sortBy(statements, 'predicate.label'), 'predicate.label');
 
     const { canEdit } = useCanEdit();
+
+    useListOrdering({
+        statements,
+        entity,
+        isEditMode,
+        mutateStatements,
+    });
 
     if (error) {
         return null;

@@ -2,11 +2,11 @@ import { faArrowRight, faClipboard, faExternalLink, faStar, faTags } from '@fort
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
-import { useContext } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { useContext, useEffect } from 'react';
 import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
 
@@ -29,6 +29,14 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
 
     const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
     const textClassName = !isFocused && !isSelected ? 'text-muted' : '';
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('ID copied to clipboard');
+        }
+    }, [state.value]);
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
@@ -71,17 +79,14 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                             content={
                                 <div className="d-flex align-items-center text-break">
                                     {data.id}
-                                    <CopyToClipboard
-                                        text={data.id}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success('ID copied to clipboard');
-                                        }}
+                                    <Button
+                                        className="py-0 border border-light-darker px-2 ms-2"
+                                        size="sm"
+                                        color="light"
+                                        onClick={() => copyToClipboard(data.id)}
                                     >
-                                        <Button className="py-0 border border-light-darker px-2 ms-2" size="sm" color="light">
-                                            <FontAwesomeIcon icon={faClipboard} color={theme?.dark} size="xs" />
-                                        </Button>
-                                    </CopyToClipboard>
+                                        <FontAwesomeIcon icon={faClipboard} color={theme?.dark} size="xs" />
+                                    </Button>
                                 </div>
                             }
                             disabled={data.external}

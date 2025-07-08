@@ -1,9 +1,9 @@
+import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { Identifier } from 'dnd-core';
 import { parseInt } from 'lodash';
-import { FC, useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { FC, useEffect, useRef, useState } from 'react';
 import { AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -12,21 +12,33 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import {
+    createDragDataFactory,
+    createDragDataKey,
+    createDragDataValidator,
+    createDraggableItem,
+    createEdgeChangeHandler,
+} from '@/components/shared/dnd/dragAndDropUtils';
 import { RSPropertyShape } from '@/services/backend/types';
-import { handleSortableHoverReactDnd } from '@/utils';
+
+// Create shared symbols and functions for position drag and drop
+export const positionKey = createDragDataKey('rosettaPosition');
+export const createPositionData = createDragDataFactory<RSPropertyShape>(positionKey);
+export const isPositionData = createDragDataValidator<RSPropertyShape>(positionKey);
 
 type PositionItemProps = {
     i: number;
     property: RSPropertyShape;
-    moveCard: (update: { dragIndex: number; hoverIndex: number }) => void;
+    instanceId: symbol;
+    totalItems: number;
 };
 
-const ItemTypes = {
-    OBJECT_POSITION: 'ObjectPosition',
-};
-
-const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
+const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalItems }) => {
     const { numberLockedProperties } = useRosettaTemplateEditorState();
+    const [isDragging, setIsDragging] = useState(false);
+    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
+    const ref = useRef<HTMLElement>(null);
+    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
 
     const isLocked = !!numberLockedProperties && numberLockedProperties >= i + 1;
 
@@ -38,44 +50,64 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
         dispatch({ type: 'deleteObjectPosition', payload: index });
     };
 
-    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return undefined;
 
-    const [{ handlerId }, drop] = useDrop<RSPropertyShape & { index: number }, void, { handlerId: Identifier | null }>({
-        accept: ItemTypes.OBJECT_POSITION,
-        canDrop: () => i !== 0 && i !== 1 && !isLocked,
-        collect: (monitor) => {
-            return {
-                handlerId: monitor.getHandlerId(),
-            };
-        },
-        hover: (item: RSPropertyShape & { index: number }, monitor) => {
-            if (monitor.canDrop()) {
-                handleSortableHoverReactDnd({ item, monitor, currentRef: ref.current, hoverIndex: i, handleUpdate: moveCard });
-            }
-        },
-    });
+        const onEdgeChange = createEdgeChangeHandler({
+            targetElement: element,
+            sourceIndex: i,
+            targetIndex: i,
+            setClosestEdge: (edge) => {
+                // Don't show drop indicator for locked positions
+                if (i === 0 || i === 1 || isLocked) {
+                    setClosestEdge(null);
+                } else {
+                    setClosestEdge(edge);
+                }
+            },
+        });
 
-    const [{ isDragging }, drag] = useDrag({
-        type: ItemTypes.OBJECT_POSITION,
-        item: () => {
-            return { ...property, index: i };
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-        canDrag: () => i !== 0 && i !== 1 && !isLocked,
-    });
-
-    const opacity = isDragging ? 0 : 1;
-    drag(drop(ref));
+        return createDraggableItem({
+            element,
+            dragHandle: dragHandleElement || undefined,
+            item: property,
+            index: i,
+            instanceId,
+            createDragData: createPositionData,
+            isDragData: isPositionData,
+            onDragStart: () => {
+                setIsDragging(true);
+                setClosestEdge(null);
+            },
+            onDrop: () => {
+                setIsDragging(false);
+                setClosestEdge(null);
+            },
+            onEdgeChange,
+            onDragEnter: onEdgeChange,
+            onDragLeave: () => setClosestEdge(null),
+            canDrop: ({ target }) => {
+                // Don't allow drops on locked positions (subject and verb)
+                return target.index !== 0 && target.index !== 1;
+            },
+        });
+    }, [property, i, instanceId, totalItems, dragHandleElement, isLocked]);
 
     const deleteButtonMessage = isLocked ? 'This position cannot be deleted because it is locked' : 'Delete object position';
 
     return (
-        <AccordionItem style={{ opacity }}>
-            <AccordionHeader innerRef={ref} data-handler-id={handlerId} targetId={property?.id ?? i.toString()} className="d-flex">
+        <AccordionItem style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }}>
+            <AccordionHeader innerRef={ref} targetId={property?.id ?? i.toString()} className="d-flex">
                 {i !== 0 && i !== 1 && !isLocked && (
-                    <div className="me-1 d-flex flex-column" style={{ marginLeft: '-15px', cursor: 'move' }}>
+                    <div
+                        ref={setDragHandleElement}
+                        className="me-1 d-flex flex-column"
+                        style={{ marginLeft: '-15px', cursor: 'move' }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Drag to reorder position"
+                    >
                         <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />
                         <FontAwesomeIcon icon={faGripVertical} className="text-secondary" style={{ marginTop: '-1.4px' }} />
                     </div>
@@ -113,6 +145,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, moveCard }) => {
             <AccordionBody accordionId={property.id ?? i.toString()} style={{ background: '#fff' }}>
                 <SlotForms index={i} isLocked={isLocked} />
             </AccordionBody>
+            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
         </AccordionItem>
     );
 };

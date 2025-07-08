@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { MouseEvent, useEffect, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
@@ -36,6 +36,14 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
     const { title } = viewPaper;
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('DOI link copied!');
+        }
+    }, [state.value]);
 
     const isPublishable = title && title.trim() !== '' && description && description.trim() !== '' && researchField && creators?.length > 0;
 
@@ -95,17 +103,14 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
                         <Label for="doi_link">DOI</Label>
                         <InputGroup>
                             <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
-                            <CopyToClipboard
-                                text={`https://doi.org/${dataCiteDoi}`}
-                                onCopy={() => {
-                                    toast.dismiss();
-                                    toast.success('DOI link copied!');
-                                }}
+                            <Button
+                                color="primary"
+                                className="pl-3 pr-3"
+                                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                onClick={() => copyToClipboard(`https://doi.org/${dataCiteDoi}`)}
                             >
-                                <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                    <FontAwesomeIcon icon={faClipboard} />
-                                </Button>
-                            </CopyToClipboard>
+                                <FontAwesomeIcon icon={faClipboard} />
+                            </Button>
                         </InputGroup>
                     </FormGroup>
                 )}

@@ -20,7 +20,8 @@ const cspHeader = `
         https://platform.twitter.com
         https://cdn.syndication.twimg.com
         https://cdnjs.cloudflare.com
-        https://app.chatwoot.com;
+        https://app.chatwoot.com
+        https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs;
     style-src 'self' 'unsafe-inline'
         https://orkg.org
         https://*.orkg.org
@@ -77,7 +78,12 @@ const cspHeader = `
         https://mastodon.social
         https://dbpedia.org
         https://api.terminology.tib.eu
-        https://www.ebi.ac.uk/ols4/api/;
+        https://www.ebi.ac.uk/ols4/api/
+        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/0-ff.json
+        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/2000-20ff.json
+        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-meta/latin.json
+        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-files/latin/sans-serif.normal.100.woff
+        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-files/latin/sans-serif.normal.400.woff;
 `;
 
 /** @type {import('next').NextConfig} */
@@ -98,7 +104,6 @@ const nextConfig = {
             },
         ];
     },
-    swcMinify: true, // different minification, speeds up compiling in dev mode
     reactStrictMode: false, // otherwise, list items are rendered twice (e.g. /resources, /paper etc. ): https://github.com/vercel/next.js/issues/35822
     eslint: {
         ignoreDuringBuilds: true, // this allows production builds to successfully complete even if the project has ESLint errors
@@ -132,8 +137,7 @@ const nextConfig = {
         };
         config.module.rules.push({
             test: /\.md$/,
-            // This is the asset module.
-            type: 'asset/source',
+            use: 'raw-loader',
         });
         config.resolve.alias = {
             ...config.resolve.alias,
@@ -142,20 +146,14 @@ const nextConfig = {
         config.externals = [...config.externals, 'canvas', 'jsdom']; // to fix pdf-text-annotation: https://github.com/kkomelin/isomorphic-dompurify/issues/54
         return config;
     },
-    experimental: {
-        serverComponentsExternalPackages: ['citeproc', 'react-pdf-highlighter'],
-        ...(process.env.NODE_ENV === 'development'
-            ? {
-                  turbo: {
-                      resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
-                      rules: {
-                          '*.md': {
-                              loaders: ['raw-loader'],
-                          },
-                      },
-                  },
-              }
-            : {}),
+    serverExternalPackages: ['citeproc'],
+    turbopack: {
+        rules: {
+            '*.md': {
+                loaders: ['raw-loader'],
+                as: '*.js',
+            },
+        },
     },
     transpilePackages: ['ky'],
     output: 'standalone',

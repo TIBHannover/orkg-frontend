@@ -1,17 +1,17 @@
-import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import arrayMove from 'array-move';
 import capitalize from 'capitalize';
 import { flattenDeep, uniqBy } from 'lodash';
-import { FC, useEffect, useState } from 'react';
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import useReview from '@/components/Review/hooks/useReview';
+import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
+import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';
@@ -19,24 +19,9 @@ import { getResource } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
 import { EntityType, ReviewSection, ReviewSectionData } from '@/services/backend/types';
 
-const DragHandle = styled.div`
-    cursor: move;
-    color: #a5a5a5;
-    width: 30px;
-    text-align: center;
-    flex-shrink: 0;
-`;
-
 const ListGroupItemStyled = styled(ListGroupItem)`
     padding: 10px 10px 9px 5px !important;
     display: flex !important;
-`;
-
-const GlobalStyle = createGlobalStyle`
-    .sortable-helper{
-        z-index: 10000 !important;
-        border-radius: 0 !important;
-    }
 `;
 
 type SelectEntitiesModalProps = {
@@ -61,6 +46,7 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
     >([]);
     const [suggestionProperties, setSuggestionProperties] = useState<Omit<ReviewSectionData, 'classes'>[]>([]);
     const [addEntityType, setAddEntityType] = useState<EntityType | null>(null);
+    const [instanceId] = useState(() => createInstanceId('select-entities-modal'));
 
     const { review, updateSection } = useReview();
     const comparisonIds = review?.sections
@@ -128,67 +114,36 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
 
     const handleAddAllEntities = (entities: Entity[]) => entities.map((entity) => handleSelectEntity(entity.id));
 
-    const SortableHandleIcon = SortableHandle(() => (
-        <DragHandle>
-            <FontAwesomeIcon icon={faSort} />
-        </DragHandle>
-    ));
+    const reorderEntities = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+            const reorderedEntities = performReorder({
+                items: selectedEntities,
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
+            });
 
-    const SortableItem = SortableElement<{ value: ReviewSectionData | Omit<ReviewSectionData, 'classes'> }>(
-        ({ value: entity }: { value: ReviewSectionData | Omit<ReviewSectionData, 'classes'> }) => (
-            <ListGroupItemStyled className="py-2 d-flex justify-content-between">
-                <div className="d-flex">
-                    <SortableHandleIcon />
-                    {capitalize(entity.label)}
-                </div>
-                <Button color="link" className="p-0 ms-2" onClick={() => handleRemoveEntity(entity.id)}>
-                    <FontAwesomeIcon icon={faMinusCircle} />
-                </Button>
-            </ListGroupItemStyled>
-        ),
+            if (reorderedEntities !== selectedEntities) {
+                setSelectedEntities(reorderedEntities);
+            }
+        },
+        [selectedEntities],
     );
 
-    const SortableList = SortableContainer<{ items: ReviewSectionData[] | Omit<ReviewSectionData, 'classes'>[] }>(
-        ({ items }: { items: ReviewSectionData[] | Omit<ReviewSectionData, 'classes'>[] }) => (
-            <ListGroup>
-                <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
-                {items.map((value, index) => (
-                    <SortableItem key={`item-${index}`} index={index} value={value} />
-                ))}
-                <ListGroupItemStyled className="py-2 d-flex justify-content-end">
-                    {addEntityType ? (
-                        <Autocomplete
-                            entityType={addEntityType}
-                            placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                            onChange={(value, { action }) => {
-                                if (action === 'select-option' && value?.id) {
-                                    handleSelectEntity(value.id);
-                                }
-                            }}
-                            openMenuOnFocus
-                            size="sm"
-                            allowCreate={false}
-                        />
-                    ) : (
-                        <>
-                            <Button color="secondary" size="sm" onClick={() => setAddEntityType(ENTITIES.PREDICATE)}>
-                                Add property
-                            </Button>
-                            {type === 'entities' && (
-                                <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
-                                    Add resource
-                                </Button>
-                            )}
-                        </>
-                    )}
-                </ListGroupItemStyled>
-            </ListGroup>
-        ),
-    );
+    useEffect(() => {
+        const cleanup = createListMonitor({
+            instanceId,
+            items: selectedEntities,
+            isDragData: isEntityData,
+            onReorder: reorderEntities,
+            getItemId: (entity) => entity.id,
+        });
 
-    const handleSort = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
-        setSelectedEntities((_entities) => arrayMove(_entities, oldIndex, newIndex));
-    };
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, selectedEntities, reorderEntities]);
 
     const handleSave = () => {
         updateSection(section.id, {
@@ -201,10 +156,48 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
 
     return (
         <Modal isOpen toggle={toggle}>
-            <GlobalStyle />
             <ModalHeader toggle={toggle}>Select {type}</ModalHeader>
             <ModalBody>
-                <SortableList items={selectedEntities} onSortEnd={handleSort} lockAxis="y" helperClass="sortable-helper" useDragHandle />
+                <ListGroup>
+                    <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
+                    {selectedEntities.map((entity, index) => (
+                        <EntityListItem
+                            key={entity.id}
+                            entity={entity}
+                            index={index}
+                            instanceId={instanceId}
+                            onRemove={handleRemoveEntity}
+                            totalItems={selectedEntities.length}
+                        />
+                    ))}
+                    <ListGroupItemStyled className="py-2 d-flex justify-content-end">
+                        {addEntityType ? (
+                            <Autocomplete
+                                entityType={addEntityType}
+                                placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
+                                onChange={(value, { action }) => {
+                                    if (action === 'select-option' && value?.id) {
+                                        handleSelectEntity(value.id);
+                                    }
+                                }}
+                                openMenuOnFocus
+                                size="sm"
+                                allowCreate={false}
+                            />
+                        ) : (
+                            <>
+                                <Button color="secondary" size="sm" onClick={() => setAddEntityType(ENTITIES.PREDICATE)}>
+                                    Add property
+                                </Button>
+                                {type === 'entities' && (
+                                    <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
+                                        Add resource
+                                    </Button>
+                                )}
+                            </>
+                        )}
+                    </ListGroupItemStyled>
+                </ListGroup>
                 <h2 className="h5 mt-3">Suggestions</h2>
 
                 {suggestionEntities.map((comparison, index) => {

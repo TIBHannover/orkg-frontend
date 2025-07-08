@@ -1,9 +1,8 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
 
 import useTemplatesRecommendation from '@/components/ViewPaper/hooks/useTemplatesRecommendation';
-import { AnimationContainer } from '@/components/ViewPaper/SmartSuggestions/styled';
 import TemplateButton from '@/components/ViewPaper/SmartSuggestions/TemplateButton';
 
 function TemplatesRecommendations({ title = '', abstract = '', resourceId }) {
@@ -14,20 +13,22 @@ function TemplatesRecommendations({ title = '', abstract = '', resourceId }) {
             {isContributionLevel && recommendedTemplates?.length > 0 && <h6 className="mt-2">Templates</h6>}
             {isContributionLevel && (
                 <ListGroup>
-                    <TransitionGroup component={null} height="30px">
-                        {recommendedTemplates.map((template) => (
-                            <AnimationContainer
+                    <AnimatePresence>
+                        {recommendedTemplates.map((template, index) => (
+                            <motion.div
                                 key={`tr${template.id}`}
-                                classNames="slide-left"
                                 className="d-flex align-items-center"
-                                timeout={{ enter: 600, exit: 600 }}
+                                initial={{ opacity: 0, x: -100, marginBottom: -40 }}
+                                animate={{ opacity: 1, x: 0, marginBottom: 0 }}
+                                exit={{ opacity: 0, x: -100, marginBottom: -39 }}
+                                transition={{ duration: 0.7, delay: index * 0.1 }}
                             >
                                 <div>
                                     <TemplateButton template={template} isSmart resourceId={resourceId} />
                                 </div>
-                            </AnimationContainer>
+                            </motion.div>
                         ))}
-                    </TransitionGroup>
+                    </AnimatePresence>
                 </ListGroup>
             )}
         </div>

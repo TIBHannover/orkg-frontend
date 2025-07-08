@@ -7,9 +7,9 @@ import { clone } from 'lodash';
 import MakeLatex from 'make-latex';
 import { reverse } from 'named-urls';
 import { FC, useEffect, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -39,6 +39,14 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
     const [includeFootnote, setIncludeFootnote] = useState(true);
     const [latexTable, setLatexTable] = useState('');
     const [bibTexReferences, setBibTexReferences] = useState('');
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Latex copied to clipboard');
+        }
+    }, [state.value]);
 
     const { comparison } = useComparison();
 
@@ -353,17 +361,9 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                                 </FormGroup>
                             </div>
 
-                            <CopyToClipboard
-                                text={latexTable}
-                                onCopy={() => {
-                                    toast.dismiss();
-                                    toast.success('Latex copied!');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
+                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(latexTable)}>
+                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                            </Button>
                         </div>
                     </>
                 )}
@@ -373,17 +373,9 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                             <Textarea type="textarea" value={!bibtexReferencesLoading ? bibTexReferences : 'Loading...'} disabled rows="15" />
                         </p>
 
-                        <CopyToClipboard
-                            text={!bibtexReferencesLoading ? bibTexReferences : 'Loading...'}
-                            onCopy={() => {
-                                toast.dismiss();
-                                toast.success('Bibtex copied!');
-                            }}
-                        >
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                            </Button>
-                        </CopyToClipboard>
+                        <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(bibTexReferences)}>
+                            <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                        </Button>
                     </>
                 )}
             </ModalBody>

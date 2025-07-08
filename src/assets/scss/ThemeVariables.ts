@@ -1,10 +1,12 @@
+import type { DefaultTheme } from 'styled-components';
+
 /**
  *
  * IMPORTANT: This is a copy as a JS object of Sass variables of `ThemeVariables.scss`
  * Please make sure to update ThemeVariables.scss if you update any of the following values
  *
  */
-const theme = {
+const theme: DefaultTheme = {
     primary: 'rgb(232, 97, 97)',
     primaryDarker: 'rgb(198, 29, 29)',
     secondary: 'rgb(128, 134, 155)',

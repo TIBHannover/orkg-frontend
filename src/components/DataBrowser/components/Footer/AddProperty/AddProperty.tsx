@@ -74,7 +74,7 @@ const AddProperty = () => {
                             <FontAwesomeIcon className="icon" icon={faPlus} /> Add property
                         </ButtonWithLoading>
                         {canAddProperty && (
-                            <SmartPropertySuggestions properties={propertyLabels} handleCreate={(predicate) => addProperty(predicate as Predicate)} />
+                            <SmartPropertySuggestions properties={propertyLabels} handleCreate={(predicate: Predicate) => addProperty(predicate)} />
                         )}
                     </ButtonGroup>
                 ) : (

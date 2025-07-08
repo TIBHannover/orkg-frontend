@@ -1,8 +1,7 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import arrayMove from 'array-move';
-import { FC, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -10,8 +9,9 @@ import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHea
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import SortableAuthorItem from '@/components/Input/AuthorsInput/SortableAuthorItem';
+import SortableAuthorItem, { isAuthorData } from '@/components/Input/AuthorsInput/SortableAuthorItem';
 import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
+import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getStatements } from '@/services/backend/statements';
@@ -32,6 +32,7 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
     const [authorNameLoading, setAuthorNameLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editIndex, setEditIndex] = useState(0);
+    const [instanceId] = useState(() => createInstanceId('authors-input'));
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (selected: SingleValue<OptionType>) => {
@@ -112,9 +113,38 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
         setShowAuthorForm((v) => !v);
     };
 
-    const handleUpdate = ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
-        handler(arrayMove(value, dragIndex, hoverIndex));
-    };
+    const reorderAuthors = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+            const reorderedAuthors = performReorder({
+                items: value,
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
+            });
+
+            if (reorderedAuthors !== value) {
+                handler(reorderedAuthors);
+            }
+        },
+        [value, handler],
+    );
+
+    useEffect(() => {
+        if (isDisabled) return undefined;
+
+        const cleanup = createListMonitor({
+            instanceId,
+            items: value,
+            isDragData: isAuthorData,
+            onReorder: reorderAuthors,
+            getItemId: (author) => author.id || author.name,
+        });
+
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, value, reorderAuthors, isDisabled]);
 
     return (
         <div className=" clearfix">
@@ -124,13 +154,14 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
                     <AuthorTags onClick={value.length === 0 && !isDisabled ? () => setShowAuthorForm((v) => !v) : undefined}>
                         {value.map((author, index) => (
                             <SortableAuthorItem
-                                key={`author-${index}`}
+                                key={`author-${author.id || author.name}-${index}`}
                                 author={author}
                                 authorIndex={index}
                                 itemLabel={itemLabel}
                                 editAuthor={editAuthor}
                                 removeAuthor={removeAuthor}
-                                handleUpdate={handleUpdate}
+                                instanceId={instanceId}
+                                totalItems={value.length}
                                 isDisabled={isDisabled ?? false}
                             />
                         ))}

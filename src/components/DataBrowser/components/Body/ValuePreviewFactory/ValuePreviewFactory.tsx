@@ -6,7 +6,7 @@ import { Statement } from '@/services/backend/types';
 
 type ValuePreviewFactoryProps = {
     value: Statement['object'];
-    children: JSX.Element;
+    children: React.ReactNode;
 };
 
 const ValuePreviewFactory: FC<ValuePreviewFactoryProps> = ({ value, children }) => {

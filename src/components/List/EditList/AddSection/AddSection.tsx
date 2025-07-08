@@ -1,8 +1,7 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { uniqueId } from 'lodash';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useRef, useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import { useClickAway } from 'react-use';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
@@ -32,23 +31,10 @@ const AddSectionStyled = styled(Button)`
 const Toolbar = styled.div`
     position: absolute !important;
     top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
     button {
         margin-right: 2px;
-    }
-`;
-
-const AnimationContainer = styled(CSSTransition)`
-    &.opacity-enter {
-        opacity: 0;
-    }
-    &.opacity-enter.opacity-enter-active,
-    &.opacity-exit {
-        transition: 0.2s ease-out;
-        opacity: 1;
-    }
-    &.opacity-exit.opacity-exit-active {
-        transition: 0.2s ease-in;
-        opacity: 0;
     }
 `;
 
@@ -79,18 +65,27 @@ const AddSection: FC<AddSectionProps> = ({ index }) => {
             <AddSectionStyled color="link" className="p-0" onClick={() => setIsToolbarVisible((v) => !v)} aria-label="Add section">
                 <FontAwesomeIcon icon={faPlusCircle} />
             </AddSectionStyled>
-            <AnimationContainer in={isToolbarVisible} unmountOnExit classNames="opacity" timeout={{ enter: 800, exit: 800 }}>
-                <Toolbar ref={refToolbar}>
-                    <ButtonGroup size="sm">
-                        <Button color="dark" onClick={() => handleAddSection('text')}>
-                            Text
-                        </Button>
-                        <Button color="dark" onClick={() => handleAddSection('list')}>
-                            List
-                        </Button>
-                    </ButtonGroup>
-                </Toolbar>
-            </AnimationContainer>
+            <AnimatePresence>
+                {isToolbarVisible && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                    >
+                        <Toolbar ref={refToolbar}>
+                            <ButtonGroup size="sm">
+                                <Button color="dark" onClick={() => handleAddSection('text')}>
+                                    Text
+                                </Button>
+                                <Button color="dark" onClick={() => handleAddSection('list')}>
+                                    List
+                                </Button>
+                            </ButtonGroup>
+                        </Toolbar>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

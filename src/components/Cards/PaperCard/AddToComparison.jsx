@@ -34,7 +34,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired,
 };
 
-const AddToComparison = ({ contributionId, paper, showLabel = false }) => {
+const AddToComparison = ({ contributionId = undefined, paper, showLabel = false }) => {
     const dispatch = useDispatch();
     const inputCheckboxRef = useRef();
     const comparison = useSelector((state) => state.viewPaper.comparison);

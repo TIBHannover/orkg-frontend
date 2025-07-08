@@ -10,8 +10,8 @@ import { updateResource } from '@/services/backend/resources';
 import { Resource, Template } from '@/services/backend/types';
 
 type IconWrapperProps = {
-    $wrappercolor: string;
-    $wrapperbackgroundcolor: string;
+    $wrappercolor?: string;
+    $wrapperbackgroundcolor?: string;
 };
 
 const IconWrapper = styled.span<IconWrapperProps>`
@@ -65,8 +65,8 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
 
     const addMode = (entity && 'classes' in entity && !entity?.classes?.includes(template.target_class.id)) || isDisabled;
 
-    let color = 'danger';
-    let wrapperBackgroundColor = '#dc3545';
+    let color: string | undefined = 'danger';
+    let wrapperBackgroundColor: string | undefined = '#dc3545';
     const wrapperColor = addMode && !isSmart ? theme?.secondary : 'white';
 
     if (addMode) {

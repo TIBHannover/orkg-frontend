@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from '@reduxjs/toolkit';
 
 import comparison from '@/slices/comparisonSlice';
 import contributionEditor from '@/slices/contributionEditorSlice';

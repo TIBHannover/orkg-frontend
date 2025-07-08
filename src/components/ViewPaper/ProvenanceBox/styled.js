@@ -1,4 +1,4 @@
-import { CSSTransition } from 'react-transition-group';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 export const StyledActivity = styled.div`
@@ -71,17 +71,8 @@ export const SidebarStyledBox = styled.div`
     }
 `;
 
-export const AnimationContainer = styled(CSSTransition)`
+export const AnimationContainer = styled(motion.div)`
     transition: 0.3s background-color, 0.3s border-color;
-
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 0.5s opacity;
-    }
 `;
 
 export const StyledItemProvenanceBox = styled.li`

@@ -155,7 +155,7 @@ const Observatories = () => {
                 {_researchFields?.length > 0 && (
                     <Tabs
                         className="mb-3"
-                        destroyInactiveTabPane
+                        destroyOnHidden
                         onChange={onTabChange}
                         activeKey={researchFieldId ?? 'all'}
                         items={[

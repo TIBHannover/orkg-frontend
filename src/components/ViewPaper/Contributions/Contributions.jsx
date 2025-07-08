@@ -89,9 +89,9 @@ const Contributions = (props) => {
             <Row>
                 <Col md="9">
                     <Tabs
-                        moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
+                        more={{ icon: <FontAwesomeIcon size="lg" icon={faAngleDown} /> }}
                         activeKey={selectedTab}
-                        destroyInactiveTabPane
+                        destroyOnHidden
                         onChange={onTabChange}
                         className="rounded"
                         style={{ background: '#F8F9FB' }}
@@ -111,9 +111,9 @@ const Contributions = (props) => {
                                                         />
                                                     ) : null
                                                 }
-                                                moreIcon={<FontAwesomeIcon size="lg" icon={faAngleDown} />}
+                                                more={{ icon: <FontAwesomeIcon size="lg" icon={faAngleDown} /> }}
                                                 activeKey={contributionId}
-                                                destroyInactiveTabPane
+                                                destroyOnHidden
                                                 onChange={onTabChange}
                                                 items={[
                                                     ...(contributions?.map((contribution) => ({

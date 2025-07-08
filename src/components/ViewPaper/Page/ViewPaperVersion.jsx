@@ -5,10 +5,10 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import {
     Alert,
     Button,
@@ -47,6 +47,14 @@ const ViewPaperVersion = () => {
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Paper link copied!');
+        }
+    }, [state.value]);
 
     const { isLoading, isLoadingFailed, contributions, paperStatements } = useViewPaperVersion({
         paperId: resourceId,
@@ -131,34 +139,28 @@ const ViewPaperVersion = () => {
                                 <Label for="paper_link">Paper link</Label>
                                 <InputGroup>
                                     <Input id="paper_link" value={`${window.location.href}`} disabled />
-                                    <CopyToClipboard
-                                        text={`${window.location.href}`}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success('Paper link copied!');
-                                        }}
+                                    <Button
+                                        color="primary"
+                                        className="pl-3 pr-3"
+                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                        onClick={() => copyToClipboard(`${window.location.href}`)}
                                     >
-                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <FontAwesomeIcon icon={faClipboard} />
-                                        </Button>
-                                    </CopyToClipboard>
+                                        <FontAwesomeIcon icon={faClipboard} />
+                                    </Button>
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="doi_link">DOI</Label>
                                 <InputGroup>
                                     <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
-                                    <CopyToClipboard
-                                        text={`https://doi.org/${dataCiteDoi}`}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success('DOI link copied!');
-                                        }}
+                                    <Button
+                                        color="primary"
+                                        className="pl-3 pr-3"
+                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                        onClick={() => copyToClipboard(`https://doi.org/${dataCiteDoi}`)}
                                     >
-                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <FontAwesomeIcon icon={faClipboard} />
-                                        </Button>
-                                    </CopyToClipboard>
+                                        <FontAwesomeIcon icon={faClipboard} />
+                                    </Button>
                                 </InputGroup>
                             </FormGroup>
                         </>

@@ -4,11 +4,11 @@ import { faChevronDown, faExternalLinkAlt, faSpinner, faUser } from '@fortawesom
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import { reverse } from 'named-urls';
+import { signIn } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 import { match } from 'path-to-regexp';
 import { MouseEvent, useState } from 'react';
 import { Cookies } from 'react-cookie';
@@ -16,6 +16,7 @@ import { useMountedState, useWindowScroll } from 'react-use';
 import {
     Badge,
     Button,
+    UncontrolledButtonDropdown as ButtonDropdown,
     Collapse,
     DropdownItem,
     DropdownMenu,
@@ -24,7 +25,6 @@ import {
     NavbarToggler,
     NavItem,
     NavLink,
-    UncontrolledButtonDropdown as ButtonDropdown,
 } from 'reactstrap';
 
 import Logo from '@/assets/img/logo.svg';

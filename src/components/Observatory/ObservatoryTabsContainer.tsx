@@ -91,7 +91,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
 
             <Tabs
                 className="box rounded mt-2"
-                destroyInactiveTabPane
+                destroyOnHidden
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={OBSERVATORY_CONTENT_TABS.map((tab) => ({

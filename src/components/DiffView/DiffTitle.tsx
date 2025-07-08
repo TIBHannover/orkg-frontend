@@ -7,7 +7,7 @@ import UserAvatar from '@/components/UserAvatar/UserAvatar';
 export type TitleData = {
     creator: string | null;
     route: string;
-    headerText: JSX.Element;
+    headerText: React.ReactNode;
     buttonText: string;
 } | null;
 

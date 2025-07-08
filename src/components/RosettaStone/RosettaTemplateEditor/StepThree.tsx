@@ -1,21 +1,24 @@
+import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Accordion, Button, FormGroup, Input, Label } from 'reactstrap';
 
 import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
-import PositionItem from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
+import PositionItem, { isPositionData } from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
 import StatementPlaceholder from '@/components/RosettaStone/RosettaTemplateEditor/StatementPlaceholder';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import { createInstanceId, createListMonitor, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { guid } from '@/utils';
 
 function StepThree() {
     const { examples, lockedExamples, numberLockedProperties, properties } = useRosettaTemplateEditorState();
     const dispatch = useRosettaTemplateEditorDispatch();
+    const [instanceId] = useState(() => createInstanceId('rosetta-positions'));
 
     const [open, setOpen] = useState(properties?.length > 0 ? properties[0].id ?? '' : '');
 
@@ -25,12 +28,40 @@ function StepThree() {
         setOpen(newId);
     };
 
-    const moveCard = useCallback(
-        ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
-            dispatch({ type: 'moveProperties', payload: { dragIndex, hoverIndex } });
+    const reorderPositions = useCallback(
+        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+            // Don't allow reordering of locked positions (subject and verb)
+            if (startIndex === 0 || startIndex === 1 || indexOfTarget === 0 || indexOfTarget === 1) {
+                return;
+            }
+
+            const finishIndex = getReorderDestinationIndex({
+                startIndex,
+                closestEdgeOfTarget,
+                indexOfTarget,
+                axis: 'vertical',
+            });
+
+            if (finishIndex !== startIndex) {
+                dispatch({ type: 'moveProperties', payload: { dragIndex: startIndex, hoverIndex: finishIndex } });
+            }
         },
         [dispatch],
     );
+
+    useEffect(() => {
+        const cleanup = createListMonitor({
+            instanceId,
+            items: properties,
+            isDragData: isPositionData,
+            onReorder: reorderPositions,
+            getItemId: (property) => property.id || '',
+        });
+
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, properties, reorderPositions]);
 
     const toggle = (id: string) => {
         if (open === id) {
@@ -78,7 +109,7 @@ function StepThree() {
             </p>
             <Accordion toggle={toggle} open={open}>
                 {properties.map((property, i) => (
-                    <PositionItem moveCard={moveCard} property={property} i={i} key={property?.id} />
+                    <PositionItem property={property} i={i} key={property?.id} instanceId={instanceId} totalItems={properties.length} />
                 ))}
             </Accordion>
             <Button className="my-2" outline size="sm" onClick={handleAddObjectPosition}>

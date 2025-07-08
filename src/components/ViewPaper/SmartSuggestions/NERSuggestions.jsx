@@ -1,17 +1,17 @@
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import { capitalize } from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TransitionGroup } from 'react-transition-group';
 import { useDebounce } from 'react-use';
 import { ListGroup } from 'reactstrap';
 import { mutate } from 'swr';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import useEntityRecognition from '@/components/ViewPaper/hooks/useEntityRecognition';
-import { AnimationContainer, PropertyItem, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
+import { PropertyItem, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
@@ -90,13 +90,15 @@ function NERSuggestions({ title = '', abstract = '', resourceId }) {
                                 </DescriptionTooltip>
                             </PropertyItem>
                         )}
-                        <TransitionGroup component={null}>
-                            {suggestions[key].map((item) => (
-                                <AnimationContainer
+                        <AnimatePresence>
+                            {suggestions[key].map((item, index) => (
+                                <motion.div
                                     key={item.id || item.label}
-                                    classNames="slide-left"
                                     className="py-2 d-flex align-items-center px-2"
-                                    timeout={{ enter: 600, exit: 600 }}
+                                    initial={{ opacity: 0, x: -100, marginBottom: -40 }}
+                                    animate={{ opacity: 1, x: 0, marginBottom: 0 }}
+                                    exit={{ opacity: 0, x: -100, marginBottom: -39 }}
+                                    transition={{ duration: 0.7, delay: index * 0.1 }}
                                 >
                                     <ValueItem
                                         action
@@ -116,9 +118,9 @@ function NERSuggestions({ title = '', abstract = '', resourceId }) {
                                             <FontAwesomeIcon icon={faAngleDoubleLeft} className="text-smart me-2" /> {item.label}
                                         </DescriptionTooltip>
                                     </ValueItem>
-                                </AnimationContainer>
+                                </motion.div>
                             ))}
-                        </TransitionGroup>
+                        </AnimatePresence>
                     </Fragment>
                 ))}
             </ListGroup>

@@ -44,7 +44,7 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMod
                     <Tabs
                         className="box rounded"
                         style={{ position: 'sticky', top: '70px' }}
-                        destroyInactiveTabPane
+                        destroyOnHidden
                         onChange={onTabChange}
                         activeKey={activeTab ?? 'information'}
                         items={[

@@ -133,7 +133,12 @@ const Comparison = () => {
             </Container>
 
             {isOpenAddContributionModal && (
-                <AddContribution onAddContributions={handleAddContributions} showDialog toggle={() => setIsOpenAddContributionModal((v) => !v)} />
+                <AddContribution
+                    onAddContributions={handleAddContributions}
+                    showDialog
+                    toggle={() => setIsOpenAddContributionModal((v) => !v)}
+                    initialSearchQuery=""
+                />
             )}
         </div>
     );

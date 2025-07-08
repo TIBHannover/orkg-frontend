@@ -36,11 +36,6 @@ afterAll(() => {
 
 window.scrollTo = vi.fn();
 
-vi.mock('react-dnd', () => ({
-    useDrag: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),
-    useDrop: vi.fn().mockImplementation(() => [vi.fn(), vi.fn(), vi.fn()]),
-}));
-
 vi.mock('@/components/UserAvatar/UserAvatar', () => ({
     default: () => null,
 }));
@@ -93,13 +88,16 @@ vi.mock('next/navigation', () => {
 
 vi.setConfig({ testTimeout: 20000 });
 
-// required due to the usage of react-slick https://github.com/akiran/ts/issues/742
+// required due to the usage of react-use and react-slick https://github.com/akiran/ts/issues/742
 window.matchMedia =
     window.matchMedia ||
-    (() => {
-        return {
-            matches: false,
-            addListener() {},
-            removeListener() {},
-        };
-    });
+    (() => ({
+        matches: false,
+        media: '',
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    }));

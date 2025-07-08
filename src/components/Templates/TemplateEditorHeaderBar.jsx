@@ -1,7 +1,7 @@
 import { faClose, faDiagramProject, faPen, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { CSSTransition } from 'react-transition-group';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -24,18 +24,8 @@ const PaperHeaderBarContainer = styled.div`
     }
 `;
 
-const AnimationContainer = styled(CSSTransition)`
-    &.fade-appear {
-        max-height: 0;
-        transition: max-height 0.5s ease;
-        overflow: hidden;
-        padding: 0;
-    }
-
-    &.fade-appear-active {
-        transition: max-height 0.5s ease;
-        max-height: 50px;
-    }
+const AnimationContainer = styled(motion.div)`
+    overflow: hidden;
 `;
 
 const TemplateEditorHeaderBar = () => {
@@ -46,7 +36,7 @@ const TemplateEditorHeaderBar = () => {
     const { id } = useParams();
 
     return (
-        <AnimationContainer in appear classNames="fade" timeout={500}>
+        <AnimationContainer initial={{ maxHeight: 0 }} animate={{ maxHeight: 60 }} transition={{ duration: 0.5, ease: 'easeOut' }} layout>
             <PaperHeaderBarContainer>
                 <Container className="d-flex align-items-center py-2">
                     {isEditMode && <Title>{id ? 'Edit mode' : 'Create template'}</Title>}

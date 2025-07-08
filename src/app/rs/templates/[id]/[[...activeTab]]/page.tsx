@@ -188,7 +188,7 @@ const RSTemplatePage = () => {
                     <Container className="mt-3 p-0">
                         <Tabs
                             className="box rounded"
-                            destroyInactiveTabPane
+                            destroyOnHidden
                             onChange={onTabChange}
                             activeKey={activeTab ?? 'information'}
                             items={[

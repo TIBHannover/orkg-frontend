@@ -1,10 +1,10 @@
 import { faMagic, faSpinner, faThList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import toArray from 'lodash/toArray';
 import randomcolor from 'randomcolor';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
@@ -19,17 +19,6 @@ import { createResourceStatement, statementsUrl } from '@/services/backend/state
 import { getLlmResponse, nlpServiceUrl } from '@/services/orkgNlp';
 import { Range, RootStore } from '@/slices/types';
 import { clearAnnotations, createAnnotation, setAbstract as setAbstractGlobal, setAbstractDialogView } from '@/slices/viewPaperSlice';
-
-const AnimationContainer = styled(CSSTransition)`
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 1s opacity;
-    }
-`;
 
 const PREDICATE_OPTIONS = [
     {
@@ -190,7 +179,7 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
     };
 
     let currentStepDetails = (
-        <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+        <motion.div key={1} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7 }}>
             <AbstractAnnotatorView
                 isAnnotationLoading={isAnnotationLoading}
                 isAnnotationFailedLoading={isAnnotationFailedLoading}
@@ -198,22 +187,22 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                 annotationError={annotationError}
                 getPredicateColor={getPredicateColor}
             />
-        </AnimationContainer>
+        </motion.div>
     );
 
     switch (abstractDialogView) {
         case 'input':
             currentStepDetails = (
-                <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                <motion.div key={2} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7 }}>
                     <AbstractInputView validation={validation} abstract={abstract} setAbstract={setAbstract} />
-                </AnimationContainer>
+                </motion.div>
             );
             break;
         case 'list':
             currentStepDetails = (
-                <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                <motion.div key={3} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7 }}>
                     <AbstractRangesList predicateOptions={PREDICATE_OPTIONS} getPredicateColor={getPredicateColor} />
-                </AnimationContainer>
+                </motion.div>
             );
             break;
         default:
@@ -235,7 +224,7 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                         </div>
                     )}
 
-                    <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
+                    <AnimatePresence mode="wait">{currentStepDetails}</AnimatePresence>
                 </div>
             </ModalBody>
             <ModalFooter>

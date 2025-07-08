@@ -1,9 +1,9 @@
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -31,25 +31,13 @@ const ArrowCards = styled.div`
     filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.13));
 `;
 
-const AnimationContainer = styled(CSSTransition)`
-    //transition: 0.3s background-color, 0.3s border-color;
-
-    animation: scale-up-center 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-    @keyframes scale-up-center {
-        0% {
-            transform: scale(0.5);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-`;
-
 const ShowMore = styled(Card)`
     background: ${(props) => props.theme.light}!important;
     color: ${(props) => props.theme.bodyColor} !important;
     text-align: center;
 `;
+
+const MotionShowMore = motion.create(ShowMore);
 
 const MAX_FIELDS = 30;
 
@@ -131,22 +119,46 @@ const ResearchFieldCards = ({
 
             {!isLoading && researchFields.length > 0 && (
                 <div className="mt-3">
-                    <div>
-                        <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFieldsSliced?.map((field) => (
-                                <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                    <AnimatePresence>
+                        <motion.div
+                            id="research-field-cards"
+                            className="mt-2 justify-content-center d-flex flex-wrap"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {researchFieldsSliced?.map((field, index) => (
+                                <motion.div
+                                    key={field.id}
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{
+                                        duration: 0.4,
+                                        ease: [0.39, 0.575, 0.565, 1],
+                                        delay: index * 0.05,
+                                    }}
+                                    style={{ display: 'contents' }}
+                                >
                                     <ResearchFieldCard field={field} />
-                                </AnimationContainer>
+                                </motion.div>
                             ))}
                             {researchFields.length > MAX_FIELDS && (
-                                <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                    <ShowMore role="button" onClick={() => setShowMoreFields((v) => !v)} as="div">
-                                        {showMoreFields ? 'Show less fields' : 'Show more fields...'}
-                                    </ShowMore>
-                                </AnimationContainer>
+                                <MotionShowMore
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{
+                                        duration: 0.4,
+                                        ease: [0.39, 0.575, 0.565, 1],
+                                    }}
+                                    role="button"
+                                    onClick={() => setShowMoreFields((v) => !v)}
+                                    as="div"
+                                >
+                                    {showMoreFields ? 'Show less fields' : 'Show more fields...'}
+                                </MotionShowMore>
                             )}
-                        </TransitionGroup>
-                    </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             )}
             {selectedFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && <ArrowCards />}

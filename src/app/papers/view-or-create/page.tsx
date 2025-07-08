@@ -5,15 +5,16 @@ import ROUTES from '@/constants/routes';
 import { getPaperByDoi, getPaperByTitle } from '@/services/backend/papers';
 import { Paper } from '@/services/backend/types';
 
-const ViewOrCreatePaper = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const ViewOrCreatePaper = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
+    const searchParamsResolved = await searchParams;
     let paper: Paper | null = null;
 
     try {
-        if (searchParams.doi && typeof searchParams.doi === 'string') {
-            paper = await getPaperByDoi(searchParams.doi);
+        if (searchParamsResolved.doi && typeof searchParamsResolved.doi === 'string') {
+            paper = await getPaperByDoi(searchParamsResolved.doi as string);
         }
-        if (!paper && searchParams.title && typeof searchParams.title === 'string') {
-            paper = await getPaperByTitle(searchParams.title);
+        if (!paper && searchParamsResolved.title && typeof searchParamsResolved.title === 'string') {
+            paper = await getPaperByTitle(searchParamsResolved.title as string);
         }
     } catch (e) {
         console.error(e);
@@ -22,7 +23,9 @@ const ViewOrCreatePaper = async ({ searchParams }: { searchParams: { [key: strin
     if (!paper) {
         return redirect(
             `${ROUTES.CREATE_PAPER}${
-                searchParams.doi ? `?entry=${searchParams.doi}` : `?title=${encodeURIComponent(searchParams.title?.toString() ?? '')}`
+                searchParamsResolved.doi
+                    ? `?entry=${searchParamsResolved.doi}`
+                    : `?title=${encodeURIComponent(searchParamsResolved.title?.toString() ?? '')}`
             }`,
         );
     }

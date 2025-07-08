@@ -1,7 +1,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { TransitionGroup } from 'react-transition-group';
 import { ListGroup } from 'reactstrap';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
@@ -9,7 +9,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import usePredicatesRecommendation from '@/components/DataBrowser/hooks/usePredicatesRecommendation';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/Utils/Tooltip';
-import { AnimationContainer, ShowMoreButton, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
+import { ShowMoreButton, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Predicate } from '@/services/backend/types';
 import { saveFeedback, SERVICE_MAPPING } from '@/services/orkgNlp';
@@ -55,22 +55,29 @@ const PredicatesRecommendations = () => {
                 </h6>
             )}
             <ListGroup>
-                <TransitionGroup component={null} height="30px">
+                <AnimatePresence mode="popLayout">
                     {_recommendedPredicates.map((p, index) => (
-                        <AnimationContainer
-                            key={index}
-                            classNames="slide-left"
+                        <motion.div
+                            key={`${p.id}-${index}`}
                             className="py-2 d-flex align-items-center px-2"
-                            timeout={{ enter: 600, exit: 600 }}
+                            initial={{ opacity: 0, x: -30, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -30, scale: 0.8 }}
+                            transition={{
+                                duration: 0.4,
+                                delay: index * 0.1,
+                                ease: 'easeOut',
+                            }}
+                            layout
                         >
                             <ValueItem action style={{ fontSize: '90%', cursor: 'pointer' }} onClick={() => handlePropertyClick(p)}>
                                 <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE} showURL>
                                     <FontAwesomeIcon icon={faPlus} className="text-smart me-2" /> {p.label}
                                 </DescriptionTooltip>
                             </ValueItem>
-                        </AnimationContainer>
+                        </motion.div>
                     ))}
-                </TransitionGroup>
+                </AnimatePresence>
             </ListGroup>
             {recommendedPredicates.length > MAX_PROPERTIES_ITEMS && (
                 <div className="text-center">

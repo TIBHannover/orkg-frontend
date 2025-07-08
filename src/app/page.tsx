@@ -1,11 +1,11 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { env } from 'next-runtime-env';
 import { Helmet } from 'react-helmet';
 import { Col, Container, Row } from 'reactstrap';
 
 import Benefits from '@/components/Home/Benefits';
-import HelpTour from '@/components/Home/HelpTour';
 import HomeTabsContainer from '@/components/Home/HomeTabsContainer';
 import useResearchFieldSelector from '@/components/Home/hooks/useResearchFieldSelector';
 import MastodonTimeline from '@/components/Home/MastodonTimeline';
@@ -16,6 +16,11 @@ import HomeAlerts from '@/components/HomeAlerts/HomeAlerts';
 import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
 import ContributorsBox from '@/components/TopContributors/ContributorsBox';
 import { RESOURCES } from '@/constants/graphSettings';
+
+// Dynamically import HelpTour to prevent hydration errors
+const HelpTourComponent = dynamic(() => import('@/components/Home/HelpTour'), {
+    ssr: false,
+});
 
 export default function Home() {
     const { selectedFieldId, selectedFieldLabel, researchFields, isLoadingFields } = useResearchFieldSelector();
@@ -85,7 +90,7 @@ export default function Home() {
                 </Col>
             </Row>
 
-            <HelpTour />
+            <HelpTourComponent />
         </Container>
     );
 }

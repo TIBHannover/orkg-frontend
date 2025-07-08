@@ -3,12 +3,6 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
-html {
-    // set to 'smooth' by bootstrap
-    // required to fix scrolling issue with react-beautiful-dnd https://github.com/atlassian/react-beautiful-dnd/issues/2441
-    scroll-behavior: auto !important;
-}
-
 body {
     color: #646464;
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible

@@ -1,6 +1,6 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { FC, Fragment, useState } from 'react';
 import { Button, Col, Container, Label, Row } from 'reactstrap';
 import styled from 'styled-components';

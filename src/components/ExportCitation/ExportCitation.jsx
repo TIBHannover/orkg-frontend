@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useCopyToClipboard } from 'react-use';
 import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
@@ -33,6 +34,15 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
         bibtexOptions,
     );
 
+    const [state, copyToClipboard] = useCopyToClipboard();
+
+    useEffect(() => {
+        if (state.value) {
+            toast.dismiss();
+            toast.success('Latex citation copied');
+        }
+    }, [state.value]);
+
     return (
         <Modal isOpen={isOpen} toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>Export citation</ModalHeader>
@@ -41,18 +51,9 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
                     <Input type="textarea" maxLength={MAX_LENGTH_INPUT} value={latex.get()} disabled rows="10" />
                 </p>
 
-                <CopyToClipboard
-                    id="copyToClipboard"
-                    text={latex.get()}
-                    onCopy={() => {
-                        toast.dismiss();
-                        toast.success('Latex citation copied');
-                    }}
-                >
-                    <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                        <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                    </Button>
-                </CopyToClipboard>
+                <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(latex.get())}>
+                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                </Button>
             </ModalBody>
         </Modal>
     );
