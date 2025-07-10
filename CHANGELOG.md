@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.167.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.0...v0.167.1) - 2025-07-10
+
+### Changes
+
+- chore: npm dedupe [`#1563`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1563)
+- fix(useTableData): improve handling of optional properties in data mapping [`#1562`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1562)
+- refactor: update to Next.js 15 [`#1553`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1553)
+
+---
 ## [v0.167.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.166.0...v0.167.0) - 2025-06-20
 
 ### Changes
