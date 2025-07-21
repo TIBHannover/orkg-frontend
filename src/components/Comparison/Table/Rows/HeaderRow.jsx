@@ -1,4 +1,3 @@
-import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
