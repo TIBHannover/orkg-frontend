@@ -52,10 +52,10 @@ const useAddPaper = ({ onCreate = null }) => {
             let contributionId = null;
             // if there are no contributions created yet, create a new one
             if (!extractedContributionData) {
-                const contributionId = await createResource({ label: 'Contribution 1', classes: [CLASSES.CONTRIBUTION] });
+                contributionId = await createResource({ label: 'Contribution 1', classes: [CLASSES.CONTRIBUTION] });
                 await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, contributionId);
             } else {
-                const statements = getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
+                const statements = await getStatements({ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION });
                 if (statements.length > 0) {
                     contributionId = statements[0].object.id;
                 }
