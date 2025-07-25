@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Scrollbar } from 'react-scrollbars-custom';
 
+import { activatedPropertiesToList } from '@/components/Comparison/hooks/helpers';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Row, { isRowData } from '@/components/Comparison/Table/Rows/Row';
 import { createInstanceId, createListMonitor, performReorder } from '@/components/shared/dnd/dragAndDropUtils';
@@ -12,6 +13,8 @@ import { updateContributionOrder, updatePropertyOrder } from '@/slices/compariso
 const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
     const { comparison, updateComparison } = useComparison();
     const transpose = useSelector((state) => state.comparison.configuration.transpose);
+    const properties = useSelector((state) => state.comparison.properties);
+    const predicates = activatedPropertiesToList(properties);
     const dispatch = useDispatch();
     const [instanceId] = useState(() => createInstanceId('comparison-rows'));
 
@@ -33,11 +36,17 @@ const Rows = ({ rows, scrollContainerBody, getTableBodyProps, prepareRow }) => {
             }
 
             if (!transpose) {
+                const newPredicates = performReorder({
+                    items: comparison.config.predicates.length > 0 ? comparison.config.predicates : predicates,
+                    startIndex,
+                    indexOfTarget,
+                    closestEdgeOfTarget,
+                });
                 dispatch(updatePropertyOrder({ from: startIndex, to: finishIndex }));
                 updateComparison({
                     config: {
                         ...comparison.config,
-                        predicates: performReorder({ items: comparison.config.predicates, startIndex, indexOfTarget, closestEdgeOfTarget }),
+                        predicates: newPredicates,
                     },
                 });
             } else {
