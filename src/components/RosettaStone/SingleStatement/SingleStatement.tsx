@@ -13,7 +13,7 @@ import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import removeEmptySegments from '@/components/RosettaStone/SingleStatement/hooks/helpers';
+import { normalizeSpacing, removeEmptySegments } from '@/components/RosettaStone/SingleStatement/hooks/helpers';
 import useEditStatement from '@/components/RosettaStone/SingleStatement/hooks/useEditStatement';
 import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import InfoBox from '@/components/RosettaStone/SingleStatement/InfoBox';
@@ -157,7 +157,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                             <Badge color="danger">NOT</Badge>
                         </div>
                     )}
-                    {formattedLabelWithInputs}.
+                    {normalizeSpacing(formattedLabelWithInputs)}.
                 </div>
                 {showContext && isLoadingContext && <div className="d-inline-block">Loading...</div>}
                 {showContext && !isLoadingContext && context && (

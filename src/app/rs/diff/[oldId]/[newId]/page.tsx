@@ -8,7 +8,7 @@ import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import DiffView from '@/components/DiffView/DiffView';
-import removeEmptySegments from '@/components/RosettaStone/SingleStatement/hooks/helpers';
+import { removeEmptySegments } from '@/components/RosettaStone/SingleStatement/hooks/helpers';
 import useRosettaStatementVersions from '@/components/RosettaStone/SingleStatement/hooks/useRosettaStatementVersions';
 import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hooks/useStatements';
