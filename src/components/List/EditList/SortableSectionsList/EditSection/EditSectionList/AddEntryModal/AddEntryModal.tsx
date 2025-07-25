@@ -57,6 +57,8 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
     };
 
     const handleAdd = async () => {
+        const newEntries = [];
+
         for (const result of results) {
             const _entity = { ...result };
             // entity does not yet exist, create it before proceeding
@@ -88,21 +90,20 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                 toast.error('Entry is already in list');
                 return;
             }
-            updateSection(section.id, {
-                entries: [
-                    ...section.entries,
-                    {
-                        description: '',
-                        value: {
-                            id: _entity.id,
-                            label: '',
-                            classes: [],
-                        },
-                    },
-                ],
+
+            newEntries.push({
+                description: '',
+                value: {
+                    id: _entity.id,
+                    label: '',
+                    classes: [],
+                },
             });
-            toggle();
         }
+        updateSection(section.id, {
+            entries: [...section.entries, ...newEntries],
+        });
+        toggle();
     };
 
     const paperToResult = (paper: Paper) => ({
@@ -145,7 +146,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                     } catch (e) {}
                 }
                 if (paperData) {
-                    _results.push(paperToResult(paper));
+                    _results.push(paperToResult(paperData));
                 } else {
                     _results.push({
                         title: paperTitle,
