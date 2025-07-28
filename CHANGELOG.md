@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.167.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.1...v0.167.2) - 2025-07-28
+
+### Changes
+
+- fix(LiteratureLists): add entities by doi [`#1569`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1569)
+- fix(Comparison): sorting properties [`#1566`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1566)
+- fix: rosetta statements spacing issue [`#1568`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1568)
+- fix: pass the new contirubtion id correctly from useAddPaper [`#1567`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1567)
+
+---
 ## [v0.167.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.0...v0.167.1) - 2025-07-10
 
 ### Changes
