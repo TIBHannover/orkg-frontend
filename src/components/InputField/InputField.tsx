@@ -24,6 +24,7 @@ type InputFieldProps = {
     includeClasses?: string[];
     allowCreate?: boolean;
     onChange?: (value?: Node) => void;
+    onFailure?: (e: Error) => void;
 };
 
 const InputField: FC<InputFieldProps> = ({
@@ -37,6 +38,7 @@ const InputField: FC<InputFieldProps> = ({
     includeClasses,
     onChange,
     allowCreate = false,
+    onFailure,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -115,6 +117,7 @@ const InputField: FC<InputFieldProps> = ({
                 openMenuOnFocus
                 autoFocus
                 size="sm"
+                onFailure={onFailure}
             />
         ),
         empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,

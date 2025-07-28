@@ -232,23 +232,27 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
     if (!value.external) {
         return value;
     }
-    // Import the option
-    if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
-        if (value.source !== AUTOCOMPLETE_SOURCE.OLS_API) {
-            importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+    try {
+        // Import the option
+        if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
+            if (value.source !== AUTOCOMPLETE_SOURCE.OLS_API) {
+                importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+            } else {
+                importedValue = (await findOrCreateResource(value)) as OptionType;
+            }
+        } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
+            importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+        } else if (entityType === ENTITIES.CLASS && value.ontology && value.uri) {
+            importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
         } else {
-            importedValue = (await findOrCreateResource(value)) as OptionType;
+            throw new Error('No implemented yet.');
         }
-    } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
-        importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-    } else if (entityType === ENTITIES.CLASS && value.ontology && value.uri) {
-        importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-    } else {
-        throw new Error('No implemented yet.');
+        if (importedValue) {
+            importStatements(importedValue.id, value);
+        }
+    } catch (e) {
+        console.error(e);
+        throw e;
     }
-    if (importedValue) {
-        importStatements(importedValue.id, value);
-    }
-
     return importedValue;
 };

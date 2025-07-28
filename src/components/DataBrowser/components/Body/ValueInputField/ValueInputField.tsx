@@ -12,6 +12,7 @@ import InputField from '@/components/InputField/InputField';
 import SmartLiteralTypeCheck from '@/components/SmartSuggestions/SmartLiteralTypeCheck';
 import SmartResourceLabelCheck from '@/components/SmartSuggestions/SmartResourceLabelCheck';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import errorHandler from '@/helpers/errorHandler';
 import { Literal, Node, Predicate } from '@/services/backend/types';
 
 type ValueInputFieldProps = {
@@ -77,6 +78,10 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                             handleSubmitValue(_class, selectedValue, true);
                             toggleShowInput();
                         }
+                    }}
+                    onFailure={(e) => {
+                        errorHandler({ error: e, shouldShowToast: true });
+                        toggleShowInput();
                     }}
                 />
                 {_class === ENTITIES.RESOURCE && <SmartResourceLabelCheck label={inputValue} />}

@@ -25,6 +25,7 @@ declare module 'react-select/base' {
         enableExternalSources?: boolean;
         size?: 'sm';
         rightAligned?: boolean;
+        onFailure?: (e: Error) => void;
     }
 }
 
@@ -58,6 +59,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         fixedOptions,
         defaultValueId,
         placeholder,
+        onFailure,
     } = props;
 
     const { value, onChange, ...restProps } = props;
@@ -139,17 +141,27 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                     if (!onChange) return;
                     if (actionMeta.action === 'select-option') {
                         if (isMulti && actionMeta.option) {
-                            const v = await importExternalSelectedOption(entityType, actionMeta.option);
-                            // Find selected item index
-                            const index = findIndex(newValue as OptionType[], { id: actionMeta.option?.id });
-                            (newValue as OptionType[])?.splice(index, 1, v);
-                            onChange(uniqBy(newValue as OptionType[], 'id') as unknown as OnChangeValue<OptionType, IsMulti>, actionMeta);
-                            return;
+                            try {
+                                const v = await importExternalSelectedOption(entityType, actionMeta.option);
+                                // Find selected item index
+                                const index = findIndex(newValue as OptionType[], { id: actionMeta.option?.id });
+                                (newValue as OptionType[])?.splice(index, 1, v);
+                                onChange(uniqBy(newValue as OptionType[], 'id') as unknown as OnChangeValue<OptionType, IsMulti>, actionMeta);
+                                return;
+                            } catch (e) {
+                                onFailure?.(e as Error);
+                                return;
+                            }
                         }
                         if (!isMulti) {
-                            const v = await importExternalSelectedOption(entityType, newValue as OptionType);
-                            onChange(v as OnChangeValue<OptionType, IsMulti>, actionMeta);
-                            return;
+                            try {
+                                const v = await importExternalSelectedOption(entityType, newValue as OptionType);
+                                onChange(v as OnChangeValue<OptionType, IsMulti>, actionMeta);
+                                return;
+                            } catch (e) {
+                                onFailure?.(e as Error);
+                                return;
+                            }
                         }
                     }
                     onChange(newValue, actionMeta);
