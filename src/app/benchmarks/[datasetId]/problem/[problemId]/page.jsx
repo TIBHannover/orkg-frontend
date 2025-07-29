@@ -9,17 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import Chart from 'react-google-charts';
 import { useSortBy, useTable } from 'react-table';
-import {
-    Button,
-    ButtonDropdown,
-    ButtonGroup,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Table,
-    UncontrolledButtonDropdown,
-} from 'reactstrap';
+import { Container, Table, UncontrolledButtonDropdown } from 'reactstrap';
 import useSWRInfinite from 'swr/infinite';
 
 import CodeURLsTooltip from '@/components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
@@ -31,6 +21,12 @@ import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';

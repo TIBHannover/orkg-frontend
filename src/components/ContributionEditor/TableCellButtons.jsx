@@ -5,12 +5,12 @@ import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useTableCellForm from '@/components/ContributionEditor/TableCellForm/hooks/useTableCellForm';
 import SemantifyButton from '@/components/SemantifyButton/SemantifyButton';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 import { setIsHelpModalOpen } from '@/slices/contributionEditorSlice';

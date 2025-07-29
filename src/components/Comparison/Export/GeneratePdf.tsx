@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import html2canvas from 'html2canvas';
 import { sumBy } from 'lodash';
 import { FC, useState } from 'react';
-import { DropdownItem } from 'reactstrap';
+
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 
 // FIXME: svg icons look ugly while exporting, so hide them before generating the PDF
 // TODO: currently the PDF file has dimensions based on the table, it is better to

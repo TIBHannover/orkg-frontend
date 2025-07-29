@@ -2,10 +2,10 @@ import { faAnglesRight, faChevronCircleDown, faChevronCircleUp, faRoute } from '
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Resource } from '@/services/backend/types';
 import { getLinkByEntityType } from '@/utils';

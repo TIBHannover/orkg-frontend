@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
+import { Breadcrumb, Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import BreadcrumbItem from '@/components/Ui/Nav/BreadcrumbItem';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getHelpCategory } from '@/services/cms';

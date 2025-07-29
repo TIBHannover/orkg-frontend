@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button, Input, InputGroup, InputGroupText } from 'reactstrap';
+import { Input, InputGroup, InputGroupText } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 type CopyIdProps = {
     id: string;

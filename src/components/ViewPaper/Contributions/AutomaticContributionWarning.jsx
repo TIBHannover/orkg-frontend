@@ -1,7 +1,9 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import { Alert, Button } from 'reactstrap';
+import { Alert } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 const AutomaticContributionWarning = (props) => {
     function handleVerify() {

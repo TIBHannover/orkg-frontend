@@ -1,5 +1,7 @@
 import { FC } from 'react';
-import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Badge, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 type HelpModalProps = {
     isHelpModalOpen: boolean;

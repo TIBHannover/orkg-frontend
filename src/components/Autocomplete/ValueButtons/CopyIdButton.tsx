@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 
 type CopyIdButtonProps = {
     value: SingleValue<OptionType>;

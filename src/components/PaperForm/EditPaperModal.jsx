@@ -4,13 +4,14 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Button, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
 import useEditPaper from '@/components/PaperForm/hooks/useEditPaper';
 import PaperForm from '@/components/PaperForm/PaperForm';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 const EditPaperModal = ({ paperData, toggle, afterUpdate = null, isPaperLinkVisible = false }) => {

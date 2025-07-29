@@ -2,7 +2,7 @@ import { faQuestionCircle, faSlidersH } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { Alert, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+import { Alert, UncontrolledAlert } from 'reactstrap';
 
 import Breadcrumbs from '@/components/DataBrowser/components/Header/Breadcrumbs/Breadcrumbs';
 import Metadata from '@/components/DataBrowser/components/Header/Metadata/Metadata';
@@ -14,6 +14,8 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
 import Popover from '@/components/FloatingUI/Popover';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 
 const Header = () => {
     const { isUsingSnapshot } = useSnapshotStatement();

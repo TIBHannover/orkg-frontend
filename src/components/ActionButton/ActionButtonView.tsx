@@ -2,8 +2,9 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString } from 'lodash';
 import { forwardRef, MouseEvent, ReactNode } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
 
 const handleIconWrapperSize = (wrapperSize: string) => {
     switch (wrapperSize) {

@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Alert, Button, ButtonGroup } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import CellRenderer from '@/libs/selfVisModel/RenderingComponents/CellRenderer';
 import CheckboxSelector from '@/libs/selfVisModel/RenderingComponents/CheckBoxSelector';
 import DropDownMapperSelector from '@/libs/selfVisModel/RenderingComponents/DropdownMapperSelector';

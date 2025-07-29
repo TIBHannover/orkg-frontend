@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import Select, { components, GroupBase, OptionProps } from 'react-select';
-import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import MarkFeaturedUnlistedContainer from '@/components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 

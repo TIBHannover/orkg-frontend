@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import { MultiValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { toast } from 'react-toastify';
-import { Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { useAutocompleteDispatch, useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
 import { CustomOption } from '@/components/Autocomplete/OntologiesModal/CustomOption';
 import { AdditionalType, Ontology } from '@/components/Autocomplete/types';
+import Button from '@/components/Ui/Button/Button';
 import { AUTOCOMPLETE_SOURCE, DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
 import { loadOntologiesOptions } from '@/services/ols';
 import { asyncLocalStorage } from '@/utils';

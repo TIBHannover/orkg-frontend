@@ -5,10 +5,11 @@ import toArray from 'lodash/toArray';
 import randomcolor from 'randomcolor';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
 
+import Button from '@/components/Ui/Button/Button';
 import AbstractAnnotatorView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
 import AbstractInputView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
 import AbstractRangesList from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';

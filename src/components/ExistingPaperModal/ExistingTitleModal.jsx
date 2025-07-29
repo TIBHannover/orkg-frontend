@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import Button from '@/components/Ui/Button/Button';
 import { convertPaperToNewFormat } from '@/utils';
 
 const ExistingTitleModal = ({ existingPaper, toggle, onContinue }) => (

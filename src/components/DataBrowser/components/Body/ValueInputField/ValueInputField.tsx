@@ -2,7 +2,7 @@ import { faCheck, faClose, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import a from 'indefinite';
 import { FC } from 'react';
-import { Button, FormFeedback, InputGroup } from 'reactstrap';
+import { FormFeedback, InputGroup } from 'reactstrap';
 
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
 import useAddValue from '@/components/DataBrowser/hooks/useAddValue';
@@ -11,6 +11,7 @@ import Popover from '@/components/FloatingUI/Popover';
 import InputField from '@/components/InputField/InputField';
 import SmartLiteralTypeCheck from '@/components/SmartSuggestions/SmartLiteralTypeCheck';
 import SmartResourceLabelCheck from '@/components/SmartSuggestions/SmartResourceLabelCheck';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Literal, Node, Predicate } from '@/services/backend/types';
 

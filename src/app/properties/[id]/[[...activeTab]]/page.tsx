@@ -4,7 +4,7 @@ import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
-import { Button, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -19,6 +19,7 @@ import PropertyStatements from '@/components/Property/PropertyStatements/Propert
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from '@/constants/graphSettings';

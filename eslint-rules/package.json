@@ -1,0 +1,6 @@
+{
+    "name": "eslint-plugin-replace-reactstrap-imports",
+    "version": "1.0.0",
+    "main": "index.js",
+    "description": "ESLint plugin to replace reactstrap imports with UI wrapper components"
+}

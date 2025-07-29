@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Alert, Button } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import {
     addYAxisSelector,

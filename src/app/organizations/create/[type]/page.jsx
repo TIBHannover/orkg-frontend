@@ -7,12 +7,13 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { Container, Form, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import slugify from 'slugify';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import Tooltip from '@/components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';

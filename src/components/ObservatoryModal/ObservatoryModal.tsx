@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import AutoCompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory';
+import Button from '@/components/Ui/Button/Button';
 import { MISC } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Observatory, Organization } from '@/services/backend/types';

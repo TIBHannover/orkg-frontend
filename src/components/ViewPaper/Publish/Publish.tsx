@@ -7,12 +7,13 @@ import { useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Alert, Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import Button from '@/components/Ui/Button/Button';
 import Tooltip from '@/components/Utils/Tooltip';
 import { PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';

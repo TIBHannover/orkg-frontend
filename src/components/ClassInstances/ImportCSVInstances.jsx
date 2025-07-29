@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useCSVReader } from 'react-papaparse';
 import { toast } from 'react-toastify';
-import { Button, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import { PREDICATES } from '@/constants/graphSettings';
 import { createLiteral } from '@/services/backend/literals';
 import { createResource, getResource } from '@/services/backend/resources';

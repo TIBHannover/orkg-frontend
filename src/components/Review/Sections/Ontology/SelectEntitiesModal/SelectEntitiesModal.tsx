@@ -4,7 +4,7 @@ import capitalize from 'capitalize';
 import { flattenDeep, uniqBy } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -12,6 +12,7 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import useReview from '@/components/Review/hooks/useReview';
 import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';

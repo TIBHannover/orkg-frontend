@@ -1,7 +1,9 @@
 import { faCaretDown, faCaretRight, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, ReactNode, useState } from 'react';
-import { Alert, Card, CardBody, Collapse, Table } from 'reactstrap';
+import { Alert, Card, CardBody, Table } from 'reactstrap';
+
+import Collapse from '@/components/Ui/Nav/Collapse';
 
 type RecommendationProps = {
     type: string;

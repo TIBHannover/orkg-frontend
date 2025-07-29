@@ -2,11 +2,12 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FC, useId, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert, Button, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { mutate } from 'swr';
 
 import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import Button from '@/components/Ui/Button/Button';
 import Tooltip from '@/components/Utils/Tooltip';
 import ROUTES from '@/constants/routes';
 import { createSnapshot, resourcesUrl } from '@/services/backend/resources';

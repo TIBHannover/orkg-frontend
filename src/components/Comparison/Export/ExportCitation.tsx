@@ -4,9 +4,13 @@ import { zipObject } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Input, Modal, ModalBody, ModalHeader, TabContent, TabPane } from 'reactstrap';
 import styled from 'styled-components';
 
+import Button from '@/components/Ui/Button/Button';
+import Nav from '@/components/Ui/Nav/Nav';
+import NavItem from '@/components/Ui/Nav/NavItem';
+import NavLink from '@/components/Ui/Nav/NavLink';
 import { getCitationByDOI } from '@/services/datacite/index';
 
 const Textarea = styled(Input)`

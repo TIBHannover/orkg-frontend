@@ -1,7 +1,7 @@
 import { faCircleXmark, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
-import { Badge, Button, FormGroup, Input, InputGroup, Label } from 'reactstrap';
+import { Badge, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 
 import useFilters from '@/app/search/components/hooks/useFilters';
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
@@ -9,6 +9,7 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import AutocompleteContributor from '@/components/AutocompleteContributor/AutocompleteContributor';
 import AutocompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory2';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { Thing } from '@/services/backend/things';

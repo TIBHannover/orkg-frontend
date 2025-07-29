@@ -6,12 +6,13 @@ import { match } from 'path-to-regexp';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch } from 'react-redux';
-import { Button, Input, InputGroup } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { updateResource } from '@/services/backend/resources';

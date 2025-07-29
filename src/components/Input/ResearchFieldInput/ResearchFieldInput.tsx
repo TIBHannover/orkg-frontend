@@ -1,10 +1,11 @@
 import { FC, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { Button, InputGroup } from 'reactstrap';
+import { InputGroup } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ResearchFieldSelectorModal from '@/components/ResearchFieldSelector/ResearchFieldSelectorModal';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Node } from '@/services/backend/types';
 

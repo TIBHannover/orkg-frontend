@@ -1,7 +1,8 @@
 import { FC, useCallback, useState } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import ResearchFieldSelector from '@/components/ResearchFieldSelector/ResearchFieldSelector';
+import Button from '@/components/Ui/Button/Button';
 import { RESOURCES } from '@/constants/graphSettings';
 import { Node } from '@/services/backend/types';
 

@@ -2,11 +2,11 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 import useSWR from 'swr';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import { SuggestionsBox } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { CLASSES } from '@/constants/graphSettings';
 import { getResources } from '@/services/backend/resources';

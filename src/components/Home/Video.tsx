@@ -1,8 +1,10 @@
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
 
 const PlayButton = styled(Button)`
     color: inherit !important;

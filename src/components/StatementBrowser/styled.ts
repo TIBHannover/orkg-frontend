@@ -1,5 +1,8 @@
-import { Button, DropdownItem, DropdownToggle } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 
 /* dropdownItem */
 export const StyledDropdownItem = styled(DropdownItem)`

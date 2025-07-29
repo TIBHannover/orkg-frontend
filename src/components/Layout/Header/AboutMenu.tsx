@@ -5,10 +5,13 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { UncontrolledButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import ROUTES from '@/constants/routes';
 import { getAboutPageCategories, getAboutPages } from '@/services/cms';
 import { AboutPageCategory, HelpArticle } from '@/services/cms/types';

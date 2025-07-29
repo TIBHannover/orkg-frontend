@@ -1,5 +1,7 @@
-import { Button, ListGroupItem } from 'reactstrap';
+import { ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
 
 export const PropertyItem = styled(ListGroupItem)`
     background-color: ${(props) => props.theme.smart}!important;

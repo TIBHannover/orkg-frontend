@@ -2,11 +2,12 @@ import { faExpandArrowsAlt, faQuestionCircle, faSearchMinus, faSearchPlus, faTim
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { resetPdfAnnotation } from '@/slices/pdfAnnotationSlice';
 
 const ToolbarStyled = styled.div`

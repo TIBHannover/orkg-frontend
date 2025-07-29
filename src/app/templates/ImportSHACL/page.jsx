@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { Accordion, Button, ListGroup } from 'reactstrap';
+import { Accordion, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
@@ -14,6 +14,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
 import useImportSHACL from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
 import ViewShapes from '@/components/Templates/ImportSHACL/ViewShapes';
+import Button from '@/components/Ui/Button/Button';
 import requireAuthentication from '@/requireAuthentication';
 
 const DragRDF = styled.div`

@@ -1,7 +1,9 @@
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import { Button, ModalFooter } from 'reactstrap';
+import { ModalFooter } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 function FilterModalFooter({ handleApply, handleCancel, handleReset }) {
     return (

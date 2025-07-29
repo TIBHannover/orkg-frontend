@@ -3,7 +3,7 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -22,6 +22,7 @@ import ResearchProblemsBox from '@/components/ResearchProblemsBox/ResearchProble
 import { SubTitle } from '@/components/styled';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import { getObservatoryById } from '@/services/backend/observatories';
 import { getOrganization } from '@/services/backend/organizations';

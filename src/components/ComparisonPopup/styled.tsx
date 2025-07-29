@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
 
 export const ComparisonBoxButton = styled(Button)`
     border-radius: 11px 11px 0 0 !important;

@@ -5,11 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { getFacebookSharerLink, getLinkedInSharerLink, getTwitterSharerLink } from '@/components/ShareLinkMarker/helpers';
+import Button from '@/components/Ui/Button/Button';
 
 export const ShareSideBox = styled.div`
     position: absolute;

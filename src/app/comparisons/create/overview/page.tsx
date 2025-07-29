@@ -5,12 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Button, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import comparisonPublishImg from '@/assets/img/AddComparison/comparison-publish-preview.png';
 import contributionEditorPreview from '@/assets/img/AddComparison/contribution-editor-preview.png';
 import csvImportPreview from '@/assets/img/AddComparison/csv-import-preview.png';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 const AddComparison = () => {

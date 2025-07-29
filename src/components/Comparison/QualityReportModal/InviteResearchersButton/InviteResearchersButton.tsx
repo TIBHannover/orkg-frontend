@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import { FC } from 'react';
-import { Button } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 type InviteResearchersButtonProps = {

@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button, ButtonGroup, Table } from 'reactstrap';
+import { Table } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { EntityType, Statement } from '@/services/backend/types';

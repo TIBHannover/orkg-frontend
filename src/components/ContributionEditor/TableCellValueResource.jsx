@@ -3,9 +3,9 @@ import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { memo, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import Button from '@/components/Ui/Button/Button';
 import { generatedFormattedLabel, updateResourceStatementsAction } from '@/slices/contributionEditorSlice';
 
 const TableCellValueResource = ({ value }) => {

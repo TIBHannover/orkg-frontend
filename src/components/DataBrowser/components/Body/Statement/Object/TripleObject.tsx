@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import LayoutTripleObject from '@/components/DataBrowser/components/Body/Statement/Object/LayoutTripleObject';
@@ -12,6 +11,7 @@ import ValueDatatype from '@/components/DataBrowser/components/Body/Statement/Va
 import ValueInputField from '@/components/DataBrowser/components/Body/ValueInputField/ValueInputField';
 import ValueOptions from '@/components/DataBrowser/components/Body/ValueOptions/ValueOptions';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import Button from '@/components/Ui/Button/Button';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';

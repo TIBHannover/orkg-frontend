@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BotInfo, BrowserInfo, detect, NodeInfo, ReactNativeInfo, SearchBotDeviceInfo } from 'detect-browser';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
-import { Button, Card, CardBody, Collapse, Container } from 'reactstrap';
+import { Card, CardBody, Container } from 'reactstrap';
 
 import Logo from '@/assets/img/logo.svg';
+import Button from '@/components/Ui/Button/Button';
+import Collapse from '@/components/Ui/Nav/Collapse';
 import ROUTES from '@/constants/routes';
 
 type ErrorFallbackProps = {

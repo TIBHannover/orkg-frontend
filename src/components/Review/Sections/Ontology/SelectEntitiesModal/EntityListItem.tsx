@@ -4,7 +4,7 @@ import { faMinusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import { FC, useEffect, useRef, useState } from 'react';
-import { Button, ListGroupItem } from 'reactstrap';
+import { ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 
 import {
@@ -14,6 +14,7 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 import { ReviewSectionData } from '@/services/backend/types';
 
 const DragHandle = styled.div`

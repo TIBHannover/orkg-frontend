@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
 import { activatedContributionsToList } from '@/components/Comparison/hooks/helpers';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import HelpVideoModal from '@/libs/selfVisModel/ComparisonComponents/HelpVideoModal';
 import PublishVisualization from '@/libs/selfVisModel/ComparisonComponents/PublishVisualization';

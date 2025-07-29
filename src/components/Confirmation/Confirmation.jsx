@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 class Confirmation extends Component {
     render() {

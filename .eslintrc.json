@@ -4,7 +4,7 @@
     "globals": {
         "globalThis": false
     },
-    "plugins": ["no-relative-import-paths", "simple-import-sort"],
+    "plugins": ["no-relative-import-paths", "simple-import-sort", "replace-reactstrap-imports"],
     "rules": {
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
@@ -35,10 +35,31 @@
                         "group": ["next/navigation"],
                         "importNames": ["useParams"],
                         "message": "Please import from `components/useParams/useParams` instead."
+                    },
+                    {
+                        "group": ["reactstrap"],
+                        "importNames": [
+                            "Button",
+                            "ButtonDropdown",
+                            "ButtonGroup",
+                            "Nav",
+                            "NavLink",
+                            "Navbar",
+                            "NavbarToggler",
+                            "Collapse",
+                            "NavItem",
+                            "BreadcrumbItem",
+                            "Dropdown",
+                            "DropdownItem",
+                            "DropdownMenu",
+                            "DropdownToggle"
+                        ],
+                        "message": "Please import from `components/Ui` instead of reactstrap. For example: Button -> @/components/Ui/Button/Button."
                     }
                 ]
             }
         ],
+        "replace-reactstrap-imports/replace-reactstrap-imports": "error",
         "prefer-const": 1,
         "react/jsx-curly-brace-presence": 2,
         "no-console": [
@@ -179,6 +200,31 @@
             "rules": {
                 "import/no-anonymous-default-export": "off"
             }
+        },
+        {
+            "files": ["src/components/Ui/**/*"],
+            "rules": {
+                "no-restricted-imports": "off"
+            }
+        },
+        {
+            "files": ["eslint-rules/**/*"],
+            "parser": "espree",
+            "parserOptions": {
+                "ecmaVersion": 2020,
+                "sourceType": "module"
+            },
+            "rules": {
+                "@typescript-eslint/naming-convention": "off",
+                "@typescript-eslint/no-var-requires": "off",
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/return-await": "off",
+                "@typescript-eslint/no-unused-expressions": "off",
+                "@typescript-eslint/no-shadow": "off",
+                "@typescript-eslint/default-param-last": "off",
+                "@typescript-eslint/no-use-before-define": "off",
+                "@typescript-eslint/no-unused-vars": "off"
+            }
         }
     ],
     "env": {
@@ -187,5 +233,5 @@
     "parserOptions": {
         "project": "./tsconfig.json"
     },
-    "ignorePatterns": ["next.config.js", "widget/*", "public/widget.js"]
+    "ignorePatterns": ["next.config.js", "widget/*", "public/widget.js", "eslint-rules/*"]
 }

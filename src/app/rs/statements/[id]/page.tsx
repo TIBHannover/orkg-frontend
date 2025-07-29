@@ -3,7 +3,7 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
-import { Button, Container, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -12,6 +12,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hooks/useStatements';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { Thing } from '@/services/backend/things';

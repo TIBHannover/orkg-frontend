@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader, Progress } from 'reactstrap';
+import { Alert, Modal, ModalBody, ModalFooter, ModalHeader, Progress } from 'reactstrap';
 
 import PaperList from '@/components/ConfirmBulkImport/PaperList';
 import useImportBulkData from '@/components/ConfirmBulkImport/useImportBulkData';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 type ConfirmBulkImportProps = {

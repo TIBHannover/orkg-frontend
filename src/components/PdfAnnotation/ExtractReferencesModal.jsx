@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert, Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import { updateTableData } from '@/slices/pdfAnnotationSlice';
 
 const ExtractReferencesModal = (props) => {

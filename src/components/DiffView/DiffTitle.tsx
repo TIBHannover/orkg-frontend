@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FC } from 'react';
-import { Button } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 
 export type TitleData = {

@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import Button from '@/components/Ui/Button/Button';
 import { fillContributionsWithTemplate, removeClassFromContributionResource, removeEmptyPropertiesOfClass } from '@/slices/contributionEditorSlice';
 
 const IconWrapper = styled.span`

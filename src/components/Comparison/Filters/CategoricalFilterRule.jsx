@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Badge, Button, FormGroup, Input, Label, ModalBody } from 'reactstrap';
+import { Badge, FormGroup, Input, Label, ModalBody } from 'reactstrap';
 
 import FilterModalFooter from '@/components/Comparison/Filters/FilterModalFooter';
+import Button from '@/components/Ui/Button/Button';
 import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 const CategoricalFilterRule = (props) => {

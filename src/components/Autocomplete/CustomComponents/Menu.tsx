@@ -2,11 +2,12 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { GroupBase } from 'react-select';
 import { components, MenuProps } from 'react-select';
-import { Badge, Button } from 'reactstrap';
+import { Badge } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useAutocompleteDispatch, useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 
 export const StyledMenuListFooter = styled.div`
     background-color: ${(props) => props.theme.bodyBg};

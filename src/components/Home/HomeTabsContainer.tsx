@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
-import { Button } from 'reactstrap';
 
 import CardFactory from '@/components/Cards/CardFactory/CardFactory';
 import ContentTypeVisibilityFilter from '@/components/ContentTypeList/ContentTypeVisibilityFilter';
@@ -8,6 +7,7 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
+import Button from '@/components/Ui/Button/Button';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES, RESOURCES } from '@/constants/graphSettings';
 import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';

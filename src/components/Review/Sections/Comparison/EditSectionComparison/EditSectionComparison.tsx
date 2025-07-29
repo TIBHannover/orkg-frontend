@@ -3,13 +3,14 @@ import { uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Alert, Button } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import useReview from '@/components/Review/hooks/useReview';
 import SectionComparison from '@/components/Review/Sections/Comparison/SectionComparison';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getComparison } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';

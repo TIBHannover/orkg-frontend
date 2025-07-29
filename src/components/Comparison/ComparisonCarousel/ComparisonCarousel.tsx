@@ -1,7 +1,7 @@
 import { faArrowCircleLeft, faArrowCircleRight, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Button, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import useRelatedFigures from '@/components/Comparison/ComparisonCarousel/RelatedFigures/hooks/useRelatedFigures';
 import RelatedFigureCard from '@/components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFigureCard';
@@ -16,6 +16,7 @@ import useComparison from '@/components/Comparison/hooks/useComparison';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
+import Button from '@/components/Ui/Button/Button';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const ComparisonCarousel = () => {

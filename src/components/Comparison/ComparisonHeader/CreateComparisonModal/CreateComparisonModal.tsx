@@ -4,10 +4,11 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert, Button, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';

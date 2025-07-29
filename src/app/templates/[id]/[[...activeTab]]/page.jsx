@@ -8,18 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    Button,
-    ButtonDropdown,
-    ButtonGroup,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Modal,
-    ModalBody,
-    ModalHeader,
-} from 'reactstrap';
+import { Container, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -36,6 +25,12 @@ import ShaclFlowModal from '@/components/Templates/ShaclFlow/ShaclFlowModal';
 import TabsContainer from '@/components/Templates/TabsContainer';
 import TemplateEditorHeaderBar from '@/components/Templates/TemplateEditorHeaderBar';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';

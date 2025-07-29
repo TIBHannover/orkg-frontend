@@ -4,10 +4,10 @@ import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import { getImage, getSdgNumber } from '@/components/SustainableDevelopmentGoals/helpers';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';
 

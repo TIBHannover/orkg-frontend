@@ -4,10 +4,10 @@ import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import Button from '@/components/Ui/Button/Button';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
 import ROUTES from '@/constants/routes';
 import { getLlmResponse } from '@/services/orkgNlp';

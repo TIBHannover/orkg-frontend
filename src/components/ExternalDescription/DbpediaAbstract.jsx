@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { Button } from 'reactstrap';
 
 import DBPEDIA_LOGO from '@/assets/img/sameas/dbpedia.png';
+import Button from '@/components/Ui/Button/Button';
 import { getAbstractByURI } from '@/services/dbpedia';
 
 class DbpediaAbstract extends Component {

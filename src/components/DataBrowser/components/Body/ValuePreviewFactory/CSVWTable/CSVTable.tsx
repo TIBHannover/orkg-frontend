@@ -13,9 +13,11 @@ import {
 } from '@tanstack/react-table';
 import { FC, ReactElement, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
-import { Button, ButtonGroup, Input, InputGroup, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
+import { Input, InputGroup, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
 
 import useTableData, { TableRow } from '@/components/DataBrowser/hooks/useTableData';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import { sortMethod } from '@/utils';
 

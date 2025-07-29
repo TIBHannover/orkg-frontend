@@ -4,7 +4,7 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Badge, Container } from 'reactstrap';
 
 import CheckClasses from '@/components/CheckClasses/CheckClasses';
 import CheckSlug from '@/components/CheckSlug/CheckSlug';
@@ -17,6 +17,11 @@ import ExternalDescription from '@/components/ResearchProblem/ExternalDescriptio
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Contributors from '@/components/TopContributors/Contributors';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utils';

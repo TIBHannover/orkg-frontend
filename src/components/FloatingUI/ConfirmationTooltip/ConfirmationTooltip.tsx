@@ -1,10 +1,11 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode } from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import { usePopoverContext } from '@/components/FloatingUI/Popover';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 
 const ConfirmationTooltipStyled = styled.div`
     color: #fff;

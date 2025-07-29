@@ -1,7 +1,7 @@
 import { FC, memo, useState } from 'react';
-import { Button } from 'reactstrap';
 
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import Button from '@/components/Ui/Button/Button';
 
 type OntologyItemProps = {
     id: string;

@@ -4,11 +4,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import CopyId from '@/components/CopyId/CopyId';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

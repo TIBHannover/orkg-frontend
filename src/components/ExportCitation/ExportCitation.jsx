@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button, Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { getResourceLink } from '@/utils';
 

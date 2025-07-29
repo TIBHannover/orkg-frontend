@@ -1,5 +1,7 @@
 import { FC } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 type ShouldPublishModalProps = { toggle: () => void; openPublishModal: () => void };
 

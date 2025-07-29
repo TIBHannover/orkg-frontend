@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { FC, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, FormGroup, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, InputGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import useMembership from '@/components/hooks/useMembership';
 import PaperTitleInput from '@/components/Input/PaperTitleInput/PaperTitleInput';
 import MetadataTable from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/MetadataTable/MetadataTable';
 import useList from '@/components/List/hooks/useList';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { CLASSES, RESOURCES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';

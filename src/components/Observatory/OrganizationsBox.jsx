@@ -6,11 +6,11 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import AddOrganization from '@/components/Observatory/AddOrganization';
+import Button from '@/components/Ui/Button/Button';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
 import { updateObservatory } from '@/services/backend/observatories';

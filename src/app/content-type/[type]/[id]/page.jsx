@@ -4,7 +4,7 @@ import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { upperFirst } from 'lodash';
 import { useEffect, useState } from 'react';
-import { Button, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -14,6 +14,7 @@ import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import Unauthorized from '@/components/Unauthorized/Unauthorized';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';

@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import { parseCiteResult } from '@/utils';
 
 const BibTexModal = ({ toggle, onUpdateData }) => {

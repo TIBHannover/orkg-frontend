@@ -2,9 +2,10 @@ import { faExclamationTriangle, faMagic, faPen, faSpinner } from '@fortawesome/f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import TooltipQuestion from '@/components/Utils/Tooltip';
 import AbstractAnnotatorModal from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorModal';
 import AbstractModal from '@/components/ViewPaper/AbstractModal/AbstractModal';

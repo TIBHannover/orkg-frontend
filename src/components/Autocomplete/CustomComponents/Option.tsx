@@ -7,13 +7,13 @@ import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button } from 'reactstrap';
 import { ThemeContext } from 'styled-components';
 
 import InfoBox from '@/components/Autocomplete/CustomComponents/InfoBox';
 import { SourceBadge } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import { getLinkByEntityType } from '@/utils';
 
 const MAXIMUM_DESCRIPTION_LENGTH = 120;

@@ -2,12 +2,12 @@ import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import useResearchProblemAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
 import ResearchProblemAuthorsModal from '@/components/TopAuthors/ResearchProblemAuthorsModal';
+import Button from '@/components/Ui/Button/Button';
 import { ResearchProblemTopAuthor } from '@/services/backend/problems';
 
 type AuthorsBoxProps = {

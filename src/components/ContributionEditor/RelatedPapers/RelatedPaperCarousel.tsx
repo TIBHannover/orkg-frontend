@@ -1,6 +1,6 @@
 import { isArray } from 'lodash';
 import React, { useState } from 'react';
-import { Button, Card, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardText, CardTitle } from 'reactstrap';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
 import RelatedPaperModal from '@/components/ContributionEditor/RelatedPapers/RelatedPaperModal';
 import AddPaperModal from '@/components/PaperForm/AddPaperModal';
+import Button from '@/components/Ui/Button/Button';
 import { getSimilarPapers, GetSimilarPapersParams, similarPaperURL } from '@/services/orkgSimpaper';
 import { SimilarPaper } from '@/services/orkgSimpaper/types';
 

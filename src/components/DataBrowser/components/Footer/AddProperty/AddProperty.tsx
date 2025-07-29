@@ -2,7 +2,7 @@ import { faClose, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { uniq } from 'lodash';
 import { ReactElement, useState } from 'react';
-import { Button, ButtonGroup, InputGroup } from 'reactstrap';
+import { InputGroup } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
@@ -16,6 +16,8 @@ import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/da
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPropertyGuidelinesCheck';
 import SmartPropertySuggestions from '@/components/SmartSuggestions/SmartPropertySuggestions';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { Predicate } from '@/services/backend/types';

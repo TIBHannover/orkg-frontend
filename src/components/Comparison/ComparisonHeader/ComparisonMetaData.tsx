@@ -2,7 +2,7 @@ import { faCalendar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { Badge, Button } from 'reactstrap';
+import { Badge } from 'reactstrap';
 
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
@@ -13,6 +13,7 @@ import ObservatoryBox from '@/components/Comparison/ObservatoryBox/ObservatoryBo
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import LinkValuePlugins from '@/components/ValuePlugins/Link/Link';
