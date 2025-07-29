@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import BioassaysModal from '@/components/ViewPaper/BioassaysModal/BioassaysModal';
 import { BIOASSAYS_FIELDS_LIST } from '@/constants/nlpFieldLists';
 

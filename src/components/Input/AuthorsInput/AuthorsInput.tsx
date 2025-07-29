@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Button, Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -12,6 +12,7 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import SortableAuthorItem, { isAuthorData } from '@/components/Input/AuthorsInput/SortableAuthorItem';
 import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getStatements } from '@/services/backend/statements';

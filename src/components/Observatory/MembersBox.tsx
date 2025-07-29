@@ -2,7 +2,6 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 import { mutate } from 'swr';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
@@ -10,6 +9,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import AddMember from '@/components/Observatory/AddMember';
 import MembersModal from '@/components/Observatory/MembersModal';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import Button from '@/components/Ui/Button/Button';
 import { getUsersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
 import { Contributor, Organization } from '@/services/backend/types';
 import { deleteUserFromObservatoryById } from '@/services/backend/users';

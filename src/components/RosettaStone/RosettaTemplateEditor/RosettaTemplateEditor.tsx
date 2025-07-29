@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Button } from 'reactstrap';
 
 import useSaveStatementType from '@/components/RosettaStone/RosettaTemplateEditor/hooks/useSaveStatementType';
 import StepOne from '@/components/RosettaStone/RosettaTemplateEditor/StepOne';
@@ -9,6 +8,7 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import Button from '@/components/Ui/Button/Button';
 
 type RosettaTemplateEditorProps = {
     saveButtonText: string;

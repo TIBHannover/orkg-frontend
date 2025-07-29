@@ -3,7 +3,7 @@ import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indi
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect, useRef, useState } from 'react';
-import { Button, Input, InputGroup } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
 
 import {
     createDragDataFactory,
@@ -12,6 +12,7 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 
 // Create shared symbols and functions for reference drag and drop
 export const referenceKey = createDragDataKey('reference');

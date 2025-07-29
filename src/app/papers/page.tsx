@@ -5,13 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { UncontrolledButtonDropdown } from 'reactstrap';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';

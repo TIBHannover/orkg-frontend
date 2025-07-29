@@ -10,11 +10,15 @@ import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
 import { activatedContributionsToList, getComparisonURLConfigOfReduxState } from '@/components/Comparison/hooks/helpers';
 import useComparison from '@/components/Comparison/hooks/useComparison';
+import Button from '@/components/Ui/Button/Button';
+import Nav from '@/components/Ui/Nav/Nav';
+import NavItem from '@/components/Ui/Nav/NavItem';
+import NavLink from '@/components/Ui/Nav/NavLink';
 import Tooltip from '@/components/Utils/Tooltip';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

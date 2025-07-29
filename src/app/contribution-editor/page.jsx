@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Button, Container } from 'reactstrap';
+import { Alert, Container } from 'reactstrap';
 
 import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
 import TableScrollContainer from '@/components/Comparison/Table/TableScrollContainer';
@@ -21,6 +21,7 @@ import TableLoadingIndicator from '@/components/ContributionEditor/TableLoadingI
 import CreateContributionModal from '@/components/CreateContributionModal/CreateContributionModal';
 import AddPaperModal from '@/components/PaperForm/AddPaperModal';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import routes from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
 import { contributionsRemoved, loadContributions } from '@/slices/contributionEditorSlice';

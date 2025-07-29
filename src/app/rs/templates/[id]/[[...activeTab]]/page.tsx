@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import ReactStringReplace from 'react-string-replace';
 import { toast } from 'react-toastify';
-import { Badge, Button, Container, ListGroup } from 'reactstrap';
+import { Badge, Container, ListGroup } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -24,6 +24,7 @@ import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleSta
 import { SlotTooltip } from '@/components/RosettaStone/SlotTooltip/SlotTooltip';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { MISC } from '@/constants/graphSettings';

@@ -1,7 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
 import { SectionStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
@@ -11,6 +10,7 @@ import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
 import EditMetadataModal from '@/components/Review/EditReview/EditMetadata/EditMetadataModal/EditMetadataModal';
 import useReview from '@/components/Review/hooks/useReview';
 import SustainableDevelopmentGoals from '@/components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
+import Button from '@/components/Ui/Button/Button';
 
 const EditMetadata = () => {
     const { review, observatory, organization, mutate } = useReview();

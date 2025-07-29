@@ -1,13 +1,13 @@
 import { truncate } from 'lodash';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import ResearchProblemsModal from '@/components/Conference/ResearchProblemsModal';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 import { getProblemsByOrganizationId, organizationsUrl } from '@/services/backend/organizations';
 import { reverseWithSlug } from '@/utils';

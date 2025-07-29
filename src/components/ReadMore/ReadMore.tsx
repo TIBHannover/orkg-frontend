@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 

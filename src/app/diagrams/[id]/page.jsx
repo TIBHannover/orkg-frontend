@@ -6,7 +6,7 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Controls, MarkerType, MiniMap } from 'reactflow';
-import { Alert, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Alert, Container } from 'reactstrap';
 
 import ContextMenu from '@/components/DiagramEditor/ContextMenu';
 import EditEdge from '@/components/DiagramEditor/EditEdge';
@@ -20,6 +20,11 @@ import StyledReactFlow from '@/components/DiagramEditor/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 

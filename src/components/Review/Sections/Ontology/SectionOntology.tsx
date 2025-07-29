@@ -3,12 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalize, orderBy, times } from 'lodash';
 import React, { FC, useMemo, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { Button, Table } from 'reactstrap';
+import { Table } from 'reactstrap';
 import useSWR from 'swr';
 
 import useReview from '@/components/Review/hooks/useReview';
 import OntologyItem from '@/components/Review/Sections/Ontology/OntologyItem/OntologyItem';
 import SelectEntitiesModal from '@/components/Review/Sections/Ontology/SelectEntitiesModal/SelectEntitiesModal';
+import Button from '@/components/Ui/Button/Button';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';

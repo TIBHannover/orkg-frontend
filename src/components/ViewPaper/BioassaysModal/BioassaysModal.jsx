@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { useCSVReader } from 'react-papaparse';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button, FormFeedback, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormFeedback, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { mutate } from 'swr';
 
+import Button from '@/components/Ui/Button/Button';
 import BioassaySelectItem from '@/components/ViewPaper/BioassaysModal/BioassaySelectItem';
 import useBioassays from '@/components/ViewPaper/hooks/useBioassays';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';

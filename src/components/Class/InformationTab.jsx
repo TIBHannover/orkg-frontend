@@ -5,7 +5,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Table } from 'reactstrap';
+import { Table } from 'reactstrap';
 import useSWR from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -13,6 +13,7 @@ import ClassInlineItem from '@/components/Class/ClassInlineItem/ClassInlineItem'
 import useCountInstances from '@/components/Class/hooks/useCountInstances';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from '@/services/backend/classes';

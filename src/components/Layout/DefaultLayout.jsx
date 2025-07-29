@@ -15,11 +15,12 @@ import { Suspense, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Helmet } from 'react-helmet';
 import { Slide, ToastContainer } from 'react-toastify';
-import { Alert, Button } from 'reactstrap';
+import { Alert } from 'reactstrap';
 import styled from 'styled-components';
 
 import Footer from '@/components/Layout/Footer';
 import Header from '@/components/Layout/Header/Header';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 const StyledBody = styled.div`

@@ -3,10 +3,10 @@ import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import Button from '@/components/Ui/Button/Button';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
 import { getLlmResponse } from '@/services/orkgNlp';
 

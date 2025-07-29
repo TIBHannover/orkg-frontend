@@ -2,12 +2,12 @@ import { faLightbulb, faSpinner, faWarning } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
 import { createResource, getResources } from '@/services/backend/resources';

@@ -3,7 +3,6 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 
 import CardFactory from '@/components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
@@ -11,6 +10,7 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
+import Button from '@/components/Ui/Button/Button';
 import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';

@@ -4,10 +4,10 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { Button } from 'reactstrap';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ROUTES from '@/constants/routes';
 import { getStatements, statementsUrl } from '@/services/backend/statements';

@@ -4,11 +4,11 @@ import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
 import { createPredicate, getPredicates } from '@/services/backend/predicates';

@@ -8,10 +8,12 @@ import PropTypes from 'prop-types';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert, Button, ButtonGroup, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useMembership from '@/components/hooks/useMembership';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';

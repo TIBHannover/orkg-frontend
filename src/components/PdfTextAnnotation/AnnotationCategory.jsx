@@ -4,13 +4,13 @@ import { filter, upperFirst } from 'lodash';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 import tokenizer from 'sbd';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useDeleteAnnotation from '@/components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from '@/components/PdfTextAnnotation/hooks/useEditAnnotation';
+import Button from '@/components/Ui/Button/Button';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
 const MAX_SENTENCES_PER_ANNOTATION = 2;

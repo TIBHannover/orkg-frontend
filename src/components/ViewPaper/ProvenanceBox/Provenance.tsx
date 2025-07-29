@@ -6,10 +6,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
+import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { StyledItemProvenanceBox } from '@/components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from '@/constants/graphSettings';

@@ -1,7 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
@@ -11,6 +10,7 @@ import useList from '@/components/List/hooks/useList';
 import ListEntryAmount from '@/components/List/ListEntryAmount/ListEntryAmount';
 import SustainableDevelopmentGoals from '@/components/List/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
+import Button from '@/components/Ui/Button/Button';
 
 const EditMetadata = () => {
     const { list, observatory, organization, mutate } = useList();

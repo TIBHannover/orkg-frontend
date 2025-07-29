@@ -3,11 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { Card, CardFooter, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Card, CardFooter, Container } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Dropdown from '@/components/Ui/Dropdown/Dropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResource, resourcesUrl } from '@/services/backend/resources';

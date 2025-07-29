@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { CSVLink } from 'react-csv';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import ExactMatch from '@/assets/img/comparison-exact-match.svg';
 import IntelligentMerge from '@/assets/img/comparison-intelligent-merge.svg';
@@ -34,6 +34,11 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import ComparisonAuthorsModel from '@/components/TopAuthors/ComparisonAuthorsModel';
+import Button from '@/components/Ui/Button/Button';
+import Dropdown from '@/components/Ui/Dropdown/Dropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
 import { getMatrixOfComparison, setConfigurationAttribute, setIsOpenFeedbackModal } from '@/slices/comparisonSlice';

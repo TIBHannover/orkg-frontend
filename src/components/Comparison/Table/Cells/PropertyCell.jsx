@@ -5,7 +5,6 @@ import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import FilterModal from '@/components/Comparison/Filters/FilterModal';
@@ -13,6 +12,7 @@ import FilterWrapper from '@/components/Comparison/Filters/FilterWrapper';
 import { getDataByProperty, getRuleByProperty, getValuesByProperty } from '@/components/Comparison/Filters/helpers';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import { handleToggleGroupVisibility, updateRulesOfProperty } from '@/slices/comparisonSlice';
 

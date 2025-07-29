@@ -9,22 +9,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import {
-    Alert,
-    Button,
-    ButtonDropdown,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    FormGroup,
-    Input,
-    InputGroup,
-    Label,
-    Modal,
-    ModalBody,
-    ModalHeader,
-} from 'reactstrap';
+import { Alert, Container, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
@@ -33,6 +18,11 @@ import ExportCitation from '@/components/Comparison/Export/ExportCitation';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useParams from '@/components/useParams/useParams';
 import Contributions from '@/components/ViewPaperVersion/ContributionsVersion/Contributions';
 import useViewPaperVersion from '@/components/ViewPaperVersion/hooks/useViewPaperVersion';

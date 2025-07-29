@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Badge, Button, ButtonDropdown, Container, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Badge, Container } from 'reactstrap';
 
 import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
@@ -13,6 +13,11 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import ROUTES from '@/constants/routes';
 import { Template } from '@/services/backend/types';
 

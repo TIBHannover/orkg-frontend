@@ -1,9 +1,10 @@
 import { FC, useEffect, useId, useState } from 'react';
-import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 import useReview from '@/components/Review/hooks/useReview';
+import Button from '@/components/Ui/Button/Button';
 import Tooltip from '@/components/Utils/Tooltip';
 import { Author, Node } from '@/services/backend/types';
 

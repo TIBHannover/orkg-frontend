@@ -4,28 +4,16 @@ import { faChevronDown, faExternalLinkAlt, faSpinner, faUser } from '@fortawesom
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import { reverse } from 'named-urls';
-import { signIn } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 import { match } from 'path-to-regexp';
 import { MouseEvent, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import { useMountedState, useWindowScroll } from 'react-use';
-import {
-    Badge,
-    Button,
-    UncontrolledButtonDropdown as ButtonDropdown,
-    Collapse,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Nav,
-    NavbarToggler,
-    NavItem,
-    NavLink,
-} from 'reactstrap';
+import { Badge } from 'reactstrap';
 
 import Logo from '@/assets/img/logo.svg';
 import LogoWhite from '@/assets/img/logo_white.svg';
@@ -38,6 +26,16 @@ import Nfdi4dsButton from '@/components/Layout/Header/Nfdi4dsButton';
 import SearchForm from '@/components/Layout/Header/SearchForm';
 import { GlobalStyle, StyledNavbar, StyledTopBar } from '@/components/Layout/Header/styled';
 import UserTooltip from '@/components/Layout/Header/UserTooltip';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import Collapse from '@/components/Ui/Nav/Collapse';
+import Nav from '@/components/Ui/Nav/Nav';
+import NavbarToggler from '@/components/Ui/Nav/NavbarToggler';
+import NavItem from '@/components/Ui/Nav/NavItem';
+import NavLink from '@/components/Ui/Nav/NavLink';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
 

@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Button } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 const CopyToClipboardButton = ({ code, children }) => {
     const [state, copyToClipboard] = useCopyToClipboard();

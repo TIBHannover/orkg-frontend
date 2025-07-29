@@ -4,13 +4,13 @@ import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import AddPaperWizard from '@/assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from '@/assets/img/tools/contribution-editor.png';
 import Popover from '@/components/FloatingUI/Popover';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 const LabelStyled = styled.span`

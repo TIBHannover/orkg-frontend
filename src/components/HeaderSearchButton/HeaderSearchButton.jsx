@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import { Button } from 'reactstrap';
 
 import { InputStyled, SearchButtonStyled, SearchStyled } from '@/components/styled';
+import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 

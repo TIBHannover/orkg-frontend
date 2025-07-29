@@ -5,10 +5,13 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { UncontrolledButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
 import { supportedContentTypes } from '@/components/ContentType/types';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import ROUTES from '@/constants/routes';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`

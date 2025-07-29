@@ -1,8 +1,9 @@
 import { ClipboardEvent, FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { Alert, Button, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import Tooltip from '@/components/Utils/Tooltip';
 import TitleWarningAlert from '@/components/ViewPaper/AbstractModal/TitleWarningAlert';
 import { RootStore } from '@/slices/types';

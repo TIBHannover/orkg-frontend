@@ -1,11 +1,11 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { defaultDragHandleProps } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 
 const SectionStyled = styled.div`
     position: relative;

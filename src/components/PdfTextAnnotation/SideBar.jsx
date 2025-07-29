@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import styled from 'styled-components';
 
 import AnnotationCategory from '@/components/PdfTextAnnotation/AnnotationCategory';
@@ -11,6 +10,11 @@ import Help from '@/components/PdfTextAnnotation/Help';
 import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
 import Completion from '@/components/PdfTextAnnotation/ProgressBar';
 import Save from '@/components/PdfTextAnnotation/Save';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { discardChanges } from '@/slices/pdfTextAnnotationSlice';
 
 const SideBarStyled = styled.div`

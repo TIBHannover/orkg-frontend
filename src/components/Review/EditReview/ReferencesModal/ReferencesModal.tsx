@@ -1,12 +1,13 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
-import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert, Badge, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ReferenceModal from '@/components/Review/EditReview/ReferencesModal/ReferenceModal/ReferenceModal';
 import useReview from '@/components/Review/hooks/useReview';
+import Button from '@/components/Ui/Button/Button';
 
 type ReferencesModalProps = {
     toggle: () => void;

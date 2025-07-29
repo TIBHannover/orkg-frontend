@@ -1,9 +1,10 @@
 import { faSearchMinus, faSearchPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { changeZoom } from '@/slices/pdfTextAnnotationSlice';
 
 const Container = styled.div`

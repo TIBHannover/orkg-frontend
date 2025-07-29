@@ -4,13 +4,13 @@ import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import PathTooltipContent from '@/components/Comparison/Table/Cells/PathTooltipContent';
 import TableCellLiteral from '@/components/Comparison/Table/Cells/TableCellLiteral';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Button from '@/components/Ui/Button/Button';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import { getCellPadding } from '@/slices/comparisonSlice';

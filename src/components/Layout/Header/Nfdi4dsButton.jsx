@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { NavItem } from 'reactstrap';
 import styled from 'styled-components';
+
+import NavItem from '@/components/Ui/Nav/NavItem';
 
 const NavItemStyled = styled(NavItem)`
     @media (min-width: ${(props) => props.theme.gridBreakpoints.lg}) and (max-width: ${(props) => props.theme.gridBreakpoints.xl}) {

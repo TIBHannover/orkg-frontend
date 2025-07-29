@@ -1,5 +1,7 @@
-import { Button, ButtonProps } from 'reactstrap';
+import { ButtonProps } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
+
+import Button from '@/components/Ui/Button/Button';
 
 export const AuthorTags = styled.div`
     display: flex;

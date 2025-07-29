@@ -2,7 +2,7 @@ import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrenc
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
 
 // import RobotoFont from '@/components/GraphView/roboto-medium-webfont.woff';
@@ -14,6 +14,11 @@ import useGraphView from '@/components/GraphView/hooks/useGraphView';
 import Node from '@/components/GraphView/Node';
 import SelectedEdgeBox from '@/components/GraphView/SelectedEdgeBox';
 import SelectedNodeBox from '@/components/GraphView/SelectedNodeBox';
+import Button from '@/components/Ui/Button/Button';
+import Dropdown from '@/components/Ui/Dropdown/Dropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { ENTITIES } from '@/constants/graphSettings';
 
 const LazyGraphViewModal = ({ toggle, resourceId }) => {

@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { Button } from 'reactstrap';
 
 import WIKIPEDIA_LOGO from '@/assets/img/sameas/wikipedia.png';
+import Button from '@/components/Ui/Button/Button';
 
 class WikipediaSummary extends Component {
     constructor(props) {

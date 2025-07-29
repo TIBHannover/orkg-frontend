@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import { RosettaStoneTemplateOption } from '@/components/RosettaStone/AddStatement/SelectOption';
 import StatementTypeAutocomplete from '@/components/RosettaStone/AddStatement/StatementTypeAutocomplete';
 import useUsedStatementTypes from '@/components/RosettaStone/hooks/useUsedStatementTypes';
+import Button from '@/components/Ui/Button/Button';
 import { RosettaStoneTemplate } from '@/services/backend/types';
 
 type StatementTypeModalProps = {

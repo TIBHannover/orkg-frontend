@@ -5,7 +5,7 @@ import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hi
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Alert, Button, ListGroup } from 'reactstrap';
+import { Alert, ListGroup } from 'reactstrap';
 
 import AddEntryModal from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/AddEntryModal';
 import EditSectionListItem from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/EditSectionListItem/EditSectionListItem';
@@ -17,6 +17,7 @@ import {
     createInstanceId,
     type ReorderParams,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';
 
 type EditSectionListProps = {

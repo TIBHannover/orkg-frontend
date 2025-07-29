@@ -3,7 +3,7 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Button, FormGroup, Input, Label } from 'reactstrap';
+import { FormGroup, Input, Label } from 'reactstrap';
 import { ZodError } from 'zod';
 
 import CheckFile from '@/app/csv-import/steps/CheckFile';
@@ -22,6 +22,7 @@ import { validateColumns, validateCsvStructure, validateRequiredFields, validate
 import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
+import Button from '@/components/Ui/Button/Button';
 import DATA_TYPES from '@/constants/DataTypes';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import requireAuthentication from '@/requireAuthentication';

@@ -5,9 +5,10 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
-import { Button, Form, Input, InputGroup } from 'reactstrap';
+import { Form, Input, InputGroup } from 'reactstrap';
 import styled from 'styled-components';
 
+import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';

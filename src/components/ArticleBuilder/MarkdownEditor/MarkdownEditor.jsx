@@ -22,13 +22,13 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { MarkdownPlaceholder } from '@/components/ArticleBuilder/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import TextSection from '@/components/Review/Sections/Text/TextSection';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ROUTES from '@/constants/routes';
 import { getResource, getResources } from '@/services/backend/resources';
 

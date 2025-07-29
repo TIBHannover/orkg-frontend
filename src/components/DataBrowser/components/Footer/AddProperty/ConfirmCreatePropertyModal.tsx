@@ -1,8 +1,9 @@
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { SmartDescriptiveProperty } from '@/components/SmartSuggestions/DescriptivePropertySuggestions';
+import Button from '@/components/Ui/Button/Button';
 import { PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { createLiteral } from '@/services/backend/literals';

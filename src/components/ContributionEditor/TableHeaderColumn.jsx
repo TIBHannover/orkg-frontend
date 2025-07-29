@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { Fragment, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 
 import { Contribution, ContributionButton, Delete, ItemHeader, ItemHeaderInner } from '@/components/Comparison/styled';
 import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
@@ -18,6 +17,7 @@ import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getPaper } from '@/services/backend/papers';

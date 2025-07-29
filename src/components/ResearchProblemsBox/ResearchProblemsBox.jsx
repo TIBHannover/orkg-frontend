@@ -4,7 +4,6 @@ import { truncate } from 'lodash';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
@@ -13,6 +12,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import AddResearchProblem from '@/components/Observatory/AddResearchProblem';
 import useResearchProblems from '@/components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemsModal from '@/components/ResearchProblemsBox/ResearchProblemsModal';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utils';
 

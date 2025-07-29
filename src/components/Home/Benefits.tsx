@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
-import { Button, Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,6 +13,7 @@ import IconFeedback from '@/assets/img/benefits/feedback.svg';
 import IconReputation from '@/assets/img/benefits/reputation.svg';
 import IconVisibility from '@/assets/img/benefits/visibility.svg';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Button from '@/components/Ui/Button/Button';
 
 const ObservatoryCardStyled = styled.div`
     cursor: initial;

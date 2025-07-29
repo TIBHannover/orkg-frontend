@@ -1,7 +1,8 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, ReactNode } from 'react';
-import { Button } from 'reactstrap';
+
+import Button from '@/components/Ui/Button/Button';
 
 type ButtonWithLoadingProps = {
     children: ReactNode;

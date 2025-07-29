@@ -4,7 +4,7 @@ import { faFileCsv, faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Button, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -16,6 +16,7 @@ import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from '@/constants/graphSettings';

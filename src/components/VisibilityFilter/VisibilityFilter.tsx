@@ -1,7 +1,10 @@
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { UncontrolledButtonDropdown } from 'reactstrap';
 
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { VisibilityOptions } from '@/services/backend/types';
 

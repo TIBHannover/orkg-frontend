@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { ButtonGroup, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`

@@ -2,11 +2,12 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { uniqueId } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import ReferenceItem, { isReferenceData } from '@/components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 
 type ReferencesModalProps = {
     toggle: () => void;

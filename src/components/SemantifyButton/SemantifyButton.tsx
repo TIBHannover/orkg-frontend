@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Button, Col, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from 'reactstrap';
+import { Col, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Table } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Button from '@/components/Ui/Button/Button';
 import { getConfigByType, getSuggestionByValue } from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

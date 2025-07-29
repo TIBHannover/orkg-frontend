@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup } from 'reactstrap';
 
 import useOverwriteValuesModal from '@/components/PaperForm/hooks/useOverwriteValuesModal';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import BibTexModal from '@/components/ViewPaper/BibTexModal/BibTexModal';
 import UploadPdfModal from '@/components/ViewPaper/UploadPdfModal/UploadPdfModal';
 

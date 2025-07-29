@@ -1,8 +1,9 @@
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useState } from 'react';
-import { Button, Input, InputGroup } from 'reactstrap';
+import { Input, InputGroup } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import useParams from '@/components/useParams/useParams';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';

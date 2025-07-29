@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useEffect, useRef, useState } from 'react';
-import { Button, ListGroupItem } from 'reactstrap';
+import { ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import invariant from 'tiny-invariant';
 
@@ -17,6 +17,7 @@ import { supportedContentTypes } from '@/components/ContentType/types';
 import useList from '@/components/List/hooks/useList';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import { defaultDragHandleProps, type DragData, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';

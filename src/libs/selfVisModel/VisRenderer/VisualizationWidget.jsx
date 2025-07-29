@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import styled, { keyframes } from 'styled-components';
 
+import Button from '@/components/Ui/Button/Button';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import AbstractCustomizationWidget from '@/libs/selfVisModel/VisRenderer/AbstractCustomizationWidget';
 import AbstractRenderer from '@/libs/selfVisModel/VisRenderer/AbstractRenderer';

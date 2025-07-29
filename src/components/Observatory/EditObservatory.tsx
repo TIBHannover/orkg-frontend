@@ -1,10 +1,11 @@
 import { isEqual } from 'lodash';
 import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateObservatory } from '@/services/backend/observatories';

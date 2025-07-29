@@ -4,9 +4,10 @@ import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Button, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 const NotFound = () => {

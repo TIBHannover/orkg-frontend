@@ -4,10 +4,14 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
+import Button from '@/components/Ui/Button/Button';
+import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
+import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import AccessPaperButton from '@/components/ViewPaper/PaperHeaderBar/AccessPaperButton';
 import Publish from '@/components/ViewPaper/Publish/Publish';
 import ROUTES from '@/constants/routes';

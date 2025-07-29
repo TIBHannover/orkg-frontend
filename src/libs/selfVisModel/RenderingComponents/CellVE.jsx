@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { usePrevious } from 'react-use';
-import { Button } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import {
     ContributionCell,
     ContributionCellInput,

@@ -2,7 +2,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 import { FC, Fragment, useState } from 'react';
-import { Button, Col, Container, Label, Row } from 'reactstrap';
+import { Col, Container, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -11,6 +11,7 @@ import FilterInputField from '@/components/Filters/FilterInputField/FilterInputF
 import FilterLabel from '@/components/Filters/FilterInputField/FilterLabel';
 import useFilterConfig from '@/components/Filters/hooks/useFilterConfig';
 import AllFiltersOffCanvas from '@/components/Filters/Panel/AllFiltersOffCanvas';
+import Button from '@/components/Ui/Button/Button';
 
 export const Separator = styled.div`
     @media (max-width: 480px) {

@@ -3,8 +3,8 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python';
 import r from 'react-syntax-highlighter/dist/cjs/languages/hljs/r';
 import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
-import { Button } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import CopyToClipboardButton from '@/components/ValuePlugins/Code/CopyToClipboardButton';
 import REGEX from '@/constants/regex';
 

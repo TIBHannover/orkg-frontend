@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import useList from '@/components/List/hooks/useList';
+import Button from '@/components/Ui/Button/Button';
+import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { LiteratureListSectionType } from '@/services/backend/types';
 
 const AddSectionStyled = styled(Button)`

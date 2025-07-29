@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { Alert, Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
 const EditAnnotationTextModal = ({ value = '', setValue, isOpen, toggle, handleDone }) => (

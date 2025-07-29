@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import {
     Badge,
-    Button,
     Form,
     FormGroup,
     Input,
@@ -24,6 +23,7 @@ import useSWR from 'swr';
 
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 import THING_TYPES from '@/constants/thingTypes';
 import { downloadJPG, downloadPDF } from '@/libs/googleChartDownloadFunctions';

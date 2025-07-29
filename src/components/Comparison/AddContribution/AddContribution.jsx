@@ -7,12 +7,13 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert, Button, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, FormGroup, Input, InputGroup, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';

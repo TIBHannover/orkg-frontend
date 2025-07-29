@@ -4,7 +4,7 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { ReactNode, useEffect, useState } from 'react';
-import { Button, Container, Row } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -18,6 +18,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Button from '@/components/Ui/Button/Button';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ROUTES from '@/constants/routes';
 import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from '@/services/backend/observatories';

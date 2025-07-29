@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { Button, Modal, ModalBody, ModalHeader, Table } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Table } from 'reactstrap';
 
+import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 
 function getCodeIconByURL(url: string) {

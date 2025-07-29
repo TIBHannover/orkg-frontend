@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -12,6 +11,7 @@ import { OptionType } from '@/components/Autocomplete/types';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ResearchFieldCard, { Card } from '@/components/Home/ResearchFieldCard';
+import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';

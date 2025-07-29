@@ -1,7 +1,6 @@
 import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Button } from 'reactstrap';
 
 import AddProperty from '@/components/DataBrowser/components/Footer/AddProperty/AddProperty';
 import PropertySuggestions from '@/components/DataBrowser/components/Footer/PropertySuggestions/PropertySuggestions';
@@ -10,6 +9,7 @@ import TemplatesModal from '@/components/DataBrowser/components/TemplatesModal/T
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 
 const Footer = () => {
