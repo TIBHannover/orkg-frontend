@@ -13,7 +13,7 @@ import { match } from 'path-to-regexp';
 import { MouseEvent, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import { useMountedState, useWindowScroll } from 'react-use';
-import { Badge } from 'reactstrap';
+import { Badge, UncontrolledButtonDropdown as ButtonDropdown } from 'reactstrap';
 
 import Logo from '@/assets/img/logo.svg';
 import LogoWhite from '@/assets/img/logo_white.svg';
@@ -27,7 +27,6 @@ import SearchForm from '@/components/Layout/Header/SearchForm';
 import { GlobalStyle, StyledNavbar, StyledTopBar } from '@/components/Layout/Header/styled';
 import UserTooltip from '@/components/Layout/Header/UserTooltip';
 import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
