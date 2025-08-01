@@ -4,7 +4,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Alert, Col, FormGroup, Row } from 'reactstrap';
+import { Alert, Col, Row } from 'reactstrap';
 
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from '@/components/ContributionTabs/AddContributionButton';
@@ -12,6 +12,7 @@ import ContributionTab from '@/components/ContributionTabs/ContributionTab';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import RosettaStoneStatements from '@/components/RosettaStone/Statements/RosettaStoneStatements';
 import Tabs from '@/components/Tabs/Tabs';
+import FormGroup from '@/components/Ui/Form/FormGroup';
 import useParams from '@/components/useParams/useParams';
 import ContributionComparisons from '@/components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from '@/components/ViewPaper/Contributions/AutomaticContributionWarning';

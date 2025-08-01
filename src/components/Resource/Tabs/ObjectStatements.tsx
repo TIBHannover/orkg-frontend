@@ -1,8 +1,10 @@
 import { useQueryState } from 'nuqs';
-import { FormGroup, Input, Label } from 'reactstrap';
 
 import StatementCard from '@/components/Cards/StatementCard/StatementCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 

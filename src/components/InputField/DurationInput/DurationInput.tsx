@@ -1,7 +1,10 @@
 import { FC, useEffect, useId, useState } from 'react';
-import { Col, FormGroup, Input, Label } from 'reactstrap';
+import { Col } from 'reactstrap';
 
 import { DurationValues, formatDurationValue, parseDurationString } from '@/components/InputField/DurationInput/helpers';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { DurationType } from '@/constants/DataTypes';
 
 type DurationInputProps = { value: string; onChange: (value: string) => void; type?: DurationType };

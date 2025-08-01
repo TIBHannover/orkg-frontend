@@ -1,8 +1,9 @@
 import { StoryFn } from '@storybook/react';
 import { useState } from 'react';
-import { ModalBody, ModalHeader } from 'reactstrap';
 
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 export default {
     title: 'ModalWithLoading',

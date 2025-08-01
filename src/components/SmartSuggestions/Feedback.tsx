@@ -2,11 +2,12 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Input, Label } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Popover from '@/components/FloatingUI/Popover';
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { createFeedback } from '@/services/cms';
 import { FeedbackType } from '@/services/cms/types';

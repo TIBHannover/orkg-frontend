@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 const MembersModal = ({ members, openModal, setOpenModal }) => (
     <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">

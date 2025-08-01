@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type RelatedFigureModalProps = {
     toggle: () => void;

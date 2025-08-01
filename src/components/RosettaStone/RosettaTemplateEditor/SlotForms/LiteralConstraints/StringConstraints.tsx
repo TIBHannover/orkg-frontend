@@ -1,10 +1,12 @@
 import { FC } from 'react';
-import { FormGroup, Input, Label } from 'reactstrap';
 
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { PropertyShapeStringType } from '@/services/backend/types';
 

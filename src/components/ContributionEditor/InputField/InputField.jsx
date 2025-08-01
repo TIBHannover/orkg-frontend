@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
-import { Input } from 'reactstrap';
 
 import DateTimeInput from '@/components/InputField/DateTimeInput/DateTimeInput';
 import DurationInput from '@/components/InputField/DurationInput/DurationInput';
 import GregorianInput from '@/components/InputField/GregorianInput/GregorianInput';
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
+import Input from '@/components/Ui/Input/Input';
 import { getConfigByClassId, getConfigByType } from '@/constants/DataTypes';
 import { ENTITIES, MISC } from '@/constants/graphSettings';
 

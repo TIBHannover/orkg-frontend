@@ -3,9 +3,13 @@
 import { debounce } from 'lodash';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { FC } from 'react';
-import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 

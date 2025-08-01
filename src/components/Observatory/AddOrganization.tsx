@@ -2,10 +2,13 @@ import { differenceBy } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { updateObservatory } from '@/services/backend/observatories';
 import { getAllOrganizations } from '@/services/backend/organizations';
 import { Organization } from '@/services/backend/types';

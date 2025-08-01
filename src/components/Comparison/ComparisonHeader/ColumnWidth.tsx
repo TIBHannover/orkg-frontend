@@ -4,11 +4,11 @@ import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { Input } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
+import Input from '@/components/Ui/Input/Input';
 import { setConfigurationAttribute } from '@/slices/comparisonSlice';
 
 export const DEFAULT_COLUMN_WIDTH = 250;

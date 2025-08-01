@@ -1,7 +1,10 @@
 import { FC, useEffect, useId, useState } from 'react';
-import { Col, FormGroup, Input, Label } from 'reactstrap';
+import { Col } from 'reactstrap';
 
 import { formatTimeValue, parseTimeString, TimeValues } from '@/components/InputField/TimeInput/helpers';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 
 type TimeInputProps = {
     value: string;

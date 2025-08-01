@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
-import { Input } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import DateTimeInput from '@/components/InputField/DateTimeInput/DateTimeInput';
@@ -8,6 +7,7 @@ import DurationInput from '@/components/InputField/DurationInput/DurationInput';
 import GregorianInput from '@/components/InputField/GregorianInput/GregorianInput';
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
+import Input from '@/components/Ui/Input/Input';
 import { InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Node } from '@/services/backend/types';

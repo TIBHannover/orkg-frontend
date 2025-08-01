@@ -2,7 +2,6 @@ import { faPlusCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { InputGroup } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import TemplatesModal from '@/components/ContributionEditor/TemplatesModal/TemplatesModal';
@@ -12,6 +11,7 @@ import SmartPropertySuggestions from '@/components/SmartSuggestions/SmartPropert
 import { StyledButton } from '@/components/StatementBrowser/styled';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createProperty } from '@/slices/contributionEditorSlice';
 

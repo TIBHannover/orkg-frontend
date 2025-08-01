@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import { range } from 'lodash';
 import PropTypes from 'prop-types';
-import { Input } from 'reactstrap';
+
+import Input from '@/components/Ui/Input/Input';
 
 const PublicationYearInput = ({ value = '', onChange, inputId = null, isDisabled = false }) => (
     <Input id={inputId} type="select" value={value} onChange={(e) => onChange(e.target.value)} disabled={isDisabled}>

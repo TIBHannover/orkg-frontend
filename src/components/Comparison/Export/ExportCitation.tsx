@@ -4,10 +4,14 @@ import { zipObject } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Input, Modal, ModalBody, ModalHeader, TabContent, TabPane } from 'reactstrap';
+import { TabContent, TabPane } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Nav from '@/components/Ui/Nav/Nav';
 import NavItem from '@/components/Ui/Nav/NavItem';
 import NavLink from '@/components/Ui/Nav/NavLink';

@@ -5,10 +5,11 @@ import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Badge, Input } from 'reactstrap';
+import { Badge } from 'reactstrap';
 
 import CopyId from '@/components/CopyId/CopyId';
 import ProvenanceBox from '@/components/Resource/ProvenanceBox';
+import Input from '@/components/Ui/Input/Input';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';

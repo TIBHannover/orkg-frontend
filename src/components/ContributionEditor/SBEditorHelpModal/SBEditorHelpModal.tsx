@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Col, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
+import { Alert, Col, Row } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import usePage from '@/components/Page/usePage';
 import { CmsPage } from '@/components/styled';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 import ROUTES from '@/constants/routes';
 import { getHelpArticle, getHelpArticles } from '@/services/cms';

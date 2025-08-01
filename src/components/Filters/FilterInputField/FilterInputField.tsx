@@ -1,13 +1,13 @@
 import { isString } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { Input } from 'reactstrap';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import NumberInputField from '@/components/Filters/FilterInputField/NumberInputField';
+import Input from '@/components/Ui/Input/Input';
 import { getConfigByClassId } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { getResourcesByIds, resourcesUrl } from '@/services/backend/resources';

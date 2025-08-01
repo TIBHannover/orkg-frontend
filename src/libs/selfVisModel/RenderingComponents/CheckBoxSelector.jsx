@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Input } from 'reactstrap';
+
+import Input from '@/components/Ui/Input/Input';
 
 class CheckboxSelector extends Component {
     constructor(props) {

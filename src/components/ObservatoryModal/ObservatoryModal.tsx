@@ -1,9 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import AutoCompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MISC } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Observatory, Organization } from '@/services/backend/types';

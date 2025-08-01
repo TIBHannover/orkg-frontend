@@ -1,10 +1,15 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';

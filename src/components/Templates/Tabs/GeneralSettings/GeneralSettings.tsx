@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -9,6 +8,11 @@ import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
 import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import FormText from '@/components/Ui/Form/FormText';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { updateDescription, updatePredicate, updateResearchFields, updateResearchProblems, updateTargetClass } from '@/slices/templateEditorSlice';

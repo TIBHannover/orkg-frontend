@@ -1,8 +1,11 @@
-import { Alert, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert, ListGroup, ListGroupItem } from 'reactstrap';
 
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
 import useTopAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ComparisonTopAuthor } from '@/services/backend/comparisons';
 
 type ComparisonAuthorsModelProps = {

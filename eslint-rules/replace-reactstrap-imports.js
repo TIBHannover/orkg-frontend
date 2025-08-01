@@ -36,6 +36,21 @@ module.exports = {
             DropdownItem: '@/components/Ui/Dropdown/DropdownItem',
             DropdownMenu: '@/components/Ui/Dropdown/DropdownMenu',
             DropdownToggle: '@/components/Ui/Dropdown/DropdownToggle',
+            Modal: '@/components/Ui/Modal/Modal',
+            ModalBody: '@/components/Ui/Modal/ModalBody',
+            ModalHeader: '@/components/Ui/Modal/ModalHeader',
+            ModalFooter: '@/components/Ui/Modal/ModalFooter',
+            Form: '@/components/Ui/Form/Form',
+            FormGroup: '@/components/Ui/Form/FormGroup',
+            FormText: '@/components/Ui/Form/FormText',
+            FormFeedback: '@/components/Ui/Form/FormFeedback',
+            Input: '@/components/Ui/Input/Input',
+            InputGroup: '@/components/Ui/Input/InputGroup',
+            InputGroupText: '@/components/Ui/Input/InputGroupText',
+            Label: '@/components/Ui/Label/Label',
+            Popover: '@/components/Ui/Popover/Popover',
+            PopoverHeader: '@/components/Ui/Popover/PopoverHeader',
+            PopoverBody: '@/components/Ui/Popover/PopoverBody',
         };
 
         return {

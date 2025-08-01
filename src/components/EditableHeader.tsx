@@ -1,12 +1,13 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Input, InputGroup } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import CuratorModal from '@/components/CuratorModal/CuratorModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import { StyledButton } from '@/components/StatementBrowser/styled';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateClass } from '@/services/backend/classes';

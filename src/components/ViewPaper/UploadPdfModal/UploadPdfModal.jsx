@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
-import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import DragUploadPdf from '@/components/DragUploadPdf/DragUploadPdf';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { getResource } from '@/services/backend/resources';
 import processPdf from '@/services/grobid';
 import { extractMetadataPdf } from '@/services/orkgNlp';

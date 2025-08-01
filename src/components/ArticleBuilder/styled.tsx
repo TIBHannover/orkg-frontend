@@ -1,7 +1,7 @@
-import { Input } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
 
 export const EditableTitle = styled(Input)`
     width: 100%;

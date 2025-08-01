@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Input, InputGroup, InputGroupText } from 'reactstrap';
 
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import InputGroupText from '@/components/Ui/Input/InputGroupText';
 
 type CopyIdProps = {
     id: string;

@@ -2,7 +2,6 @@ import { faCheck, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
-import { InputGroup } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -10,6 +9,7 @@ import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import useClasses from '@/components/DataBrowser/hooks/useClasses';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import Button from '@/components/Ui/Button/Button';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Class } from '@/services/backend/types';

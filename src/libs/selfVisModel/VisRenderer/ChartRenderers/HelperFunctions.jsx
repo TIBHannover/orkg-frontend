@@ -1,6 +1,5 @@
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Input } from 'reactstrap';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -9,6 +8,7 @@ import Dropdown from '@/components/Ui/Dropdown/Dropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import Input from '@/components/Ui/Input/Input';
 
 const DeleteButton = styled(Button)`
     &&& {

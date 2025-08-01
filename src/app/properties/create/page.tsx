@@ -4,10 +4,14 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';

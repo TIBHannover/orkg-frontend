@@ -3,11 +3,15 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { Form, FormGroup, Input, Label, ListGroup } from 'reactstrap';
+import { ListGroup } from 'reactstrap';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { getResources, resourcesUrl } from '@/services/backend/resources';

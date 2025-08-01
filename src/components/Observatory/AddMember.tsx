@@ -1,11 +1,18 @@
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { mutate } from 'swr';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { Organization } from '@/services/backend/types';
 import { addUserToObservatory } from '@/services/backend/users';
 import { getErrorMessage } from '@/utils';

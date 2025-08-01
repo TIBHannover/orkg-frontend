@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import RSTemplateCard from '@/components/Cards/RSTemplateCard/RSTemplateCard';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
@@ -15,6 +15,10 @@ import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedCon
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { getRSTemplates, rosettaStoneUrl } from '@/services/backend/rosettaStone';

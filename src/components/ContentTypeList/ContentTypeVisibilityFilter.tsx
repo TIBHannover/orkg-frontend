@@ -1,7 +1,7 @@
 import { useQueryState } from 'nuqs';
 import { ChangeEvent, FC } from 'react';
-import { Input } from 'reactstrap';
 
+import Input from '@/components/Ui/Input/Input';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { VisibilityOptions } from '@/services/backend/types';
 
