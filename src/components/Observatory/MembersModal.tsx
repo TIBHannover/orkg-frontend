@@ -1,11 +1,13 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { getUsersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
 import { Contributor, Organization } from '@/services/backend/types';
 

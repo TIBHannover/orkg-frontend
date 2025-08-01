@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { FC } from 'react';
 import { GroupBase, OptionsOrGroups } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { InputGroup } from 'reactstrap';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import ROUTES from '@/constants/routes';
 import { getObservatories } from '@/services/backend/observatories';
 import { Observatory } from '@/services/backend/types';

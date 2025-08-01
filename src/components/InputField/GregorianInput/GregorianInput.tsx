@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { Input, InputGroupText } from 'reactstrap';
 
 import {
     daysOptions,
@@ -8,6 +7,8 @@ import {
     monthsOptions,
     parseGregorianString,
 } from '@/components/InputField/GregorianInput/helpers';
+import Input from '@/components/Ui/Input/Input';
+import InputGroupText from '@/components/Ui/Input/InputGroupText';
 import { GregorianType } from '@/constants/DataTypes';
 
 type GregorianInputProps = {

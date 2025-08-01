@@ -1,10 +1,11 @@
-import { FormGroup, Input, Label } from 'reactstrap';
-
 import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 
 function StepTwo() {
     const { description, numberLockedProperties } = useRosettaTemplateEditorState();

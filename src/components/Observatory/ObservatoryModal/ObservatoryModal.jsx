@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 const ObservatoryModal = ({ isOpen, toggle }) => (
     <Modal isOpen={isOpen} toggle={toggle}>

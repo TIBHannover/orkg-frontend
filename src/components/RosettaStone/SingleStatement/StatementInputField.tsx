@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { Input, InputGroup } from 'reactstrap';
 
 import AutoComplete from '@/components/Autocomplete/Autocomplete';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -9,6 +8,8 @@ import GregorianInput from '@/components/InputField/GregorianInput/GregorianInpu
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
 import ListInputField from '@/components/RosettaStone/SingleStatement/ListInputField';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { getConfigByClassId, InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Node, RSPropertyShape } from '@/services/backend/types';

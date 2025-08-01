@@ -1,11 +1,16 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import useResearchProblems from '@/components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemCard from '@/components/ResearchProblemsBox/ResearchProblemCard';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { RESOURCES } from '@/constants/graphSettings';
 

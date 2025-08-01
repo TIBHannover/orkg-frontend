@@ -2,10 +2,13 @@ import { Cite } from '@citation-js/core';
 import { FC, useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import useReview from '@/components/Review/hooks/useReview';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type ReferenceModalProps = {
     toggle: () => void;

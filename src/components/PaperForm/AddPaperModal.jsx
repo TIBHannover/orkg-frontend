@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
 import AddPaperAdditionalButtons from '@/components/PaperForm/AddPaperAdditionalButtons';
 import useAddPaper from '@/components/PaperForm/hooks/useAddPaper';
 import PaperForm from '@/components/PaperForm/PaperForm';
 import Button from '@/components/Ui/Button/Button';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import REGEX from '@/constants/regex';
 
 const AddPaperModal = ({ isOpen, toggle, onCreatePaper, initialValue = '' }) => {

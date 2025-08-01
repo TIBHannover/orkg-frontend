@@ -1,12 +1,18 @@
 import capitalize from 'capitalize';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Badge, FormGroup, Input, Label, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert, Badge, ListGroup, ListGroupItem } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
 
 import { activatedPropertiesToList } from '@/components/Comparison/hooks/helpers';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { setConfigurationAttribute, setProperties } from '@/slices/comparisonSlice';
 
 const ListGroupItemStyled = styled(ListGroupItem)`

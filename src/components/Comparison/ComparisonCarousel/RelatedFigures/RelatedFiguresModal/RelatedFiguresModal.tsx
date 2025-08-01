@@ -1,12 +1,14 @@
 import { faAdd, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useRelatedFigures from '@/components/Comparison/ComparisonCarousel/RelatedFigures/hooks/useRelatedFigures';
 import AddEditRelatedFigureModal from '@/components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFiguresModal/AddEditRelatedFiguresModal/AddEditRelatedFiguresModal';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type RelatedFiguresModalProps = {
     toggle: () => void;

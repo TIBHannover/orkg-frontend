@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import { useId } from 'react';
 import { toast } from 'react-toastify';
-import { Col, Form, FormGroup, FormText, Input, InputGroup, Label, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
@@ -16,6 +16,12 @@ import PublishedInInput from '@/components/Input/PublishedInInput/PublishedInInp
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 import useOverwriteValuesModal from '@/components/PaperForm/hooks/useOverwriteValuesModal';
 import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import FormText from '@/components/Ui/Form/FormText';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
 import Tooltip from '@/components/Utils/Tooltip';
 import { getAbstractByDoi } from '@/services/semanticScholar';
 import { parseCiteResult } from '@/utils';

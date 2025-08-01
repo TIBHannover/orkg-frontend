@@ -5,25 +5,22 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import {
-    Badge,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-    PopoverBody,
-    PopoverHeader,
-    UncontrolledPopover,
-} from 'reactstrap';
+import { Badge, UncontrolledPopover } from 'reactstrap';
 import useSWR from 'swr';
 
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import PopoverBody from '@/components/Ui/Popover/PopoverBody';
+import PopoverHeader from '@/components/Ui/Popover/PopoverHeader';
 import ROUTES from '@/constants/routes';
 import THING_TYPES from '@/constants/thingTypes';
 import { downloadJPG, downloadPDF } from '@/libs/googleChartDownloadFunctions';

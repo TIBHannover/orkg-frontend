@@ -3,7 +3,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Accordion, FormGroup, Input, Label } from 'reactstrap';
+import { Accordion } from 'reactstrap';
 
 import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
 import PositionItem, { isPositionData } from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
@@ -14,6 +14,9 @@ import {
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { createInstanceId, createListMonitor, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import Button from '@/components/Ui/Button/Button';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import { guid } from '@/utils';
 
 function StepThree() {

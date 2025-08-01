@@ -1,6 +1,9 @@
 import { useQueryState } from 'nuqs';
 import { ChangeEvent, FC } from 'react';
-import { FormGroup, Input, Label } from 'reactstrap';
+
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 
 type ContentTypeSubFieldsFilterProps = {
     isLoading: boolean;

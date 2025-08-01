@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Alert, FormGroup, FormText, Input, InputGroup, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -11,6 +11,14 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
 import Button from '@/components/Ui/Button/Button';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import FormText from '@/components/Ui/Form/FormText';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import DATA_TYPES from '@/constants/DataTypes';
 import { FILTER_SOURCE } from '@/constants/filters';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';

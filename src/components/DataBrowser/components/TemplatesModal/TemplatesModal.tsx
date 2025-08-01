@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnimatePresence, motion } from 'framer-motion';
 import pluralize from 'pluralize';
 import { FC } from 'react';
-import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Alert } from 'reactstrap';
 import styled from 'styled-components';
 
 import TemplateButton from '@/components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
@@ -15,6 +15,9 @@ import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedCon
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
 import { CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';

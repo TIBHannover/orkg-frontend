@@ -1,7 +1,7 @@
 import { faPen, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
-import { Alert, Badge, Label, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';
+import { Alert, Badge, Offcanvas, OffcanvasBody, OffcanvasHeader } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import FilterInputField from '@/components/Filters/FilterInputField/FilterInputField';
@@ -10,6 +10,7 @@ import useCurateFilters from '@/components/Filters/hooks/useCurateFilters';
 import FilterCurationForm from '@/components/Filters/Panel/FilterCurationForm';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Button from '@/components/Ui/Button/Button';
+import Label from '@/components/Ui/Label/Label';
 import { FILTER_SOURCE } from '@/constants/filters';
 import { FilterConfig, FilterConfigValue } from '@/services/backend/types';
 

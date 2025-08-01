@@ -6,7 +6,6 @@ import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, Controls, MiniMap, ReactFlowProvider } from 'reactflow';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
@@ -16,6 +15,10 @@ import useAutoLayout from '@/components/Templates/ShaclFlow/hooks/useAutoLayoutA
 import useExportSHACL from '@/components/Templates/ShaclFlow/hooks/useExportSHACL';
 import Node from '@/components/Templates/ShaclFlow/Node/Node';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES } from '@/constants/graphSettings';
 import { loadTemplateFlowByID } from '@/services/backend/statements';
 import { setDiagramMode, setTemplateFlow } from '@/slices/templateEditorSlice';

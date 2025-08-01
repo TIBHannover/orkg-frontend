@@ -1,6 +1,8 @@
 import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { getConfigByType } from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';

@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
 import { FC, useId } from 'react';
 import { useCookies } from 'react-cookie';
-import { Input, Label } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 
 export const PreferencesStyle = styled.div`

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { FC } from 'react';
 import { GroupBase, OptionsOrGroups } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { InputGroup } from 'reactstrap';
 import useSWR from 'swr';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
@@ -14,6 +13,7 @@ import Option from '@/components/AutocompleteContributor/CustomComponents/Option
 import SingleValue from '@/components/AutocompleteContributor/CustomComponents/SingleValue';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import ROUTES from '@/constants/routes';
 import { contributorsUrl, getContributorInformationById, getContributors } from '@/services/backend/contributors';
 import { Contributor } from '@/services/backend/types';

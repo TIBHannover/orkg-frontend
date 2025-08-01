@@ -2,11 +2,11 @@ import { faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { Input } from 'reactstrap';
 import styled from 'styled-components';
 
 import { ActionButton } from '@/components/ContributionTabs/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Input from '@/components/Ui/Input/Input';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import MathJax from '@/components/ValuePlugins/MathJax/MathJax';
 

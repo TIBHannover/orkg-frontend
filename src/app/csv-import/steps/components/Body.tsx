@@ -1,7 +1,6 @@
 import { faCheck, faPen, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
-import { InputGroup } from 'reactstrap';
 import { ZodError } from 'zod';
 import { fromError } from 'zod-validation-error';
 
@@ -10,6 +9,7 @@ import { MappedColumn } from '@/app/csv-import/steps/helpers';
 import ActionButton from '@/components/ActionButton/ActionButton';
 import InputField from '@/components/InputField/InputField';
 import Button from '@/components/Ui/Button/Button';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 
 type BodyProps = {
     data: string[][];

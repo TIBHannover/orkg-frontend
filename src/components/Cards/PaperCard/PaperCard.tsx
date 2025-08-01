@@ -5,7 +5,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
-import { Input } from 'reactstrap';
 import styled from 'styled-components';
 
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
@@ -19,6 +18,7 @@ import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnl
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from '@/components/styled';
+import Input from '@/components/Ui/Input/Input';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { VISIBILITY } from '@/constants/contentTypes';
 import ROUTES from '@/constants/routes';

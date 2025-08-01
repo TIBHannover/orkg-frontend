@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports */
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString } from 'lodash';
@@ -5,11 +6,11 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Input } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
-
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Input from '@/components/Ui/Input/Input';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from '@/slices/pdfTextAnnotationSlice';
+// eslint-disable-next-line import/extensions
 import { summarizeText } from '@/services/annotation/index';
 
 const ANNOTATION_RATIO = 0.08;

@@ -2,10 +2,15 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { components } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { Col, FormFeedback, FormGroup, Input, Label, ModalBody } from 'reactstrap';
+import { Col } from 'reactstrap';
 import { z } from 'zod';
 
 import FilterModalFooter from '@/components/Comparison/Filters/FilterModalFooter';
+import FormFeedback from '@/components/Ui/Form/FormFeedback';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
 import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 const createOption = (label) => ({

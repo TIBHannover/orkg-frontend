@@ -1,13 +1,19 @@
 import dayjs from 'dayjs';
 import { FC, useEffect, useId, useState } from 'react';
 import Select from 'react-select';
-import { Form, FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
 import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
 import { CONFERENCE_REVIEW_MISC } from '@/constants/organizationsTypes';
 import { getConferencesSeries } from '@/services/backend/conferences-series';

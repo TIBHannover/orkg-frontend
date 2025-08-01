@@ -4,9 +4,13 @@ import Papa from 'papaparse';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { Alert, Form, FormGroup, InputGroup, Label } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
 
 type UploadFormProps = {
     handleOnFileLoaded: (data: { _data: string[][] }) => void;

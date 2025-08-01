@@ -5,12 +5,16 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import ExtractReferencesModal from '@/components/PdfAnnotation/ExtractReferencesModal';
 import useExtractionModal from '@/components/PdfAnnotation/hooks/useExtractionModal';
 import useTableEditor from '@/components/PdfAnnotation/hooks/useTableEditor';
 import Button from '@/components/Ui/Button/Button';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import ROUTES from '@/constants/routes';
 
 // CRA-CODE

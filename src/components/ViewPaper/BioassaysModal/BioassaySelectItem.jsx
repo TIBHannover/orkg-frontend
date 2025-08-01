@@ -1,9 +1,11 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Alert, Input, Label, ListGroup } from 'reactstrap';
+import { Alert, ListGroup } from 'reactstrap';
 
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
 import ROUTES from '@/constants/routes';
 
 export default function BioassaySelectItem(props) {

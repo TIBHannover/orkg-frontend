@@ -4,10 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Input, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import useList from '@/components/List/hooks/useList';
 import Button from '@/components/Ui/Button/Button';
+import Input from '@/components/Ui/Input/Input';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { Paper } from '@/services/backend/types';
 

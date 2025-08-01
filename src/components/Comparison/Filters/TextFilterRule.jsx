@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Select from 'react-select';
-import { ModalBody } from 'reactstrap';
 import stopwords from 'stopwords-en';
 
 import FilterModalFooter from '@/components/Comparison/Filters/FilterModalFooter';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
 import { FILTER_TYPES } from '@/constants/comparisonFilterTypes';
 
 const TextFilterRule = (props) => {

@@ -6,13 +6,14 @@ import { isString } from 'lodash';
 import { createRef } from 'react';
 import NativeListener from 'react-native-listener';
 import { connect } from 'react-redux';
-import { Input, InputGroup } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { StyledDropdownItem, StyledDropdownToggle } from '@/components/StatementBrowser/styled';
 import Dropdown from '@/components/Ui/Dropdown/Dropdown';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { createPredicate } from '@/services/backend/predicates';

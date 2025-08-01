@@ -3,7 +3,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -13,6 +12,7 @@ import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import { StyledButton } from '@/components/StatementBrowser/styled';
+import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 

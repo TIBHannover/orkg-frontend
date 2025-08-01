@@ -52,7 +52,22 @@
                             "Dropdown",
                             "DropdownItem",
                             "DropdownMenu",
-                            "DropdownToggle"
+                            "DropdownToggle",
+                            "Form",
+                            "FormGroup",
+                            "FormFeedback",
+                            "FormText",
+                            "Input",
+                            "InputGroup",
+                            "InputGroupText",
+                            "Label",
+                            "Modal",
+                            "ModalHeader",
+                            "ModalBody",
+                            "ModalFooter",
+                            "Popover",
+                            "PopoverHeader",
+                            "PopoverBody"
                         ],
                         "message": "Please import from `components/Ui` instead of reactstrap. For example: Button -> @/components/Ui/Button/Button."
                     }

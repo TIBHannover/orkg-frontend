@@ -1,8 +1,10 @@
 import { ClipboardEvent, FC } from 'react';
 import { useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { Alert, FormFeedback, Label } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
+import FormFeedback from '@/components/Ui/Form/FormFeedback';
+import Label from '@/components/Ui/Label/Label';
 import Tooltip from '@/components/Utils/Tooltip';
 import { RootStore } from '@/slices/types';
 

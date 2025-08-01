@@ -6,7 +6,7 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Container, Form, FormGroup, FormText, Input, InputGroup, Label } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
@@ -16,6 +16,12 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import FormText from '@/components/Ui/Form/FormText';
+import Input from '@/components/Ui/Input/Input';
+import InputGroup from '@/components/Ui/Input/InputGroup';
+import Label from '@/components/Ui/Label/Label';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';

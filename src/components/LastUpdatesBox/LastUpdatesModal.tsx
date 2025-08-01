@@ -2,11 +2,13 @@ import dayjs from 'dayjs';
 import { truncate } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import { StyledActivity } from '@/components/LastUpdatesBox/styled';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { RESOURCES } from '@/constants/graphSettings';
 import { contentTypesUrl, getGenericContentTypes } from '@/services/backend/contentTypes';

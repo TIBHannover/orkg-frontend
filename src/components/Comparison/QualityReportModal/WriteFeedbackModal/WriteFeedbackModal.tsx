@@ -1,12 +1,17 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert, Input, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
+import { Alert, Table } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import feedbackQuestions from '@/components/Comparison/QualityReportModal/hooks/feedbackQuestions';
 import InviteResearchersButton from '@/components/Comparison/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Input from '@/components/Ui/Input/Input';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
