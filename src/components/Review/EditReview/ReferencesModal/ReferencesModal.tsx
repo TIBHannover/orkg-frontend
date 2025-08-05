@@ -1,13 +1,16 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
-import { Alert, Badge, ListGroup, ListGroupItem } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ReferenceModal from '@/components/Review/EditReview/ReferencesModal/ReferenceModal/ReferenceModal';
 import useReview from '@/components/Review/hooks/useReview';
+import Alert from '@/components/Ui/Alert/Alert';
+import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';

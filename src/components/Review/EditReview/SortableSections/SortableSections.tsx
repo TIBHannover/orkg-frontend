@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Container } from 'reactstrap';
 
 import Section, { HandleManualSort } from '@/components/Review/EditReview/SortableSections/Section/Section';
 import useReview from '@/components/Review/hooks/useReview';
@@ -13,6 +12,7 @@ import {
     performReorder,
     type ReorderParams,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import Container from '@/components/Ui/Structure/Container';
 import { ReviewSection } from '@/services/backend/types';
 
 // Create shared symbols and functions for review sections

@@ -1,12 +1,12 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import EditMetadataModal from '@/components/Comparison/ComparisonHeader/EditMetadataModal/EditMetadataModel';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import usePublish from '@/components/Comparison/hooks/usePublish';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';

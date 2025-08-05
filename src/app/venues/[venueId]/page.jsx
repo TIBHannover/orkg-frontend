@@ -6,7 +6,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
@@ -16,6 +15,9 @@ import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useVenuePapers from '@/components/Venue/useVenuePapers';
 import ROUTES from '@/constants/routes';

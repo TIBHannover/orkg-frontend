@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Col, Row, Table } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -20,6 +19,9 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
+import Table from '@/components/Ui/Table/Table';
 import { getConfigByType, getSuggestionByValue } from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, ListGroupItem } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
@@ -12,11 +11,13 @@ import useTemplates from '@/components/ContributionEditor/TableCellForm/hooks/us
 import SearchFieldSelector from '@/components/ContributionEditor/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
 import TemplateButton from '@/components/ContributionEditor/TemplatesModal/TemplateButton/TemplateButton';
 import ResearchFieldSelectorModal from '@/components/ResearchFieldSelector/ResearchFieldSelectorModal';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';

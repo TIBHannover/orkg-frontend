@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import useAuthor from '@/components/Author/hooks/useAuthor';
@@ -16,6 +15,7 @@ import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 type AuthorHeaderProps = {

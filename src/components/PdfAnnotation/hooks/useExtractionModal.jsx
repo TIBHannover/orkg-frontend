@@ -3,9 +3,10 @@ import { createRef, useEffect, useState } from 'react';
 import { usePapaParse } from 'react-papaparse';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 
 import Confirm from '@/components/Confirmation/Confirmation';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import { extractTable } from '@/services/orkgNlp/index';
 import { setTableData } from '@/slices/pdfAnnotationSlice';

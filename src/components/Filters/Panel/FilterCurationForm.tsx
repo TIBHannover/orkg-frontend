@@ -2,7 +2,6 @@ import { motion } from 'motion/react';
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -10,6 +9,7 @@ import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import FormText from '@/components/Ui/Form/FormText';

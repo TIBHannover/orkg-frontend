@@ -1,11 +1,10 @@
 'use client';
 
-import { Container } from 'reactstrap';
-
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Benchmarks from '@/components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from '@/components/ResearchProblem/ResearchProblemHeader';
 import ResearchProblemTabsContainer from '@/components/ResearchProblem/ResearchProblemTabsContainer';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 
 function ResearchProblem() {

@@ -1,7 +1,7 @@
-import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 
 export const SubtitleSeparator = styled.div`
     background: ${(props) => props.theme.secondary};

@@ -1,6 +1,7 @@
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert } from 'reactstrap';
+
+import Alert from '@/components/Ui/Alert/Alert';
 
 const NotFound = () => (
     <Alert color="danger" className="mb-0 rounded d-flex">

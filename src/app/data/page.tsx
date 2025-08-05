@@ -4,10 +4,15 @@ import { faPython } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { env } from 'next-runtime-env';
 import { useEffect } from 'react';
-import { Card, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Card from '@/components/Ui/Card/Card';
+import CardText from '@/components/Ui/Card/CardText';
+import CardTitle from '@/components/Ui/Card/CardTitle';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 
 const Data = () => {
     useEffect(() => {

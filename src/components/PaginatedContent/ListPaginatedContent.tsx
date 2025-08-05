@@ -1,10 +1,11 @@
 import { ReactNode } from 'react';
-import { Container, ListGroup } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import Container from '@/components/Ui/Structure/Container';
 
 type ListPaginatedContentProps<ItemType> = {
     label: string;

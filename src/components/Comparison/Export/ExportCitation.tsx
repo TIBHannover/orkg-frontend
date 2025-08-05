@@ -4,7 +4,6 @@ import { zipObject } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { TabContent, TabPane } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/Ui/Button/Button';
@@ -15,6 +14,8 @@ import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Nav from '@/components/Ui/Nav/Nav';
 import NavItem from '@/components/Ui/Nav/NavItem';
 import NavLink from '@/components/Ui/Nav/NavLink';
+import TabContent from '@/components/Ui/Tab/TabContent';
+import TabPane from '@/components/Ui/Tab/TabPane';
 import { getCitationByDOI } from '@/services/datacite/index';
 
 const Textarea = styled(Input)`

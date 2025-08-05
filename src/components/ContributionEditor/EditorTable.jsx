@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import { Alert } from 'reactstrap';
 
 import SBEditorHelpModal from '@/components/ContributionEditor/SBEditorHelpModal/SBEditorHelpModal';
 import useContributionEditor from '@/components/ContributionEditor/TableCellForm/hooks/useContributionEditor';
+import Alert from '@/components/Ui/Alert/Alert';
 
 const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, papers, statements, properties, resources, literals } = useSelector((state) => state.contributionEditor);

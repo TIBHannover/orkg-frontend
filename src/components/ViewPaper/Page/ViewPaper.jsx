@@ -3,7 +3,6 @@
 import { env } from 'next-runtime-env';
 import { InView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
@@ -13,6 +12,7 @@ import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import GraphViewModal from '@/components/GraphView/GraphViewModal';
 import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import Contributions from '@/components/ViewPaper/Contributions/Contributions';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';

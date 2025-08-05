@@ -3,7 +3,6 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Breadcrumb, Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import CheckSlug from '@/components/CheckSlug/CheckSlug';
@@ -11,7 +10,9 @@ import PageContentLoader from '@/components/Page/PageContentLoader';
 import usePage from '@/components/Page/usePage';
 import { CmsPage } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import BreadcrumbItem from '@/components/Ui/Nav/BreadcrumbItem';
+import Breadcrumb from '@/components/Ui/Breadcrumb/Breadcrumb';
+import BreadcrumbItem from '@/components/Ui/Breadcrumb/BreadcrumbItem';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getHelpArticle } from '@/services/cms';

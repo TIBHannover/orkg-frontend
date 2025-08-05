@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { toInteger } from 'lodash';
 import { reverse } from 'named-urls';
 import reactStringReplace from 'react-string-replace';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import DiffView from '@/components/DiffView/DiffView';
@@ -12,6 +11,7 @@ import { removeEmptySegments } from '@/components/RosettaStone/SingleStatement/h
 import useRosettaStatementVersions from '@/components/RosettaStone/SingleStatement/hooks/useRosettaStatementVersions';
 import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/useRosettaTemplate';
 import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hooks/useStatements';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { RosettaStoneStatement, RosettaStoneTemplate } from '@/services/backend/types';

@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import useMembership from '@/components/hooks/useMembership';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
+import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';

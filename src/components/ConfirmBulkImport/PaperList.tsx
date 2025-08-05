@@ -4,12 +4,14 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import { Alert, Badge, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import StatementList from '@/components/ConfirmBulkImport/StatementList';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Alert from '@/components/Ui/Alert/Alert';
+import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
 import ROUTES from '@/constants/routes';
 
 const PaperCardStyled = styled.div`

@@ -1,8 +1,9 @@
 import { FC, useState } from 'react';
-import { Card, CardImg } from 'reactstrap';
 import { createGlobalStyle } from 'styled-components';
 
 import RelatedFigureModal from '@/components/Comparison/ComparisonCarousel/RelatedFigures/RelatedFigureModal/RelatedFigureModal';
+import Card from '@/components/Ui/Card/Card';
+import CardImg from '@/components/Ui/Card/CardImg';
 
 const GlobalStyle = createGlobalStyle`
     .ril__image.ril-image-current:not(.ril-not-loaded) {

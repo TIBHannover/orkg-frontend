@@ -1,10 +1,10 @@
 'use client';
 
-import { Alert, Container } from 'reactstrap';
-
 import AuthorWorks from '@/components/Author/AuthorWorks';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 
 const AuthorLiteral = () => {

@@ -1,8 +1,8 @@
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Badge } from 'reactstrap';
 
 import useList from '@/components/List/hooks/useList';
+import Badge from '@/components/Ui/Badge/Badge';
 import { LiteratureListSectionList } from '@/services/backend/types';
 
 export default function ListEntryAmount() {

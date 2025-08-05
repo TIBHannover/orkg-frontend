@@ -1,8 +1,8 @@
 import { ClipboardEvent, FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Label from '@/components/Ui/Label/Label';
 import Modal from '@/components/Ui/Modal/Modal';

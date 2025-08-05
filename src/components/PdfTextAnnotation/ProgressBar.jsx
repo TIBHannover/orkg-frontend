@@ -1,9 +1,9 @@
 import { filter, meanBy, upperFirst } from 'lodash';
 import { useSelector } from 'react-redux';
-import { Progress } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
+import Progress from '@/components/Ui/Progress/Progress';
 
 const RECOMMENDED_ANNOTATION_AMOUNT = 2;
 

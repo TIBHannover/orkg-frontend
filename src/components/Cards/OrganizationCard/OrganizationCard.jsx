@@ -1,9 +1,11 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Card, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
 
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import ROUTES from '@/constants/routes';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 

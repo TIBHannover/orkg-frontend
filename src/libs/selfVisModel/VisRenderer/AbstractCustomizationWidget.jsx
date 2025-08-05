@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import CustomizationBarChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationBarChart';
 import CustomizationColumnChart from '@/libs/selfVisModel/VisRenderer/ChartRenderers/CustomizationColumnChart';

@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import PageContentLoader from '@/components/Page/PageContentLoader';
 import usePage from '@/components/Page/usePage';
 import { CmsPage } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { getPageByUrl } from '@/services/cms';
 

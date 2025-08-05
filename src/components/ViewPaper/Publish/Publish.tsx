@@ -7,12 +7,12 @@ import { useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { Alert } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';

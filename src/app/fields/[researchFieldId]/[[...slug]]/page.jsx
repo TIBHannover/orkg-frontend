@@ -1,7 +1,5 @@
 'use client';
 
-import { Col, Container, Row } from 'reactstrap';
-
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
@@ -10,6 +8,9 @@ import useResearchFieldObservatories from '@/components/ResearchField/hooks/useR
 import ResearchFieldHeader from '@/components/ResearchField/ResearchFieldHeader';
 import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
 import ResearchProblemsBox from '@/components/ResearchProblemsBox/ResearchProblemsBox';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 
 const ResearchField = () => {

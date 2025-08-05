@@ -3,10 +3,14 @@ import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import { AccordionBody, AccordionHeader, AccordionItem, Badge, Table } from 'reactstrap';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import AccordionBody from '@/components/Ui/Accordion/AccordionBody';
+import AccordionHeader from '@/components/Ui/Accordion/AccordionHeader';
+import AccordionItem from '@/components/Ui/Accordion/AccordionItem';
+import Badge from '@/components/Ui/Badge/Badge';
+import Table from '@/components/Ui/Table/Table';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 

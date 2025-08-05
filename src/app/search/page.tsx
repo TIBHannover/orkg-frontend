@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 
 import Filters from '@/app/search/components/Filters';
 import useSearch from '@/app/search/components/hooks/useSearch';
@@ -10,6 +9,9 @@ import OrkgAskBanner from '@/app/search/components/OrkgAskBanner/OrkgAskBanner';
 import Results from '@/app/search/components/Results';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import { Thing } from '@/services/backend/things';
 import { PaginatedResponse } from '@/services/backend/types';
 

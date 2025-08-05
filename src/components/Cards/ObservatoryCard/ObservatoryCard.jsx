@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Card, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 
 import useObservatoryStats from '@/components/Observatory/hooks/useObservatoryStats';
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
 import ROUTES from '@/constants/routes';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 

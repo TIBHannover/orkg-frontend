@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { find, flatten } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { Container, ListGroup } from 'reactstrap';
 
 import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import Container from '@/components/Ui/Structure/Container';
 import { getResources } from '@/services/backend/resources';
 import { getStatementsBySubjects } from '@/services/backend/statements';
 import { convertComparisonToNewFormat, getComparisonData, groupVersionsOfComparisons } from '@/utils';

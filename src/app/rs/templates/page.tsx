@@ -7,7 +7,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import RSTemplateCard from '@/components/Cards/RSTemplateCard/RSTemplateCard';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
@@ -19,6 +18,7 @@ import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import Container from '@/components/Ui/Structure/Container';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { getRSTemplates, rosettaStoneUrl } from '@/services/backend/rosettaStone';

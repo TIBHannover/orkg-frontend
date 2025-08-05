@@ -4,10 +4,11 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Card, Table } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import Card from '@/components/Ui/Card/Card';
+import Table from '@/components/Ui/Table/Table';
 import ROUTES from '@/constants/routes';
 import { Author, UpdateAuthor } from '@/services/backend/types';
 

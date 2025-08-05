@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode } from 'react';
-import { Container } from 'reactstrap';
 import styled from 'styled-components';
+
+import Container from '@/components/Ui/Structure/Container';
 
 const AnimationContainer = styled(motion.div)`
     overflow: hidden;

@@ -3,8 +3,8 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import { StyledActivity } from '@/components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from '@/constants/graphSettings';

@@ -2,8 +2,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Badge } from 'reactstrap';
 
+import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utils';

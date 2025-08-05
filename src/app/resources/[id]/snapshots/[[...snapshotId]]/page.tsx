@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Alert, Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -15,7 +14,9 @@ import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getSnapshot, resourcesUrl } from '@/services/backend/resources';

@@ -7,7 +7,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { UncontrolledButtonDropdown } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import LoadingArticle from '@/components/ArticleBuilder/LoadingArticle';
@@ -26,6 +25,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';

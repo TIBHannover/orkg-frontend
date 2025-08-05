@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import CellVE from '@/libs/selfVisModel/RenderingComponents/CellVE';
 import DropDownMapperSelector from '@/libs/selfVisModel/RenderingComponents/DropdownMapperSelector';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';

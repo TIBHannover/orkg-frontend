@@ -3,7 +3,6 @@ import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { useCallback, useEffect, useState } from 'react';
-import { Container } from 'reactstrap';
 
 import EditSection from '@/components/List/EditList/SortableSectionsList/EditSection/EditSection';
 import useList from '@/components/List/hooks/useList';
@@ -14,6 +13,7 @@ import {
     createInstanceId,
     type ReorderParams,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import Container from '@/components/Ui/Structure/Container';
 import { LiteratureListSection } from '@/services/backend/types';
 
 export type HandleManualSort = (params: { id: string; direction: 'up' | 'down' }) => void;

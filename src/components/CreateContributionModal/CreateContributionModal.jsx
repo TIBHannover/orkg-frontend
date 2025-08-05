@@ -4,10 +4,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useCreateContribution from '@/components/CreateContributionModal/hooks/useCreateContribution';
+import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';

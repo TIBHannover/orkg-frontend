@@ -1,7 +1,6 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Table } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ContributorsDropdownFilter from '@/components/TopContributors/ContributorsDropdownFilter';
@@ -9,6 +8,7 @@ import useContributors from '@/components/TopContributors/hooks/useContributors'
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Table from '@/components/Ui/Table/Table';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 
 type ContributorsModalProps = {

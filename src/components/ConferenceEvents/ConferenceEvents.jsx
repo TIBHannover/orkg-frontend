@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Container, ListGroup } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import EventsCard from '@/components/Organization/EventsCard';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import Container from '@/components/Ui/Structure/Container';
 import { getSeriesListByConferenceId } from '@/services/backend/conferences-series';
 
 const ConferenceEvents = ({ conferenceId, conferenceName }) => {

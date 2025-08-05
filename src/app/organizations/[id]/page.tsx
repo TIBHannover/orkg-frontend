@@ -7,13 +7,13 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import OrganizationCard from '@/components/Cards/OrganizationCard/OrganizationCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';

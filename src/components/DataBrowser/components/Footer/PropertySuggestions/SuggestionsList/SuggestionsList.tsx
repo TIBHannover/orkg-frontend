@@ -2,13 +2,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { groupBy } from 'lodash';
 import { FC } from 'react';
-import { ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Predicate, Template } from '@/services/backend/types';
 

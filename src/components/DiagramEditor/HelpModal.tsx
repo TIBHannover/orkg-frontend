@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Badge } from 'reactstrap';
 
+import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';

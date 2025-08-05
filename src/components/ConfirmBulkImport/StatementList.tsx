@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Badge, ListGroup } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import Badge from '@/components/Ui/Badge/Badge';
+import ListGroup from '@/components/Ui/List/ListGroup';
 import { getConfigByType } from '@/constants/DataTypes';
 import ROUTES from '@/constants/routes';
 

@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import { FC, ReactNode } from 'react';
-import { Container } from 'reactstrap';
 import styled from 'styled-components';
+
+import Container from '@/components/Ui/Structure/Container';
 
 const StepStyled = styled.div`
     height: 29px;

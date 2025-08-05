@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import { Component, createRef } from 'react';
 import { Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
-import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import {
@@ -24,9 +23,11 @@ import {
 import Popover from '@/components/FloatingUI/Popover';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import Navbar from '@/components/Ui/Nav/Navbar';
+import Container from '@/components/Ui/Structure/Container';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ROUTES from '@/constants/routes';
 import { loadComparisonFromLocalStorage, removeFromComparison } from '@/slices/viewPaperSlice';

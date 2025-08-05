@@ -5,10 +5,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
-import { UncontrolledButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';

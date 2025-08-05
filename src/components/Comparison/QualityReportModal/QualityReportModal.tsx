@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Progress } from 'reactstrap';
 import styled from 'styled-components';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
@@ -15,6 +14,7 @@ import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Progress from '@/components/Ui/Progress/Progress';
 import { setIsOpenFeedbackModal } from '@/slices/comparisonSlice';
 
 const ButtonTab = styled(Button)`

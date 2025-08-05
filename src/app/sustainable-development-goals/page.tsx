@@ -4,10 +4,10 @@ import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import { getImage } from '@/components/SustainableDevelopmentGoals/helpers';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 

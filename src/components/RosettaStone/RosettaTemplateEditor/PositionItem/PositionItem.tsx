@@ -4,7 +4,6 @@ import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-sol
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parseInt } from 'lodash';
 import { FC, useEffect, useRef, useState } from 'react';
-import { AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import SlotForms from '@/components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
@@ -19,6 +18,9 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
+import AccordionBody from '@/components/Ui/Accordion/AccordionBody';
+import AccordionHeader from '@/components/Ui/Accordion/AccordionHeader';
+import AccordionItem from '@/components/Ui/Accordion/AccordionItem';
 import { RSPropertyShape } from '@/services/backend/types';
 
 // Create shared symbols and functions for position drag and drop

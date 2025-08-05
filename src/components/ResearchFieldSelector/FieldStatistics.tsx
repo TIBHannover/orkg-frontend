@@ -1,8 +1,8 @@
 import Skeleton from 'react-loading-skeleton';
-import { Badge } from 'reactstrap';
 import useSWR from 'swr';
 
 import { type ResearchField } from '@/components/ResearchFieldSelector/ResearchFieldSelector';
+import Badge from '@/components/Ui/Badge/Badge';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 const FieldStatistics = ({ field }: { field: ResearchField }) => {

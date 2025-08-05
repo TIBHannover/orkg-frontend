@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
-import { Navbar as NavbarReactstrap, NavbarProps } from 'reactstrap';
+import React, { FC, PropsWithChildren } from 'react';
+import { Navbar as ReactstrapNavbar, NavbarProps as ReactstrapNavbarProps } from 'reactstrap';
 
-const Navbar: FC<NavbarProps> = ({ children, ...rest }) => {
-    return <NavbarReactstrap {...rest}>{children}</NavbarReactstrap>;
+export type NavbarProps = ReactstrapNavbarProps;
+
+const Navbar: FC<PropsWithChildren<NavbarProps>> = ({ children, ...rest }) => {
+    return <ReactstrapNavbar {...rest}>{children}</ReactstrapNavbar>;
 };
 
 export default Navbar;

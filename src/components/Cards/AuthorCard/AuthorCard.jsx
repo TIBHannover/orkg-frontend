@@ -7,12 +7,14 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Badge, ListGroup, ListGroupItem } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import ROUTES from '@/constants/routes';
 import { getAuthorsByLabel } from '@/services/semanticScholar';
 

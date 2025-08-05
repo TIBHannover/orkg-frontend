@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Badge } from 'reactstrap';
 
+import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utils';
 

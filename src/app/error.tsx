@@ -6,10 +6,10 @@ import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { detect } from 'detect-browser';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 const InternalServerError = ({ error }: { error?: Error & { digest?: string } }) => {

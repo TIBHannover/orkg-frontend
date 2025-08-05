@@ -1,11 +1,12 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 
 import Item from '@/app/search/components/Item/Item';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import { CardBadge } from '@/components/styled';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import ROUTES from '@/constants/routes';
 import { Thing } from '@/services/backend/things';
 

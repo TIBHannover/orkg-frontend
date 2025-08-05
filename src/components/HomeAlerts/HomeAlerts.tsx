@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Alert } from 'reactstrap';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import { getHomeAlerts } from '@/services/cms';
 import { Alert as AlertType } from '@/services/cms/types';
 

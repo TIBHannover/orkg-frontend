@@ -6,7 +6,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 import useSWR from 'swr';
 
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
@@ -19,6 +18,9 @@ import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

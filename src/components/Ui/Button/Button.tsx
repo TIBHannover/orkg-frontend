@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
-import { Button as ButtonReactstrap, ButtonProps } from 'reactstrap';
+import React, { FC, PropsWithChildren } from 'react';
+import { Button as ReactstrapButton, ButtonProps as ReactstrapButtonProps } from 'reactstrap';
 
-const Button: FC<ButtonProps> = ({ children, ...rest }) => {
-    return <ButtonReactstrap {...rest}>{children}</ButtonReactstrap>;
+export type ButtonProps = ReactstrapButtonProps;
+
+const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, ...rest }) => {
+    return <ReactstrapButton {...rest}>{children}</ReactstrapButton>;
 };
 
 export default Button;

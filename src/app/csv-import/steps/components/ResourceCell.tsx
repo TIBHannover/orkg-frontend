@@ -2,12 +2,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { Badge } from 'reactstrap';
 import useSWR from 'swr';
 
 import { findTypeByIdOrName, parseCellString } from '@/app/csv-import/steps/helpers';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

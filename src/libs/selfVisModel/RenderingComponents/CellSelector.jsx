@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import CellRenderer from '@/libs/selfVisModel/RenderingComponents/CellRenderer';

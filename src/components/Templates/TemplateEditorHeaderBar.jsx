@@ -2,12 +2,12 @@ import { faClose, faDiagramProject, faPen, faSave, faSpinner } from '@fortawesom
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import { Title } from '@/components/EditModeHeader/EditModeHeader';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { loadTemplate, saveTemplate, setDiagramMode } from '@/slices/templateEditorSlice';

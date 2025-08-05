@@ -3,9 +3,9 @@
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

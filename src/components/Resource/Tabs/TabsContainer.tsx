@@ -1,13 +1,13 @@
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
-import { Container } from 'reactstrap';
 
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import ObjectStatements from '@/components/Resource/Tabs/ObjectStatements';
 import PreviewFactory from '@/components/Resource/Tabs/Preview/PreviewFactory/PreviewFactory';
 import ResourceUsage from '@/components/Resource/Tabs/ResourceUsage';
 import Tabs from '@/components/Tabs/Tabs';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

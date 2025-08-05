@@ -2,7 +2,6 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -11,6 +10,8 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import AddStatement from '@/components/RosettaStone/AddStatement/AddStatement';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CERTAINTY, VISIBILITY } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';

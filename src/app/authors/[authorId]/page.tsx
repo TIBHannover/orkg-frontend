@@ -1,7 +1,6 @@
 'use client';
 
 import { useQueryState } from 'nuqs';
-import { Container } from 'reactstrap';
 
 import AuthorHeader from '@/components/Author/AuthorHeader';
 import CardFactory from '@/components/Cards/CardFactory/CardFactory';
@@ -10,6 +9,7 @@ import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListH
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Tabs from '@/components/Tabs/Tabs';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';

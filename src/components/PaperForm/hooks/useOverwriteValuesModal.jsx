@@ -1,6 +1,5 @@
 import { isArray, isEqual } from 'lodash';
 import { Fragment, useCallback, useState } from 'react';
-import { Table } from 'reactstrap';
 
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import Button from '@/components/Ui/Button/Button';
@@ -8,6 +7,7 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Table from '@/components/Ui/Table/Table';
 
 const labels = {
     doi: 'DOI',

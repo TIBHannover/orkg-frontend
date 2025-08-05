@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -9,6 +8,7 @@ import NotFound from '@/app/not-found';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import ObjectStatements from '@/components/Resource/Tabs/ObjectStatements';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { getLiteral, literalsUrl } from '@/services/backend/literals';
 

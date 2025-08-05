@@ -1,9 +1,10 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { Container, ListGroup } from 'reactstrap';
 import useSWR from 'swr';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 import { getAllObservatoriesByOrganizationId, organizationsUrl } from '@/services/backend/organizations';
 

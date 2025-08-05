@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-import { ListGroup } from 'reactstrap';
 
+import ListGroup from '@/components/Ui/List/ListGroup';
 import useTemplatesRecommendation from '@/components/ViewPaper/hooks/useTemplatesRecommendation';
 import TemplateButton from '@/components/ViewPaper/SmartSuggestions/TemplateButton';
 

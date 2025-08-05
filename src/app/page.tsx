@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { env } from 'next-runtime-env';
 import { Helmet } from 'react-helmet';
-import { Col, Container, Row } from 'reactstrap';
 
 import Benefits from '@/components/Home/Benefits';
 import HomeTabsContainer from '@/components/Home/HomeTabsContainer';
@@ -15,6 +14,9 @@ import ResearchFieldCards from '@/components/Home/ResearchFieldCards';
 import HomeAlerts from '@/components/HomeAlerts/HomeAlerts';
 import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
 import ContributorsBox from '@/components/TopContributors/ContributorsBox';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import { RESOURCES } from '@/constants/graphSettings';
 
 // Dynamically import HelpTour to prevent hydration errors

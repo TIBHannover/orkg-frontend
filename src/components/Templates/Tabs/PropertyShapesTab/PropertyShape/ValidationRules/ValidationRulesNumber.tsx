@@ -1,10 +1,10 @@
 import { ChangeEvent, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col } from 'reactstrap';
 
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import Col from '@/components/Ui/Structure/Col';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { PropertyShape as PropertyShapeType, PropertyShapeNumberType } from '@/services/backend/types';

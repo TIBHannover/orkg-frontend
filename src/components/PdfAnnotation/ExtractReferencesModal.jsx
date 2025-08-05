@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';

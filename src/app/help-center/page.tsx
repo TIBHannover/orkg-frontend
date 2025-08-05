@@ -4,11 +4,14 @@ import { times } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Alert, Col, Container, Row } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import HelpCenterSearchInput from '@/components/HelpCenterSearchInput/HelpCenterSearchInput';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 import { getHelpCategories } from '@/services/cms';
 import { HelpArticle } from '@/services/cms/types';

@@ -6,7 +6,6 @@ import { ScrollSyncPane } from 'react-scroll-sync';
 import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { useMedia } from 'react-use';
-import { Alert } from 'reactstrap';
 
 import { DEFAULT_COLUMN_WIDTH } from '@/components/Comparison/ComparisonHeader/ColumnWidth';
 import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from '@/components/Comparison/hooks/helpers';
@@ -17,6 +16,7 @@ import RowHeader from '@/components/Comparison/Table/Cells/RowHeader/RowHeader';
 import TableCell from '@/components/Comparison/Table/Cells/TableCell';
 import HeaderRow from '@/components/Comparison/Table/Rows/HeaderRow';
 import Rows from '@/components/Comparison/Table/Rows/Rows';
+import Alert from '@/components/Ui/Alert/Alert';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 
 const ComparisonTable = (props) => {

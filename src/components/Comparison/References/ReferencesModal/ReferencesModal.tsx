@@ -2,11 +2,11 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { uniqueId } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Alert } from 'reactstrap';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import ReferenceItem, { isReferenceData } from '@/components/Comparison/References/ReferencesModal/ReferencesItem/ReferenceItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';

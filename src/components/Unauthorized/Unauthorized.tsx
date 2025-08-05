@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 /**

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Alert } from 'reactstrap';
 
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
@@ -17,6 +16,7 @@ import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFea
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
