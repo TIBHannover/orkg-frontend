@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { FC } from 'react';
-import { ListGroupItem } from 'reactstrap';
 
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import { CardBadge } from '@/components/styled';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Thing } from '@/services/backend/things';
 import { getResourceLink } from '@/utils';

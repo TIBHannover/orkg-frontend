@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import { RootStore } from '@/slices/types';
 
 const TitleWarningAlert = () => {

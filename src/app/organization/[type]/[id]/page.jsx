@@ -6,7 +6,6 @@ import { upperFirst } from 'lodash';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import InternalServerError from '@/app/error';
@@ -19,6 +18,9 @@ import Observatories from '@/components/Organization/Observatories';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';

@@ -7,11 +7,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import { CardTitle } from 'reactstrap';
 import { Autoplay, EffectCube, EffectFade } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import useObservatoryStats from '@/components/Observatory/hooks/useObservatoryStats';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ROUTES from '@/constants/routes';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';

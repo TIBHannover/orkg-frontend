@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import ReactStringReplace from 'react-string-replace';
-import { Badge, ListGroupItem } from 'reactstrap';
 import useSWR from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -19,9 +18,11 @@ import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/
 import InfoBox from '@/components/RosettaStone/SingleStatement/InfoBox';
 import StatementInputField from '@/components/RosettaStone/SingleStatement/StatementInputField';
 import StatementValue from '@/components/RosettaStone/SingleStatement/StatementValue';
+import Badge from '@/components/Ui/Badge/Badge';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
 import { getPaper, papersUrl } from '@/services/backend/papers';

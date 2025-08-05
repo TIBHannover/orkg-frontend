@@ -3,9 +3,15 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { Badge, Card, CardBody, CardText, CardTitle, Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import Badge from '@/components/Ui/Badge/Badge';
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
+import CardText from '@/components/Ui/Card/CardText';
+import CardTitle from '@/components/Ui/Card/CardTitle';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 
 const Comparison = styled(Card)`

@@ -2,7 +2,6 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { find, sortBy, uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import { Alert } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 import useSWR from 'swr';
 
@@ -11,6 +10,7 @@ import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import FieldStatistics from '@/components/ResearchFieldSelector/FieldStatistics';
 import PreviouslySelectedResearchField from '@/components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from '@/components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
 import { FieldChildren, getFieldChildren, getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';

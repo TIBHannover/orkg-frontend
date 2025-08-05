@@ -1,5 +1,4 @@
 import { groupBy } from 'lodash';
-import { ListGroup } from 'reactstrap';
 
 import PredicatesRecommendations from '@/components/DataBrowser/components/Footer/PropertySuggestions/PredicatesRecommendations';
 import SuggestionsList from '@/components/DataBrowser/components/Footer/PropertySuggestions/SuggestionsList/SuggestionsList';
@@ -7,6 +6,7 @@ import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowse
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import ListGroup from '@/components/Ui/List/ListGroup';
 
 const PropertySuggestions = () => {
     const { templates } = useTemplates();

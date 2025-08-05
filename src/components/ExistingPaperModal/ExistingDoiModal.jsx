@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { Alert } from 'reactstrap';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
+import Alert from '@/components/Ui/Alert/Alert';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';

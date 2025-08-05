@@ -1,11 +1,14 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
 import Showdown from 'showdown';
 import styled from 'styled-components';
 import { EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
+import CardSubtitle from '@/components/Ui/Card/CardSubtitle';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import { getNewsCards } from '@/services/cms';
 import { NewsCard } from '@/services/cms/types';
 

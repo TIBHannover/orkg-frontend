@@ -3,11 +3,11 @@
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import RosettaTemplateEditor from '@/components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
 import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
 

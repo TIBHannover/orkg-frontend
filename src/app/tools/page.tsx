@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import AddPaperWizard from '@/assets/img/tools/add-paper-wizard.png';
@@ -10,6 +9,7 @@ import ContributionEditor from '@/assets/img/tools/contribution-editor.png';
 import CsvImport from '@/assets/img/tools/csv-import.png';
 import PdfSentenceAnnotation from '@/assets/img/tools/pdf-sentence-annotation.png';
 import SurveyImporter from '@/assets/img/tools/survey-importer.png';
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 const ToolsContainer = styled(Container)`

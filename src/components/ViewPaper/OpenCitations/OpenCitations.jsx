@@ -4,9 +4,9 @@ import { isNaN } from 'lodash';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Badge } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import { getCitationCount } from '@/services/openCitations';
 
 function OpenCitations({ doi }) {

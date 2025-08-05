@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { FC } from 'react';
-import { Card, CardBody } from 'reactstrap';
 import styled from 'styled-components';
 
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utils';
 

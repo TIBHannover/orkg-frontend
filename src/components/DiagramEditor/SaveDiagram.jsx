@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Input from '@/components/Ui/Input/Input';
 import Modal from '@/components/Ui/Modal/Modal';

@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import { useEffect } from 'react';
-import { Alert } from 'reactstrap';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
+import Alert from '@/components/Ui/Alert/Alert';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getLiteratureLists, listsUrl } from '@/services/backend/literatureLists';

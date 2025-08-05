@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isString, kebabCase } from 'lodash';
 import Link from 'next/link';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { Alert, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import FeaturedComparisonsItem from '@/components/FeaturedComparisons/FeaturedComparisonsItem';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

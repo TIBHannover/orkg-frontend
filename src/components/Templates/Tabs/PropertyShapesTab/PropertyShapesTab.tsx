@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
-import { Col, Row } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
@@ -12,6 +11,8 @@ import PropertyShape, { isPropertyShapeData } from '@/components/Templates/Tabs/
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';

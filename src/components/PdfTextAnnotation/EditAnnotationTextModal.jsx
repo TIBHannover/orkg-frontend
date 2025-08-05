@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Alert } from 'reactstrap';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Input from '@/components/Ui/Input/Input';
 import Modal from '@/components/Ui/Modal/Modal';

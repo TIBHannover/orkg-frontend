@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Alert, Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import CheckSlug from '@/components/CheckSlug/CheckSlug';
@@ -10,9 +9,11 @@ import PageContentLoader from '@/components/Page/PageContentLoader';
 import usePage from '@/components/Page/usePage';
 import { CmsPage } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
 import Nav from '@/components/Ui/Nav/Nav';
 import Navbar from '@/components/Ui/Nav/Navbar';
 import NavItem from '@/components/Ui/Nav/NavItem';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getAboutPage, getAboutPages } from '@/services/cms';

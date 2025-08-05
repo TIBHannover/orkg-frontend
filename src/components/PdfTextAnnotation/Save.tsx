@@ -8,10 +8,10 @@ import PropTypes from 'prop-types';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useMembership from '@/components/hooks/useMembership';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import FormGroup from '@/components/Ui/Form/FormGroup';

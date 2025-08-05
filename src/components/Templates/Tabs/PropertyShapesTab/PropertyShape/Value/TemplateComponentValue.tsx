@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
-import { Col } from 'reactstrap';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -16,6 +15,7 @@ import FormText from '@/components/Ui/Form/FormText';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
+import Col from '@/components/Ui/Structure/Col';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import DATA_TYPES from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';

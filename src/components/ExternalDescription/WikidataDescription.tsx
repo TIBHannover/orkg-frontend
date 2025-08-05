@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { groupBy } from 'lodash';
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
-import { Row } from 'reactstrap';
 
 import WIKIDATA_LOGO from '@/assets/img/sameas/wikidatawiki.png';
 import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import Row from '@/components/Ui/Structure/Row';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import { wikidataSparql } from '@/services/wikidata/index';

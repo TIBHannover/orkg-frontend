@@ -2,9 +2,9 @@ import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import pluralize from 'pluralize';
 import { FC } from 'react';
-import { Alert } from 'reactstrap';
 import useSWR from 'swr';
 
+import Alert from '@/components/Ui/Alert/Alert';
 import ROUTES from '@/constants/routes';
 import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
 

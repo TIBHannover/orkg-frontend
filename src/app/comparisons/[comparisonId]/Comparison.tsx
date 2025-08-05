@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
-import { Alert, Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import AddContribution from '@/components/Comparison/AddContribution/AddContribution';
@@ -22,7 +21,9 @@ import useComparisonOld from '@/components/Comparison/hooks/useComparisonOld';
 import References from '@/components/Comparison/References/References';
 import { ContainerAnimated } from '@/components/Comparison/styled';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 

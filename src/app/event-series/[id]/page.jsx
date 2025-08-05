@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -10,6 +9,9 @@ import ResearchProblemBox from '@/components/Conference/ResearchProblemBox';
 import Comparisons from '@/components/Organization/Comparisons';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import { getConferenceById } from '@/services/backend/conferences-series';
 

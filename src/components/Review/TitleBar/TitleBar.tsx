@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
-import { UncontrolledButtonDropdown } from 'reactstrap';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import ExportCitation from '@/components/ExportCitation/ExportCitation';
@@ -31,6 +30,7 @@ import useReview from '@/components/Review/hooks/useReview';
 import { SubTitle } from '@/components/styled';
 import TitleBarOriginal from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';

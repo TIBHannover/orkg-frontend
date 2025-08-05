@@ -1,8 +1,11 @@
 import { FC } from 'react';
-import { Alert, ListGroup, ListGroupItem, Progress } from 'reactstrap';
 
 import FEEDBACK_QUESTIONS from '@/components/Comparison/QualityReportModal/hooks/feedbackQuestions';
 import InviteResearchersButton from '@/components/Comparison/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
+import Alert from '@/components/Ui/Alert/Alert';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
+import Progress from '@/components/Ui/Progress/Progress';
 
 type FeedbackTabProps = {
     feedbacks: {

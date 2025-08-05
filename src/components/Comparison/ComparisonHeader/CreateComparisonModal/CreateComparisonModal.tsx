@@ -4,10 +4,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';

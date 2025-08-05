@@ -2,7 +2,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 
 import useAuthorWorks from '@/components/Author/hooks/useAuthorWorks';
 import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
@@ -11,6 +10,9 @@ import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
 import VisualizationCard from '@/components/Cards/VisualizationCard/VisualizationCard';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
+import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';
 import { convertComparisonToNewFormat, convertPaperToNewFormat, convertReviewToNewFormat, convertVisualizationToNewFormat } from '@/utils';
 

@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { Row } from 'reactstrap';
 
 import { PropertyStyle, StatementsGroupStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
+import Row from '@/components/Ui/Structure/Row';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Coordinates } from '@/services/geoNames';

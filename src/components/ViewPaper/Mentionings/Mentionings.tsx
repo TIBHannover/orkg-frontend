@@ -1,7 +1,9 @@
 import { FC } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import useSWR from 'swr';
 
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
+import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import AddMentioning from '@/components/ViewPaper/Mentionings/AddMentioning/AddMentioning';
 import MentioningItem from '@/components/ViewPaper/Mentionings/MentioningItem/MentioningItem';

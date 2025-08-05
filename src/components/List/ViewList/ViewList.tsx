@@ -1,7 +1,6 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Alert, Container, ListGroup, ListGroupItem } from 'reactstrap';
 
 import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
@@ -20,7 +19,11 @@ import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/use
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';

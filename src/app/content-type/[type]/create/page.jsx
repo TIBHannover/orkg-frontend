@@ -9,16 +9,17 @@ import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert, Container } from 'reactstrap';
 
 import { supportedContentTypes } from '@/components/ContentType/types';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { CLASSES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';

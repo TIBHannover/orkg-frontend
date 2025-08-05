@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from 'motion/react';
 import PropTypes from 'prop-types';
 import { useId } from 'react';
 import { toast } from 'react-toastify';
-import { Col, Row } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
@@ -22,6 +21,8 @@ import FormText from '@/components/Ui/Form/FormText';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import Tooltip from '@/components/Utils/Tooltip';
 import { getAbstractByDoi } from '@/services/semanticScholar';
 import { parseCiteResult } from '@/utils';

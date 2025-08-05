@@ -7,7 +7,6 @@ import { useQueryState } from 'nuqs';
 import { MouseEvent, useEffect, useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -20,6 +19,7 @@ import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import Container from '@/components/Ui/Structure/Container';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';

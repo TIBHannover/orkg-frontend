@@ -4,12 +4,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Badge } from 'reactstrap';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
 import useProvenance from '@/components/Resource/hooks/useProvenance';
+import Badge from '@/components/Ui/Badge/Badge';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 

@@ -5,10 +5,11 @@ import { sanitize } from 'isomorphic-dompurify';
 import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { loadMastodonTimeline, Message } from '@/services/mastodon';
 
 const COOKIE_NAME = 'loadMastodonTimeline';

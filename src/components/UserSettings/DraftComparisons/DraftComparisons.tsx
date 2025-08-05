@@ -5,10 +5,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
-import { Alert, ListGroup, ListGroupItem } from 'reactstrap';
 import useSWRInfinite from 'swr/infinite';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Alert from '@/components/Ui/Alert/Alert';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import ROUTES from '@/constants/routes';
 import { comparisonUrl, GetComparisonParams, getComparisons } from '@/services/backend/comparisons';
 

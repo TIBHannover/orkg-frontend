@@ -4,12 +4,12 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { CardTitle } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import MembersModal from '@/components/Organization/MembersModal';
 import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from '@/components/styled';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import ROUTES from '@/constants/routes';
 import { getUsersByOrganizationId } from '@/services/backend/organizations';
 

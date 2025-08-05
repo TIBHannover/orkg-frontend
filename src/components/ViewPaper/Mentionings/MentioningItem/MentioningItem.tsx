@@ -2,12 +2,13 @@ import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Badge, ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Badge from '@/components/Ui/Badge/Badge';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { classesUrl, getClassById } from '@/services/backend/classes';

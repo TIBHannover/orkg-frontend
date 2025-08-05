@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
+import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 export default function WebinarMay11() {

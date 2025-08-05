@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -34,6 +33,7 @@ import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';

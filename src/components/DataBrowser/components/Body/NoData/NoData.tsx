@@ -1,6 +1,5 @@
-import { ListGroupItem } from 'reactstrap';
-
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 
 const NoData = () => {
     const { config } = useDataBrowserState();

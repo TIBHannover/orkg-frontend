@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { Badge } from 'reactstrap';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import { CLASSES } from '@/constants/graphSettings';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { VisibilityOptions } from '@/services/backend/types';

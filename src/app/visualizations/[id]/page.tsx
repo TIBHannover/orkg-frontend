@@ -2,9 +2,9 @@
 
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
-import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

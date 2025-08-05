@@ -1,6 +1,5 @@
-import { Container } from 'reactstrap';
-
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Container from '@/components/Ui/Structure/Container';
 import Unauthorized from '@/components/Unauthorized/Unauthorized';
 
 export default function requireAuthentication<P extends object>(Component: React.ComponentType<P>) {

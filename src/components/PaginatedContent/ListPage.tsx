@@ -2,12 +2,12 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalize } from 'lodash';
 import { parseAsInteger, useQueryState } from 'nuqs';
-import { Container } from 'reactstrap';
 
 import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import { PaginatedResponse } from '@/services/backend/types';
 
 type ListPageProps<ItemType, FetchFunctionParams> = {

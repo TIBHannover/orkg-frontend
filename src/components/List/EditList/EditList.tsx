@@ -1,5 +1,3 @@
-import { Container } from 'reactstrap';
-
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -7,6 +5,7 @@ import Contributors from '@/components/List/Contributors/Contributors';
 import AddSection from '@/components/List/EditList/AddSection/AddSection';
 import EditMetadata from '@/components/List/EditList/EditMetadata/EditMetadata';
 import SortableSectionsList from '@/components/List/EditList/SortableSectionsList/SortableSectionsList';
+import Container from '@/components/Ui/Structure/Container';
 
 const EditList = () => (
     <main>

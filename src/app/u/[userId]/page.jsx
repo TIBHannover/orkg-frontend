@@ -8,7 +8,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Gravatar from 'react-gravatar';
-import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import NotFound from '@/app/not-found';
@@ -16,6 +15,8 @@ import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import UserProfileTabsContainer from '@/components/UserProfile/UserProfileTabsContainer';
 import UserStatistics from '@/components/UserProfile/UserStatistics';

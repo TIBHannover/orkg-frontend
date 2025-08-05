@@ -3,13 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
-import { Alert, Col, Row } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ContributionTab from '@/components/ContributionTabs/ContributionTab';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import Tabs from '@/components/Tabs/Tabs';
+import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import useContributions from '@/components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';

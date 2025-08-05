@@ -3,8 +3,8 @@
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Container } from 'reactstrap';
 
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 

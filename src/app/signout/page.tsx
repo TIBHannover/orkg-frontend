@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
+
+import Container from '@/components/Ui/Structure/Container';
 
 export default function Logout() {
     const router = useRouter();

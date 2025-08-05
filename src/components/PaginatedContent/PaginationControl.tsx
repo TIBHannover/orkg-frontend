@@ -2,11 +2,13 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { createSerializer, parseAsInteger } from 'nuqs';
 import { FC } from 'react';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import styled from 'styled-components';
 
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
+import Pagination from '@/components/Ui/Pagination/Pagination';
+import PaginationItem from '@/components/Ui/Pagination/PaginationItem';
+import PaginationLink from '@/components/Ui/Pagination/PaginationLink';
 
 type PaginationProps = {
     page: number;

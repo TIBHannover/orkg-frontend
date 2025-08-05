@@ -4,7 +4,6 @@ import capitalize from 'capitalize';
 import { flattenDeep, uniqBy } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
@@ -13,6 +12,8 @@ import useReview from '@/components/Review/hooks/useReview';
 import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';

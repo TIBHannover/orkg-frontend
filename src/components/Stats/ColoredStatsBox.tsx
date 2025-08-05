@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { FC } from 'react';
 import CountUp from 'react-countup';
-import { Col } from 'reactstrap';
 import styled from 'styled-components';
 
+import Col from '@/components/Ui/Structure/Col';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 
 const StatsBoxStyled = styled(Col)`

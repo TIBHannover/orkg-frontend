@@ -1,9 +1,10 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 
 const DiagramCardStyled = styled.div`

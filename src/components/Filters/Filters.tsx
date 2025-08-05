@@ -2,7 +2,6 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 import { FC, Fragment, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -13,6 +12,9 @@ import useFilterConfig from '@/components/Filters/hooks/useFilterConfig';
 import AllFiltersOffCanvas from '@/components/Filters/Panel/AllFiltersOffCanvas';
 import Button from '@/components/Ui/Button/Button';
 import Label from '@/components/Ui/Label/Label';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 
 export const Separator = styled.div`
     @media (max-width: 480px) {

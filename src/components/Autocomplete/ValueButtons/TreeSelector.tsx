@@ -2,11 +2,11 @@ import { faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
-import { Alert } from 'reactstrap';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import TreeView from '@/components/Class/TreeView';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';

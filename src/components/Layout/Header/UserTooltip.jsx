@@ -7,13 +7,13 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Gravatar from 'react-gravatar';
 import { toast } from 'react-toastify';
-import { Row } from 'reactstrap';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 import { getUserInformation, userUrl } from '@/services/backend/users';
 import { federatedLogout, visitAccountUrl } from '@/services/keycloak';

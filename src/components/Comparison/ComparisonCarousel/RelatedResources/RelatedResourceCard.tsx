@@ -1,6 +1,9 @@
 import { FC } from 'react';
-import { Card, CardBody, CardText, CardTitle } from 'reactstrap';
 
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
+import CardText from '@/components/Ui/Card/CardText';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import REGEX from '@/constants/regex';
 
 type RelatedResourceCardProps = {

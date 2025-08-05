@@ -3,7 +3,6 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
@@ -23,6 +22,9 @@ import { SubTitle } from '@/components/styled';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import { getObservatoryById } from '@/services/backend/observatories';
 import { getOrganization } from '@/services/backend/organizations';

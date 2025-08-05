@@ -5,13 +5,13 @@ import Link from 'next/link';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { CardTitle } from 'reactstrap';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ContributorsModal from '@/components/ResearchProblem/ContributorsModal';
 import useResearchProblemContributors from '@/components/ResearchProblem/hooks/useResearchProblemContributors';
 import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from '@/components/styled';
+import CardTitle from '@/components/Ui/Card/CardTitle';
 import ROUTES from '@/constants/routes';
 
 const Contributors = ({ researchProblemId }) => {

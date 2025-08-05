@@ -4,7 +4,6 @@ import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Badge, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import useCountInstances from '@/components/Class/hooks/useCountInstances';
@@ -14,6 +13,8 @@ import Tabs from '@/components/Tabs/Tabs';
 import Format from '@/components/Templates/Tabs/Format/Format';
 import GeneralSettings from '@/components/Templates/Tabs/GeneralSettings/GeneralSettings';
 import PropertyShapesTab from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShapesTab';
+import Badge from '@/components/Ui/Badge/Badge';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';

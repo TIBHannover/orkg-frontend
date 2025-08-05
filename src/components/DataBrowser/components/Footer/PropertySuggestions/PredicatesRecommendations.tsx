@@ -2,12 +2,12 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { ListGroup } from 'reactstrap';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import usePredicatesRecommendation from '@/components/DataBrowser/hooks/usePredicatesRecommendation';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ListGroup from '@/components/Ui/List/ListGroup';
 import Tooltip from '@/components/Utils/Tooltip';
 import { ShowMoreButton, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { ENTITIES } from '@/constants/graphSettings';

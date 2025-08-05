@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Badge, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import EU_LOGO from '@/assets/img/poweredby/co-funded-h2020-horiz_en.png';
@@ -13,6 +12,10 @@ import L3S_LOGO from '@/assets/img/poweredby/L3S.png';
 import LUH_LOGO from '@/assets/img/poweredby/LUH.png';
 import TIB_LOGO from '@/assets/img/poweredby/TIB_Logo_EN.png';
 import Logo from '@/assets/img/vertical_logo.svg';
+import Badge from '@/components/Ui/Badge/Badge';
+import Col from '@/components/Ui/Structure/Col';
+import Container from '@/components/Ui/Structure/Container';
+import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 import ROUTES_CMS from '@/constants/routesCms';
 

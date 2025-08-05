@@ -2,9 +2,9 @@
 
 import { marked } from 'marked';
 import { Component } from 'react';
-import { Container } from 'reactstrap';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 
 import changelogPath from '../../../CHANGELOG.md';
 

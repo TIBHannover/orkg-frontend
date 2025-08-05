@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
-import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 
 const StyledShortRecord = styled.div`
     & .options {

@@ -3,7 +3,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
-import { Alert, Table } from 'reactstrap';
 
 import { DEFAULT_HEADERS, MappedColumn } from '@/app/csv-import/steps/helpers';
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -12,6 +11,8 @@ import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Alert from '@/components/Ui/Alert/Alert';
+import Table from '@/components/Ui/Table/Table';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 

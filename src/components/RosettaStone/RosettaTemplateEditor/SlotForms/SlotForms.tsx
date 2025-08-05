@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import AutoComplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -13,6 +12,7 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
+import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';

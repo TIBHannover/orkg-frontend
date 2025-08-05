@@ -2,11 +2,13 @@ import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
 import { Dispatch, SetStateAction } from 'react';
-import { Alert, ListGroup, ListGroupItem } from 'reactstrap';
 
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
 import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
 import useResearchProblemAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import Alert from '@/components/Ui/Alert/Alert';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';

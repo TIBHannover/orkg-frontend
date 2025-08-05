@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { CSVLink } from 'react-csv';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert } from 'reactstrap';
 
 import ExactMatch from '@/assets/img/comparison-exact-match.svg';
 import IntelligentMerge from '@/assets/img/comparison-intelligent-merge.svg';
@@ -34,6 +33,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import ComparisonAuthorsModel from '@/components/TopAuthors/ComparisonAuthorsModel';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Dropdown from '@/components/Ui/Dropdown/Dropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';

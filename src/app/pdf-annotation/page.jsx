@@ -1,6 +1,7 @@
 'use client';
 
-import { Alert, Container } from 'reactstrap';
+import Alert from '@/components/Ui/Alert/Alert';
+import Container from '@/components/Ui/Structure/Container';
 
 // import { useState, useEffect } from 'react';
 // import Toolbar from '@/components/PdfAnnotation/Toolbar';

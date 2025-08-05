@@ -4,7 +4,6 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
 import { FC } from 'react';
-import { Alert, Container } from 'reactstrap';
 
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
@@ -23,7 +22,9 @@ import SectionResourceProperty from '@/components/Review/Sections/ResourceProper
 import TextSection from '@/components/Review/Sections/Text/TextSection';
 import SectionVisualization from '@/components/Review/Sections/Visualization/SectionVisualization';
 import SustainableDevelopmentGoals from '@/components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY } from '@/constants/contentTypes';
 import { ENTITIES } from '@/constants/graphSettings';

@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
-import { ListGroup } from 'reactstrap';
 import { mutate } from 'swr';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import ListGroup from '@/components/Ui/List/ListGroup';
 import useEntityRecognition from '@/components/ViewPaper/hooks/useEntityRecognition';
 import { PropertyItem, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { ENTITIES } from '@/constants/graphSettings';

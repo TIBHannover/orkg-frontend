@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Col, Row } from 'reactstrap';
 
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
 import { CLASSES } from '@/constants/graphSettings';
 import { getResources } from '@/services/backend/resources';
 

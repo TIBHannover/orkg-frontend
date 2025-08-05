@@ -1,11 +1,12 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react';
-import { Alert, Table } from 'reactstrap';
 import { ZodError } from 'zod';
 import { fromError } from 'zod-validation-error';
 
 import Body from '@/app/csv-import/steps/components/Body';
 import Header from '@/app/csv-import/steps/components/Header';
 import { MappedColumn } from '@/app/csv-import/steps/helpers';
+import Alert from '@/components/Ui/Alert/Alert';
+import Table from '@/components/Ui/Table/Table';
 
 type CheckFileProps = {
     data: string[][];

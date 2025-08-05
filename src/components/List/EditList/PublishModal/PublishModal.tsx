@@ -3,10 +3,10 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Alert } from 'reactstrap';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useList from '@/components/List/hooks/useList';
+import Alert from '@/components/Ui/Alert/Alert';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';

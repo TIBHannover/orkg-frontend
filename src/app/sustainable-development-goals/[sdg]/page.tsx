@@ -5,12 +5,12 @@ import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 
 import NotFound from '@/app/not-found';
 import { getImage } from '@/components/SustainableDevelopmentGoals/helpers';
 import SgdTabsContainer from '@/components/SustainableDevelopmentGoals/SgdTabsContainer';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

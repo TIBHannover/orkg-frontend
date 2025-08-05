@@ -2,14 +2,15 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Alert, Table } from 'reactstrap';
 import { ZodError } from 'zod';
 import { fromError } from 'zod-validation-error';
 
 import { isDefaultHeader, MappedColumn, parseCellString } from '@/app/csv-import/steps/helpers';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Alert from '@/components/Ui/Alert/Alert';
 import Input from '@/components/Ui/Input/Input';
+import Table from '@/components/Ui/Table/Table';
 import DATA_TYPES, { DataType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

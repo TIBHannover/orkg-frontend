@@ -1,11 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import { Container, ListGroup } from 'reactstrap';
 import styled from 'styled-components';
 
 import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
 import Button from '@/components/Ui/Button/Button';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import Container from '@/components/Ui/Structure/Container';
 import useContributionComparison from '@/components/ViewPaper/ContributionComparisons/hooks/useContributionComparison';
 import { convertComparisonToNewFormat } from '@/utils';
 

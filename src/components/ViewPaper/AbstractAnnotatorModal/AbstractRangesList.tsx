@@ -4,12 +4,14 @@ import toArray from 'lodash/toArray';
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
-import { Badge, ListGroup, ListGroupItem } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
+import Badge from '@/components/Ui/Badge/Badge';
+import ListGroup from '@/components/Ui/List/ListGroup';
+import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Range, RootStore } from '@/slices/types';
 import { removeAnnotation, toggleEditAnnotation, updateAnnotationPredicate } from '@/slices/viewPaperSlice';

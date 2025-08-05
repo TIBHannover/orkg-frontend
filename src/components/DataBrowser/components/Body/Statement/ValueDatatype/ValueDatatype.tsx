@@ -1,9 +1,9 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import { Badge } from 'reactstrap';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import DATA_TYPES from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

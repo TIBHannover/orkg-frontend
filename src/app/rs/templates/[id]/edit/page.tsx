@@ -3,7 +3,6 @@
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { Container } from 'reactstrap';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -12,6 +11,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import RosettaTemplateEditor from '@/components/RosettaStone/RosettaTemplateEditor/RosettaTemplateEditor';
 import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import TitleBar from '@/components/TitleBar/TitleBar';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
