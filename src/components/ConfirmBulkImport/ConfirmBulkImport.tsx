@@ -29,12 +29,11 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
         setIsFinished(true);
         onFinishParent();
     };
-    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
-        {
+    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors, importFailed } =
+        useImportBulkData({
             data,
             onFinish,
-        },
-    );
+        });
 
     useEffect(() => {
         makePaperList();
@@ -51,7 +50,7 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
         <Modal isOpen={isOpen} size="lg" backdrop="static">
             <ModalHeader toggle={toggle}>Review import</ModalHeader>
             <ModalBody>
-                {!isLoading && createdContributions.length === 0 && (
+                {!isLoading && createdContributions.length === 0 && !isFinished && (
                     <>
                         <Alert color="info" fade={false}>
                             The following contributions will be imported, please review the content carefully
@@ -76,15 +75,31 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
                 )}
                 {isFinished && (
                     <>
-                        <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
-                        The imported papers can be viewed in the contribution editor <br />
-                        <Button tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                            Contribution editor
-                        </Button>
+                        {createdContributions.length > 0 && (
+                            <>
+                                <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
+                                The imported papers can be viewed in the contribution editor <br />
+                                <Button tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
+                                    Contribution editor
+                                </Button>
+                            </>
+                        )}
+                        {importFailed.length > 0 && (
+                            <Alert color="danger" className="mt-3">
+                                The following papers failed to import:{' '}
+                                <div>
+                                    <ul className="m-0">
+                                        {importFailed.map((paper) => (
+                                            <li key={paper}>{paper}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </Alert>
+                        )}
                     </>
                 )}
             </ModalBody>
-            {createdContributions.length === 0 && !isLoading && (
+            {createdContributions.length === 0 && !isLoading && !isFinished && (
                 <ModalFooter>
                     <Button color="primary" onClick={handleImport}>
                         Import

@@ -31,7 +31,7 @@ const PaperCardStyled = styled.div`
 
 type PaperListProps = {
     papers: any[];
-    existingPaperIds: string[];
+    existingPaperIds: (string | null)[];
     idToLabel: Record<string, string>;
     validationErrors: Record<number, Record<string, boolean[]>>;
 };
@@ -86,7 +86,7 @@ const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, va
                         >
                             <div className="d-flex">
                                 <span className="flex-grow-1">
-                                    {Object.keys(paper.contents[0].statements).length === 0 && (
+                                    {Object.keys(paper.contents[0]?.statements)?.length === 0 && (
                                         <Alert color="danger">
                                             <FontAwesomeIcon icon={faExclamationCircle} className="me-2" /> Paper can't be imported because it doesn't
                                             contain any contribution data
