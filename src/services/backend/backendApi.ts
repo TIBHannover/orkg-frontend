@@ -7,9 +7,11 @@ let pendingTokenPromise: Promise<string | null> | null = null;
 
 const getAccessToken = async (): Promise<string | null> => {
     const EXPIRY_BUFFER_TIME = 60 * 1000; // 60 seconds
+    // Use cached token if it is still considered valid (with buffer)
     if (cachedToken && tokenExpiryTime && Date.now() < tokenExpiryTime) {
         return cachedToken;
     }
+    // Deduplicate concurrent token requests
     if (pendingTokenPromise) {
         return pendingTokenPromise;
     }
@@ -19,16 +21,17 @@ const getAccessToken = async (): Promise<string | null> => {
             await signOut();
             return null;
         }
-        const token = session?.access_token;
-        const expiresAt = session?.expires_at ? session.expires_at * 1000 : null; // Convert to milliseconds
-        if (token && expiresAt) {
-            // Calculate expiry time with buffer
-            tokenExpiryTime = expiresAt - EXPIRY_BUFFER_TIME;
-            if (Date.now() < tokenExpiryTime) {
-                cachedToken = token;
-                return token;
-            }
+        const token = session?.access_token ?? null;
+        const expiresAtMs = session?.expires_at ? session.expires_at * 1000 : null; // Convert to milliseconds
+
+        // Always return the latest token from the session if present.
+        // We still maintain a buffer for the cached validity window, but we do not drop the header when close to expiry.
+        if (token) {
+            cachedToken = token;
+            tokenExpiryTime = expiresAtMs ? expiresAtMs - EXPIRY_BUFFER_TIME : null;
+            return token;
         }
+
         return null;
     })().finally(() => {
         pendingTokenPromise = null;
