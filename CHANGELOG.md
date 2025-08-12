@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.167.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.2...v0.167.3) - 2025-08-12
+
+### Changes
+
+- fix: prevent missing Authorization header in UserTooltip [`#1580`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1580)
+- refactor(ui): wrapper components for Card,Badge,Alert,Tab,Pagination,Canvas,List,Progress [`#1576`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1576)
+- refactor: add wrappers components for Modal, Form, Input, and Popover [`#1573`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1573)
+- fix(Header): import UncontrolledButtonDropdown instead of ButtonDropdown [`#1575`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1575)
+- disable eslint [`#1564`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1564)
+
+---
 ## [v0.167.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.1...v0.167.2) - 2025-07-28
 
 ### Changes
