@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { sanitize } from 'isomorphic-dompurify';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import Comparison from '@/app/comparisons/[comparisonId]/Comparison';
 import Coins from '@/components/Coins/Coins';
@@ -36,9 +37,13 @@ export default async function ComparisonPage({ params }: { params: Promise<{ com
     const { comparisonId } = await params;
     let comparison: ComparisonType | undefined;
     let jsonLd: Record<string, unknown> | undefined;
-    if (comparisonId) {
-        comparison = await getComparison(comparisonId);
 
+    if (comparisonId) {
+        try {
+            comparison = await getComparison(comparisonId);
+        } catch {
+            return notFound();
+        }
         jsonLd = {
             mainEntity: {
                 headline: comparison.title,
