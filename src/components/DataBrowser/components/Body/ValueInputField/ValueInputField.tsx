@@ -14,6 +14,7 @@ import Button from '@/components/Ui/Button/Button';
 import FormFeedback from '@/components/Ui/Form/FormFeedback';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import errorHandler from '@/helpers/errorHandler';
 import { Literal, Node, Predicate } from '@/services/backend/types';
 
 type ValueInputFieldProps = {
@@ -79,6 +80,10 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                             handleSubmitValue(_class, selectedValue, true);
                             toggleShowInput();
                         }
+                    }}
+                    onFailure={(e) => {
+                        errorHandler({ error: e, shouldShowToast: true });
+                        toggleShowInput();
                     }}
                 />
                 {_class === ENTITIES.RESOURCE && <SmartResourceLabelCheck label={inputValue} />}
