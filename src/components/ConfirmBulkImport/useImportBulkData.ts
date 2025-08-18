@@ -1,4 +1,5 @@
 import { Cite } from '@citation-js/core';
+import { isUri } from '@hyperjump/uri';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -33,10 +34,11 @@ type ImportBulkDataProps = {
 
 const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
     const [papers, setPapers] = useState<any[]>([]);
-    const [existingPaperIds, setExistingPaperIds] = useState<string[]>([]);
+    const [existingPaperIds, setExistingPaperIds] = useState<(string | null)[]>([]);
     const [idToLabel, setIdToLabel] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
+    const [importFailed, setImportFailed] = useState<string[]>([]);
     const [createdContributions, setCreatedContributions] = useState<{ paperId: string; contributionId: string }[]>([]);
     const { observatoryId, organizationId } = useMembership();
 
@@ -45,7 +47,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         const _validationErrors: Record<number, Record<string, boolean[]>> = {};
         const header = data[0];
         const rows = data.slice(1);
-        const _existingPaperIds: string[] = [];
+        const _existingPaperIds: (string | null)[] = [];
         // used to map resource/property IDs to their labels
         const _idToLabel = {
             [PREDICATES.HAS_RESEARCH_PROBLEM]: 'has research problem',
@@ -91,7 +93,8 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                     publicationMonth = paperMetadata.paperPublicationMonth;
                     publicationYear = paperMetadata.paperPublicationYear;
                     publishedIn = paperMetadata.publishedIn;
-                    url = url || paperMetadata.url;
+                    // validate becuase it has to be RFC 3987 compliant and not just a URL, the RDF spec says that URLs should be RFC 3987 compliant, otherwise it will be rejected by the backend
+                    url = url || (isUri(paperMetadata.url) ? paperMetadata.url : '');
                 }
             }
 
@@ -236,9 +239,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
 
             // eslint-disable-next-line no-await-in-loop
             const paperId = await getExistingPaperId(title, doi);
-            if (paperId) {
-                _existingPaperIds.push(paperId);
-            }
+            _existingPaperIds.push(paperId);
 
             const paper = {
                 title,
@@ -345,41 +346,49 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                 delete paper.extraction_method;
 
                 // only create the paper if there is contribution data (backend endpoint requirement)
-                // eslint-disable-next-line no-await-in-loop
-                const _paper = await createPaperMergeIfExists({
-                    paper,
-                    contribution,
-                    createContributionData: {
-                        literals: newLiterals,
-                    },
-                    extractionMethod,
-                });
+                let _paperId;
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    _paperId = await createPaperMergeIfExists({
+                        paper,
+                        contribution,
+                        createContributionData: {
+                            literals: newLiterals,
+                        },
+                        extractionMethod,
+                    });
+                } catch (e) {
+                    _paperId = null;
+                    setImportFailed((prev) => [...prev, paper.title]);
+                }
+                if (_paperId) {
+                    // get paper statements so it is possible to list the contribution IDs and make a comparison
+                    // eslint-disable-next-line no-await-in-loop
+                    const paperStatements = await getStatements({ subjectId: _paperId });
 
-                // get paper statements so it is possible to list the contribution IDs and make a comparison
-                const paperStatements = await getStatements({ subjectId: _paper });
-
-                for (const statement of paperStatements) {
-                    if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
-                        setCreatedContributions((state) => [
-                            ...state,
-                            {
-                                paperId: _paper,
-                                contributionId: statement.object.id,
-                            },
-                        ]);
-                        break;
+                    for (const statement of paperStatements) {
+                        if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                            setCreatedContributions((state) => [
+                                ...state,
+                                {
+                                    paperId: _paperId,
+                                    contributionId: statement.object.id,
+                                },
+                            ]);
+                            break;
+                        }
                     }
                 }
             } catch (e) {
-                console.log(e);
-                toast.error(`Something went wrong while adding the paper: ${paper.title}`);
+                console.error(e);
+                setImportFailed((prev) => [...prev, paper.title]);
             }
         }
         setIsLoading(false);
         onFinish();
     };
 
-    return { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors };
+    return { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors, importFailed };
 };
 
 export default useImportBulkData;

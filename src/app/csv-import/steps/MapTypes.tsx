@@ -49,8 +49,10 @@ const TypeMapping: FC<TypeMappingProps> = ({
         runValidation(data, _mappedColumns);
         setData((prevData) => {
             const updatedData = [...prevData];
-            const { label } = parseCellString(updatedData[0][colIndex]);
-            updatedData[0][colIndex] = `${label}${_mappedColumns[colIndex].type ? `<${_mappedColumns[colIndex].type?.classId}>` : ''}`;
+            const { label, entityId } = parseCellString(updatedData[0][colIndex]);
+            updatedData[0][colIndex] = `${entityId ? `orkg:${entityId}` : label}${
+                _mappedColumns[colIndex].type ? `<${_mappedColumns[colIndex].type?.classId}>` : ''
+            }`;
             return updatedData;
         });
     };
