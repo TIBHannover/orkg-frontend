@@ -39,7 +39,7 @@ const TableCellLiteral = ({ entity }) => {
                 <Tooltip content={entity.label} disabled={isExpanded} contentStyle={{ maxWidth: '300px' }}>
                     <span>
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
-                            {isExpanded ? 'Hide more' : 'Show more'} <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                            {isExpanded ? 'Show less' : 'Show more'} <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     </span>
                 </Tooltip>
