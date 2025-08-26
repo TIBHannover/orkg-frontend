@@ -20,7 +20,7 @@ type RSTemplateCardProps = {
 const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }) => {
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
-        return <i key={i}>{template.properties[i].placeholder}</i>;
+        return <i key={i}>{template.properties[i]?.placeholder ?? i}</i>;
     };
 
     const formattedLabelWithPlaceholders = ReactStringReplace(
