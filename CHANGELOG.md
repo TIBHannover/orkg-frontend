@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.167.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.3...v0.167.4) - 2025-09-04
+
+### Changes
+
+- fix(page): if comparison doesnot exist return notfound() [`#1570`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1570)
+- fix(CSVImport): list failed imports and fix typing properties [`#1579`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1579)
+- fix(Autocomplete): handle errors when importing entities [`#1571`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1571)
+
+---
 ## [v0.167.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.2...v0.167.3) - 2025-08-12
 
 ### Changes
