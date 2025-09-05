@@ -62,7 +62,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         onFailure,
     } = props;
 
-    const { value, onChange, ...restProps } = props;
+    const { value, onChange, noOptionsMessage, ...restProps } = props;
 
     const [defaultValue, setValue] = useState<OptionType[] | OptionType | null>(null);
 
@@ -107,7 +107,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             : additionalOptions,
     });
 
-    const noOptionsMessage = (value: { inputValue: string }) => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
+    const _noOptionsMessage = (value: { inputValue: string }) => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
 
     // in contribution editor we need to know the status of the modal because we are using useClickAway to trigger save
     useEffect(() => {
@@ -166,7 +166,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                     }
                     onChange(newValue, actionMeta);
                 }}
-                noOptionsMessage={noOptionsMessage}
+                noOptionsMessage={noOptionsMessage || _noOptionsMessage}
                 aria-label={placeholder?.toString()}
                 {...(allowCreate ? { createOptionPosition: 'first' } : {})}
             />

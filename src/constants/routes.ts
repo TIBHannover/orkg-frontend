@@ -71,6 +71,7 @@ const routes = {
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
+    CSV_IMPORT_LOOKUP: '/csv-import/lookup',
     BENCHMARKS: '/benchmarks',
     BENCHMARK: '/benchmarks/:datasetId/problem/:problemId',
     REVIEW: '/reviews/:id',
