@@ -1,17 +1,29 @@
-import 'reactflow/dist/style.css';
+import '@xyflow/react/dist/style.css';
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    applyEdgeChanges,
+    applyNodeChanges,
+    Background,
+    BackgroundVariant,
+    Controls,
+    Edge,
+    EdgeChange,
+    MiniMap,
+    NodeChange,
+    ReactFlow,
+    ReactFlowProvider,
+} from '@xyflow/react';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, Controls, MiniMap, ReactFlowProvider } from 'reactflow';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import DownloadButton from '@/components/Templates/ShaclFlow/DownloadImage/DownloadButton';
-import useAutoLayout from '@/components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
+import useAutoLayout, { NodeWithPosition } from '@/components/Templates/ShaclFlow/hooks/useAutoLayoutAndFitView';
 import useExportSHACL from '@/components/Templates/ShaclFlow/hooks/useExportSHACL';
 import Node from '@/components/Templates/ShaclFlow/Node/Node';
 import Button from '@/components/Ui/Button/Button';
@@ -21,42 +33,38 @@ import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES } from '@/constants/graphSettings';
 import { loadTemplateFlowByID } from '@/services/backend/statements';
+import { PropertyShapeResourceType } from '@/services/backend/types';
 import { setDiagramMode, setTemplateFlow } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
 import { convertTreeToFlat } from '@/utils';
 
-function ShaclFlowModal() {
+const ShaclFlowModal = () => {
     useAutoLayout({ direction: 'LR' });
     const dispatch = useDispatch();
-    const diagramMode = useSelector((state) => state.templateEditor.diagramMode);
-    const templateID = useSelector((state) => state.templateEditor.id);
+    const diagramMode = useSelector((state: RootStore) => state.templateEditor.diagramMode);
+    const templateID = useSelector((state: RootStore) => state.templateEditor.id);
     const toggle = () => dispatch(setDiagramMode(false));
     const nodeTypes = useMemo(() => ({ [CLASSES.NODE_SHAPE]: Node }), []);
     const { exportSHACL, isConvertingToSHACL } = useExportSHACL();
     const [isLoading, setIsLoading] = useState(false);
-    const [nodes, setNodes] = useState([]);
-    const [edges, setEdges] = useState([]);
+    const [nodes, setNodes] = useState<NodeWithPosition[]>([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
 
     const loadFlow = useCallback(
-        async (id) => {
+        async (id: string) => {
             setIsLoading(true);
             try {
                 const templatesFlow = await loadTemplateFlowByID(id, new Set());
                 const flattenNodes = [templatesFlow, ...convertTreeToFlat(templatesFlow, 'neighbors').filter((n) => !isEmpty(n))];
                 dispatch(setTemplateFlow(flattenNodes));
-                // We need this root node to make sure the algorithm of useAutoLayout always use as a root node if the selected template doesn't have a root (not a Tree) like qudt:Unit template
-                const startNode = {
-                    id: 'ROOT',
-                    data: { label: 'Current Template' },
-                    position: { x: 0, y: 0 },
-                };
-                setNodes([startNode, ...flattenNodes.map((n) => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } }))]);
+                setNodes(flattenNodes.map((n) => ({ id: n.id, data: n, type: CLASSES.NODE_SHAPE, position: { x: 0, y: 0 } })));
 
-                const _edges = [{ id: 'startingEdge', type: 'straight', source: startNode.id, target: id }];
+                const _edges: Edge[] = [];
                 flattenNodes.map((cn) => {
                     cn.properties
-                        .filter((ps) => ps.class)
-                        .map((ps) => {
-                            const targetNode = flattenNodes.find((c) => c.target_class.id === ps.class.id);
+                        .filter((ps: PropertyShapeResourceType) => ps.class)
+                        .map((ps: PropertyShapeResourceType) => {
+                            const targetNode = flattenNodes.find((c) => ps.class && c.target_class.id === ps.class.id);
                             if (targetNode) {
                                 _edges.push({
                                     style: { strokeWidth: 3 },
@@ -83,8 +91,8 @@ function ShaclFlowModal() {
         loadFlow(templateID);
     }, [loadFlow, templateID]);
 
-    const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
-    const onEdgesChange = useCallback((changes) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
+    const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
+    const onEdgesChange = useCallback((changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
     const modalHeight = window.innerHeight - 250;
 
     return (
@@ -114,7 +122,7 @@ function ShaclFlowModal() {
                             >
                                 <Controls />
                                 <MiniMap />
-                                <Background variant="dots" gap={12} size={1} />
+                                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
                             </ReactFlow>
                         )}
                         {isLoading && 'Loading...'}
@@ -146,12 +154,12 @@ function ShaclFlowModal() {
             </ModalFooter>
         </Modal>
     );
-}
+};
 
-function ShaclFlowModalWithProvider(props) {
+function ShaclFlowModalWithProvider() {
     return (
         <ReactFlowProvider>
-            <ShaclFlowModal {...props} />
+            <ShaclFlowModal />
         </ReactFlowProvider>
     );
 }

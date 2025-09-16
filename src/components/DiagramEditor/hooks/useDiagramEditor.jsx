@@ -1,6 +1,6 @@
+import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useContextMenu } from 'react-contexify';
-import { addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import CustomEdge from '@/components/DiagramEditor/CustomEdge';
@@ -130,7 +130,7 @@ function useDiagramEditor({ id }) {
                     if (currentGroup.nodes.map((sn) => sn.id).includes(node.id)) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
-                        child.parentNode = group.id;
+                        child.parentId = group.id;
                         child.extent = 'parent';
                         child.position = {
                             x: node.position.x - currentGroup.event.target.offsetLeft + 20,
@@ -152,7 +152,7 @@ function useDiagramEditor({ id }) {
             // Compute mouse coords relative to canvas
             const clientX = event.props.event.clientX - bounds.left;
             const clientY = event.props.event.clientY - bounds.top;
-            setPosition(reactFlowInstance.project({ x: clientX, y: clientY }));
+            setPosition(reactFlowInstance.screenToFlowPosition({ x: clientX, y: clientY }));
             setCurrentNode(null);
             setIsEditNodeModalOpen((v) => !v);
         },
@@ -194,8 +194,8 @@ function useDiagramEditor({ id }) {
                 nds
                     .filter((n) => n.id !== event.props.node.id)
                     .map((n) => {
-                        if (n.parentNode === event.props.node.id) {
-                            n.parentNode = undefined;
+                        if (n.parentId === event.props.node.id) {
+                            n.parentId = undefined;
                             n.extent = undefined;
                             n.position = { x: n.position.x + event.props.node.position.x, y: n.position.y + event.props.node.position.y };
                         }

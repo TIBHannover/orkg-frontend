@@ -1,10 +1,11 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import NodeFooter from '@/components/Templates/ShaclFlow/Node/NodeFooter';
 import NodeHeader from '@/components/Templates/ShaclFlow/Node/NodeHeader';
 import PropertyShape from '@/components/Templates/ShaclFlow/Node/PropertyShape';
 import TargetClass from '@/components/Templates/ShaclFlow/Node/TargetClass';
+import { Template } from '@/services/backend/types';
 
 const NodeStyled = styled.div`
     background:${(props) => props.theme.light};
@@ -14,7 +15,11 @@ const NodeStyled = styled.div`
     overflow: 'hidden',
 `;
 
-function Node({ data }) {
+type NodeProps = {
+    data: Template;
+};
+
+const Node: FC<NodeProps> = ({ data }) => {
     return (
         <NodeStyled>
             <NodeHeader label={data.label} id={data.id} />
@@ -28,10 +33,6 @@ function Node({ data }) {
             <NodeFooter isClosed={data.is_closed} targetClass={data.target_class} />
         </NodeStyled>
     );
-}
-
-Node.propTypes = {
-    data: PropTypes.object.isRequired,
 };
 
 export default Node;

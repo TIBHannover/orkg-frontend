@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types';
-import { EdgeLabelRenderer, getSmoothStepPath } from 'reactflow';
+import { EdgeLabelRenderer, getSmoothStepPath, Position } from '@xyflow/react';
+import { FC } from 'react';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import { ENTITIES } from '@/constants/graphSettings';
+import { Resource } from '@/services/backend/types';
 
-const getMarkerEnd = (arrowHeadType, markerEndId) => {
+const getMarkerEnd = (arrowHeadType: string, markerEndId: string) => {
     if (typeof markerEndId !== 'undefined' && markerEndId) {
         return `url(#${markerEndId})`;
     }
@@ -14,7 +15,20 @@ const getMarkerEnd = (arrowHeadType, markerEndId) => {
     return typeof arrowHeadType !== 'undefined' ? `url(#type=${arrowHeadType})` : 'none';
 };
 
-export default function CustomEdge({
+type CustomEdgeProps = {
+    sourceX: number;
+    sourceY: number;
+    targetX: number;
+    targetY: number;
+    sourcePosition: Position;
+    targetPosition: Position;
+    style: React.CSSProperties;
+    arrowHeadType: string;
+    markerEndId: string;
+    data: Resource & { linked?: boolean };
+    borderRadius: number;
+};
+const CustomEdge: FC<CustomEdgeProps> = ({
     sourceX,
     sourceY,
     targetX,
@@ -26,7 +40,7 @@ export default function CustomEdge({
     markerEndId,
     data,
     borderRadius = 5,
-}) {
+}) => {
     const [path, labelX, labelY] = getSmoothStepPath({
         sourceX,
         sourceY,
@@ -55,7 +69,8 @@ export default function CustomEdge({
                 >
                     <ConditionalWrapper
                         condition={data?.linked}
-                        wrapper={(children) => (
+                        // eslint-disable-next-line react/no-unstable-nested-components
+                        wrapper={(children: React.ReactNode) => (
                             <DescriptionTooltip _class={ENTITIES.PREDICATE} id={data?.id}>
                                 {children}
                             </DescriptionTooltip>
@@ -67,18 +82,6 @@ export default function CustomEdge({
             </EdgeLabelRenderer>
         </>
     );
-}
-
-CustomEdge.propTypes = {
-    sourceX: PropTypes.number,
-    sourceY: PropTypes.number,
-    targetX: PropTypes.number,
-    targetY: PropTypes.number,
-    sourcePosition: PropTypes.string,
-    targetPosition: PropTypes.string,
-    style: PropTypes.object,
-    arrowHeadType: PropTypes.string,
-    markerEndId: PropTypes.string,
-    data: PropTypes.object,
-    borderRadius: PropTypes.number,
 };
+
+export default CustomEdge;

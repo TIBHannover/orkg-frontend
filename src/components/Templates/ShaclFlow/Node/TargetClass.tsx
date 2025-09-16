@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { Position } from 'reactflow';
+import { Position } from '@xyflow/react';
 import styled from 'styled-components';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
@@ -12,12 +11,19 @@ const TargetClassStyled = styled.div`
     border-bottom: 1px solid #000;
 `;
 
-function TargetClass({ data, nodeId }) {
+type TargetClassProps = {
+    data: {
+        id: string;
+        label: string;
+    };
+    nodeId: string;
+};
+
+function TargetClass({ data, nodeId }: TargetClassProps) {
     return (
         <TargetClassStyled className="py-1 px-2 position-relative">
-            <Handle type="target" position={Position.Left} nodeId={nodeId} />
+            <Handle type="target" position={Position.Left} id={nodeId} />
             <div>
-                {' '}
                 <DescriptionTooltip id={data.id} _class={ENTITIES.CLASS} showURL>
                     {data.label}
                 </DescriptionTooltip>
@@ -25,10 +31,5 @@ function TargetClass({ data, nodeId }) {
         </TargetClassStyled>
     );
 }
-
-TargetClass.propTypes = {
-    data: PropTypes.object.isRequired,
-    nodeId: PropTypes.string.isRequired,
-};
 
 export default TargetClass;

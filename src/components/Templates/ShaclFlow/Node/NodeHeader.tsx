@@ -2,7 +2,7 @@ import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -14,10 +14,16 @@ const NodeHeaderStyled = styled.div`
     color: #fff;
 `;
 
-function NodeHeader({ label, id }) {
+type NodeHeaderProps = {
+    label: string;
+    id: string;
+};
+
+const NodeHeader: FC<NodeHeaderProps> = ({ label, id }) => {
     return (
         <NodeHeaderStyled className="p-2 d-flex">
-            <ConditionalWrapper condition={label?.length > 40} wrapper={(children) => <Tooltip content={label}>{children}</Tooltip>}>
+            {/* eslint-disable-next-line react/no-unstable-nested-components */}
+            <ConditionalWrapper condition={label?.length > 40} wrapper={(children: React.ReactNode) => <Tooltip content={label}>{children}</Tooltip>}>
                 <div className="text-truncate d-inline-block me-2" style={{ maxWidth: 300 }}>
                     {label}
                 </div>
@@ -29,11 +35,6 @@ function NodeHeader({ label, id }) {
             </Tooltip>
         </NodeHeaderStyled>
     );
-}
-
-NodeHeader.propTypes = {
-    label: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
 };
 
 export default NodeHeader;

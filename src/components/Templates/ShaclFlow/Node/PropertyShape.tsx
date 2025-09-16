@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types';
-import { Position } from 'reactflow';
+import { Position } from '@xyflow/react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Handle from '@/components/Templates/ShaclFlow/Node/Handle';
 import DATA_TYPES from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
+import { PropertyShape } from '@/services/backend/types';
 
 const PropertyShapeStyled = styled.div`
     background: ${(props) => props.theme.light};
@@ -22,9 +23,19 @@ const Circle = styled.div`
     background: ${(props) => props.theme.secondaryDarker};
 `;
 
-function PropertyShape({ data }) {
+type PropertyShapeProps = {
+    data: PropertyShape;
+    nodeId: string;
+};
+
+const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
     let initialType;
-    const range = data.class || data.datatype;
+    let range;
+    if ('class' in data) {
+        range = data.class;
+    } else if ('datatype' in data) {
+        range = data.datatype;
+    }
     if (range?.id) {
         if (
             DATA_TYPES.filter((dt) => dt._class === ENTITIES.LITERAL)
@@ -66,18 +77,14 @@ function PropertyShape({ data }) {
                     </DescriptionTooltip>{' '}
                     [{data.min_count}..{data.max_count ?? '*'}]
                 </div>
-                {initialType && (
-                    <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showPageURL showURL>
+                {initialType && range && (
+                    <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showURL>
                         <Circle>{initialType}</Circle>
                     </DescriptionTooltip>
                 )}
             </div>
         </PropertyShapeStyled>
     );
-}
-
-PropertyShape.propTypes = {
-    data: PropTypes.object.isRequired,
 };
 
-export default PropertyShape;
+export default PropertyShapeComponent;

@@ -2,10 +2,10 @@
 
 import { faEllipsisV, faPen, faQuestionCircle, faRefresh, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Controls, MarkerType, MiniMap } from '@xyflow/react';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { Controls, MarkerType, MiniMap } from 'reactflow';
 
 import ContextMenu from '@/components/DiagramEditor/ContextMenu';
 import EditEdge from '@/components/DiagramEditor/EditEdge';

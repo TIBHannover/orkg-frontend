@@ -1,11 +1,12 @@
 import { faLock, faLockOpen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import useCountInstances from '@/components/Class/hooks/useCountInstances';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Badge from '@/components/Ui/Badge/Badge';
+import { Node } from '@/services/backend/types';
 
 const NodeFooterStyled = styled.div`
     background: ${(props) => props.theme.lightDarker};
@@ -15,7 +16,12 @@ const NodeFooterStyled = styled.div`
     font-size: 12px;
 `;
 
-function NodeFooter({ isClosed, targetClass }) {
+type NodeFooterProps = {
+    isClosed: boolean;
+    targetClass: Node;
+};
+
+const NodeFooter: FC<NodeFooterProps> = ({ isClosed, targetClass }) => {
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClass.id);
     return (
         <NodeFooterStyled className="px-2 py-1 d-flex justify-content-between">
@@ -39,11 +45,6 @@ function NodeFooter({ isClosed, targetClass }) {
             </div>
         </NodeFooterStyled>
     );
-}
-
-NodeFooter.propTypes = {
-    isClosed: PropTypes.bool.isRequired,
-    targetClass: PropTypes.object.isRequired,
 };
 
 export default NodeFooter;

@@ -1,12 +1,16 @@
 import 'react-contexify/dist/ReactContexify.css';
 
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { Item, Menu } from 'react-contexify';
 
 import { DIAGRAM_CONTEXT_MENU_ID } from '@/constants/misc';
 
-const ContextMenu = ({ actions, currentMenu }) => (
-    <Menu id={DIAGRAM_CONTEXT_MENU_ID} animation={null}>
+type ContextMenuProps = {
+    actions: { label: string; effect: () => void; menu: string[] }[];
+    currentMenu: string;
+};
+const ContextMenu: FC<ContextMenuProps> = ({ actions, currentMenu }) => (
+    <Menu id={DIAGRAM_CONTEXT_MENU_ID} animation={undefined}>
         {actions
             .filter((a) => a.menu.includes(currentMenu))
             .map((action) => (
@@ -16,7 +20,5 @@ const ContextMenu = ({ actions, currentMenu }) => (
             ))}
     </Menu>
 );
-
-ContextMenu.propTypes = { actions: PropTypes.array, currentMenu: PropTypes.string };
 
 export default ContextMenu;

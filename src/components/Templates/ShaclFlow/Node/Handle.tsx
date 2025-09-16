@@ -1,20 +1,18 @@
-import PropTypes from 'prop-types';
-import { createContext, useContext, useRef } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Handle, Position } from '@xyflow/react';
+import { FC, useRef } from 'react';
 
-export const HandleContext = createContext();
-export const HandleContextProvider = HandleContext.Provider;
+type CustomHandleProps = {
+    id: string;
+    position: Position;
+    type: 'source' | 'target';
+};
 
-export function useHandle() {
-    return useContext(HandleContext);
-}
-
-function CustomHandle({ nodeId, ...props }) {
-    const ref = useRef();
+const CustomHandle: FC<CustomHandleProps> = ({ id, position, type }) => {
+    const ref = useRef<HTMLDivElement>(null);
 
     return (
         <div
-            className={`react-flow__handle-${props.position}`}
+            className={`react-flow__handle-${position}`}
             style={{
                 width: '10px',
                 height: '10px',
@@ -22,8 +20,8 @@ function CustomHandle({ nodeId, ...props }) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 position: 'absolute',
-                left: props.position === Position.Left ? -5 : null,
-                right: props.position === Position.Right ? -5 : null,
+                left: position === Position.Left ? -5 : undefined,
+                right: position === Position.Right ? -5 : undefined,
             }}
         >
             <div
@@ -36,7 +34,9 @@ function CustomHandle({ nodeId, ...props }) {
             />
             <Handle
                 ref={ref}
-                {...props}
+                id={id}
+                type={type}
+                position={position}
                 isConnectableStart={false}
                 style={{
                     border: 'none',
@@ -49,11 +49,6 @@ function CustomHandle({ nodeId, ...props }) {
             />
         </div>
     );
-}
-
-CustomHandle.propTypes = {
-    nodeId: PropTypes.string,
-    position: PropTypes.string.isRequired,
 };
 
 export default CustomHandle;
