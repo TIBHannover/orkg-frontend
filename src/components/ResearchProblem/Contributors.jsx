@@ -44,7 +44,7 @@ const Contributors = ({ researchProblemId }) => {
                                 contentStyle={{ maxWidth: '300px' }}
                             >
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.user.id })}>
-                                    <StyledGravatar className="rounded-circle" md5={contributor.user.gravatar_id} size={48} />
+                                    <StyledGravatar className="rounded-circle" hashedEmail={contributor.user.gravatar_id} size={48} />
                                 </Link>
                             </Tooltip>
                         </div>

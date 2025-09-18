@@ -7,12 +7,12 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 
 import NotFound from '@/app/not-found';
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Gravatar from '@/components/Gravatar/Gravatar';
 import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Container from '@/components/Ui/Structure/Container';
@@ -146,7 +146,7 @@ const UserProfile = (props) => {
                 {!isLoadingUserData && (
                     <div className="box rounded p-4 row">
                         <div className="col-md-2 text-center d-flex justify-content-center mb-3 mb-md-0">
-                            <StyledGravatar className="rounded-circle" md5={userData?.gravatar_id ?? 'example@example.com'} size={100} />
+                            <StyledGravatar className="rounded-circle" hashedEmail={userData?.gravatar_id ?? 'example@example.com'} size={100} />
                         </div>
                         <div className="col-md-10 row">
                             <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>

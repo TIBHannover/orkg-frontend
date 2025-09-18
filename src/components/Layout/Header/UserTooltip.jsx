@@ -5,16 +5,17 @@ import { AnimatePresence, motion } from 'motion/react';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import Gravatar from 'react-gravatar';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
+import Gravatar from '@/components/Gravatar/Gravatar';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
+import sha256Hex from '@/lib/hash';
 import { getUserInformation, userUrl } from '@/services/backend/users';
 import { federatedLogout, visitAccountUrl } from '@/services/keycloak';
 
@@ -76,6 +77,11 @@ const UserTooltip = () => {
     const { data: user, isLoading } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
 
     const email = user?.email ? user?.email : 'example@example.com';
+
+    const { data: hashedEmail, isLoading: isHashedEmailLoading } = useSWR(user && email ? [email, 'sha256Hex'] : null, ([params]) =>
+        sha256Hex(params),
+    );
+
     const [isVisibleTooltip, setIsVisibleTooltip] = useState(false);
     const userPopup = useRef(null);
     const greeting = greetingTime(new Date());
@@ -112,14 +118,14 @@ const UserTooltip = () => {
 
     return (
         <div className="ms-2 position-relative" ref={userPopup}>
-            {isLoading ? (
+            {isLoading || isHashedEmailLoading ? (
                 <FontAwesomeIcon size="xl" icon={faSpinner} spin />
             ) : (
                 <StyledGravatar
                     role="button"
                     tabIndex={0}
                     className="rounded-circle"
-                    email={email}
+                    hashedEmail={hashedEmail}
                     size={40}
                     onClick={() => setIsVisibleTooltip((v) => !v)}
                     onKeyDown={(e) => (e.code === 'Enter' ? setIsVisibleTooltip((v) => !v) : undefined)}
@@ -150,13 +156,17 @@ const UserTooltip = () => {
                         <Row>
                             <div className="col-3 text-center">
                                 <Link onClick={() => setIsVisibleTooltip(false)} href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
-                                    <StyledGravatar
-                                        className="rounded-circle"
-                                        style={{ border: '3px solid #fff' }}
-                                        email={email}
-                                        size={76}
-                                        id="TooltipExample"
-                                    />
+                                    {isHashedEmailLoading ? (
+                                        <FontAwesomeIcon size="xl" icon={faSpinner} spin />
+                                    ) : (
+                                        <StyledGravatar
+                                            className="rounded-circle"
+                                            style={{ border: '3px solid #fff' }}
+                                            hashedEmail={hashedEmail}
+                                            size={76}
+                                            id="TooltipExample"
+                                        />
+                                    )}
                                 </Link>
                             </div>
                             <div className="col-9 text-start">

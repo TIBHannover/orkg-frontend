@@ -75,7 +75,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                                 }
                             >
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
-                                    <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
+                                    <StyledGravatar className="rounded-circle" hashedEmail={contributor.gravatar_id} size={48} />
                                 </Link>
                             </Tooltip>
                         </div>

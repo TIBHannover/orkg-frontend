@@ -126,6 +126,10 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: 'localhost',
             },
+            {
+                protocol: 'https',
+                hostname: 'gravatar.com',
+            },
         ],
     },
     webpack(config) {
