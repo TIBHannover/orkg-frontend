@@ -1,6 +1,8 @@
 const { version } = require('./package.json');
 const path = require('path');
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://orkg.org/';
+
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 });
@@ -462,6 +464,29 @@ const nextConfig = {
                 permanent: true,
             },
         ];
+    },
+    async rewrites() {
+        return [
+            'application/trig',
+            'application/x-trig',
+            'application/x-trigstar',
+            'application/n-quads',
+            'text/x-nquads',
+            'text/nquads',
+            'application/ld\\+json',
+            'application/x-ld\\+ndjson',
+            'application/rdf\\+json',
+        ].map((type) => ({
+            source: '/np/:path*',
+            has: [
+                {
+                    type: 'header',
+                    key: 'accept',
+                    value: `(?<accept>.*${type}.*)`,
+                },
+            ],
+            destination: `${backendUrl}api/nanopublications/:path*`,
+        }));
     },
 };
 
