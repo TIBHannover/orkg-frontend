@@ -45,10 +45,16 @@ export type ViewPaper = {
     abstract: string;
 };
 
+export type TemplateEditor = {
+    id: string;
+    diagramMode: boolean;
+};
+
 // TODO: add additional slices here when they are migrated to TypeScript
 export type RootStore = {
     contributionEditor: ContributionEditor;
     viewPaper: ViewPaper;
+    templateEditor: TemplateEditor;
 };
 
 export type AppDispatch = AppStore['store']['dispatch'];

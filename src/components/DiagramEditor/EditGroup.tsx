@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { Node } from '@xyflow/react';
+import { FC, useEffect, useState } from 'react';
 
 import Button from '@/components/Ui/Button/Button';
 import Input from '@/components/Ui/Input/Input';
@@ -7,8 +7,16 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import { Resource } from '@/services/backend/types';
 
-function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) {
+type EditGroupProps = {
+    isEditGroupModalOpen: boolean;
+    setIsEditGroupModalOpen: () => void;
+    saveGroup: (value: string) => void;
+    addGroup: (value: string) => void;
+    currentGroup: Node<Resource> | undefined;
+};
+const EditGroup: FC<EditGroupProps> = ({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) => {
     const [value, setValue] = useState(!currentGroup?.id ? '' : currentGroup.data.label);
 
     useEffect(() => {
@@ -34,13 +42,6 @@ function EditGroup({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, a
             </ModalFooter>
         </Modal>
     );
-}
-
-EditGroup.propTypes = {
-    isEditGroupModalOpen: PropTypes.bool.isRequired,
-    setIsEditGroupModalOpen: PropTypes.func.isRequired,
-    addGroup: PropTypes.func.isRequired,
-    saveGroup: PropTypes.func.isRequired,
-    currentGroup: PropTypes.object,
 };
+
 export default EditGroup;

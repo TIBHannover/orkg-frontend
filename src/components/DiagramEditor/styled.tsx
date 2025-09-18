@@ -1,6 +1,6 @@
-import 'reactflow/dist/style.css';
+import '@xyflow/react/dist/style.css';
 
-import ReactFlow from 'reactflow';
+import { ReactFlow } from '@xyflow/react';
 import styled from 'styled-components';
 
 const StyledReactFlow = styled(ReactFlow)`

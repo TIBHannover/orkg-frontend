@@ -1,11 +1,14 @@
+import { getNodesBounds, getViewportForBounds, useReactFlow } from '@xyflow/react';
+// we have to keep the version of html-to-image below 1.11.13 because of a bug in the library
+// see https://github.com/bubkoo/html-to-image/issues/516
 import { toPng } from 'html-to-image';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getRectOfNodes, getTransformForBounds, useReactFlow } from 'reactflow';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import { RootStore } from '@/slices/types';
 
-function downloadImage(dataUrl, imageName) {
+function downloadImage(dataUrl: string, imageName: string) {
     const a = document.createElement('a');
 
     a.setAttribute('download', imageName);
@@ -16,25 +19,25 @@ function downloadImage(dataUrl, imageName) {
 function DownloadButton() {
     const { getNodes } = useReactFlow();
     const [isConvertingToImage, setIsConvertingToImage] = useState(false);
-    const templateID = useSelector((state) => state.templateEditor.id);
+    const templateID = useSelector((state: RootStore) => state.templateEditor.id);
 
     const convertFlowToImage = () => {
         // we calculate a transform for the nodes so that all nodes are visible
         // we then overwrite the transform of the `.react-flow__viewport` element
         // with the style option of the html-to-image library
-        const nodesBounds = getRectOfNodes(getNodes());
+        const nodesBounds = getNodesBounds(getNodes());
         const imageWidth = nodesBounds.width ?? 1024;
         const imageHeight = nodesBounds.height ?? 768;
-        const transform = getTransformForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+        const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2, 0);
 
-        return toPng(document.querySelector('.react-flow__viewport'), {
+        return toPng(document.querySelector('.react-flow__viewport') as HTMLElement, {
             backgroundColor: 'transparent',
             width: imageWidth,
             height: nodesBounds.height,
             style: {
-                width: imageWidth,
-                height: imageHeight,
-                transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+                width: imageWidth.toString(),
+                height: imageHeight.toString(),
+                transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
             },
         });
     };
