@@ -16,7 +16,19 @@ import {
     useRole,
     useTransitionStatus,
 } from '@floating-ui/react';
-import { cloneElement, createContext, forwardRef, isValidElement, useContext, useMemo, useRef, useState } from 'react';
+import {
+    cloneElement,
+    createContext,
+    forwardRef,
+    isValidElement,
+    type ReactElement,
+    type Ref,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import { FloatingContentStyled } from '@/components/FloatingUI/styled';
 import { BaseFloatingOptions, FloatingComponentProps, FloatingContentProps, FloatingTriggerProps } from '@/components/FloatingUI/types';
@@ -62,16 +74,23 @@ export function useTooltip({
 
     const hover = useHover(context, {
         move: false,
-        enabled: controlledOpen == null,
+        enabled: controlledOpen == null && !disabled,
         handleClose: safePolygon(),
     });
     const focus = useFocus(context, {
-        enabled: controlledOpen == null,
+        enabled: controlledOpen == null && !disabled,
     });
     const dismiss = useDismiss(context);
     const role = useRole(context, { role: 'tooltip' });
 
     const interactions = useInteractions([hover, focus, dismiss, role]);
+
+    // Ensure tooltip closes immediately when it becomes disabled
+    useEffect(() => {
+        if (disabled && open) {
+            setOpen(false);
+        }
+    }, [disabled, open, setOpen]);
 
     return useMemo(
         () => ({
@@ -107,20 +126,12 @@ export const TooltipTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElemen
     propRef,
 ) {
     const context = useTooltipContext();
-    const childrenRef = (children as any).ref;
+    const childrenRef = isValidElement(children) ? (children as ReactElement & { ref?: Ref<HTMLElement> }).ref : undefined;
     const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);
 
     // `asChild` allows the user to pass any element as the anchor
     if (asChild && isValidElement(children)) {
-        return cloneElement(
-            children,
-            context.getReferenceProps({
-                ref,
-                ...props,
-                ...(children.props as any),
-                'data-state': context.open ? 'open' : 'closed',
-            }),
-        );
+        return cloneElement(children, context.getReferenceProps({ ref, ...props }));
     }
 
     return (
@@ -175,7 +186,7 @@ export default function Tooltip({ children, content, contentStyle, ...options }:
     return (
         <TooltipContext.Provider value={tooltip}>
             <TooltipTrigger>{children}</TooltipTrigger>
-            {content && <TooltipContent {...(contentStyle && { style: contentStyle })}>{content}</TooltipContent>}
+            {content && !tooltip.disabled && <TooltipContent {...(contentStyle && { style: contentStyle })}>{content}</TooltipContent>}
         </TooltipContext.Provider>
     );
 }

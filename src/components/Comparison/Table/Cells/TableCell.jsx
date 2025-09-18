@@ -125,7 +125,7 @@ const TableCell = ({ entities }) => {
                         )}
                     {entities?.length > MAX_ITEMS && (
                         <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={() => setIsExpanded((v) => !v)}>
-                            {isExpanded ? 'Hide more' : `Show ${entities.length - MAX_ITEMS} more`}{' '}
+                            {isExpanded ? 'Show less' : `Show ${entities.length - MAX_ITEMS} more`}{' '}
                             <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                         </Button>
                     )}

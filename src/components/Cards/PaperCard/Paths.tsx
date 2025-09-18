@@ -79,7 +79,7 @@ const Paths: FC<PathsProps> = ({ paths }) => {
             </ul>
             {paths.length > MAX_ITEMS && (
                 <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={toggleExpand}>
-                    {isExpanded ? 'Hide more' : `Show ${paths.length - MAX_ITEMS} more`}{' '}
+                    {isExpanded ? 'Show less' : `Show ${paths.length - MAX_ITEMS} more`}{' '}
                     <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                 </Button>
             )}
