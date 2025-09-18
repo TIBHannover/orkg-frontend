@@ -7,8 +7,8 @@ const useContributor = ({ userId }: { userId?: string }) => {
     const { data: contributor, isLoading } = useSWR(
         userId && userId !== MISC.UNKNOWN_ID ? [userId, contributorsUrl, 'getContributorInformationById'] : null,
         ([params]) => getContributorInformationById(params),
+        { shouldRetryOnError: false },
     );
-
     return {
         contributor,
         isLoadingContributor: isLoading,
