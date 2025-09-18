@@ -1,6 +1,6 @@
-import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 
+import Gravatar from '@/components/Gravatar/Gravatar';
 import Button from '@/components/Ui/Button/Button';
 
 export const SubtitleSeparator = styled.div`

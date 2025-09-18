@@ -2,10 +2,10 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 
 import ActionButton, { ActionButtonProps } from '@/components/ActionButton/ActionButton';
+import Gravatar from '@/components/Gravatar/Gravatar';
 import ROUTES from '@/constants/routes';
 import { TopContributor } from '@/services/backend/types';
 
@@ -23,7 +23,7 @@ const ContributorCard: FC<ContributorCardProps> = ({ contributor, options }) => 
     <div>
         <div className="d-flex flex-row">
             <Link className="justify-content-center align-self-center" href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
-                <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} md5={contributor.gravatar_id} size={50} />
+                <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} hashedEmail={contributor.gravatar_id} size={50} />
             </Link>
             <div className="d-flex justify-content-center" style={{ marginLeft: '10px', flexDirection: 'column' }}>
                 <div>

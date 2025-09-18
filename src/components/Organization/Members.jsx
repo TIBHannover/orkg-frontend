@@ -47,7 +47,7 @@ const Members = ({ organizationsId }) => {
                         <div key={`contributor${member.id}`}>
                             <Tooltip placement="bottom" content={member.display_name}>
                                 <Link href={reverse(ROUTES.USER_PROFILE, { userId: member.id })}>
-                                    <StyledGravatar className="rounded-circle" md5={member.gravatar_id} size={48} />
+                                    <StyledGravatar className="rounded-circle" hashedEmail={member.gravatar_id} size={48} />
                                 </Link>
                             </Tooltip>
                         </div>

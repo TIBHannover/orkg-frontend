@@ -13,7 +13,7 @@ const SingleValue = ({ children, ...props }: SingleValueProps<Contributor>) => {
         <components.SingleValue {...props}>
             <div>
                 <Link className="d-flex align-items-center" href={reverse(ROUTES.USER_PROFILE, { userId: data.id })}>
-                    <StyledGravatar className="rounded-circle me-2" md5={data.gravatar_id ?? 'example@example.com'} size={20} />
+                    <StyledGravatar className="rounded-circle me-2" hashedEmail={data.gravatar_id ?? 'example@example.com'} size={20} />
                     <div>{data.display_name}</div>
                 </Link>
             </div>
