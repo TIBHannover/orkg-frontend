@@ -3,6 +3,7 @@
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';
 import '@citation-js/plugin-doi';
+import '@citation-js/plugin-bibjson';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { plugins } from '@citation-js/core';

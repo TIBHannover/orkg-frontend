@@ -101,7 +101,7 @@ const routes = {
     DIAGRAM: '/diagrams/:id',
     NEW_DIAGRAM: '/diagrams/create',
     /* API */
-    CITATIONS: '/citations/',
+    CITATIONS: '/citations',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',

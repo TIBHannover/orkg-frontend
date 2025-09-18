@@ -11,11 +11,10 @@ import useReview from '@/components/Review/hooks/useReview';
 import SectionComparison from '@/components/Review/Sections/Comparison/SectionComparison';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
-import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { getComparison } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';
-import { createResourceStatement, getStatements, updateStatement } from '@/services/backend/statements';
-import { ReviewSection, Statement } from '@/services/backend/types';
+import { ReviewSection } from '@/services/backend/types';
 
 type EditSectionComparisonProps = {
     section: ReviewSection;
@@ -26,7 +25,7 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
     const [shouldShowOntologyAlert, setShouldShowOntologyAlert] = useState(false);
     const [selectedResource, setSelectedResource] = useState<OptionType | null>(null);
 
-    const { review, createSection, parsedReferences, updateReview, mutate } = useReview();
+    const { review, createSection, parsedReferences, updateReview, updateSection } = useReview();
 
     useEffect(() => {
         const sectionContent = section.comparison;
@@ -48,14 +47,7 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
     // it requires quite a lot of requests to get the metadata of the papers used in a comparison
     const getPaperMetadataFromComparison = async (comparisonId: string) => {
         const comparison = await getComparison(comparisonId);
-        const contributionIds = comparison.contributions.map(({ id }) => id);
-        const paperStatementsPromises = contributionIds.map((contributionId) =>
-            getStatements({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: contributionId }),
-        );
-        const paperIds = uniq(
-            (await Promise.all(paperStatementsPromises)).flatMap((statements) => statements as Statement[]).map((statement) => statement.subject.id),
-        );
-
+        const paperIds = uniq(comparison.data.contributions.map(({ paper_id }) => paper_id));
         const papers = await Promise.all(paperIds.map((paperId) => getPaper(paperId)));
         const references: string[] = [];
         for (const paper of papers) {
@@ -64,16 +56,17 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
                 title: paper.title,
                 author: paper.authors?.map((author) => ({ name: author.name })),
                 year: paper.publication_info.published_year,
+                ...(paper.identifiers.doi && paper.identifiers.doi.length > 0
+                    ? { identifier: [{ type: 'doi', id: paper.identifiers?.doi?.[0] ?? null }] }
+                    : {}),
             };
-            // debugger;
             const parsedReference = await Cite.async(bibJson);
             const parsedReferenceData = parsedReference?.data?.[0];
             if (!parsedReferenceData) {
                 continue;
             }
-            parsedReferenceData['citation-label'] = paper.id;
+            parsedReference.data[0]['citation-key'] = paper.id; // set citation-key, later used to get the citation key
             const bibtex: string = parsedReference.format('bibtex'); // use the paper ID as key, so we can identify it to add in the _usedReferences later
-            parsedReferenceData.id = paper.id; // set citation-label, later used to get the citation key
             const isExistingReference = parsedReferences.find((reference) => reference?.parsedReference?.id === paper.id);
             if (!isExistingReference) {
                 references.push(bibtex);
@@ -94,28 +87,10 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
         setSelectedResource({ id, label });
         setShouldShowOntologyAlert(true);
 
-        // Start: Backend issue doesn't allow setting the comparison currently, so for now manually creating the statement
-        // see issue: https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/602
-
-        const sectionStatements = await getStatements({ subjectId: section.id, predicateId: PREDICATES.HAS_LINK });
-
-        if (sectionStatements.length > 0) {
-            await updateStatement(sectionStatements?.[0].id, {
-                subject_id: section.id,
-                predicate_id: PREDICATES.HAS_LINK,
-                object_id: id,
-            });
-        } else {
-            await createResourceStatement(section.id, PREDICATES.HAS_LINK, id);
-        }
-        mutate();
-
-        // updateSection(section.id, {
-        //     heading: section.heading,
-        //     comparison: id,
-        // });
-
-        // End: creating comparison statement
+        updateSection(section.id, {
+            heading: section.heading,
+            comparison: id,
+        });
 
         // paper metadata is needed to add it automatically to the reference list
         getPaperMetadataFromComparison(id);
