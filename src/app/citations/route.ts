@@ -2,17 +2,34 @@
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';
 import '@citation-js/plugin-doi';
+import '@citation-js/plugin-bibjson';
 
 import { Cite } from '@citation-js/core';
+
+import { getReview } from '@/services/backend/reviews';
 
 export async function POST(request: Request) {
     const res = await request.json();
 
-    const name = res.bibtex;
-    // by passing the full bibtex to citation-js, we get sorting and formatting of references for free
-    const parsedCitation = await Cite.async(name);
+    const id = res.reviewId;
+    const { usedReferences } = res;
+    const review = await getReview(id);
 
-    const bibliography = parsedCitation.format('bibliography', {
+    const { references } = review;
+
+    // Parse all references to get their IDs
+    const parsedCitation = await Cite.async(references);
+    const allReferenceIds = parsedCitation.data?.map((reference: { id: string }) => reference.id) || [];
+
+    // Filter to only include references that are in usedReferences
+    const filteredReferenceIds = allReferenceIds.filter((_id: string) => usedReferences.includes(_id));
+
+    // Get only the references that match the used IDs
+    const filteredReferences = parsedCitation.data?.filter((reference: { id: string }) => filteredReferenceIds.includes(reference.id)) || [];
+
+    // Create a new Cite instance with only the filtered references
+    const filteredCitation = new Cite(filteredReferences);
+    const bibliography = filteredCitation.format('bibliography', {
         format: 'html',
         template: 'apa',
         lang: 'en-US',

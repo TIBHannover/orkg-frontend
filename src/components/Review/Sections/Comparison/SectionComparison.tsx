@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import { isEqual, uniq } from 'lodash';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
@@ -20,7 +20,7 @@ const SectionComparison: FC<SectionComparisonProps> = ({ section }) => {
     const id = section.comparison?.id;
 
     const updateReferences = (contributions: { paper_id: string }[]) => {
-        const paperIds = contributions.map((contribution) => contribution.paper_id);
+        const paperIds = uniq(contributions.map((contribution) => contribution.paper_id));
         if (paperIds.length === 0) {
             return;
         }

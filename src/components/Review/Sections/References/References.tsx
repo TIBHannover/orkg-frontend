@@ -1,3 +1,4 @@
+import { Cite } from '@citation-js/core';
 import ky from 'ky';
 import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -40,6 +41,8 @@ const References = () => {
                 .map((section) => (Object.values(section).length > 0 ? Object.values(section).filter((reference) => reference) : []))
                 .join('');
 
+            const usedReferencesCite = await Cite.async(bibtex);
+            const usedReferencesIds = usedReferencesCite.data?.map((reference: { id: string }) => reference?.id);
             if (!bibtex) {
                 // remove existing references
                 if (bibliography) {
@@ -49,8 +52,10 @@ const References = () => {
             }
 
             try {
-                // by passing the full bibtex to citation-js, we get sorting and formatting of references for free
-                const _bibliography: { bibliography: string } = await ky.post(ROUTES.CITATIONS, { json: { bibtex } }).json();
+                // Get the bibliography from the server
+                const _bibliography: { bibliography: string } = await ky
+                    .post(ROUTES.CITATIONS, { json: { usedReferences: usedReferencesIds, reviewId: params.id } })
+                    .json();
                 setBibliography(_bibliography.bibliography);
             } catch (e) {
                 console.error(e);
