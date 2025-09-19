@@ -16,6 +16,10 @@
     --color-smart-darker: #148da0;
 }
 
+.box {
+    @apply tw:bg-white tw:rounded-lg tw:shadow-sm;
+}
+
 .orkgSwiper {
     --swiper-theme-color: #e86161;
     --swiper-pagination-color: #e86161;

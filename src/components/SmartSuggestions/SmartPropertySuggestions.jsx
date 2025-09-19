@@ -119,7 +119,7 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
             >
                 <button
                     type="button"
-                    className="btn btn-smart px-3 btn-sm"
+                    className="btn btn-smart px-3 btn-sm tw:border-0"
                     style={{ marginLeft: 1 }}
                     onClick={() => setIsOpenSmartTooltip((v) => !v)}
                 >

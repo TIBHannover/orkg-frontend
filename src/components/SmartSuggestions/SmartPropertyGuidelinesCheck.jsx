@@ -82,7 +82,7 @@ const SmartPropertyGuidelinesCheck = ({ label = '' }) => {
                 llmTask={LLM_TASK_NAMES.CHECK_PROPERTY_LABEL_GUIDELINES}
                 handleReload={getChatResponse}
             >
-                <button type="button" className="btn btn-smart btn-sm px-3 " onClick={() => setIsOpenSmartTooltip((v) => !v)}>
+                <button type="button" className="btn btn-smart btn-sm px-3 tw:border-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </SmartSuggestions>

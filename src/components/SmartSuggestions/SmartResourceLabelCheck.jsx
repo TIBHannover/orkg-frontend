@@ -80,7 +80,7 @@ const SmartResourceLabelCheck = ({ label = '' }) => {
                 llmTask={LLM_TASK_NAMES.CHECK_RESOURCE_DESTRUCTURING}
                 handleReload={getChatResponse}
             >
-                <button type="button" className="btn btn-smart btn-sm px-3 " onClick={() => setIsOpenSmartTooltip((v) => !v)}>
+                <button type="button" className="btn btn-smart btn-sm px-3 tw:border-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </SmartSuggestions>

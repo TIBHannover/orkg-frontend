@@ -83,7 +83,7 @@ export const SmartDescriptivenessCheck = ({ value = '' }) => {
             >
                 <button
                     type="button"
-                    className="btn btn-smart btn-sm p-0 position-absolute"
+                    className="btn btn-smart btn-sm p-0 position-absolute tw:border-0"
                     style={{ right: 5, top: 5 }}
                     onClick={() => setIsOpenSmartTooltip((v) => !v)}
                 >

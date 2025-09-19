@@ -51,7 +51,7 @@ const AddComparison = () => {
             </Container>
             <Container className="box rounded py-4 px-5 mt-4">
                 <Row className="mt-2">
-                    <Col className="border-right">
+                    <Col className="border-r">
                         <h2 className="h4">1. Existing data</h2>
                         <div className="d-flex justify-content-center" style={{ minHeight: 160 }}>
                             <Image

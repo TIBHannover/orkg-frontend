@@ -99,7 +99,7 @@ const CSVWTable: FC<CSVWTableProps> = ({ id }) => {
         <ConditionalWrapper condition={isCSVWModelOpen} wrapper={disabledWrapper}>
             <div className="px-2 py-3 br-bottom row g-0">
                 {!isLoading && (
-                    <div>
+                    <div className="tw:w-full tw:max-w-full">
                         <div className="d-flex justify-content-end">
                             <ButtonGroup className="mb-3" size="sm">
                                 <Button style={{ marginRight: '2px' }} size="sm" onClick={toggleModal}>

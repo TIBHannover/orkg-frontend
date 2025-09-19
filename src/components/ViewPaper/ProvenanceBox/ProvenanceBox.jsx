@@ -7,7 +7,7 @@ import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProven
 import useProvenance from '@/components/ViewPaper/hooks/useProvenance';
 import useTimeline from '@/components/ViewPaper/hooks/useTimeline';
 import Provenance from '@/components/ViewPaper/ProvenanceBox/Provenance';
-import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs, SidebarStyledBox } from '@/components/ViewPaper/ProvenanceBox/styled';
+import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs } from '@/components/ViewPaper/ProvenanceBox/styled';
 import Timeline from '@/components/ViewPaper/ProvenanceBox/Timeline';
 
 const ProvenanceBox = () => {
@@ -27,15 +27,17 @@ const ProvenanceBox = () => {
     return (
         <div>
             {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by && (
-                <div className="mb-2">
+                <div className="tw:mb-2">
                     <PWCProvenanceBox />
                 </div>
             )}
-            <SidebarStyledBox className="box rounded-3" style={{ minHeight: 430, backgroundColor: '#f8f9fb' }}>
-                <ProvenanceBoxTabs className="clearfix d-flex">
+            <div className="tw:border tw:border-gray-200 tw:shadow-sm tw:rounded-lg tw:bg-[#f8f9fb] tw:min-h-[430px] tw:grow tw:overflow-hidden tw:mt-5 tw:md:mt-0">
+                <ProvenanceBoxTabs className="tw:flex">
                     <div
                         id="div1"
-                        className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
+                        className={`tw:text-lg tw:w-full tw:md:shrink-0 tw:md:grow-0 tw:md:w-6/12 tw:md:basis-6/12 tw:md:max-w-6/12 tw:text-center tab ${
+                            activeTab === 1 ? 'active' : ''
+                        }`}
                         onClick={() => setActiveTab(1)}
                         onKeyDown={(e) => (e.key === 'Enter' ? setActiveTab(1) : undefined)}
                         role="button"
@@ -45,7 +47,9 @@ const ProvenanceBox = () => {
                     </div>
                     <div
                         id="div2"
-                        className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
+                        className={`tw:text-lg tw:w-full tw:md:shrink-0 tw:md:grow-0 tw:md:w-6/12 tw:md:basis-6/12 tw:md:max-w-6/12 tw:text-center tab ${
+                            activeTab === 2 ? 'active' : ''
+                        }`}
                         onClick={() => setActiveTab(2)}
                         onKeyDown={(e) => (e.key === 'Enter' ? setActiveTab(2) : undefined)}
                         role="button"
@@ -97,7 +101,7 @@ const ProvenanceBox = () => {
                         </AnimationContainer>
                     )}
                 </AnimatePresence>
-            </SidebarStyledBox>
+            </div>
         </div>
     );
 };
