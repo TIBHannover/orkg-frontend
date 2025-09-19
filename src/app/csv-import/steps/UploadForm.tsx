@@ -1,5 +1,7 @@
 'use client';
 
+import { reverse } from 'named-urls';
+import Link from 'next/link';
 import Papa from 'papaparse';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -11,6 +13,7 @@ import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
+import ROUTES from '@/constants/routes';
 
 type UploadFormProps = {
     handleOnFileLoaded: (data: { _data: string[][] }) => void;
@@ -56,7 +59,11 @@ const UploadForm = ({ handleOnFileLoaded }: UploadFormProps) => {
                 <a href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG" target="_blank" rel="noopener noreferrer">
                     help guide
                 </a>{' '}
-                for formatting your CSV file
+                for formatting instructions. To easily find or create entity IDs for your CSV file, use the{' '}
+                <Link href={reverse(ROUTES.CSV_IMPORT_LOOKUP)} target="_blank" rel="noopener noreferrer">
+                    Entity lookup tool
+                </Link>
+                .
             </Alert>
             <Form>
                 <FormGroup>
