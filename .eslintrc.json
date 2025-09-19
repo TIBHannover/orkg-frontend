@@ -280,5 +280,5 @@
     "parserOptions": {
         "project": "./tsconfig.json"
     },
-    "ignorePatterns": ["next.config.js", "widget/*", "public/widget.js", "eslint-rules/*"]
+    "ignorePatterns": ["next.config.js", "widget/*", "public/widget.js", "eslint-rules/*", "codemods/*"]
 }

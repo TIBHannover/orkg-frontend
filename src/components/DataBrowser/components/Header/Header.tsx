@@ -45,7 +45,7 @@ const Header = () => {
                     </p>
                 </Alert>
             )}
-            <div className="d-flex br-bottom p-2 align-items-center">
+            <div className="d-flex tw:border-b tw:border-zinc-200 p-2 align-items-center">
                 <Breadcrumbs />
                 <ButtonGroup className="m-auto flex-shrink-0" size="sm">
                     <Popover

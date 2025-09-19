@@ -50,7 +50,7 @@ const Metadata = () => {
     return (
         <MetadataStyled
             id={entity?.id}
-            className={`py-3 px-3 br-bottom ${isHighlighted ? 'highlight' : ''}`}
+            className={`py-3 px-3 tw:border-b tw:border-zinc-200 ${isHighlighted ? 'highlight' : ''}`}
             onAnimationEnd={() => setIsHighlighted(false)}
         >
             <Label />

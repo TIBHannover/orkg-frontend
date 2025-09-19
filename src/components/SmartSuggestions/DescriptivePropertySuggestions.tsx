@@ -125,7 +125,7 @@ export const SmartDescriptiveProperty: FC<SmartDescriptivePropertyProps> = ({ pr
                 type="button"
                 onClick={() => setIsOpenSmartTooltip((v) => !v)}
                 style={{ right: 5, top: 5 }}
-                className="btn btn-smart btn-sm p-0 position-absolute p-0"
+                className="btn btn-smart btn-sm p-0 position-absolute p-0 tw:border-0"
             >
                 <Tooltip content="Automatically generate a property description" disabled={isOpenSmartTooltip}>
                     <FontAwesomeIcon className="px-3 py-1" icon={faLightbulb} style={{ fontSize: '120%' }} />

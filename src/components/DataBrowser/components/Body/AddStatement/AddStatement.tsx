@@ -56,14 +56,14 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
     };
 
     return (
-        <div className="br-bottom row g-0">
-            <div className="d-flex">
-                <div className="d-flex col-4" style={{ borderRight: '1px solid #e0e0e0' }}>
+        <div className="tw:border-b tw:border-gray-200 tw:flex tw:flex-wrap tw:items-stretch tw:gap-0">
+            <div className="tw:flex tw:flex-1 tw:min-w-0">
+                <div className="tw:flex tw:shrink-0 tw:grow-0 tw:w-4/12 tw:basis-4/12 tw:max-w-4/12" style={{ borderRight: '1px solid #e0e0e0' }}>
                     {shift && <HierarchyIndicator path={['1', '1']} side="left" />}
-                    <StatementWrapperStyled className="px-2 py-2 d-flex align-items-center flex-grow-1">
+                    <StatementWrapperStyled className="tw:px-2 tw:py-2 tw:flex tw:items-center tw:flex-1 tw:min-w-0 tw:flex-grow">
                         <PredicateView predicate={predicate} isNewPredicate />{' '}
                         {showDeleteButton && canEdit && isEditMode && (
-                            <span className="ms-1 actionButtons">
+                            <span className="tw:ml-1 actionButtons">
                                 <ActionButton
                                     isDisabled={!canDelete}
                                     title={canDelete ? 'Delete property' : 'This property is required by the template'}
@@ -89,8 +89,8 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
                         )}
                     </StatementWrapperStyled>
                 </div>
-                <div className="d-flex flex-grow-1">
-                    <div className="px-2 py-1 d-flex flex-grow-1 d-flex align-items-center">
+                <div className="tw:flex tw:flex-1 tw:min-w-0">
+                    <div className="tw:px-2 tw:py-1 tw:flex tw:flex-1 tw:min-w-0 tw:items-center">
                         {canEdit && isEditMode && !showAdd && (
                             <div className="">
                                 <ActionButton

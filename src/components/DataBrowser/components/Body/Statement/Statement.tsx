@@ -54,12 +54,12 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0 
     return (
         <>
             <motion.div layout>
-                <StatementStyled className="br-bottom row g-0">
-                    <div className="d-flex" style={{ background: getBackgroundColor(level) }}>
-                        <div className="d-flex col-4" style={{ borderRight: '1px solid #e0e0e0' }}>
+                <StatementStyled className="tw:border-b tw:border-gray-200">
+                    <div className="tw:flex" style={{ backgroundColor: getBackgroundColor(level) }}>
+                        <div className="tw:flex tw:basis-1/3 tw:shrink-0 tw:border-r tw:border-gray-200">
                             <TriplePredicate level={level} statement={statement} deleteStatement={deleteStatement} />
                         </div>
-                        <div className="d-flex flex-grow-1">
+                        <div className="tw:flex tw:flex-1 tw:min-w-0">
                             <TripleObject
                                 level={level}
                                 path={path}

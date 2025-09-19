@@ -152,7 +152,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                 llmTask={taskName}
                 handleReload={getChatResponse}
             >
-                <button type="button" className="btn btn-smart px-3 btn-sm" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
+                <button type="button" className="btn btn-smart px-3 btn-sm tw:border-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </SmartSuggestions>

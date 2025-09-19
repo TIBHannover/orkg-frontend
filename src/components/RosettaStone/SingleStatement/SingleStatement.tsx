@@ -115,7 +115,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
 
     return (
         <ListGroupItem className="py-3">
-            <div className="position-absolute top-0 end-0 mt-2 z-3">
+            <div className="position-absolute tw:top-0 tw:right-0 mt-2 z-3">
                 {isEditMode && (
                     <span className="ms-2">
                         {statement.latest_version_id && (
@@ -175,7 +175,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
             <div className="d-flex justify-content-between">
                 {isEditing && isEditMode && (
                     <div className="clearfix">
-                        <FormGroup switch className="pull-right me-2">
+                        <FormGroup switch className="float-right me-2">
                             <Tooltip content="By activating this option the statement would be negated.">
                                 <span>
                                     <Input

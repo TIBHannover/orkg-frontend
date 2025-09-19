@@ -63,14 +63,6 @@ export const ErrorMessage = styled.div`
     font-size: 12px;
 `;
 
-export const SidebarStyledBox = styled.div`
-    flex-grow: 1;
-    overflow: hidden;
-    @media (max-width: 768px) {
-        margin-top: 20px;
-    }
-`;
-
 export const AnimationContainer = styled(motion.div)`
     transition: 0.3s background-color, 0.3s border-color;
 `;

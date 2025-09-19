@@ -69,7 +69,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, id }) => {
                 <div className="d-flex">
                     <h5>{visualization.title ?? 'No Title'}</h5>
                     <Tooltip content="Go to resource page">
-                        <Link target="_blank" className="ms-2 resourceLink" href={`${reverse(ROUTES.RESOURCE, { id: visualization.id })}?noRedirect`}>
+                        <Link target="_blank" className="ms-2" href={`${reverse(ROUTES.RESOURCE, { id: visualization.id })}?noRedirect`}>
                             <FontAwesomeIcon icon={faLink} className="text-primary" />
                         </Link>
                     </Tooltip>

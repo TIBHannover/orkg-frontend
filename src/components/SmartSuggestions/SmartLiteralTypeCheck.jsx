@@ -84,7 +84,7 @@ const SmartLiteralTypeCheck = ({ label = '' }) => {
                 llmTask={LLM_TASK_NAMES.CHECK_IF_LITERAL_TYPE_IS_CORRECT}
                 handleReload={getChatResponse}
             >
-                <button type="button" className="btn btn-smart btn-sm p-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
+                <button type="button" className="btn btn-smart btn-sm p-0 tw:border-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
                     <FontAwesomeIcon className="px-3 py-1" icon={faLightbulb} style={{ fontSize: '120%' }} />
                 </button>
             </SmartSuggestions>
