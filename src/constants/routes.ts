@@ -79,7 +79,7 @@ const routes = {
     REVIEW_NEW: '/reviews/create',
     REVIEW_DIFF: '/reviews/diff/:oldId/:newId',
     TOOLS: '/tools',
-    CONTRIBUTION_EDITOR: '/contribution-editor',
+    GRID_EDITOR: '/grid-editor',
     PAGE: '/page/:url',
     ABOUT: '/about/:id/:slug',
     ABOUT_NO_SLUG: '/about/:id',

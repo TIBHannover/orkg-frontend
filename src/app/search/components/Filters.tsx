@@ -28,6 +28,7 @@ type FiltersProps = {
     setSelectedSmartFilterIds: (ids: string[]) => void;
     selectedSmartFilterIds: string[];
     */
+    defaultFilters?: { id: string; label: string }[];
     countResults: Record<string, PaginatedResponse<Thing>>;
     typeData: { label: string; id: string } | undefined;
     isLoading: boolean;
@@ -42,6 +43,7 @@ const Filters: FC<FiltersProps> = ({
     setSelectedSmartFilterIds,
     selectedSmartFilterIds,
     */
+    defaultFilters = DEFAULT_FILTERS,
     countResults,
     typeData,
     isLoading: isLoadingResults,
@@ -165,7 +167,7 @@ const Filters: FC<FiltersProps> = ({
                 />
 
                 <div className="mt-2">
-                    {type && typeData && !DEFAULT_FILTERS.map((f) => f.id).includes(type) && (
+                    {type && typeData && !defaultFilters.map((f) => f.id).includes(type) && (
                         <Button onClick={() => setType('')} size="sm" color="primary" className="rounded-pill me-2 mb-1 px-3">
                             {typeData.label}{' '}
                             <Badge size="sm" className="rounded-pill px-2">
@@ -174,7 +176,7 @@ const Filters: FC<FiltersProps> = ({
                             </Badge>
                         </Button>
                     )}
-                    {DEFAULT_FILTERS.map((filter) => (
+                    {defaultFilters.map((filter) => (
                         <Button
                             onClick={() => (type !== filter.id ? setType(filter.id) : setType(''))}
                             key={filter.id}

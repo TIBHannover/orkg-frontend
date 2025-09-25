@@ -23,25 +23,20 @@ export const SmartDescriptiveProperty: FC<SmartDescriptivePropertyProps> = ({ pr
     const [isLoading, setIsLoading] = useState(false);
     const [isFailed, setIsFailed] = useState(false);
     const pathname = usePathname();
-    // @ts-expect-error awaiting migration contributionEditor slice
-    const properties = useSelector((state) => state.contributionEditor.properties);
 
-    const isContributionEditor = !!match(ROUTES.CONTRIBUTION_EDITOR)(pathname);
+    const isContributionEditor = !!match(ROUTES.GRID_EDITOR)(pathname);
 
-    const paperTitle = useSelector((state) =>
-        // @ts-expect-error
-        isContributionEditor ? Object.values(state.contributionEditor.papers)?.[0]?.label : state.viewPaper?.paper?.title,
-    );
+    // @ts-expect-error awaiting migration viewPaper slice
+    const paperTitle = useSelector((state) => (isContributionEditor ? '' : state.viewPaper?.paper?.title));
 
     const researchField = useSelector((state) =>
         // @ts-expect-error
         isContributionEditor ? '' : state.viewPaper?.paper?.research_fields?.[0]?.label,
     );
 
+    const properties: any[] = [];
+
     const getChatResponse = useCallback(async () => {
-        if (!properties || properties.length === 0) {
-            return;
-        }
         setIsLoading(true);
         setIsFailed(false);
 
@@ -59,7 +54,7 @@ export const SmartDescriptiveProperty: FC<SmartDescriptivePropertyProps> = ({ pr
         } finally {
             setIsLoading(false);
         }
-    }, [JSON.stringify(properties)]);
+    }, []);
 
     useEffect(() => {
         if (!isOpenSmartTooltip) {

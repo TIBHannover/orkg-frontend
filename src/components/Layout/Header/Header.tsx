@@ -279,11 +279,11 @@ const Header = () => {
                                 <DropdownItem header>Data entry</DropdownItem>
                                 <DropdownItem
                                     tag={Link}
-                                    href={ROUTES.CONTRIBUTION_EDITOR}
-                                    onClick={(e) => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
-                                    active={pathname === ROUTES.CONTRIBUTION_EDITOR}
+                                    href={ROUTES.GRID_EDITOR}
+                                    onClick={(e) => requireAuthentication(e, ROUTES.GRID_EDITOR)}
+                                    active={pathname === ROUTES.GRID_EDITOR}
                                 >
-                                    Contribution editor
+                                    Grid editor
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={Link}

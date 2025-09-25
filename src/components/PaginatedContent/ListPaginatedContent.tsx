@@ -65,13 +65,16 @@ const ListPaginatedContent = <ItemType,>({
         </div>
     ),
 }: ListPaginatedContentProps<ItemType>) => {
+    // Extract flush from listGroupProps to avoid passing it to non-ListGroup components
+    const { flush: _, ...safeListGroupProps } = listGroupProps;
+    const componentProps = ListGroupComponent === ListGroup ? listGroupProps : safeListGroupProps;
     return (
         <Container className="p-0">
             {isLoading && loadingComponent}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && items && items.length > 0 && (
-                <ListGroupComponent {...listGroupProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
+                <ListGroupComponent {...componentProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
                     {items?.map((item, index) => renderListItem(item, index === items.length - 1))}
                 </ListGroupComponent>
             )}

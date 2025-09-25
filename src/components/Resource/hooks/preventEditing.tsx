@@ -70,7 +70,6 @@ const PREVENT_EDIT_CASES: PreventEditCase[] = [
 
 const getPreventEditCase = (resource: Resource) => {
     for (const preventCase of PREVENT_EDIT_CASES) {
-        // eslint-disable-next-line no-await-in-loop
         const resultCondition = preventCase.condition(resource);
         if (resultCondition) {
             return preventCase;

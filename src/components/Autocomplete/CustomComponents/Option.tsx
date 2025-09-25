@@ -76,8 +76,9 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                         )}
 
                         <Tooltip
+                            contentStyle={{ zIndex: 99999, position: 'absolute' }}
                             content={
-                                <div className="d-flex align-items-center text-break">
+                                <div className="d-flex align-items-center text-break z-100">
                                     {data.id}
                                     <Button
                                         className="py-0 border border-light-darker px-2 ms-2"

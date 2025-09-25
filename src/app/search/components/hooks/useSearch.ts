@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/navigation';
-import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
+import { parseAsInteger, useQueryState } from 'nuqs';
 import useSWR from 'swr';
 
 import { getEntityLink } from '@/app/search/components/Item/Item';
@@ -13,20 +13,32 @@ import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { getThing, getThings, Thing, thingsUrl } from '@/services/backend/things';
 import { PaginatedResponse, Statement } from '@/services/backend/types';
 
-const IGNORED_CLASSES = [CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT, CLASSES.COMPARISON_DELETED];
+export const IGNORED_CLASSES = [CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT, CLASSES.COMPARISON_DELETED];
 
-const ITEMS_PER_FILTER = 25;
+type UseSearchProps = {
+    defaultFilters?: { label: string; id: string }[];
+    ignoredClasses?: string[];
+    itemsPerFilter?: number;
+    searchAuthor?: boolean;
+    redirectToEntity?: boolean;
+};
 
-const useSearch = () => {
-    const [searchTerm] = useQueryState('q', { defaultValue: '' });
+const useSearch = ({
+    defaultFilters = DEFAULT_FILTERS,
+    ignoredClasses = IGNORED_CLASSES,
+    itemsPerFilter = 25,
+    searchAuthor = false,
+    redirectToEntity = false,
+}: UseSearchProps) => {
+    const [searchTerm, setSearchTerm] = useQueryState('q', { defaultValue: '' });
     const [createdBy] = useQueryState('createdBy', { defaultValue: '' });
     const [observatoryId] = useQueryState('observatoryId', { defaultValue: '' });
     const [type, setType] = useQueryState('type', { defaultValue: '' });
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(0));
-    const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(ITEMS_PER_FILTER));
+    const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(itemsPerFilter));
     const router = useRouter();
 
-    let typeData = DEFAULT_FILTERS.find((f) => f.id === type);
+    let typeData = defaultFilters.find((f) => f.id === type);
     const { data: _typeData } = useSWR(!typeData ? [type, classesUrl, 'getClassById'] : null, ([params]) => getClassById(params));
     typeData = !typeData ? _typeData : typeData;
 
@@ -35,7 +47,7 @@ const useSearch = () => {
         ([params]) => getThing(params),
     );
 
-    if (entity) {
+    if (entity && redirectToEntity) {
         const link = getEntityLink(entity);
         router.push(link);
     }
@@ -44,11 +56,11 @@ const useSearch = () => {
         [
             {
                 page,
-                size: ITEMS_PER_FILTER,
+                size: itemsPerFilter,
                 q: searchTerm,
                 created_by: !isEmpty(createdBy) ? createdBy : undefined,
                 observatory_id: !isEmpty(observatoryId) ? observatoryId : undefined,
-                exclude: IGNORED_CLASSES,
+                exclude: ignoredClasses,
                 include: type ? [type] : undefined,
             },
             thingsUrl,
@@ -61,7 +73,7 @@ const useSearch = () => {
         [{ searchTerm, createdBy, observatoryId }, thingsUrl, 'getThings'],
         ([params]) =>
             Promise.all(
-                DEFAULT_FILTERS.map((f) => {
+                defaultFilters.map((f) => {
                     return getThings({
                         page: 0,
                         size: 1,
@@ -74,7 +86,7 @@ const useSearch = () => {
             ),
     );
 
-    const countResults = Object.fromEntries(DEFAULT_FILTERS.map((f, index) => [f.id, _countResults?.[index]])) as Record<
+    const countResults = Object.fromEntries(defaultFilters.map((f, index) => [f.id, _countResults?.[index]])) as Record<
         string,
         PaginatedResponse<Thing>
     >;
@@ -85,11 +97,12 @@ const useSearch = () => {
         getPaperByDoi(params),
     );
     let results = _results;
-    if (paper && _results) {
+    if ((paper || entity) && _results) {
         results = {
             ..._results,
             content: [
-                { ...paper, label: paper.title, classes: [CLASSES.PAPER], _class: ENTITIES.RESOURCE } as unknown as Thing,
+                ...(paper ? [{ ...paper, label: paper.title, classes: [CLASSES.PAPER], _class: ENTITIES.RESOURCE } as unknown as Thing] : []),
+                ...(entity ? [{ ...entity, label: entity.label, classes: [entity._class], _class: entity._class } as unknown as Thing] : []),
                 ...(_results?.content || []),
             ],
         };
@@ -97,7 +110,7 @@ const useSearch = () => {
 
     // check if the search term is an author
     const { data: authorStatements, isLoading: isLoadingAuthorStatements } = useSWR(
-        type === CLASSES.AUTHOR ? [searchTerm, statementsUrl, 'getStatements'] : null,
+        searchAuthor && type === CLASSES.AUTHOR ? [searchTerm, statementsUrl, 'getStatements'] : null,
         ([params]) =>
             getStatements({ objectLabel: params, predicateId: PREDICATES.HAS_LIST_ELEMENT, size: 1, returnContent: true }) as Promise<Statement[]>,
     );
@@ -109,6 +122,7 @@ const useSearch = () => {
     );
     const isAuthorExists = (authors && authors.length > 0 && !!authors.find((s) => s.predicate.id === PREDICATES.HAS_AUTHORS)) ?? false;
 
+    const hasNextPage = results?.page.total_pages && results?.page.total_pages > page;
     return {
         typeData,
         setType,
@@ -122,6 +136,8 @@ const useSearch = () => {
         setPage,
         results,
         isAuthorExists,
+        hasNextPage,
+        setSearchTerm,
     };
 };
 export default useSearch;

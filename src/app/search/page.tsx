@@ -18,7 +18,21 @@ import { PaginatedResponse } from '@/services/backend/types';
 export default function Search() {
     const [results, setResults] = useState<PaginatedResponse<Thing> | undefined>(undefined);
 
-    const { typeData, searchTerm, page, countResults, isLoading, pageSize, setPageSize, setPage, results: _results, isAuthorExists } = useSearch();
+    const {
+        typeData,
+        searchTerm,
+        page,
+        countResults,
+        isLoading,
+        pageSize,
+        setPageSize,
+        setPage,
+        results: _results,
+        isAuthorExists,
+    } = useSearch({
+        redirectToEntity: true,
+        searchAuthor: true,
+    });
 
     useEffect(() => {
         setResults(_results);

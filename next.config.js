@@ -171,6 +171,11 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/contribution-editor',
+                destination: '/grid-editor',
+                permanent: true,
+            },
+            {
                 source: '/smart-review/new',
                 destination: '/review/new',
                 permanent: true,

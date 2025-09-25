@@ -31,6 +31,7 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
         <Tooltip
             onTrigger={() => setIsOpen(true)}
             key="c"
+            contentStyle={{ zIndex: 99999, position: 'absolute' }}
             content={
                 <div className="text-start">
                     {!isLoading ? (

@@ -15,7 +15,7 @@ type DatatypeSelectorProps = {
     dataType: string;
     setDataType: Dispatch<SetStateAction<string>>;
     isDisabled?: boolean;
-    menuPortalTarget?: HTMLElement | null;
+    menuPortalTarget?: HTMLElement | undefined;
 };
 
 const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, setDataType, menuPortalTarget, isDisabled = false }) => {
@@ -49,7 +49,7 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, 
                     getOptionValue={({ type }) => type}
                     getOptionLabel={({ name }) => name}
                     isClearable={false}
-                    menuPortalTarget={menuPortalTarget ?? null}
+                    menuPortalTarget={menuPortalTarget ?? undefined}
                     inputId="datatypeSelector"
                     isDisabled={isDisabled}
                     // @ts-expect-error
