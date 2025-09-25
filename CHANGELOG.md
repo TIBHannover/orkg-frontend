@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.169.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.168.0...v0.169.0) - 2025-09-25
+
+### Changes
+
+- feat: introduce grid editor [`#1565`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1565)
+
+---
 ## [v0.168.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.5...v0.168.0) - 2025-09-19
 
 ### Changes
