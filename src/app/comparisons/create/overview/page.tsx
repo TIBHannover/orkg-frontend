@@ -70,21 +70,21 @@ const AddComparison = () => {
                         </Button>
                     </Col>
                     <Col className="border-right">
-                        <h2 className="h4">2. Contribution editor</h2>
+                        <h2 className="h4">2. Grid editor</h2>
                         <div className="d-flex justify-content-center" style={{ minHeight: 160 }}>
                             <Image
                                 src={contributionEditorPreview}
-                                alt="Preview of contribution editor"
+                                alt="Preview of grid editor"
                                 style={{ width: '50%', height: 'auto' }}
                                 className="align-self-center"
                             />
                         </div>
                         <p>
-                            If you don’t have existing data, go to the contribution editor to add contributions that will be used in the comparison.
-                            After creating contributions, you can create a comparisons.
+                            If you don’t have existing data, go to the grid editor to add contributions that will be used in the comparison. After
+                            creating contributions, you can create a comparison.
                         </p>
-                        <Button color="primary" tag={Link} href={ROUTES.CONTRIBUTION_EDITOR}>
-                            Go to contribution editor
+                        <Button color="primary" tag={Link} href={ROUTES.GRID_EDITOR}>
+                            Go to grid editor
                         </Button>
                     </Col>
                     <Col>

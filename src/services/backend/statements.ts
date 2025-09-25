@@ -81,6 +81,17 @@ export const getStatements = <T extends boolean = true>({
         .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Statement[] : PaginatedResponse<Statement>>;
 };
 
+export const createStatement = (subjectId: string, predicateId: string, objectId: string) =>
+    statementsApi
+        .post<Statement>('', {
+            json: {
+                subject_id: subjectId,
+                predicate_id: predicateId,
+                object_id: objectId,
+            },
+        })
+        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string) =>
     statementsApi
         .post<Statement>('', {

@@ -40,7 +40,7 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
     }, [data, makePaperList]);
 
     const comparisonUrl = createdContributions
-        ? `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${createdContributions.map((entry) => entry.contributionId)}`
+        ? `${reverse(ROUTES.GRID_EDITOR)}?entityIds=${createdContributions.map((entry) => entry.contributionId)}`
         : null;
 
     const progressPercentage =

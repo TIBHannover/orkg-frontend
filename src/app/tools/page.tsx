@@ -69,10 +69,10 @@ const Tools = () => (
             <p className="my-2 px-2">The form guides you through the process of generating structured data for your paper</p>
         </ToolContainer>
 
-        <ToolContainer href={ROUTES.CONTRIBUTION_EDITOR} className="box rounded text-decoration-none">
-            <Header>Contribution editor</Header>
+        <ToolContainer href={ROUTES.GRID_EDITOR} className="box rounded text-decoration-none">
+            <Header>Grid editor</Header>
             <ImgContainer>
-                <Image src={ContributionEditor} style={{ width: '60%', height: 'auto' }} alt="Contribution editor preview" />
+                <Image src={ContributionEditor} style={{ width: '60%', height: 'auto' }} alt="Grid editor preview" />
             </ImgContainer>
             <p className="my-2 px-2">Create multiple contributions simultaneously and create a comparison from them </p>
         </ToolContainer>

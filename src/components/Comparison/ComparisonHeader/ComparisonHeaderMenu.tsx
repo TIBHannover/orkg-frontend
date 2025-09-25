@@ -123,9 +123,7 @@ const ComparisonHeaderMenu = () => {
 
         if (isConfirmed) {
             router.push(
-                `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${contributionsList.join(',')}${
-                    comparison?.id ? `&comparisonId=${comparison?.id}` : ''
-                }`,
+                `${reverse(ROUTES.GRID_EDITOR)}?entityIds=${contributionsList.join(',')}${comparison?.id ? `&comparisonId=${comparison?.id}` : ''}`,
             );
         }
     };

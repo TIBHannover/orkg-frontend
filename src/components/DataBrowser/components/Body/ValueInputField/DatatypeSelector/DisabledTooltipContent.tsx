@@ -18,7 +18,7 @@ const DisabledTooltipContent: FC<DisabledTooltipContentProps> = ({ range, _class
             {range || !canSwitchEntityType ? 'Type is determined by the template.' : 'Changing the type is not possible'}
             {range && _class === ENTITIES.RESOURCE && (
                 <div>
-                    Only instances of
+                    Only instances of{' '}
                     <Link target="_blank" href={reverse(ROUTES.CLASS, { id: range.id })}>
                         {range.label}
                     </Link>{' '}

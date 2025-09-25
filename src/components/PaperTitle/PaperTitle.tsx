@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 type PaperTitleProps = {
     title?: string;
+    className?: string;
 };
 
 const StyledMathJax = styled(MathJaxPreview)`
@@ -20,7 +21,7 @@ const StyledMathJax = styled(MathJaxPreview)`
 // https://www.crossref.org/documentation/schema-library/markup-guide-metadata-segments/face-markup/
 const FACE_MARKUPS = ['b', 'i', 'u', 'ovl', 'sup', 'sub', 'scp', 'tt', 'mml:mrow', 'mml:math', 'mml:mo', 'mml:msup', 'mml:mover', 'mml:mi'];
 
-const PaperTitle: FC<PaperTitleProps> = ({ title }) => {
+const PaperTitle: FC<PaperTitleProps> = ({ title, className }) => {
     if (!title) {
         return <em>No title</em>;
     }
@@ -30,6 +31,7 @@ const PaperTitle: FC<PaperTitleProps> = ({ title }) => {
     return (
         <StyledMathJax inline>
             <span
+                className={className}
                 dangerouslySetInnerHTML={{
                     __html: sanitize(title, { ALLOWED_TAGS: FACE_MARKUPS }).replaceAll('<mml:', '<').replaceAll('</mml:', '</'),
                 }}

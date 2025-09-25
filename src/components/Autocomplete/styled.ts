@@ -115,6 +115,9 @@ export const customStyles: StylesConfig<OptionType, boolean, GroupBase<OptionTyp
             maxWidth: 700,
             ...(state.selectProps.rightAligned ? { position: 'absolute', right: 0 } : {}),
         } as CSSObjectWithLabel),
+    // When using menuPortalTarget, react-select wraps the menu in a portal container.
+    // Ensure it appears above floating popovers and AG Grid overlays.
+    menuPortal: (base) => ({ ...base, zIndex: 20000 } as CSSObjectWithLabel),
     multiValueLabel: (provided, state) =>
         ({
             ...provided,

@@ -38,14 +38,16 @@ const ConfirmationTooltip = ({ message, buttons }: ConfirmationTooltipProps) => 
         <ConfirmationTooltipStyled className="text-center p-1">
             <div className="mb-2">{message}</div>
             <ButtonGroup size="sm" className="my-1">
-                {buttons.map((button, i) => (
+                {buttons.map((button) => (
                     <Button
-                        onClick={() => {
+                        onClick={(e) => {
                             button.action?.();
                             setOpen(false);
+                            e.preventDefault();
+                            e.stopPropagation();
                         }}
                         className="px-2"
-                        key={i}
+                        key={button.title}
                         color={button.color}
                     >
                         <FontAwesomeIcon icon={button.icon} className="me-1" />

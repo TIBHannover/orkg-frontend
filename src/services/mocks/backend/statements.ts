@@ -76,6 +76,81 @@ const statements = [
             },
         });
     }),
+    http.get(`${statementsUrl}:id`, ({ params }) => {
+        const { id } = params as { id: string };
+        const statement = db.statements.findFirst({
+            where: {
+                id: { equals: id },
+            },
+        });
+
+        if (!statement) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const subjectRef = findEntityById(statement.subject);
+        const predicateRef = db.predicates.findFirst({
+            where: {
+                id: { equals: statement.predicate },
+            },
+        });
+        const objectRef = findEntityById(statement.object);
+
+        return HttpResponse.json({
+            ...statement,
+            subject:
+                subjectRef && 'classes' in subjectRef
+                    ? { ...subjectRef, classes: subjectRef?.classes.split(',').filter((c) => c !== '') }
+                    : subjectRef,
+            predicate: predicateRef,
+            object:
+                objectRef && 'classes' in objectRef ? { ...objectRef, classes: objectRef?.classes.split(',').filter((c) => c !== '') } : objectRef,
+        });
+    }),
+    http.put(`${statementsUrl}:id`, async ({ params, request }) => {
+        const { id } = params as { id: string };
+        const {
+            subject_id: subjectId,
+            predicate_id: predicateId,
+            object_id: objectId,
+        } = (await request.json()) as { subject_id?: string; predicate_id?: string; object_id?: string };
+
+        const updatedStatement = db.statements.update({
+            where: {
+                id: {
+                    equals: id,
+                },
+            },
+            data: {
+                ...(subjectId && { subject: subjectId }),
+                ...(predicateId && { predicate: predicateId }),
+                ...(objectId && { object: objectId }),
+            },
+        });
+
+        if (!updatedStatement) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const subjectRef = findEntityById(updatedStatement.subject);
+        const predicateRef = db.predicates.findFirst({
+            where: {
+                id: { equals: updatedStatement.predicate },
+            },
+        });
+        const objectRef = findEntityById(updatedStatement.object);
+
+        return HttpResponse.json({
+            ...updatedStatement,
+            subject:
+                subjectRef && 'classes' in subjectRef
+                    ? { ...subjectRef, classes: subjectRef?.classes.split(',').filter((c) => c !== '') }
+                    : subjectRef,
+            predicate: predicateRef,
+            object:
+                objectRef && 'classes' in objectRef ? { ...objectRef, classes: objectRef?.classes.split(',').filter((c) => c !== '') } : objectRef,
+        });
+    }),
     http.delete(`${statementsUrl}:id`, ({ params }) => {
         const { id } = params as { id: string };
         db.statements.delete({

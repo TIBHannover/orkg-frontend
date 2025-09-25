@@ -25,6 +25,9 @@ type InputFieldProps = {
     allowCreate?: boolean;
     onChange?: (value?: Node) => void;
     onFailure?: (e: Error) => void;
+    menuPortalTarget?: HTMLElement | null;
+    autoFocus?: boolean;
+    onCreate?: (value?: Node) => void;
 };
 
 const InputField: FC<InputFieldProps> = ({
@@ -39,6 +42,9 @@ const InputField: FC<InputFieldProps> = ({
     onChange,
     allowCreate = false,
     onFailure,
+    menuPortalTarget,
+    autoFocus = true,
+    onCreate,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -50,7 +56,7 @@ const InputField: FC<InputFieldProps> = ({
                 value={inputValue}
                 onChange={(e) => setInputValue(e ? e.target.value : '')}
                 className="form-control form-control-sm flex-grow d-flex"
-                autoFocus
+                autoFocus={autoFocus}
                 minRows={1}
             />
         ),
@@ -105,6 +111,9 @@ const InputField: FC<InputFieldProps> = ({
                     if (action === 'select-option') {
                         onChange?.(i as Node);
                     }
+                    if (action === 'create-option') {
+                        onCreate?.(i as Node);
+                    }
                 }}
                 allowCreate={allowCreate}
                 enableExternalSources={!range?.id}
@@ -115,9 +124,10 @@ const InputField: FC<InputFieldProps> = ({
                 }}
                 inputValue={inputValue}
                 openMenuOnFocus
-                autoFocus
+                autoFocus={autoFocus}
                 size="sm"
                 onFailure={onFailure}
+                menuPortalTarget={menuPortalTarget}
             />
         ),
         empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,
@@ -131,7 +141,7 @@ const InputField: FC<InputFieldProps> = ({
                 onChange={(e) => setInputValue(e ? e.target.value : '')}
                 invalid={!isValid}
                 className="flex-grow d-flex"
-                autoFocus
+                autoFocus={autoFocus}
             />
         ),
         dateTime: (
