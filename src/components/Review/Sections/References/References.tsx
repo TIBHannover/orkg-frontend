@@ -1,9 +1,11 @@
 import { Cite } from '@citation-js/core';
 import ky from 'ky';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import styled from 'styled-components';
+import useSWR from 'swr';
 
-import { reviewContext } from '@/components/Review/context/ReviewContext';
+import { reviewContext, UsedReference } from '@/components/Review/context/ReviewContext';
 import Alert from '@/components/Ui/Alert/Alert';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
@@ -28,49 +30,34 @@ const ListReferencesStyled = styled.ul`
 `;
 
 const References = () => {
-    const [bibliography, setBibliography] = useState<string | null>(null);
-    const [error, setError] = useState(false);
-
-    const params = useParams();
+    const { id } = useParams();
     const { usedReferences } = useContext(reviewContext);
     const { isEditMode } = useIsEditMode();
 
-    useEffect(() => {
-        const parseBibtex = async () => {
-            const bibtex = Object.values(usedReferences)
-                .map((section) => (Object.values(section).length > 0 ? Object.values(section).filter((reference) => reference) : []))
-                .join('');
+    const getBibliography = async (usedRefs: UsedReference, reviewId: string) => {
+        const bibtex = Object.values(usedRefs)
+            .map((section) => (Object.values(section).length > 0 ? Object.values(section).filter((reference) => reference) : []))
+            .join('');
 
-            const usedReferencesCite = await Cite.async(bibtex);
-            const usedReferencesIds = usedReferencesCite.data?.map((reference: { id: string }) => reference?.id);
-            if (!bibtex) {
-                // remove existing references
-                if (bibliography) {
-                    setBibliography(null);
-                }
-                return;
-            }
+        const usedReferencesCite = await Cite.async(bibtex);
+        const usedReferencesIds = usedReferencesCite.data?.map((reference: { id: string }) => reference?.id);
+        if (!bibtex) {
+            return null;
+        }
 
-            try {
-                // Get the bibliography from the server
-                const _bibliography: { bibliography: string } = await ky
-                    .post(ROUTES.CITATIONS, { json: { usedReferences: usedReferencesIds, reviewId: params.id } })
-                    .json();
-                setBibliography(_bibliography.bibliography);
-            } catch (e) {
-                console.error(e);
-                setError(true);
-            }
-        };
-        parseBibtex();
-    }, [bibliography, params, usedReferences]);
+        // Get the bibliography from the server
+        return ky.get<{ bibliography: string }>(ROUTES.CITATIONS, { searchParams: { usedReferences: usedReferencesIds, reviewId } }).json();
+    };
+
+    const { data: bibliography, error, isLoading } = useSWR([usedReferences, id], ([_usedReferences, _id]) => getBibliography(_usedReferences, _id));
 
     return (
         <>
-            {!error && bibliography && (
-                <ListReferencesStyled dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="ps-3" />
+            {!error && bibliography && !isLoading && (
+                <ListReferencesStyled dangerouslySetInnerHTML={{ __html: bibliography?.bibliography }} style={{ fontSize: '90%' }} className="ps-3" />
             )}
-            {error && isEditMode && <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>}
+            {error && isEditMode && !isLoading && <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>}
+            {isLoading && <Skeleton count={10} />}
         </>
     );
 };

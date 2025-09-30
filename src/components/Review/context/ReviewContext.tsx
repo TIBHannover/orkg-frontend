@@ -1,6 +1,6 @@
 import { createContext, ReactNode, SetStateAction, useMemo, useState } from 'react';
 
-type UsedReference = {
+export type UsedReference = {
     [sectionId: string]: string[];
 };
 
