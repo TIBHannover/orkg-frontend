@@ -1,6 +1,7 @@
 import { isString } from 'lodash';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
+import { useUpdateEffect } from 'react-use';
 import useSWR from 'swr';
 
 import { contributorsUrl, getContributorInformationById } from '@/services/backend/contributors';
@@ -35,7 +36,8 @@ const useFilters = () => {
         setValue(searchTerm ?? '');
     }, [searchTerm]);
 
-    useEffect(() => {
+    // Update the page when the filters change, ignore the first render because the page might be visited with a page number
+    useUpdateEffect(() => {
         setPage(0);
     }, [createdBy, observatoryId, setPage, type]);
 
