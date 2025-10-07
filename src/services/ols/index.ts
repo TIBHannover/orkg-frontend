@@ -20,6 +20,9 @@ const PAGE_SIZE = 12;
 
 const client = createClient<paths>({
     baseUrl: olsBaseUrl,
+    headers: {
+        caller: 'ORKG',
+    },
     querySerializer: {
         allowReserved: true, // the facetFields param is reserved
         array: {
