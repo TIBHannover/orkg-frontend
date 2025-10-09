@@ -15,6 +15,7 @@ import useLoadOptions from '@/components/Autocomplete/hooks/useLoadOptions';
 import OntologiesModal from '@/components/Autocomplete/OntologiesModal/OntologiesModal';
 import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { AdditionalType, AutocompleteProps, OptionType } from '@/components/Autocomplete/types';
+import errorHandler from '@/helpers/errorHandler';
 import { getThing } from '@/services/backend/things';
 
 // This import is necessary for module augmentation.
@@ -149,6 +150,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                                 onChange(uniqBy(newValue as OptionType[], 'id') as unknown as OnChangeValue<OptionType, IsMulti>, actionMeta);
                                 return;
                             } catch (e) {
+                                errorHandler({ error: e, shouldShowToast: true });
                                 onFailure?.(e as Error);
                                 return;
                             }
@@ -159,6 +161,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                                 onChange(v as OnChangeValue<OptionType, IsMulti>, actionMeta);
                                 return;
                             } catch (e) {
+                                errorHandler({ error: e, shouldShowToast: true });
                                 onFailure?.(e as Error);
                                 return;
                             }

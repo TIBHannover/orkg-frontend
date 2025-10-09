@@ -1,4 +1,4 @@
-import { faArrowRight, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCircleExclamation, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
@@ -13,7 +13,9 @@ import InfoBox from '@/components/Autocomplete/CustomComponents/InfoBox';
 import { SourceBadge } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
+import { ENTITIES } from '@/constants/graphSettings';
 import { getLinkByEntityType } from '@/utils';
 
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
@@ -74,7 +76,21 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                                 <InfoBox data={data} isFocused={isFocused} />
                             </div>
                         )}
-
+                        {/* If the option is a class and it's external and from Wikidata, we need to show a warning badge because it's going to be imported as a class and not a resource */}
+                        {data._class && data._class === ENTITIES.CLASS && data.external && data.ontology === 'Wikidata' && (
+                            <Tooltip
+                                contentStyle={{ zIndex: 99999, position: 'absolute' }}
+                                content={<div className="d-flex align-items-center text-break z-100">This option will be imported as a class</div>}
+                            >
+                                <span>
+                                    <Badge color="warning" className="small me-1">
+                                        <FontAwesomeIcon icon={faCircleExclamation} color="white" />
+                                        {` `}
+                                        Class
+                                    </Badge>
+                                </span>
+                            </Tooltip>
+                        )}
                         <Tooltip
                             contentStyle={{ zIndex: 99999, position: 'absolute' }}
                             content={

@@ -1,4 +1,4 @@
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faExternalLink, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import Classes, { BadgeTagsStyle } from '@/components/DataBrowser/components/Hea
 import Label from '@/components/DataBrowser/components/Header/Metadata/Label';
 import Templates from '@/components/DataBrowser/components/Header/Metadata/Templates';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import { ENTITIES } from '@/constants/graphSettings';
 
 export const MetadataStyled = styled.div`
     &.highlight {
@@ -60,6 +61,15 @@ const Metadata = () => {
                 {entity && 'shared' in entity && entity.shared > 1 && (
                     <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
                         <FontAwesomeIcon icon={faArrowRight} className="me-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
+                    </BadgeTagsStyle>
+                )}
+                {entity && entity._class === ENTITIES.CLASS && 'uri' in entity && entity.uri !== null && (
+                    <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
+                        <FontAwesomeIcon icon={faHashtag} className="me-1" />
+                        URI:{' '}
+                        <a href={entity.uri} target="_blank" rel="noopener noreferrer">
+                            {entity.uri} <FontAwesomeIcon icon={faExternalLink} className="me-1" />
+                        </a>
                     </BadgeTagsStyle>
                 )}
             </div>

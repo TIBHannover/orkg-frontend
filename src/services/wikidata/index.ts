@@ -3,9 +3,21 @@ import { env } from 'next-runtime-env';
 
 import { ExternalServiceResponse, OptionType } from '@/components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';
+import { ENTITIES } from '@/constants/graphSettings';
 
 export const wikidataUrl = env('NEXT_PUBLIC_WIKIDATA_URL');
 export const wikidataSparql = env('NEXT_PUBLIC_WIKIDATA_SPARQL');
+
+export const getWikidataEntitiesClaims = async (ids: string[]) => {
+    const response = await ky.get(wikidataUrl!, {
+        searchParams: `action=wbgetentities&ids=${ids.join('%7C')}&languages=en&props=claims&format=json&origin=*`,
+    });
+    return response.json() as Promise<{ entities: { [key: string]: { claims: string[] } } }>;
+};
+
+const isResource = (claims: string[]) => {
+    return !claims || claims.length === 0 || claims.some((claim) => claim === 'P31') || claims.every((claim) => claim !== 'P279');
+};
 
 export const searchEntity = async ({
     value,
@@ -34,6 +46,12 @@ export const searchEntity = async ({
     /* @ts-expect-error API typing missing */
     if (results && results.search) {
         /* @ts-expect-error API typing missing */
+        const claims = await getWikidataEntitiesClaims(results.search.map((result: { id: string }) => result.id));
+        let claimsMap = new Map<string, string[]>();
+        if (claims && claims.entities) {
+            claimsMap = new Map(Object.entries(claims.entities).map(([id, entity]) => [id, Object.keys(entity.claims)]));
+        }
+        /* @ts-expect-error API typing missing */
         for (const [index, result] of results.search.entries()) {
             // a simple heuristic to determine if something should get the "Recommended" label
             const isRecommended =
@@ -43,6 +61,7 @@ export const searchEntity = async ({
                     !!result.aliases?.find((alias: string) => alias?.toLowerCase() === value?.toLowerCase()));
 
             const item: OptionType = {
+                _class: isResource(claimsMap.get(result.id) ?? []) ? ENTITIES.RESOURCE : ENTITIES.CLASS,
                 id: result.id,
                 label: result.label,
                 description: result.description,

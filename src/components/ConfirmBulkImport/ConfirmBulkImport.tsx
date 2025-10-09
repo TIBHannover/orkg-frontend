@@ -29,11 +29,21 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
         setIsFinished(true);
         onFinishParent();
     };
-    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors, importFailed } =
-        useImportBulkData({
-            data,
-            onFinish,
-        });
+    const {
+        papers,
+        existingPaperIds,
+        idToLabel,
+        idToEntityType,
+        isLoading,
+        createdContributions,
+        makePaperList,
+        handleImport,
+        validationErrors,
+        importFailed,
+    } = useImportBulkData({
+        data,
+        onFinish,
+    });
 
     useEffect(() => {
         makePaperList();
@@ -55,7 +65,13 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
                         <Alert color="info" fade={false}>
                             The following contributions will be imported, please review the content carefully
                         </Alert>
-                        <PaperList papers={papers} existingPaperIds={existingPaperIds} idToLabel={idToLabel} validationErrors={validationErrors} />
+                        <PaperList
+                            papers={papers}
+                            existingPaperIds={existingPaperIds}
+                            idToLabel={idToLabel}
+                            idToEntityType={idToEntityType}
+                            validationErrors={validationErrors}
+                        />
                     </>
                 )}
                 {isLoading && (
@@ -78,9 +94,9 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
                         {createdContributions.length > 0 && (
                             <>
                                 <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
-                                The imported papers can be viewed in the contribution editor <br />
+                                The imported papers can be viewed in the grid editor <br />
                                 <Button tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                                    Contribution editor
+                                    Grid editor
                                 </Button>
                             </>
                         )}

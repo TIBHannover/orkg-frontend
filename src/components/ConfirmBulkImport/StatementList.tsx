@@ -1,5 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import capitalize from 'capitalize';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -10,15 +11,18 @@ import Badge from '@/components/Ui/Badge/Badge';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import { getConfigByType } from '@/constants/DataTypes';
 import ROUTES from '@/constants/routes';
+import { EntityType } from '@/services/backend/types';
+import { getLinkByEntityType } from '@/utils';
 
 type ListStatementsProps = {
     property: string;
     idToLabel: Record<string, string>;
+    idToEntityType: Record<string, EntityType>;
     values: { id: string; label: string; text: string; datatype: string }[];
     validationErrors?: boolean[];
 };
 
-const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, values, validationErrors = [] }) => (
+const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, idToEntityType, values, validationErrors = [] }) => (
     <StatementsGroupStyle className="list-group-item" style={{ marginBottom: -1 }}>
         <div className="row gx-0">
             <PropertyStyle className="col-4" tabIndex={0}>
@@ -43,11 +47,11 @@ const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, values, 
                             <div className="d-inline">
                                 {'id' in value && idToLabel[value.id] && (
                                     <>
-                                        <Link href={`${reverse(ROUTES.RESOURCE, { id: value.id })}?noRedirect`} target="_blank">
+                                        <Link href={getLinkByEntityType(idToEntityType[value.id], value.id)} target="_blank">
                                             {idToLabel[value.id]}
                                         </Link>
                                         <Badge color="light" className="ms-2">
-                                            Resource
+                                            {capitalize(idToEntityType[value.id])}
                                         </Badge>
                                     </>
                                 )}
