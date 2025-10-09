@@ -29,8 +29,12 @@ const TextFilterRule = (props) => {
     const selectedOptions = typeof keyWordRule === 'undefined' ? null : options.filter(({ value }) => keyWordRule.value.includes(value));
     const [selectedKeys, setSelectedKeys] = useState(selectedOptions);
 
-    const calRules = (selectedVals) =>
-        selectedVals ? [{ propertyId, propertyName, type: FILTER_TYPES.INC, value: selectedVals.map(({ value }) => value) }] : [];
+    const calRules = (selectedVals) => {
+        if (selectedVals && selectedVals.length > 0) {
+            return [{ propertyId, propertyName, type: FILTER_TYPES.INC, value: selectedVals.map(({ value }) => value) }];
+        }
+        return [];
+    };
 
     const handleChange = (selectedOption) => {
         setSelectedKeys(selectedOption);
