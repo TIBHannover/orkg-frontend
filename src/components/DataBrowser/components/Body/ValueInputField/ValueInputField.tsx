@@ -4,7 +4,7 @@ import a from 'indefinite';
 import { FC } from 'react';
 
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
-import useAddValue from '@/components/DataBrowser/hooks/useAddValue';
+import useSaveValue from '@/components/DataBrowser/hooks/useSaveValue';
 import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
 import Popover from '@/components/FloatingUI/Popover';
 import InputField from '@/components/InputField/InputField';
@@ -39,17 +39,16 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
         acceptSuggestion,
         rejectSuggestion,
         handleSubmitValue,
-
         suggestionType,
         setIsConversionTippyOpen,
         isConversionTippyOpen,
         isValid,
         formFeedback,
         setFormFeedback,
-    } = useAddValue(predicate, toggleShowInput, value);
+    } = useSaveValue(predicate, toggleShowInput, value);
 
     let optionsClasses: string[] = [];
-    if (_class === ENTITIES.RESOURCE && range) {
+    if (_class === ENTITIES.RESOURCE && range && range.id !== CLASSES.RESOURCE) {
         optionsClasses = [range.id];
     } else if (dataType === 'list') {
         optionsClasses = [CLASSES.LIST];
@@ -60,13 +59,13 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
             <InputGroup size="sm" className="flex-grow-1 flex-nowrap">
                 <DatatypeSelector
                     _class={editMode && value && '_class' in value ? value._class : undefined}
-                    range={range}
+                    range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                     isDisabled={!!range}
                     dataType={dataType}
                     setDataType={setDataType}
                 />
                 <InputField
-                    range={range}
+                    range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                     inputValue={inputValue}
                     setInputValue={setInputValue}
                     inputFormType={inputFormType}

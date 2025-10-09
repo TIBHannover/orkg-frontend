@@ -8,9 +8,9 @@ import GregorianInput from '@/components/InputField/GregorianInput/GregorianInpu
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
 import Input from '@/components/Ui/Input/Input';
-import { InputType, StandardInputType } from '@/constants/DataTypes';
-import { CLASSES, ENTITIES } from '@/constants/graphSettings';
-import { Node } from '@/services/backend/types';
+import { getConfigByType, InputType, StandardInputType } from '@/constants/DataTypes';
+import { CLASSES } from '@/constants/graphSettings';
+import { EntityType, Node } from '@/services/backend/types';
 
 type InputFieldProps = {
     range?: Node;
@@ -47,6 +47,8 @@ const InputField: FC<InputFieldProps> = ({
     onCreate,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const entityType = getConfigByType(dataType).type as EntityType;
 
     const Forms: { [key: string]: React.ReactNode } = {
         textarea: (
@@ -95,7 +97,8 @@ const InputField: FC<InputFieldProps> = ({
         gMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonth" />,
         autocomplete: (
             <Autocomplete
-                entityType={ENTITIES.RESOURCE}
+                key={entityType}
+                entityType={entityType}
                 excludeClasses={[
                     CLASSES.CONTRIBUTION,
                     CLASSES.NODE_SHAPE,

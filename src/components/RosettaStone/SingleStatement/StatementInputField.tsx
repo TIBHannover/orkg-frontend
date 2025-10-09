@@ -11,8 +11,8 @@ import ListInputField from '@/components/RosettaStone/SingleStatement/ListInputF
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import { getConfigByClassId, InputType, StandardInputType } from '@/constants/DataTypes';
-import { CLASSES, ENTITIES } from '@/constants/graphSettings';
-import { Node, RSPropertyShape } from '@/services/backend/types';
+import { CLASSES } from '@/constants/graphSettings';
+import { EntityType, Node, RSPropertyShape } from '@/services/backend/types';
 
 type StatementInputFieldProps = {
     value: Node[];
@@ -63,8 +63,8 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
         ),
         autocomplete: (
             <AutoComplete
-                entityType={ENTITIES.RESOURCE}
-                baseClass={range?.id ? range.id : ''}
+                entityType={config._class as EntityType}
+                baseClass={range?.id && range.id !== CLASSES.RESOURCE ? range.id : ''}
                 excludeClasses={[CLASSES.ROSETTA_STONE_STATEMENT]}
                 placeholder={propertyShape.placeholder}
                 onChange={(selected, { action }) => {
@@ -83,7 +83,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 isMulti={isMulti}
                 size="sm"
                 className="w-25 d-inline-block"
-                enableExternalSources={!range?.id}
+                enableExternalSources={!(range?.id && range.id !== CLASSES.RESOURCE)}
             />
         ),
         default: (

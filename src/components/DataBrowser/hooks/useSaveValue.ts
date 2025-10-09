@@ -12,7 +12,7 @@ import { getList, listsUrl, updateList } from '@/services/backend/lists';
 import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
 import { Class, EntityType, Literal, Node, Predicate, Resource } from '@/services/backend/types';
 
-const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: Node | Literal) => {
+const useSaveValue = (predicate: Predicate, toggleShowInput: () => void, value?: Node | Literal) => {
     const { ranges, propertyShapes, isLiteralField } = useConstraints(predicate.id);
     const { entity, mutateStatements } = useEntity();
     const { getPreviousId } = useHistory();
@@ -57,16 +57,18 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
         if (editMode && entityType !== 'empty') {
             apiCall = commitChangeLabel(value.id, entityType, inputValue, 'datatype' in v ? v.datatype : dataType);
         } else if (!existingValue) {
-            apiCall = createValue(entityType, { ...v, ...(range?.id && { classes: [range.id] }) }).then(async (response) => {
-                if (isList) {
-                    await updateList({
-                        id: entity?.id,
-                        elements: [...(originalOrder?.elements ?? []), response.id],
-                    });
-                } else {
-                    await createResourceStatement(entity?.id, predicate?.id, response.id);
-                }
-            });
+            apiCall = createValue(entityType, { ...v, ...(range?.id && range.id !== CLASSES.RESOURCE && { classes: [range.id] }) }).then(
+                async (response) => {
+                    if (isList) {
+                        await updateList({
+                            id: entity?.id,
+                            elements: [...(originalOrder?.elements ?? []), response.id],
+                        });
+                    } else {
+                        await createResourceStatement(entity?.id, predicate?.id, response.id);
+                    }
+                },
+            );
         } else if (existingValue && 'id' in v) {
             if (isList) {
                 apiCall = updateList({
@@ -179,4 +181,4 @@ const useAddValue = (predicate: Predicate, toggleShowInput: () => void, value?: 
     };
 };
 
-export default useAddValue;
+export default useSaveValue;

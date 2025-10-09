@@ -97,7 +97,10 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         allowCreate
                         isDisabled={!isEditMode}
                         isClearable
-                        defaultOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId }))}
+                        defaultOptions={[
+                            ...DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({ label: dt.name, id: dt.classId })),
+                            { label: 'Resource', id: CLASSES.RESOURCE },
+                        ]}
                         size="sm"
                         enableExternalSources
                     />

@@ -76,7 +76,7 @@ const CustomCellEditor: FC<CustomCellEditorProps> = ({ initialValue, value: stat
     } = useSaveValue(entityId, predicate, statement as Statement, handleSuccess, stopEditing);
 
     let optionsClasses: string[] = [];
-    if (_class === ENTITIES.RESOURCE && range) {
+    if (_class === ENTITIES.RESOURCE && range && range.id !== CLASSES.RESOURCE) {
         optionsClasses = [range.id];
     } else if (dataType === 'list') {
         optionsClasses = [CLASSES.LIST];
@@ -106,14 +106,14 @@ const CustomCellEditor: FC<CustomCellEditorProps> = ({ initialValue, value: stat
                 <InputGroup size="sm" className="tw:flex-grow-1 tw:flex-nowrap">
                     <DatatypeSelector
                         _class={editMode && value && '_class' in value ? value._class : undefined}
-                        range={range}
+                        range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                         isDisabled={!!range}
                         dataType={dataType}
                         setDataType={setDataType}
                         menuPortalTarget={document.body}
                     />
                     <InputField
-                        range={range}
+                        range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                         inputValue={inputValue}
                         setInputValue={setInputValue}
                         inputFormType={inputFormType}

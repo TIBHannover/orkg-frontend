@@ -102,9 +102,15 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
         switch (_class) {
             case ENTITIES.PREDICATE:
                 return 'Property';
+            case `${ENTITIES.PREDICATE}_ref`:
+                return 'Property';
             case ENTITIES.RESOURCE:
                 return 'Resource';
+            case `${ENTITIES.RESOURCE}_ref`:
+                return 'Resource';
             case ENTITIES.CLASS:
+                return 'Class';
+            case `${ENTITIES.CLASS}_ref`:
                 return 'Class';
             case ENTITIES.LITERAL:
                 return 'Literal';

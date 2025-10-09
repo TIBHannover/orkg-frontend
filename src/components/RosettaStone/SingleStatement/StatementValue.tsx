@@ -56,7 +56,7 @@ const StatementValue: FC<StatementValueProps> = ({
                     {!('datatype' in v) && (
                         <Fragment key={`v${v.id}`}>
                             <DescriptionTooltip id={v.id} _class={v._class ?? ENTITIES.RESOURCE} classes={'classes' in v ? v.classes : undefined}>
-                                <Link href={getLinkByEntityType(ENTITIES.RESOURCE, v.id)} target="_blank">
+                                <Link href={getLinkByEntityType(v._class ?? ENTITIES.RESOURCE, v.id)} target="_blank">
                                     {v?.label}
                                 </Link>
                             </DescriptionTooltip>
