@@ -11,12 +11,14 @@ import styled from 'styled-components';
 import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
-import useImportSHACL from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
+import useImportSHACL, { ParsedTemplate } from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
 import ViewShapes from '@/components/Templates/ImportSHACL/ViewShapes';
 import Accordion from '@/components/Ui/Accordion/Accordion';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import requireAuthentication from '@/requireAuthentication';
+import { Template } from '@/services/backend/types';
 
 const DragRDF = styled.div`
     margin: 0 auto 0;
@@ -47,30 +49,26 @@ const FilePlaceholder = styled(FontAwesomeIcon)`
     color: inherit;
 `;
 
-function ImportSHACL() {
-    const [data, setData] = useState(null);
-    const [importedTemplates, setImportedTemplates] = useState([]);
+const ImportSHACL = () => {
+    const [data, setData] = useState<ParsedTemplate[] | null>(null);
+    const [importedTemplates, setImportedTemplates] = useState<Template[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
-    const [uploadedFile, setUploadedFile] = useState(null);
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const { parseTemplates, importTemplates } = useImportSHACL();
 
-    useEffect(() => {
-        document.title = 'Import SHACL - ORKG';
-    });
-
-    const onDrop = async ([file]) => {
+    const onDrop = async ([file]: File[]) => {
         setIsLoading(true);
         const reader = new FileReader();
         reader.onload = async (e) => {
-            const content = e.target.result;
+            const content = e.target?.result;
             try {
-                const parsed = await parseTemplates(content);
+                const parsed = await parseTemplates(content as string);
                 setData(parsed);
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
-                toast.error(error.message);
+                toast.error(error instanceof Error ? error.message : 'Unknown error');
                 setIsLoading(false);
             }
         };
@@ -85,10 +83,15 @@ function ImportSHACL() {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'text/n3': ['.n3'] } });
 
-    const [open, setOpen] = useState('0');
-    const toggle = (id) => {
+    const [open, setOpen] = useState<string>('0');
+
+    useEffect(() => {
+        document.title = 'Import SHACL - ORKG';
+    });
+
+    const toggle = (id: string) => {
         if (open === id) {
-            setOpen();
+            setOpen('');
         } else {
             setOpen(id);
         }
@@ -124,7 +127,7 @@ function ImportSHACL() {
             >
                 <>
                     {!isLoading && !data && (
-                        <DragRDF {...getRootProps()} className={isDragActive && 'active'}>
+                        <DragRDF {...getRootProps()} className={isDragActive ? 'active' : undefined}>
                             <FilePlaceholder icon={faFile} style={{ fontSize: 70 }} /> <br />
                             Drag 'n' drop a N-Triples file here, or click here to upload one
                             <input {...getInputProps()} />
@@ -155,10 +158,19 @@ function ImportSHACL() {
                     )}
                 </>
             </StepContainer>
-            <StepContainer bottomLine step="2" topLine title="View shapes" active={data && data?.length > 0}>
-                <Accordion open={open} toggle={toggle}>
-                    <ViewShapes data={data} />
-                </Accordion>
+            <StepContainer bottomLine step="2" topLine title="View shapes" active={!!data}>
+                {data && data?.length === 0 && (
+                    <Alert color="info">
+                        No data to import
+                        <br />
+                        <b>Please upload a valid N-Triples file that contains SHACL shapes</b>
+                    </Alert>
+                )}
+                {data && data?.length > 0 && (
+                    <Accordion open={open} toggle={toggle}>
+                        <ViewShapes data={data} />
+                    </Accordion>
+                )}
 
                 <Button
                     disabled={!activeImport || isImporting || importedTemplates?.length > 0}
@@ -167,7 +179,7 @@ function ImportSHACL() {
                     onClick={async () => {
                         setIsImporting(true);
                         try {
-                            const result = await importTemplates(data);
+                            const result = await importTemplates(data as ParsedTemplate[]);
                             setImportedTemplates(result);
                             setIsImporting(false);
                         } catch {
@@ -183,7 +195,7 @@ function ImportSHACL() {
                 step="3"
                 title="Import templates"
                 topLine
-                active={data && data?.length > 0 && (isImporting || importedTemplates?.length > 0)}
+                active={(data && data?.length > 0 && (isImporting || importedTemplates?.length > 0)) ?? false}
             >
                 {isImporting && 'Importing...'}
                 {!isImporting && importedTemplates.length > 0 && (
@@ -199,6 +211,6 @@ function ImportSHACL() {
             </StepContainer>
         </>
     );
-}
+};
 
 export default requireAuthentication(ImportSHACL);

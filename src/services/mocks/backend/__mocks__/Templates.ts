@@ -7,7 +7,6 @@ export const strictTemplate = {
     relations: {
         research_fields: [],
         research_problems: [],
-        predicate: undefined,
     },
     properties: [
         {
@@ -45,7 +44,6 @@ export const templateR0TemplateR40006 = {
             { id: 'R206008', label: 'Infectious disease basic reproduction number' },
             { id: 'R44546', label: 'Determination of the COVID-19 basic reproduction number' },
         ],
-        predicate: { id: 'P31', label: 'contribution' },
     },
     properties: [
         {
@@ -105,7 +103,7 @@ export const templateR44415 = {
     id: 'R44415',
     label: 'Basic reproduction number estimate value specification',
     description: '',
-    relations: { research_fields: [], research_problems: [], predicate: undefined },
+    relations: { research_fields: [], research_problems: [] },
     properties: [
         {
             id: 'R44635',
@@ -150,7 +148,7 @@ export const templateR35077 = {
     id: 'R35077',
     label: 'Confidence interval (95%)',
     description: '',
-    relations: { research_fields: [], research_problems: [], predicate: undefined },
+    relations: { research_fields: [], research_problems: [] },
     properties: [
         {
             id: 'R48016',
@@ -209,7 +207,7 @@ export const templateR35087 = {
     id: 'R35087',
     label: 'Time interval',
     description: '',
-    relations: { research_fields: [], research_problems: [], predicate: undefined },
+    relations: { research_fields: [], research_problems: [] },
     properties: [
         {
             id: 'R215825',
@@ -254,7 +252,7 @@ export const templateR48000 = {
     id: 'R48000',
     label: 'Problem',
     description: '',
-    relations: { research_fields: [], research_problems: [], predicate: undefined },
+    relations: { research_fields: [], research_problems: [] },
     properties: [
         {
             id: 'R576884',

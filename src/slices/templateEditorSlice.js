@@ -19,7 +19,6 @@ const initialState = {
     relations: {
         researchFields: [],
         researchProblems: [],
-        predicate: null,
     },
     target_class: null,
     is_closed: false,
@@ -43,9 +42,6 @@ export const templateEditorSlice = createSlice({
         },
         updateDescription: (state, { payload }) => {
             state.description = payload;
-        },
-        updatePredicate: (state, { payload }) => {
-            state.relations.predicate = payload;
         },
         updateIsClosed: (state, { payload }) => {
             state.is_closed = payload;
@@ -113,7 +109,6 @@ export const templateEditorSlice = createSlice({
 export const {
     updateLabel,
     updateDescription,
-    updatePredicate,
     updateIsClosed,
     updateHasLabelFormat,
     updateLabelFormat,
@@ -194,7 +189,6 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         relations: {
             research_fields: data.relations.research_fields?.map((rf) => rf.id) || [],
             research_problems: data.relations.research_problems?.map((rf) => rf.id) || [],
-            predicate: data.relations.predicate?.id,
         },
         properties: data.properties.map((ps) => ({
             label: ps.label || 'Property shape',

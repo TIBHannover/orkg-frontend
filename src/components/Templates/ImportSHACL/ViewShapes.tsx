@@ -1,11 +1,11 @@
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
-import { Fragment } from 'react';
+import { FC, Fragment } from 'react';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import { ParsedTemplate } from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
 import AccordionBody from '@/components/Ui/Accordion/AccordionBody';
 import AccordionHeader from '@/components/Ui/Accordion/AccordionHeader';
 import AccordionItem from '@/components/Ui/Accordion/AccordionItem';
@@ -14,7 +14,7 @@ import Table from '@/components/Ui/Table/Table';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
-const ViewShapes = ({ data }) => (
+const ViewShapes: FC<{ data: ParsedTemplate[] }> = ({ data }) => (
     <div>
         {data?.map((nodesShape, index) => (
             <AccordionItem key={index.toString()}>
@@ -41,7 +41,7 @@ const ViewShapes = ({ data }) => (
                             {nodesShape.label}
                         </div>
                         <Badge color="light" className="justify-content-end me-2">
-                            {pluralize('Property', nodesShape.propertyShapes.length, true)}
+                            {pluralize('Property', nodesShape.properties.length, true)}
                         </Badge>
                     </div>
                 </AccordionHeader>
@@ -59,18 +59,18 @@ const ViewShapes = ({ data }) => (
                                 </tr>
                             )}
                             <tr>
-                                <th scope="row" width="20%">
+                                <th scope="row" style={{ width: '20%' }}>
                                     Target class
                                 </th>
                                 <td>
-                                    {nodesShape.targetClass.id ? (
-                                        <DescriptionTooltip id={nodesShape.targetClass.id} _class={ENTITIES.CLASS}>
-                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: nodesShape.targetClass.id })}>
-                                                {nodesShape.targetClass.label}
+                                    {'id' in nodesShape.target_class && nodesShape.target_class.id ? (
+                                        <DescriptionTooltip id={nodesShape.target_class.id} _class={ENTITIES.CLASS}>
+                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: nodesShape.target_class.id })}>
+                                                {nodesShape.target_class.label}
                                             </Link>
                                         </DescriptionTooltip>
                                     ) : (
-                                        <>{nodesShape.targetClass.label}</>
+                                        nodesShape.target_class.label
                                     )}
                                 </td>
                             </tr>
@@ -80,75 +80,57 @@ const ViewShapes = ({ data }) => (
                                     <td>{nodesShape.description}</td>
                                 </tr>
                             )}
-                            {nodesShape.formattedLabel && (
+                            {nodesShape.formatted_label && (
                                 <tr>
                                     <th scope="row">Formatted label</th>
-                                    <td>{nodesShape.formattedLabel}</td>
+                                    <td>{nodesShape.formatted_label}</td>
                                 </tr>
                             )}
-                            {nodesShape.templatePredicate && (
-                                <tr>
-                                    <th scope="row">Template predicate</th>
-                                    <td>
-                                        {nodesShape.templatePredicate?.id ? (
-                                            <DescriptionTooltip id={nodesShape.templatePredicate.id} _class={ENTITIES.PREDICATE}>
-                                                <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: nodesShape.templatePredicate.id })}>
-                                                    {nodesShape.templatePredicate.label}
-                                                </Link>
-                                            </DescriptionTooltip>
-                                        ) : (
-                                            <>{nodesShape.templatePredicate.label}</>
-                                        )}
-                                    </td>
-                                </tr>
-                            )}
-                            {nodesShape.researchFields?.length > 0 && (
+                            {nodesShape.relations.research_fields && nodesShape.relations.research_fields.length > 0 && (
                                 <tr>
                                     <th scope="row">Research fields</th>
                                     <td>
-                                        {nodesShape.researchFields
-                                            .map((researchField) => (
-                                                <Fragment key={researchField.id}>
-                                                    {researchField?.id ? (
-                                                        <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
-                                                            <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
-                                                                {researchField.label}
-                                                            </Link>
-                                                        </DescriptionTooltip>
-                                                    ) : (
-                                                        <>{researchField.label} </>
-                                                    )}
-                                                </Fragment>
-                                            ))
-                                            .reduce((prev, curr) => [prev, ', ', curr])}
+                                        {nodesShape.relations.research_fields.map((researchField, index) => (
+                                            <Fragment key={'id' in researchField && researchField.id ? researchField.id : index.toString()}>
+                                                {index > 0 && ', '}
+                                                {'id' in researchField && researchField.id ? (
+                                                    <DescriptionTooltip id={researchField.id} _class={ENTITIES.RESOURCE}>
+                                                        <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchField.id })}>
+                                                            {researchField.label}
+                                                        </Link>
+                                                    </DescriptionTooltip>
+                                                ) : (
+                                                    <>{researchField.label} </>
+                                                )}
+                                            </Fragment>
+                                        ))}
                                     </td>
                                 </tr>
                             )}
-                            {nodesShape.researchProblems?.length > 0 && (
+                            {nodesShape.relations.research_problems && nodesShape.relations.research_problems.length > 0 && (
                                 <tr>
                                     <th scope="row">Research problem</th>
                                     <td>
-                                        {nodesShape.researchProblems
-                                            .map((researchProblem) => (
-                                                <Fragment key={researchProblem.id}>
-                                                    {researchProblem?.id ? (
-                                                        <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
-                                                            <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
-                                                                {researchProblem.label}
-                                                            </Link>
-                                                        </DescriptionTooltip>
-                                                    ) : (
-                                                        <>{researchProblem.label} </>
-                                                    )}
-                                                </Fragment>
-                                            ))
-                                            .reduce((prev, curr) => [prev, ', ', curr])}
+                                        {nodesShape.relations.research_problems.map((researchProblem, index) => (
+                                            <Fragment key={'id' in researchProblem && researchProblem.id ? researchProblem.id : index.toString()}>
+                                                {index > 0 && ', '}
+                                                {'id' in researchProblem && researchProblem.id ? (
+                                                    <DescriptionTooltip id={researchProblem.id} _class={ENTITIES.RESOURCE}>
+                                                        <Link target="_blank" href={reverse(ROUTES.RESOURCE, { id: researchProblem.id })}>
+                                                            {researchProblem.label}
+                                                        </Link>
+                                                    </DescriptionTooltip>
+                                                ) : (
+                                                    <>{researchProblem.label} </>
+                                                )}
+                                            </Fragment>
+                                        ))}
                                     </td>
                                 </tr>
                             )}
                             <tr>
                                 <th scope="row">Closed</th>
-                                <td>{nodesShape.closed !== 'false' ? 'Yes' : 'No'}</td>
+                                <td>{nodesShape.is_closed ? 'Yes' : 'No'}</td>
                             </tr>
                         </tbody>
                     </Table>
@@ -162,33 +144,28 @@ const ViewShapes = ({ data }) => (
                             </tr>
                         </thead>
                         <tbody>
-                            {nodesShape.propertyShapes.map((propertyShape, i) => (
+                            {nodesShape.properties.map((propertyShape, i) => (
                                 <tr key={i.toString()}>
                                     <td>
-                                        {propertyShape.path?.id ? (
+                                        {propertyShape.path && 'id' in propertyShape.path && propertyShape.path.id ? (
                                             <DescriptionTooltip id={propertyShape.path.id} _class={ENTITIES.PREDICATE}>
                                                 <Link target="_blank" href={reverse(ROUTES.PROPERTY, { id: propertyShape.path.id })}>
                                                     {propertyShape.path.label}
                                                 </Link>
                                             </DescriptionTooltip>
                                         ) : (
-                                            <>{propertyShape.path.label}</>
+                                            propertyShape.path?.label
                                         )}
                                     </td>
                                     <td>
-                                        {propertyShape.range && (
-                                            <>
-                                                {propertyShape.range.id ? (
-                                                    <DescriptionTooltip id={propertyShape.range.id} _class={ENTITIES.CLASS}>
-                                                        <Link target="_blank" href={reverse(ROUTES.CLASS, { id: propertyShape.range.id })}>
-                                                            {propertyShape.range.label}
-                                                        </Link>
-                                                    </DescriptionTooltip>
-                                                ) : (
-                                                    <>{propertyShape.range.label}</>
-                                                )}
-                                            </>
+                                        {propertyShape.range && 'id' in propertyShape.range && propertyShape.range.id && propertyShape.range.id && (
+                                            <DescriptionTooltip id={propertyShape.range.id} _class={ENTITIES.CLASS}>
+                                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: propertyShape.range.id })}>
+                                                    {propertyShape.range.label}
+                                                </Link>
+                                            </DescriptionTooltip>
                                         )}
+                                        {propertyShape.range && !('id' in propertyShape.range) && propertyShape.range.label}
                                     </td>
                                     <td>
                                         {propertyShape.minCount ?? 0} - {propertyShape.maxCount ?? '*'}
@@ -228,7 +205,5 @@ const ViewShapes = ({ data }) => (
         ))}
     </div>
 );
-
-ViewShapes.propTypes = { data: PropTypes.array };
 
 export default ViewShapes;

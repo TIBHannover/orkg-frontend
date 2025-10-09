@@ -7,7 +7,6 @@ import { OptionType } from '@/components/Autocomplete/types';
 import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
 import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
-import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import FormText from '@/components/Ui/Form/FormText';
 import Input from '@/components/Ui/Input/Input';
@@ -15,13 +14,11 @@ import InputGroup from '@/components/Ui/Input/InputGroup';
 import Label from '@/components/Ui/Label/Label';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
-import { updateDescription, updatePredicate, updateResearchFields, updateResearchProblems, updateTargetClass } from '@/slices/templateEditorSlice';
+import { updateDescription, updateResearchFields, updateResearchProblems, updateTargetClass } from '@/slices/templateEditorSlice';
 
 export const MAX_DESCRIPTION_LENGTH = 350;
 
-const GeneralSettings: FC<{}> = () => {
-    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
-    const [propertyLabel, setPropertyLabel] = useState('');
+const GeneralSettings = () => {
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
@@ -31,27 +28,11 @@ const GeneralSettings: FC<{}> = () => {
     const {
         research_problems: researchProblems,
         research_fields: researchFields,
-        predicate,
         // @ts-expect-error
     } = useSelector((state) => state.templateEditor.relations);
 
     const handleChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(updateDescription(e.target.value));
-    };
-
-    const handlePropertySelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
-        if (action === 'select-option') {
-            dispatch(updatePredicate(selected));
-        } else if (action === 'create-option' && selected) {
-            setIsOpenConfirmModal(true);
-            setPropertyLabel(selected.label);
-        } else if (action === 'clear') {
-            dispatch(updatePredicate(null));
-        }
-    };
-
-    const handleCreate = ({ id }: { id: string }) => {
-        dispatch(updatePredicate({ label: propertyLabel, id }));
     };
 
     const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
@@ -80,15 +61,6 @@ const GeneralSettings: FC<{}> = () => {
 
     return (
         <div className="p-4">
-            {isOpenConfirmModal && (
-                <ConfirmCreatePropertyModal
-                    isOpen={isOpenConfirmModal}
-                    onCreate={handleCreate}
-                    label={propertyLabel}
-                    toggle={() => setIsOpenConfirmModal((v) => !v)}
-                />
-            )}
-
             <FormGroup className="mb-4">
                 <Label for="target-class">Target class</Label>
                 <InputGroup>
@@ -126,31 +98,9 @@ const GeneralSettings: FC<{}> = () => {
                 <legend className="mt-3">Template use cases</legend>
                 <p>
                     <small className="text-muted">
-                        These fields are optional, the property is used to link the contribution resource to the template instance. The research
-                        fields/problems are used to suggest this template in the relevant papers.
+                        These fields are optional. The research fields/problems are used to suggest this template in the relevant papers.
                     </small>
                 </p>
-                <FormGroup className="mb-4">
-                    <Label for="template-property">
-                        Property <span className="text-muted fst-italic">(optional)</span>
-                    </Label>
-                    <Autocomplete
-                        entityType={ENTITIES.PREDICATE}
-                        placeholder={isEditMode ? 'Select or type to enter a property' : 'No Property'}
-                        onChange={handlePropertySelect}
-                        value={predicate}
-                        openMenuOnFocus
-                        allowCreate
-                        isDisabled={!isEditMode}
-                        isClearable
-                        inputId="template-property"
-                    />
-                    {isEditMode && (
-                        <FormText>
-                            Specify the property of this template. This property is used to link the contribution to the template instance.
-                        </FormText>
-                    )}
-                </FormGroup>
                 <FormGroup className="mb-4">
                     <Label for="template-field">
                         Research fields <span className="text-muted fst-italic">(optional)</span>
