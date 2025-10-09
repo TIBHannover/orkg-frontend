@@ -5,19 +5,18 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
 import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { StyledItemProvenanceBox } from '@/components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from '@/constants/graphSettings';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 import { Contributor, Observatory, Organization, Paper } from '@/services/backend/types';
-import { setPaperObservatory } from '@/slices/viewPaperSlice';
 
 type ProvenanceProps = {
     observatoryInfo: Observatory;
@@ -40,9 +39,7 @@ const Provenance: FC<ProvenanceProps> = ({
 }) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const { user } = useAuthentication();
-    // @ts-expect-error
-    const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
-    const dispatch = useDispatch();
+    const { dataCiteDoi, mutatePaper } = useViewPaper({ paperId: paperResource.id });
 
     return (
         <div>
@@ -161,8 +158,8 @@ const Provenance: FC<ProvenanceProps> = ({
                 </div>
             )}
             <ObservatoryModal
-                callBack={(observatory_id, organization_id) => {
-                    dispatch(setPaperObservatory({ observatory_id, organization_id }));
+                callBack={() => {
+                    mutatePaper();
                 }}
                 showDialog={showAssignObservatory}
                 resourceId={paperResource.id}

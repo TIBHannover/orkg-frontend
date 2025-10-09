@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { MouseEvent, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
@@ -22,14 +21,15 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import useParams from '@/components/useParams/useParams';
 import Tooltip from '@/components/Utils/Tooltip';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { publishPaper } from '@/services/backend/papers';
 import { getStatements } from '@/services/backend/statements';
-import { Author, Paper } from '@/services/backend/types';
-import { RootStore } from '@/slices/types';
+import { Author } from '@/services/backend/types';
 
 type PublishProps = {
     showDialog: boolean;
@@ -41,10 +41,11 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState<SingleValue<OptionType>>(null);
     const [creators, setCreators] = useState<Author[]>([]);
-    const viewPaper = useSelector((state: RootStore) => state.viewPaper.paper as Paper);
+    const { resourceId } = useParams();
+    const { paper: viewPaper } = useViewPaper({ paperId: resourceId });
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
-    const { title } = viewPaper;
+    const { title } = viewPaper || {};
     const [state, copyToClipboard] = useCopyToClipboard();
 
     useEffect(() => {
@@ -57,9 +58,13 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
     const isPublishable = title && title.trim() !== '' && description && description.trim() !== '' && researchField && creators?.length > 0;
 
     useEffect(() => {
-        setResearchField(viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0] : null);
-        setCreators(viewPaper.authors);
+        setResearchField(viewPaper?.research_fields && viewPaper?.research_fields?.length > 0 ? viewPaper?.research_fields?.[0] : null);
+        setCreators(viewPaper?.authors || []);
     }, [viewPaper]);
+
+    if (!viewPaper) {
+        return null;
+    }
 
     const publishDOI = async (paperId: string) => {
         if (isPublishable) {

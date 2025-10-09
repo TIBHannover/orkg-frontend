@@ -2,7 +2,6 @@
 
 import { env } from 'next-runtime-env';
 import { InView } from 'react-intersection-observer';
-import { useSelector } from 'react-redux';
 
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
@@ -22,26 +21,39 @@ import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
-    const viewPaper = useSelector((state) => state.viewPaper.paper);
-    const { isLoading, isLoadingFailed, showHeaderBar, isEditMode, showGraphModal, toggle, handleShowHeaderBar, setShowGraphModal } = useViewPaper({
+    const {
+        paper: viewPaper,
+        isLoading,
+        isLoadingFailed,
+        showHeaderBar,
+        isEditMode,
+        showGraphModal,
+        toggle,
+        handleShowHeaderBar,
+        setShowGraphModal,
+    } = useViewPaper({
         paperId: resourceId,
     });
 
     return (
         <div>
             {!isLoading && isLoadingFailed && <NotFound />}
-            {!isLoadingFailed && (
+            {!isLoading && !isLoadingFailed && viewPaper && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
+                        <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by} editMode={isEditMode} toggle={toggle} />
                     )}
-                    <Breadcrumbs researchFieldId={viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null} />
+                    <Breadcrumbs
+                        researchFieldId={
+                            viewPaper?.research_fields && viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null
+                        }
+                    />
 
                     <InView as="div" onChange={(inView, entry) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={
                                 <PaperMenuBar
-                                    disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy}
+                                    disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by}
                                     editMode={isEditMode}
                                     toggle={toggle}
                                 />
@@ -68,7 +80,7 @@ const ViewPaper = () => {
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
                         )}
-                        {!isLoading && !isLoadingFailed && <PaperHeader editMode={isEditMode} />}
+                        {!isLoading && !isLoadingFailed && <PaperHeader editMode={isEditMode} isPublishedVersionView={false} />}
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />

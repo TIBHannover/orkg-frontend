@@ -1,3 +1,5 @@
+'use client';
+
 import { isArray } from 'lodash';
 // eslint-disable-next-line no-restricted-imports
 import { useParams as useParamsNext } from 'next/navigation';

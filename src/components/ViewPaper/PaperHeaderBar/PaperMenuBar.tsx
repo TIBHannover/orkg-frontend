@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
@@ -12,11 +11,12 @@ import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import useParams from '@/components/useParams/useParams';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import AccessPaperButton from '@/components/ViewPaper/PaperHeaderBar/AccessPaperButton';
 import Publish from '@/components/ViewPaper/Publish/Publish';
 import ROUTES from '@/constants/routes';
-import { RootStore } from '@/slices/types';
-import { getPaperLink } from '@/slices/viewPaperSlice';
+import { Paper } from '@/services/backend/types';
 
 type PaperMenuBarProps = {
     editMode: boolean;
@@ -24,14 +24,26 @@ type PaperMenuBarProps = {
     toggle: (key: string) => void;
 };
 
+const getPaperLink = (paper?: Paper) => {
+    if (paper?.publication_info?.url) {
+        return paper.publication_info?.url;
+    }
+    if (paper?.identifiers?.doi?.[0] && paper?.identifiers?.doi?.[0].startsWith('10.')) {
+        return `https://doi.org/${paper?.identifiers?.doi?.[0]}`;
+    }
+    return '';
+};
+
 const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) => {
+    const { resourceId } = useParams();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
-    const id = useSelector((state: RootStore) => state.viewPaper.paper.id);
-    const title = useSelector((state: RootStore) => state.viewPaper.paper.title);
-    const doi = useSelector((state: RootStore) => state.viewPaper.paper.identifiers?.doi?.[0]);
-    const paperLink = useSelector(getPaperLink);
+    const { paper } = useViewPaper({ paperId: resourceId });
+    const id = paper?.id;
+    const title = paper?.title;
+    const doi = paper?.identifiers?.doi?.[0];
+    const paperLink = getPaperLink(paper);
 
     return (
         <>

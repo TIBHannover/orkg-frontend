@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
 
@@ -32,19 +31,19 @@ import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
+import PaperHeader from '@/components/ViewPaper/PaperHeader';
 import Contributions from '@/components/ViewPaperVersion/ContributionsVersion/Contributions';
 import useViewPaperVersion from '@/components/ViewPaperVersion/hooks/useViewPaperVersion';
-import PaperVersionHeader from '@/components/ViewPaperVersion/PaperVersionHeader';
 import ROUTES from '@/constants/routes';
 
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();
-    const paper = useSelector((state) => state.viewPaper.paper);
-    const originalPaperId = useSelector((state) => state.viewPaper.originalPaperId);
+
+    const { paper, dataCiteDoi, originalPaperId, isLoadingPaperVersion } = useViewPaper({ paperId: resourceId });
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const dataCiteDoi = useSelector((state) => state.viewPaper.dataCiteDoi);
     const [state, copyToClipboard] = useCopyToClipboard();
 
     useEffect(() => {
@@ -60,19 +59,19 @@ const ViewPaperVersion = () => {
 
     return (
         <div>
-            {!isLoading && isLoadingFailed && <NotFound />}
-            {!isLoadingFailed && (
+            {!isLoading && !isLoadingPaperVersion && isLoadingFailed && <NotFound />}
+            {!isLoading && !isLoadingPaperVersion && !isLoadingFailed && paper && (
                 <>
                     <Coins item={paper} />
-                    <Breadcrumbs researchFieldId={paper.research_fields.length > 0 ? paper.research_fields?.[0]?.id : null} />
+                    <Breadcrumbs researchFieldId={paper?.research_fields?.length > 0 ? paper.research_fields?.[0]?.id : null} />
                     <TitleBar
                         buttonGroup={
                             <>
-                                <Button size="sm" onClick={() => setShowExportCitationsDialog((v) => !v)}>
+                                <Button size="sm" onClick={() => setShowExportCitationsDialog((v) => !v)} style={{ marginRight: 2 }}>
                                     Export citations
                                 </Button>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end ms-2">
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <FontAwesomeIcon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>
@@ -100,15 +99,7 @@ const ViewPaperVersion = () => {
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
                         )}
-                        {!isLoading && originalPaperId && (
-                            <Alert color="warning" className="container d-flex">
-                                <div className="flex-grow-1">
-                                    You are viewing the published version of the paper. Click to{' '}
-                                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link>
-                                </div>
-                            </Alert>
-                        )}
-                        {!isLoading && !isLoadingFailed && <PaperVersionHeader />}
+                        {!isLoading && !isLoadingFailed && <PaperHeader isPublishedVersionView editMode={false} />}
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />

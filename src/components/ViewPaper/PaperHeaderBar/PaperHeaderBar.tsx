@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import Container from '@/components/Ui/Structure/Container';
+import useParams from '@/components/useParams/useParams';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 
 const PaperHeaderBarContainer = styled.div`
@@ -25,34 +26,36 @@ const AnimationContainer = styled(motion.div)`
     overflow: hidden;
 `;
 
-function PaperHeaderBar(props) {
-    const title = useSelector((state) => state.viewPaper.paper.title);
+type PaperHeaderBarProps = {
+    editMode: boolean;
+    disableEdit: boolean;
+    toggle: (key: string) => void;
+};
+
+const PaperHeaderBar: FC<PaperHeaderBarProps> = ({ editMode, disableEdit, toggle }) => {
+    const { resourceId } = useParams();
+    const { paper } = useViewPaper({ paperId: resourceId });
 
     return (
         <AnimationContainer initial={{ maxHeight: 0 }} animate={{ maxHeight: 60 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
             <PaperHeaderBarContainer id="paperHeaderBar">
                 <Container className="d-flex align-items-center py-2">
                     <div className="title flex-grow-1 text-truncate">
-                        {props.editMode ? (
+                        {editMode ? (
                             <>
                                 Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </>
                         ) : (
-                            title
+                            paper?.title || ''
                         )}
                     </div>
                     <ButtonGroup className="flex-shrink-0">
-                        <PaperMenuBar disableEdit={props.disableEdit} editMode={props.editMode} toggle={props.toggle} />
+                        <PaperMenuBar disableEdit={disableEdit} editMode={editMode} toggle={toggle} />
                     </ButtonGroup>
                 </Container>
             </PaperHeaderBarContainer>
         </AnimationContainer>
     );
-}
-PaperHeaderBar.propTypes = {
-    editMode: PropTypes.bool.isRequired,
-    disableEdit: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
 };
 
 export default PaperHeaderBar;

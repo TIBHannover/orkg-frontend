@@ -5,24 +5,26 @@ import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
-import { useDispatch } from 'react-redux';
+import { mutate } from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useHistory from '@/components/DataBrowser/hooks/useHistory';
 import Button from '@/components/Ui/Button/Button';
 import Input from '@/components/Ui/Input/Input';
 import InputGroup from '@/components/Ui/Input/InputGroup';
-import { ENTITIES } from '@/constants/graphSettings';
+import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { updateResource } from '@/services/backend/resources';
-import { updatePaperContributionLabel } from '@/slices/viewPaperSlice';
+import { statementsUrl } from '@/services/backend/statements';
 import { getLinkByEntityType } from '@/utils';
 
 const Label = () => {
     const [isEditing, setIsEditing] = useState(false);
     const { isValidating, entity, mutateEntity } = useEntity();
+    const { history } = useHistory();
     const [value, setValue] = useState(entity?.label ?? '');
     const { config } = useDataBrowserState();
     const { isEditMode } = config;
@@ -37,16 +39,19 @@ const Label = () => {
         setIsEditing(true);
     };
 
-    const dispatch = useDispatch();
-
     const handleUpdateLabel = async () => {
         if (entity) {
             await updateResource(entity?.id, { label: value });
             mutateEntity();
-            // update the label in the redux store (if we are in paper view)
-            const isPaperView = !!match(ROUTES.VIEW_PAPER)(pathname) || !!match(ROUTES.VIEW_PAPER_CONTRIBUTION)(pathname);
-            if (isPaperView) {
-                dispatch(updatePaperContributionLabel({ label: value, id: entity.id }));
+            // reload contributions if we are in paper view
+            const paperMatch = match(ROUTES.VIEW_PAPER_CONTRIBUTION)(pathname);
+            const isPaperView = !!match(ROUTES.VIEW_PAPER)(pathname) || !!paperMatch;
+            if (isPaperView && history.length === 0) {
+                // @ts-expect-error not typed
+                const paperid = paperMatch?.params?.resourceId;
+                mutate([{ subjectId: paperid, predicateId: PREDICATES.HAS_CONTRIBUTION }, statementsUrl, 'getStatements'], undefined, {
+                    revalidate: true,
+                });
             }
             setIsEditing(false);
         }

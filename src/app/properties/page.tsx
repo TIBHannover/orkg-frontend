@@ -34,7 +34,7 @@ const Properties = () => {
     return (
         <ListPage
             label="properties"
-            resourceClass={ENTITIES.PREDICATE}
+            resourceClass="Predicate"
             renderListItem={renderListItem}
             fetchFunction={getPredicates}
             fetchFunctionName="getPredicates"
