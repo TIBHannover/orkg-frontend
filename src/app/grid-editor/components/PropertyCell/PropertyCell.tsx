@@ -46,7 +46,7 @@ const PropertyCell = ({ value, data }: PropertyCellProps) => {
     }
 
     return (
-        <div className="tw:flex tw:items-center tw:justify-between tw:group tw:w-full tw:relative">
+        <div className="tw:flex tw:items-center tw:justify-between tw:group tw:relative tw:w-full tw:h-full tw:cursor-pointer">
             <Link
                 href={reverse(ROUTES.PROPERTY, { id: value.id })}
                 target="_blank"

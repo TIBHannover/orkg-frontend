@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import Button from '@/components/Ui/Button/Button';
@@ -8,25 +7,20 @@ import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
-class Confirmation extends Component {
-    render() {
-        const { proceedLabel, cancelLabel, title, message, proceed, enableEscape = true } = this.props;
-        return (
-            <Modal isOpen toggle={() => proceed(false)} backdrop={!!enableEscape}>
-                <ModalHeader toggle={() => proceed(false)}>{title}</ModalHeader>
-                <ModalBody>{message}</ModalBody>
-                <ModalFooter>
-                    <Button color="light" onClick={() => proceed(false)}>
-                        {cancelLabel}
-                    </Button>
-                    <Button color="primary" onClick={() => proceed(true)}>
-                        {proceedLabel}
-                    </Button>
-                </ModalFooter>
-            </Modal>
-        );
-    }
-}
+const Confirmation = ({ proceedLabel, cancelLabel, title, message, proceed, enableEscape = true }) => (
+    <Modal isOpen toggle={() => proceed(false)} backdrop={!!enableEscape}>
+        <ModalHeader toggle={() => proceed(false)}>{title}</ModalHeader>
+        <ModalBody>{message}</ModalBody>
+        <ModalFooter>
+            <Button color="light" onClick={() => proceed(false)}>
+                {cancelLabel}
+            </Button>
+            <Button color="primary" onClick={() => proceed(true)}>
+                {proceedLabel}
+            </Button>
+        </ModalFooter>
+    </Modal>
+);
 
 Confirmation.propTypes = {
     proceedLabel: PropTypes.string,

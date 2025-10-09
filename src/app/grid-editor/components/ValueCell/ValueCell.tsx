@@ -26,7 +26,7 @@ const ValueCell = (params: ValueCellParams) => {
         return (
             <div
                 role="textbox"
-                className="tw:group tw:flex tw:items-start tw:gap-2 tw:relative tw:pr-6"
+                className="tw:group tw:flex tw:items-start tw:gap-2 tw:relative tw:pr-6 tw:w-full tw:h-full tw:cursor-pointer"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 tabIndex={0}
@@ -46,7 +46,7 @@ const ValueCell = (params: ValueCellParams) => {
     }
     return (
         <div
-            className="tw:group tw:flex tw:items-start tw:gap-2 tw:relative tw:pr-6"
+            className="tw:group tw:flex tw:items-start tw:gap-2 tw:relative tw:pr-6 tw:w-full tw:h-full tw:cursor-pointer"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

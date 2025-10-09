@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { TData } from '@/app/grid-editor/context/GridContext';
+import { getFocusedCellInfo, isInEditMode as checkIsInEditMode } from '@/app/grid-editor/hooks/gridKeyboardHelpers';
 import useConstraints from '@/app/grid-editor/hooks/useConstraints';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useSwrStatementsCache from '@/app/grid-editor/hooks/useSwrStatementsCache';
@@ -111,41 +112,15 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
                 return; // Don't interfere with other key events
             }
 
-            // Get current grid state
-            const api = gridRef.current?.api;
-            if (!api) return;
-
-            // Check if we're currently in cell editing mode or using autocomplete
-            const focusedElement = document.activeElement;
-            const isInEditMode =
-                focusedElement &&
-                (focusedElement.tagName === 'INPUT' ||
-                    focusedElement.tagName === 'TEXTAREA' ||
-                    (focusedElement as HTMLElement).contentEditable === 'true' ||
-                    // Check for react-select components (autocomplete dropdown)
-                    focusedElement.closest('.react-select__control') ||
-                    focusedElement.closest('.react-select__menu') ||
-                    focusedElement.closest('.react-select__option') ||
-                    focusedElement.closest('.react-select__input') ||
-                    // Check for CustomCellEditor component
-                    focusedElement.closest('.custom-cell-editor') ||
-                    // Check for any modal or dropdown that might be open
-                    focusedElement.closest('[role="listbox"]') ||
-                    focusedElement.closest('[role="option"]') ||
-                    focusedElement.closest('[role="combobox"]'));
-
             // Don't interfere with copy/paste operations in edit mode or when autocomplete is active
-            if (isInEditMode) return;
+            if (checkIsInEditMode()) return;
 
-            // Get focused cell using AG Grid's API instead of tracking state
-            const focusedCell = api.getFocusedCell();
-            if (!focusedCell || !focusedCell.column) return;
+            // Get current grid state and focused cell
+            const api = gridRef.current?.api;
+            const cellInfo = getFocusedCellInfo(api);
+            if (!cellInfo || !api) return;
 
-            const colId = focusedCell.column.getColId();
-            const { rowIndex } = focusedCell;
-
-            // Skip if predicate column (not copyable/pastable)
-            if (colId === 'predicate') return;
+            const { colId, rowIndex } = cellInfo;
 
             // Copy functionality (Ctrl+C or Cmd+C)
             if (isCopyOperation) {
@@ -203,7 +178,7 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [canAddValue, isValidValue, gridRef]); // Dependencies for the useEffect
+    }, [canAddValue, isValidValue, mutateStatement, gridRef]); // Dependencies for the useEffect
 
     return {
         // Expose current copied value for debugging if needed (but as a function to avoid re-renders)

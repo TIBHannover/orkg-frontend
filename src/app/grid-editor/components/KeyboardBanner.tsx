@@ -16,7 +16,7 @@ const KeyboardBanner = () => {
     return (
         <Container className=" tw:px-4 tw:my-2">
             <Alert color="info" isOpen={!isKeyboardBannerDismissed} toggle={onDismissKeyboardBanner}>
-                You can use keyboard shortcuts to navigate the grid and copy/paste values.
+                You can use keyboard shortcuts to navigate the grid, copy/paste values, and delete values (Delete key).
             </Alert>
         </Container>
     );
