@@ -26,6 +26,7 @@ import { TData } from '@/app/grid-editor/context/GridContext';
 import useBlankNodeHandler from '@/app/grid-editor/hooks/useBlankNodeHandler';
 import useConstraints from '@/app/grid-editor/hooks/useConstraints';
 import useCopyPaste from '@/app/grid-editor/hooks/useCopyPaste';
+import useDeleteValue from '@/app/grid-editor/hooks/useDeleteValue';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useGridEditor from '@/app/grid-editor/hooks/useGridEditor';
 import useScrollToNewProperty from '@/app/grid-editor/hooks/useScrollToNewProperty';
@@ -42,9 +43,10 @@ const MainGrid = () => {
     const { canAddValue: canAddValueFn, getRanges } = useConstraints();
     const { handleBlankNode } = useBlankNodeHandler();
     // Copy-paste functionality
-    useCopyPaste({
-        gridRef,
-    });
+    useCopyPaste({ gridRef });
+
+    // Delete value functionality
+    useDeleteValue({ gridRef });
 
     // Handler to check if user can edit when entering edit mode
     const onCellEditingStarted = async (params: CellEditingStartedEvent<TData>) => {
@@ -92,6 +94,11 @@ const MainGrid = () => {
         const isFromModal = target.closest('.modal');
 
         if (isFromModal) return true;
+
+        // Always suppress Delete key - we handle it with custom confirmation dialog
+        if (event.key === 'Delete') {
+            return true;
+        }
 
         // Only suppress if we're editing and the event comes from react-select
         if (!params.editing) return false;

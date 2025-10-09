@@ -7,12 +7,14 @@ import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { ReactElement, useEffect, useState } from 'react';
 
+import ComparisonSupportWarning from '@/app/grid-editor/components/ComparisonSupportWarning/ComparisonSupportWarning';
 import KeyboardBanner from '@/app/grid-editor/components/KeyboardBanner';
 import MainGrid from '@/app/grid-editor/components/MainGrid/MainGrid';
 import getPreventEditCase from '@/app/grid-editor/components/PreventEditing/PreventConditions';
 import PreventEditing from '@/app/grid-editor/components/PreventEditing/PreventEditing';
 import RelatedPapersCarousel from '@/app/grid-editor/components/RelatedPapers/RelatedPaperCarousel';
 import SelectEntities from '@/app/grid-editor/components/SelectEntities/SelectEntities';
+import UpdateComparison from '@/app/grid-editor/components/UpdateComparison/UpdateComparison';
 import GridProvider from '@/app/grid-editor/context/GridContext';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import usePaperContributionCheck from '@/app/grid-editor/hooks/usePaperContributionCheck';
@@ -21,6 +23,7 @@ import AddPaperModal from '@/components/PaperForm/AddPaperModal';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+import Container from '@/components/Ui/Structure/Container';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import routes from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
@@ -88,6 +91,12 @@ const GridEditorPage = () => {
             </TitleBar>
 
             {prevent.length > 0 && <PreventEditing />}
+            {entities && entities.length > 0 && (
+                <Container className="tw:px-4 tw:my-2">
+                    <ComparisonSupportWarning selectedEntities={entities} dismissible />
+                </Container>
+            )}
+            {comparisonId && <UpdateComparison />}
             {prevent.length === 0 && entityIds && entityIds.length > 0 && <KeyboardBanner />}
             {prevent.length === 0 && (
                 <GridProvider>

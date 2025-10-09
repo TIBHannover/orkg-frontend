@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
+import ComparisonSupportWarning from '@/app/grid-editor/components/ComparisonSupportWarning/ComparisonSupportWarning';
 import Item from '@/app/grid-editor/components/SelectEntities/Item';
 import SelectedItem from '@/app/grid-editor/components/SelectEntities/SelectedItem';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
@@ -249,6 +250,7 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
                         setIsOpenViewSelectedEntities(params[0] === 'selected');
                     }}
                 />
+                <ComparisonSupportWarning selectedEntities={selectedEntities} />
             </ModalBody>
             <ModalFooter className="d-flex">
                 {allowCreate && (
