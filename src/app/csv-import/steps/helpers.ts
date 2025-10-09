@@ -28,7 +28,7 @@ export const matchHeaderByLabel = (header: string) => {
     const defaultHeader = DEFAULT_HEADERS.find(
         (h) =>
             header.toLowerCase().includes(h.label.toLowerCase()) ||
-            header.toLowerCase().includes(h.id.toLowerCase()) ||
+            header.toLowerCase() === h.id.toLowerCase() ||
             h.alternativeLabels?.some((alt) => header.toLowerCase().includes(alt.toLowerCase())),
     );
     if (defaultHeader) return defaultHeader;
