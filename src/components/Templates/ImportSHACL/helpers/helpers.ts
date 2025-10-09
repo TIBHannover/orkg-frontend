@@ -1,45 +1,50 @@
-import rdf from 'rdf';
+import { DataFactory, Quad_Object, Store, Term } from 'n3';
 
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createClass, getClassById, getClasses } from '@/services/backend/classes';
 import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
 import { getResource } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
+import { Class, Resource } from '@/services/backend/types';
 
-export const isORKGDefaultPredicate = (id) => Object.keys(PREDICATES).find((c) => PREDICATES[c] === id);
+const { namedNode } = DataFactory;
 
-export const isORKGDefaultClass = (id) => Object.keys(CLASSES).find((c) => CLASSES[c] === id);
+export const isORKGDefaultPredicate = (id: string) => Object.keys(PREDICATES).find((c) => PREDICATES[c] === id);
+
+export const isORKGDefaultClass = (id: string) => Object.keys(CLASSES).find((c) => CLASSES[c] === id);
 
 /**
  * Match triple from the RDF graph
- *
- * @param {String} g RDF graph
- * @param {String} concept target concept (object | subject | predicate)
- * @param {Object} subject subject node selector
- * @param {Object} predicate predicate node selector
- * @param {Object} object object node selector
- * @param {Boolean} isUnique if one concept should be returned
- * @result {Object} Concept or array of matched concepts
  */
-export const extractConcept = (g, concept = 'object', subject = null, predicate = null, object = null, isUnique = true) => {
-    const triples = g.match(subject, predicate, object);
-    let result = isUnique ? null : [];
-    triples.forEach((s) => {
-        if (isUnique) {
-            result = s[concept];
-        } else {
-            result.push(s[concept]);
-        }
-    });
-    return result;
-};
+export function extractConcept<T extends boolean = true>(
+    g: Store,
+    concept: 'subject' | 'predicate' | 'object' = 'object',
+    subject: Term | null = null,
+    predicate: Term | null = null,
+    object: Term | null = null,
+    isUnique: T = true as T,
+): T extends true ? Quad_Object | null : Quad_Object[] | null {
+    const matches = g.match(subject, predicate, object);
+    if (isUnique) {
+        let result: Quad_Object | null = null;
+        matches.forEach((match) => {
+            result = match[concept as keyof typeof match] as Quad_Object;
+        });
+        return result as T extends true ? Quad_Object | null : Quad_Object[];
+    }
+    const result: Quad_Object[] = [];
+    for (const match of matches) {
+        result.push(match[concept as keyof typeof match] as Quad_Object);
+    }
+    return result as T extends true ? Quad_Object | null : Quad_Object[];
+}
 
-export const extractLabelFromRdfURI = (uri) => {
+export const extractLabelFromRdfURI = (uri: string) => {
     // Check if the URI has a fragment identifier
     const fragmentIndex = uri.indexOf('#');
     if (fragmentIndex !== -1) {
         // Extract the fragment identifier and decode it
-        const fragment = decodeURIComponent(uri.substr(fragmentIndex + 1));
+        const fragment = decodeURIComponent(uri.substring(fragmentIndex + 1));
 
         // Split the fragment identifier by slashes and return the last part
         const parts = fragment.split('/');
@@ -54,12 +59,13 @@ export const extractLabelFromRdfURI = (uri) => {
     return decodeURIComponent(lastSegment);
 };
 
-export const mapPredicate = async (g, predicateNode) => {
+export const mapPredicate = async (g: Store, predicateNode: Quad_Object | null) => {
     let result = null;
     if (!predicateNode) {
         return null;
     }
-    const labelNode = extractConcept(g, 'object', predicateNode, rdf.rdfsns('label'), null, true);
+    const rdfs = (suffix: string) => namedNode(`http://www.w3.org/2000/01/rdf-schema#${suffix}`);
+    const labelNode = extractConcept(g, 'object', predicateNode, rdfs('label'), null, true);
     // check if the predicate is as ORKG default predicate
     const extractedId = extractLabelFromRdfURI(predicateNode.value);
     if (predicateNode?.value?.toString().includes('orkg.org') && isORKGDefaultPredicate(extractedId)) {
@@ -73,7 +79,7 @@ export const mapPredicate = async (g, predicateNode) => {
     if (labelNode) {
         // Search for a predicate with the exact label
         const fetchedPredicate = await getPredicates({ q: labelNode?.value, exact: true });
-        if (fetchedPredicate.page.total_elements) {
+        if (fetchedPredicate && 'page' in fetchedPredicate && fetchedPredicate.page.total_elements) {
             [result] = fetchedPredicate.content;
         } else {
             return {
@@ -89,8 +95,8 @@ export const mapPredicate = async (g, predicateNode) => {
             predicateId: PREDICATES.SAME_AS,
             subjectClasses: ['Predicate'],
         });
-        if (fetchedPredicate.page.total_elements) {
-            [result] = fetchedPredicate.content;
+        if (Array.isArray(fetchedPredicate) && fetchedPredicate.length > 0) {
+            [result] = fetchedPredicate;
             result = result.subject;
         } else {
             return {
@@ -103,17 +109,19 @@ export const mapPredicate = async (g, predicateNode) => {
     return { extractedId, ...result };
 };
 
-export const mapClass = async (g, classNode) => {
+export const mapClass = async (g: Store, classNode: Quad_Object | null) => {
     if (!classNode) {
         return null;
     }
-    const owl = rdf.ns('http://www.w3.org/2002/07/owl#');
-    const labelNode = extractConcept(g, 'object', classNode, rdf.rdfsns('label'), null, true);
+    const owl = (suffix: string) => namedNode(`http://www.w3.org/2002/07/owl#${suffix}`);
+    const rdfs = (suffix: string) => namedNode(`http://www.w3.org/2000/01/rdf-schema#${suffix}`);
+    const labelNode = extractConcept(g, 'object', classNode, rdfs('label'), null, true);
     const classURI = extractConcept(g, 'object', classNode, owl('equivalentClass'), null, true);
-    // check if the class is as ORKG default class
+    // check if the class is an ORKG default class
     const extractedId = extractLabelFromRdfURI(classNode.value);
     if (classNode?.value?.toString().includes('orkg.org') && isORKGDefaultClass(extractLabelFromRdfURI(classNode.value))) {
-        let fetchedClass = await getClassById(extractedId);
+        let fetchedClass: Class | null = await getClassById(extractedId);
+        // the database should have the class, if not, create it
         if (!fetchedClass) {
             try {
                 const fetchedClassId = await createClass(labelNode?.value ?? extractedId, classURI?.value ?? null, extractedId);
@@ -123,7 +131,7 @@ export const mapClass = async (g, classNode) => {
             }
         }
         if (fetchedClass) {
-            return fetchedClass;
+            return { ...fetchedClass, extractedId };
         }
     }
     let uri = classURI ? classURI.value : null;
@@ -131,30 +139,32 @@ export const mapClass = async (g, classNode) => {
         uri = !classNode?.value?.toString().includes('orkg.org') ? classNode.value : null;
     }
     if (uri) {
-        let fetchedClass;
+        let fetchedClass: Class | null = null;
         try {
             fetchedClass = await getClasses({ uri });
         } catch {
             fetchedClass = null;
         }
         if (fetchedClass) {
-            return fetchedClass;
+            return { ...fetchedClass, extractedId };
         }
     }
     return {
         label: labelNode ? labelNode.value : extractLabelFromRdfURI(classNode.value),
         uri,
+        extractedId,
     };
 };
 
-export const mapResource = async (g, resourceNode, classes) => {
+export const mapResource = async (g: Store, resourceNode: Quad_Object | null, classes: string[]) => {
     if (!resourceNode) {
         return null;
     }
-    const labelNode = extractConcept(g, 'object', resourceNode, rdf.rdfsns('label'), null, true);
+    const rdfs = (suffix: string) => namedNode(`http://www.w3.org/2000/01/rdf-schema#${suffix}`);
+    const labelNode = extractConcept(g, 'object', resourceNode, rdfs('label'), null, true);
     const extractedId = extractLabelFromRdfURI(resourceNode.value);
     if (resourceNode?.value?.toString().includes('orkg.org')) {
-        let fetchedResource;
+        let fetchedResource: Resource | null = null;
         try {
             fetchedResource = await getResource(extractedId);
         } catch {

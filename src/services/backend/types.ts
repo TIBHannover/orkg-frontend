@@ -330,8 +330,8 @@ export type Template = {
     label: string;
     description: string;
     formatted_label: string;
-    target_class: Node;
-    relations: { research_fields: Node[]; research_problems: Node[]; predicate?: Node };
+    target_class: Node & { uri?: string | null };
+    relations: { research_fields: Node[]; research_problems: Node[] };
     properties: PropertyShape[];
     is_closed: boolean;
     organizations: string[];
@@ -342,11 +342,13 @@ export type Template = {
     unlisted_by?: string;
 };
 
+export type PropertyShapeCreateParams = Omit<PropertyShape, 'path'> & { path: string };
+
 export type CreateTemplateParams = {
     label: string;
     target_class: string;
-    relations: { research_fields: string[]; research_problems: string[]; predicate?: string };
-    properties: PropertyShape[];
+    relations: { research_fields: string[]; research_problems: string[] };
+    properties: PropertyShapeCreateParams[];
     organizations: string[];
     observatories: string[];
 };

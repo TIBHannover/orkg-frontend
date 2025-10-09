@@ -1,8 +1,10 @@
 import { find, flatten, flattenDepth, groupBy, isEmpty, last, uniq } from 'lodash';
+import { DataFactory, Store, Writer } from 'n3';
 import qs from 'qs';
-import rdf from 'rdf';
 
 import { DEFAULT_COMPARISON_METHOD, LICENSE_URL } from '@/constants/misc';
+
+const { namedNode, literal, blankNode, quad } = DataFactory;
 
 // returns the position of the first differing character between
 // $left and $right, or -1 if either is empty
@@ -234,105 +236,115 @@ export const getPropertyObjectFromData = (data, value) => {
 
 export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
     const element = document.createElement('a');
-    const cubens = rdf.ns('http://purl.org/linked-data/cube#');
-    const orkgVocab = rdf.ns('https://orkg.org/vocab/#');
-    const orkgResource = rdf.ns('https://orkg.org/resource/');
-    const gds = new rdf.Graph();
+
+    // Namespace helper functions
+    const cubens = (term) => namedNode(`http://purl.org/linked-data/cube#${term}`);
+    const orkgVocab = (term) => namedNode(`https://orkg.org/vocab/#${term}`);
+    const orkgResource = (term) => namedNode(`https://orkg.org/resource/${term}`);
+    const rdfsns = (term) => namedNode(`http://www.w3.org/2000/01/rdf-schema#${term}`);
+    const rdfns = (term) => namedNode(`http://www.w3.org/1999/02/22-rdf-syntax-ns#${term}`);
+    const dcterms = (term) => namedNode(`http://purl.org/dc/terms/#${term}`);
+
+    const store = new Store();
     // Vocabulary properties labels
-    gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
-    gds.add(new rdf.Triple(cubens('structure'), rdf.rdfsns('label'), new rdf.Literal('structure')));
-    gds.add(new rdf.Triple(cubens('component'), rdf.rdfsns('label'), new rdf.Literal('component')));
-    gds.add(new rdf.Triple(cubens('componentProperty'), rdf.rdfsns('label'), new rdf.Literal('component Property')));
-    gds.add(new rdf.Triple(cubens('componentAttachment'), rdf.rdfsns('label'), new rdf.Literal('component Attachment')));
-    gds.add(new rdf.Triple(cubens('dimension'), rdf.rdfsns('label'), new rdf.Literal('dimension')));
-    gds.add(new rdf.Triple(cubens('attribute'), rdf.rdfsns('label'), new rdf.Literal('attribute')));
-    gds.add(new rdf.Triple(cubens('measure'), rdf.rdfsns('label'), new rdf.Literal('measure')));
-    gds.add(new rdf.Triple(cubens('order'), rdf.rdfsns('label'), new rdf.Literal('order')));
+    store.addQuad(quad(cubens('dataSet'), rdfsns('label'), literal('dataSet')));
+    store.addQuad(quad(cubens('structure'), rdfsns('label'), literal('structure')));
+    store.addQuad(quad(cubens('component'), rdfsns('label'), literal('component')));
+    store.addQuad(quad(cubens('componentProperty'), rdfsns('label'), literal('component Property')));
+    store.addQuad(quad(cubens('componentAttachment'), rdfsns('label'), literal('component Attachment')));
+    store.addQuad(quad(cubens('dimension'), rdfsns('label'), literal('dimension')));
+    store.addQuad(quad(cubens('attribute'), rdfsns('label'), literal('attribute')));
+    store.addQuad(quad(cubens('measure'), rdfsns('label'), literal('measure')));
+    store.addQuad(quad(cubens('order'), rdfsns('label'), literal('order')));
     // BNodes
-    const ds = new rdf.BlankNode();
-    const dsd = new rdf.BlankNode();
+    const ds = blankNode();
+    const dsd = blankNode();
     // Dataset
-    gds.add(new rdf.Triple(ds, rdf.rdfns('type'), cubens('DataSet')));
+    store.addQuad(quad(ds, rdfns('type'), cubens('DataSet')));
     // Metadata
-    const dcterms = rdf.ns('http://purl.org/dc/terms/#');
-    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : 'Comparison - ORKG')));
-    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : 'Description')));
-    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : 'Creator')));
-    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : 'Date')));
-    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode(LICENSE_URL)));
-    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal('Comparison - ORKG')));
-    gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
+    store.addQuad(quad(ds, dcterms('title'), literal(metadata.title ? metadata.title : 'Comparison - ORKG')));
+    store.addQuad(quad(ds, dcterms('description'), literal(metadata.description ? metadata.description : 'Description')));
+    store.addQuad(quad(ds, dcterms('creator'), literal(metadata.creator ? metadata.creator : 'Creator')));
+    store.addQuad(quad(ds, dcterms('date'), literal(metadata.date ? metadata.date : 'Date')));
+    store.addQuad(quad(ds, dcterms('license'), namedNode(LICENSE_URL)));
+    store.addQuad(quad(ds, rdfsns('label'), literal('Comparison - ORKG')));
+    store.addQuad(quad(ds, cubens('structure'), dsd));
     // DataStructureDefinition
-    gds.add(new rdf.Triple(dsd, rdf.rdfns('type'), cubens('DataStructureDefinition')));
-    gds.add(new rdf.Triple(dsd, rdf.rdfsns('label'), new rdf.Literal('Data Structure Definition')));
+    store.addQuad(quad(dsd, rdfns('type'), cubens('DataStructureDefinition')));
+    store.addQuad(quad(dsd, rdfsns('label'), literal('Data Structure Definition')));
     const cs = {};
     const dt = {};
     // components
     const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter((c) => c.active).map((contribution, index) => contribution)];
     columns.forEach((column, index) => {
         if (column.id === 'Properties') {
-            cs[column.id] = new rdf.BlankNode();
+            cs[column.id] = blankNode();
             dt[column.id] = orkgVocab('Property');
         } else {
-            cs[column.id] = new rdf.BlankNode();
+            cs[column.id] = blankNode();
             dt[column.id] = orkgResource(`${column.id}`);
         }
 
-        gds.add(new rdf.Triple(dsd, cubens('component'), cs[column.id]));
-        gds.add(new rdf.Triple(cs[column.id], rdf.rdfns('type'), cubens('ComponentSpecification')));
-        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal('Component Specification')));
-        gds.add(new rdf.Triple(cs[column.id], cubens('order'), new rdf.Literal(index.toString())));
+        store.addQuad(quad(dsd, cubens('component'), cs[column.id]));
+        store.addQuad(quad(cs[column.id], rdfns('type'), cubens('ComponentSpecification')));
+        store.addQuad(quad(cs[column.id], rdfsns('label'), literal('Component Specification')));
+        store.addQuad(quad(cs[column.id], cubens('order'), literal(index.toString())));
         if (column.id === 'Properties') {
-            gds.add(new rdf.Triple(cs[column.id], cubens('dimension'), dt[column.id]));
-            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('DimensionProperty')));
+            store.addQuad(quad(cs[column.id], cubens('dimension'), dt[column.id]));
+            store.addQuad(quad(dt[column.id], rdfns('type'), cubens('DimensionProperty')));
         } else {
-            gds.add(new rdf.Triple(cs[column.id], cubens('measure'), dt[column.id]));
-            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('MeasureProperty')));
+            store.addQuad(quad(cs[column.id], cubens('measure'), dt[column.id]));
+            store.addQuad(quad(dt[column.id], rdfns('type'), cubens('MeasureProperty')));
         }
-        gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
-        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column?.label?.toString() ?? column?.title?.toString() ?? '')));
+        store.addQuad(quad(dt[column.id], rdfns('type'), cubens('ComponentProperty')));
+        store.addQuad(quad(dt[column.id], rdfsns('label'), literal(column?.label?.toString() ?? column?.title?.toString() ?? '')));
     });
     // data
     properties
         .filter((property) => property.active && data[property.id])
         .map((property, index) => {
-            const bno = new rdf.BlankNode();
-            gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
-            gds.add(new rdf.Triple(bno, rdf.rdfsns('label'), new rdf.Literal(`Observation #{${index + 1}}`)));
-            gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
-            gds.add(new rdf.Triple(bno, dt.Properties.toString(), new rdf.Literal(property.label.toString())));
+            const bno = blankNode();
+            store.addQuad(quad(bno, rdfns('type'), cubens('Observation')));
+            store.addQuad(quad(bno, rdfsns('label'), literal(`Observation #{${index + 1}}`)));
+            store.addQuad(quad(bno, cubens('dataSet'), ds));
+            store.addQuad(quad(bno, dt.Properties, literal(property.label.toString())));
             contributions.map((contribution, index2) => {
                 if (contribution.active) {
                     const cell = data[property.id][index2];
                     if (cell.length > 0) {
                         cell.map((v) => {
                             if (v.type && v.type === 'resource') {
-                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                                store.addQuad(quad(bno, dt[contribution.id], orkgResource(`${v.resourceId}`)));
                             } else {
-                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                                store.addQuad(quad(bno, dt[contribution.id], literal(`${v.label ? v.label : ''}`)));
                             }
                             return null;
                         });
                     } else {
-                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                        store.addQuad(quad(bno, dt[contribution.id], literal('Empty')));
                     }
                 }
                 return null;
             });
             return null;
         });
-    // Create the RDF file
-    const file = new Blob(
-        [
-            gds
-                .toArray()
-                .map((t) => t.toString())
-                .join('\n'),
-        ],
-        { type: 'text/n3' },
-    );
-    element.href = URL.createObjectURL(file);
-    element.download = 'ComparisonRDF.n3';
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
+    // Create the RDF file using N3.js Writer
+    const writer = new Writer({ format: 'N3' });
+
+    // Add all quads from the store to the writer
+    const quads = store.getQuads();
+    writer.addQuads(quads);
+
+    writer.end((error, result) => {
+        if (error) {
+            console.error('Error serializing RDF:', error);
+            return;
+        }
+
+        const file = new Blob([result], { type: 'text/n3' });
+        element.href = URL.createObjectURL(file);
+        element.download = 'ComparisonRDF.n3';
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    });
 };

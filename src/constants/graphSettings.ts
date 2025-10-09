@@ -29,7 +29,6 @@ export const PREDICATES: {
     PLACEHOLDER: 'placeholder',
     TEMPLATE_OF_RESEARCH_FIELD: 'TemplateOfResearchField',
     TEMPLATE_OF_RESEARCH_PROBLEM: 'TemplateOfResearchProblem',
-    TEMPLATE_OF_PREDICATE: 'TemplateOfPredicate',
     TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
     SHACL_TARGET_CLASS: 'sh:targetClass',
     SHACL_PROPERTY: 'sh:property',
