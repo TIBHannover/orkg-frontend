@@ -2,6 +2,7 @@ import { faCheck, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
+import { toast } from 'react-toastify';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -10,7 +11,7 @@ import useClasses from '@/components/DataBrowser/hooks/useClasses';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import Button from '@/components/Ui/Button/Button';
 import InputGroup from '@/components/Ui/Input/InputGroup';
-import { ENTITIES } from '@/constants/graphSettings';
+import { ENTITIES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Class } from '@/services/backend/types';
 
@@ -35,7 +36,11 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
     const handleUpdateClasses = async (selected: MultiValue<OptionType>, action: ActionMeta<OptionType>) => {
         setIsUpdating(true);
         if (action.action === 'select-option') {
-            setLocalClasses(selected as Class[]);
+            if (action.option && ENTITY_CLASSES.includes(action.option.id)) {
+                toast.error(`The selected option ${action.option.label} cannot be set manually; it is reserved for managing entities in the system`);
+            } else {
+                setLocalClasses(selected as Class[]);
+            }
         } else if (action.action === 'create-option' && selected) {
             const foundIndex = selected.findIndex((x) => x.__isNew__);
             const newClass = await ConfirmClass({

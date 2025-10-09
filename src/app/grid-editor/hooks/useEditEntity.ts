@@ -6,7 +6,7 @@ import useSWR, { mutate } from 'swr';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import { OptionType } from '@/components/Autocomplete/types';
 import Confirm from '@/components/ConfirmationModal/ConfirmationModal';
-import { ENTITIES } from '@/constants/graphSettings';
+import { ENTITIES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { classesUrl, getClassById, updateClass } from '@/services/backend/classes';
 import { updatePredicate } from '@/services/backend/predicates';
 import { updateResource } from '@/services/backend/resources';
@@ -55,7 +55,11 @@ const useEditEntity = (entity: Thing) => {
             }
         } else {
             const newClasses = !selected ? [] : selected;
-            setDraftClasses(newClasses as OptionType[]);
+            if (action.option && ENTITY_CLASSES.includes(action.option.id)) {
+                toast.error(`The selected option ${action.option.label} cannot be set manually; it is reserved for managing entities in the system`);
+            } else {
+                setDraftClasses(newClasses as OptionType[]);
+            }
         }
     };
 

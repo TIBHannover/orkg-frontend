@@ -16,6 +16,7 @@ import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import { ENTITY_CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
 
 const FiltersWrapperStyled = styled.div`
@@ -53,7 +54,11 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const usedTemplates = _usedTemplates?.filter((t) => commonClasses.includes(t.target_class.id));
 
     const renderListItem = (template: Template) => (
-        <TemplateButton isDisabled={commonClasses.includes(template.target_class.id)} template={template} key={`tr${template.id}`} />
+        <TemplateButton
+            isDisabled={commonClasses.includes(template.target_class.id) || ENTITY_CLASSES.includes(template.target_class.id)}
+            template={template}
+            key={`tr${template.id}`}
+        />
     );
 
     return (

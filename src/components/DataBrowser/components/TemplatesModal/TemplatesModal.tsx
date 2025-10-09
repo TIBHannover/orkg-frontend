@@ -19,7 +19,7 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
-import { CLASSES } from '@/constants/graphSettings';
+import { CLASSES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
 
 const FiltersWrapperStyled = styled.div`
@@ -60,7 +60,10 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
 
     const renderListItem = (template: Template) => (
         <TemplateButton
-            isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+            isDisabled={
+                (entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)) ||
+                ENTITY_CLASSES.includes(template.target_class.id)
+            }
             template={template}
             key={`tr${template.id}`}
         />

@@ -66,10 +66,10 @@ const useSaveValue = (
         } else if (existingValue && editMode && value.id && 'id' in v && statement?.id) {
             apiCall = updateStatement(statement?.id, { object_id: v.id });
         } else if (!existingValue && editMode && statement?.id) {
-            const newObject = await createValue(entityType, { ...v, ...(range?.id && { classes: [range.id] }) });
+            const newObject = await createValue(entityType, { ...v, ...(range?.id && range.id !== CLASSES.RESOURCE && { classes: [range.id] }) });
             apiCall = updateStatement(statement?.id, { object_id: newObject.id });
         } else if (!existingValue) {
-            const newObject = await createValue(entityType, { ...v, ...(range?.id && { classes: [range.id] }) });
+            const newObject = await createValue(entityType, { ...v, ...(range?.id && range.id !== CLASSES.RESOURCE && { classes: [range.id] }) });
             apiCall = createStatement(entity?.id, predicate?.id, newObject.id).then(async (response) => {
                 statementId = response;
             });

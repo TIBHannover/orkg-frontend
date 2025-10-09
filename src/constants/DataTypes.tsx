@@ -320,26 +320,25 @@ const DATA_TYPES: DataType[] = [
         inputFormType: 'gMonth',
         weight: 1,
     },
+    {
+        name: 'Class',
+        type: ENTITIES.CLASS,
+        _class: ENTITIES.CLASS,
+        classId: CLASSES.CLASS,
+        schema: z.string(),
+        inputFormType: 'autocomplete',
+        weight: 0,
+    },
+    {
+        name: 'Property',
+        type: ENTITIES.PREDICATE,
+        _class: ENTITIES.PREDICATE,
+        classId: CLASSES.PREDICATE,
+        schema: z.string(),
+        inputFormType: 'autocomplete',
+        weight: 0,
+    },
 ];
-/*
-{
-    name: 'Class',
-    type: ENTITIES.CLASS,
-    _class: ENTITIES.CLASS,
-    classId: CLASSES.CLASS,
-    schema: z.string(),
-    inputFormType: 'autocomplete',
-    weight: 0
-},
-{
-    name: 'Property',
-    type: ENTITIES.PREDICATE,
-    _class: ENTITIES.PREDICATE,
-    classId: CLASSES.PREDICATE,
-    schema: z.string(),
-    inputFormType: 'autocomplete',
-    weight: 0
-} */
 
 export const getConfigByType = (type: string) =>
     DATA_TYPES.find((dt) => dt.type === type) || (DATA_TYPES.find((dt) => dt.type === MISC.DEFAULT_LITERAL_DATATYPE) as DataType);

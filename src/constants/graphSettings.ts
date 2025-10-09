@@ -236,3 +236,5 @@ export const ENTITIES: {
     RESOURCE: 'resource',
     LITERAL: 'literal',
 };
+
+export const ENTITY_CLASSES = [CLASSES.PREDICATE, CLASSES.CLASS, CLASSES.RESOURCE];
