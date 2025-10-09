@@ -122,7 +122,7 @@ const useSearch = ({
     );
     const isAuthorExists = (authors && authors.length > 0 && !!authors.find((s) => s.predicate.id === PREDICATES.HAS_AUTHORS)) ?? false;
 
-    const hasNextPage = results?.page.total_pages && results?.page.total_pages > page;
+    const hasNextPage = !!(results?.page.total_pages && results?.page.total_pages > page + 1);
     return {
         typeData,
         setType,

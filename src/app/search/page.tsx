@@ -29,6 +29,7 @@ export default function Search() {
         setPage,
         results: _results,
         isAuthorExists,
+        hasNextPage,
     } = useSearch({
         redirectToEntity: true,
         searchAuthor: true,
@@ -81,7 +82,7 @@ export default function Search() {
                                 <div className="box rounded pb-4 h-100">
                                     <Results
                                         query={searchTerm}
-                                        hasNextPage={false}
+                                        hasNextPage={hasNextPage}
                                         items={results.content || []}
                                         page={page}
                                         setPage={setPage}

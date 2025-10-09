@@ -202,7 +202,7 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
                                                     items={results.content ?? []}
                                                     page={page}
                                                     setPage={setPage}
-                                                    hasNextPage={!!hasNextPage}
+                                                    hasNextPage={hasNextPage}
                                                     setPageSize={setPageSize}
                                                     totalElements={results.page.total_elements}
                                                     error={null}

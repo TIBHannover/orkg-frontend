@@ -56,7 +56,9 @@ const Item: FC<{ item: Thing }> = ({ item }) => {
     return (
         <ListGroupItem key={`result-${item.id}`} className="py-2" style={{ overflowWrap: 'anywhere' }}>
             <div className="d-flex align-items-center my-3">
-                <Link href={getEntityLink(item)}>{item.label}</Link>{' '}
+                <Link href={getEntityLink(item)} className="tw:line-clamp-2">
+                    {item.label}
+                </Link>{' '}
                 {!!badge && (
                     <div className="d-inline-block ms-2 flex-shrink-0">
                         <CardBadge color="primary">{badge.label}</CardBadge>
