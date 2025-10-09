@@ -5,16 +5,15 @@ import '@citation-js/plugin-doi';
 import '@citation-js/plugin-bibjson';
 
 import { Cite } from '@citation-js/core';
+import type { NextRequest } from 'next/server';
 
 import { getReview } from '@/services/backend/reviews';
 
-export async function POST(request: Request) {
-    const res = await request.json();
-
-    const id = res.reviewId;
-    const { usedReferences } = res;
-    const review = await getReview(id);
-
+export async function GET(request: NextRequest) {
+    const { searchParams } = request.nextUrl;
+    const id = searchParams.get('reviewId');
+    const usedReferences = searchParams.get('usedReferences')?.split(',') ?? [];
+    const review = await getReview(id ?? '');
     const { references } = review;
 
     // Parse all references to get their IDs
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
     const allReferenceIds = parsedCitation.data?.map((reference: { id: string }) => reference.id) || [];
 
     // Filter to only include references that are in usedReferences
-    const filteredReferenceIds = allReferenceIds.filter((_id: string) => usedReferences.includes(_id));
+    const filteredReferenceIds = allReferenceIds.filter((_id: string) => usedReferences?.includes(_id));
 
     // Get only the references that match the used IDs
     const filteredReferences = parsedCitation.data?.filter((reference: { id: string }) => filteredReferenceIds.includes(reference.id)) || [];
