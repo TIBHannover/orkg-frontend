@@ -17,7 +17,7 @@ const TextFilterRule = (props) => {
         ...new Set(
             Object.keys(values)
                 .reduce((prev, curr) => `${prev} ${curr}`, '')
-                .replace(/[.,/#!$%^&*;:{}=_`~()0-9]+/g, '')
+                .replace(/[.,/#!$%^&*;:{}=_`~()0-9]+/g, ' ')
                 .toLowerCase()
                 .split(' '),
         ),
