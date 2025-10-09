@@ -81,8 +81,7 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                             toggleShowInput();
                         }
                     }}
-                    onFailure={(e) => {
-                        errorHandler({ error: e, shouldShowToast: true });
+                    onFailure={() => {
                         toggleShowInput();
                     }}
                 />

@@ -18,12 +18,13 @@ import {
 } from '@/components/ConfirmBulkImport/helpers';
 import useMembership from '@/components/hooks/useMembership';
 import { getConfigByType } from '@/constants/DataTypes';
-import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
 import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
-import { createResource, getResource, getResources } from '@/services/backend/resources';
+import { createResource, getResources } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
+import { getThing } from '@/services/backend/things';
 import { ExtractionMethod } from '@/services/backend/types';
 import { parseCiteResult } from '@/utils';
 
@@ -36,6 +37,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
     const [papers, setPapers] = useState<any[]>([]);
     const [existingPaperIds, setExistingPaperIds] = useState<(string | null)[]>([]);
     const [idToLabel, setIdToLabel] = useState({});
+    const [idToEntityType, setIdToEntityType] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [importFailed, setImportFailed] = useState<string[]>([]);
@@ -51,6 +53,9 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         // used to map resource/property IDs to their labels
         const _idToLabel = {
             [PREDICATES.HAS_RESEARCH_PROBLEM]: 'has research problem',
+        };
+        const _idToEntityType = {
+            [PREDICATES.HAS_RESEARCH_PROBLEM]: ENTITIES.PREDICATE,
         };
         // used to map property values to their IDs (not the inverse of _idToLabel!)
         const valueToId: Record<string, string> = {};
@@ -172,9 +177,10 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                         if (!(value in _idToLabel)) {
                             try {
                                 // eslint-disable-next-line no-await-in-loop
-                                const resource = await getResource(value);
+                                const resource = await getThing(value);
                                 if (resource) {
                                     _idToLabel[value] = resource.label;
+                                    _idToEntityType[value] = resource._class;
                                 }
                             } catch (e) {}
                         }
@@ -275,6 +281,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         setPapers(_papers);
         setExistingPaperIds(_existingPaperIds);
         setIdToLabel(_idToLabel);
+        setIdToEntityType(_idToEntityType);
         setValidationErrors(_validationErrors);
     }, [data, observatoryId, organizationId]);
 
@@ -388,7 +395,18 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         onFinish();
     };
 
-    return { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors, importFailed };
+    return {
+        papers,
+        existingPaperIds,
+        idToLabel,
+        idToEntityType,
+        isLoading,
+        createdContributions,
+        makePaperList,
+        handleImport,
+        validationErrors,
+        importFailed,
+    };
 };
 
 export default useImportBulkData;

@@ -1,17 +1,16 @@
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 
 import { findTypeByIdOrName, parseCellString } from '@/app/csv-import/steps/helpers';
+import { getEntityLink } from '@/app/search/components/Item/Item';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Badge from '@/components/Ui/Badge/Badge';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
-import ROUTES from '@/constants/routes';
-import { getResource } from '@/services/backend/resources';
+import { getThing } from '@/services/backend/things';
 
 type ResourceCellProps = {
     data: string;
@@ -19,8 +18,8 @@ type ResourceCellProps = {
 };
 
 const ResourceCell: FC<ResourceCellProps> = ({ data, columnDataType }) => {
-    const { data: resource, isLoading } = useSWR(data && data.startsWith('orkg:') ? [data.replace('orkg:', ''), 'getResource'] : null, ([params]) =>
-        getResource(params),
+    const { data: resource, isLoading } = useSWR(data && data.startsWith('orkg:') ? [data.replace('orkg:', ''), 'getThing'] : null, ([params]) =>
+        getThing(params),
     );
 
     const { label, typeStr, hasTypeInfo } = parseCellString(data);
@@ -55,8 +54,8 @@ const ResourceCell: FC<ResourceCellProps> = ({ data, columnDataType }) => {
     }
     return (
         <div>
-            <DescriptionTooltip id={resource.id} _class={ENTITIES.RESOURCE}>
-                <Link href={reverse(ROUTES.RESOURCE, { id: resource.id })} target="_blank">
+            <DescriptionTooltip id={resource.id} _class={resource._class}>
+                <Link href={getEntityLink(resource)} target="_blank">
                     {resource.label}
                 </Link>
             </DescriptionTooltip>

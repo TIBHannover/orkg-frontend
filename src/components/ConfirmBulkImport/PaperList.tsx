@@ -13,6 +13,7 @@ import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import ROUTES from '@/constants/routes';
+import { EntityType } from '@/services/backend/types';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -33,10 +34,11 @@ type PaperListProps = {
     papers: any[];
     existingPaperIds: (string | null)[];
     idToLabel: Record<string, string>;
+    idToEntityType: Record<string, EntityType>;
     validationErrors: Record<number, Record<string, boolean[]>>;
 };
 
-const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, validationErrors = {} }) => {
+const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, idToEntityType, validationErrors = {} }) => {
     const [showContributions, setShowContributions] = useState<number[]>([]);
 
     const handleCardClick = (i: number) => {
@@ -145,6 +147,7 @@ const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, va
                                                     key={property}
                                                     property={property}
                                                     idToLabel={idToLabel}
+                                                    idToEntityType={idToEntityType}
                                                     values={paper.contents[0].statements[property]}
                                                     validationErrors={validationErrors?.[i]?.[property]}
                                                 />

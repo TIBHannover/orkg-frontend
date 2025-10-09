@@ -13,7 +13,16 @@ type GeonameDescriptionProps = {
 };
 
 const GeonameDescription: FC<GeonameDescriptionProps> = ({ externalResourceUrl }) => {
-    const id = externalResourceUrl?.slice(0, -1).split('/').at(-1);
+    const extractIdFromUrl = (urlString: string) => {
+        // Split the URL by the slash and remove any empty strings
+        // from the end (which occur if there's a trailing slash)
+        const segments = urlString.split('/').filter((segment) => segment);
+
+        // Return the last element of the resulting array
+        return segments.pop();
+    };
+
+    const id = extractIdFromUrl(externalResourceUrl);
     const { data: coordinates, error, isLoading } = useSWR(id || null, getById);
 
     return (

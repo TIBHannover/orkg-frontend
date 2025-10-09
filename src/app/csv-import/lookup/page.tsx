@@ -75,8 +75,11 @@ const AutocompletePage = () => {
                     <ul className="list-disc list-inside">
                         <li>Search for entities in ORKG and copy their IDs to include in your CSV file.</li>
                         <li>Create new entities if the resource you need does not yet exist.</li>
+                        <li>
+                            You can search for existing entities by ID by using <code>#</code> as a prefix (e.g., <code>#R12</code>)
+                        </li>
                     </ul>
-                    If you don't find a result for your desired resource, simply click the Create button to generate a new entity and obtain its ID.
+                    If you don't find a result for your desired resource, simply click the 'Create' button to generate a new entity and obtain its ID.
                 </div>
                 <InputGroup className="d-flex justify-content-center">
                     <Input
@@ -135,7 +138,7 @@ const AutocompletePage = () => {
                             <div className="d-flex align-items-center mb-4">
                                 <CopyId id={`orkg:${entity.id}`} size="lg" text="CSV import ID" />
                             </div>
-                            <DataBrowser id={entity.id} isEditMode={false} />
+                            <DataBrowser id={entity.id} isEditMode={false} key={entity.id} />
                         </div>
                     </div>
                 </Container>

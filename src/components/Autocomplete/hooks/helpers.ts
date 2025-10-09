@@ -234,7 +234,7 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
     }
     try {
         // Import the option
-        if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
+        if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri && value._class !== ENTITIES.CLASS) {
             if (value.source !== AUTOCOMPLETE_SOURCE.OLS_API) {
                 importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
             } else {
@@ -242,7 +242,8 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
             }
         } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
             importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-        } else if (entityType === ENTITIES.CLASS && value.ontology && value.uri) {
+            // If the option is a class, we need to import it as a class
+        } else if ((entityType === ENTITIES.CLASS || value._class === ENTITIES.CLASS) && value.ontology && value.uri) {
             importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
         } else {
             throw new Error('No implemented yet.');
