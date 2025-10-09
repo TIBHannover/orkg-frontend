@@ -11,6 +11,7 @@ import { mutate } from 'swr';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import useEntityRecognition from '@/components/ViewPaper/hooks/useEntityRecognition';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { PropertyItem, ValueItem } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
@@ -19,12 +20,13 @@ import { determineActiveNERService, getNerResults, saveFeedback } from '@/servic
 import { setNerProperties, setNerRawResponse, setNerResources } from '@/slices/viewPaperSlice';
 
 function NERSuggestions({ title = '', abstract = '', resourceId }) {
+    const { paper } = useViewPaper({ paperId: resourceId });
     const nerProperties = useSelector((state) => state.viewPaper.nerProperties);
     const dispatch = useDispatch();
     const [activeNERService, setActiveNERService] = useState(null);
 
     const { suggestions } = useEntityRecognition({ activeNERService, title, abstract, resourceId });
-    const researchField = useSelector((state) => state.viewPaper.paper.research_fields?.[0]);
+    const researchField = paper?.research_fields?.[0];
 
     useEffect(() => {
         (async () => setActiveNERService(await determineActiveNERService(researchField?.id)))();

@@ -1,17 +1,21 @@
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useState } from 'react';
 
 import Button from '@/components/Ui/Button/Button';
 import BioassaysModal from '@/components/ViewPaper/BioassaysModal/BioassaysModal';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { BIOASSAYS_FIELDS_LIST } from '@/constants/nlpFieldLists';
 
-const Bioassays = ({ resourceId }) => {
+type BioassaysProps = {
+    resourceId: string;
+};
+
+const Bioassays: FC<BioassaysProps> = ({ resourceId }) => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
-    const researchFieldId = useSelector((state) => state.viewPaper.paper.research_fields?.[0])?.id ?? null;
-    const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(researchFieldId);
+    const { paper } = useViewPaper({ paperId: resourceId });
+    const researchFieldId = paper?.research_fields?.[0]?.id ?? null;
+    const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(researchFieldId ?? '');
 
     return isBioassayField ? (
         <>
@@ -21,10 +25,6 @@ const Bioassays = ({ resourceId }) => {
             <BioassaysModal selectedResource={resourceId} showDialog={isOpenBioassays} toggle={() => setIsOpenBioassays((v) => !v)} />
         </>
     ) : null;
-};
-
-Bioassays.propTypes = {
-    resourceId: PropTypes.string.isRequired,
 };
 
 export default Bioassays;

@@ -46,7 +46,7 @@ export const StyledInput = styled(Input)`
 `;
 
 type ContributionTabProps = {
-    contribution: Resource & { isSaving: boolean; isDeleting: boolean };
+    contribution: Resource & { statementId: string };
     canDelete: boolean;
     isSelected: boolean;
     handleChangeContributionLabel: (id: string, label: string) => void;
@@ -63,8 +63,9 @@ const ContributionTab: FC<ContributionTabProps> = ({
     enableEdit,
 }) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [draftLabel, setDraftLabel] = useState(contribution.label);
-
     const refInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -116,8 +117,10 @@ const ContributionTab: FC<ContributionTabProps> = ({
                         size="sm"
                         type="submit"
                         color="primary"
-                        onClick={() => {
-                            handleChangeContributionLabel(contribution.id, draftLabel);
+                        onClick={async () => {
+                            setIsSaving(true);
+                            await handleChangeContributionLabel(contribution.id, draftLabel);
+                            setIsSaving(false);
                             setIsEditing(false);
                         }}
                         title="Save"
@@ -144,13 +147,15 @@ const ContributionTab: FC<ContributionTabProps> = ({
                                 <span>
                                     <ActionButton
                                         color="link"
-                                        disabled={contribution.isSaving || contribution.isDeleting}
-                                        onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                        disabled={isSaving || isDeleting}
+                                        onClick={async (e: MouseEvent<HTMLButtonElement>) => {
                                             e.stopPropagation();
-                                            toggleDeleteContribution(contribution.id);
+                                            setIsDeleting(true);
+                                            await toggleDeleteContribution(contribution.id);
+                                            setIsDeleting(false);
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={!contribution.isDeleting ? faTrash : faSpinner} spin={contribution.isDeleting} />
+                                        <FontAwesomeIcon icon={!isDeleting ? faTrash : faSpinner} spin={isDeleting} />
                                     </ActionButton>
                                 </span>
                             </Tooltip>
@@ -162,12 +167,12 @@ const ContributionTab: FC<ContributionTabProps> = ({
                                 <span>
                                     <ActionButton
                                         color="link"
-                                        disabled={contribution.isSaving || contribution.isDeleting}
+                                        disabled={isSaving || isDeleting}
                                         onClick={() => {
                                             setIsEditing(true);
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={!contribution.isSaving ? faPen : faSpinner} spin={contribution.isSaving} />
+                                        <FontAwesomeIcon icon={!isSaving ? faPen : faSpinner} spin={isSaving} />
                                     </ActionButton>
                                 </span>
                             </Tooltip>

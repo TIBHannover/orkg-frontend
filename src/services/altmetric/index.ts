@@ -3,9 +3,16 @@ import { env } from 'next-runtime-env';
 
 const altmetricApi = ky.create({ prefixUrl: env('NEXT_PUBLIC_ALTMETRIC_URL') });
 
-export const getAltMetrics = (doi: string) =>
+type AltmetricResponse = {
+    details_url: string;
+    images: {
+        small: string;
+    };
+};
+
+export const getAltMetrics = async (doi: string) =>
     altmetricApi
-        .get(`doi/${doi}`)
+        .get<AltmetricResponse>(`doi/${doi}`)
         .json()
         .catch(() => {});
 

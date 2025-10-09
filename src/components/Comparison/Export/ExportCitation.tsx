@@ -53,11 +53,11 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
             CITATION_STYLES.map((s) =>
                 getCitationByDOI(DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(() => 'Failed to load citation'),
             ),
-        ).then((citations) => {
+        ).then((c) => {
             setCitations(
                 zipObject(
                     CITATION_STYLES.map((s) => s.styleID),
-                    citations,
+                    c,
                 ),
             );
         });

@@ -1,9 +1,7 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useEffect } from 'react';
 
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
 import AddContributionButton from '@/components/ContributionTabs/AddContributionButton';
@@ -19,7 +17,10 @@ import useParams from '@/components/useParams/useParams';
 import ContributionComparisons from '@/components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from '@/components/ViewPaper/Contributions/AutomaticContributionWarning';
 import useContributions from '@/components/ViewPaper/Contributions/hooks/useContributions';
+import usePaperSectionStats from '@/components/ViewPaper/Contributions/hooks/usePaperSectionStats';
+import PaperSectionTabLabel from '@/components/ViewPaper/Contributions/PaperSectionTabLabel/PaperSectionTabLabel';
 import useFetchAbstract from '@/components/ViewPaper/hooks/useFetchAbstract';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import Mentionings from '@/components/ViewPaper/Mentionings/Mentionings';
 import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import SmartSuggestions from '@/components/ViewPaper/SmartSuggestions/SmartSuggestions';
@@ -27,64 +28,70 @@ import SustainableDevelopmentGoals from '@/components/ViewPaper/SustainableDevel
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 
-const Contributions = (props) => {
+type ContributionsProps = {
+    enableEdit: boolean;
+};
+
+type PaperSections = 'contributions' | 'statements' | 'mentions';
+
+const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
     const { resourceId, contributionId } = useParams();
+    const { paper, contributions } = useViewPaper({ paperId: resourceId });
     const {
-        contributions,
-        paperTitle,
         handleAutomaticContributionVerification,
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
         router,
+        isAddingContribution,
     } = useContributions({
         paperId: resourceId,
-        contributionId,
     });
 
-    const isAddingContribution = useSelector((state) => state.viewPaper.isAddingContribution);
+    const { count, isLoading } = usePaperSectionStats({ paperId: resourceId });
 
-    const researchFieldId = useSelector((state) => state.viewPaper.paper.research_fields?.[0]?.id);
+    const researchFieldId = paper?.research_fields?.[0]?.id;
 
-    const onTabChange = (key) => {
-        const url =
-            key === 'contributions'
-                ? reverse(ROUTES.VIEW_PAPER, { resourceId })
-                : reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId, contributionId: key });
-
-        router.push(`${url}${props.enableEdit ? `?isEditMode=${props.enableEdit}` : ''}`);
+    const onTabChange = (key: string) => {
+        const url = reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId, contributionId: key });
+        router.push(`${url}${enableEdit ? `?isEditMode=${enableEdit}` : ''}`);
     };
 
     const { fetchAbstract, isLoading: isLoadingAbstract, abstract } = useFetchAbstract();
 
     useEffect(() => {
-        if (props.enableEdit && !abstract) {
+        if (enableEdit && !abstract) {
             fetchAbstract();
         }
-    }, [props.enableEdit, abstract, fetchAbstract]);
+    }, [enableEdit, abstract, fetchAbstract]);
 
-    let selectedTab;
-
-    if (contributionId === 'statements') {
-        selectedTab = 'statements';
-    } else if (contributionId === 'mentions') {
-        selectedTab = 'mentions';
-    } else {
-        selectedTab = 'contributions';
+    let selectedTab: PaperSections = contributionId as PaperSections;
+    if (!selectedTab && !isLoading) {
+        if (count.contributions) {
+            selectedTab = 'contributions';
+        } else if (count.statements) {
+            selectedTab = 'statements';
+        } else if (count.mentions) {
+            selectedTab = 'mentions';
+        } else {
+            selectedTab = 'contributions';
+        }
     }
     let selectedContributionId = null;
     let failedContributionId = false;
-    if (contributionId === 'statements' || (!contributionId && !contributions?.length)) {
-        selectedContributionId = null;
+    if (!['statements', 'mentions'].includes(selectedTab)) {
+        selectedTab = 'contributions';
+        if (contributions && contributions?.length > 0 && (!contributionId || contributionId === 'contributions')) {
+            selectedContributionId = contributions[0].id;
+        } else {
+            selectedContributionId = contributionId;
+        }
     }
-    if (!contributionId && contributions?.length > 0) {
-        selectedContributionId = contributions[0].id;
-    }
-    if (contributionId && contributions?.some((el) => el.id === contributionId)) {
-        selectedContributionId = contributionId;
-    }
-    if (contributionId && !contributions?.some((el) => el.id === contributionId)) {
-        failedContributionId = true;
+
+    if (!['statements', 'mentions', 'contributions'].includes(selectedTab)) {
+        if (!contributions?.some((el) => el.id === selectedContributionId)) {
+            failedContributionId = true;
+        }
     }
 
     return (
@@ -100,14 +107,14 @@ const Contributions = (props) => {
                         style={{ background: '#F8F9FB' }}
                         items={[
                             {
-                                label: 'Contributions',
+                                label: <PaperSectionTabLabel paperId={resourceId} paperSection="contributions" label="Contributions" />,
                                 key: 'contributions',
                                 children: (
                                     <>
                                         {!failedContributionId && (
                                             <Tabs
                                                 tabBarExtraContent={
-                                                    props.enableEdit ? (
+                                                    enableEdit ? (
                                                         <AddContributionButton
                                                             disabled={isAddingContribution}
                                                             onClick={() => handleCreateContribution()}
@@ -115,7 +122,7 @@ const Contributions = (props) => {
                                                     ) : null
                                                 }
                                                 more={{ icon: <FontAwesomeIcon size="lg" icon={faAngleDown} /> }}
-                                                activeKey={contributionId}
+                                                activeKey={selectedContributionId ?? undefined}
                                                 destroyOnHidden
                                                 onChange={onTabChange}
                                                 items={[
@@ -123,12 +130,12 @@ const Contributions = (props) => {
                                                         label: (
                                                             <ContributionTab
                                                                 handleChangeContributionLabel={handleChangeContributionLabel}
-                                                                isSelected={contribution.id === contributionId}
+                                                                isSelected={contribution.id === selectedContributionId}
                                                                 canDelete={contributions.length !== 1}
                                                                 contribution={contribution}
                                                                 key={contribution.id}
                                                                 toggleDeleteContribution={toggleDeleteContribution}
-                                                                enableEdit={props.enableEdit}
+                                                                enableEdit={enableEdit}
                                                             />
                                                         ),
                                                         key: contribution.id,
@@ -146,18 +153,18 @@ const Contributions = (props) => {
                                                                     <AutomaticContributionWarning
                                                                         contribution={contribution}
                                                                         onVerifyHandler={handleAutomaticContributionVerification}
-                                                                        enableEdit={props.enableEdit}
+                                                                        enableEdit={enableEdit}
                                                                     />
                                                                 )}
                                                                 {selectedContributionId && (
                                                                     <div>
                                                                         <FormGroup>
                                                                             <DataBrowser
-                                                                                isEditMode={props.enableEdit}
+                                                                                isEditMode={enableEdit}
                                                                                 id={selectedContributionId}
                                                                                 canEditSharedRootLevel
                                                                                 researchField={researchFieldId}
-                                                                                title={paperTitle}
+                                                                                title={paper?.title}
                                                                                 abstract={abstract}
                                                                             />
                                                                         </FormGroup>
@@ -182,7 +189,7 @@ const Contributions = (props) => {
                                             <Alert className="m-3 rounded" color="warning">
                                                 This paper has no contributions yet
                                                 <br />
-                                                {props.enableEdit ? (
+                                                {enableEdit ? (
                                                     <span style={{ fontSize: '0.875rem' }}>
                                                         Start by adding a contribution using the top right (+) button
                                                     </span>
@@ -196,7 +203,7 @@ const Contributions = (props) => {
                                 ),
                             },
                             {
-                                label: 'Statements',
+                                label: <PaperSectionTabLabel paperId={resourceId} paperSection="statements" label="Statements" />,
                                 key: 'statements',
                                 children: (
                                     <div className="p-4">
@@ -205,7 +212,7 @@ const Contributions = (props) => {
                                 ),
                             },
                             {
-                                label: 'Mentions',
+                                label: <PaperSectionTabLabel paperId={resourceId} paperSection="mentions" label="Mentions" />,
                                 key: 'mentions',
                                 children: (
                                     <div className="p-4">
@@ -218,19 +225,19 @@ const Contributions = (props) => {
                 </Col>
 
                 <div className="col-md-3">
-                    <SustainableDevelopmentGoals isEditable={props.enableEdit} />
+                    <SustainableDevelopmentGoals isEditable={enableEdit} />
 
-                    {contributions?.length > 0 && (
+                    {contributions && contributions?.length > 0 && (
                         <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
-                            <AddToComparison showLabel paper={{ id: resourceId, label: paperTitle, contributions }} />
+                            <AddToComparison showLabel paper={{ id: resourceId, label: paper?.title, contributions }} />
                         </div>
                     )}
 
-                    {selectedContributionId && contributionId !== 'statements' && contributionId !== 'mentions' && props.enableEdit && (
+                    {selectedContributionId && contributionId !== 'statements' && contributionId !== 'mentions' && enableEdit && (
                         <div className="mb-3">
                             <SmartSuggestions
                                 isLoadingAbstract={isLoadingAbstract}
-                                title={paperTitle}
+                                title={paper?.title}
                                 abstract={abstract}
                                 resourceId={selectedContributionId}
                             />
@@ -242,10 +249,6 @@ const Contributions = (props) => {
             </Row>
         </div>
     );
-};
-
-Contributions.propTypes = {
-    enableEdit: PropTypes.bool.isRequired,
 };
 
 export default Contributions;

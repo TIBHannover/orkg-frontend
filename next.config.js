@@ -76,6 +76,7 @@ const cspHeader = `
         https://dbpedia.org/sparql
         https://api.unpaywall.org
         https://raw.githubusercontent.com
+        https://api.opencitations.net
         https://fonts.gstatic.com
         https://mastodon.social
         https://dbpedia.org

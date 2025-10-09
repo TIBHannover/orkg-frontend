@@ -27,7 +27,10 @@ export async function generateMetadata({ params }: { params: Promise<{ resourceI
     const { resourceId } = await params;
     let paper: Paper | undefined;
     try {
-        paper = await getPaper(resourceId);
+        const paperResource = await getResource(resourceId);
+        if (!paperResource.classes.includes(CLASSES.PAPER_VERSION)) {
+            paper = await getPaper(resourceId);
+        }
     } catch (e) {
         console.error(e);
     }

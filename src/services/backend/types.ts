@@ -888,3 +888,5 @@ export type Snapshot = {
         };
     };
 };
+
+export type PaperSections = 'contributions' | 'statements' | 'mentions';

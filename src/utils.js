@@ -81,22 +81,6 @@ function getOrder(paperStatements) {
     return order;
 }
 
-/**
- * Filter the objects and return one doi object
- * @param {Array} objects Array of object of DOI statements
- * @param {Boolean} isDataCite The doi type to filter on (DataCite is the doi given by orkg)
- * @return {Object} Doi object
- */
-export const filterDoiObjects = (objects, isDataCite = false) => {
-    if (!objects.length) {
-        return '';
-    }
-    if (isDataCite) {
-        return objects.find((doi) => doi.label?.startsWith(env('NEXT_PUBLIC_DATACITE_DOI_PREFIX'))) ?? '';
-    }
-    return objects.find((doi) => doi.label?.startsWith('10.') && !doi.label?.startsWith(env('NEXT_PUBLIC_DATACITE_DOI_PREFIX'))) ?? '';
-};
-
 export const getAuthorsInList = ({ resourceId, statements }) => {
     const sortedStatements = sortBy(statements ?? [], 'index');
     const authorList = filterObjectOfStatementsByPredicateAndClass(
@@ -149,40 +133,6 @@ export const addAuthorsToStatements = async (statements) => {
         return statements;
     }
     return [...statements, ...(await getAuthorStatements(statements))];
-};
-
-/**
- * Parse paper statements and return a a paper object
- *
- * @param {Array} paperStatements
- */
-export const getPaperDataViewPaper = (paperResource, paperStatements) => {
-    const paperStatementsFirstLevel = paperStatements.filter((s) => s.subject.id === paperResource.id);
-    const authors = getAuthorsInList({ resourceId: paperResource.id, statements: paperStatements });
-    const authorListResource = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_AUTHORS, false)?.[0];
-
-    const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_CONTRIBUTION, false, null);
-    const doi = filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_DOI, false);
-    return {
-        paperResource,
-        authors,
-        authorListResource,
-        // sort contributions ascending, so contribution 1, is actually the first one
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
-        publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_PUBLICATION_MONTH, true),
-        publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_PUBLICATION_YEAR, true),
-        doi: filterDoiObjects(doi),
-        researchField: filterObjectOfStatementsByPredicateAndClass(
-            paperStatementsFirstLevel,
-            PREDICATES.HAS_RESEARCH_FIELD,
-            true,
-            CLASSES.RESEARCH_FIELD,
-        ),
-        publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_VENUE, true),
-        url: filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.URL, true),
-        hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatementsFirstLevel, PREDICATES.HAS_PREVIOUS_VERSION, true),
-        dataCiteDoi: filterDoiObjects(doi, true),
-    };
 };
 
 /**

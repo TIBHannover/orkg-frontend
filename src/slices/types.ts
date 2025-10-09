@@ -1,4 +1,4 @@
-import { Paper } from '@/services/backend/types';
+import { Paper, Resource } from '@/services/backend/types';
 import type { AppStore } from '@/store';
 
 export type Range = {
@@ -15,7 +15,6 @@ export type Range = {
 
 // TODO: not complete yet
 export type ViewPaper = {
-    paper: Paper;
     isAbstractLoading: boolean;
     isAbstractFailedFetching: boolean;
     fetchAbstractTitle: string | null;

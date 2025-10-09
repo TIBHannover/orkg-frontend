@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
-import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { classesUrl, getClasses } from '@/services/backend/classes';
 import { Class } from '@/services/backend/types';
@@ -40,7 +39,7 @@ const Classes = () => {
     return (
         <ListPage
             label="classes"
-            resourceClass={ENTITIES.CLASS}
+            resourceClass="Class"
             renderListItem={renderListItem}
             fetchFunction={getClasses}
             fetchFunctionName="getClasses"

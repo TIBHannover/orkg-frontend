@@ -1,24 +1,22 @@
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { isNaN } from 'lodash';
+import { isNaN, parseInt } from 'lodash';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC } from 'react';
+import useSWR from 'swr';
+import { undefined } from 'zod';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Badge from '@/components/Ui/Badge/Badge';
-import { getCitationCount } from '@/services/openCitations';
+import { getCitationCount, openCitationsUrl } from '@/services/openCitations';
 
-function OpenCitations({ doi }) {
-    const [citationCount, setCitationCount] = useState(null);
+type OpenCitationsProps = {
+    doi?: string;
+};
 
-    useEffect(() => {
-        const getCount = async () => {
-            setCitationCount(parseInt(await getCitationCount(doi), 10));
-        };
-        getCount();
-    }, [doi]);
-
+const OpenCitations: FC<OpenCitationsProps> = ({ doi }) => {
+    const { data: _citationCount } = useSWR(doi ? [doi, openCitationsUrl, 'getCitationCount'] : null, ([params]) => getCitationCount(params));
+    const citationCount = _citationCount ? parseInt(_citationCount.toString(), 10) : undefined;
     return (
         typeof citationCount === 'number' &&
         !isNaN(citationCount) && (
@@ -40,10 +38,6 @@ function OpenCitations({ doi }) {
             </Tooltip>
         )
     );
-}
-
-OpenCitations.propTypes = {
-    doi: PropTypes.string,
 };
 
 export default OpenCitations;

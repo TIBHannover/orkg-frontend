@@ -1,15 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 
+import useParams from '@/components/useParams/useParams';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { getAbstractByDoi, getAbstractByTitle } from '@/services/semanticScholar';
 import { setAbstract, setFetchAbstractTitle, setIsAbstractFailedFetching, setIsAbstractFetched, setIsAbstractLoading } from '@/slices/viewPaperSlice';
 
 const removeLineBreaks = (text) => text.replace(/(\r\n|\n|\r)/gm, ' ');
 
 const useFetchAbstract = () => {
+    const { resourceId } = useParams();
+    const { paper } = useViewPaper({ paperId: resourceId });
     const abstract = useSelector((state) => state.viewPaper.abstract);
     const isAbstractFetched = useSelector((state) => state.viewPaper.isAbstractFetched);
-    const title = useSelector((state) => state.viewPaper.paper.title);
-    const doi = useSelector((state) => state.viewPaper.paper?.identifiers?.doi);
+    const title = paper?.title;
+    const doi = paper?.identifiers?.doi;
+
     const isAbstractLoading = useSelector((state) => state.viewPaper.isAbstractLoading);
     const dispatch = useDispatch();
 
