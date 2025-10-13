@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.170.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.169.0...v0.170.0) - 2025-10-13
+
+### Changes
+
+- feat: show counts on tabs and display the Rosetta Statements tab by default when no contributions [`#1599`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1599)
+- chore: add ORKG caller header to all TIB TS requests [`#1600`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1600)
+- feat: link nested templates on shacl import [`#1590`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1590)
+- feat(GridEditor): display a warning message if the user selects an entire paper [`#1598`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1598)
+- feat: add properties and classes to types options for new statements [`#1596`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1596)
+- feat: support importing Wikidata items as classes [`#1592`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1592)
+- fix: next page and last page buttons, and allow visiting the search page with a specific page number [`#1597`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1597)
+- refactor: make the citations route accept GET requests instead of POST [`#1595`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1595)
+- fix(ComparisonFilters): replace special characters with spaces in text filter [`#1594`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1594)
+- fix(ComparisonFilters): no results on no filters [`#1593`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1593)
+- fix(CSVImport): fix match header by label function [`#1591`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1591)
+
+---
 ## [v0.169.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.168.0...v0.169.0) - 2025-09-25
 
 ### Changes
