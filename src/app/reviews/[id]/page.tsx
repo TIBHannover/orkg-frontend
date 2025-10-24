@@ -21,7 +21,6 @@ const GlobalStyle = createGlobalStyle`
     @media print {
         nav,
         footer,
-        .woot--bubble-holder,
         .container:not(.print-only) {
             display: none !important;
         }

@@ -22,7 +22,6 @@ const cspHeader = `
         https://platform.twitter.com
         https://cdn.syndication.twimg.com
         https://cdnjs.cloudflare.com
-        https://app.chatwoot.com
         https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs;
     style-src 'self' 'unsafe-inline'
         https://orkg.org
@@ -49,7 +48,6 @@ const cspHeader = `
         https://syndication.twitter.com
         https://www.youtube.com
         https://time.graphics
-        https://app.chatwoot.com
         https://support.tib.eu;
     frame-ancestors 'self' https://accounts.orkg.org;
     connect-src 'self'
@@ -69,7 +67,6 @@ const cspHeader = `
         https://api.semanticscholar.org
         https://api.datacite.org
         https://api.crossref.org
-        https://app.chatwoot.com
         https://opencitations.net
         https://*.wikidata.org
         https://*.wikipedia.org/api/

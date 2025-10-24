@@ -130,25 +130,6 @@ export default function DefaultLayout(props) {
         setVisible(!cookies.cookieInfoDismissed);
     }, [cookies.cookieInfoDismissed]);
 
-    useEffect(() => {
-        if (env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN')) {
-            // eslint-disable-next-line wrap-iife
-            ((d, t) => {
-                const BASE_URL = 'https://app.chatwoot.com';
-                const g = d.createElement(t);
-                const s = d.getElementsByTagName(t)[0];
-                g.src = `${BASE_URL}/packs/js/sdk.js`;
-                s.parentNode.insertBefore(g, s);
-                g.onload = () => {
-                    window.chatwootSDK.run({
-                        websiteToken: env('NEXT_PUBLIC_CHATWOOT_WEBSITE_TOKEN'),
-                        baseUrl: BASE_URL,
-                    });
-                };
-            })(document, 'script');
-        }
-    }, []);
-
     return (
         <StyledBody className="body">
             <ToastContainerStyled>
