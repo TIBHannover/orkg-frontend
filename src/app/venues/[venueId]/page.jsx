@@ -8,7 +8,6 @@ import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
@@ -105,7 +104,6 @@ const VenuePage = () => {
                             <div className="text-center mt-3">You have reached the last page</div>
                         )}
                     </Container>
-                    <ComparisonPopup />
                 </div>
             )}
         </>

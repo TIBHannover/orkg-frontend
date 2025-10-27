@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { detect } from 'detect-browser';
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
@@ -22,6 +23,8 @@ import Header from '@/components/Layout/Header/Header';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
+
+const ComparisonPopup = dynamic(() => import('@/components/ComparisonPopup/ComparisonPopup'), { ssr: false });
 
 const StyledBody = styled.div`
     display: flex;
@@ -199,6 +202,7 @@ export default function DefaultLayout(props) {
                     OK
                 </Button>
             </StyledAlertCookie>
+            <ComparisonPopup />
         </StyledBody>
     );
 }

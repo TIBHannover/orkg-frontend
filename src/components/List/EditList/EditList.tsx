@@ -1,5 +1,4 @@
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Contributors from '@/components/List/Contributors/Contributors';
 import AddSection from '@/components/List/EditList/AddSection/AddSection';
@@ -27,7 +26,6 @@ const EditList = () => (
                 <Contributors />
             </SectionStyled>
         </Container>
-        <ComparisonPopup />
     </main>
 );
 

@@ -8,7 +8,6 @@ import { useQueryState } from 'nuqs';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import CopyId from '@/components/CopyId/CopyId';
 import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
 import ResearchFieldSelector from '@/components/ResearchFieldSelector/ResearchFieldSelector';
@@ -137,7 +136,6 @@ const ResearchFields = () => {
                         </Col>
                     </Row>
                 </div>
-                <ComparisonPopup />
             </Container>
         </>
     );

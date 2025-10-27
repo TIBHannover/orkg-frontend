@@ -4,7 +4,6 @@ import { useQueryState } from 'nuqs';
 
 import AuthorHeader from '@/components/Author/AuthorHeader';
 import CardFactory from '@/components/Cards/CardFactory/CardFactory';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
@@ -99,7 +98,6 @@ const AuthorPage = () => {
                     ),
                 }))}
             />
-            <ComparisonPopup />
         </Container>
     );
 };

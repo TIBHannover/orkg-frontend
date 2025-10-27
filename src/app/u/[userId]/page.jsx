@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import NotFound from '@/app/not-found';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Gravatar from '@/components/Gravatar/Gravatar';
 import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
@@ -209,7 +208,6 @@ const UserProfile = (props) => {
             <Container className="mt-4 p-0">
                 <UserProfileTabsContainer currentUserId={currentUserId} id={userId} />
             </Container>
-            <ComparisonPopup />
         </>
     );
 };

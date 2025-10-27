@@ -1,6 +1,5 @@
 'use client';
 
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Benchmarks from '@/components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from '@/components/ResearchProblem/ResearchProblemHeader';
 import ResearchProblemTabsContainer from '@/components/ResearchProblem/ResearchProblemTabsContainer';
@@ -17,7 +16,6 @@ function ResearchProblem() {
             <Container className="p-0 mt-2">
                 <ResearchProblemTabsContainer id={researchProblemId} />
             </Container>
-            <ComparisonPopup />
         </div>
     );
 }

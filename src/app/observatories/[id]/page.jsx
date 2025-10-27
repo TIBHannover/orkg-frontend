@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import EditObservatory from '@/components/Observatory/EditObservatory';
@@ -193,8 +192,6 @@ const Observatory = () => {
                         sdgs={sdgs}
                     />
                     <ObservatoryModal isOpen={showDialogInfo} toggle={() => setShowDialogInfo((v) => !v)} />
-
-                    <ComparisonPopup />
                 </>
             )}
         </>
