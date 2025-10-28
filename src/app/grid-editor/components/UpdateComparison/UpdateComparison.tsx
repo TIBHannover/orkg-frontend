@@ -38,6 +38,7 @@ const UpdateComparison = () => {
                     contributions: [...comparison.config.contributions, ...newContributions],
                 },
             });
+            toast.success('Comparison updated successfully');
             mutate();
         } catch (e) {
             toast.error('Error updating comparison');
@@ -58,7 +59,7 @@ const UpdateComparison = () => {
                 <Alert color="warning" className="tw:my-2 tw:px-4 tw:md:flex tw:items-center">
                     <p className="tw:!m-0">
                         You are editing the comparison <strong>{comparison.title}</strong>. Some of the contributions you selected are not part of
-                        this comparison. To include them, click the button below.
+                        this comparison. To include them, use the button on the right.
                     </p>
                     <div className="tw:shrink-0 tw:grow-0 tw:flex tw:justify-center">
                         <ButtonWithLoading
