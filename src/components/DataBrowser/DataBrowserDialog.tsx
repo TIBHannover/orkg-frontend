@@ -70,14 +70,14 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
                 </span>
                 <Link
                     style={{ right: 45, position: 'absolute', top: 12 }}
-                    title={`Go to ${type} page`}
+                    title={`Go to ${type === ENTITIES.PREDICATE ? 'property' : type} page`}
                     className="ms-2"
                     href={`${reverse(route, { id })}?noRedirect`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     <Button color="link" className="p-0">
-                        Open {type} <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
+                        Open {type === ENTITIES.PREDICATE ? 'property' : type} <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
                     </Button>
                 </Link>
             </ModalHeader>

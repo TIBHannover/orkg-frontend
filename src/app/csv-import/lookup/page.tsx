@@ -30,9 +30,11 @@ const AutocompletePage = () => {
     const [inputValue, setInputValue] = useState('');
     const [isCreating, setIsCreating] = useState(false);
 
+    const entityTypeLabel = entityType === ENTITIES.PREDICATE ? 'property' : entityType;
+
     useEffect(() => {
-        document.title = `Entity lookup tool - ${entityType}`;
-    }, [entityType]);
+        document.title = `Entity lookup tool - ${entityTypeLabel}`;
+    }, [entityTypeLabel]);
 
     const handleParentClassSelect = (selected: SingleValue<OptionType>) => {
         setEntity(selected);
@@ -71,15 +73,21 @@ const AutocompletePage = () => {
                     <Link href={reverse(ROUTES.CSV_IMPORT)} target="_blank">
                         ORKG CSV import tool
                     </Link>
-                    . You can:{' '}
+                    .{' '}
+                    <p className="mb-0">
+                        An entity represents a type of item in the system. It can be a <i>Resource</i>, <i>Class</i>, or <i>Property</i>. You can
+                        select the desired entity type from the dropdown menu on the left.{' '}
+                    </p>
+                    You can then:{' '}
                     <ul className="list-disc list-inside">
                         <li>Search for entities in ORKG and copy their IDs to include in your CSV file.</li>
-                        <li>Create new entities if the resource you need does not yet exist.</li>
+                        <li>Create new entities if the one you need does not yet exist.</li>
                         <li>
-                            You can search for existing entities by ID by using <code>#</code> as a prefix (e.g., <code>#R12</code>)
+                            Search for existing entities by ID using <code>#</code> as a prefix (e.g., <code>#R12</code>)
                         </li>
                     </ul>
-                    If you don't find a result for your desired resource, simply click the 'Create' button to generate a new entity and obtain its ID.
+                    If you don't find the entity you're looking for, enter your label, close the options menu, and simply click the 'Create' button to
+                    generate a new entity and obtain its ID.
                 </div>
                 <InputGroup className="d-flex justify-content-center">
                     <Input
@@ -91,12 +99,12 @@ const AutocompletePage = () => {
                     >
                         <option value={ENTITIES.RESOURCE}>Resource</option>
                         <option value={ENTITIES.CLASS}>Class</option>
-                        <option value={ENTITIES.PREDICATE}>Predicate</option>
+                        <option value={ENTITIES.PREDICATE}>Property</option>
                     </Input>
                     <Autocomplete
                         key={entityType}
                         entityType={entityType}
-                        placeholder={`Select or type to enter a ${entityType}`}
+                        placeholder={`Select or type to enter a ${entityTypeLabel}`}
                         onChange={handleParentClassSelect}
                         value={entity}
                         openMenuOnFocus
