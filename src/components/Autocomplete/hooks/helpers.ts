@@ -4,16 +4,16 @@ import { MultiValue } from 'react-select';
 
 import { ExternalServiceResponse, Ontology, OptionsSettings, OptionType } from '@/components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';
-import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getClasses } from '@/services/backend/classes';
 import { importClassByURI, importPredicateByURI, importResourceByURI } from '@/services/backend/import';
 import { createLiteral } from '@/services/backend/literals';
 import { getEntities } from '@/services/backend/misc';
-import { createResource, getResources } from '@/services/backend/resources';
-import { createLiteralStatement, getStatements } from '@/services/backend/statements';
+import { getResources } from '@/services/backend/resources';
+import { createLiteralStatement } from '@/services/backend/statements';
 import { getThing, Thing } from '@/services/backend/things';
-import { Class, EntityType, PaginatedResponse, Predicate, Resource, Statement } from '@/services/backend/types';
+import { Class, EntityType, PaginatedResponse, Predicate, Resource } from '@/services/backend/types';
 import getGeoNames from '@/services/geoNames';
 import { EntityPath, getOntologyEntities, selectEntities } from '@/services/ols';
 import { searchEntity } from '@/services/wikidata';
@@ -196,31 +196,6 @@ export const getExternalData = ({
     return promises;
 };
 
-const findOrCreateResource = async (value: OptionType) => {
-    let resource;
-    resource = value.uri
-        ? ((await getStatements({
-              subjectLabel: value.label,
-              objectLabel: value.uri,
-              subjectClasses: [CLASSES.EXTERNAL],
-              predicateId: PREDICATES.SAME_AS,
-              size: 1,
-              returnContent: true,
-          })) as Statement[])
-        : [];
-    resource = resource.length > 0 ? resource[0].subject : null;
-    if (!resource) {
-        const resourceId = await createResource({ label: value.label, classes: [CLASSES.EXTERNAL, ...(value.classes ?? [])] });
-        if (value.uri) {
-            createLiteralStatement(resourceId, PREDICATES.SAME_AS, await createLiteral(value.uri, 'xsd:anyURI'));
-        }
-        if (value.description) {
-            createLiteralStatement(resourceId, PREDICATES.DESCRIPTION, await createLiteral(value.description));
-        }
-    }
-    return resource;
-};
-
 export const importStatements = async (id: string, value: OptionType) => {
     for (const s of value.statements ?? []) {
         createLiteralStatement(id, s.predicate, await createLiteral(s.value.label));
@@ -235,11 +210,7 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
     try {
         // Import the option
         if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri && value._class !== ENTITIES.CLASS) {
-            if (value.source !== AUTOCOMPLETE_SOURCE.OLS_API) {
-                importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-            } else {
-                importedValue = (await findOrCreateResource(value)) as OptionType;
-            }
+            importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
         } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
             importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
             // If the option is a class, we need to import it as a class
