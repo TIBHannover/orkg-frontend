@@ -7,7 +7,6 @@ import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
@@ -86,22 +85,18 @@ const Papers: FC = () => {
     );
 
     return (
-        <>
-            <ListPage
-                label="papers"
-                fetchFunction={getPapers}
-                fetchFunctionName="getPapers"
-                fetchUrl={papersUrl}
-                fetchExtraParams={{ verified, visibility }}
-                renderListItem={renderListItem}
-                resourceClass={CLASSES.PAPER}
-                buttons={buttons}
-                disableSearch={verified !== null}
-                infoContainerText={infoContainerText}
-            />
-
-            <ComparisonPopup />
-        </>
+        <ListPage
+            label="papers"
+            fetchFunction={getPapers}
+            fetchFunctionName="getPapers"
+            fetchUrl={papersUrl}
+            fetchExtraParams={{ verified, visibility }}
+            renderListItem={renderListItem}
+            resourceClass={CLASSES.PAPER}
+            buttons={buttons}
+            disableSearch={verified !== null}
+            infoContainerText={infoContainerText}
+        />
     );
 };
 

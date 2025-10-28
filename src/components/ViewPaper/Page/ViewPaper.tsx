@@ -5,7 +5,6 @@ import { InView } from 'react-intersection-observer';
 
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import GraphViewModal from '@/components/GraphView/GraphViewModal';
@@ -84,10 +83,7 @@ const ViewPaper = () => {
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />
-
                                 <Contributions enableEdit={isEditMode} />
-
-                                <ComparisonPopup />
                             </>
                         )}
                     </Container>

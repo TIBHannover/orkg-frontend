@@ -7,7 +7,6 @@ import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import { supportedContentTypes } from '@/components/ContentType/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Contributors from '@/components/List/Contributors/Contributors';
@@ -162,7 +161,6 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                     </section>
                 </SectionStyled>
             </main>
-            <ComparisonPopup />
         </Container>
     );
 };

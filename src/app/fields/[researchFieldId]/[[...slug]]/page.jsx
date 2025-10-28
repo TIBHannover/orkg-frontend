@@ -1,7 +1,6 @@
 'use client';
 
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import LastUpdatesBox from '@/components/LastUpdatesBox/LastUpdatesBox';
 import ObservatoriesCarousel from '@/components/ObservatoriesCarousel/ObservatoriesCarousel';
 import useResearchFieldObservatories from '@/components/ResearchField/hooks/useResearchFieldObservatories';
@@ -44,8 +43,6 @@ const ResearchField = () => {
             <Container className="p-0 mt-2">
                 <ResearchFieldTabsContainer id={researchFieldId} />
             </Container>
-
-            <ComparisonPopup />
         </>
     );
 };

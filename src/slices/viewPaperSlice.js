@@ -1,12 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { asyncLocalStorage, guid } from '@/utils';
+import { guid } from '@/utils';
 
 const initialState = {
-    comparison: {
-        byId: {},
-        allIds: [],
-    },
     abstract: '',
     isAbstractLoading: false,
     isAbstractFetched: false,
@@ -26,19 +22,6 @@ export const viewPaperSlice = createSlice({
     name: 'viewPaper',
     initialState,
     reducers: {
-        loadComparisonFromLocalStorage: (state, { payload }) => {
-            state.comparison = payload;
-        },
-        addToComparison: (state, { payload }) => {
-            state.comparison.byId[payload.contributionId] = payload.contributionData;
-            state.comparison.allIds.push(payload.contributionId);
-            asyncLocalStorage.setItem('comparison', JSON.stringify(state.comparison));
-        },
-        removeFromComparison: (state, { payload }) => {
-            delete state.comparison.byId[payload];
-            state.comparison.allIds = state.comparison.allIds.filter((id) => id !== payload);
-            asyncLocalStorage.setItem('comparison', JSON.stringify(state.comparison));
-        },
         setAbstract: (state, { payload }) => {
             state.abstract = payload;
         },
@@ -102,9 +85,6 @@ export const viewPaperSlice = createSlice({
 });
 
 export const {
-    loadComparisonFromLocalStorage,
-    addToComparison,
-    removeFromComparison,
     setAbstract,
     setIsAbstractLoading,
     setIsAbstractFetched,

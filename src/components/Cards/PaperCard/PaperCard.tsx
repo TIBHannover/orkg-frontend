@@ -96,7 +96,7 @@ const PaperCard: FC<PaperCardType> = ({
                         )}
                         {!selectable && showAddToComparison && !!paper.contributions?.length && (
                             <div>
-                                <AddToComparison paper={paper} />
+                                <AddToComparison paper={paper as Paper} />
                             </div>
                         )}
                         {showCurationFlags && (

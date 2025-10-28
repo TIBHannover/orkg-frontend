@@ -8,7 +8,6 @@ import ComparisonCard from '@/components/Cards/ComparisonCard/ComparisonCard';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
 import VisualizationCard from '@/components/Cards/VisualizationCard/VisualizationCard';
-import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import ListGroupItem from '@/components/Ui/List/ListGroupItem';
@@ -107,7 +106,6 @@ const AuthorWorks = ({ authorId = null, authorString = null }) => {
                     )}
                 </ListGroup>
             </Container>
-            <ComparisonPopup />
         </>
     );
 };
