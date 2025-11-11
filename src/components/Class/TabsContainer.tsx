@@ -40,7 +40,7 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMod
             <Row className="ps-2">
                 <Col md={6} className="box rounded" style={{ background: '#fff' }}>
                     <TabHeaderStyle className="rc-tabs-nav-wrap">Tree view</TabHeaderStyle>
-                    <TreeView id={id} label={label} reloadTree={reloadTree} />
+                    <TreeView id={id} reloadTree={reloadTree} />
                 </Col>
                 <Col md={6}>
                     <Tabs

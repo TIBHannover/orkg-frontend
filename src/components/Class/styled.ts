@@ -7,12 +7,12 @@ export const motion = {
     motionName: 'node-motion',
     motionAppear: false,
     onAppearStart: () => ({ height: 0 }),
-    onAppearActive: (node) => ({ height: node.scrollHeight }),
-    onLeaveStart: (node) => ({ height: node.offsetHeight }),
+    onAppearActive: (node: { scrollHeight: number }) => ({ height: node.scrollHeight }),
+    onLeaveStart: (node: { offsetHeight: number }) => ({ height: node.offsetHeight }),
     onLeaveActive: () => ({ height: 0 }),
 };
 
-const AnimatedTree = styled(Tree)`
+const AnimatedTree = styled(Tree as any)`
     .rc-tree-indent {
         line-height: 40px;
         height: 24px;

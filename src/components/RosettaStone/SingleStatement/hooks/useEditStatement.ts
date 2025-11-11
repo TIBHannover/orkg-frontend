@@ -100,7 +100,11 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
                             if (v.__isNew__) {
                                 const tempID = `#${guid()}`;
                                 values.push(tempID);
-                                resources[tempID] = { label: v.label, classes: range?.id ? [range.id] : [] };
+                                let _classes = v.classes ? v.classes : [];
+                                if (range?.id && _classes.length === 0) {
+                                    _classes = range?.id ? [range.id] : [];
+                                }
+                                resources[tempID] = { label: v.label, classes: _classes };
                             } else {
                                 values.push(v.id);
                             }

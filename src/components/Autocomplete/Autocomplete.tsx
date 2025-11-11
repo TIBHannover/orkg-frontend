@@ -1,16 +1,18 @@
 import { findIndex, uniqBy } from 'lodash';
 import { useEffect, useId, useMemo, useState } from 'react';
-import type { GroupBase, OnChangeValue } from 'react-select';
+import type { ActionMeta, GroupBase, OnChangeValue } from 'react-select';
 import type {} from 'react-select/base';
 import Creatable, { CreatableProps } from 'react-select/creatable';
 import { AsyncPaginate, ComponentProps, UseAsyncPaginateParams, withAsyncPaginate } from 'react-select-async-paginate';
 
 import AutocompleteProvider, { useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
+import Control from '@/components/Autocomplete/CustomComponents/Control';
 import CustomMultiValueLabel from '@/components/Autocomplete/CustomComponents/CustomMultiValueLabel';
 import Input from '@/components/Autocomplete/CustomComponents/Input';
 import Menu from '@/components/Autocomplete/CustomComponents/Menu';
 import { Option as CustomOption } from '@/components/Autocomplete/CustomComponents/Option';
 import { importExternalSelectedOption } from '@/components/Autocomplete/hooks/helpers';
+import useBaseClass from '@/components/Autocomplete/hooks/useBaseClass';
 import useLoadOptions from '@/components/Autocomplete/hooks/useLoadOptions';
 import OntologiesModal from '@/components/Autocomplete/OntologiesModal/OntologiesModal';
 import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
@@ -27,6 +29,12 @@ declare module 'react-select/base' {
         size?: 'sm';
         rightAligned?: boolean;
         onFailure?: (e: Error) => void;
+        baseClass?: string;
+        rootBaseClass?: string;
+        onBaseClassChange?: (value: string | null) => void;
+        entityType?: string;
+        /** @internal */
+        readonly __orkgAutocompleteAugmentation?: { option?: Option; isMulti?: IsMulti; group?: Group };
     }
 }
 
@@ -57,29 +65,35 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         additionalOptions,
         isMulti,
         onOntologySelectorModalStatusChange,
+        onEffectiveBaseClassChange,
         fixedOptions,
         defaultValueId,
         placeholder,
         onFailure,
     } = props;
 
-    const { value, onChange, noOptionsMessage, ...restProps } = props;
+    const { value: incomingValue, onChange, noOptionsMessage, getNewOptionData: originalGetNewOptionData, ...restProps } = props;
 
     const [defaultValue, setValue] = useState<OptionType[] | OptionType | null>(null);
 
-    let localValue = value;
+    const { effectiveBaseClass, handleBaseClassChange, rootBaseClass } = useBaseClass({
+        baseClass,
+        onEffectiveBaseClassChange,
+    });
+
+    let localValue = incomingValue;
     if (defaultValueId) {
         localValue = defaultValue;
     } else if (isMulti && fixedOptions?.length) {
-        localValue = (value as OptionType[])?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
+        localValue = (incomingValue as OptionType[])?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
     }
 
     useEffect(() => {
         const loadNode = async () => {
-            if (defaultValueId && !value && !isMulti) {
+            if (defaultValueId && !incomingValue && !isMulti) {
                 const node = await getThing(defaultValueId as string);
                 setValue(node as OptionType);
-            } else if (defaultValueId && defaultValueId?.length > 0 && !value && isMulti) {
+            } else if (defaultValueId && defaultValueId?.length > 0 && !incomingValue && isMulti) {
                 const nodes = await Promise.all((defaultValueId as string[]).map((v) => getThing(v) as Promise<OptionType>));
                 setValue(nodes);
             } else {
@@ -91,7 +105,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             setValue(null);
             loadNode();
         }
-    }, [defaultValue, defaultValueId, isMulti, value]);
+    }, [defaultValue, defaultValueId, isMulti, incomingValue]);
 
     const Select = useMemo(() => (allowCreate ? AsyncPaginateCreatable : AsyncPaginate), [allowCreate]);
 
@@ -99,7 +113,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
 
     const { loadOptions, defaultAdditional } = useLoadOptions({
         entityType,
-        baseClass,
+        baseClass: effectiveBaseClass,
         includeClasses,
         excludeClasses,
         enableExternalSources,
@@ -108,12 +122,39 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             : additionalOptions,
     });
 
-    const _noOptionsMessage = (value: { inputValue: string }) => (value.inputValue !== '' ? 'No results found' : 'Start typing to find results');
+    const _noOptionsMessage = (optionsInput: { inputValue: string }) =>
+        optionsInput.inputValue !== '' ? 'No results found' : 'Start typing to find results';
 
     // in contribution editor we need to know the status of the modal because we are using useClickAway to trigger save
     useEffect(() => {
         onOntologySelectorModalStatusChange?.(isOntologySelectorIsOpen);
     }, [onOntologySelectorModalStatusChange, isOntologySelectorIsOpen]);
+
+    // Wrap getNewOptionData to inject effectiveBaseClass into classes attribute
+    const getNewOptionData = (inputValue: string, label: string) => {
+        if (!allowCreate) return undefined;
+
+        // Call original getNewOptionData if provided, otherwise use default
+        const newOption = {
+            label: label || inputValue,
+            id: inputValue,
+            value: label || inputValue,
+            __isNew__: true,
+        };
+
+        // Add effectiveBaseClass to classes array if it exists
+        if (effectiveBaseClass) {
+            const existingClasses = 'classes' in newOption && Array.isArray(newOption.classes) ? newOption.classes : [];
+            // Avoid duplicates
+            const classes = existingClasses.includes(effectiveBaseClass) ? existingClasses : [...existingClasses, effectiveBaseClass];
+            return {
+                ...newOption,
+                classes,
+            };
+        }
+
+        return newOption;
+    };
 
     return (
         <>
@@ -121,7 +162,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
             <Select<OptionType, GroupBase<OptionType>, AdditionalType, IsMulti>
                 {...restProps}
                 // to clear the cached options if the selected ontologies changes
-                key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(defaultAdditional)}
+                key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(defaultAdditional) + (effectiveBaseClass ?? '')}
                 instanceId={useId()}
                 styles={customStyles}
                 classNames={customClassNames}
@@ -130,15 +171,19 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 loadOptions={loadOptions}
                 additional={defaultAdditional}
                 enableExternalSources={enableExternalSources}
+                baseClass={effectiveBaseClass}
+                rootBaseClass={rootBaseClass}
+                onBaseClassChange={handleBaseClassChange}
                 components={{
                     Menu,
                     Option: CustomOption,
                     Input,
                     MultiValueLabel: CustomMultiValueLabel,
+                    Control,
                 }}
                 value={localValue}
-                getOptionValue={({ id }) => id}
-                onChange={async (newValue, actionMeta) => {
+                getOptionValue={(option) => option.id}
+                onChange={async (newValue: OnChangeValue<OptionType, IsMulti>, actionMeta: ActionMeta<OptionType>) => {
                     if (!onChange) return;
                     if (actionMeta.action === 'select-option') {
                         if (isMulti && actionMeta.option) {
@@ -171,7 +216,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 }}
                 noOptionsMessage={noOptionsMessage || _noOptionsMessage}
                 aria-label={placeholder?.toString()}
-                {...(allowCreate ? { createOptionPosition: 'first' } : {})}
+                {...(allowCreate ? { createOptionPosition: 'first', getNewOptionData } : {})}
             />
             {enableExternalSources && <OntologiesModal />}
         </>
