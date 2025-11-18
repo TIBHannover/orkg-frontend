@@ -8,7 +8,7 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createClass, getClassById, getClasses } from '@/services/backend/classes';
 import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { createTemplate, getTemplate, getTemplates } from '@/services/backend/templates';
-import { CreateTemplateParams, Node, Resource } from '@/services/backend/types';
+import { Class, CreateTemplateParams, Node, PaginatedResponse, Resource } from '@/services/backend/types';
 
 const { namedNode } = DataFactory;
 
@@ -220,7 +220,17 @@ const useImportSHACL = () => {
                     // Check if class exists by URI first
                     if (originalClass.uri) {
                         try {
-                            const fetchedClass = await getClasses({ uri: originalClass.uri });
+                            const r = await getClasses({ uri: originalClass.uri });
+                            let fetchedClass: Class | null = null;
+                            if (r && !('page' in r) && !('content' in r)) {
+                                fetchedClass = r;
+                            } else if (!('page' in r) && !('content' in r)) {
+                                fetchedClass = null;
+                            } else if ((r as unknown as PaginatedResponse<Class>).content.length > 0) {
+                                [fetchedClass] = (r as unknown as PaginatedResponse<Class>).content;
+                            } else {
+                                fetchedClass = null;
+                            }
                             if (fetchedClass) {
                                 mappedClass = { ...fetchedClass, extractedId: originalClass.extractedId };
                             }

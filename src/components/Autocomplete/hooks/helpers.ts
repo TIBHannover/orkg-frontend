@@ -55,19 +55,23 @@ export const orkgLookup = async ({
     } else if (entityType === ENTITIES.CLASS && isURI) {
         // Lookup a class by uri
         try {
-            responseJson = (await getClasses({
+            const r = await getClasses({
                 page,
                 size: pageSize,
                 exact,
                 uri: localValue.trim(),
-            })) as Class;
+            });
+            if (r && !('page' in r) && !('content' in r)) {
+                responseJson = { content: [r], page: { total_elements: 1, total_pages: 1, size: 0, number: 0 } };
+            } else if (!('page' in r) && !('content' in r)) {
+                responseJson = { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
+            } else {
+                responseJson = r as unknown as PaginatedResponse<Class>;
+            }
         } catch (error) {
             // No matching class
             return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
         }
-        responseJson = responseJson
-            ? { content: [responseJson], page: { total_elements: 1, total_pages: 1, size: 0, number: 0 } }
-            : { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
     } else {
         // Predicate or Class
         responseJson = await getEntities(entityType, {
