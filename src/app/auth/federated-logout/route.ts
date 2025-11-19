@@ -16,21 +16,26 @@ function handleEmptyToken() {
     return NextResponse.json(response, responseHeaders);
 }
 
-function sendEndSessionEndpointToURL(token: JWT) {
+function sendEndSessionEndpointToURL(token: JWT, redirectUri: string) {
     const endSessionEndPoint = new URL(
         `${env('NEXT_PUBLIC_KEYCLOAK_URL')}/realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}/protocol/openid-connect/logout`,
     );
     const params: Record<string, string> = logoutParams(token);
+    if (redirectUri && redirectUri !== '') {
+        params.post_logout_redirect_uri = redirectUri;
+    }
     const endSessionParams = new URLSearchParams(params);
     const response = { url: `${endSessionEndPoint.href}/?${endSessionParams}` };
     return NextResponse.json(response);
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export async function GET(req: NextRequest) {
     try {
+        const redirectUri = req.nextUrl.searchParams.get('redirect_uri');
         const token = await getToken({ req });
         if (token) {
-            return sendEndSessionEndpointToURL(token);
+            return sendEndSessionEndpointToURL(token, redirectUri ?? '');
         }
         return handleEmptyToken();
     } catch (error) {

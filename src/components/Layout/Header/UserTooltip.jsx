@@ -109,7 +109,7 @@ const UserTooltip = () => {
     const handleSignOut = async () => {
         try {
             setIsVisibleTooltip(false);
-            await federatedLogout();
+            await federatedLogout({ redirectUri: window.location.href });
             toast.success('Signed out successfully');
         } catch (error) {
             console.log(error);
