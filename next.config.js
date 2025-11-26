@@ -159,6 +159,11 @@ const nextConfig = {
             },
         },
     },
+    experimental: {
+        reactCompiler: {
+            compilationMode: 'annotation',
+        },
+    },
     transpilePackages: ['ky'],
     output: 'standalone',
     env: {

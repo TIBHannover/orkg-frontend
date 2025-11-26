@@ -56,7 +56,7 @@ const useSearch = ({
         [
             {
                 page,
-                size: itemsPerFilter,
+                size: pageSize,
                 q: searchTerm,
                 created_by: !isEmpty(createdBy) ? createdBy : undefined,
                 observatory_id: !isEmpty(observatoryId) ? observatoryId : undefined,

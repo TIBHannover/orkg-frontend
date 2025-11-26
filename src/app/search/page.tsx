@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import Filters from '@/app/search/components/Filters';
 import useSearch from '@/app/search/components/hooks/useSearch';
+import useSmartFilters from '@/app/search/components/hooks/useSmartFilters';
 import OrkgAskBanner from '@/app/search/components/OrkgAskBanner/OrkgAskBanner';
-// import useSetSmartFilters from '@/app/search/components/hooks/useSetSmartFilters';
 import Results from '@/app/search/components/Results';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import TitleBar from '@/components/TitleBar/TitleBar';
@@ -16,8 +16,6 @@ import { Thing } from '@/services/backend/things';
 import { PaginatedResponse } from '@/services/backend/types';
 
 export default function Search() {
-    const [results, setResults] = useState<PaginatedResponse<Thing> | undefined>(undefined);
-
     const {
         typeData,
         searchTerm,
@@ -35,18 +33,27 @@ export default function Search() {
         searchAuthor: true,
     });
 
-    useEffect(() => {
-        setResults(_results);
-    }, [_results]);
-    /*
-    const { setSelectedSmartFilterIds, selectedSmartFilterIds, selectedSmartFilterLabels, toggleSmartFilter, initialResults } = useSetSmartFilters(
-        setResults,
-        results,
-    );
-    */
+    const {
+        filteredItemsIds,
+        selectedSmartFilter,
+        setSelectedSmartFilter,
+        generateSmartFilters,
+        isLoading: isLoadingSmartFilters,
+        error: errorSmartFilters,
+        facets,
+    } = useSmartFilters(searchTerm, _results);
+
     useEffect(() => {
         document.title = `Search ${searchTerm} - ORKG`;
     }, [searchTerm]);
+
+    let results: PaginatedResponse<Thing> | undefined = _results;
+    if (filteredItemsIds.length > 0) {
+        results = {
+            ..._results,
+            content: _results?.content?.filter((item) => filteredItemsIds.includes(item.id)),
+        } as PaginatedResponse<Thing>;
+    }
 
     return (
         <div>
@@ -60,6 +67,12 @@ export default function Search() {
                                 countResults={countResults}
                                 typeData={typeData}
                                 isLoading={isLoading}
+                                selectedSmartFilter={selectedSmartFilter}
+                                setSelectedSmartFilter={setSelectedSmartFilter}
+                                generateSmartFilters={generateSmartFilters}
+                                isLoadingSmartFilters={isLoadingSmartFilters}
+                                errorSmartFilters={errorSmartFilters}
+                                facets={facets || []}
                             />
                         </div>
                     </Col>

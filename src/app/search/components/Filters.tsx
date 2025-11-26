@@ -1,12 +1,16 @@
-import { faCircleXmark, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp, faCircleInfo, faCircleXmark, faMagic, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC } from 'react';
+import { startCase, toLower } from 'lodash';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 
 import useFilters from '@/app/search/components/hooks/useFilters';
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import AutocompleteContributor from '@/components/AutocompleteContributor/AutocompleteContributor';
 import AutocompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory2';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import Badge from '@/components/Ui/Badge/Badge';
 import Button from '@/components/Ui/Button/Button';
@@ -18,38 +22,38 @@ import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { Thing } from '@/services/backend/things';
 import { PaginatedResponse } from '@/services/backend/types';
+import { FacetValuePair } from '@/services/smartFilters';
 
 type FiltersProps = {
     results: PaginatedResponse<Thing>;
-    /*
-    initialResults: PaginatedResponse<Thing>;
-    selectedSmartFilterLabels: string[];
-    toggleSmartFilter: (facetValue: string, checked: boolean, memoizedFacets: any[]) => void;
-    setSelectedSmartFilterIds: (ids: string[]) => void;
-    selectedSmartFilterIds: string[];
-    */
     defaultFilters?: { id: string; label: string }[];
     countResults: Record<string, PaginatedResponse<Thing>>;
     typeData: { label: string; id: string } | undefined;
     isLoading: boolean;
+    selectedSmartFilter?: string[];
+    setSelectedSmartFilter?: Dispatch<SetStateAction<string[]>>;
+    generateSmartFilters: () => void;
+    isLoadingSmartFilters: boolean;
+    errorSmartFilters: Error | undefined;
+    facets: FacetValuePair[];
 };
 
 const Filters: FC<FiltersProps> = ({
     results,
-    /*
-    initialResults,
-    selectedSmartFilterLabels,
-    toggleSmartFilter,
-    setSelectedSmartFilterIds,
-    selectedSmartFilterIds,
-    */
     defaultFilters = DEFAULT_FILTERS,
     countResults,
     typeData,
     isLoading: isLoadingResults,
+    selectedSmartFilter = [],
+    setSelectedSmartFilter = () => {},
+    generateSmartFilters,
+    isLoadingSmartFilters,
+    errorSmartFilters,
+    facets,
 }) => {
     const { user } = useAuthentication();
     const {
+        searchTerm,
         value,
         createdBy,
         setCreatedBy,
@@ -63,31 +67,28 @@ const Filters: FC<FiltersProps> = ({
         clearFilter,
         isFilterApplied,
     } = useFilters();
-    /*
-    const { extractIdsAndAbstracts, isLoading, error, memoizedFacets } = useSmartFilters(
-        searchTerm,
-        results,
-        initialResults,
-        setSelectedSmartFilterIds,
-        selectedSmartFilterIds,
-    );
+
     // Track the open/close state of each facet
-    const [openFacets, setOpenFacets] = useState({});
+    const [openFacets, setOpenFacets] = useState<Record<number, boolean>>({});
 
     const toggleFacet = (index: number) => {
         setOpenFacets((prev) => ({
             ...prev,
-            // @ts-expect-error
-            [index]: !prev[index], // Toggle the specific facet state
+            [index]: !prev[index],
         }));
     };
 
     const handleSmartFilterChange = (facetValue: string, checked: boolean) => {
-        // Ensure only the selected facet value is toggled
-        // @ts-expect-error
-        toggleSmartFilter(facetValue, checked, memoizedFacets);
+        if (setSelectedSmartFilter) {
+            setSelectedSmartFilter((prevLabels) => {
+                if (checked) {
+                    return [...prevLabels, facetValue];
+                }
+                return prevLabels.filter((label) => label !== facetValue);
+            });
+        }
     };
-    */
+
     return (
         <FormGroup>
             <Label for="searchQuery">Search query</Label>
@@ -195,75 +196,84 @@ const Filters: FC<FiltersProps> = ({
                 </div>
             </FormGroup>
 
-            {/* Smart Filters 
             <hr className="mt-3 mb-3" />
-           
+
             <div className="d-flex align-items-center justify-content-between">
                 <Label>
-                    Smart Filters &nbsp;
-                    <FontAwesomeIcon icon={faCircleInfo} className="ml-5 me-2" title="Smart filters are generated based on titles and descriptions" />
+                    Smart Filters{' '}
+                    <Tooltip
+                        content={
+                            <>
+                                Smart filters are created based on titles and descriptions for papers, comparisons, or reviews.{' '}
+                                <a href="https://www.orkg.org/help-center/article/63/Smart_filters" target="_blank" rel="noreferrer">
+                                    Learn more in the help center
+                                </a>
+                                .
+                            </>
+                        }
+                    >
+                        <FontAwesomeIcon icon={faCircleInfo} className="ml-5 me-2" />
+                    </Tooltip>
                 </Label>
-                <Button onClick={() => extractIdsAndAbstracts()} color="smart" size="sm" className="d-flex align-items-center" title="">
+                <ButtonWithLoading
+                    isLoading={isLoadingSmartFilters}
+                    isDisabled={!searchTerm}
+                    loadingMessage="Generating..."
+                    onClick={() => generateSmartFilters()}
+                    color="smart"
+                    size="sm"
+                    className="d-flex align-items-center"
+                >
                     <FontAwesomeIcon icon={faMagic} className="me-2" />
                     Generate
-                </Button>
+                </ButtonWithLoading>
             </div>
 
             <div className="mt-2 text-muted">
-                {!isLoading && (!memoizedFacets || memoizedFacets.length === 0) && (
+                {!isLoadingSmartFilters && (!facets || facets.length === 0) && (
                     <div className="mt-1 small text-muted">
-                        {error ? (
-                            <span className="text-danger">{error.message || 'Failed to generate smart filters. Please try again.'}</span>
-                        ) : (
-                            'Click to generate smart filters'
+                        {searchTerm && errorSmartFilters && (
+                            <span className="text-danger">{errorSmartFilters.message || 'Failed to generate smart filters. Please try again.'}</span>
                         )}
+                        {!searchTerm && !errorSmartFilters && 'Enter a search query to enable generating smart filters'}
+                        {searchTerm && !errorSmartFilters && 'Click to generate smart filters'}
                     </div>
                 )}
 
-                {isLoading ? (
-                    <ContentLoader speed={2} width="100%" height={60}>
-                        <rect x="0" y="15" width="100%" height="30" />
+                {isLoadingSmartFilters ? (
+                    <ContentLoader speed={2} width="100%" height={70}>
+                        <rect x="0" y="0" width="100%" height="30" />
+                        <rect x="0" y="40" width="100%" height="30" />
                     </ContentLoader>
                 ) : (
                     <div className="mt-2 text-muted">
-                        {memoizedFacets && memoizedFacets.length > 0 && (
+                        {facets && facets.length > 0 && (
                             <div className="mt-3">
                                 <div className="border p-2 rounded bg-light">
-                                    {memoizedFacets.map((facet, index) => {
+                                    {facets.map((facet, index) => {
                                         const isFacetOpen = openFacets[index] || false; // Get facet state
 
                                         return (
                                             <div key={index} className="mb-2">
-                                                {/* Facet Title
-                                                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions 
-                                                <div
-                                                    onClick={() => toggleFacet(index)} // Toggle facet open/close state
-                                                    className="fw-bold"
-                                                    style={{ cursor: 'pointer' }}
-                                                >
-                                                    {facet.facet}
-                                                    <FontAwesomeIcon
-                                                        icon={isFacetOpen ? faCaretUp : faCaretDown} // Toggle icon
-                                                        className="ms-1"
-                                                    />
+                                                {/* Facet Title */}
+                                                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+                                                <div onClick={() => toggleFacet(index)} className=" tw:cursor-pointer tw:font-bold">
+                                                    {startCase(toLower(facet.facet || ''))}
+                                                    <FontAwesomeIcon icon={isFacetOpen ? faCaretUp : faCaretDown} className="ms-1" />
                                                 </div>
 
-                                                {/* Facet Values with Checkboxes 
-                                                <ul
-                                                    className={`mt-1 ps-1 ${isFacetOpen ? '' : 'd-none'}`} // Show facet values when open
-                                                    id={`facet-values-${index}`}
-                                                    style={{ listStyleType: 'none' }}
-                                                >
-                                                    {facet.facet_values.map((value, vIndex) => (
+                                                {/* Facet Values with Checkboxes */}
+                                                <ul className={`mt-1 ps-1 ${isFacetOpen ? '' : 'd-none'}`} style={{ listStyleType: 'none' }}>
+                                                    {facet.facet_values.map((fv, vIndex) => (
                                                         <li key={vIndex}>
                                                             <FormGroup check>
                                                                 <Label check>
                                                                     <Input
                                                                         type="checkbox"
-                                                                        onChange={(e) => handleSmartFilterChange(value.facet_value, e.target.checked)}
-                                                                        checked={selectedSmartFilterLabels.includes(value.facet_value)}
+                                                                        onChange={(e) => handleSmartFilterChange(fv.facet_value, e.target.checked)}
+                                                                        checked={selectedSmartFilter.includes(fv.facet_value)}
                                                                     />
-                                                                    {value.facet_value} <span className="text-muted">({value.frequency})</span>
+                                                                    {fv.facet_value} <span className="text-muted">({fv.frequency})</span>
                                                                 </Label>
                                                             </FormGroup>
                                                         </li>
@@ -277,7 +287,7 @@ const Filters: FC<FiltersProps> = ({
                         )}
                     </div>
                 )}
-            </div> */}
+            </div>
         </FormGroup>
     );
 };
