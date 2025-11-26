@@ -49,8 +49,7 @@ export const getPapersByTitle = async ({ title, limit = 10, offset = 0, fields =
     }
 };
 
-// @ts-expect-error TODO
-export const getAbstractByDoi = async (doi) => {
+export const getAbstractByDoi = async (doi: string) => {
     const result = await semanticScholarApi
         .get(`v1/paper/${doi}`)
         .json()
@@ -64,13 +63,11 @@ export const getAbstractByDoi = async (doi) => {
     return result;
 };
 
-// @ts-expect-error TODO
-export const getAbstractByTitle = async (title) =>
+export const getAbstractByTitle = async (title: string) =>
     // @ts-expect-error TODO
     getPapersByTitle({ title, limit: 1, fields: ['abstract', 'title'] }).then((data, reject) => data?.data?.[0] ?? reject);
 
-// @ts-expect-error TODO
-export const getAuthorsByLabel = ({ label, limit }) =>
+export const getAuthorsByLabel = ({ label, limit }: { label: string; limit: number }) =>
     semanticScholarApi
         .get('graph/v1/author/search', {
             searchParams: `query=${encodeURIComponent(label)}&fields=name,url,citationCount,hIndex&limit=${limit}`,

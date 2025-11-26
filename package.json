@@ -31,6 +31,7 @@
         "@xyflow/react": "^12.8.4",
         "ag-grid-react": "^34.0.1",
         "array-move": "^3.0.1",
+        "babel-plugin-react-compiler": "^1.0.0",
         "better-react-mathjax": "^2.3.0",
         "bootstrap": "^5.2.3",
         "capitalize": "^2.0.4",

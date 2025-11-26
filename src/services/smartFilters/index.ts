@@ -1,30 +1,32 @@
-import ky from 'ky';
+import ky, { ResponsePromise } from 'ky';
 import { env } from 'next-runtime-env';
 
+export const smartFiltersUrl = env('NEXT_PUBLIC_SMART_FILTERS_URL');
+
 const smartFilters = ky.create({
-    prefixUrl: env('NEXT_PUBLIC_SMART_FILTERS_URL'),
+    prefixUrl: smartFiltersUrl,
     timeout: 1000 * 60 * 20, // 20 minutes
 });
 
 // Faceted Response interface
-interface FacetValue {
+export type FacetValue = {
     facet_value: string;
     frequency: number;
     paper_Ids: string[];
-}
+};
 
-interface FacetValuePair {
+export type FacetValuePair = {
     facet: string;
     facet_values: FacetValue[];
-}
+};
 
-interface FacetedResponse {
+export type FacetedResponse = {
     uuid: string;
     timestamp: string;
     payload: {
         facet_value_pairs: FacetValuePair[];
     };
-}
+};
 
 type SmartFiltersRequest = {
     question: string;
@@ -32,12 +34,10 @@ type SmartFiltersRequest = {
     items_abstracts: string[];
 };
 
-export async function getSmartFilters({ question, items_ids, items_abstracts }: SmartFiltersRequest): Promise<FacetedResponse> {
-    // Sending data in the request body as JSON
-    const response = await smartFilters.post('llm/extract/smart_filters', {
-        json: { question, items_ids, items_abstracts },
-    });
-
-    // Ensure response is returned in the expected format
-    return response.json();
-}
+export const getSmartFilters = ({ question, items_ids, items_abstracts }: SmartFiltersRequest): Promise<FacetedResponse> => {
+    return smartFilters
+        .post<FacetedResponse>('llm/extract/filters', {
+            json: { question, items_ids, items_abstracts },
+        })
+        .json();
+};

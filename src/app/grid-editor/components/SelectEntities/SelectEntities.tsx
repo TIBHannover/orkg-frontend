@@ -11,6 +11,7 @@ import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useTemplates from '@/app/grid-editor/hooks/useTemplates';
 import Filters from '@/app/search/components/Filters';
 import useSearch, { IGNORED_CLASSES as DEFAULT_IGNORED_CLASSES } from '@/app/search/components/hooks/useSearch';
+import useSmartFilters from '@/app/search/components/hooks/useSmartFilters';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Tabs from '@/components/Tabs/Tabs';
@@ -26,6 +27,7 @@ import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { updateResource } from '@/services/backend/resources';
 import { Thing } from '@/services/backend/things';
+import { PaginatedResponse } from '@/services/backend/types';
 
 type AddEntityProps = {
     showDialog: boolean;
@@ -80,13 +82,35 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
         setSelectedEntities(entities ?? []);
     }, [entities]);
 
-    const { typeData, page, countResults, isLoading, pageSize, setPageSize, setPage, results, hasNextPage, setSearchTerm } = useSearch({
+    const {
+        searchTerm,
+        typeData,
+        page,
+        countResults,
+        isLoading,
+        pageSize,
+        setPageSize,
+        setPage,
+        results: _results,
+        hasNextPage,
+        setSearchTerm,
+    } = useSearch({
         itemsPerFilter: 10,
         ignoredClasses: IGNORED_CLASSES,
         defaultFilters: DEFAULT_FILTERS,
         searchAuthor: false,
         redirectToEntity: false,
     });
+
+    const {
+        filteredItemsIds,
+        selectedSmartFilter,
+        setSelectedSmartFilter,
+        generateSmartFilters,
+        isLoading: isLoadingSmartFilters,
+        error: errorSmartFilters,
+        facets,
+    } = useSmartFilters(searchTerm, _results);
 
     const handleSubmit = async () => {
         // get the list of newly selected entities by comparing the ids
@@ -161,6 +185,14 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
         <Item showContributions item={item} key={item.id} selectedEntities={selectedEntities} setSelectedEntities={setSelectedEntities} />
     );
 
+    let results: PaginatedResponse<Thing> | undefined = _results;
+    if (filteredItemsIds.length > 0) {
+        results = {
+            ..._results,
+            content: _results?.content?.filter((item) => filteredItemsIds.includes(item.id)),
+        } as PaginatedResponse<Thing>;
+    }
+
     return (
         <Modal isOpen={showDialog} toggle={toggle} size="xl" onClosed={() => setSearchTerm('')}>
             <ModalHeader toggle={toggle}>Select entities</ModalHeader>
@@ -179,6 +211,12 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
                                             countResults={countResults}
                                             typeData={typeData}
                                             isLoading={isLoading}
+                                            generateSmartFilters={generateSmartFilters}
+                                            isLoadingSmartFilters={isLoadingSmartFilters}
+                                            errorSmartFilters={errorSmartFilters}
+                                            facets={facets || []}
+                                            selectedSmartFilter={selectedSmartFilter}
+                                            setSelectedSmartFilter={setSelectedSmartFilter}
                                         />
                                     </Col>
                                     <Col md={8}>
