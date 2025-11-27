@@ -150,7 +150,7 @@ const Stats = () => {
                     <ColoredStatsBox
                         link={reverse(ROUTES.RS_TEMPLATES)}
                         number={getStatisticsByName('content-types', 'rosetta-stone-template-count')}
-                        label="Statement types"
+                        label="Statement templates"
                         isLoading={isLoadingContentTypes}
                     />
                 </Row>

@@ -29,7 +29,7 @@ export const OBSERVATORY_CONTENT_TABS = [
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
     { id: CLASSES.NODE_SHAPE, label: 'Templates', params: { published: undefined } },
     { id: CLASSES.ROSETTA_STONE_STATEMENT, label: 'Statements', params: { published: undefined } },
-    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement types', params: { published: undefined } },
+    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement templates', params: { published: undefined } },
 ];
 
 function ObservatoryTabsContainer({ id }: { id: string }) {

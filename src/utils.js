@@ -622,6 +622,8 @@ export const getResourceLink = (classId, id) => {
         [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
         [ENTITIES.LITERAL]: [ROUTES.LITERAL, 'id'],
         [CLASSES.RESEARCH_FIELD]: [ROUTES.RESEARCH_FIELD_NO_SLUG, 'researchFieldId'],
+        [CLASSES.ROSETTA_STONE_STATEMENT]: [ROUTES.RS_STATEMENT, 'id'],
+        [CLASSES.ROSETTA_NODE_SHAPE]: [ROUTES.RS_TEMPLATE, 'id'],
         default: [ROUTES.RESOURCE, 'id'],
     };
     const [route, idParam] = links[classId] || links.default;

@@ -37,7 +37,7 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }
                         <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
-                                <CardBadge color="primary">Statement type</CardBadge>
+                                <CardBadge color="primary">Statement template</CardBadge>
                             </div>
                         )}
                     </div>

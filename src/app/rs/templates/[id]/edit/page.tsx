@@ -34,7 +34,7 @@ const RSTemplateEditPage = () => {
     const router = useRouter();
 
     useEffect(() => {
-        document.title = `${template?.label ?? ''} - Edit Statement type - ORKG`;
+        document.title = `${template?.label ?? ''} - Edit Statement template - ORKG`;
     }, [template]);
 
     const extractPositions = (formatted_label: string) => {
@@ -81,7 +81,7 @@ const RSTemplateEditPage = () => {
     if (!canEditTemplate) {
         return (
             <Container className="box clearfix pt-4 pb-4 ps-5 pe-5 rounded">
-                You cannot edit this statement type because it has some instances or you are not the creator
+                You cannot edit this statement template because it has some instances or you are not the creator
             </Container>
         );
     }
@@ -115,11 +115,11 @@ const RSTemplateEditPage = () => {
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && template && (
                 <>
-                    <TitleBar>Edit Statement type: {template?.label}</TitleBar>
+                    <TitleBar>Edit Statement template: {template?.label}</TitleBar>
                     <Container className="box clearfix pt-4 pb-4 ps-5 pe-5 rounded">
                         <RosettaTemplateEditorProvider initialState={initializeRosettaTemplateEditor}>
                             <RosettaTemplateEditor
-                                saveButtonText="Update statement type"
+                                saveButtonText="Update statement template"
                                 onCancel={() =>
                                     router.push(
                                         reverse(ROUTES.RS_TEMPLATE, {

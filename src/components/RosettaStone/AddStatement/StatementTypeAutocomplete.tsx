@@ -84,8 +84,8 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
                 isMulti={false}
                 components={{ Option: SelectOption }}
                 onChange={onChange}
-                formatCreateLabel={(inputValue: string) => `Create new statement type "${inputValue}"`}
-                placeholder="Search statement type by verb/predicate (e.g., has measurement, develops from) or define a new one"
+                formatCreateLabel={(inputValue: string) => `Create new statement template "${inputValue}"`}
+                placeholder="Search statement template by verb/predicate (e.g., has measurement, develops from) or define a new one"
                 createOptionPosition="first"
                 autoFocus={autoFocus}
                 openMenuOnFocus={openMenuOnFocus}

@@ -27,7 +27,7 @@ export const USER_PROFILE_CONTENT_TABS = [
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
     { id: CLASSES.NODE_SHAPE, label: 'Templates', params: { published: undefined } },
-    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement types', params: { published: undefined } },
+    { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement templates', params: { published: undefined } },
 ];
 
 function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUserId: string }) {

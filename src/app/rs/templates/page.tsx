@@ -50,12 +50,12 @@ const Templates = () => {
     });
 
     useEffect(() => {
-        document.title = 'Statement types - ORKG';
+        document.title = 'Statement templates - ORKG';
     }, []);
 
     const infoContainerText = (
         <>
-            Statement types allows to define data schema patterns, and they can be used when describing research contributions.{' '}
+            Statement templates allows to define data schema patterns, and they can be used when describing research contributions.{' '}
             <a href="https://orkg.org/help-center/article/58/Statement_types" rel="noreferrer" target="_blank">
                 Learn more in the help center
             </a>
@@ -75,7 +75,7 @@ const Templates = () => {
             className="btn btn-secondary btn-sm flex-shrink-0"
             href={reverse(ROUTES.RS_ADD_TEMPLATE)}
         >
-            <FontAwesomeIcon icon={faPlus} /> Create statement type
+            <FontAwesomeIcon icon={faPlus} /> Create statement template
         </RequireAuthentication>
     );
 
@@ -99,7 +99,7 @@ const Templates = () => {
                 }
                 buttonGroup={buttons}
             >
-                Statement types
+                Statement templates
             </TitleBar>
 
             <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
@@ -124,7 +124,7 @@ const Templates = () => {
             <ListPaginatedContent<RosettaStoneTemplate>
                 renderListItem={renderListItem}
                 pageSize={pageSize}
-                label="statement types"
+                label="statement templates"
                 isLoading={isLoading}
                 items={items ?? []}
                 hasNextPage={hasNextPage}

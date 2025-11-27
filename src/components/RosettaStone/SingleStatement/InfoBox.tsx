@@ -11,12 +11,15 @@ import useSWR from 'swr';
 
 import ActionButtonView from '@/components/ActionButton/ActionButtonView';
 import CopyId from '@/components/CopyId/CopyId';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Popover from '@/components/FloatingUI/Popover';
+import Tooltip from '@/components/FloatingUI/Tooltip';
 import VersionsModal from '@/components/RosettaStone/SingleStatement/VersionsModal';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { CERTAINTY } from '@/constants/contentTypes';
-import { MISC } from '@/constants/graphSettings';
+import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { classesUrl, getClassById } from '@/services/backend/classes';
 import { getRSStatementVersions, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { Certainty, RosettaStoneStatement, RosettaStoneTemplate } from '@/services/backend/types';
 
@@ -36,6 +39,10 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
     const { data: _versions, isLoading } = useSWR(
         isOpen && statement.latest_version_id ? [{ id: statement.latest_version_id }, rosettaStoneUrl, 'getRSStatementVersions'] : null,
         ([params]) => getRSStatementVersions(params),
+    );
+
+    const { data: statementClass } = useSWR(template.target_class ? [template.target_class, classesUrl, 'getClassById'] : null, ([params]) =>
+        getClassById(params),
     );
 
     const versions = _versions ?? [];
@@ -66,16 +73,26 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                                 <div className="float-end f-d my-1">
                                     <CopyId text="Statement ID" id={statement.id} />
                                 </div>
-                                <Link href={reverse(ROUTES.RS_STATEMENT, { id: statement.id })} className="ms-2" target="_blank">
-                                    <FontAwesomeIcon icon={faLink} />
-                                </Link>
+                                <Tooltip content="Go to statement page">
+                                    <Link href={reverse(ROUTES.RS_STATEMENT, { id: statement.id })} className="ms-2" target="_blank">
+                                        <FontAwesomeIcon icon={faLink} />
+                                    </Link>
+                                </Tooltip>
                             </div>
                         )}
                         <li className="mb-1">
-                            Template:
+                            Statement template:{' '}
                             <Link target="_blank" href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>
                                 {template.label ? template.label : <em>No title</em>}
                             </Link>
+                        </li>
+                        <li className="mb-1">
+                            Statement type:{' '}
+                            <DescriptionTooltip id={statementClass?.id} _class={ENTITIES.CLASS}>
+                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class })}>
+                                    {statementClass?.label}
+                                </Link>
+                            </DescriptionTooltip>
                         </li>
                         <li className="mb-1">
                             Created:{' '}

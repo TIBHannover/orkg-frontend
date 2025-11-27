@@ -27,10 +27,10 @@ const NewStatementTypeModal: FC<NewStatementTypeModalProps> = ({ initialLabel, i
             toggle={toggle}
             size="lg"
         >
-            <ModalHeader toggle={toggle}>Statement type editor</ModalHeader>
+            <ModalHeader toggle={toggle}>Statement template editor</ModalHeader>
             <ModalBody>
                 <RosettaTemplateEditor
-                    saveButtonText="Create and insert statement type"
+                    saveButtonText="Create and insert statement template"
                     onCancel={toggle}
                     onCreate={(templateID) => {
                         handleStatementSelect(templateID);

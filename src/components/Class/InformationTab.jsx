@@ -157,28 +157,27 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">Template</th>
-                        <td>
-                            {template ? (
-                                <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
-                            ) : (
-                                <i>
-                                    Not defined <Link href={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${id}`}>Create a template</Link>
-                                </i>
-                            )}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Statement type</th>
-                        <td>
-                            {rsTemplate ? (
+                    {rsTemplate ? (
+                        <tr>
+                            <th scope="row">Statement template</th>
+                            <td>
                                 <Link href={reverse(ROUTES.RS_TEMPLATE, { id: rsTemplate.id })}>{rsTemplate.label}</Link>
-                            ) : (
-                                <i>Not defined</i>
-                            )}
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    ) : (
+                        <tr>
+                            <th scope="row">Template</th>
+                            <td>
+                                {template ? (
+                                    <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
+                                ) : (
+                                    <i>
+                                        Not defined <Link href={`${reverse(ROUTES.ADD_TEMPLATE)}?classID=${id}`}>Create a template</Link>
+                                    </i>
+                                )}
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </Table>
             <DataBrowser isEditMode={editMode} id={id} showHeader={false} propertiesAsLinks valuesAsLinks />

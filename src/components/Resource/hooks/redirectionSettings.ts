@@ -80,7 +80,7 @@ const DEDICATED_PAGE_LINKS = {
         routeParams: 'id',
     },
     [CLASSES.ROSETTA_NODE_SHAPE]: {
-        label: 'Statement type',
+        label: 'Statement template',
         route: ROUTES.RS_TEMPLATE,
         routeParams: 'id',
     },

@@ -34,7 +34,7 @@ const StatementTypeModal = ({ template, isOpen, toggle, context, subject, handle
 
     return (
         <Modal isOpen={isOpen} toggle={toggle} size="lg" onOpened={() => addBtn?.current?.focus()}>
-            <ModalHeader toggle={toggle}>Select statement type</ModalHeader>
+            <ModalHeader toggle={toggle}>Select statement template</ModalHeader>
             <ModalBody>
                 <p>Select the type of statement you want to add.</p>
                 <StatementTypeAutocomplete
