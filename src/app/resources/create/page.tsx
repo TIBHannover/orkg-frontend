@@ -20,6 +20,7 @@ import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
 import Container from '@/components/Ui/Structure/Container';
+import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
@@ -56,6 +57,15 @@ const CreateResourcePage = () => {
     const handleAdd = async (e: MouseEvent) => {
         e.preventDefault();
         setIsSaving(true);
+        if (!isCurationAllowed && classes && classes.some((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x))) {
+            toast.error(
+                `The selected option ${classes
+                    .filter((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x))
+                    .join(', ')} cannot be set manually; it is reserved for managing content types in the system`,
+            );
+            setIsSaving(false);
+            return;
+        }
         if (label.trim() !== '') {
             if (!isDOI.test(label)) {
                 try {
@@ -111,6 +121,15 @@ const CreateResourcePage = () => {
                 return null;
             }
         } else {
+            if (!isCurationAllowed && selected && selected.some((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x.id))) {
+                toast.error(
+                    `The selected option ${selected
+                        .filter((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x.id))
+                        .map((x) => x.label)
+                        .join(', ')} cannot be set manually; it is reserved for managing content types in the system`,
+                );
+                return null;
+            }
             setClasses(selected.map((x) => x.id));
         }
         return null;

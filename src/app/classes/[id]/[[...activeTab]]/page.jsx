@@ -19,6 +19,7 @@ import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA, CREATE_NEW_RESOURCE_CONTENT_TYPES } from '@/constants/contentTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { classesUrl, getClassById } from '@/services/backend/classes';
@@ -52,24 +53,38 @@ function ClassDetails() {
                     <TitleBar
                         buttonGroup={
                             <>
-                                <RequireAuthentication
-                                    component={Link}
-                                    href={`${ROUTES.CREATE_RESOURCE}?classes=${id}`}
-                                    className="float-end btn btn-secondary flex-shrink-0 btn-sm"
-                                    style={{ marginRight: 2 }}
-                                >
-                                    <FontAwesomeIcon icon={faPlus} /> Add resource
-                                </RequireAuthentication>
+                                {!CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(id) && (
+                                    <>
+                                        <RequireAuthentication
+                                            component={Link}
+                                            href={`${ROUTES.CREATE_RESOURCE}?classes=${id}`}
+                                            className="float-end btn btn-secondary flex-shrink-0 btn-sm"
+                                            style={{ marginRight: 2 }}
+                                        >
+                                            <FontAwesomeIcon icon={faPlus} /> Add resource
+                                        </RequireAuthentication>
 
-                                <RequireAuthentication
-                                    style={{ marginRight: 2 }}
-                                    component={Button}
-                                    size="sm"
-                                    color="secondary"
-                                    onClick={() => setModalImportIsOpen(true)}
-                                >
-                                    <FontAwesomeIcon icon={faFileCsv} /> Import instances
-                                </RequireAuthentication>
+                                        <RequireAuthentication
+                                            style={{ marginRight: 2 }}
+                                            component={Button}
+                                            size="sm"
+                                            color="secondary"
+                                            onClick={() => setModalImportIsOpen(true)}
+                                        >
+                                            <FontAwesomeIcon icon={faFileCsv} /> Import instances
+                                        </RequireAuthentication>
+                                    </>
+                                )}
+                                {CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(id) && id in CREATE_NEW_RESOURCE_CONTENT_TYPES && (
+                                    <RequireAuthentication
+                                        component={Link}
+                                        href={CREATE_NEW_RESOURCE_CONTENT_TYPES[id]}
+                                        className="float-end btn btn-secondary flex-shrink-0 btn-sm"
+                                        style={{ marginRight: 2 }}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} /> Create new instance
+                                    </RequireAuthentication>
+                                )}
                                 {!isEditMode ? (
                                     <RequireAuthentication
                                         component={Button}

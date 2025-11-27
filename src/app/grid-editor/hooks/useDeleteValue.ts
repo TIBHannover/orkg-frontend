@@ -60,10 +60,11 @@ const useDeleteValue = ({ gridRef }: UseDeleteValueProps) => {
             }
 
             try {
-                // Delete from backend
-                await deleteStatementById(statement.id);
                 // Update cache
                 deleteStatements([statement.id]);
+
+                // Delete from backend
+                await deleteStatementById(statement.id);
             } catch (error) {
                 console.error('Error deleting statement:', error);
             }

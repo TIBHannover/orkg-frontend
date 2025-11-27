@@ -6,9 +6,10 @@ import CellMenu from '@/app/grid-editor/components/CellMenu/CellMenu';
 import { TData } from '@/app/grid-editor/context/GridContext';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import useAuthentication from '@/components/hooks/useAuthentication';
 import Button from '@/components/Ui/Button/Button';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { EntityType } from '@/services/backend/types';
 
 type ValueCellParams = ICellRendererParams<TData>;
@@ -17,7 +18,8 @@ const ValueCell = (params: ValueCellParams) => {
     const { value, api } = params;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-
+    const { user } = useAuthentication();
+    const isCurationAllowed = user?.isCurationAllowed ?? false;
     if (!value || !value.object) {
         return <div />;
     }
@@ -69,7 +71,12 @@ const ValueCell = (params: ValueCellParams) => {
                     toggleModal={() => setIsModalOpen(!isModalOpen)}
                     id={value.object.id}
                     label={value.object.label}
-                    isEditMode={env('NEXT_PUBLIC_PWC_USER_ID') !== value.object.created_by ? true : undefined}
+                    isEditMode={
+                        !(
+                            env('NEXT_PUBLIC_PWC_USER_ID') === value.object.created_by ||
+                            (value.object.classes.includes(CLASSES.RESEARCH_FIELD) && !isCurationAllowed)
+                        )
+                    }
                 />
             )}
         </div>
