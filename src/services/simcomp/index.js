@@ -23,13 +23,13 @@ const simCompServiceApi = ky.create({
 export const getComparison = ({ contributionIds = [], type = null, format = null }) => {
     const params = qs.stringify(
         {
-            contributions: contributionIds,
+            contributions: contributionIds?.join(','),
             type,
             format,
         },
         {
+            encode: false,
             skipNulls: true,
-            arrayFormat: 'repeat',
         },
     );
     return simCompServiceApi
