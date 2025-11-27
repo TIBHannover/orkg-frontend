@@ -5,7 +5,7 @@ import { createClass, getClassById, getClasses } from '@/services/backend/classe
 import { createPredicate, getPredicate, getPredicates } from '@/services/backend/predicates';
 import { getResource } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
-import { Class, Resource } from '@/services/backend/types';
+import { Class, PaginatedResponse, Resource } from '@/services/backend/types';
 
 const { namedNode } = DataFactory;
 
@@ -141,7 +141,16 @@ export const mapClass = async (g: Store, classNode: Quad_Object | null) => {
     if (uri) {
         let fetchedClass: Class | null = null;
         try {
-            fetchedClass = await getClasses({ uri });
+            const r = await getClasses({ uri });
+            if (r && !('page' in r) && !('content' in r)) {
+                fetchedClass = r;
+            } else if (!('page' in r) && !('content' in r)) {
+                fetchedClass = null;
+            } else if ((r as unknown as PaginatedResponse<Class>).content.length > 0) {
+                [fetchedClass] = (r as unknown as PaginatedResponse<Class>).content;
+            } else {
+                fetchedClass = null;
+            }
         } catch {
             fetchedClass = null;
         }
