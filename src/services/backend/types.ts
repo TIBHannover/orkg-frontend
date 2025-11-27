@@ -360,7 +360,7 @@ export type RosettaStoneTemplate = {
     description: string;
     formatted_label: string;
     example_usage: string;
-    target_class: Node;
+    target_class: string;
     properties: RSPropertyShape[];
     organizations: string[];
     observatories: string[];
@@ -372,6 +372,8 @@ export type RosettaStoneTemplate = {
 
 export type RosettaStoneStatement = {
     id: string;
+    label?: string;
+    formatted_label?: string;
     template_id: string;
     latest_version_id?: string;
     version_id?: string;

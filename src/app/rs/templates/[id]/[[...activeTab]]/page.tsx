@@ -14,6 +14,7 @@ import useSWR from 'swr';
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import Confirm from '@/components/Confirmation/Confirmation';
+import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -29,8 +30,9 @@ import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import { MISC } from '@/constants/graphSettings';
+import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { classesUrl, getClassById } from '@/services/backend/classes';
 import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { Thing } from '@/services/backend/things';
 
@@ -48,14 +50,19 @@ const RSTemplatePage = () => {
     } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements({ template_id: params }));
     const router = useRouter();
 
+    const { data: targetClass, isLoading: isLoadingTargetClass } = useSWR(
+        template?.target_class ? [template.target_class, classesUrl, 'getClassById'] : null,
+        ([params]) => getClassById(params),
+    );
+
     const onTabChange = (key: string) => router.push(reverse(ROUTES.RS_TEMPLATE_TABS, { id, activeTab: key }));
 
     useEffect(() => {
-        document.title = `${template?.label ?? ''} - Statement type - ORKG`;
+        document.title = `${template?.label ?? ''} - Statement template - ORKG`;
     }, [template]);
 
-    const preventDeletionTooltipText = 'You cannot delete this statement type because it has some instances or you are not the creator';
-    const preventEditTooltipText = 'You cannot edit this statement type because it has some instances or you are not the creator';
+    const preventDeletionTooltipText = 'You cannot delete this statement template because it has some instances or you are not the creator';
+    const preventEditTooltipText = 'You cannot edit this statement template because it has some instances or you are not the creator';
 
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
@@ -72,7 +79,7 @@ const RSTemplatePage = () => {
     const handleDeleteTemplate = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this statement type?',
+            message: 'Are you sure you want to delete this statement template?',
         });
 
         if (confirm) {
@@ -83,7 +90,7 @@ const RSTemplatePage = () => {
                 router.push(ROUTES.RS_TEMPLATES);
             } catch (err: unknown) {
                 console.error(err);
-                toast.error("Couldn't delete statement type");
+                toast.error("Couldn't delete statement template");
             }
         }
     };
@@ -139,14 +146,14 @@ const RSTemplatePage = () => {
                                 >
                                     <Tooltip content={preventEditTooltipText} disabled={canEditTemplate}>
                                         <span>
-                                            <FontAwesomeIcon icon={faPen} /> Edit statement type
+                                            <FontAwesomeIcon icon={faPen} /> Edit statement template
                                         </span>
                                     </Tooltip>
                                 </Button>
                             </>
                         }
                     >
-                        Statement type
+                        Statement template
                     </TitleBar>
                     <EditModeHeader isVisible={isEditMode} />
                     <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
@@ -168,7 +175,7 @@ const RSTemplatePage = () => {
                                         onClick={handleDeleteTemplate}
                                         disabled={!canDeleteTemplate}
                                     >
-                                        <FontAwesomeIcon icon={faTrash} /> Delete statement type
+                                        <FontAwesomeIcon icon={faTrash} /> Delete statement template
                                     </Button>
                                 </span>
                             </Tooltip>
@@ -196,22 +203,30 @@ const RSTemplatePage = () => {
                             activeKey={activeTab ?? 'information'}
                             items={[
                                 {
-                                    label: 'Statement type information',
+                                    label: 'Statement template information',
                                     key: 'information',
                                     children: (
                                         <div className="p-4">
                                             <p className="mb-1">
                                                 <b>Dynamic label:</b>
                                             </p>
-                                            <div className="mb-3">{formattedLabelWithPlaceholders}</div>
+                                            <p className="mb-3">{formattedLabelWithPlaceholders}</p>
+
                                             <p className="mb-1">
                                                 <b>Description:</b>
                                             </p>
-                                            {template.description && (
-                                                <div>
-                                                    <small className="text-muted">{template.description}</small>
-                                                </div>
-                                            )}
+                                            {template.description && <div className="mb-3 text-muted">{template.description}</div>}
+                                            <p className="mb-3">
+                                                <b>Target class: </b>
+                                                {isLoadingTargetClass && <>Loading...</>}
+                                                {!isLoadingTargetClass && targetClass && (
+                                                    <DescriptionTooltip id={targetClass?.id} _class={ENTITIES.CLASS}>
+                                                        <Link target="_blank" href={reverse(ROUTES.CLASS, { id: targetClass?.id })}>
+                                                            {targetClass?.label}
+                                                        </Link>
+                                                    </DescriptionTooltip>
+                                                )}
+                                            </p>
                                         </div>
                                     ),
                                 },

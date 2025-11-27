@@ -100,7 +100,7 @@ const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
         <div>
             {isLocked && (
                 <Alert color="warning">
-                    This slot cannot be edited. You can only add new object positions, as the positions for the current statement type are locked
+                    This slot cannot be edited. You can only add new object positions, as the positions for the current statement template are locked
                 </Alert>
             )}
             <FormGroup className="mt-2">
@@ -183,9 +183,9 @@ const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
                             <Label for="cardinalityValueInput">
                                 Count of values{' '}
                                 {index === 0 ? (
-                                    <HelpIcon content="Here, you can specify whether the subject, which is always required and thus always has to be provided for the statement to be saved to the ORKG, is 'Required - Exactly one', meaning that this subject must be specified for this statement type, but only once, whereas 'Required - One or more' means that at least one must be specified, but more can be added." />
+                                    <HelpIcon content="Here, you can specify whether the subject, which is always required and thus always has to be provided for the statement to be saved to the ORKG, is 'Required - Exactly one', meaning that this subject must be specified for this statement template, but only once, whereas 'Required - One or more' means that at least one must be specified, but more can be added." />
                                 ) : (
-                                    <HelpIcon content="Here, you can specify whether the object is required or optional. Required means that it has to be provided for the statement to be saved to the ORKG, whereas optional objects do not have to be specified. 'Optional - Zero or more' means that the same object can be added more than once, but can also be left empty. 'Optional-optional' means that it can only be added once to a given statement of that type, but can be left empty. 'Required - Exactly one' means that this object must be specified for this statement type, but only once, whereas 'Required - One or more' means that at least one must be specified, but more can be added." />
+                                    <HelpIcon content="Here, you can specify whether the object is required or optional. Required means that it has to be provided for the statement to be saved to the ORKG, whereas optional objects do not have to be specified. 'Optional - Zero or more' means that the same object can be added more than once, but can also be left empty. 'Optional-optional' means that it can only be added once to a given statement of that template, but can be left empty. 'Required - Exactly one' means that this object must be specified for this statement template, but only once, whereas 'Required - One or more' means that at least one must be specified, but more can be added." />
                                 )}
                             </Label>
                             <Input onChange={onChangeCardinality} value={cardinality} type="select" id="cardinalityValueInput" disabled={isLocked}>

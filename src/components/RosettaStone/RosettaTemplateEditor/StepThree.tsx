@@ -100,7 +100,7 @@ function StepThree() {
                     value={examples}
                     type="textarea"
                     id="examples"
-                    placeholder="Provide example sentences that illustrate the type of information you expect this statement type to handle. These examples will help users understand the scope of the statement type."
+                    placeholder="Provide example sentences that illustrate the type of information you expect this statement template to handle. These examples will help users understand the scope of the statement template."
                     rows="4"
                 />
             </FormGroup>
@@ -109,7 +109,7 @@ function StepThree() {
             <hr />
             <p>
                 Positions:{' '}
-                <HelpIcon content="In this step, you create a pattern for the new statement type. At the top you see the progress you make in specifying that pattern and how it will be displayed in the ORKG. Each item you see at the top is a specific position in the sentence that you define. At the bottom you can add more object positions. Whenever you add an object, it will appear at the top. With the statement pattern it should be possible to express all the example sentences that you provided." />
+                <HelpIcon content="In this step, you create a pattern for the new statement template. At the top you see the progress you make in specifying that pattern and how it will be displayed in the ORKG. Each item you see at the top is a specific position in the sentence that you define. At the bottom you can add more object positions. Whenever you add an object, it will appear at the top. With the statement pattern it should be possible to express all the example sentences that you provided." />
             </p>
             <Accordion toggle={toggle} open={open}>
                 {properties.map((property, i) => (

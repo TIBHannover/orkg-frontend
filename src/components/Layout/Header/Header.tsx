@@ -305,7 +305,7 @@ const Header = () => {
                                     Templates
                                 </DropdownItem>
                                 <DropdownItem tag={Link} href={ROUTES.RS_TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.RS_TEMPLATES}>
-                                    Statement types
+                                    Statement templates
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>

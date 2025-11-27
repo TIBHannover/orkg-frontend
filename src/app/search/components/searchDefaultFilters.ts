@@ -22,6 +22,10 @@ const DEFAULT_FILTERS = [
         id: CLASSES.PROBLEM,
     },
     {
+        label: 'Statements',
+        id: CLASSES.ROSETTA_STONE_STATEMENT,
+    },
+    {
         label: 'Resource',
         id: 'Resource',
     },
@@ -40,6 +44,10 @@ const DEFAULT_FILTERS = [
     {
         label: 'Template',
         id: CLASSES.NODE_SHAPE,
+    },
+    {
+        label: 'Statement template',
+        id: CLASSES.ROSETTA_NODE_SHAPE,
     },
     {
         label: 'Venue',

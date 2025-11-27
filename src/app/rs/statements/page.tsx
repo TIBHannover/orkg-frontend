@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import ListPage from '@/components/PaginatedContent/ListPage';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
+import { CLASSES } from '@/constants/graphSettings';
 import { getRSStatements, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { RosettaStoneStatement } from '@/services/backend/types';
 
@@ -27,12 +28,12 @@ const StatementsPage = () => {
     return (
         <ListPage
             label="statements"
+            resourceClass={CLASSES.ROSETTA_STONE_STATEMENT}
             fetchFunction={getRSStatements}
             fetchUrl={rosettaStoneUrl}
             fetchFunctionName="getRSStatements"
             fetchExtraParams={{}}
             renderListItem={renderListItem}
-            disableSearch
             infoContainerText={infoContainerText}
         />
     );

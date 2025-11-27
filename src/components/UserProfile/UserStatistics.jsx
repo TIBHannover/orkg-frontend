@@ -37,7 +37,7 @@ const STATISTICS = [
         class: CLASSES.NODE_SHAPE,
     },
     {
-        label: 'Statement types',
+        label: 'Statement templates',
         class: CLASSES.ROSETTA_NODE_SHAPE,
     },
 ];
