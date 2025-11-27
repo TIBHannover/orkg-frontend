@@ -7,9 +7,9 @@ export const ROLES = {
     ROLE_CURATOR: 'curator',
 };
 
-export const federatedLogout = async () => {
+export const federatedLogout = async ({ redirectUri }: { redirectUri: string }) => {
     try {
-        const response = await fetch(`${env('NEXT_PUBLIC_URL')}/auth/federated-logout`);
+        const response = await fetch(`${env('NEXT_PUBLIC_URL')}/auth/federated-logout?redirect_uri=${redirectUri}`);
         const data = await response.json();
         if (response.ok) {
             await signOut({ redirect: false });
