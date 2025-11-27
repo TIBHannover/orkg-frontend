@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.172.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.171.0...v0.172.0) - 2025-11-27
+
+### Changes
+
+- feat: integrate Smart Filters - kudos to @Mutahira.Khalid [`#1603`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1603)
+- refactor: use local storage instead of redux for the comparison popup [`#1606`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1606)
+- chore(GridEditor): change update comparison warning [`#1601`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1601)
+- fix: import resources from OLS [`#1604`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1604)
+
+---
 ## [v0.171.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.170.0...v0.171.0) - 2025-10-28
 
 ### Changes
