@@ -9,8 +9,10 @@ import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import useClasses from '@/components/DataBrowser/hooks/useClasses';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
+import useAuthentication from '@/components/hooks/useAuthentication';
 import Button from '@/components/Ui/Button/Button';
 import InputGroup from '@/components/Ui/Input/InputGroup';
+import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { ENTITIES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Class } from '@/services/backend/types';
@@ -24,6 +26,8 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
     const { entity, mutateEntity } = useEntity();
     const [localClasses, setLocalClasses] = useState(classes);
     const [isUpdating, setIsUpdating] = useState(false);
+    const { user } = useAuthentication();
+    const isCurationAllowed = user?.isCurationAllowed ?? false;
 
     const submitChanges = async () => {
         if (entity) {
@@ -38,6 +42,10 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
         if (action.action === 'select-option') {
             if (action.option && ENTITY_CLASSES.includes(action.option.id)) {
                 toast.error(`The selected option ${action.option.label} cannot be set manually; it is reserved for managing entities in the system`);
+            } else if (!isCurationAllowed && action.option && CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(action.option.id)) {
+                toast.error(
+                    `The selected option ${action.option.label} cannot be set manually; it is reserved for managing content types in the system`,
+                );
             } else {
                 setLocalClasses(selected as Class[]);
             }
@@ -53,7 +61,13 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                 setLocalClasses(selected as Class[]);
             }
         } else if (action.action === 'remove-value') {
-            setLocalClasses(localClasses.filter((c) => c.id !== action.removedValue.id));
+            if (!isCurationAllowed && action.removedValue.id && CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(action.removedValue.id)) {
+                toast.error(
+                    `The selected option ${action.removedValue.label} cannot be removed; it is reserved for managing content types in the system`,
+                );
+            } else {
+                setLocalClasses(localClasses.filter((c) => c.id !== action.removedValue.id));
+            }
         } else if (action.action === 'clear') {
             setLocalClasses([]);
         }

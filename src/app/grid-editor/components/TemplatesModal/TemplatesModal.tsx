@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import TemplateButton from '@/app/grid-editor/components/TemplatesModal/TemplateButton/TemplateButton';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useTemplates from '@/app/grid-editor/hooks/useTemplates';
+import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
@@ -16,6 +17,7 @@ import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { ENTITY_CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
 
@@ -48,14 +50,19 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     } = useTemplateGallery({ pageSize: 15 });
 
     const { commonClasses } = useEntities();
-
+    const { user } = useAuthentication();
+    const isCurationAllowed = user?.isCurationAllowed ?? false;
     const { templates: _usedTemplates } = useTemplates();
     // Filter out resource templates
     const usedTemplates = _usedTemplates?.filter((t) => commonClasses.includes(t.target_class.id));
 
     const renderListItem = (template: Template) => (
         <TemplateButton
-            isDisabled={commonClasses.includes(template.target_class.id) || ENTITY_CLASSES.includes(template.target_class.id)}
+            isDisabled={
+                commonClasses.includes(template.target_class.id) ||
+                ENTITY_CLASSES.includes(template.target_class.id) ||
+                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed)
+            }
             template={template}
             key={`tr${template.id}`}
         />
@@ -86,7 +93,13 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                     <div>
                                         <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
                                         {usedTemplates?.map((template) => (
-                                            <TemplateButton template={template} key={`tr${template.id}`} />
+                                            <TemplateButton
+                                                isDisabled={
+                                                    CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed
+                                                }
+                                                template={template}
+                                                key={`tr${template.id}`}
+                                            />
                                         ))}
                                     </div>
                                 </motion.div>

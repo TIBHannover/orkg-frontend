@@ -10,6 +10,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from '@/components/DataBrowser/hooks/useFeaturedTemplates';
 import useRecommendedTemplates from '@/components/DataBrowser/hooks/useRecommendedTemplates';
 import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
+import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
@@ -19,6 +20,7 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
+import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { CLASSES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
 
@@ -52,7 +54,8 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
 
     const { featuredTemplates } = useFeaturedTemplates();
     const { recommendedTemplates } = useRecommendedTemplates();
-
+    const { user } = useAuthentication();
+    const isCurationAllowed = user?.isCurationAllowed ?? false;
     const { entity } = useEntity();
     const { templates: _usedTemplates } = useTemplates();
     // Filter out resource templates
@@ -62,7 +65,8 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
         <TemplateButton
             isDisabled={
                 (entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)) ||
-                ENTITY_CLASSES.includes(template.target_class.id)
+                ENTITY_CLASSES.includes(template.target_class.id) ||
+                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed)
             }
             template={template}
             key={`tr${template.id}`}
@@ -94,7 +98,13 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                     <div>
                                         <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
                                         {usedTemplates?.map((template) => (
-                                            <TemplateButton template={template} key={`tr${template.id}`} />
+                                            <TemplateButton
+                                                isDisabled={
+                                                    CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed
+                                                }
+                                                template={template}
+                                                key={`tr${template.id}`}
+                                            />
                                         ))}
                                     </div>
                                 </motion.div>
