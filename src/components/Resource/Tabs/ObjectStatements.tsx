@@ -1,10 +1,14 @@
+import { reverse } from 'named-urls';
+import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 
 import StatementCard from '@/components/Cards/StatementCard/StatementCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
+import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import ROUTES from '@/constants/routes';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 
@@ -17,6 +21,10 @@ const ObjectStatements = ({ id }: { id: string }) => {
     });
     return (
         <div>
+            <Alert color="info" className="m-1">
+                <strong>Note:</strong> This tab shows statements pointing to this resource. For statements from this resource, visit the{' '}
+                <Link href={`${reverse(ROUTES.RESOURCE, { id })}?tab=information`}>Resource information</Link> tab.
+            </Alert>
             <FormGroup check className="m-3">
                 <Label>
                     <Input type="checkbox" checked={isFormattedLabelEnabled} onChange={(e) => setIsFormattedLabelEnabled(e.target.checked)} /> Show
