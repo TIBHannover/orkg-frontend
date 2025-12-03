@@ -232,7 +232,7 @@ const Template = () => {
                 <ExportCitation
                     id={id}
                     title={label}
-                    authors={[contributor?.display_name]}
+                    authors={[{ literal: contributor?.display_name ?? '' }]}
                     classId={CLASSES.NODE_SHAPE}
                     isOpen={showExportCitation}
                     toggle={() => setShowExportCitation((v) => !v)}
