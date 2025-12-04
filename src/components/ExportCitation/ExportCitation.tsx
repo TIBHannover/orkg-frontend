@@ -3,8 +3,7 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
 
@@ -16,7 +15,16 @@ import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { getResourceLink } from '@/utils';
 
-const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
+type ExportCitationProps = {
+    isOpen: boolean;
+    toggle: () => void;
+    id: string;
+    title: string;
+    authors: { literal: string }[];
+    classId: string;
+};
+
+const ExportCitation: FC<ExportCitationProps> = ({ isOpen, toggle, id, title, authors, classId }) => {
     const bibtexOptions = {
         output: {
             type: 'string',
@@ -25,15 +33,16 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
     };
 
     const link = `${env('NEXT_PUBLIC_URL')}${getResourceLink(classId, id)}`;
-
     const latex = new Cite(
         {
             type: 'misc',
-            id,
+            _id: id,
             title,
-            author: authors,
+            author: authors.length > 0 ? authors : null,
             URL: link,
-            accessed: { 'date-parts': [[dayjs().format('YYYY'), dayjs().format('MM'), dayjs().format('DD')]] },
+            accessed: {
+                'date-parts': [[dayjs().year(), dayjs().month() + 1, dayjs().date()]],
+            },
         },
         bibtexOptions,
     );
@@ -61,15 +70,6 @@ const ExportCitation = ({ isOpen, toggle, id, title, authors, classId }) => {
             </ModalBody>
         </Modal>
     );
-};
-
-ExportCitation.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    authors: PropTypes.array.isRequired,
-    classId: PropTypes.string.isRequired,
 };
 
 export default ExportCitation;

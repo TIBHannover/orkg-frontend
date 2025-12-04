@@ -220,7 +220,9 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                 <ExportCitation
                     id={review?.id}
                     title={review.title}
-                    authors={review.authors.map((author) => author?.name)}
+                    authors={review.authors.map((author) => {
+                        return { literal: author?.name ?? '' };
+                    })}
                     classId={CLASSES.SMART_REVIEW_PUBLISHED}
                     isOpen={showExportCitation}
                     toggle={() => setShowExportCitation((v) => !v)}
