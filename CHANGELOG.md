@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.173.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.172.0...v0.173.0) - 2025-12-04
+
+### Changes
+
+- fix: export citation component [`#1615`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1615)
+- chore: update Next.js to version 15.3.6 [`#1616`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1616)
+- fix: prevent users from editing the research fields taxonomy [`#1607`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1607)
+- feat: redirect to the same page after logout [`#1612`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1612)
+- chore: temporary support for single class and paged class responses for the /api/classes [`#1611`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1611)
+- fix: use comma-separated values when calling the simcomp service [`#1609`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1609)
+- chore: statement type to statement template [`#1602`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1602)
+
+---
 ## [v0.172.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.171.0...v0.172.0) - 2025-11-27
 
 ### Changes
