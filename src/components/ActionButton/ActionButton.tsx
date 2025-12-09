@@ -12,7 +12,7 @@ export type ActionButtonProps = {
     icon: IconDefinition;
     iconSpin?: boolean;
     testId?: string;
-    iconSize?: 'xs' | 'sm' | 'lg';
+    iconSize?: '2xs' | 'xs' | 'sm' | 'lg';
     action?: () => void;
     isDisabled?: boolean;
     open?: boolean;

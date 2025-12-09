@@ -30,7 +30,9 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import requireAuthentication from '@/requireAuthentication';
 import { getPredicate, getPredicates } from '@/services/backend/predicates';
 
-const TYPE_DROPDOWN_OPTIONS = DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE && dt.classId !== CLASSES.LIST);
+const TYPE_DROPDOWN_OPTIONS = DATA_TYPES.filter(
+    (dt) => dt.classId !== CLASSES.RESOURCE && dt.classId !== CLASSES.LIST && dt.classId !== CLASSES.CSVW_TABLE,
+);
 
 const CsvImport = () => {
     const [data, setData] = useState<string[][]>([]);

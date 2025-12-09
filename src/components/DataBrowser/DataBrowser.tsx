@@ -30,6 +30,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
     canEditSharedRootLevel = false,
     showExternalDescriptions = true,
     showHeader = true,
+    showFooter = true,
     collapsedClasses = ['', CLASSES.RESEARCH_FIELD, CLASSES.PAPER, CLASSES.CONTRIBUTION, CLASSES.CSVW_TABLE, CLASSES.CSVW_ROW, CLASSES.CSVW_COLUMN],
     researchField,
     title,
@@ -47,6 +48,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
         showHeader,
         collapsedClasses,
         statementsSnapshot,
+        showFooter,
     };
     const context = { researchField, title, abstract };
     return (
@@ -56,7 +58,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
                     {showHeader && <Header />}
                     <Body />
                 </DataBrowserContentStyled>
-                <Footer />
+                {showFooter && <Footer />}
                 <EditorHelpModal />
             </DataBrowserProvider>
         </ErrorBoundary>

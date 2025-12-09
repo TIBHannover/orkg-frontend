@@ -15,7 +15,9 @@ import DATA_TYPES, { DataType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
-const TYPE_DROPDOWN_OPTIONS = DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE && dt.classId !== CLASSES.LIST);
+const TYPE_DROPDOWN_OPTIONS = DATA_TYPES.filter(
+    (dt) => dt.classId !== CLASSES.RESOURCE && dt.classId !== CLASSES.LIST && dt.classId !== CLASSES.CSVW_TABLE,
+);
 
 type TypeMappingProps = {
     data: string[][];

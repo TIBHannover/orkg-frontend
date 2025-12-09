@@ -74,7 +74,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
                             <ClassInlineItem
                                 classObject={parent}
                                 editMode={editMode}
-                                displayButtonOnHover={false}
+                                $displayButtonOnHover={false}
                                 onChange={async (_parent) => {
                                     if (parent) {
                                         await deleteParentByID(id);
@@ -131,7 +131,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
                                     <ClassInlineItem
                                         classObject={null}
                                         editMode={editMode}
-                                        displayButtonOnHover={false}
+                                        $displayButtonOnHover={false}
                                         noValueMessage={null}
                                         showParentFieldForCreate={false}
                                         onChange={async (chil) => {

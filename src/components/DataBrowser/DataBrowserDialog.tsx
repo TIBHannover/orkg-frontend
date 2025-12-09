@@ -21,6 +21,7 @@ type DataBrowserDialogProps = {
     defaultHistory?: string[];
     toggleModal: () => void;
     onCloseModal?: () => void;
+    showFooter?: boolean;
 };
 
 const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
@@ -32,6 +33,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     toggleModal,
     onCloseModal,
     type = ENTITIES.RESOURCE,
+    showFooter = true,
 }) => {
     let route = ROUTES.RESOURCE;
     switch (type) {
@@ -82,7 +84,14 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
                 </Link>
             </ModalHeader>
             <ModalBody>
-                <DataBrowser isEditMode={isEditMode} key={rootId} id={rootId} canEditSharedRootLevel defaultHistory={defaultHistory} />
+                <DataBrowser
+                    isEditMode={isEditMode}
+                    key={rootId}
+                    id={rootId}
+                    canEditSharedRootLevel
+                    defaultHistory={defaultHistory}
+                    showFooter={showFooter}
+                />
             </ModalBody>
         </Modal>
     );

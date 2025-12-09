@@ -11,7 +11,7 @@ import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBr
 import useStatement from '@/components/DataBrowser/hooks/useStatement';
 import { getBackgroundColor } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
-import { ENTITIES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Statement } from '@/services/backend/types';
 
 type SingleStatementProps = {
@@ -81,7 +81,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0 
                     statement.object._class !== ENTITIES.LITERAL &&
                     isEqual(loadedResources[statement.object.id] || [], path) &&
                     !path.includes(statement.object.id) &&
-                    !isEditMode && (
+                    (!isEditMode || (isEditMode && 'classes' in statement.object && statement.object.classes.includes(CLASSES.CSVW_TABLE))) && (
                         <motion.div
                             key="content"
                             initial="collapsed"

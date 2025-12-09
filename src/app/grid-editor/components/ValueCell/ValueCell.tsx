@@ -77,6 +77,7 @@ const ValueCell = (params: ValueCellParams) => {
                             (value.object.classes.includes(CLASSES.RESEARCH_FIELD) && !isCurationAllowed)
                         )
                     }
+                    showFooter={!value.object.classes?.includes(CLASSES.CSVW_TABLE)}
                 />
             )}
         </div>

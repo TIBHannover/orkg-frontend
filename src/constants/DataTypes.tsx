@@ -192,6 +192,16 @@ const DATA_TYPES: DataType[] = [
         weight: 0,
     },
     {
+        name: 'Table',
+        tooltip: 'Choose Table to create a table of values',
+        type: 'table',
+        _class: ENTITIES.RESOURCE,
+        classId: CLASSES.CSVW_TABLE,
+        schema: z.string(),
+        inputFormType: 'autocomplete',
+        weight: 0,
+    },
+    {
         name: 'Duration',
         type: 'xsd:duration',
         _class: ENTITIES.LITERAL,

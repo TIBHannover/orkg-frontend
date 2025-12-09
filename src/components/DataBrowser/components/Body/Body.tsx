@@ -59,6 +59,7 @@ const Body = () => {
         <div>
             {/* for resource entity show only description property if in edit mode and can edit */}
             {((entity?._class === ENTITIES.RESOURCE && isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE) &&
+                config.showFooter &&
                 requiredProperties
                     // Show only description property
                     .filter((p) => p.id === PREDICATES.DESCRIPTION)

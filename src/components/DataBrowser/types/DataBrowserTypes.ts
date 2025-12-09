@@ -38,6 +38,10 @@ export type DataBrowserConfig = {
      */
     showHeader?: boolean;
     /**
+     * Determines if the footer should be shown.
+     */
+    showFooter?: boolean;
+    /**
      * An array of class IDs representing the classes to be collapsed.
      */
     collapsedClasses?: string[];
@@ -83,3 +87,12 @@ export type DataBrowserProps = {
     id: string;
 } & DataBrowserConfig &
     DataBrowserResourceContext;
+
+export type ColType = {
+    id: string;
+    label: string;
+    number?: number;
+};
+
+// The id is the column id
+export type TableRow = Record<string, { id: string; value: string; _class: string; datatype: string }>;
