@@ -829,9 +829,17 @@ export type AuthorIdParam = {
     author_id?: string;
 };
 
+export type AuthorNameParam = {
+    author_name?: string;
+};
+
 export type ResearchFieldIdParams = {
     research_field?: string;
     include_subfields?: boolean;
+};
+
+export type VenueIdParam = {
+    venue?: string;
 };
 
 export type SdgParam = {

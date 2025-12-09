@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import useCardData from '@/components/Cards/hooks/useCardData';
 import Authors from '@/components/Cards/PaperCard/Authors';
 import Coins from '@/components/Coins/Coins';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -34,17 +33,6 @@ type ListCardProps = {
 };
 
 const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlags = true, renderCoins = true }) => {
-    // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
-    // this because the new 'review' variable already has the field and authors included
-    const { researchField, authors } = useCardData({
-        id: list.id,
-        // @ts-expect-error
-        initResearchField: list.research_fields?.[0],
-        // @ts-expect-error
-        initAuthors: list.authors,
-        isList: true,
-    });
-
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: list.id,
         unlisted: list?.visibility === VISIBILITY.UNLISTED,
@@ -76,7 +64,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                     </div>
                     <div className="mb-1">
                         <small>
-                            <Authors authors={authors} />
+                            <Authors authors={list.authors} />
                             {list.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-1 me-1" />{' '}
@@ -105,7 +93,7 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={researchField} />
+                        <RelativeBreadcrumbs researchField={list.research_fields?.[0]} />
                     </div>
                 </div>
                 <UserAvatar userId={list?.created_by} />

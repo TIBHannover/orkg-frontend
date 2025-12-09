@@ -12,6 +12,7 @@ type UsePaginateProps<ItemType, FetchFunctionParams> = {
     defaultSortBy?: string;
     defaultSortDirection?: string;
     prefixParams?: string;
+    isReadyToLoad?: boolean;
 };
 
 const usePaginate = <ItemType, FetchFunctionParams>({
@@ -23,6 +24,7 @@ const usePaginate = <ItemType, FetchFunctionParams>({
     defaultSortBy = 'created_at',
     defaultSortDirection = 'desc',
     prefixParams = '',
+    isReadyToLoad = true,
 }: UsePaginateProps<ItemType, FetchFunctionParams>) => {
     const [pageSize, setPageSize] = useQueryState(`${prefixParams}pageSize`, parseAsInteger.withDefault(defaultPageSize));
     const [page, setPage] = useQueryState(`${prefixParams}page`, parseAsInteger.withDefault(0));
@@ -30,16 +32,18 @@ const usePaginate = <ItemType, FetchFunctionParams>({
     const [sortDirection] = useQueryState(`${prefixParams}sortDirection`, parseAsString.withDefault(defaultSortDirection));
 
     const { data, isLoading, error, mutate } = useSWR(
-        [
-            {
-                page,
-                size: pageSize,
-                sortBy: [{ property: sortBy, direction: sortDirection }],
-                ...fetchExtraParams,
-            },
-            fetchUrl,
-            fetchFunctionName,
-        ],
+        isReadyToLoad
+            ? [
+                  {
+                      page,
+                      size: pageSize,
+                      sortBy: [{ property: sortBy, direction: sortDirection }],
+                      ...fetchExtraParams,
+                  },
+                  fetchUrl,
+                  fetchFunctionName,
+              ]
+            : null,
         ([params]) => fetchFunction(params),
     );
 

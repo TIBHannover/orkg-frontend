@@ -11,6 +11,7 @@ import {
     ComparisonRelatedResource,
     CreatedByParam,
     ObservatoryIdParam,
+    OrganizationIdParam,
     PaginatedResponse,
     PaginationParams,
     PublishedParam,
@@ -191,6 +192,7 @@ export type GetComparisonParams = PaginationParams &
     CreatedByParam &
     SdgParam &
     ObservatoryIdParam &
+    OrganizationIdParam &
     ResearchFieldIdParams &
     PublishedParam;
 
@@ -202,6 +204,7 @@ export const getComparisons = ({
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
     created_by,
     observatory_id,
+    organization_id,
     research_field,
     include_subfields,
     sdg,
@@ -215,6 +218,7 @@ export const getComparisons = ({
         visibility,
         created_by,
         observatory_id,
+        organization_id,
         sdg,
         research_field,
         include_subfields,

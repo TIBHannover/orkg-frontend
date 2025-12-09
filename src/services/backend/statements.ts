@@ -132,33 +132,7 @@ export const updateStatement = (
         })
         .json();
 
-export const updateStatements = (
-    statementIds: string[],
-    {
-        subject_id = null,
-        predicate_id = null,
-        object_id = null,
-    }: { subject_id?: string | null; predicate_id?: string | null; object_id?: string | null },
-) =>
-    statementsApi
-        .put<Statement[]>('', {
-            searchParams: `ids=${statementIds.join()}`,
-            json: {
-                ...(subject_id ? { subject_id } : null),
-                ...(predicate_id ? { predicate_id } : null),
-                ...(object_id ? { object_id } : null),
-            },
-        })
-        .json();
-
 export const deleteStatementById = (id: string) => statementsApi.delete<void>(encodeURIComponent(id)).json();
-
-export const deleteStatementsByIds = (ids: string[]) =>
-    statementsApi
-        .delete<void>('', {
-            searchParams: `ids=${ids.join()}`,
-        })
-        .json();
 
 /**
  * Fetching statements for a thing as a bundle
@@ -184,39 +158,6 @@ export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = []
             searchParams,
         })
         .json();
-};
-
-export const getStatementsBySubjects = ({
-    ids,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-}: {
-    ids: string[];
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-}) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const searchParams = qs.stringify(
-        { ids: ids.join(), page, size, sort },
-        {
-            skipNulls: true,
-        },
-    );
-    return statementsApi
-        .get<{ id: string; statements: PaginatedResponse<Statement> }[]>('subjects', {
-            searchParams,
-        })
-        .json()
-        .then((res) =>
-            res.map((subjectStatements) => ({
-                ...subjectStatements,
-                statements: subjectStatements.statements.content,
-            })),
-        );
 };
 
 /**

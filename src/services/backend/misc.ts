@@ -6,6 +6,7 @@ import { getPredicates } from '@/services/backend/predicates';
 import { getResources } from '@/services/backend/resources';
 import {
     AuthorIdParam,
+    AuthorNameParam,
     Class,
     CreatedByParam,
     Item,
@@ -18,6 +19,7 @@ import {
     ResearchFieldIdParams,
     Resource,
     SdgParam,
+    VenueIdParam,
     VerifiedParam,
     VisibilityParam,
 } from '@/services/backend/types';
@@ -79,7 +81,9 @@ export const prepareParams = (
         ObservatoryIdParam &
         OrganizationIdParam &
         ResearchFieldIdParams &
-        AuthorIdParam,
+        AuthorIdParam &
+        AuthorNameParam &
+        VenueIdParam,
 ): string =>
     qs.stringify(
         {
@@ -96,6 +100,8 @@ export const prepareParams = (
             research_field: params.research_field,
             include_subfields: params.include_subfields,
             author_id: params.author_id,
+            author_name: params.author_name,
+            venue: params.venue,
         },
         {
             skipNulls: true,
