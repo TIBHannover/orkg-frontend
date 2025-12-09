@@ -147,6 +147,12 @@ export const PopoverContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
     });
     const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
+    // The "NaN" error occurs because the arrow middleware sometimes calculates invalid coordinates
+    // when used with the inline middleware. This check ensures we only render the arrow when coordinates are valid.
+    const arrowX = floatingContext.middlewareData?.arrow?.x;
+    const arrowY = floatingContext.middlewareData?.arrow?.y;
+    const isArrowValid = (arrowX != null && !Number.isNaN(arrowX)) || (arrowY != null && !Number.isNaN(arrowY));
+
     if (!floatingContext.open) return null;
 
     return (
@@ -160,7 +166,9 @@ export const PopoverContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
                         {...context.getFloatingProps(props)}
                     >
                         {props.children}
-                        {context.showArrow && <FloatingArrow ref={context.arrowRef} context={floatingContext} fill={context.arrowFill ?? '#444'} />}
+                        {context.showArrow && isArrowValid && (
+                            <FloatingArrow ref={context.arrowRef} context={floatingContext} fill={context.arrowFill ?? '#444'} />
+                        )}
                     </FloatingContentStyled>
                 </FloatingFocusManager>
             </FloatingPortal>

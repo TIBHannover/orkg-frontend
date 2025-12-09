@@ -52,6 +52,8 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
         optionsClasses = [range.id];
     } else if (dataType === 'list') {
         optionsClasses = [CLASSES.LIST];
+    } else if (dataType === 'table') {
+        optionsClasses = [CLASSES.CSVW_TABLE];
     }
 
     return (

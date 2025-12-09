@@ -123,6 +123,7 @@ export const CLASSES: {
     CSVW_TABLE: 'Table',
     CSVW_COLUMN: 'Column',
     CSVW_ROW: 'Row',
+    CSVW_CELL: 'Cell',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
     BENCHMARK: 'C14022',

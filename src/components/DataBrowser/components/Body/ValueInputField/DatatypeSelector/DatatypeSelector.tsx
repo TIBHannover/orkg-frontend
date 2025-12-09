@@ -16,9 +16,18 @@ type DatatypeSelectorProps = {
     setDataType: Dispatch<SetStateAction<string>>;
     isDisabled?: boolean;
     menuPortalTarget?: HTMLElement | undefined;
+    allowAllDataTypes?: boolean;
 };
 
-const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, setDataType, menuPortalTarget, isDisabled = false }) => {
+const DatatypeSelector: FC<DatatypeSelectorProps> = ({
+    range,
+    _class,
+    dataType,
+    setDataType,
+    menuPortalTarget,
+    isDisabled = false,
+    allowAllDataTypes = false,
+}) => {
     const disabledWrapper = (children: ReactElement) => (
         <Tooltip
             content={
@@ -40,7 +49,7 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({ range, _class, dataType, 
                     value={getConfigByType(dataType)}
                     isMulti={false}
                     components={{ Option: DatatypeOption }}
-                    options={!_class ? DATA_TYPES : DATA_TYPES.filter((dt) => dt._class === _class)}
+                    options={!_class || allowAllDataTypes ? DATA_TYPES : DATA_TYPES.filter((dt) => dt._class === _class)}
                     onChange={(v) => {
                         if (v && 'type' in v) {
                             setDataType(v?.type ?? '');

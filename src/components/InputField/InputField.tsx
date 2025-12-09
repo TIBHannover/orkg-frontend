@@ -106,6 +106,9 @@ const InputField: FC<InputFieldProps> = ({
                     CLASSES.PAPER_DELETED,
                     CLASSES.CONTRIBUTION_DELETED,
                     CLASSES.EXTERNAL,
+                    CLASSES.CSVW_CELL,
+                    CLASSES.CSVW_ROW,
+                    CLASSES.CSVW_COLUMN,
                 ]}
                 includeClasses={includeClasses}
                 placeholder={placeholder ?? `Enter a ${dataType}`}

@@ -20,7 +20,7 @@ type MentioningItemProps = {
     onDelete: (id: string) => void;
 };
 type ButtonsContainerProps = {
-    displayButtonOnHover: boolean;
+    $displayButtonOnHover: boolean;
 };
 const ItemContainer = styled.div`
     line-height: 27px;
@@ -29,7 +29,7 @@ const ItemContainer = styled.div`
     }
 `;
 const ButtonsContainer = styled.div<ButtonsContainerProps>`
-    display: ${(props) => (props.displayButtonOnHover ? 'none' : 'inline-block')};
+    display: ${(props) => (props.$displayButtonOnHover ? 'none' : 'inline-block')};
 `;
 
 const MentioningItem: FC<MentioningItemProps> = ({ item, isEditMode, onDelete }) => {
@@ -60,7 +60,7 @@ const MentioningItem: FC<MentioningItemProps> = ({ item, isEditMode, onDelete })
                 </small>
 
                 {isEditMode && (
-                    <ButtonsContainer className="item-buttons ms-2" displayButtonOnHover>
+                    <ButtonsContainer className="item-buttons ms-2" $displayButtonOnHover>
                         <ActionButton
                             title="Delete resource"
                             icon={faTrash}

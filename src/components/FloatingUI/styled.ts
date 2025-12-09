@@ -9,7 +9,7 @@ export const FloatingContentStyled = styled.div`
     box-sizing: border-box;
     width: max-content;
     max-width: calc(100vw - 10px);
-    z-index: 9999;
+    z-index: 99999;
     transition-property: opacity;
 
     &[data-status='open'] {

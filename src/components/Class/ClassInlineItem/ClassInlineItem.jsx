@@ -24,14 +24,14 @@ const ItemContainer = styled.div`
 `;
 
 const ButtonsContainer = styled.div`
-    display: ${(props) => (props.displayButtonOnHover ? 'none' : 'inline-block')};
+    display: ${(props) => (props.$displayButtonOnHover ? 'none' : 'inline-block')};
 `;
 
 const ClassInlineItem = ({
     classObject,
     editMode,
     noValueMessage = 'Not defined',
-    displayButtonOnHover = true,
+    $displayButtonOnHover = true,
     showParentFieldForCreate = true,
     onDelete,
     onChange,
@@ -89,7 +89,7 @@ const ClassInlineItem = ({
                         </Link>
                     )}
                     {!isSavingChange && !classObject && noValueMessage}
-                    <ButtonsContainer className="item-buttons" displayButtonOnHover={displayButtonOnHover}>
+                    <ButtonsContainer className="item-buttons" $displayButtonOnHover={$displayButtonOnHover}>
                         {editMode && !isCurationAllowed && (
                             <span className="ms-2">
                                 <ActionButton title="Editing requires a curator role" icon={faPen} action={null} isDisabled />
@@ -180,7 +180,7 @@ ClassInlineItem.propTypes = {
     onChange: PropTypes.func,
     onDelete: PropTypes.func,
     noValueMessage: PropTypes.string,
-    displayButtonOnHover: PropTypes.bool,
+    $displayButtonOnHover: PropTypes.bool,
     showParentFieldForCreate: PropTypes.bool,
 };
 

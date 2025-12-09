@@ -8,6 +8,8 @@ import Button from '@/components/Ui/Button/Button';
 
 const handleIconWrapperSize = (wrapperSize: string) => {
     switch (wrapperSize) {
+        case '2xs':
+            return '1.25rem';
         case 'xs':
             return '1.5rem';
         case 'lg':
@@ -61,7 +63,7 @@ export type ActionButtonViewProps = {
     title: ReactNode;
     icon: IconDefinition;
     iconSpin?: boolean;
-    size?: 'xs' | 'sm' | 'lg';
+    size?: '2xs' | 'xs' | 'sm' | 'lg';
     action?: (e: MouseEvent) => void;
     isDisabled?: boolean;
     testId?: string;

@@ -80,6 +80,8 @@ const CustomCellEditor: FC<CustomCellEditorProps> = ({ initialValue, value: stat
         optionsClasses = [range.id];
     } else if (dataType === 'list') {
         optionsClasses = [CLASSES.LIST];
+    } else if (dataType === 'table') {
+        optionsClasses = [CLASSES.CSVW_TABLE];
     }
 
     // Handle key events

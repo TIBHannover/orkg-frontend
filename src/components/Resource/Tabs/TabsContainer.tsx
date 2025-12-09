@@ -32,13 +32,15 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, classes, editMode }) => {
         );
     };
 
+    const defaultTab = classes?.includes(CLASSES.CSVW_TABLE) ? 'preview' : 'information';
+
     return (
         <Container className="mt-3 p-0">
             <Tabs
                 className="box rounded"
                 destroyOnHidden
                 onChange={onTabChange}
-                activeKey={activeTab ?? 'information'}
+                activeKey={activeTab ?? defaultTab}
                 items={[
                     {
                         label: 'Resource information',

@@ -36,6 +36,21 @@ export type NewResource = {
     classes: string[];
 };
 
+export type NewPredicate = {
+    label: string;
+    description: string;
+};
+
+export type NewList = {
+    label: string;
+    elements: string[];
+};
+
+export type NewClass = {
+    label: string;
+    uri: string;
+};
+
 export type Resource = {
     id: string;
     label: string;

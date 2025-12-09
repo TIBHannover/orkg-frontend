@@ -41,8 +41,7 @@ export const orkgLookup = async ({
         localValue = localValue.substring(1, localValue.length - 1).trim();
     }
     let responseJson;
-
-    if (entityType === ENTITIES.RESOURCE) {
+    if (entityType === ENTITIES.RESOURCE || includeClasses?.includes(CLASSES.CSVW_TABLE) || includeClasses?.includes(CLASSES.LIST)) {
         responseJson = await getResources({
             baseClass,
             include: includeClasses,

@@ -2,7 +2,7 @@ import { Cookies } from 'react-cookie';
 import { z, ZodTypeAny } from 'zod';
 
 import { preprocessNumber } from '@/constants/DataTypes';
-import { ENTITIES, MISC, RESOURCES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES, MISC, RESOURCES } from '@/constants/graphSettings';
 import { createClass, getClassById } from '@/services/backend/classes';
 import { createList, getList } from '@/services/backend/lists';
 import { createLiteral, getLiteral, updateLiteral } from '@/services/backend/literals';
@@ -81,6 +81,8 @@ export const createValue = async (_class: EntityType | 'empty', value: Resource 
         case ENTITIES.RESOURCE:
             if ('datatype' in value && value.datatype === 'list') {
                 apiCall = getList(await createList({ label: value.label }));
+            } else if ('datatype' in value && value.datatype === 'table') {
+                apiCall = getResource(await createResource({ label: value.label, classes: [CLASSES.CSVW_TABLE] }));
             } else {
                 apiCall = getResource(
                     await createResource({ label: value.label, classes: 'classes' in value && value.classes ? value.classes : [] }),
