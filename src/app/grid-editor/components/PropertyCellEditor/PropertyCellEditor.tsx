@@ -12,7 +12,7 @@ import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPro
 import Button from '@/components/Ui/Button/Button';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
-import { updateStatements } from '@/services/backend/statements';
+import { updateStatement } from '@/services/backend/statements';
 import { Predicate } from '@/services/backend/types';
 
 export const ROW_HEIGHT = 72;
@@ -44,7 +44,7 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
                     .map((statement) => statement?.id)
                     .filter((id) => id !== undefined);
 
-                await updateStatements(statementIds, { predicate_id: p.id });
+                await Promise.all(statementIds.map((id) => updateStatement(id, { predicate_id: p.id })));
                 updateStatementsPredicate(statementIds, p);
                 // Call onValueChange to update the grid
                 onValueChange(p);

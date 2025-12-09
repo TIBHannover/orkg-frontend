@@ -1,4 +1,4 @@
-import { faChartBar, faCodeBranch, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faCodeBranch, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
@@ -10,9 +10,8 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ROUTES from '@/constants/routes';
-import { getStatements, statementsUrl } from '@/services/backend/statements';
-import { ComparisonVersion, Statement } from '@/services/backend/types';
-import { getComparisonData } from '@/utils';
+import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
+import { ComparisonVersion } from '@/services/backend/types';
 
 type VersionTooltipProps = {
     version: ComparisonVersion;
@@ -21,12 +20,9 @@ type VersionTooltipProps = {
 const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
     const [isActive, setIsActive] = useState(false);
 
-    const { data, isLoading } = useSWR(
-        isActive && version.id ? [{ subjectId: version.id, returnContent: true }, statementsUrl, 'getStatements'] : null,
-        ([params]) => getStatements(params) as Promise<Statement[]>,
+    const { data, isLoading } = useSWR(isActive && version.id ? [version.id, comparisonUrl, 'getComparison'] : null, ([params]) =>
+        getComparison(params),
     );
-
-    const _data = getComparisonData(version, data ?? []);
 
     return (
         <Tooltip
@@ -35,23 +31,17 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
                 <>
                     {version.label}
                     <div className="d-flex mt-1">
-                        {!isLoading && (
+                        {!isLoading && data && (
                             <div className="flex-grow-1">
-                                {_data?.contributions?.length && (
+                                {data?.contributions?.length && (
                                     <>
-                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {_data?.contributions?.length} Contributions
+                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {data?.contributions?.length} Contributions
                                     </>
                                 )}
-                                {_data.visualizations && (
+                                {data.visualizations && (
                                     <>
-                                        <FontAwesomeIcon size="sm" icon={faChartBar} className="ms-2 me-1" /> {_data.visualizations?.length}{' '}
+                                        <FontAwesomeIcon size="sm" icon={faChartBar} className="ms-2 me-1" /> {data.visualizations?.length}{' '}
                                         Visualizations
-                                    </>
-                                )}
-                                {(_data.resources?.length > 0 || _data.figures?.length > 0) && (
-                                    <>
-                                        <FontAwesomeIcon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
-                                        {_data.resources.length + _data.resources.length} attachments
                                     </>
                                 )}
                             </div>

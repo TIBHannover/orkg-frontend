@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import useCardData from '@/components/Cards/hooks/useCardData';
 import Authors from '@/components/Cards/PaperCard/Authors';
 import Coins from '@/components/Coins/Coins';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -34,16 +33,6 @@ type ReviewCardProps = {
 };
 
 const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, showBadge = false, renderCoins = true }) => {
-    // the useCardData can be removed as soon as the convertReviewToNewFormat function is not used anymore to transform review data,
-    // this because the new 'review' variable already has the field and authors included
-    const { researchField, authors } = useCardData({
-        id: review?.id,
-        // @ts-expect-error
-        initResearchField: review.research_fields?.[0],
-        // @ts-expect-error
-        initAuthors: review.authors,
-    });
-
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: review.id,
         unlisted: review?.visibility === VISIBILITY.UNLISTED,
@@ -75,7 +64,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                     </div>
                     <div className="mb-1">
                         <small>
-                            <Authors authors={review.authors.length > 0 ? review.authors : authors} />
+                            <Authors authors={review.authors.length > 0 ? review.authors : []} />
                             {review.created_at && (
                                 <>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
@@ -105,7 +94,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={review.research_fields?.[0] ?? researchField} />
+                        <RelativeBreadcrumbs researchField={review.research_fields?.[0]} />
                     </div>
                 </div>
                 <UserAvatar userId={review.created_by} />

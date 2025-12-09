@@ -8,6 +8,8 @@ import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListH
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Tabs from '@/components/Tabs/Tabs';
+import TitleBar from '@/components/TitleBar/TitleBar';
+import Alert from '@/components/Ui/Alert/Alert';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
@@ -26,7 +28,7 @@ const AUTHOR_CONTENT_TABS = [
 ];
 
 const AuthorPage = () => {
-    const { authorId } = useParams();
+    const { authorId, authorString } = useParams();
     const [contentType, setContentType] = useQueryState('contentType', { defaultValue: ALL_CONTENT_TYPES_ID });
     const [sort] = useQueryState<VisibilityOptions>('sort', {
         defaultValue: VISIBILITY_FILTERS.TOP_RECENT,
@@ -53,7 +55,8 @@ const AuthorPage = () => {
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            author_id: authorId,
+            ...(authorId ? { author_id: authorId } : {}),
+            ...(authorString ? { author_name: authorString } : {}),
             visibility: sort,
             contentType,
             published: true,
@@ -67,7 +70,15 @@ const AuthorPage = () => {
 
     return (
         <Container className="p-0">
-            <AuthorHeader authorId={authorId} />
+            {authorId && <AuthorHeader authorId={authorId} />}
+            {authorString && <TitleBar titleAddition={<div className="text-muted">Author</div>}>{authorString}</TitleBar>}
+
+            {authorString && (
+                <Alert color="info" className="box-shadow">
+                    Results include work from all authors matching this name. This means that the results may include work by other people with the
+                    same name.
+                </Alert>
+            )}
 
             <ContentTypeListHeader label="Works" isLoading={isLoading} totalElements={totalElements} />
 

@@ -21,6 +21,7 @@ import {
     SdgParam,
     Statement,
     UpdatePaperParams,
+    VenueIdParam,
     VerifiedParam,
     VisibilityParam,
 } from '@/services/backend/types';
@@ -148,7 +149,8 @@ export const getPapers = ({
     research_field,
     include_subfields,
     sdg,
-}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams) => {
+    venue,
+}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams & VenueIdParam) => {
     const searchParams = prepareParams({
         page,
         size,
@@ -160,6 +162,7 @@ export const getPapers = ({
         sdg,
         research_field,
         include_subfields,
+        venue,
     });
     return papersApi
         .get<PaginatedResponse<Paper>>('', {

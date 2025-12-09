@@ -1,17 +1,13 @@
 import capitalize from 'capitalize';
 import { unescape } from 'he';
-import { isNaN, isString, sortBy, uniqBy } from 'lodash';
+import { isNaN, isString, sortBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
-import { Cookies } from 'react-cookie';
 import slugifyString from 'slugify';
 
-import { VISIBILITY } from '@/constants/contentTypes';
-import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getStatements, getStatementsBySubjects } from '@/services/backend/statements';
-
-const cookies = new Cookies();
+import { getStatements } from '@/services/backend/statements';
 
 export const guid = () => {
     function s4() {
@@ -71,16 +67,6 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
     return isUnique ? null : [];
 };
 
-function getOrder(paperStatements) {
-    let order = paperStatements.filter((statement) => statement.predicate.id === PREDICATES.ORDER);
-    if (order.length > 0) {
-        order = order[0].object.label;
-    } else {
-        order = Infinity;
-    }
-    return order;
-}
-
 export const getAuthorsInList = ({ resourceId, statements }) => {
     const sortedStatements = sortBy(statements ?? [], 'index');
     const authorList = filterObjectOfStatementsByPredicateAndClass(
@@ -106,16 +92,6 @@ export const getAuthorsInList = ({ resourceId, statements }) => {
     return authorsArray ?? [];
 };
 
-export const addAuthorsToStatementBundle = async (statements) => {
-    const authorListStatements = statements.map((bundle) => bundle.statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS));
-    const _authors = await getStatementsBySubjects({ ids: authorListStatements.filter((p) => p?.object?.id).map((p) => p?.object?.id) });
-
-    return statements.map((bundle, index) => ({
-        ...bundle,
-        statements: [...bundle.statements, ...(_authors.find(({ id }) => id === authorListStatements[index]?.object?.id)?.statements ?? [])],
-    }));
-};
-
 export const getAuthorStatements = async (statements) => {
     const listId = statements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS)?.object?.id;
     if (!listId) {
@@ -133,83 +109,6 @@ export const addAuthorsToStatements = async (statements) => {
         return statements;
     }
     return [...statements, ...(await getAuthorStatements(statements))];
-};
-
-/**
- * Parse paper statements and return a paper object
- * @param {Object} resource Paper resource
- * @param {Array} paperStatements
- */
-
-export const getPaperData = (resource, paperStatements) => {
-    let doi = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true);
-    if (doi && doi.label.includes('10.') && !doi.label.startsWith('10.')) {
-        doi = { ...doi, label: doi.label.substring(doi.label.indexOf('10.')) };
-    }
-    const authorListResource = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHORS, false)?.[0];
-    const researchField = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
-    const publicationYear = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true);
-    // gets month[0] and resourceId[1]
-    const publicationMonth = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true);
-    const authors = getAuthorsInList({ resourceId: resource.id, statements: paperStatements });
-    const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-    const order = getOrder(paperStatements);
-    const publishedIn = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true);
-    const url = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true);
-
-    return {
-        ...resource,
-        id: resource.id,
-        label: resource.label ? resource.label : 'No Title',
-        publicationYear,
-        publicationMonth,
-        researchField,
-        doi,
-        authors,
-        authorListResource,
-        // sort contributions ascending, so contribution 1, is actually the first one
-        contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [],
-        order,
-        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null,
-        publishedIn,
-        url,
-    };
-};
-
-/**
- * Parse review statements and return a review object
- * @param {Object} resource Review resource
- * @param {Array} statements Review Statements
- */
-export const getReviewData = async (resource, statements) => {
-    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const paperId = (await getStatements({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject?.id;
-
-    return {
-        ...resource,
-        id: resource.id,
-        label: resource.label ? resource.label : 'No Title',
-        description: description?.label ?? '',
-        paperId,
-    };
-};
-
-/**
- * Parse list statements and return a list object
- * @param {Object} resource List resource
- * @param {Array} statements List  Statements
- */
-export const getListData = async (resource, statements) => {
-    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-    const listId = (await getStatements({ objectId: resource.id, predicateId: PREDICATES.HAS_PUBLISHED_VERSION }))?.[0]?.subject?.id;
-
-    return {
-        ...resource,
-        id: resource.id,
-        label: resource.label ? resource.label : 'No Title',
-        description: description?.label ?? '',
-        listId,
-    };
 };
 
 /**
@@ -233,96 +132,6 @@ export const getAuthorData = (resource, statements) => {
         researchGate,
         googleScholar,
         dblp: '',
-    };
-};
-
-/**
- * Parse comparison statements and return a comparison object
- * @param {Object} resource Comparison resource
- * @param {Array} comparisonStatements
- */
-export const getComparisonData = (resource, comparisonStatements) => {
-    const description = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, true);
-    const contributions = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.COMPARE_CONTRIBUTION, false);
-    const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
-    const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
-    const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(
-        comparisonStatements,
-        PREDICATES.HAS_PREVIOUS_VERSION,
-        true,
-        CLASSES.COMPARISON,
-    );
-    const icon = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ICON, true);
-    const type = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.TYPE, true);
-    const order = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ORDER, true);
-    const onHomePage = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ON_HOMEPAGE, true);
-    const subject = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD);
-    const resources = filterObjectOfStatementsByPredicateAndClass(
-        comparisonStatements,
-        PREDICATES.RELATED_RESOURCE,
-        false,
-        CLASSES.COMPARISON_RELATED_RESOURCE,
-    );
-    const figures = filterObjectOfStatementsByPredicateAndClass(
-        comparisonStatements,
-        PREDICATES.RELATED_FIGURE,
-        false,
-        CLASSES.COMPARISON_RELATED_FIGURE,
-    );
-    const visualizations = filterObjectOfStatementsByPredicateAndClass(
-        comparisonStatements,
-        PREDICATES.HAS_VISUALIZATION,
-        false,
-        CLASSES.VISUALIZATION,
-    );
-
-    const video = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_VIDEO, true);
-    const authors = getAuthorsInList({ resourceId: resource.id, statements: comparisonStatements });
-    const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
-    const anonymized = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.IS_ANONYMIZED, true);
-    const sdgs = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.SUSTAINABLE_DEVELOPMENT_GOAL, false).map((sdg) => ({
-        id: sdg.id,
-        label: sdg.label,
-    }));
-
-    return {
-        ...resource,
-        label: resource.label ? resource.label : 'No Title',
-        authors,
-        contributions,
-        references,
-        doi: doi ? doi.label : '',
-        description: description ? description.label : '',
-        icon: icon ? icon.label : '',
-        order: order ? order.label : Infinity,
-        type: type ? type.id : '',
-        onHomePage: !!onHomePage,
-        researchField: subject,
-        hasPreviousVersion,
-        visualizations,
-        figures,
-        resources,
-        properties,
-        video,
-        anonymized: !!anonymized,
-        sdgs,
-    };
-};
-
-/**
- * Parse visualization statements and return a visualization object
- * @param {String} id
- * @param {String } label
- * @param {Array} visualizationStatements
- */
-export const getVisualizationData = (resource, visualizationStatements) => {
-    const description = visualizationStatements.find((statement) => statement.predicate.id === PREDICATES.DESCRIPTION);
-    const authors = getAuthorsInList({ resourceId: resource.id, statements: visualizationStatements });
-
-    return {
-        ...resource,
-        description: description ? description.object.label : '',
-        authors,
     };
 };
 
@@ -406,29 +215,6 @@ export const asyncLocalStorage = {
     },
 };
 
-export function listToTree(list) {
-    const map = {};
-    let node;
-    const roots = [];
-    let i;
-    list = sortBy(list, 'hasPreviousVersion');
-    for (i = 0; i < list.length; i += 1) {
-        map[list[i].id] = i; // initialize the map
-        const v = list[i].hasPreviousVersion;
-        list[i].versions = v && !list.find((c) => c.id === v.id) ? [list[i].hasPreviousVersion] : []; // initialize the versions
-    }
-    for (i = 0; i < list.length; i += 1) {
-        node = list[i];
-        // Check that map[node.hasPreviousVersion.id] exists : The parent could be not part of the list (not fetched yet!)
-        if (node.hasPreviousVersion && node.hasPreviousVersion.id !== null && map[node.hasPreviousVersion.id]) {
-            list[map[node.hasPreviousVersion.id]].versions.push(node);
-        } else {
-            roots.push(node);
-        }
-    }
-    return roots;
-}
-
 export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions') {
     const flatten = (children, extractChildren) =>
         Array.prototype.concat.apply(
@@ -439,41 +225,6 @@ export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions')
     const flat = flatten(extractChildren(treeStructure), extractChildren);
     return flat;
 }
-
-/**
- * Group comparisons versions
- * @param {Array} comparisons comparison data objects
- * @param {Function} sortFunc Sort function
- */
-export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
-    // 1- Remove duplicated and keep the ones with hasPreviousVersion
-    let result = comparisons.filter((c) => c?.classes?.includes(CLASSES.COMPARISON));
-    // 2- Make a tree of versions
-    result = listToTree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
-    // 3- We flat the versions  inside the roots
-    for (let i = 0; i < result.length; i += 1) {
-        // Always the new version if the main resource
-        const arrayVersions = [...convertTreeToFlat(result[i], 'versions'), result[i]].sort(sortFunc);
-        result[i] = { ...arrayVersions[0], versions: arrayVersions };
-    }
-    // 4- We sort the roots
-    result = [...result, ...comparisons.filter((c) => !c?.classes?.includes(CLASSES.COMPARISON))].sort(sortFunc);
-    return result;
-};
-
-/**
- * Compare input value to select options
- * Built-ins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
- * @param {String} inputValue candidate label
- * @param {Object} option option
- */
-export const compareOption = (inputValue = '', option) => {
-    const candidate = String(inputValue).toLowerCase();
-    const optionValue = String(option.value).toLowerCase();
-    const optionLabel = String(option.label).toLowerCase();
-    const optionURI = String(option.uri).toLowerCase();
-    return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
-};
 
 /**
  * Merge two arrays with alternating values
@@ -555,43 +306,6 @@ export const parseCiteResult = (paper) => {
 };
 
 /**
- * Parse resources statements and return a related figures objects
- * @param {Array} resourceStatements
- */
-export function getRelatedFiguresData(resourcesStatements) {
-    const _figures = resourcesStatements.map((resourceStatements) => {
-        const imageStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.IMAGE);
-        const alt = resourceStatements.statements.length ? resourceStatements.statements[0]?.subject?.label : null;
-        return {
-            src: imageStatement ? imageStatement.object.label : '',
-            figureId: resourceStatements.id,
-            alt,
-        };
-    });
-    return _figures;
-}
-
-/**
- * Parse resources statements and return a related resources objects
- * @param {Array} resourceStatements
- */
-export function getRelatedResourcesData(resourcesStatements) {
-    const _resources = resourcesStatements.map((resourceStatements) => {
-        const imageStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.IMAGE);
-        const urlStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.URL);
-        const descriptionStatement = resourceStatements.statements.find((statement) => statement.predicate.id === PREDICATES.DESCRIPTION);
-        return {
-            url: urlStatement ? urlStatement.object.label : '',
-            image: imageStatement ? imageStatement.object.label : '',
-            id: resourceStatements.id,
-            title: resourceStatements.statements[0]?.subject?.label,
-            description: descriptionStatement ? descriptionStatement.object.label : '',
-        };
-    });
-    return _resources;
-}
-
-/**
  * Get resource link based on class
  *
  * @param {String} classId class ID
@@ -650,65 +364,6 @@ export const getLinkByEntityType = (_class, id) => {
 };
 
 /**
- * Get resource type label based on class
- *
- * @param {String} classId class ID
- * @result {String} resource label
- */
-export const getResourceTypeLabel = (classId) => {
-    let label = 'resource';
-
-    switch (classId) {
-        case CLASSES.PAPER: {
-            label = 'paper';
-            break;
-        }
-        case CLASSES.PROBLEM: {
-            label = 'research problem';
-            break;
-        }
-        case CLASSES.AUTHOR: {
-            label = 'author';
-            break;
-        }
-        case CLASSES.COMPARISON: {
-            label = 'comparison';
-            break;
-        }
-        case CLASSES.VENUE: {
-            label = 'venue';
-            break;
-        }
-        case CLASSES.NODE_SHAPE: {
-            label = 'template';
-            break;
-        }
-        case CLASSES.VISUALIZATION: {
-            label = 'visualization';
-            break;
-        }
-        case CLASSES.CONTRIBUTION: {
-            label = 'contribution';
-            break;
-        }
-        case ENTITIES.RESOURCE: {
-            label = 'resource';
-            break;
-        }
-        case ENTITIES.PREDICATE: {
-            label = 'predicate';
-            break;
-        }
-        default: {
-            label = 'resource';
-            break;
-        }
-    }
-
-    return label;
-};
-
-/**
  * Stringify sort value
  *
  * @param {String} sort sort value
@@ -748,263 +403,3 @@ export const getPublicUrl = () => {
  * @param params.slug the slug for this param
  */
 export const reverseWithSlug = (route, params) => reverse(route, { ...params, slug: params.slug ? slugify(params.slug) : undefined });
-
-/**
- * check if Cookies is enabled
- * @return {Boolean}
- */
-export const checkCookie = () => {
-    cookies.set('testcookie', 1, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 5 });
-    const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
-    return !!cookieEnabled;
-};
-
-export const filterStatementsBySubjectId = (statements, subjectId) => statements.filter((statement) => statement.subject.id === subjectId);
-
-/**
- * Parse resource statements and return an object of its type
- * @param {Object} resource resource
- * @param {Array} statements Statements
- */
-export const getDataBasedOnType = (resource, statements) => {
-    if (resource?.classes?.includes(CLASSES.PAPER)) {
-        return getPaperData(resource, statements);
-    }
-    if (resource?.classes?.includes(CLASSES.COMPARISON)) {
-        return getComparisonData(resource, statements);
-    }
-    if (resource?.classes?.includes(CLASSES.VISUALIZATION)) {
-        return getVisualizationData(resource, statements);
-    }
-    if (resource?.classes?.includes(CLASSES.SMART_REVIEW) || resource?.classes?.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
-        return getReviewData(resource, statements);
-    }
-    if (resource?.classes?.includes(CLASSES.LITERATURE_LIST) || resource?.classes?.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-        return getListData(resource, statements);
-    }
-    return undefined;
-};
-
-export const handleSortableHoverReactDnd = ({ item, monitor, currentRef, hoverIndex, handleUpdate }) => {
-    if (!currentRef) {
-        return;
-    }
-    const dragIndex = item.index;
-    // Don't replace items with themselves
-    if (dragIndex === hoverIndex) {
-        return;
-    }
-    // Determine rectangle on screen
-    const hoverBoundingRect = currentRef.getBoundingClientRect();
-    // Get vertical middle
-    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
-    // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-    // Only perform the move when the mouse has crossed half of the items height
-    // When dragging downwards, only move when the cursor is below 50%
-    // When dragging upwards, only move when the cursor is above 50%
-    // Dragging downwards
-    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-    }
-    // Dragging upwards
-    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-    }
-    // Time to actually perform the action
-    handleUpdate({ dragIndex, hoverIndex });
-
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    item.index = hoverIndex;
-};
-
-export const convertAuthorToOldFormat = (author) => ({
-    id: author.id,
-    label: author.name,
-    orcid: author.identifiers?.orcid?.[0],
-    _class: author.id ? ENTITIES.RESOURCE : ENTITIES.LITERAL,
-});
-export const convertAuthorsToOldFormat = (authors) => authors.map((author) => convertAuthorToOldFormat(author));
-
-export const convertAuthorToNewFormat = (author) => ({
-    id: author.classes && author.classes.includes(CLASSES.AUTHOR) ? author.id : null,
-    name: author.label,
-    ...(author.orcid
-        ? {
-              identifiers: {
-                  orcid: author.orcid ? [author.orcid] : [],
-              },
-          }
-        : {}),
-});
-
-export const convertAuthorsToNewFormat = (authors) => authors.map((author) => convertAuthorToNewFormat(author));
-
-export const convertFeaturedAndUnlisted2Visibility = (unlisted, featured) => {
-    if (unlisted) {
-        return VISIBILITY.UNLISTED;
-    }
-    if (featured) {
-        return VISIBILITY.FEATURED;
-    }
-    return VISIBILITY.DEFAULT;
-};
-
-export const convertVisualizationToNewFormat = (visualization) => ({
-    id: visualization.id,
-    title: visualization.label,
-    authors: visualization.authors.map((author) => convertAuthorToNewFormat(author)),
-    organizations: visualization.organizations,
-    observatories: visualization.observatories,
-    extraction_method: visualization.extraction_method,
-    created_at: visualization.created_at,
-    created_by: visualization.created_by,
-    visibility: convertFeaturedAndUnlisted2Visibility(visualization.unlisted, visualization.featured),
-    description: visualization.description,
-});
-
-export const convertComparisonToNewFormat = (comparison) => ({
-    id: comparison.id,
-    title: comparison.label,
-    description: comparison.description,
-    ...(comparison.researchField ? { research_fields: [comparison.researchField] } : {}),
-    ...(comparison.doi
-        ? {
-              identifiers: {
-                  doi: comparison.doi,
-              },
-          }
-        : {}),
-    publication_info: {
-        published_month: comparison.publicationMonth?.label,
-        published_year: comparison.publicationYear?.label,
-        published_in: comparison.publishedIn?.label,
-        url: comparison.url?.label,
-    },
-    versions: {
-        head: {},
-        published: comparison.versions,
-    },
-    authors: comparison.authors.map((author) => convertAuthorToNewFormat(author)),
-    contributions: comparison.contributions,
-    visualizations: comparison.visualizations,
-    related_figures: comparison.figures,
-    related_resources: comparison.resources,
-    references: comparison.references,
-    observatories: comparison.observatories,
-    organizations: comparison.organizations,
-    extraction_method: comparison.extraction_method,
-    created_at: comparison.created_at,
-    created_by: comparison.created_by,
-    previous_version: comparison.hasPreviousVersion?.id,
-    is_anonymized: comparison.anonymized,
-    visibility: convertFeaturedAndUnlisted2Visibility(comparison.unlisted, comparison.featured),
-});
-
-export const convertPaperToNewFormat = (paper) => ({
-    id: paper.id,
-    title: paper.title || paper.label,
-    ...(paper.researchField ? { research_fields: [paper.researchField] } : {}),
-    ...(paper.doi
-        ? {
-              identifiers: {
-                  doi: [paper.doi.label],
-              },
-          }
-        : {}),
-    publication_info: {
-        published_month: paper.publicationMonth?.label,
-        published_year: paper.publicationYear?.label,
-        published_in: paper.publishedIn,
-        url: paper.url?.label,
-    },
-    authors: paper.authors ? paper.authors.map((author) => convertAuthorToNewFormat(author)) : [],
-    contributions: paper.contributions,
-    organizations: [paper.organization_id],
-    observatories: [paper.observatory_id],
-    extraction_method: paper.extractionMethod,
-    created_at: paper.created_at,
-    created_by: paper.created_by,
-    verified: paper.verified,
-    visibility: convertFeaturedAndUnlisted2Visibility(paper.unlisted, paper.featured),
-    unlisted_by: paper.unlisted_by,
-});
-
-export const convertReviewToNewFormat = (reviews) => ({
-    id: reviews?.[0]?.id,
-    title: reviews?.[0]?.title || reviews?.[0]?.label,
-    organizations: [reviews?.[0]?.organization_id],
-    observatories: [reviews?.[0]?.observatory_id],
-    extraction_method: reviews?.[0]?.extraction_method,
-    created_at: reviews?.[0]?.created_at,
-    created_by: reviews?.[0]?.created_by,
-    verified: reviews?.[0]?.verified,
-    visibility: reviews?.[0]?.visibility,
-    unlisted_by: null,
-    authors: reviews?.[0]?.authors ? reviews?.[0]?.authors.map((author) => convertAuthorToNewFormat(author)) : [],
-    ...(reviews?.[0]?.researchField
-        ? {
-              research_fields: [
-                  {
-                      id: reviews?.[0]?.researchField.id,
-                      label: reviews?.[0]?.researchField.label,
-                  },
-              ],
-          }
-        : {}),
-    versions: {
-        head: {
-            id: reviews?.[0]?.id,
-            label: reviews?.[0]?.title || reviews?.[0]?.label,
-            created_at: reviews?.[0]?.created_at,
-        },
-        published: reviews.map((review) => ({
-            id: review.id,
-            label: review.title || review.label,
-            created_at: review.created_at,
-            changelog: review.description,
-        })),
-    },
-});
-
-export const convertListToNewFormat = (lists) => ({
-    id: lists?.[0]?.id,
-    title: lists?.[0]?.title || lists?.[0]?.label,
-    organizations: [lists?.[0]?.organization_id],
-    observatories: [lists?.[0]?.observatory_id],
-    extraction_method: lists?.[0]?.extraction_method,
-    created_at: lists?.[0]?.created_at,
-    created_by: lists?.[0]?.created_by,
-    verified: lists?.[0]?.verified,
-    visibility: lists?.[0]?.visibility,
-    unlisted_by: null,
-    authors: lists?.[0]?.authors ? lists?.[0]?.authors.map((author) => convertAuthorToNewFormat(author)) : [],
-    ...(lists?.[0]?.researchField
-        ? {
-              research_fields: [
-                  {
-                      id: lists?.[0]?.researchField.id,
-                      label: lists?.[0]?.researchField.label,
-                  },
-              ],
-          }
-        : {}),
-    versions: {
-        head: {
-            id: lists?.[0]?.id,
-            label: lists?.[0]?.title || lists?.[0]?.label,
-            created_at: lists?.[0]?.created_at,
-        },
-        published: lists.map((review) => ({
-            id: review.id,
-            label: review.title || review.label,
-            created_at: review.created_at,
-            changelog: review.description,
-        })),
-    },
-});
