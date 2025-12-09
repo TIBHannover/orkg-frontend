@@ -71,7 +71,7 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, classes, editMode }) => {
                     },
 
                     {
-                        label: 'In statements',
+                        label: 'Incoming statements',
                         key: 'statements',
                         children: <ObjectStatements id={id} />,
                     },

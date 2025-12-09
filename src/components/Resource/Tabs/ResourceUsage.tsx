@@ -1,5 +1,6 @@
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
+import Alert from '@/components/Ui/Alert/Alert';
 import { getPaper, getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
 import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
 
@@ -27,6 +28,9 @@ function ResourceUsage({ id }: { id: string }) {
 
     return (
         <div>
+            <Alert color="info" className="m-1">
+                <strong>Note:</strong> This tab shows papers that reference this resource.
+            </Alert>
             <ListPage
                 label="papers"
                 boxShadow={false}
