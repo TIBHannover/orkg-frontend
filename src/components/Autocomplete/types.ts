@@ -60,5 +60,6 @@ export type AutocompleteProps = {
     allowCreate: boolean;
     defaultValueId?: string | string[];
     onOntologySelectorModalStatusChange?: (v: boolean) => void;
+    onEffectiveBaseClassChange?: (effectiveBaseClass: string | undefined) => void;
     fixedOptions?: string[];
 } & OptionsSettings;

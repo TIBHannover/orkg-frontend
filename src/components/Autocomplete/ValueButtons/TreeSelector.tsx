@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
 import { OptionType } from '@/components/Autocomplete/types';
-import TreeView from '@/components/Class/TreeView';
+import TreeView, { TreeNode } from '@/components/Class/TreeView';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
@@ -54,11 +54,9 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
                     {!isDisabled && <Alert color="info">Selected class: {valueFromTree?.label}</Alert>}
                     <TreeView
                         id={value?.id}
-                        label={value?.label}
                         onSelect={
                             !isDisabled
-                                ? // @ts-expect-error
-                                  (_info: any, { node }) => {
+                                ? (_info: string[], { node }: { node: TreeNode }) => {
                                       if (_info?.length) {
                                           setValueFromTree(node);
                                       }
