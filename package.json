@@ -62,7 +62,7 @@
         "motion": "^12.18.1",
         "n3": "^1.26.0",
         "named-urls": "^2.0.1",
-        "next": "15.3.6",
+        "next": "15.3.8",
         "next-auth": "^4.24.11",
         "next-client-cookies": "^2.1.0",
         "next-runtime-env": "^3.3.0",
