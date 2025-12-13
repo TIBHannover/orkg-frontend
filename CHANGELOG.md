@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.174.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.173.0...v0.174.0) - 2025-12-13
+
+### Changes
+
+- chore: upgrade to Next.js 15.3.8 [`#1618`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1618)
+- feat: improve table support [`#1610`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1610)
+- feat: add support for selecting subclasses in slot constraints [`#1608`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1608)
+- refactor: venue page [`#1614`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1614)
+- feat(ObjectStatements): add informational alert for resource statements tab [`#1613`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1613)
+
+---
 ## [v0.173.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.172.0...v0.173.0) - 2025-12-04
 
 ### Changes
