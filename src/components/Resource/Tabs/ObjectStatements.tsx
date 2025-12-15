@@ -23,7 +23,7 @@ const ObjectStatements = ({ id }: { id: string }) => {
         <div>
             <Alert color="info" className="m-1">
                 <strong>Note:</strong> This tab shows statements pointing to this resource. For statements from this resource, visit the{' '}
-                <Link href={`${reverse(ROUTES.RESOURCE, { id })}?tab=information`}>Resource information</Link> tab.
+                <Link href={`${reverse(ROUTES.RESOURCE, { id })}?tab=information&noRedirect`}>Resource information</Link> tab.
             </Alert>
             <FormGroup check className="m-3">
                 <Label>
