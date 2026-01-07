@@ -5,7 +5,7 @@ import Select, { components, OptionProps, SingleValue } from 'react-select';
 import { SectionTypeContainerStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import useOntology from '@/components/PdfTextAnnotation/hooks/useOntology';
+import useOntology from '@/components/PdfAnnotation/hooks/useOntology';
 import useReview from '@/components/Review/hooks/useReview';
 import { ReviewSection } from '@/services/backend/types';
 

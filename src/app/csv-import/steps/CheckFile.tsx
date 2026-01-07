@@ -15,7 +15,7 @@ type CheckFileProps = {
     booleanCellValidation: boolean[][];
     cellValidation: (boolean | ZodError<unknown> | null | undefined)[][];
     mappedColumns: MappedColumn[];
-    setData: Dispatch<SetStateAction<string[][]>>;
+    setData: (data: string[][]) => void;
     runValidation: (data: string[][], columnTypes: MappedColumn[]) => void;
     debugMode: boolean;
 };

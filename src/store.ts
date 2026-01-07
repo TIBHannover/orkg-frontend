@@ -6,6 +6,12 @@ export function setupStore(initialState = {}) {
     const store = configureStore({
         preloadedState: initialState,
         reducer: combinedReducers({}),
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware({
+                serializableCheck: {
+                    ignoredActions: ['pdfAnnotation/setParsedPdfData'],
+                },
+            }),
     });
     return { store };
 }

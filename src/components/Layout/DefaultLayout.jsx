@@ -108,7 +108,7 @@ CloseToastButton.propTypes = {
 
 export default function DefaultLayout(props) {
     const pathname = usePathname();
-    const showFooter = pathname !== ROUTES.PDF_TEXT_ANNOTATION && pathname !== ROUTES.PDF_ANNOTATION;
+    const showFooter = pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
     const [visible, setVisible] = useState(false);
     const { trackPageView } = useMatomo();

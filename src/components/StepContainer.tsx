@@ -56,8 +56,17 @@ type StepContainerProps = {
     bottomLine?: boolean;
     active?: boolean;
     children?: ReactNode;
+    hasBorder?: boolean;
 };
-const StepContainer: FC<StepContainerProps> = ({ step, title, topLine = false, bottomLine = false, active = false, children = null }) => {
+const StepContainer: FC<StepContainerProps> = ({
+    step,
+    title,
+    topLine = false,
+    bottomLine = false,
+    active = false,
+    children = null,
+    hasBorder = false,
+}) => {
     const activeClasses = active ? 'active' : '';
     const topClasses = classNames({
         top: true,
@@ -80,7 +89,7 @@ const StepContainer: FC<StepContainerProps> = ({ step, title, topLine = false, b
                 <TitleStyled className={titleClasses}>{title}</TitleStyled>
             </Container>
             {active && (
-                <Container className="box rounded pt-4 pb-4 ps-5 pe-5 position-relative" style={{ zIndex: 1 }}>
+                <Container className={classNames('box rounded pt-4 pb-4 ps-5 pe-5 position-relative', { border: hasBorder })} style={{ zIndex: 1 }}>
                     {children}
                 </Container>
             )}

@@ -77,20 +77,12 @@ const Tools = () => (
             <p className="my-2 px-2">Create multiple contributions simultaneously and create a comparison from them </p>
         </ToolContainer>
 
-        <ToolContainer href={ROUTES.PDF_TEXT_ANNOTATION} className="box rounded text-decoration-none">
-            <Header>PDF sentence annotator</Header>
+        <ToolContainer href={ROUTES.PDF_ANNOTATION} className="box rounded text-decoration-none">
+            <Header>PDF annotator</Header>
             <ImgContainer>
-                <Image src={PdfSentenceAnnotation} style={{ width: '50%', height: 'auto' }} alt="PDF sentence annotator preview" />
+                <Image src={PdfSentenceAnnotation} style={{ width: '50%', height: 'auto' }} alt="PDF sentence annotator preview or table extractor" />
             </ImgContainer>
-            <p className="my-2 px-2">Upload your paper as PDF and annotate the most important sentences</p>
-        </ToolContainer>
-
-        <ToolContainer href={ROUTES.PDF_ANNOTATION} className="box rounded text-default text-decoration-none">
-            <Header>Survey importer</Header>
-            <ImgContainer>
-                <Image src={SurveyImporter} style={{ width: '70%', height: 'auto' }} alt="Survey importer preview" />
-            </ImgContainer>
-            <p className="my-2 px-2">Import already existing surveys into the ORKG directly from the PDF article</p>
+            <p className="my-2 px-2">Upload your paper as PDF and annotate the most important sentences or extract survey tables from the PDF</p>
         </ToolContainer>
 
         <ToolContainer href={ROUTES.CSV_IMPORT} className="box rounded text-decoration-none">

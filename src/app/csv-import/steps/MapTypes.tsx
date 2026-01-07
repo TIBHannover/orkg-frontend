@@ -23,7 +23,7 @@ type TypeMappingProps = {
     data: string[][];
     mappedColumns: MappedColumn[];
     setMappedColumns: Dispatch<SetStateAction<MappedColumn[]>>;
-    setData: Dispatch<SetStateAction<string[][]>>;
+    setData: (data: string[][]) => void;
     runValidation: (data: string[][], mappedDataTypes: MappedColumn[]) => void;
     cellValidation: (boolean | ZodError<unknown> | null | undefined)[][];
     booleanCellValidation: boolean[][];
@@ -49,14 +49,12 @@ const TypeMapping: FC<TypeMappingProps> = ({
         };
         setMappedColumns(_mappedColumns);
         runValidation(data, _mappedColumns);
-        setData((prevData) => {
-            const updatedData = [...prevData];
-            const { label, entityId } = parseCellString(updatedData[0][colIndex]);
-            updatedData[0][colIndex] = `${entityId ? `orkg:${entityId}` : label}${
-                _mappedColumns[colIndex].type ? `<${_mappedColumns[colIndex].type?.classId}>` : ''
-            }`;
-            return updatedData;
-        });
+        const updatedData = [...data];
+        const { label, entityId } = parseCellString(updatedData[0][colIndex]);
+        updatedData[0][colIndex] = `${entityId ? `orkg:${entityId}` : label}${
+            _mappedColumns[colIndex].type ? `<${_mappedColumns[colIndex].type?.classId}>` : ''
+        }`;
+        setData(updatedData);
     };
 
     const generateInvalidationMessagesForColumn = (index: number) => {

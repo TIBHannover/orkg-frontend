@@ -6,11 +6,14 @@ import NewClassConfirmationModal from '@/components/ConfirmationModal/NewClassCo
 
 const confirm = (props) =>
     new Promise((resolve) => {
-        let container = document.createElement('div');
+        const container = document.createElement('div');
+        document.body.appendChild(container);
         const root = createRoot(container);
         const handleResolve = (result) => {
             root.unmount();
-            container = null;
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
             resolve(result);
         };
 

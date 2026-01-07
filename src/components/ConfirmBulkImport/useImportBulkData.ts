@@ -30,7 +30,7 @@ import { parseCiteResult } from '@/utils';
 
 type ImportBulkDataProps = {
     data: string[][];
-    onFinish: () => void;
+    onFinish: (papers: string[], contributions: string[]) => void;
 };
 
 const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
@@ -298,7 +298,8 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         const newProperties: Record<string, string> = {};
         const newResources: Record<string, string> = {};
         const newLiterals: Record<string, { label: string; data_type: string }> = {};
-
+        const importedContributionsIds: string[] = [];
+        const importedPapersIds: string[] = [];
         for (const paper of papers.filter((_paper) => Object.keys(_paper.contents[0].statements).length > 0)) {
             try {
                 // create new properties for the ones that do not yet exist
@@ -369,12 +370,14 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                     setImportFailed((prev) => [...prev, paper.title]);
                 }
                 if (_paperId) {
+                    importedPapersIds.push(_paperId);
                     // get paper statements so it is possible to list the contribution IDs and make a comparison
                     // eslint-disable-next-line no-await-in-loop
                     const paperStatements = await getStatements({ subjectId: _paperId });
 
                     for (const statement of paperStatements) {
                         if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                            importedContributionsIds.push(statement.object.id);
                             setCreatedContributions((state) => [
                                 ...state,
                                 {
@@ -392,7 +395,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
             }
         }
         setIsLoading(false);
-        onFinish();
+        onFinish(importedPapersIds, importedContributionsIds);
     };
 
     return {
