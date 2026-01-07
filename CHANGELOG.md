@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.175.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.174.0...v0.175.0) - 2026-01-07
+
+### Changes
+
+- feat: integrate survey table extractor in PDF sentence annotator [`#1277`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1277)
+- feat(ImportSHACL): make target class optional as in the UI [`#1623`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1623)
+
+---
 ## [v0.174.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.173.0...v0.174.0) - 2025-12-13
 
 ### Changes
