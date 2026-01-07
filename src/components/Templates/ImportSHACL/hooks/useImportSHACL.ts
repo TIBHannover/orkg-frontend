@@ -1,5 +1,6 @@
 import { sortBy } from 'lodash';
 import { DataFactory, Parser, Store } from 'n3';
+import { toast } from 'react-toastify';
 import format from 'string-format';
 
 import useMembership from '@/components/hooks/useMembership';
@@ -36,7 +37,7 @@ export type ParsedTemplate = {
     label: string;
     description: string;
     formatted_label: string;
-    target_class: MappedClass & { uri?: string | null };
+    target_class?: MappedClass & { uri?: string | null };
     relations: {
         research_fields: (Resource | { label: string; classes: string[] })[] | null;
         research_problems: (Resource | { label: string; classes: string[] })[] | null;
@@ -73,9 +74,6 @@ const useImportSHACL = () => {
             const templateLabel = extractConcept(store, 'object', nodesShape, rdfs('label'), null, true);
             // Target Class
             const targetClass = await mapClass(store, extractConcept(store, 'object', nodesShape, shacl('targetClass'), null, true));
-            if (!targetClass) {
-                throw new Error('Template target class is required');
-            }
             if (targetClass && 'id' in targetClass && targetClass.id) {
                 const classId = targetClass.id;
                 //  Check if the template of the class if already defined
@@ -161,7 +159,7 @@ const useImportSHACL = () => {
                 },
                 properties: propertyShapesObj,
                 is_closed: closed?.value === 'true' || closed?.toString() === 'true' || false,
-                target_class: targetClass,
+                target_class: targetClass || undefined,
                 targetClassHasAlreadyTemplate,
                 existingTemplateId,
             });
@@ -288,10 +286,23 @@ const useImportSHACL = () => {
                     return propertyShape.range;
                 });
                 const hasId = (node: Node | { label: string; classes: string[] }): node is Node => node && 'id' in node && !!node.id;
+                // Generate target class id if not exists
+                let targetClassId = (targetClass && 'id' in targetClass ? targetClass.id : undefined) || undefined;
+                if (!targetClass) {
+                    try {
+                        const newClassId = await createClass(`${nodesShape.label} [C]`);
+                        targetClassId = newClassId;
+                    } catch (error) {
+                        toast.error(`Error creating target class for template ${nodesShape.label}`);
+                    }
+                }
+                if (!targetClassId) {
+                    return null;
+                }
                 // Prepare the object for the import
                 const templateObject: CreateTemplateParams = {
                     label: nodesShape.label,
-                    target_class: (targetClass && 'id' in targetClass ? targetClass.id : '') || '',
+                    target_class: targetClassId,
                     ...(nodesShape.formatted_label && {
                         formatted_label: format(
                             nodesShape.formatted_label,

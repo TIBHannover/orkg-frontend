@@ -63,14 +63,14 @@ const ViewShapes: FC<{ data: ParsedTemplate[] }> = ({ data }) => (
                                     Target class
                                 </th>
                                 <td>
-                                    {'id' in nodesShape.target_class && nodesShape.target_class.id ? (
+                                    {nodesShape.target_class && 'id' in nodesShape.target_class && nodesShape.target_class.id ? (
                                         <DescriptionTooltip id={nodesShape.target_class.id} _class={ENTITIES.CLASS}>
                                             <Link target="_blank" href={reverse(ROUTES.CLASS, { id: nodesShape.target_class.id })}>
                                                 {nodesShape.target_class.label}
                                             </Link>
                                         </DescriptionTooltip>
                                     ) : (
-                                        nodesShape.target_class.label
+                                        nodesShape.target_class?.label || 'N/A (Target class will be created)'
                                     )}
                                 </td>
                             </tr>
