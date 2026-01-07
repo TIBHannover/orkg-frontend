@@ -299,7 +299,7 @@ const Header = () => {
                                     onClick={(e) => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
                                     active={pathname === ROUTES.PDF_ANNOTATION}
                                 >
-                                    Survey table import
+                                    PDF annotator
                                 </DropdownItem>
                                 <DropdownItem tag={Link} href={ROUTES.TEMPLATES} onClick={closeMenu} active={pathname === ROUTES.TEMPLATES}>
                                     Templates

@@ -19,15 +19,15 @@ type ConfirmBulkImportProps = {
     data: string[][];
     isOpen: boolean;
     toggle: () => void;
-    onFinish: () => void;
+    onFinish: (papers: string[], contributions: string[]) => void;
 };
 
 const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = () => {} }: ConfirmBulkImportProps) => {
     const [isFinished, setIsFinished] = useState(false);
 
-    const onFinish = () => {
+    const onFinish = (papers: string[], contributions: string[]) => {
         setIsFinished(true);
-        onFinishParent();
+        onFinishParent(papers, contributions);
     };
     const {
         papers,

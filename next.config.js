@@ -471,6 +471,11 @@ const nextConfig = {
                 destination: '/rs/templates/create',
                 permanent: true,
             },
+            {
+                source: '/pdf-text-annotation',
+                destination: '/pdf-annotation',
+                permanent: true,
+            },
         ];
     },
     async rewrites() {

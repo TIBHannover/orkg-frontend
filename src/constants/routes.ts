@@ -68,7 +68,6 @@ const routes = {
     STATS: '/stats',
     DATA: '/data',
     CHANGELOG: '/changelog',
-    PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
     CSV_IMPORT_LOOKUP: '/csv-import/lookup',

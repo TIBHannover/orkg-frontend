@@ -1,4 +1,4 @@
-import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
+import { FC, ReactElement } from 'react';
 import Select from 'react-select';
 
 import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
@@ -13,7 +13,7 @@ type DatatypeSelectorProps = {
     range?: Node;
     _class?: string;
     dataType: string;
-    setDataType: Dispatch<SetStateAction<string>>;
+    setDataType: (_: string) => void;
     isDisabled?: boolean;
     menuPortalTarget?: HTMLElement | undefined;
     allowAllDataTypes?: boolean;

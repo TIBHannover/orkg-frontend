@@ -284,8 +284,7 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
                                     setDataType={(newDataType) => {
                                         setItems((prevItems) => {
                                             const updatedItems = [...prevItems];
-                                            const dataTypeValue =
-                                                typeof newDataType === 'function' ? newDataType(updatedItems[idx].type.type) : newDataType;
+                                            const dataTypeValue = newDataType;
                                             updatedItems[idx].type = getConfigByType(dataTypeValue || MISC.DEFAULT_LITERAL_DATATYPE);
                                             return updatedItems;
                                         });

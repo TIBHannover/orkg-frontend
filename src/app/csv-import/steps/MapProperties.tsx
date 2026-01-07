@@ -21,7 +21,7 @@ type PropertyMappingProps = {
     initialHeaders: string[];
     mappedColumns: MappedColumn[];
     setMappedColumns: Dispatch<SetStateAction<MappedColumn[]>>;
-    setData: Dispatch<SetStateAction<string[][]>>;
+    setData: (data: string[][]) => void;
     runValidation: (data: string[][], mappedDataTypes: MappedColumn[]) => void;
     columnValidation: string | null;
 };
