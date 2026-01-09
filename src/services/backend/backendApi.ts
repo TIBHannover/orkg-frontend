@@ -1,5 +1,7 @@
+import { Configuration } from '@orkg/orkg-client';
 import ky from 'ky';
 import { getSession, signOut } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 
 let cachedToken: string | null = null;
 let tokenExpiryTime: number | null = null;
@@ -38,6 +40,18 @@ const getAccessToken = async (): Promise<string | null> => {
     });
     return pendingTokenPromise;
 };
+
+export const configuration = new Configuration({
+    basePath: env('NEXT_PUBLIC_BACKEND_URL'),
+    fetchApi: async (input: RequestInfo, init?: RequestInit) => {
+        const token = await getAccessToken();
+        const headers = new Headers(init?.headers);
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
+        }
+        return fetch(input, { ...init, headers, next: { revalidate: 3600 } });
+    },
+});
 
 const backendApi = ky.create({
     timeout: 1000 * 60 * 10, // 10 minutes
