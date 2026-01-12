@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 import { drop } from '@mswjs/data';
 import { useRouter } from 'next-router-mock';
@@ -61,11 +61,11 @@ vi.mock('next-auth/react', () => {
     };
 });
 
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-}));
+global.ResizeObserver = vi.fn(function (this: any) {
+    this.observe = vi.fn();
+    this.unobserve = vi.fn();
+    this.disconnect = vi.fn();
+}) as any;
 
 vi.mock('next/navigation', () => {
     const usePathname = () => {
@@ -85,8 +85,6 @@ vi.mock('next/navigation', () => {
         useParams: () => ({}),
     };
 });
-
-vi.setConfig({ testTimeout: 20000 });
 
 // required due to the usage of react-use and react-slick https://github.com/akiran/ts/issues/742
 window.matchMedia =
