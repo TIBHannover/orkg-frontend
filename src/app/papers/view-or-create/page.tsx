@@ -17,7 +17,7 @@ const ViewOrCreatePaper = async ({ searchParams }: { searchParams: Promise<{ [ke
             paper = await getPaperByTitle(searchParamsResolved.title as string);
         }
     } catch (e) {
-        console.error(e);
+        console.error(`Error getting paper ${searchParamsResolved.doi ?? searchParamsResolved.title}`);
     }
 
     if (!paper) {

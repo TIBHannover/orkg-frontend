@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ compariso
         try {
             comparison = await getComparison(comparisonId);
         } catch (e) {
-            console.error(e);
+            console.error(`Error getting comparison ${comparisonId}`);
         }
     }
 

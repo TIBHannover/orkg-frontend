@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ resourceI
             paper = await getPaper(resourceId);
         }
     } catch (e) {
-        console.error(e);
+        console.error(`Error getting paper metadata for ${resourceId}`);
     }
     if (!paper) {
         return {};
@@ -61,7 +61,7 @@ export default async function CheckPaperVersion(props: { params: Promise<{ resou
     try {
         paperResource = await getResource(params.resourceId);
     } catch (e) {
-        console.error(e);
+        console.error(`Error getting paper resource ${params.resourceId}`);
     }
     if (!paperResource || (!paperResource.classes.includes(CLASSES.PAPER) && !paperResource.classes.includes(CLASSES.PAPER_VERSION))) {
         return <NotFound />;
@@ -71,6 +71,7 @@ export default async function CheckPaperVersion(props: { params: Promise<{ resou
     if (paperType === CLASSES.PAPER_VERSION) {
         return <ViewPaperVersion />;
     }
+
     const paper = await getPaper(paperResource.id);
 
     const jsonLd = {
