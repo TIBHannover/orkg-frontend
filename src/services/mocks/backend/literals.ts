@@ -21,7 +21,7 @@ const literalPut = async ({ request, params }: { request: Request; params: { id?
     });
     return new HttpResponse(null, {
         headers: {
-            Location: `${literalsUrl}${updatedLiteral?.id}`,
+            Location: `${literalsUrl}/${updatedLiteral?.id}`,
         },
     });
 };
@@ -34,13 +34,13 @@ const literalPost = async ({ request }: { request: Request }) => {
     });
     return new HttpResponse(null, {
         headers: {
-            Location: `${literalsUrl}${createdLiteral?.id}`,
+            Location: `${literalsUrl}/${createdLiteral?.id}`,
         },
     });
 };
 
 const literals = [
-    http.get(`${literalsUrl}:id`, ({ params }) => {
+    http.get(`${literalsUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         const literalItem = db.literals.findFirst({
             where: {
@@ -56,13 +56,12 @@ const literals = [
                 datatype: MISC.DEFAULT_LITERAL_DATATYPE,
                 created_at: '2020-06-03T20:21:11.980177+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'class',
-                description: null,
+                _class: 'literal',
             });
         }
         return HttpResponse.json(literalItem);
     }),
-    http.put(`${literalsUrl}:id`, literalPut),
+    http.put(`${literalsUrl}/:id`, literalPut),
     http.post(literalsUrl, literalPost),
 ];
 

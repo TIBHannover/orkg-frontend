@@ -1,4 +1,6 @@
-export type EntityType = 'class' | 'predicate' | 'resource' | 'literal';
+import { LiteralRepresentation } from '@orkg/orkg-client';
+
+export type EntityType = string;
 
 export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility' | 'name';
 
@@ -77,14 +79,7 @@ export type Predicate = {
     created_by: string;
 };
 
-export type Literal = {
-    id: string;
-    label: string;
-    datatype: string;
-    _class: 'literal';
-    created_at: string;
-    created_by: string;
-};
+export type Literal = LiteralRepresentation;
 
 export type Class = {
     id: string;

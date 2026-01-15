@@ -1,15 +1,18 @@
+import { LiteralsApi } from '@orkg/orkg-client';
+
 import { MISC } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { Literal } from '@/services/backend/types';
+import { configuration, getCreatedId } from '@/services/backend/backendApi';
 
-export const literalsUrl = `${url}literals/`;
-export const literalsApi = backendApi.extend(() => ({ prefixUrl: literalsUrl }));
+// remove the trailing slash, can be removed when the .env file is updated to remove the trailing slash
+export const literalsUrl = `${url.replace(/\/+$/, '')}/literals`;
 
-export const getLiteral = (id: string) => literalsApi.get<Literal>(id).json();
+const literalsApi = new LiteralsApi(configuration);
+
+export const getLiteral = (id: string) => literalsApi.findById({ id });
 
 export const updateLiteral = (id: string, label: string, datatype: string | undefined = undefined) =>
-    literalsApi.put<Literal>(id, { json: { label, datatype } }).json();
+    literalsApi.update({ id, updateLiteralRequest: { label, datatype } });
 
 export const createLiteral = (label: string, datatype: string = MISC.DEFAULT_LITERAL_DATATYPE) =>
-    literalsApi.post<Literal>('', { json: { label, datatype } }).then(({ headers }) => getCreatedIdFromHeaders(headers));
+    literalsApi.createRaw({ createLiteralRequest: { label, datatype } }).then(getCreatedId);

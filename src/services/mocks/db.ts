@@ -6,9 +6,12 @@ const thing = {
     _class: String,
 };
 
-const provenance = {
+const provenanceCommon = {
     created_at: Date,
     created_by: String,
+};
+
+const provenanceObservatory = {
     observatory_id: String,
     extraction_method: String,
     organization_id: String,
@@ -25,14 +28,14 @@ const contentType = {
 const models = {
     literals: {
         ...thing,
-        ...provenance,
+        ...provenanceCommon,
         label: String,
         datatype: String,
         _class: () => 'literal',
     },
     classes: {
         ...thing,
-        ...provenance,
+        ...provenanceCommon,
         label: String,
         uri: nullable(String),
         description: nullable(String),
@@ -40,7 +43,7 @@ const models = {
     },
     predicates: {
         ...thing,
-        ...provenance,
+        ...provenanceCommon,
         label: String,
         created_at: Date,
         created_by: String,
@@ -48,7 +51,8 @@ const models = {
     },
     resources: {
         ...thing,
-        ...provenance,
+        ...provenanceCommon,
+        ...provenanceObservatory,
         ...contentType,
         label: String,
         // it's a string because msw/data doesn't support querying data on arrays https://github.com/mswjs/data?tab=readme-ov-file#querying-data
@@ -58,7 +62,8 @@ const models = {
         _class: () => 'resource',
     },
     statements: {
-        ...provenance,
+        ...provenanceCommon,
+        ...provenanceObservatory,
         id: primaryKey(String),
         subject: String,
         predicate: String,
@@ -66,7 +71,7 @@ const models = {
     },
     lists: {
         ...thing,
-        ...provenance,
+        ...provenanceCommon,
         label: String,
         elements: Array,
         _class: () => 'list',
