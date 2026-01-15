@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { SnakeCasedProperties } from 'type-fest';
 
 import { MISC } from '@/constants/graphSettings';
 import { Class, Literal, Predicate, Resource, Statement } from '@/services/backend/types';
@@ -45,14 +46,11 @@ export const createMSWPredicate = (data: Partial<Predicate>) => {
         label: data.label ?? `predicate ${id}`,
         created_at: faker.date.recent().toISOString(),
         created_by: faker.string.uuid(),
-        extraction_method: 'UNKNOWN',
-        organization_id: faker.string.uuid(),
-        observatory_id: faker.string.uuid(),
         ...data,
     });
 };
 
-export const createMSWLiteral = (data: Partial<Literal>) => {
+export const createMSWLiteral = (data: Partial<SnakeCasedProperties<Literal>>) => {
     const id = `L${faker.number.int()}`;
 
     return db.literals.create({
@@ -61,9 +59,6 @@ export const createMSWLiteral = (data: Partial<Literal>) => {
         datatype: MISC.DEFAULT_LITERAL_DATATYPE,
         created_at: faker.date.recent().toISOString(),
         created_by: faker.string.uuid(),
-        extraction_method: 'UNKNOWN',
-        organization_id: faker.string.uuid(),
-        observatory_id: faker.string.uuid(),
         ...data,
     });
 };
@@ -76,9 +71,6 @@ export const createMSWClass = (data: Partial<Class>) => {
         uri: data.uri ?? null,
         created_at: faker.date.recent().toISOString(),
         created_by: faker.string.uuid(),
-        extraction_method: 'UNKNOWN',
-        organization_id: faker.string.uuid(),
-        observatory_id: faker.string.uuid(),
         ...data,
     });
 };

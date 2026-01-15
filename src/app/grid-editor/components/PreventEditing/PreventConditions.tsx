@@ -13,7 +13,7 @@ export type PreventEditCase = {
 
 const PREVENT_EDIT_CASES: PreventEditCase[] = [
     {
-        condition: (entity: Thing) => env('NEXT_PUBLIC_PWC_USER_ID') === entity.created_by,
+        condition: (entity: Thing) => env('NEXT_PUBLIC_PWC_USER_ID') === ('created_by' in entity ? entity.created_by : entity.createdBy),
         message: (entity: Thing) => (
             <>
                 This resource was imported from an external source and our provenance feature is in active development, and due to that, this resource

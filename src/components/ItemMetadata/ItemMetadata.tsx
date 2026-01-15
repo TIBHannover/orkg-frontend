@@ -69,13 +69,16 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
         }
     }, [item]);
 
+    const createdBy = 'created_by' in item ? item.created_by : item.createdBy;
+    const createdAt = 'created_at' in item ? item.created_at : item.createdAt;
+
     return (
         <>
             <div className="d-flex">
                 <div className="flex-grow-1">
                     {showCreatedAt && (
                         <Badge color="light" className="me-2">
-                            <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {dayjs(item.created_at).format('DD MMMM YYYY - H:mm')}
+                            <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {dayjs(createdAt).format('DD MMMM YYYY - H:mm')}
                         </Badge>
                     )}
                     {'shared' in item && item.shared > 0 && (
@@ -100,11 +103,11 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                             {item.classes.join(', ')}
                         </Badge>
                     )}
-                    {showCreatedBy && item.created_by !== MISC.UNKNOWN_ID && (
+                    {showCreatedBy && createdBy !== MISC.UNKNOWN_ID && (
                         <Badge color="light" className="me-2">
                             <FontAwesomeIcon icon={faUser} /> Created by{' '}
                             <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                                <UserAvatar size={20} userId={item.created_by} showDisplayName />
+                                <UserAvatar size={20} userId={createdBy} showDisplayName />
                             </span>
                         </Badge>
                     )}

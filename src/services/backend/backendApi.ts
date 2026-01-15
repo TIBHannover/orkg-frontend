@@ -42,7 +42,7 @@ const getAccessToken = async (): Promise<string | null> => {
 };
 
 export const configuration = new Configuration({
-    basePath: env('NEXT_PUBLIC_BACKEND_URL'),
+    basePath: env('NEXT_PUBLIC_BACKEND_URL')?.replace(/\/$/, ''), // remove the trailing slash, can be removed when the .env file is updated to remove the trailing slash
     fetchApi: async (input: RequestInfo, init?: RequestInit) => {
         const token = await getAccessToken();
         const headers = new Headers(init?.headers);
@@ -91,3 +91,6 @@ export default backendApi;
 
 export const getCreatedIdFromHeaders = (headers: Headers) =>
     headers.get('Location')?.substring((headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';
+
+export const getCreatedId = ({ raw }: { raw: Response }) =>
+    raw.headers.get('Location')?.substring((raw.headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';
