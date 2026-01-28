@@ -19,5 +19,7 @@ const REGEX = {
     ORCID_URL: /^(?:(?:https?:\/\/)?orcid.org\/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\/*$/,
     ORCID: /([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g,
     CSW_ROW_TITLES_VALUE: /^(row \d+)$/,
+    RAW_GITHUB_URL: /^(https):(\/\/(www.)?raw\.githubusercontent\.com[^"']*\/)/i,
+    ZENODO_URL: /^(https):(\/\/(www.)?zenodo\.org[^"']*\/)/i,
 };
 export default REGEX;
