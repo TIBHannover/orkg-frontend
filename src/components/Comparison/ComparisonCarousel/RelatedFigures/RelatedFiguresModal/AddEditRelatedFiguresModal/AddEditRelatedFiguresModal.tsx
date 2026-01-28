@@ -12,6 +12,7 @@ import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import REGEX from '@/constants/regex';
 
 type AddEditRelatedFigureModalProps = {
     toggle: () => void;
@@ -27,6 +28,8 @@ const AddEditRelatedFigureModal: FC<AddEditRelatedFigureModalProps> = ({ toggle,
 
     const isEdit = !!relatedFigureId;
     const formId = useId();
+
+    const isWhitelistedDomain = (text: string) => text.match(new RegExp(REGEX.RAW_GITHUB_URL)) || text.match(new RegExp(REGEX.ZENODO_URL));
 
     useEffect(() => {
         if (!relatedFigureId || !relatedFigures) {
@@ -49,6 +52,11 @@ const AddEditRelatedFigureModal: FC<AddEditRelatedFigureModalProps> = ({ toggle,
 
         if (!label || !image || !description) {
             toast.error('The label, image, and description are required');
+            return;
+        }
+
+        if (!isWhitelistedDomain(image)) {
+            toast.error('Image URL must be from raw.githubusercontent.com or zenodo.org domain');
             return;
         }
         if (relatedFigureId) {
