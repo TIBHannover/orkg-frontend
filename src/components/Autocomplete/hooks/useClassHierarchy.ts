@@ -10,7 +10,7 @@ const useClassHierarchy = ({ id }: { id: string }) => {
         mutate: childrenMutate,
     } = useSWR(id ? [{ id }, classesUrl, 'getChildrenByID'] : null, ([params]) => getChildrenByID(params));
 
-    const hasChildren = children?.page?.total_elements;
+    const hasChildren = children?.page?.totalElements;
     return { children, childrenError, childrenIsLoading, childrenMutate, hasChildren };
 };
 export default useClassHierarchy;

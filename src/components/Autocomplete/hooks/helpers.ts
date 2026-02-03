@@ -59,7 +59,16 @@ export const orkgLookup = async ({
                 size: pageSize,
                 exact,
                 uri: localValue.trim(),
-            });
+            }).then((res) => ({
+                // TODO: remove snake case handling after finishing services migration
+                content: res.content,
+                page: {
+                    total_elements: res.page.totalElements,
+                    total_pages: res.page.totalPages,
+                    size: res.page.size,
+                    number: res.page.number,
+                },
+            }));
             if (r && !('page' in r) && !('content' in r)) {
                 responseJson = { content: [r], page: { total_elements: 1, total_pages: 1, size: 0, number: 0 } };
             } else if (!('page' in r) && !('content' in r)) {
@@ -78,7 +87,16 @@ export const orkgLookup = async ({
             size: pageSize,
             q: localValue?.trim(),
             exact,
-        });
+        }).then((res) => ({
+            // TODO: remove snake case handling after finishing services migration
+            content: res.content,
+            page: {
+                total_elements: 'totalElements' in res.page ? res.page.totalElements : res.page.total_elements,
+                total_pages: 'totalPages' in res.page ? res.page.totalPages : res.page.total_pages,
+                size: res.page.size,
+                number: res.page.number,
+            },
+        }));
     }
 
     return responseJson;

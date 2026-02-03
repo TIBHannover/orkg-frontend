@@ -69,6 +69,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
         }
     }, [item]);
 
+    // TODO: remove snake case handling after finishing services migration
     const createdBy = 'created_by' in item ? item.created_by : item.createdBy;
     const createdAt = 'created_at' in item ? item.created_at : item.createdAt;
 

@@ -8,11 +8,11 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
-import { PaginatedResponse } from '@/services/backend/types';
+import { PaginatedResponse, Pagination } from '@/services/backend/types';
 
 type ListPageProps<ItemType, FetchFunctionParams> = {
     label: string;
-    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType>>;
+    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType> | Pagination<ItemType>>;
     fetchFunctionName: string;
     fetchUrl: string;
     fetchExtraParams: FetchFunctionParams;

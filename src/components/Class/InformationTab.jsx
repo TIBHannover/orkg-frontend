@@ -42,7 +42,7 @@ function InformationTab({ id, classObject, editMode, callBackToReloadTree }) {
     const { data: childrenObjects, mutate: mutateChildren } = useSWR([{ id }, classesUrl, 'getChildrenByID'], ([params]) => getChildrenByID(params));
 
     const children = orderBy(
-        childrenObjects?.content.map((c) => c.class),
+        childrenObjects?.content.map((c) => c._class),
         [(c) => c.label.toLowerCase()],
         ['asc'],
     );

@@ -1,11 +1,11 @@
 import { LiteralsApi } from '@orkg/orkg-client';
 
 import { MISC } from '@/constants/graphSettings';
-import { url } from '@/constants/misc';
+import { urlNoTrailingSlash } from '@/constants/misc';
 import { configuration, getCreatedId } from '@/services/backend/backendApi';
 
 // remove the trailing slash, can be removed when the .env file is updated to remove the trailing slash
-export const literalsUrl = `${url.replace(/\/+$/, '')}/literals`;
+export const literalsUrl = `${urlNoTrailingSlash}/literals`;
 
 const literalsApi = new LiteralsApi(configuration);
 

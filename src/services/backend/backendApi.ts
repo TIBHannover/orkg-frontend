@@ -3,6 +3,8 @@ import ky from 'ky';
 import { getSession, signOut } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 
+import { SortByParam } from '@/services/backend/types';
+
 let cachedToken: string | null = null;
 let tokenExpiryTime: number | null = null;
 let pendingTokenPromise: Promise<string | null> | null = null;
@@ -94,3 +96,17 @@ export const getCreatedIdFromHeaders = (headers: Headers) =>
 
 export const getCreatedId = ({ raw }: { raw: Response }) =>
     raw.headers.get('Location')?.substring((raw.headers.get('Location')?.lastIndexOf('/') || 0) + 1) || '';
+
+/**
+ * Transform pagination parameters to match backend API spec, also apply default params
+ */
+export const transformPaginationParams = <T extends SortByParam & { size?: number; page?: number }>({ sortBy, size, page, ...params }: T) => {
+    const sortTransformed = sortBy?.map(({ property, direction }) => `${property},${direction}`);
+
+    return {
+        sort: sortBy ? sortTransformed : ['created_at,desc'],
+        size: size ?? 9999,
+        page: page ?? 0,
+        ...params,
+    };
+};

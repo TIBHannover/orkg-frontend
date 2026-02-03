@@ -25,28 +25,28 @@ const SameAsStatements = () => {
         <div>
             <div className="mt-4 mb-2">
                 {sameAsStatements.map((statementUrl) => {
-                    if (statementUrl.match(REG_DPPEDIA)) {
+                    if (statementUrl?.match(REG_DPPEDIA)) {
                         return (
                             <div className="list-group-item mb-3" key={statementUrl}>
                                 <DbpediaAbstract externalResource={statementUrl} />
                             </div>
                         );
                     }
-                    if (statementUrl.match(REG_WIKIDATA)) {
+                    if (statementUrl?.match(REG_WIKIDATA)) {
                         return (
                             <div className="border rounded p-3 mb-3" key={statementUrl}>
                                 <WikidataDescription externalResource={statementUrl} />
                             </div>
                         );
                     }
-                    if (statementUrl.match(REG_GEONAME)) {
+                    if (statementUrl?.match(REG_GEONAME)) {
                         return (
                             <div className="border rounded p-3 mb-3" key={statementUrl}>
                                 <GeonameDescription externalResourceUrl={statementUrl} />
                             </div>
                         );
                     }
-                    if (statementUrl.match(REG_WIKIPEDIA)) {
+                    if (statementUrl?.match(REG_WIKIPEDIA)) {
                         return (
                             <div className="list-group-item mb-3" key={statementUrl}>
                                 <WikipediaSummary externalResource={statementUrl} />

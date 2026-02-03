@@ -1,4 +1,4 @@
-import { LiteralRepresentation } from '@orkg/orkg-client';
+import { ClassRepresentation, LiteralRepresentation, PageOfAuthorRecordRepresentationsPage } from '@orkg/orkg-client';
 
 export type EntityType = string;
 
@@ -16,6 +16,11 @@ export type PaginatedResponse<T> = {
         total_elements: number;
         total_pages: number;
     };
+};
+
+export type Pagination<T> = {
+    content: T[];
+    page: PageOfAuthorRecordRepresentationsPage;
 };
 
 export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';
@@ -81,15 +86,7 @@ export type Predicate = {
 
 export type Literal = LiteralRepresentation;
 
-export type Class = {
-    id: string;
-    label: string;
-    uri: string | null;
-    description: string | null;
-    _class: 'class';
-    created_at: string;
-    created_by: string;
-};
+export type Class = ClassRepresentation;
 
 export type BenchmarkSummary = {
     research_problem: {
@@ -809,11 +806,16 @@ export type LiteratureList = {
 
 export type Verified = boolean | null;
 
+export type SortByParam = {
+    sortBy?: { property: string; direction: SortDirectionOptions }[];
+};
+
 export type PaginationParams = {
     page?: number;
     size?: number;
-    sortBy?: { property: string; direction: SortDirectionOptions }[];
-};
+} & SortByParam;
+
+export type WithPaginationParams<T> = Omit<T, 'sort'> & SortByParam;
 
 export type VerifiedParam = {
     verified?: Verified;

@@ -1,10 +1,10 @@
 import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
 import useSWR from 'swr';
 
-import { PaginatedResponse } from '@/services/backend/types';
+import { PaginatedResponse, Pagination } from '@/services/backend/types';
 
 type UsePaginateProps<ItemType, FetchFunctionParams> = {
-    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType>>;
+    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType> | Pagination<ItemType>>;
     fetchUrl: string;
     fetchFunctionName: string;
     fetchExtraParams: FetchFunctionParams;
@@ -49,14 +49,17 @@ const usePaginate = <ItemType, FetchFunctionParams>({
 
     const { page: pageObject } = data || {};
 
-    const hasNextPage = pageObject ? pageObject.number < pageObject.total_pages - 1 : false;
+    // TODO: remove snake case handling after finishing services migration
+    const hasNextPage = pageObject ? pageObject.number < ('total_pages' in pageObject ? pageObject.total_pages : pageObject.totalPages) - 1 : false;
 
     return {
         data: data?.content,
         isLoading,
         hasNextPage,
-        totalElements: pageObject?.total_elements,
-        totalPages: pageObject?.total_pages,
+        // TODO: remove snake case handling after finishing services migration
+        totalElements: pageObject ? ('total_elements' in pageObject ? pageObject.total_elements : pageObject.totalElements) : undefined,
+        // TODO: remove snake case handling after finishing services migration
+        totalPages: pageObject ? ('total_pages' in pageObject ? pageObject.total_pages : pageObject.totalPages) : undefined,
         page,
         pageSize,
         error,
