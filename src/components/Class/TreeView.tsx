@@ -8,7 +8,6 @@ import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionToolt
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getChildrenByID, getHierarchyByID } from '@/services/backend/classes';
-import { Class } from '@/services/backend/types';
 
 export type TreeNode = {
     id: string;
@@ -97,8 +96,8 @@ const TreeView = ({ id, rootNodeId, reloadTree, ...props }: TreeViewProps) => {
             setIsLoading(true);
             const hierarchyResponse = await getHierarchyByID({ id });
             const hierarchyNodes: TreeNode[] = hierarchyResponse.content.map((c) => ({
-                ...c.class,
-                parent_id: c.parent_id !== null ? String(c.parent_id) : null,
+                ...c._class,
+                parent_id: c.parentId !== null ? String(c.parentId) : null,
                 children: [],
             }));
             let filteredHierarchyNodes = hierarchyNodes;
@@ -117,16 +116,16 @@ const TreeView = ({ id, rootNodeId, reloadTree, ...props }: TreeViewProps) => {
             const list: Record<string, TreeNode[]> = {};
             const filteredHierarchyIds = new Set(filteredHierarchyNodes.map((p) => p.id));
             result.forEach((r, index) => {
-                const children = r.content as unknown as { child_count: number; class: Class }[];
+                const children = r.content;
                 list[filteredHierarchyNodes[index].id] = children
                     // remove the children that exist in the hierarchy
-                    .filter((c) => !filteredHierarchyIds.has(c.class.id))
+                    .filter((c) => !filteredHierarchyIds.has(c._class.id))
                     .map((d) => ({
-                        ...d.class,
+                        ...d._class,
                         parent_id: null,
                         children: [],
-                        child_count: d.child_count,
-                        isLeaf: d.child_count === 0,
+                        child_count: d.childCount,
+                        isLeaf: d.childCount === 0,
                         loaded: false,
                     }));
             });
@@ -169,14 +168,14 @@ const TreeView = ({ id, rootNodeId, reloadTree, ...props }: TreeViewProps) => {
         }
         return getChildrenByID({ id: node.id }).then((_children) => {
             // Sort children by label
-            const children = _children.content as unknown as { child_count: number; class: Class }[];
+            const children = _children.content;
             const sChildren: TreeNode[] = orderBy(
                 children.map((n) => ({
-                    ...n.class,
+                    ...n._class,
                     parent_id: null,
                     children: [],
-                    child_count: n.child_count,
-                    isLeaf: n.child_count === 0,
+                    child_count: n.childCount,
+                    isLeaf: n.childCount === 0,
                     loaded: false,
                 })),
                 [(c) => c[SORT_NODES_BY].toLowerCase()],

@@ -34,7 +34,7 @@ const resources = [
             },
         });
     }),
-    http.get(`${classesUrl}:id`, ({ params }) => {
+    http.get(`${classesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         const classItem = db.classes.findFirst({
             where: {
@@ -64,7 +64,7 @@ const resources = [
         });
         return new HttpResponse(null, {
             headers: {
-                Location: `${classesUrl}${newClass.id}`,
+                Location: `${classesUrl}/${newClass.id}`,
             },
         });
     }),

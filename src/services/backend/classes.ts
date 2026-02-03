@@ -1,132 +1,59 @@
 'use client';
 
-import qs from 'qs';
+import {
+    ClassesApi,
+    ClassesApiFindAllRequest,
+    ClassHierarchiesApi,
+    ClassHierarchiesApiFindAllChildrenByAncestorIdRequest,
+    ClassHierarchiesApiFindClassHierarchyRequest,
+} from '@orkg/orkg-client';
 
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { Class, CreatedByParam, PaginatedResponse, PaginationParams } from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { WithPaginationParams } from '@/services/backend/types';
 
-export const classesUrl = `${url}classes/`;
-export const classesApi = backendApi.extend(() => ({ prefixUrl: classesUrl }));
+export const classesUrl = `${urlNoTrailingSlash}/classes`;
 
-export const getClassById = (id: string) => classesApi.get<Class>(encodeURIComponent(id)).json();
+const classesApi = new ClassesApi(configuration);
+const classHierarchiesApi = new ClassHierarchiesApi(configuration);
+
+export const getClassById = (id: string) => classesApi.findById({ id });
 
 export const createClass = (label: string, uri: string | null = null, id: string | null = null) =>
-    classesApi
-        .post<Class>('', {
-            json: {
-                label,
-                uri,
-                id,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    classesApi.createRaw({ createClassRequest: { label, uri, id } }).then(getCreatedId);
 
-export const updateClass = (id: string, label: string) =>
-    classesApi
-        .patch<Class>(encodeURIComponent(id), {
-            json: {
-                label,
-            },
-        })
-        .json();
+export const updateClass = (id: string, label: string) => classesApi.update({ id, updateClassRequest: { label } });
 
-export type GetClassesParams<T extends boolean = false, U extends string | null = null> = {
-    q?: string | null;
-    exact?: boolean;
-    returnContent?: T;
-    uri?: U;
-} & PaginationParams &
-    CreatedByParam;
-
-export const getClasses = <T extends boolean = false, U extends string | null = null>({
-    page = 0,
-    size = 9999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    q = null,
-    exact = false,
-    uri = null as U,
-    returnContent = false as T,
-    created_by = undefined,
-}: GetClassesParams<T, U>): Promise<U extends string ? Class : T extends true ? Class[] : PaginatedResponse<Class>> => {
-    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
-    const searchParams = qs.stringify(
-        { page, size, exact, created_by, ...(q ? { q } : { sort }), uri },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
-    );
-
-    return classesApi
-        .get<PaginatedResponse<Class>>('', {
-            searchParams,
-        })
-        .json()
-        .then((res) => (returnContent ? res.content : res)) as any;
-};
+export const getClasses = (params: WithPaginationParams<ClassesApiFindAllRequest>) => classesApi.findAll(transformPaginationParams(params));
 
 /**
  * Count instances including subclasses
  */
-export const getCountInstances = (id: string) => classesApi.get<{ count: number }>(`${encodeURIComponent(id)}/count`).json();
+export const getCountInstances = (id: string) => classHierarchiesApi.countClassInstances({ id });
 
 /**
  * Lists all direct child classes.
  */
-export const getChildrenByID = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return classesApi
-        .get<PaginatedResponse<{ child_count: number; class: Class }[]>>(`${encodeURIComponent(id)}/children`, {
-            searchParams,
-        })
-        .json();
-};
+export const getChildrenByID = (params: ClassHierarchiesApiFindAllChildrenByAncestorIdRequest) =>
+    classHierarchiesApi.findAllChildrenByAncestorId(params);
 
 /**
  * Get parent class
  */
-export const getParentByID = (id: string) => classesApi.get<Class>(`${encodeURIComponent(id)}/parent`).json();
+export const getParentByID = (id: string) => classHierarchiesApi.findParentByChildId({ id });
 
 /**
  * Set parent class
  */
 export const setParentClassByID = (id: string, parentId: string) =>
-    classesApi.post<void>(`${encodeURIComponent(id)}/parent`, { json: { parent_id: parentId } }).json();
+    classHierarchiesApi.createParentRelation({ id, createParentRelationRequest: { parentId } });
 
 /**
  * Delete parent class
  */
-export const deleteParentByID = (id: string) => classesApi.delete<void>(`${encodeURIComponent(id)}/parent`).json();
-
-/**
- * Get root class
- */
-export const getRootByID = (id: string): Promise<Class> => classesApi.get<Class>(`${encodeURIComponent(id)}/root`).json();
-
-/**
- * Get all root classes
- */
-export const getAllRootClasses = () => classesApi.get<PaginatedResponse<Class[]>>(`roots`).json();
+export const deleteParentByID = (id: string) => classHierarchiesApi.deleteByChildId({ id });
 
 /**
  * Get hierarchy by class ID
  */
-export const getHierarchyByID = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return classesApi
-        .get<PaginatedResponse<{ parent_id: number | null; class: Class }>>(`${encodeURIComponent(id)}/hierarchy`, {
-            searchParams,
-        })
-        .json();
-};
+export const getHierarchyByID = (params: ClassHierarchiesApiFindClassHierarchyRequest) => classHierarchiesApi.findClassHierarchy(params);

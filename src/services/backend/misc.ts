@@ -13,6 +13,7 @@ import {
     ObservatoryIdParam,
     OrganizationIdParam,
     PaginatedResponse,
+    Pagination,
     PaginationParams,
     Predicate,
     PublishedParam,
@@ -30,11 +31,11 @@ export const getEntities = (
     params: {
         page?: number;
         size?: number;
-        q?: string | null;
+        q?: string;
         exclude?: string[];
         exact?: boolean;
     },
-): Promise<PaginatedResponse<Resource | Predicate | Class>> => {
+): Promise<PaginatedResponse<Resource | Predicate> | Pagination<Class>> => {
     // { page = 0, size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
     // for resources there additional parameter: exclude
     // for resources there additional parameter: uri
