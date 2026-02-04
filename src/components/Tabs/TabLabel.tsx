@@ -1,3 +1,4 @@
+import { StatisticsApiFindMetricByGroupAndNameRequest } from '@orkg/orkg-client';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
@@ -6,21 +7,12 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import Badge from '@/components/Ui/Badge/Badge';
 import { CLASSES } from '@/constants/graphSettings';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
-import { VisibilityOptions } from '@/services/backend/types';
 
 type TabLabelProps = {
     label: string;
     showCount?: boolean;
     classId: string;
-    countParams: {
-        researchFieldId?: string;
-        includeSubfields?: boolean;
-        observatoryId?: string;
-        visibility?: VisibilityOptions;
-        createdBy?: string;
-        published?: boolean;
-        sdgId?: string;
-    };
+    countParams?: StatisticsApiFindMetricByGroupAndNameRequest['parameters'];
     description?: string;
 };
 
@@ -53,9 +45,10 @@ const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countP
             ? [
                   {
                       group: 'content-types',
-                      ...countParams,
-                      includeSubfields: countParams.researchFieldId ? countParams.includeSubfields : undefined,
                       name: getStatsName(classId),
+                      ...(countParams
+                          ? { parameters: { ...countParams, ...(countParams.research_field ? { include_subfields: 'true' } : {}) } }
+                          : {}),
                   },
                   statisticsUrl,
                   'getStatistics',

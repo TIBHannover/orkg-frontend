@@ -91,10 +91,10 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                             classId={tab.id}
                             showCount
                             countParams={{
-                                researchFieldId,
-                                includeSubfields: includeSubFields,
+                                research_field: researchFieldId,
+                                include_subfields: includeSubFields.toString(),
                                 visibility: sort,
-                                published: tab.params?.published,
+                                ...(tab.params?.published ? { published: tab.params?.published.toString() } : {}),
                             }}
                         />
                     ),

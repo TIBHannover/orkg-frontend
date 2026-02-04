@@ -11,13 +11,11 @@ type ObservatoryStats = {
 const useObservatoryStats = ({ id }: { id: string }) => {
     const { data: observatoryStats, isLoading } = useSWR([id, statisticsUrl, 'getStatistics'], ([params]) =>
         Promise.all([
-            getStatistics({ observatoryId: params, group: 'content-types', name: 'paper-count' }),
+            getStatistics({ parameters: { observatory_id: params }, group: 'content-types', name: 'paper-count' }),
             getStatistics({
-                observatoryId: params,
+                parameters: { observatory_id: params, published: 'true', visibility: VISIBILITY_FILTERS.ALL_LISTED },
                 group: 'content-types',
                 name: 'comparison-count',
-                published: true,
-                visibility: VISIBILITY_FILTERS.ALL_LISTED,
             }),
         ]),
     );

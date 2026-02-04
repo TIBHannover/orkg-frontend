@@ -101,7 +101,11 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
                             classId={tab.id}
                             description={tab.description}
                             showCount
-                            countParams={{ visibility: sort, observatoryId: id, published: tab.params?.published }}
+                            countParams={{
+                                visibility: sort,
+                                observatory_id: id,
+                                ...(tab.params?.published ? { published: tab.params?.published.toString() } : {}),
+                            }}
                         />
                     ),
                     key: tab.id,

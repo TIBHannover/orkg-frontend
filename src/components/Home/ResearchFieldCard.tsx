@@ -71,8 +71,8 @@ type ResearchFieldCardProps = {
 const ResearchFieldCard: FC<ResearchFieldCardProps> = ({ field }) => {
     const { data: stats, isLoading } = useSWR([field.id, statisticsUrl, 'getStatistics'], ([params]) =>
         Promise.all([
-            getStatistics({ researchFieldId: params, group: 'content-types', name: 'paper-count', includeSubfields: true }),
-            getStatistics({ researchFieldId: params, group: 'content-types', name: 'comparison-count', includeSubfields: true }),
+            getStatistics({ parameters: { research_field: params, include_subfields: 'true' }, group: 'content-types', name: 'paper-count' }),
+            getStatistics({ parameters: { research_field: params, include_subfields: 'true' }, group: 'content-types', name: 'comparison-count' }),
         ]),
     );
 

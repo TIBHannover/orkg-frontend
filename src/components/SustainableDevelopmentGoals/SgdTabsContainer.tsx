@@ -77,7 +77,14 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
                 onChange={onTabChange}
                 activeKey={contentType}
                 items={SDG_CONTENT_TABS.map((tab) => ({
-                    label: <TabLabel label={tab.label} classId={tab.id} showCount countParams={{ sdgId, published: tab.params?.published }} />,
+                    label: (
+                        <TabLabel
+                            label={tab.label}
+                            classId={tab.id}
+                            showCount
+                            countParams={{ sdg: sdgId, ...(tab.params?.published ? { published: tab.params?.published.toString() } : {}) }}
+                        />
+                    ),
                     key: tab.id,
                     children: (
                         <ListPaginatedContent<Item>
