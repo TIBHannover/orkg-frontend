@@ -3,6 +3,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.176.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.175.0...v0.176.0) - 2026-02-04
+
+### Changes
+
+- refactor: migrate statistics service [`#1630`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1630)
+- fix: short code redirection [`#1634`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1634)
+- feat: track events for smart filter usage [`#1633`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1633)
+- refactor: migrate classes to use orkg backend client [`#1629`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1629)
+- feat(regex): add zenodo and raw.githubusercontent image [`#1617`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1617)
+- refactor: migrate literals to use orkg backend client [`#1624`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1624)
+- fix(ObjectStatements): add noRedirect parameter to resource information link [`#1619`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1619)
+- chore: improve error logging for about, comparison and paper retrieval [`#1627`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1627)
+- chore: update vitest to version 4.0.16 [`#1625`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1625)
+- refactor: initial integration of @orkg/orkg-client [`#1621`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1621)
+
+---
 ## [v0.175.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.174.0...v0.175.0) - 2026-01-07
 
 ### Changes
