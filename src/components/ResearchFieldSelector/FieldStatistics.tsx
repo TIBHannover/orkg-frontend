@@ -11,8 +11,7 @@ const FieldStatistics = ({ field }: { field: ResearchField }) => {
             {
                 group: 'content-types',
                 name: 'content-type-count',
-                researchFieldId: field.id,
-                includeSubfields: true,
+                parameters: { research_field: field.id, include_subfields: 'true' },
             },
             statisticsUrl,
             'getStatistics',

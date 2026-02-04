@@ -41,7 +41,7 @@ const Stats = () => {
                 getStatistics({
                     group: 'content-types',
                     name,
-                    ...(['comparison-count', 'smart-review-count'].includes(name) && { published: true }),
+                    ...(['comparison-count', 'smart-review-count'].includes(name) ? { parameters: { published: 'true' } } : {}),
                 }),
             ),
         ),
@@ -61,13 +61,13 @@ const Stats = () => {
 
     const getStatisticsByName = (group: string, name: string) => {
         if (group === 'content-types') {
-            return contentTypesStats?.find((stat) => stat.name === name)?.value;
+            return contentTypesStats?.find((stat) => 'name' in stat && stat.name === name)?.value;
         }
         if (group === 'community') {
-            return communityStats?.find((stat) => stat.name === name)?.value;
+            return communityStats?.find((stat) => 'name' in stat && stat.name === name)?.value;
         }
         if (group === 'things') {
-            return thingsStats?.find((stat) => stat.name === name)?.value;
+            return thingsStats?.find((stat) => 'name' in stat && stat.name === name)?.value;
         }
         return undefined;
     };

@@ -127,9 +127,9 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                             description={tab.description}
                             showCount
                             countParams={{
-                                createdBy: id,
+                                created_by: id,
                                 visibility: sort,
-                                published: tab.params?.published,
+                                ...(tab.params?.published ? { published: tab.params?.published.toString() } : {}),
                             }}
                         />
                     ),

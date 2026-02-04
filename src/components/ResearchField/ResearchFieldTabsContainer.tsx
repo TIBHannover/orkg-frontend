@@ -80,10 +80,10 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
                             classId={tab.id}
                             showCount
                             countParams={{
-                                researchFieldId: id,
-                                includeSubfields: includeSubFields,
+                                research_field: id,
+                                include_subfields: includeSubFields.toString(),
                                 visibility: sort,
-                                published: tab.params.published,
+                                ...(tab.params?.published ? { published: tab.params?.published.toString() } : {}),
                             }}
                         />
                     ),
