@@ -73,7 +73,6 @@ const useQualityReport = () => {
             );
 
             const feedbackDataPromises = feedbackIds.map(
-                // @ts-expect-error getThing awaiting migration
                 (feedbackId) => getThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackId }) as Promise<Feedback>,
             );
             const _feedbacks = (await Promise.all(feedbackDataPromises)).map((feedback) => feedback.data.answers) ?? [];

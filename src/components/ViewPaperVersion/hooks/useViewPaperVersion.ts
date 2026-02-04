@@ -11,7 +11,6 @@ const useViewPaperVersion = ({ paperId }: { paperId: string }) => {
     const { paper, isLoadingPaperVersion } = useViewPaper({ paperId });
 
     const fetcher = async (pId: string) => {
-        // @ts-expect-error not typed
         const snapshot = await getThing({ thingType: THING_TYPES.PAPER_VERSION, thingKey: pId });
         const contributionsNodes = filterSubjectOfStatementsByPredicateAndClass(
             snapshot.data.statements,

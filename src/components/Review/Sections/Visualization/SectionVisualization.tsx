@@ -17,9 +17,7 @@ const SectionVisualization: FC<SectionVisualizationProps> = ({ id, label }) => {
 
     const { data, isLoading } = useSWR(
         id ? [{ thingType: THING_TYPES.VISUALIZATION, thingKey: id }, simCompServiceUrl, 'getThing'] : null,
-        ([params]) =>
-            // @ts-expect-error awaiting migration simcomp
-            getThing(params),
+        ([params]) => getThing(params),
     );
 
     if (!review) {

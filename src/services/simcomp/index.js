@@ -42,8 +42,8 @@ export const getComparison = ({ contributionIds = [], type = null, format = null
 /**
  * Get saved thing result
  *
- * @param {String} thingKey Key
- * @param {String} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
+ * @param {Object.string} thingKey Key
+ * @param {Object.string} thingType Type (Available values : UNKNOWN, COMPARISON, DIAGRAM, VISUALIZATION, DRAFT_COMPARISON, LIST, REVIEW, QUALITY_REVIEW, PAPER_VERSION, ANY)
  */
 export const getThing = ({ thingType, thingKey }) => {
     const params = qs.stringify(
