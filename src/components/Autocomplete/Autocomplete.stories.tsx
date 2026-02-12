@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 import { useState } from 'react';
 import { SingleValue } from 'react-select';
 

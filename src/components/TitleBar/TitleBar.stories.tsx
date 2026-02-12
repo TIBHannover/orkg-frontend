@@ -1,6 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 import Link from 'next/link';
 
 import TitleBar from '@/components/TitleBar/TitleBar';

@@ -19,7 +19,7 @@ export function getPublicEnv(config: string) {
 
 const config: StorybookConfig = {
     stories: ['./**/*.mdx', '../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-    addons: ['@storybook/addon-links', '@storybook/addon-essentials', '@storybook/addon-interactions', '@storybook/addon-mdx-gfm'],
+    addons: ['@storybook/addon-links', '@storybook/addon-docs'],
     framework: {
         name: '@storybook/nextjs',
         options: {},
@@ -40,7 +40,6 @@ const config: StorybookConfig = {
             alias: {
                 ...(baseConfig.resolve?.alias ?? {}),
                 '@opentelemetry/api': 'next/dist/compiled/@opentelemetry/api',
-                '@testing-library/react': '@storybook/test', // see: https://github.com/vercel/next.js/issues/55620#issuecomment-1758276652
             },
         };
         return baseConfig;

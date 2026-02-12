@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import Doi from '@/components/ValuePlugins/Doi/Doi';
 import { ENTITIES } from '@/constants/graphSettings';

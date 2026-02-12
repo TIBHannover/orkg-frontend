@@ -13,7 +13,7 @@ include:
     - template: Dependency-Scanning.gitlab-ci.yml
 
 install:
-  image: node:lts-buster
+  image: node:22-bookworm
   stage: install
   script:
     - npm install
@@ -22,7 +22,7 @@ install:
       - node_modules/
 
 vitest:
-    image: node:lts-buster
+    image: node:22-bookworm
     stage: test
     script:
         - cp default.env .env
@@ -61,7 +61,7 @@ deploy:release:
 
 # deploy storybook to Gitlab pages
 pages:
-  image: node:lts-buster
+  image: node:22-bookworm
   stage: pages
   script:
     - rm -rf public # remove the currently existing 'public' folder that contains static files for running the frontend

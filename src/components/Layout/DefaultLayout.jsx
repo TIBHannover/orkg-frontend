@@ -14,7 +14,6 @@ import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
 import { Suspense, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { Helmet } from 'react-helmet';
 import { Slide, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 
@@ -155,14 +154,9 @@ export default function DefaultLayout(props) {
                 </Alert>
             )}
             {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && (
-                <>
-                    <Helmet>
-                        <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
-                    </Helmet>
-                    <Alert color="warning" style={alertStyle} className="text-center" fade={false}>
-                        <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any notice.
-                    </Alert>
-                </>
+                <Alert color="warning" style={alertStyle} className="text-center" fade={false}>
+                    <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any notice.
+                </Alert>
             )}
             <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
                 <ErrorBoundary fallback="Something went wrong while loading the page!">

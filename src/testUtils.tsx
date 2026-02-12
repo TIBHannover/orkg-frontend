@@ -32,7 +32,7 @@ const Wrapper = ({ children, initialState = {}, store = setupStore(initialState)
         <NuqsTestingAdapter {...nuqsOptions}>
             <Provider store={_store}>
                 <ThemeProvider theme={theme}>
-                    <SWRConfig value={{ dedupingInterval: 0 }}>
+                    <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
                         <MathJaxContext config={MATH_JAX_CONFIG}>
                             {children}
                             <ToastContainer

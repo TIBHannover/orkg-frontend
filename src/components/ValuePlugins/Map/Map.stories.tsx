@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import MapComponent from '@/components/ValuePlugins/Map/Map';
 import { ENTITIES } from '@/constants/graphSettings';

@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import ImageAsFigure from '@/components/ValuePlugins/Images/ImageAsFigures';
 import { ENTITIES } from '@/constants/graphSettings';

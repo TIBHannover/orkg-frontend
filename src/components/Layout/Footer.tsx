@@ -52,7 +52,7 @@ const Footer = () => (
     <FooterWrapper>
         <Container>
             <footer className="pt-4 pb-4">
-                <h1 className="sr-only">More information about ORKG</h1>
+                <h1 className="tw:sr-only">More information about ORKG</h1>
                 <Row>
                     <FooterCol md={3}>
                         <h2 className="h5">ORKG</h2>

@@ -1,6 +1,13 @@
 {
     "parser": "@typescript-eslint/parser", // airbnb-typescript won't work without specifying the parser
-    "extends": ["airbnb", "airbnb-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "next/core-web-vitals"],
+    "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "next/core-web-vitals",
+        "plugin:storybook/recommended"
+    ],
     "globals": {
         "globalThis": false
     },
@@ -17,7 +24,13 @@
         "react/jsx-tag-spacing": 2,
         "react/jsx-curly-spacing": 2,
         "curly": 1,
-        "react/jsx-wrap-multilines": ["error", { "declaration": false, "assignment": false }],
+        "react/jsx-wrap-multilines": [
+            "error",
+            {
+                "declaration": false,
+                "assignment": false
+            }
+        ],
         "react/self-closing-comp": 2,
         "react/prop-types": 2,
         "no-var": 2,

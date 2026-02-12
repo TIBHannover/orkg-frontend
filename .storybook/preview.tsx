@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/nextjs';
 import '@/assets/scss/CustomBootstrap.scss';
 import '@/assets/scss/DefaultLayout.scss';
 import 'leaflet/dist/leaflet.css';

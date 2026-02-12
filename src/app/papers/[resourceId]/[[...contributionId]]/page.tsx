@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { Metadata } from 'next';
 
 import NotFound from '@/app/not-found';
@@ -102,7 +102,7 @@ export default async function CheckPaperVersion(props: { params: Promise<{ resou
     return (
         <>
             <Coins item={paper} />
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitize(JSON.stringify(jsonLd)) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify(jsonLd)) }} />
             <ViewPaper />
         </>
     );

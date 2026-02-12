@@ -1,4 +1,4 @@
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { FC, useCallback, useContext, useEffect, useMemo } from 'react';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
@@ -86,7 +86,7 @@ const TextSection: FC<TextSectionProps> = ({ text = null, sectionId }) => {
     });
     converter.setFlavor('github');
 
-    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(sanitize(text ?? '', { ADD_ATTR: ['target'] })) }} />;
+    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(DOMPurify.sanitize(text ?? '', { ADD_ATTR: ['target'] })) }} />;
 };
 
 export default TextSection;

@@ -1,3 +1,4 @@
+/// <reference types="vitest/globals" />
 declare module '*.png';
 declare module '*.svg';
 declare module '*.jpeg';

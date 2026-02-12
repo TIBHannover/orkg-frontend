@@ -2,7 +2,7 @@ import { Cite } from '@citation-js/core';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { PublicConfiguration } from 'swr/dist/_internal';
+import { PublicConfiguration } from 'swr/_internal';
 
 import useParams from '@/components/useParams/useParams';
 import { MISC } from '@/constants/graphSettings';
