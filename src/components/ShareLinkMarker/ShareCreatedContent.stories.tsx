@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import ShareCreatedContent from '@/components/ShareLinkMarker/ShareCreatedContent';
 

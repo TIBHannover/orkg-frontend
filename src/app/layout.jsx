@@ -8,7 +8,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 import { CookiesProvider } from 'next-client-cookies/server';
-import { PublicEnvScript } from 'next-runtime-env';
+import { env, PublicEnvScript } from 'next-runtime-env';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import PropTypes from 'prop-types';
@@ -26,7 +26,7 @@ const RootLayout = ({ children }) => (
             <link rel="shortcut icon" href="/favicon.ico" />
             {/* eslint-disable-next-line react/no-invalid-html-attribute */}
             <link href="https://mastodon.social/@orkg" rel="me" />
-            <title>Open Research Knowledge Graph</title>
+            {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && <meta name="robots" content="noindex" />}
             <meta property="og:image" content="/og_image.png" />
             <link
                 rel="stylesheet"

@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import Link from '@/components/ValuePlugins/Link/Link';
 

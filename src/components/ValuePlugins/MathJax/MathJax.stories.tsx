@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import MathJax from '@/components/ValuePlugins/MathJax/MathJax';
 

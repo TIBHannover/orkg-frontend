@@ -1,4 +1,4 @@
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import PropTypes from 'prop-types';
 import { FC } from 'react';
 import * as Showdown from 'showdown';
@@ -25,7 +25,7 @@ const MarkdownRenderer: FC<MarkdownRendererProps> = ({ text = '' }) => {
     });
     converter.setFlavor('github');
 
-    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(sanitize(text, { ADD_ATTR: ['target'] })) }} />;
+    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(DOMPurify.sanitize(text, { ADD_ATTR: ['target'] })) }} />;
 };
 
 MarkdownRenderer.propTypes = {

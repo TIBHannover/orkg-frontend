@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import ListGroup from '@/components/Ui/List/ListGroup';

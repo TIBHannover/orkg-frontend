@@ -1,7 +1,7 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
 import { useEffect, useState } from 'react';
@@ -102,7 +102,7 @@ const MastodonTimeline = () => {
                                     <MastodonContent
                                         style={{ fontSize: '90%' }}
                                         className="pt-2"
-                                        dangerouslySetInnerHTML={{ __html: sanitize(message.content) }}
+                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }}
                                     />
                                     <div className="d-flex justify-content-between align-items-center">
                                         <a href={message.url} target="_blank" rel="noopener noreferrer">

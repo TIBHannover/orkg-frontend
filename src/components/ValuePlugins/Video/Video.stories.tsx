@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import Video from '@/components/ValuePlugins/Video/Video';
 import { ENTITIES } from '@/constants/graphSettings';

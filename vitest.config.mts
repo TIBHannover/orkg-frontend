@@ -21,13 +21,12 @@ export default defineConfig({
     root: '.',
     plugins: [react(), stubNextAssetImport()],
     test: {
+        testTimeout: 30000,
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./src/setupTests.ts'],
         include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
         env: loadEnv('', process.cwd(), ''),
-        reporters: ['default', ['junit', { suiteName: 'ORKG Frontend Tests', classnameTemplate: '{filename}' }]],
-        outputFile: 'junit.xml',
     },
     resolve: {
         alias: {

@@ -1,5 +1,5 @@
 import { MathJax as MathJaxPreview } from 'better-react-mathjax';
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -33,7 +33,7 @@ const PaperTitle: FC<PaperTitleProps> = ({ title, className }) => {
             <span
                 className={className}
                 dangerouslySetInnerHTML={{
-                    __html: sanitize(title, { ALLOWED_TAGS: FACE_MARKUPS }).replaceAll('<mml:', '<').replaceAll('</mml:', '</'),
+                    __html: DOMPurify.sanitize(title, { ALLOWED_TAGS: FACE_MARKUPS }).replaceAll('<mml:', '<').replaceAll('</mml:', '</'),
                 }}
             />
         </StyledMathJax>

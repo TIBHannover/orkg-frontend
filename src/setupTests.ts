@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 import { drop } from '@mswjs/data';
 import { useRouter } from 'next-router-mock';
@@ -20,7 +20,7 @@ vi.mock('next-client-cookies', () => {
 
 beforeAll(async () => {
     server.listen();
-    vi.setConfig({ testTimeout: 20000 });
+    vi.setConfig({ testTimeout: 30000 });
     seed();
 });
 

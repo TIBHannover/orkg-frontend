@@ -1,8 +1,11 @@
+'use client';
+
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
-import { GraphCanvas, lightTheme, useSelection } from 'reagraph';
+import { lightTheme, useSelection } from 'reagraph';
 
 // import RobotoFont from '@/components/GraphView/roboto-medium-webfont.woff';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -24,6 +27,8 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES } from '@/constants/graphSettings';
+
+const GraphCanvas = dynamic(() => import('reagraph').then((mod) => mod.GraphCanvas), { ssr: false });
 
 const LazyGraphViewModal = ({ toggle, resourceId }) => {
     const [layoutType, setLayoutType] = useState('forceDirected2d');

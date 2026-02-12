@@ -1,5 +1,5 @@
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/nextjs';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 

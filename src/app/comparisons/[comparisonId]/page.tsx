@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { sanitize } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -66,7 +66,7 @@ export default async function ComparisonPage({ params }: { params: Promise<{ com
 
     return (
         <>
-            {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: sanitize(JSON.stringify(jsonLd)) }} />}
+            {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify(jsonLd)) }} />}
             {comparison && <Coins item={comparison} />}
             <Comparison />
         </>
