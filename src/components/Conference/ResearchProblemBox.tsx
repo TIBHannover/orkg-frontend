@@ -9,14 +9,15 @@ import ResearchProblemsModal from '@/components/Conference/ResearchProblemsModal
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
-import { getProblemsByOrganizationId, organizationsUrl } from '@/services/backend/organizations';
+import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
 import { reverseWithSlug } from '@/utils';
 
 const ResearchProblemBox = ({ id }: { id: string }) => {
     const [openModal, setOpenModal] = useState(false);
 
-    const { data, isLoading, error } = useSWR([id, organizationsUrl, 'getProblemsByOrganizationId'], ([params]) =>
-        getProblemsByOrganizationId(params),
+    const { data, isLoading, error } = useSWR(
+        [{ addressedByOrganization: id, page: 0, size: 6 }, researchProblemsUrl, 'getResearchProblems'],
+        ([params]) => getResearchProblems(params),
     );
     const problems = data?.content ?? [];
 
@@ -24,7 +25,7 @@ const ResearchProblemBox = ({ id }: { id: string }) => {
         <div className="box rounded-3 p-3 flex-grow-1">
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
-            <h5>Research problems </h5>
+            <h5>Research problems</h5>
             {!isLoading && problems.length > 0 && (
                 <ul className="ps-3 pt-2">
                     {problems.slice(0, 5).map((rp) => (
@@ -45,7 +46,7 @@ const ResearchProblemBox = ({ id }: { id: string }) => {
                     <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                         View more
                     </Button>
-                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} problems={problems} />}
+                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} organizationId={id} />}
                 </div>
             )}
         </div>

@@ -1,18 +1,33 @@
+import dayjs from 'dayjs';
 import pluralize from 'pluralize';
 import { FC, useState } from 'react';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ContributorsModal from '@/components/TopContributors/ContributorsModal';
-import useContributors from '@/components/TopContributors/hooks/useContributors';
 import Button from '@/components/Ui/Button/Button';
+import { contributorStatisticsUrl, getContributorStatisticsByResearchFieldId } from '@/services/backend/contributor-statistics';
 
 type ContributorsBoxProps = {
     researchFieldId: string;
 };
 
 const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top', initialIncludeSubFields: true });
+    const { data: contributors, isLoading } = usePaginate({
+        fetchFunction: getContributorStatisticsByResearchFieldId,
+        fetchUrl: contributorStatisticsUrl,
+        fetchFunctionName: 'getContributorStatisticsByResearchFieldId',
+        prefixParams: 'contributorStatisticsBox_',
+        fetchExtraParams: {
+            id: researchFieldId,
+            includeSubfields: true,
+            sort: ['total_count,desc'],
+            after: dayjs().startOf('day').subtract(30, 'day').toISOString(),
+        },
+        defaultPageSize: 5,
+    });
+
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -23,12 +38,10 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
                 {!isLoading && contributors && contributors?.length > 0 && (
                     <div className="mt-2">
                         {contributors?.slice(0, 4).map((contributor, index) => (
-                            <div className="pt-1 ps-2 pe-2" key={`rp${contributor.id}`}>
+                            <div className="pt-1 ps-2 pe-2" key={`rp${contributor.contributorId}`}>
                                 <ContributorCard
-                                    contributor={{
-                                        ...contributor,
-                                        subTitle: `${pluralize('contribution', contributor.total, true)}`,
-                                    }}
+                                    id={contributor.contributorId}
+                                    subTitle={`${pluralize('contribution', contributor.totalCount, true)}`}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>

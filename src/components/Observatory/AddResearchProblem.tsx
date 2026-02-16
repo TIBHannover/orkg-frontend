@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -12,17 +12,15 @@ import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
-import { Resource } from '@/services/backend/types';
 
 type AddResearchProblemProps = {
     showDialog: boolean;
     toggle: () => void;
     id: string;
-    setProblems: Dispatch<SetStateAction<Resource[]>>;
-    setTotalElements: Dispatch<SetStateAction<number>>;
+    afterSubmit: () => void;
 };
 
-const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, id, setProblems, setTotalElements }) => {
+const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, id, afterSubmit }) => {
     const [problem, setProblem] = useState<OptionType | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -33,8 +31,7 @@ const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, i
                 await updateResource(problem.id, { observatory_id: id, organization_id: MISC.UNKNOWN_ID });
                 toast.success('Research problem added successfully');
                 setIsSaving(false);
-                setProblems((v) => [problem as Resource, ...v]);
-                setTotalElements((t) => t + 1);
+                afterSubmit();
                 toggle();
                 setProblem(null);
             } catch (error: unknown) {

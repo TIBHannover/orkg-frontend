@@ -9,7 +9,7 @@ import Container from '@/components/Ui/Structure/Container';
 
 type ListPaginatedContentProps<ItemType> = {
     label: string;
-    renderListItem: (item: ItemType, lastItem?: boolean) => React.ReactNode;
+    renderListItem: (item: ItemType, lastItem?: boolean, index?: number) => React.ReactNode;
     boxShadow?: boolean;
     isLoading: boolean;
     error: ({ statusCode?: number } & Error) | null;
@@ -75,7 +75,7 @@ const ListPaginatedContent = <ItemType,>({
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && items && items.length > 0 && (
                 <ListGroupComponent {...componentProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
-                    {items?.map((item, index) => renderListItem(item, index === items.length - 1))}
+                    {items?.map((item, index) => renderListItem(item, index === items.length - 1, page * pageSize + index))}
                 </ListGroupComponent>
             )}
             {!isLoading && !error && items && items.length === 0 && noDataComponent}

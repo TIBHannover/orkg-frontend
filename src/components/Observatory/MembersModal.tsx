@@ -44,13 +44,10 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
     });
 
     const renderListItem = (member: Contributor, lastItem?: boolean) => (
-        <>
+        <div key={`member${member.id}`}>
             <ContributorCard
-                contributor={{
-                    ...member,
-                    contributor: member.id,
-                    subTitle: organizationsList.find((o) => o.id.includes(member.organization_id))?.name,
-                }}
+                id={member.id}
+                subTitle={organizationsList.find((o) => o.id.includes(member.organization_id))?.name}
                 options={
                     isEditMode && !!user && user.isCurationAllowed
                         ? [
@@ -65,7 +62,7 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
                 }
             />
             {!lastItem && <hr style={{ width: '90%', margin: '10px auto' }} />}
-        </>
+        </div>
     );
 
     return (

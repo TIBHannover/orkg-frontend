@@ -1,15 +1,18 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch, FC, SetStateAction } from 'react';
+import dayjs from 'dayjs';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import ContributorsDropdownFilter from '@/components/TopContributors/ContributorsDropdownFilter';
-import useContributors from '@/components/TopContributors/hooks/useContributors';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Table from '@/components/Ui/Table/Table';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { contributorStatisticsUrl, getContributorStatisticsByResearchFieldId } from '@/services/backend/contributor-statistics';
 
 type ContributorsModalProps = {
     researchFieldId: string;
@@ -26,15 +29,44 @@ const ContributorsModal: FC<ContributorsModalProps> = ({
     initialSort = 'top',
     initialIncludeSubFields = true,
 }) => {
-    const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
-        researchFieldId,
-        pageSize: 50,
-        initialSort,
-        initialIncludeSubFields,
+    const [sort, setSort] = useState(initialSort);
+    const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
+
+    const after = sort === 'top' ? dayjs().startOf('day').subtract(30, 'day').toISOString() : undefined;
+    const {
+        data: contributors,
+        isLoading,
+        totalElements,
+        page,
+        setPage,
+        totalPages,
+        pageSize,
+        setPageSize,
+        hasNextPage,
+    } = usePaginate({
+        fetchFunction: getContributorStatisticsByResearchFieldId,
+        fetchUrl: contributorStatisticsUrl,
+        fetchFunctionName: 'getContributorStatisticsByResearchFieldId',
+        prefixParams: 'contributorStatistics_',
+        fetchExtraParams: {
+            id: researchFieldId,
+            includeSubfields: includeSubFields,
+            sort: ['total_count,desc'],
+            after,
+        },
+        defaultPageSize: 50,
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="xl">
+        <Modal
+            isOpen={openModal}
+            toggle={() => setOpenModal((v) => !v)}
+            size="xl"
+            onExit={() => {
+                setPage(0);
+                setPageSize(50);
+            }}
+        >
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <FontAwesomeIcon icon={faAward} className="text-primary" /> Top contributors
                 <div style={{ display: 'inline-block', marginLeft: '20px' }}>
@@ -67,17 +99,17 @@ const ContributorsModal: FC<ContributorsModalProps> = ({
                             <tbody>
                                 {contributors &&
                                     contributors.map((contributor, index) => (
-                                        <tr key={`rp${contributor.id}`}>
-                                            <td className="text-center align-middle">{index + 1}.</td>
+                                        <tr key={`rp${contributor.contributorId}`}>
+                                            <td className="text-center align-middle">{page * pageSize + index + 1}.</td>
                                             <td className="flex-grow-1">
-                                                <UserAvatar userId={contributor.id} size={50} showDisplayName />
+                                                <UserAvatar userId={contributor.contributorId} size={50} showDisplayName />
                                             </td>
-                                            <td className="text-center align-middle">{contributor.contributions}</td>
-                                            <td className="text-center align-middle">{contributor.comparisons}</td>
-                                            <td className="text-center align-middle">{contributor.papers}</td>
-                                            <td className="text-center align-middle">{contributor.visualizations}</td>
-                                            <td className="text-center align-middle">{contributor.problems}</td>
-                                            <td className="text-center align-middle">{contributor.total}</td>
+                                            <td className="text-center align-middle">{contributor.contributionCount}</td>
+                                            <td className="text-center align-middle">{contributor.comparisonCount}</td>
+                                            <td className="text-center align-middle">{contributor.paperCount}</td>
+                                            <td className="text-center align-middle">{contributor.visualizationCount}</td>
+                                            <td className="text-center align-middle">{contributor.researchProblemCount}</td>
+                                            <td className="text-center align-middle">{contributor.totalCount}</td>
                                         </tr>
                                     ))}
                             </tbody>
@@ -88,6 +120,20 @@ const ContributorsModal: FC<ContributorsModalProps> = ({
                             No contributors yet.
                             <i> Be the first contributor!</i>
                         </div>
+                    )}
+                    {!isLoading && (
+                        <PaginationControl
+                            prefixParams="contributorStatistics_"
+                            page={page}
+                            setPage={setPage}
+                            totalPages={totalPages ?? 0}
+                            pageSize={pageSize}
+                            setPageSize={setPageSize}
+                            isLoading={isLoading}
+                            hasNextPage={hasNextPage}
+                            totalElements={totalElements ?? 0}
+                            boxShadow={false}
+                        />
                     )}
                     {isLoading && (
                         <div className="mt-4 mb-4">

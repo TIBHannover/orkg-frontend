@@ -1,18 +1,16 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import pluralize from 'pluralize';
+import { AuthorRecordRepresentation } from '@orkg/orkg-client';
 import { Dispatch, SetStateAction } from 'react';
 
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
-import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
-import useResearchProblemAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Alert from '@/components/Ui/Alert/Alert';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import { ResearchProblemTopAuthor } from '@/services/backend/problems';
+import { getAuthorStatisticsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
 type ResearchProblemAuthorsModalProps = {
     researchProblemId: string;
@@ -21,49 +19,80 @@ type ResearchProblemAuthorsModalProps = {
 };
 
 const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModal }: ResearchProblemAuthorsModalProps) => {
-    const { authors, isLoading, isLast, loadNext } = useResearchProblemAuthors({
-        researchProblemId,
-        pageSize: 5,
+    const {
+        data: authors,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getAuthorStatisticsByResearchProblemId,
+        fetchUrl: researchProblemsUrl,
+        fetchFunctionName: 'getAuthorStatisticsByResearchProblemId',
+        prefixParams: 'authorStatistics_',
+        fetchExtraParams: {
+            id: researchProblemId,
+            sort: ['paper_count,desc'],
+        },
+        defaultPageSize: 10,
     });
 
+    const renderListItem = (author: AuthorRecordRepresentation, lastItem?: boolean, index: number = 0) => (
+        <div className="px-2" key={`rpAuthor${index}`}>
+            <div className="d-flex align-items-center py-2">
+                <div className="pe-2 text-muted h5 mb-0 ms-2" style={{ flexBasis: '2em' }}>
+                    {index + 1}.
+                </div>{' '}
+                <div className="flex-grow-1">
+                    <AuthorCard author={author.authorName} paperAmount={author.paperCount} isVisibleGoogleScholar isVisibleShowCitations />{' '}
+                </div>
+            </div>
+            {!lastItem && <hr className="mb-0 mt-1" />}
+        </div>
+    );
+
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+        <Modal
+            isOpen={openModal}
+            toggle={() => setOpenModal((v) => !v)}
+            size="lg"
+            onExit={() => {
+                setPage(0);
+                setPageSize(10);
+            }}
+        >
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>
                 <FontAwesomeIcon icon={faAward} className="text-primary ms-2" /> Top authors
             </ModalHeader>
-            <ModalBody className="p-0">
+            <ModalBody className="p-0 px-2">
                 <Alert color="info" className="m-3">
                     The authors listed below are engaged researchers. They are sorted by the number of papers per author. The list can be used to find
                     suitable peer-reviewers.
                 </Alert>
-                <ListGroup flush className="overflow-hidden rounded">
-                    {authors.map((author, index) => (
-                        <ListGroupItem className="pt-2 pb-2" key={`rp${index}`}>
-                            <div className="d-flex align-items-center">
-                                <div className="pe-2 text-muted h5 mb-0 ms-2" style={{ flexBasis: '2em' }}>
-                                    {index + 1}.
-                                </div>
-                                <div className="flex-grow-1">
-                                    <AuthorCard
-                                        author={author.author.value}
-                                        // @ts-expect-error
-                                        paperAmount={pluralize('paper', (author as ResearchProblemTopAuthor).papers, true)}
-                                        isVisibleGoogleScholar
-                                        isVisibleShowCitations
-                                    />
-                                </div>
-                            </div>
-                        </ListGroupItem>
-                    ))}
-
-                    {!isLoading && !isLast && (
-                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex={0} onClick={loadNext}>
-                            Load more...
-                        </ListGroupItem>
-                    )}
-                </ListGroup>
-                {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors yet</div>}
-                {isLoading && authors?.length === 0 && <AuthorsContentLoader />}
+                <ListPaginatedContent<AuthorRecordRepresentation>
+                    renderListItem={renderListItem}
+                    pageSize={pageSize}
+                    label="top authors"
+                    isLoading={isLoading}
+                    items={authors ?? []}
+                    hasNextPage={hasNextPage}
+                    page={page}
+                    setPage={setPage}
+                    setPageSize={setPageSize}
+                    totalElements={totalElements}
+                    error={error}
+                    totalPages={totalPages}
+                    boxShadow={false}
+                    flush={false}
+                    listGroupProps={{ className: 'pt-2 pb-2' }}
+                    prefixParams="authorStatistics_"
+                    noDataComponent={<div className="mt-4 mb-4">No authors yet</div>}
+                />
             </ModalBody>
         </Modal>
     );

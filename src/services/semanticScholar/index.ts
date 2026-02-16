@@ -67,9 +67,23 @@ export const getAbstractByTitle = async (title: string) =>
     // @ts-expect-error TODO
     getPapersByTitle({ title, limit: 1, fields: ['abstract', 'title'] }).then((data, reject) => data?.data?.[0] ?? reject);
 
-export const getAuthorsByLabel = ({ label, limit }: { label: string; limit: number }) =>
+export type SemanticScholarAuthor = {
+    authorId: string;
+    url: string;
+    name: string;
+    citationCount: number;
+    hIndex: number;
+};
+
+export type SemanticScholarAuthorSearchResponse = {
+    total: number;
+    offset: number;
+    data: SemanticScholarAuthor[];
+};
+
+export const getAuthorsByLabel = async ({ label, limit }: { label: string; limit: number }): Promise<SemanticScholarAuthorSearchResponse> =>
     semanticScholarApi
-        .get('graph/v1/author/search', {
+        .get<SemanticScholarAuthorSearchResponse>('graph/v1/author/search', {
             searchParams: `query=${encodeURIComponent(label)}&fields=name,url,citationCount,hIndex&limit=${limit}`,
         })
         .json();
