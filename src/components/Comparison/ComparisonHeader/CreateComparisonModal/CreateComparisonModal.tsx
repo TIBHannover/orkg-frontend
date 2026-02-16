@@ -61,6 +61,7 @@ const CreateComparisonModal: FC<CreateComparisonModalProps> = ({ toggle, contrib
                     transpose: false,
                     type: 'PATH',
                 },
+                is_anonymized: false,
             });
             setCreatedComparisonId(comparisonId);
         } catch (error) {

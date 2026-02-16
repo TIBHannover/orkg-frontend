@@ -58,6 +58,7 @@ const CreateComparison = () => {
                     transpose: false,
                     type: 'PATH',
                 },
+                is_anonymized: false,
             });
             router.push(`${reverse(ROUTES.COMPARISON, { comparisonId })}?isEditMode=true`);
         } catch (error) {
