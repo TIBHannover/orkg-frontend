@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.176.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.0...v0.176.1) - 2026-02-16
+
+### Changes
+
+- fix: add missing is_anonymized property on create comparison [`#1638`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1638)
+- refactor: use new backend API endpoint [`#1637`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1637)
+- chore: remove react-helmet and update  pragmatic dnd and citation-js [`#1626`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1626)
+
+---
 ## [v0.176.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.175.0...v0.176.0) - 2026-02-04
 
 ### Changes
