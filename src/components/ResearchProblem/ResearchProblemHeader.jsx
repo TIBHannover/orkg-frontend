@@ -4,6 +4,7 @@ import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import useSWR from 'swr';
 
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import CheckClasses from '@/components/CheckClasses/CheckClasses';
@@ -17,7 +18,6 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import Contributors from '@/components/ResearchProblem/Contributors';
 import ExternalDescription from '@/components/ResearchProblem/ExternalDescription';
 import useResearchProblem from '@/components/ResearchProblem/hooks/useResearchProblem';
-import useResearchProblemResearchFields from '@/components/ResearchProblem/hooks/useResearchProblemResearchFields';
 import ResearchFieldsBox from '@/components/ResearchProblem/ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from '@/components/ResearchProblem/SuperResearchProblemBox/SuperResearchProblemBox';
 import { SubTitle } from '@/components/styled';
@@ -34,6 +34,7 @@ import Container from '@/components/Ui/Structure/Container';
 import Row from '@/components/Ui/Structure/Row';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { getResearchFields, newResearchFieldUrl as researchFieldUrl } from '@/services/backend/researchFields';
 import { reverseWithSlug } from '@/utils';
 
 const ResearchProblemHeader = ({ id }) => {
@@ -41,7 +42,12 @@ const ResearchProblemHeader = ({ id }) => {
     const [editMode, setEditMode] = useState(false);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
-    const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
+
+    const { data: researchFields, isLoading: isLoadingResearchFields } = useSWR(
+        id ? [{ researchProblem: id, sort: ['research_problem_count,desc'] }, researchFieldUrl, 'getResearchFields'] : null,
+        ([params]) => getResearchFields(params),
+    );
+
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: researchProblemData?.unlisted,
@@ -76,7 +82,10 @@ const ResearchProblemHeader = ({ id }) => {
                     </div>
                 </>
             )}
-            <Breadcrumbs researchFieldId={!isLoadingResearchFields && researchFields.length ? researchFields[0].field.id : null} disableLastField />
+            <Breadcrumbs
+                researchFieldId={!isLoadingResearchFields && researchFields?.content?.length ? researchFields.content[0].id : null}
+                disableLastField
+            />
             {!isLoading && !isFailedLoading && (
                 <>
                     <TitleBar
@@ -172,7 +181,7 @@ const ResearchProblemHeader = ({ id }) => {
                                 <AuthorsBox researchProblemId={id} />
                             </Col>
                             <Col md="4" className="d-flex mt-3 mt-md-0">
-                                <ResearchFieldsBox isLoading={isLoadingResearchFields} researchFields={researchFields} />
+                                <ResearchFieldsBox isLoading={isLoadingResearchFields} researchFields={researchFields?.content ?? []} />
                             </Col>
                             <Col md="4" className="d-flex mt-3 mt-md-0">
                                 <SuperResearchProblemBox isLoading={isLoadingResearchFields} superProblems={superProblems} />

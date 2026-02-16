@@ -2,7 +2,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -43,7 +43,7 @@ const StyledSpinnerGravatar = styled.div<StyledSpinnerGravatarProps>`
 type UserAvatarProps = {
     userId?: string;
     size?: number;
-    appendToTooltip?: string;
+    appendToTooltip?: ReactNode;
     showDisplayName?: boolean;
     linkTarget?: string;
 };
@@ -55,7 +55,12 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
         return (
             <Tooltip
                 placement="bottom"
-                content={`${contributor?.display_name}${appendToTooltip}`}
+                content={
+                    <>
+                        {contributor?.display_name}
+                        {appendToTooltip}
+                    </>
+                }
                 disabled={showDisplayName || !userId || !contributor || isLoadingContributor}
             >
                 <span tabIndex={0}>

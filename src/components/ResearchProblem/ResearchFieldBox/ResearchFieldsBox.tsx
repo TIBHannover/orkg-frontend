@@ -1,11 +1,16 @@
+import { ResourceRepresentation } from '@orkg/orkg-client';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 
-import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utils';
 
-const AuthorsBox = ({ isLoading, researchFields }) => (
+type ResearchFieldsBoxProps = {
+    isLoading: boolean;
+    researchFields: ResourceRepresentation[];
+};
+
+const ResearchFieldsBox: FC<ResearchFieldsBoxProps> = ({ isLoading, researchFields }) => (
     <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
         <h5>Research fields</h5>
         <div>
@@ -18,19 +23,14 @@ const AuthorsBox = ({ isLoading, researchFields }) => (
                 {researchFields.length > 0 ? (
                     <ul className="ps-1">
                         {researchFields.map((researchField) => (
-                            <li key={`rf${researchField.field.id}`}>
+                            <li key={`rf${researchField.id}`}>
                                 <Link
                                     href={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                        researchFieldId: researchField.field.id,
-                                        slug: researchField.field.label,
+                                        researchFieldId: researchField.id,
+                                        slug: researchField.label,
                                     })}
                                 >
-                                    {researchField.field.label}
-                                    <small>
-                                        <Badge className="ms-1" color="info" pill>
-                                            {researchField.freq}
-                                        </Badge>
-                                    </small>
+                                    {researchField.label}
                                 </Link>
                             </li>
                         ))}
@@ -45,9 +45,4 @@ const AuthorsBox = ({ isLoading, researchFields }) => (
     </div>
 );
 
-AuthorsBox.propTypes = {
-    isLoading: PropTypes.bool.isRequired,
-    researchFields: PropTypes.array.isRequired,
-};
-
-export default AuthorsBox;
+export default ResearchFieldsBox;

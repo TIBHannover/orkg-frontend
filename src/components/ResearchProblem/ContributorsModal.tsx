@@ -1,19 +1,37 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
+import { Dispatch, FC, SetStateAction } from 'react';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
-import useResearchProblemContributors from '@/components/ResearchProblem/hooks/useResearchProblemContributors';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import { getContributorsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
-const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
-    const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
-        researchProblemId,
-        pageSize: 19,
+type ContributorsModalProps = {
+    researchProblemId: string;
+    openModal: boolean;
+    setOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+
+const ContributorsModal: FC<ContributorsModalProps> = ({ researchProblemId, openModal, setOpenModal }) => {
+    const {
+        data: contributors,
+        isLoading,
+        totalElements,
+        error,
+    } = usePaginate({
+        fetchFunction: getContributorsByResearchProblemId,
+        fetchUrl: researchProblemsUrl,
+        fetchFunctionName: 'getContributorsByResearchProblemId',
+        fetchExtraParams: {
+            id: researchProblemId,
+            sort: ['total_count,desc'],
+        },
+        defaultPageSize: 30,
     });
 
     return (
@@ -25,29 +43,28 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
             <ModalBody>
                 <div className="ps-3 pe-3">
                     {!isLoading &&
+                        contributors &&
                         contributors.map((contributor, index) => (
                             <div className="pt-2 pb-2" key={`rp${index}`}>
                                 <div className="d-flex">
                                     <div className="ps-4 pe-4 pt-2">{index + 1}.</div>
                                     <div>
                                         <ContributorCard
-                                            contributor={{
-                                                ...contributor.user,
-                                                subTitle: contributor.contributions ? pluralize('contribution', contributor.contributions, true) : '',
-                                            }}
+                                            id={contributor.contributorId}
+                                            subTitle={`${pluralize('contribution', contributor.totalCount, true)}`}
                                         />
                                     </div>
                                 </div>
                                 {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
                             </div>
                         ))}
-                    {!isLoading && !isLoadingFailed && contributors?.length === 0 && (
+                    {!isLoading && !error && contributors?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No contributors yet.
                             <i> Be the first contributor!</i>
                         </div>
                     )}
-                    {!isLoading && isLoadingFailed && <div className="mt-4 mb-4 text-danger">Something went wrong while loading contributors.</div>}
+                    {!isLoading && error && <div className="mt-4 mb-4 text-danger">Something went wrong while loading contributors.</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
@@ -65,14 +82,6 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
             </ModalBody>
         </Modal>
     );
-};
-
-ContributorsModal.propTypes = {
-    researchProblemId: PropTypes.string.isRequired,
-    openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired,
-    initialSort: PropTypes.string,
-    initialIncludeSubFields: PropTypes.bool,
 };
 
 export default ContributorsModal;

@@ -1,24 +1,39 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ContributorsModal from '@/components/ResearchProblem/ContributorsModal';
-import useResearchProblemContributors from '@/components/ResearchProblem/hooks/useResearchProblemContributors';
-import { ContributorsAvatars, StyledDotGravatar, StyledGravatar } from '@/components/styled';
+import { ContributorsAvatars, StyledDotGravatar } from '@/components/styled';
 import CardTitle from '@/components/Ui/Card/CardTitle';
-import ROUTES from '@/constants/routes';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { getContributorsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
-const Contributors = ({ researchProblemId }) => {
-    const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
-        researchProblemId,
-        pageSize: 19,
+type ContributorsProps = {
+    researchProblemId: string;
+};
+
+const Contributors = ({ researchProblemId }: ContributorsProps) => {
+    const {
+        data: contributors,
+        isLoading,
+        totalElements,
+        error,
+    } = usePaginate({
+        fetchFunction: getContributorsByResearchProblemId,
+        fetchUrl: researchProblemsUrl,
+        fetchFunctionName: 'getContributorsByResearchProblemId',
+        prefixParams: 'contributorsBox_',
+        fetchExtraParams: {
+            id: researchProblemId,
+            sort: ['total_count,desc'],
+        },
+        defaultPageSize: 19,
     });
+
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -28,25 +43,26 @@ const Contributors = ({ researchProblemId }) => {
                     Contributors
                 </CardTitle>
             </div>
-            {!isLoading && contributors && contributors.length > 0 && (
+            {!isLoading && !error && contributors && contributors.length > 0 && (
                 <ContributorsAvatars>
                     {contributors.slice(0, 18).map((contributor /* 18 perfect for the container width */) => (
-                        <div key={`contributor${contributor.user.id}`}>
-                            <Tooltip
-                                placement="bottom"
-                                content={
-                                    <>
-                                        {contributor.user.display_name}
-                                        <br />
-                                        {contributor.contributions !== null && <i>{pluralize('contribution', contributor.contributions, true)}</i>}
-                                    </>
+                        <div key={`contributor${contributor.contributorId}`}>
+                            <UserAvatar
+                                userId={contributor.contributorId}
+                                size={48}
+                                showDisplayName={false}
+                                appendToTooltip={
+                                    <div className="p-2">
+                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                            <li>{pluralize('paper', contributor.paperCount, true)}</li>
+                                            <li>{pluralize('contribution', contributor.contributionCount, true)}</li>
+                                            <li>{pluralize('comparison', contributor.comparisonCount, true)}</li>
+                                            <li>{pluralize('visualization', contributor.visualizationCount, true)}</li>
+                                            <li>{pluralize('research problem', contributor.researchProblemCount, true)}</li>
+                                        </ul>
+                                    </div>
                                 }
-                                contentStyle={{ maxWidth: '300px' }}
-                            >
-                                <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributor.user.id })}>
-                                    <StyledGravatar className="rounded-circle" hashedEmail={contributor.user.gravatar_id} size={48} />
-                                </Link>
-                            </Tooltip>
+                            />
                         </div>
                     ))}
                     {contributors.length > 18 && (
@@ -58,16 +74,16 @@ const Contributors = ({ researchProblemId }) => {
                     )}
                 </ContributorsAvatars>
             )}
-            {!isLoading && !isLoadingFailed && contributors?.length === 0 && (
+            {!isLoading && !error && contributors?.length === 0 && (
                 <div className="mt-2 mb-2">
                     No contributors in this research field yet.
                     <i> Be the first contributor!</i>
                 </div>
             )}
-            {!isLoading && isLoadingFailed && (
+            {!isLoading && error && (
                 <div className="mt-2 mb-2 text-danger">Something went wrong while loading contributors of this research field.</div>
             )}
-            {contributors.length > 18 && openModal && (
+            {!isLoading && !error && contributors && contributors.length > 18 && openModal && (
                 <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />
             )}
             {isLoading && (
@@ -83,10 +99,6 @@ const Contributors = ({ researchProblemId }) => {
             )}
         </div>
     );
-};
-
-Contributors.propTypes = {
-    researchProblemId: PropTypes.string.isRequired,
 };
 
 export default Contributors;

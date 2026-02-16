@@ -1,6 +1,6 @@
 import { url as backendURL } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { Contributor, Observatory, Organization, PaginatedResponse, Resource } from '@/services/backend/types';
+import { Contributor, Observatory, Organization } from '@/services/backend/types';
 
 export const organizationsUrl = `${backendURL}organizations/`;
 export const organizationsApi = backendApi.extend(() => ({ prefixUrl: organizationsUrl }));
@@ -50,6 +50,3 @@ export const getAllObservatoriesByOrganizationId = (id: string) =>
 export const getUsersByOrganizationId = (id: string) => organizationsApi.get<Contributor[]>(`${encodeURIComponent(id)}/users`).json();
 
 export const getConferences = () => organizationsApi.get<Organization[]>(`conferences`).json();
-
-export const getProblemsByOrganizationId = (id: string) =>
-    organizationsApi.get<PaginatedResponse<Resource>>(`${encodeURIComponent(id)}/problems`).json();

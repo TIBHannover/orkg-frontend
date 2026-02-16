@@ -1,13 +1,11 @@
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
-import AuthorsContentLoader from '@/components/TopAuthors/AuthorsContentLoader';
-import useTopAuthors from '@/components/TopAuthors/hooks/useTopAuthors';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Alert from '@/components/Ui/Alert/Alert';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import { ComparisonTopAuthor } from '@/services/backend/comparisons';
+import { ComparisonTopAuthor, comparisonUrl, getAuthorsByComparisonId } from '@/services/backend/comparisons';
 
 type ComparisonAuthorsModelProps = {
     comparisonId: string;
@@ -15,45 +13,62 @@ type ComparisonAuthorsModelProps = {
 };
 
 const ComparisonAuthorsModel = ({ comparisonId, toggle }: ComparisonAuthorsModelProps) => {
-    const { authors, isLoading, isLast, loadNext } = useTopAuthors({
-        comparisonId,
-        pageSize: 5,
+    const {
+        data: authors,
+        isLoading,
+        totalElements,
+        page,
+        hasNextPage,
+        totalPages,
+        error,
+        pageSize,
+        setPage,
+        setPageSize,
+    } = usePaginate({
+        fetchFunction: getAuthorsByComparisonId,
+        fetchUrl: comparisonUrl,
+        fetchFunctionName: 'getAuthorsByComparisonId',
+        prefixParams: 'comparisonAuthors_',
+        fetchExtraParams: {
+            id: comparisonId,
+        },
+        defaultPageSize: 10,
     });
+
+    const renderListItem = (author: ComparisonTopAuthor, lastItem?: boolean, index: number = 0) => (
+        <div className="px-2 py-2" key={`comparisonAuthor${index}`}>
+            <AuthorCard author={author.author.value} isVisibleGoogleScholar isVisibleShowCitations papers={author.info} />
+            {!lastItem && <hr className="mb-0 mt-3" />}
+        </div>
+    );
 
     return (
         <Modal isOpen toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>Top authors</ModalHeader>
-            <ModalBody className="p-0">
+            <ModalBody className="px-3">
                 <Alert color="info" className="m-3">
                     The authors listed below are engaged researchers. Each author is linked to a paper displayed in the comparison. The list can be
                     used to find suitable peer-reviewers.
                 </Alert>
-                <ListGroup flush className="overflow-hidden rounded mb-3">
-                    {authors.map((author, index) => (
-                        <ListGroupItem className="py-2 px-4" key={index}>
-                            <AuthorCard
-                                author={author.author.value}
-                                // @ts-expect-error
-                                papers={(author as ComparisonTopAuthor).info}
-                                isVisibleGoogleScholar
-                                isVisibleShowCitations
-                            />
-                        </ListGroupItem>
-                    ))}
-
-                    {!isLoading && !isLast && (
-                        <ListGroupItem className="py-2 text-center" action role="button" tabIndex={0} onClick={loadNext}>
-                            Load more...
-                        </ListGroupItem>
-                    )}
-                </ListGroup>
-
-                {!isLoading && authors?.length === 0 && (
-                    <Alert color="info" className="m-3">
-                        No authors found
-                    </Alert>
-                )}
-                {isLoading && authors?.length === 0 && <AuthorsContentLoader />}
+                <ListPaginatedContent<ComparisonTopAuthor>
+                    renderListItem={renderListItem}
+                    pageSize={pageSize}
+                    label="top authors"
+                    isLoading={isLoading}
+                    items={authors ?? []}
+                    hasNextPage={hasNextPage}
+                    page={page}
+                    setPage={setPage}
+                    setPageSize={setPageSize}
+                    totalElements={totalElements}
+                    error={error}
+                    totalPages={totalPages}
+                    boxShadow={false}
+                    flush={false}
+                    listGroupProps={{ className: 'pt-2 pb-2' }}
+                    prefixParams="comparisonAuthors_"
+                    noDataComponent={<div className="mt-4 mb-4">No authors yet</div>}
+                />
             </ModalBody>
         </Modal>
     );

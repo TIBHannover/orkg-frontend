@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
-import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getPredicates, predicatesUrl } from '@/services/backend/predicates';
 import { Predicate } from '@/services/backend/types';

@@ -1,7 +1,6 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 import Popover from '@/components/FloatingUI/Popover';
 import Button from '@/components/Ui/Button/Button';
@@ -15,7 +14,16 @@ import Label from '@/components/Ui/Label/Label';
 import { RESOURCES } from '@/constants/graphSettings';
 import { stringifySort } from '@/utils';
 
-const ContributorsDropdownFilter = ({
+type ContributorsDropdownFilterProps = {
+    sort: string;
+    isLoading: boolean;
+    includeSubFields: boolean;
+    setSort: (sort: string) => void;
+    setIncludeSubFields: (includeSubFields: boolean) => void;
+    researchFieldId: string;
+};
+
+const ContributorsDropdownFilter: FC<ContributorsDropdownFilterProps> = ({
     sort,
     isLoading,
     includeSubFields,
@@ -99,15 +107,6 @@ const ContributorsDropdownFilter = ({
             )}
         </>
     );
-};
-
-ContributorsDropdownFilter.propTypes = {
-    sort: PropTypes.string.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    includeSubFields: PropTypes.bool.isRequired,
-    setSort: PropTypes.func.isRequired,
-    researchFieldId: PropTypes.string,
-    setIncludeSubFields: PropTypes.func.isRequired,
 };
 
 export default ContributorsDropdownFilter;

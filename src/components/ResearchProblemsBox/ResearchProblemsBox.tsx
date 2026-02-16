@@ -1,28 +1,59 @@
 import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ResourceRepresentation } from '@orkg/orkg-client';
 import { truncate } from 'lodash';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { FC, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import AddResearchProblem from '@/components/Observatory/AddResearchProblem';
-import useResearchProblems from '@/components/ResearchProblemsBox/hooks/useResearchProblems';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ResearchProblemsModal from '@/components/ResearchProblemsBox/ResearchProblemsModal';
 import Button from '@/components/Ui/Button/Button';
+import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
+import { updateResource } from '@/services/backend/resources';
 import { reverseWithSlug } from '@/utils';
 
-const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
-    const { problems, isLoading, totalElements, setProblems, deleteResearchProblem, setTotalElements } = useResearchProblems({
-        id,
-        by,
-        initialSort: 'combined',
-        pageSize: 10,
+type ResearchProblemsBoxProps = {
+    id: string;
+    by: 'ResearchField' | 'Observatory';
+    isEditMode?: boolean;
+};
+
+const ResearchProblemsBox: FC<ResearchProblemsBoxProps> = ({ id, by = 'ResearchField', isEditMode = false }) => {
+    const {
+        data: problems,
+        isLoading,
+        totalElements,
+        mutate,
+    } = usePaginate({
+        fetchFunction: getResearchProblems,
+        fetchUrl: researchProblemsUrl,
+        fetchFunctionName: 'getResearchProblems',
+        prefixParams: 'researchProblemsBox_',
+        fetchExtraParams: {
+            ...(by === 'ResearchField' ? { researchField: id } : { observatoryId: id }),
+            ...(by === 'ResearchField' ? { includeSubfields: true } : {}),
+            sort: ['created_at,desc'],
+        },
+        defaultPageSize: 10,
     });
+
+    const deleteResearchProblem = async (researchProblem: ResourceRepresentation) => {
+        try {
+            await updateResource(researchProblem.id, { observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID });
+            mutate();
+            toast.success('Research problem deleted successfully');
+        } catch (error) {
+            toast.error('error deleting a research problem');
+        }
+    };
     const [openModal, setOpenModal] = useState(false);
     const { user } = useAuthentication();
     const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
@@ -40,16 +71,15 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                             showDialog={showAddResearchProblemDialog}
                             toggle={() => setShowAddResearchProblemDialog((v) => !v)}
                             id={id}
-                            setProblems={setProblems}
-                            setTotalElements={setTotalElements}
+                            afterSubmit={() => mutate()}
                         />
                     </>
                 )}
             </div>
             <div className="flex-grow-1">
-                {!isLoading && totalElements > 0 && (
+                {!isLoading && problems && problems.length > 0 && (
                     <ul className="ps-3 pt-2">
-                        {problems.slice(0, 5).map((rp) => (
+                        {problems?.slice(0, 5).map((rp) => (
                             <li key={`rp${rp.id}`}>
                                 <Tooltip content={rp.label} disabled={rp.label?.length <= 70}>
                                     <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
@@ -96,7 +126,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
                     </ContentLoader>
                 </div>
             )}
-            {totalElements > 5 && (
+            {!isLoading && problems && problems.length > 5 && (
                 <div className="text-center mt-2">
                     <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
                         View more
@@ -106,12 +136,6 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', isEditMode }) => {
             )}
         </div>
     );
-};
-ResearchProblemsBox.propTypes = {
-    id: PropTypes.string.isRequired,
-    by: PropTypes.string.isRequired, // ResearchField || Observatory
-    organizationsList: PropTypes.array,
-    isEditMode: PropTypes.bool.isRequired,
 };
 
 export default ResearchProblemsBox;

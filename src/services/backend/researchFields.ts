@@ -1,43 +1,16 @@
-import qs from 'qs';
+import { ResearchFieldsApi, ResearchFieldsApiFindAllRequest } from '@orkg/orkg-client';
 
-import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
+import { url, urlNoTrailingSlash } from '@/constants/misc';
+import backendApi, { configuration } from '@/services/backend/backendApi';
 import { PaginatedResponse, Resource } from '@/services/backend/types';
 
 export const researchFieldUrl = `${url}research-fields/`;
 export const researchFieldApi = backendApi.extend(() => ({ prefixUrl: researchFieldUrl }));
 
-export const getResearchProblemsByResearchFieldId = ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = 'created_at',
-    desc = true,
-    subfields = true,
-    visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: {
-    id: string;
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    desc?: boolean;
-    subfields?: boolean;
-    visibility?: string;
-}) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const searchParams = qs.stringify(
-        { page, size, sort, visibility },
-        {
-            skipNulls: true,
-        },
-    );
-    return researchFieldApi
-        .get<PaginatedResponse<Resource>>(`${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems`, {
-            searchParams,
-        })
-        .json();
-};
+export const newResearchFieldUrl = `${urlNoTrailingSlash}/research-fields`;
+const newResearchFieldApi = new ResearchFieldsApi(configuration);
+
+export const getResearchFields = (params: ResearchFieldsApiFindAllRequest) => newResearchFieldApi.findAll(params);
 
 export type FieldChildren = {
     child_count: number;

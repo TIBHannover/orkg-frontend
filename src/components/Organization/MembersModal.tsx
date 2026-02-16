@@ -1,11 +1,18 @@
-import PropTypes from 'prop-types';
+import { Contributor } from '@orkg/orkg-client';
+import { Dispatch, FC, SetStateAction } from 'react';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
-const MembersModal = ({ members, openModal, setOpenModal }) => (
+type MembersModalProps = {
+    members: Contributor[];
+    openModal: boolean;
+    setOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+
+const MembersModal: FC<MembersModalProps> = ({ members, openModal, setOpenModal }) => (
     <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
         <ModalHeader toggle={() => setOpenModal((v) => !v)}>Organization members</ModalHeader>
         <ModalBody>
@@ -14,11 +21,7 @@ const MembersModal = ({ members, openModal, setOpenModal }) => (
                     <div className="pt-2 pb-2" key={`rp${index}`}>
                         <div className="d-flex">
                             <div>
-                                <ContributorCard
-                                    contributor={{
-                                        ...contributor,
-                                    }}
-                                />
+                                <ContributorCard id={contributor.id} />
                             </div>
                         </div>
                     </div>
@@ -28,11 +31,4 @@ const MembersModal = ({ members, openModal, setOpenModal }) => (
         </ModalBody>
     </Modal>
 );
-
-MembersModal.propTypes = {
-    members: PropTypes.array.isRequired,
-    openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired,
-};
-
 export default MembersModal;
