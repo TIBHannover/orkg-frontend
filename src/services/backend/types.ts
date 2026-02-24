@@ -358,6 +358,7 @@ export type CreateTemplateParams = {
     properties: PropertyShapeCreateParams[];
     organizations: string[];
     observatories: string[];
+    is_closed: boolean;
 };
 
 export type RosettaStoneTemplate = {

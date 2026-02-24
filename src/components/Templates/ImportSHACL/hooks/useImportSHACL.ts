@@ -377,6 +377,7 @@ const useImportSHACL = () => {
                         .filter((property) => property !== null),
                     observatories: observatoryId ? [observatoryId] : [],
                     organizations: organizationId ? [organizationId] : [],
+                    is_closed: 'is_closed' in nodesShape && nodesShape.is_closed !== undefined ? nodesShape.is_closed : false,
                 };
 
                 const templateResource = await createTemplate(templateObject);

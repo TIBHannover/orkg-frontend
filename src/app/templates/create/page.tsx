@@ -84,6 +84,7 @@ const TemplateNew = () => {
                 properties: [],
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
+                is_closed: false,
             };
             const templateResource = await createTemplate(data);
             if (templateResource) {
