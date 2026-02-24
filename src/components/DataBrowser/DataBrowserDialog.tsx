@@ -22,6 +22,7 @@ type DataBrowserDialogProps = {
     toggleModal: () => void;
     onCloseModal?: () => void;
     showFooter?: boolean;
+    comparisonSelectedPaths?: string[][];
 };
 
 const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
@@ -34,6 +35,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     onCloseModal,
     type = ENTITIES.RESOURCE,
     showFooter = true,
+    comparisonSelectedPaths,
 }) => {
     let route = ROUTES.RESOURCE;
     switch (type) {
@@ -62,7 +64,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
             isOpen={show}
             toggle={toggleModal}
             size="xl"
-            onExit={() => {
+            onClosed={() => {
                 onCloseModal?.();
             }}
         >
@@ -84,14 +86,17 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
                 </Link>
             </ModalHeader>
             <ModalBody>
-                <DataBrowser
-                    isEditMode={isEditMode}
-                    key={rootId}
-                    id={rootId}
-                    canEditSharedRootLevel
-                    defaultHistory={defaultHistory}
-                    showFooter={showFooter}
-                />
+                {show && (
+                    <DataBrowser
+                        isEditMode={isEditMode}
+                        key={rootId}
+                        id={rootId}
+                        canEditSharedRootLevel
+                        defaultHistory={defaultHistory}
+                        showFooter={showFooter}
+                        comparisonSelectedPaths={comparisonSelectedPaths}
+                    />
+                )}
             </ModalBody>
         </Modal>
     );

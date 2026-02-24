@@ -49,6 +49,10 @@ export type DataBrowserConfig = {
      * An array of statements representing the statements snapshot.
      */
     statementsSnapshot?: Statement[];
+    /**
+     * Paths selected in the comparison view, used to show predicates for non-existing values in the data browser.
+     */
+    comparisonSelectedPaths?: string[][];
 };
 
 export type DataBrowserPreferences = {

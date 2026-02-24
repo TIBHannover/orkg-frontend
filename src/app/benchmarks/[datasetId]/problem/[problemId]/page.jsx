@@ -2,14 +2,14 @@
 
 import { faEllipsisV, faPen, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import Chart from 'react-google-charts';
-import { useSortBy, useTable } from 'react-table';
-import useSWRInfinite from 'swr/infinite';
+import useSWR from 'swr';
 
 import CodeURLsTooltip from '@/components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import useBenchmarkDatasetPapers from '@/components/Benchmarks/hooks/useBenchmarkDatasetPapers';
@@ -76,14 +76,8 @@ function Benchmark() {
         problemId,
     });
 
-    const getKey = (pageIndex) => ({
-        id: problemId,
-        page: pageIndex,
-        size: 9999,
-    });
-
-    const { data: datasets, isLoading: isLoadingDatasets } = useSWRInfinite(
-        (pageIndex) => [getKey(pageIndex), datasetsUrl, 'getDatasetsBenchmarksByResearchProblemId'],
+    const { data: datasets, isLoading: isLoadingDatasets } = useSWR(
+        [{ id: problemId, page: 0, size: 9999 }, datasetsUrl, 'getDatasetsBenchmarksByResearchProblemId'],
         ([params]) => getDatasetsBenchmarksByResearchProblemId(params),
         { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
     );
@@ -91,41 +85,41 @@ function Benchmark() {
     const columns = useMemo(
         () => [
             {
-                Header: 'Paper Title',
-                accessor: 'paper_title',
-                Cell: (cell) => (
-                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: cell.row.original.paper_id })} style={{ textDecoration: 'none' }}>
-                        <PaperTitle title={cell.row.original.paper_title} />
+                header: 'Paper Title',
+                accessorKey: 'paper_title',
+                cell: (info) => (
+                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: info.row.original.paper_id })} style={{ textDecoration: 'none' }}>
+                        <PaperTitle title={info.row.original.paper_title} />
                     </Link>
                 ),
             },
             {
-                Header: 'Model',
-                accessor: 'model_name',
-                Cell: (cell) =>
-                    cell.value ? (
-                        <Link href={reverse(ROUTES.RESOURCE, { id: cell.row.original.model_id })} style={{ textDecoration: 'none' }}>
-                            {cell.value ?? '-'}
+                header: 'Model',
+                accessorKey: 'model_name',
+                cell: (info) =>
+                    info.getValue() ? (
+                        <Link href={reverse(ROUTES.RESOURCE, { id: info.row.original.model_id })} style={{ textDecoration: 'none' }}>
+                            {info.getValue() ?? '-'}
                         </Link>
                     ) : (
                         '-'
                     ),
             },
             {
-                Header: 'Score',
-                accessor: 'score',
-                Cell: (cell) => cell.value ?? '-',
+                header: 'Score',
+                accessorKey: 'score',
+                cell: (info) => info.getValue() ?? '-',
             },
             {
-                Header: 'Metric',
-                accessor: 'metric',
-                Cell: (cell) => cell.value ?? '-',
+                header: 'Metric',
+                accessorKey: 'metric',
+                cell: (info) => info.getValue() ?? '-',
             },
             {
-                Header: 'Code',
-                accessor: 'code_urls',
-                Cell: (cell) => (
-                    <CodeURLsTooltip id={cell.row.original.paper_id} title={cell.row.original.paper_title} urls={cell.row.original.code_urls} />
+                header: 'Code',
+                accessorKey: 'code_urls',
+                cell: (info) => (
+                    <CodeURLsTooltip id={info.row.original.paper_id} title={info.row.original.paper_title} urls={info.row.original.code_urls} />
                 ),
             },
         ],
@@ -137,21 +131,20 @@ function Benchmark() {
         [selectedMetric, benchmarkDatasetPapers],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
-        {
-            columns,
-            data,
-            initialState: {
-                sortBy: [
-                    {
-                        id: 'score',
-                        desc: true,
-                    },
-                ],
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState: {
+            sorting: [
+                {
+                    id: 'score',
+                    desc: true,
+                },
+            ],
         },
-        useSortBy,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+    });
 
     const dataChart = [
         ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
@@ -263,7 +256,7 @@ function Benchmark() {
                                             {resourceData.label}
                                         </DropdownToggle>
                                         <DropdownMenu style={{ maxHeight: '280px', overflowY: 'auto' }}>
-                                            {datasets.map((ds, index) => (
+                                            {datasets?.content?.map((ds, index) => (
                                                 <DropdownItem
                                                     key={index}
                                                     disabled={isLoading}
@@ -380,49 +373,58 @@ function Benchmark() {
                         Papers
                     </TitleBar>
                     <Container className="p-0 rounded box">
-                        {rows?.length > 0 && (
-                            <Table {...getTableProps()}>
+                        {table.getRowModel().rows?.length > 0 && (
+                            <Table>
                                 <thead>
-                                    {headerGroups.map((headerGroup) => (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <tr {...headerGroup.getHeaderGroupProps()}>
-                                            {headerGroup.headers.map((column) => (
-                                                <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
-                                                    <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                        {column.render('Header')}
-                                                        {/* Add a sort direction indicator */}
-                                                        <div className="ms-1">
-                                                            {column.isSorted && column.isSortedDesc && (
-                                                                <FontAwesomeIcon icon={faSortUp} className="ms-1" />
-                                                            )}
-
-                                                            {column.isSorted && !column.isSortedDesc && <FontAwesomeIcon icon={faSortDown} />}
+                                    {table.getHeaderGroups().map((headerGroup) => (
+                                        <tr key={headerGroup.id}>
+                                            {headerGroup.headers.map((header) => (
+                                                <th key={header.id}>
+                                                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                                                        <div
+                                                            className="d-flex cursor-pointer select-none"
+                                                            onClick={header.column.getToggleSortingHandler()}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                                    e.preventDefault();
+                                                                    header.column.getToggleSortingHandler()(e);
+                                                                }
+                                                            }}
+                                                            role="button"
+                                                            tabIndex={0}
+                                                        >
+                                                            {flexRender(header.column.columnDef.header, header.getContext())}
+                                                            {/* Add a sort direction indicator */}
+                                                            <div className="ms-1">
+                                                                {{
+                                                                    asc: <FontAwesomeIcon icon={faSortDown} />,
+                                                                    desc: <FontAwesomeIcon icon={faSortUp} className="ms-1" />,
+                                                                }[header.column.getIsSorted()] ?? null}
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    ) : (
+                                                        <div className="d-flex">
+                                                            {flexRender(header.column.columnDef.header, header.getContext())}
+                                                        </div>
+                                                    )}
                                                 </th>
                                             ))}
                                         </tr>
                                     ))}
                                 </thead>
-                                <tbody {...getTableBodyProps()}>
-                                    {rows?.length > 0 &&
-                                        rows.map((row) => {
-                                            prepareRow(row);
-                                            return (
-                                                // eslint-disable-next-line react/jsx-key
-                                                <tr {...row.getRowProps()}>
-                                                    {row.cells.map((cell) => (
-                                                        // eslint-disable-next-line react/jsx-key
-                                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                                    ))}
-                                                </tr>
-                                            );
-                                        })}
+                                <tbody>
+                                    {table.getRowModel().rows.map((row) => (
+                                        <tr key={row.id}>
+                                            {row.getVisibleCells().map((cell) => (
+                                                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                                            ))}
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </Table>
                         )}
 
-                        {!rows?.length && (
+                        {!table.getRowModel().rows?.length && (
                             <div className="p-4">
                                 No papers that addresses {problemData.label} on {resourceData.label} yet.
                                 <div className="pt-3">

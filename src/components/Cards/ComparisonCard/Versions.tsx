@@ -32,10 +32,10 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
                     {version.label}
                     <div className="d-flex mt-1">
                         {!isLoading && data && (
-                            <div className="flex-grow-1">
-                                {data?.contributions?.length && (
+                            <div className="flex-grow-1 pe-2">
+                                {data?.sources?.length && (
                                     <>
-                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {data?.contributions?.length} Contributions
+                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {data?.sources?.length} Sources
                                     </>
                                 )}
                                 {data.visualizations && (

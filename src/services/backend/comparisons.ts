@@ -7,8 +7,11 @@ import { prepareParams } from '@/services/backend/misc';
 import {
     Author,
     Comparison,
+    ComparisonContents,
     ComparisonRelatedFigure,
     ComparisonRelatedResource,
+    ComparisonTablePaths,
+    ComparisonUpdateSelectedPathsParams,
     CreatedByParam,
     ObservatoryIdParam,
     OrganizationIdParam,
@@ -23,7 +26,7 @@ import {
 
 export const comparisonUrl = `${url}comparisons/`;
 export const comparisonsApi = backendApi.extend(() => ({ prefixUrl: comparisonUrl }));
-const COMPARISONS_CONTENT_TYPE = 'application/vnd.orkg.comparison.v2+json';
+const COMPARISONS_CONTENT_TYPE = 'application/vnd.orkg.comparison.v3+json';
 
 export type ComparisonTopAuthor = {
     author: {
@@ -48,6 +51,35 @@ export const getAuthorsByComparisonId = ({ id, page = 0, size = 9999 }: { id: st
 export const getComparison = (id: string): Promise<Comparison> =>
     comparisonsApi
         .get<Comparison>(encodeURIComponent(id), {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
+
+export const getComparisonContents = (id: string): Promise<ComparisonContents> =>
+    comparisonsApi
+        .get<ComparisonContents>(`${encodeURIComponent(id)}/contents`, {
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
+
+export const updateComparisonContents = ({ id, selected_paths }: ComparisonUpdateSelectedPathsParams): Promise<void> =>
+    comparisonsApi
+        .put(`${encodeURIComponent(id)}/contents`, {
+            json: { selected_paths },
+            headers: {
+                Accept: COMPARISONS_CONTENT_TYPE,
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
+
+export const getComparisonTablePaths = (id: string): Promise<ComparisonTablePaths> =>
+    comparisonsApi
+        .get<ComparisonTablePaths>(`${encodeURIComponent(id)}/table-paths`, {
             headers: {
                 Accept: COMPARISONS_CONTENT_TYPE,
             },

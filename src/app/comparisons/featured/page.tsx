@@ -141,7 +141,7 @@ const FeaturedComparisons = () => {
                                                         description={comparison.description}
                                                         icon={getIcon(comparison.id)}
                                                         id={comparison.id}
-                                                        contributions={comparisons?.find((c) => c.id === comparison.id)?.contributions ?? []}
+                                                        sourcesCount={comparison.sources?.length ?? 0}
                                                     />
                                                 ))}
                                         </Row>

@@ -25,3 +25,33 @@
     --swiper-pagination-color: #e86161;
     --swiper-navigation-size: 18px;
 }
+
+/**
+ * Hides the scrollbars but preserves the scroll functionality.
+ * https://github.com/tailwindlabs/tailwindcss/discussions/2394
+ */
+@utility scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@utility scrollbar-always-visible {
+    &::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 3px;
+        height: 10px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 30px;
+        
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 30px;
+        background-color: rgba(0, 0, 0, .4);
+        /* box-shadow: 0 0 1px rgba(255, 255, 255, .5); */
+    }
+}

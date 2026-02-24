@@ -62,11 +62,11 @@ export default class MachineReadableRepresentation {
     createContributionAnchors(model) {
         // go through the input data and create the anchors for the contributions (add AnchorId)
         model.contributionAnchors = [];
-        this.inputDataAsJsonObject.contributions.forEach((contrib, index) => {
+        this.inputDataAsJsonObject?.sources?.forEach((source, index) => {
             // create a cell as contributionAnchor;
             const aCell = new Cell();
             aCell.setFlagByName('contribution');
-            aCell.initializeCellFromData(contrib, index);
+            aCell.initializeCellFromData(source, index);
             model.contributionAnchors.push(aCell);
         });
     }
@@ -74,7 +74,7 @@ export default class MachineReadableRepresentation {
     createPropertyAnchors(model) {
         // go through the input data and create the anchors for the contributions (add AnchorId)
         model.propertyAnchors = [];
-        this.inputDataAsJsonObject.properties.forEach((property, index) => {
+        this.inputDataAsJsonObject?.properties?.forEach((property, index) => {
             // create a cell as contributionAnchor;
             const aCell = new Cell();
             aCell.setFlagByName('property');

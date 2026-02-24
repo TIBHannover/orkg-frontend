@@ -35,7 +35,7 @@ const HierarchyIndicator: FC<HierarchyIndicatorProps> = ({ path = [], side, show
     return (
         <div className={`tw:flex tw:shrink-0 ${side === 'right' ? 'tw:flex-row-reverse' : ''}`}>
             {path?.map((_path, index) => (
-                <LineContainer key={_path} style={{ backgroundColor: getBackgroundColor(index) }}>
+                <LineContainer key={`${_path}-${index}-${side}`} style={{ backgroundColor: getBackgroundColor(index) }}>
                     <VerticalLine
                         style={{
                             opacity: side === 'left' ? 1 : 0.0,

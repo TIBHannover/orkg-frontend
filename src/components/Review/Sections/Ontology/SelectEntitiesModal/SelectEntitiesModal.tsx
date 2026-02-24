@@ -1,13 +1,14 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
-import { flattenDeep, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import useReview from '@/components/Review/hooks/useReview';
 import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
@@ -19,7 +20,7 @@ import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
-import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
+import { comparisonUrl, getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';
 import { getResource } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
@@ -63,30 +64,24 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
         comparisonIds && comparisonIds.length > 0 ? [comparisonIds, comparisonUrl, 'getComparison'] : null,
         ([ids]) => Promise.all(ids.map((id) => getComparison(id))),
     );
+    const { data: comparisonContents } = useSWR(
+        comparisonIds && comparisonIds.length > 0 ? [comparisonIds, comparisonUrl, 'getComparisonContents'] : null,
+        ([ids]) => Promise.all(ids.map((id) => getComparisonContents(id))),
+    );
 
     useEffect(() => {
         const populateLists = async () => {
             if (type === 'entities') {
                 if (comparisons) {
                     setSuggestionEntities(
-                        comparisons.map((comparison) => ({
+                        comparisons.map((comparison, index) => ({
                             title: comparison.title ?? 'Nameless comparison',
                             properties: uniqBy(
-                                flattenDeep(
-                                    Object.keys(comparison.data.data)
-                                        .filter((property) => comparison.data.predicates.find(({ id }) => property === id)?.active)
-                                        .map((property) =>
-                                            comparison.data.data[property].map((row) =>
-                                                row
-                                                    .map((value) => ({
-                                                        label: value.path_labels?.[value.path_labels.length - 1],
-                                                        id: value.path?.[value.path.length - 1],
-                                                        type: 'property',
-                                                    }))
-                                                    .filter((_property) => _property.id),
-                                            ),
-                                        ),
-                                ),
+                                flattenPaths(comparisonContents?.[index].selected_paths ?? []).map((path) => ({
+                                    label: path.label,
+                                    id: path.id,
+                                    type: 'property',
+                                })),
                                 'id',
                             ),
                         })),
@@ -101,7 +96,7 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
             }
         };
         populateLists();
-    }, [comparisons, section, type]);
+    }, [comparisonContents, comparisons, section, type]);
 
     const handleSelectEntity = async (id: string) => {
         try {

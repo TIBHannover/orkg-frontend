@@ -24,7 +24,7 @@ const ImportedPapers = ({ annotationId }: ImportedPapersProps) => {
         ? `${reverse(ROUTES.GRID_EDITOR)}?entityIds=${annotation.importedContributions.map((entry) => entry)}`
         : null;
     const comparisonUrl = annotation?.importedContributions
-        ? `${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${annotation.importedContributions.join(',')}`
+        ? `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${annotation.importedContributions.join(',')}`
         : null;
     return (
         <div>
@@ -32,13 +32,13 @@ const ImportedPapers = ({ annotationId }: ImportedPapersProps) => {
             {!isLoading && papers && papers.length > 0 && (
                 <>
                     <div className="mb-3">
-                        The imported papers can be viewed in the grid editor or in a comparison view.
+                        The imported papers can be viewed in the grid editor or a new comparison can be created with them.
                         <br />
                         <Button size="sm" tag={Link} href={gridEditorUrl} target="_blank" color="primary" className="mt-3 me-2">
                             Grid editor
                         </Button>
                         <Button size="sm" tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                            View comparison
+                            Create comparison
                         </Button>
                     </div>
                     <ListGroup>

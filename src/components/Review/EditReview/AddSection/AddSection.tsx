@@ -28,6 +28,7 @@ const AddSectionStyled = styled(Button)`
 const Toolbar = styled.div`
     position: absolute !important;
     top: -25px;
+    z-index: 99;
 
     button {
         margin-right: 2px;

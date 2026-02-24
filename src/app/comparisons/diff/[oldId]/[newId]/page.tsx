@@ -6,7 +6,7 @@ import { reverse } from 'named-urls';
 import DiffView from '@/components/DiffView/DiffView';
 import useDiff from '@/components/DiffView/useDiff';
 import ROUTES from '@/constants/routes';
-import { getComparison } from '@/services/backend/comparisons';
+import { getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { Comparison } from '@/services/backend/types';
 
 const ComparisonDiff = () => {
@@ -20,12 +20,14 @@ const ComparisonDiff = () => {
     });
 
     const getData = async ({ oldId, newId }: { oldId: string; newId: string }) =>
-        Promise.all([getComparison(oldId), getComparison(newId)]).then(([oldComparison, newComparison]) => ({
-            oldText: comparisonToPlainText(oldComparison),
-            newText: comparisonToPlainText(newComparison),
-            oldTitleData: getTitleData(oldComparison),
-            newTitleData: getTitleData(newComparison),
-        }));
+        Promise.all([getComparison(oldId), getComparison(newId), getComparisonContents(oldId), getComparisonContents(newId)]).then(
+            ([oldComparison, newComparison, oldContents, newContents]) => ({
+                oldText: comparisonToPlainText({ comparison: oldComparison, comparisonContents: oldContents }),
+                newText: comparisonToPlainText({ comparison: newComparison, comparisonContents: newContents }),
+                oldTitleData: getTitleData(oldComparison),
+                newTitleData: getTitleData(newComparison),
+            }),
+        );
 
     return <DiffView diffRoute={ROUTES.COMPARISON_DIFF} type="comparison" getData={getData} />;
 };

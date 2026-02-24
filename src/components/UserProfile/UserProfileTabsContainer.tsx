@@ -100,7 +100,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
         const contributionIds = flatten(
             (flatten(items).filter((r) => selectedItems.includes(r.id)) as Paper[])?.map((c) => c.contributions?.map((ctrId) => ctrId.id)),
         );
-        router.push(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}`);
+        router.push(`${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${contributionIds.join(',')}`);
     };
 
     useEffect(() => {

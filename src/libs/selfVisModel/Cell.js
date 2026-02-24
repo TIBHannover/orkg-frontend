@@ -98,8 +98,8 @@ export default class Cell {
         if (this.contributionAnchgorFlag === true) {
             this.contributionAnchor = data;
             this.positionContribAnchor = index;
-            this.label = `${data.label}(${data.paper_id})`; // << for now to keep string short
-            this.originalLabel = `${data.label}(${data.paper_id})`; // << for now to keep string short
+            this.label = `${data.label}(${data.id})`; // << for now to keep string short
+            this.originalLabel = `${data.label}(${data.id})`; // << for now to keep string short
         }
         if (this.propertyAnchorFlag === true) {
             this.propertyAnchor = data;
@@ -114,15 +114,15 @@ export default class Cell {
     initializeCellValueFromData = (data, rowIndex, colIndex) => {
         if (this.valueAnchorFlag === true) {
             this.valueAnchor = data; // << data is an array holding dataItems;
-            if (data.length !== 1) {
+            if (data && data.length > 1) {
                 this.multiDimensionalCell = true;
             }
             this.positionPropertyAnchor = rowIndex;
             this.positionContribAnchor = colIndex;
             if (!this.multiDimensionalCell) {
-                this.label = data[0].label;
-                this.originalLabel = data[0].label;
-                this.pathAnchor = data[0].path;
+                this.label = data?.[0]?.label;
+                this.originalLabel = data?.[0]?.label;
+                this.pathAnchor = data?.[0]?.path;
             } else {
                 this.label = 'MULTI DIMENSIONAL CELLS ARE NOT SUPPORTED';
             }

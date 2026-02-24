@@ -3,7 +3,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import Comparison from '@/app/comparisons/[comparisonId]/Comparison';
+import ComparisonWithContext from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonWithContext';
 import Coins from '@/components/Coins/Coins';
 import { LICENSE_URL } from '@/constants/misc';
 import { getComparison } from '@/services/backend/comparisons';
@@ -37,13 +37,16 @@ export default async function ComparisonPage({ params }: { params: Promise<{ com
     const { comparisonId } = await params;
     let comparison: ComparisonType | undefined;
     let jsonLd: Record<string, unknown> | undefined;
+    if (!comparisonId) {
+        return notFound();
+    }
+    try {
+        comparison = await getComparison(comparisonId);
+    } catch {
+        return notFound();
+    }
 
-    if (comparisonId) {
-        try {
-            comparison = await getComparison(comparisonId);
-        } catch {
-            return notFound();
-        }
+    if (comparison) {
         jsonLd = {
             mainEntity: {
                 headline: comparison.title,
@@ -68,7 +71,7 @@ export default async function ComparisonPage({ params }: { params: Promise<{ com
         <>
             {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify(jsonLd)) }} />}
             {comparison && <Coins item={comparison} />}
-            <Comparison />
+            <ComparisonWithContext id={comparisonId} isEmbedded={false} />
         </>
     );
 }
