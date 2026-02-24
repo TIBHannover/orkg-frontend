@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import useSWR from 'swr';
 
 import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
-import MarkFeaturedUnlistedContainer from '@/components/Comparison/ComparisonHeader/MarkFeaturedUnlistedContainer';
+import MarkFeaturedUnlistedContainer from '@/components/MarkFeaturedUnlisted/MarkFeaturedUnlistedContainer/MarkFeaturedUnlistedContainer';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';

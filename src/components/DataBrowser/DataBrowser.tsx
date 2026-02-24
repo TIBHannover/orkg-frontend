@@ -36,6 +36,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
     title,
     abstract,
     statementsSnapshot,
+    comparisonSelectedPaths,
 }) => {
     const config = {
         isEditMode,
@@ -49,6 +50,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
         collapsedClasses,
         statementsSnapshot,
         showFooter,
+        comparisonSelectedPaths,
     };
     const context = { researchField, title, abstract };
     return (

@@ -5,6 +5,7 @@ import { FC } from 'react';
 import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import PublishedBadge from '@/components/Badges/PublishedBadge/PublishedBadge';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import { supportedContentTypes } from '@/components/ContentType/types';
@@ -83,6 +84,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                     )}
                                 </div>
                                 <div className="my-3">
+                                    {list.published && <PublishedBadge />}
                                     <ResearchFieldBadge researchField={list.research_fields?.[0]} />
                                     <ListEntryAmount />
                                     <AuthorBadges authors={list.authors} />

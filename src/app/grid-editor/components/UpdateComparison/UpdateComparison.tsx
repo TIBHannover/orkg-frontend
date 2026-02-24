@@ -1,27 +1,22 @@
 import { motion } from 'motion/react';
 import { useQueryState } from 'nuqs';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
 
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useComparison from '@/components/Comparison/hooks/useComparison';
 import Alert from '@/components/Ui/Alert/Alert';
 import Container from '@/components/Ui/Structure/Container';
-import { comparisonUrl, getComparison, updateComparison } from '@/services/backend/comparisons';
+import { updateComparison } from '@/services/backend/comparisons';
 
 const UpdateComparison = () => {
     const [comparisonId] = useQueryState('comparisonId', { defaultValue: '' });
     const [isUpdating, setIsUpdating] = useState(false);
     const { entityIds } = useEntities();
-    const {
-        data: comparison,
-        error,
-        isLoading,
-        mutate,
-    } = useSWR(comparisonId ? [comparisonId, comparisonUrl, 'getComparison'] : null, ([params]) => getComparison(params));
+    const { comparison, isLoading, error, mutate, mutateComparisonContents } = useComparison(comparisonId);
 
-    const currentContributions = comparison?.contributions.map((contribution) => contribution.id) ?? [];
+    const currentContributions = comparison?.sources.map((source) => source.id) ?? [];
     const newContributions = entityIds?.filter((entity) => !currentContributions.includes(entity)) ?? [];
 
     if (isLoading || error || !comparison || newContributions.length === 0) {
@@ -32,14 +27,11 @@ const UpdateComparison = () => {
         setIsUpdating(true);
         try {
             await updateComparison(comparison.id, {
-                contributions: [...currentContributions, ...newContributions],
-                config: {
-                    ...comparison.config,
-                    contributions: [...comparison.config.contributions, ...newContributions],
-                },
+                sources: [...comparison.sources, ...newContributions.map((id) => ({ id, type: 'THING' as const }))],
             });
             toast.success('Comparison updated successfully');
             mutate();
+            mutateComparisonContents();
         } catch (e) {
             toast.error('Error updating comparison');
             console.error(e);

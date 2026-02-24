@@ -15,7 +15,7 @@ export default function CellRenderer(props) {
     return (
         <>
             {(props.type === 'property' || props.type === 'contribution' || props.type === 'value') && (
-                <Tooltip content={props.data.label ?? 'Empty'} contentStyle={{ maxWidth: '300px' }}>
+                <Tooltip content={props.data?.label ?? 'Empty'} contentStyle={{ maxWidth: '300px' }}>
                     <TippyContainer>
                         {props.type === 'property' && (
                             <PropertyCell>
@@ -28,7 +28,7 @@ export default function CellRenderer(props) {
                             </ContributionCell>
                         )}
                         {props.type === 'value' && (
-                            <ValueCell>{props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}</ValueCell>
+                            <ValueCell>{props.data?.label !== props.data?.originalLabel ? <b>{props.data?.label}</b> : props.data?.label}</ValueCell>
                         )}
                     </TippyContainer>
                 </Tooltip>

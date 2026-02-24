@@ -11,12 +11,13 @@ import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Thing } from '@/services/backend/things';
+import { ResourceThingReference } from '@/services/backend/types';
 
 const Item: FC<{
     item: Thing;
     showContributions?: boolean;
-    selectedEntities: Thing[];
-    setSelectedEntities: Dispatch<SetStateAction<Thing[]>>;
+    selectedEntities: (Thing | ResourceThingReference)[];
+    setSelectedEntities: Dispatch<SetStateAction<(Thing | ResourceThingReference)[]>>;
 }> = ({ item, showContributions = false, selectedEntities, setSelectedEntities }) => {
     const getBadge = () => {
         if (item._class === ENTITIES.LITERAL) {
@@ -43,7 +44,7 @@ const Item: FC<{
 
     const isSelected = (itemId: string) => selectedEntities.some((i) => i.id === itemId);
 
-    const handleSelect = (i: Thing) => {
+    const handleSelect = (i: Thing | ResourceThingReference) => {
         if (selectedEntities.some((s) => s.id === i.id)) {
             setSelectedEntities((v) => v.filter((s) => s.id !== i.id));
         } else {

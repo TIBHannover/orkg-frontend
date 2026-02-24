@@ -18,6 +18,7 @@ type SingleStatementProps = {
     path: string[];
     level: number;
     statement: Statement;
+    isHiddenInComparison?: boolean;
 };
 
 const StatementStyled = styled.div`
@@ -27,10 +28,10 @@ const StatementStyled = styled.div`
     }
 `;
 
-const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0 }) => {
+const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0, isHiddenInComparison }) => {
     const { config, loadedResources } = useDataBrowserState();
     const dispatch = useDataBrowserDispatch();
-    const { isEditMode, valuesAsLinks } = config;
+    const { isEditMode, valuesAsLinks, comparisonSelectedPaths } = config;
 
     const {
         isLoadingObjectStatements,
@@ -51,13 +52,18 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0 
         }
     }, [dispatch, path, statement.object._class, statement.object.id, loadedResources]);
 
+    const isComparisonView = comparisonSelectedPaths !== undefined;
+    const isHidden = isComparisonView && isHiddenInComparison; // only hide invisible properties in comparison view
     return (
         <>
             <motion.div layout>
                 <StatementStyled className="tw:border-b tw:border-gray-200">
-                    <div className="tw:flex" style={{ backgroundColor: getBackgroundColor(level) }}>
+                    <div
+                        className={`tw:flex ${isHidden ? 'tw:transition-opacity tw:opacity-50 tw:hover:opacity-100' : ''}`}
+                        style={{ background: getBackgroundColor(level) }}
+                    >
                         <div className="tw:flex tw:basis-1/3 tw:shrink-0 tw:border-r tw:border-gray-200">
-                            <TriplePredicate level={level} statement={statement} deleteStatement={deleteStatement} />
+                            <TriplePredicate level={level} statement={statement} deleteStatement={deleteStatement} isHidden={isHidden} />
                         </div>
                         <div className="tw:flex tw:flex-1 tw:min-w-0">
                             <TripleObject

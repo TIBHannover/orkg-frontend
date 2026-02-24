@@ -5,8 +5,15 @@ import { Dispatch, SetStateAction } from 'react';
 import usePaperContributionCheck from '@/app/grid-editor/hooks/usePaperContributionCheck';
 import Button from '@/components/Ui/Button/Button';
 import { Thing } from '@/services/backend/things';
+import { ResourceThingReference } from '@/services/backend/types';
 
-const SelectedItem = ({ entity, setSelectedEntities }: { entity: Thing; setSelectedEntities: Dispatch<SetStateAction<Thing[]>> }) => {
+const SelectedItem = ({
+    entity,
+    setSelectedEntities,
+}: {
+    entity: Thing | ResourceThingReference;
+    setSelectedEntities: Dispatch<SetStateAction<(Thing | ResourceThingReference)[]>>;
+}) => {
     const { paper } = usePaperContributionCheck(entity.id);
 
     return (

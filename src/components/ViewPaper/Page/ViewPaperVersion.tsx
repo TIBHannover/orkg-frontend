@@ -9,10 +9,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
 
+import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import Coins from '@/components/Coins/Coins';
-import ExportCitation from '@/components/Comparison/Export/ExportCitation';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from '@/components/TitleBar/TitleBar';

@@ -1,33 +1,32 @@
 import { FC, useEffect } from 'react';
 
-import Comparison from '@/components/Comparison/Comparison';
-import ComparisonLoadingComponent from '@/components/Comparison/ComparisonLoadingComponent';
+import ComparisonContextProvider from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
+import ComparisonLoading from '@/components/Comparison/ComparisonLoading/ComparisonLoading';
+import ComparisonTable from '@/components/Comparison/ComparisonTable/ComparisonTable';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import useComparisonOld from '@/components/Comparison/hooks/useComparisonOld';
+import { CLASSES } from '@/constants/graphSettings';
 
 type EmbeddedComparisonProps = {
     id: string;
-    updateReferences: (contributions: { paper_id: string }[]) => void;
+    updateReferences: (paperIds: string[]) => void;
 };
 
 const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences }) => {
-    const { comparison } = useComparison(id);
-    const { isLoadingResult, data, contributions, properties } = useComparisonOld({
-        id,
-        isEmbeddedMode: true,
-        isPublished: true,
-        contributionIds: undefined,
-    });
+    const { comparisonContents, isLoadingComparisonContents, isLoading } = useComparison(id, true);
+
     useEffect(() => {
-        if (!isLoadingResult) {
-            updateReferences(contributions);
+        if (!isLoadingComparisonContents && comparisonContents) {
+            updateReferences(comparisonContents.titles.filter((title) => title.classes.includes(CLASSES.PAPER)).map((title) => title.id));
         }
-    }, [comparison, contributions, data, isLoadingResult, properties]);
+    }, [comparisonContents, isLoadingComparisonContents, updateReferences]);
+
+    const isLoadingResult = isLoading || isLoadingComparisonContents;
+
     return (
-        <>
-            {id && !isLoadingResult && contributions.length > 0 && <Comparison />}
-            {id && isLoadingResult && <ComparisonLoadingComponent />}
-        </>
+        <ComparisonContextProvider id={id} isEmbedded>
+            {id && !isLoadingResult && comparisonContents && comparisonContents?.titles.length > 0 && <ComparisonTable id={id} />}
+            {id && isLoadingResult && <ComparisonLoading />}
+        </ComparisonContextProvider>
     );
 };
 

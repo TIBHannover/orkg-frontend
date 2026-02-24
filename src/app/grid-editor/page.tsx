@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { ReactElement, useEffect, useState } from 'react';
 
-import ComparisonSupportWarning from '@/app/grid-editor/components/ComparisonSupportWarning/ComparisonSupportWarning';
 import KeyboardBanner from '@/app/grid-editor/components/KeyboardBanner';
 import MainGrid from '@/app/grid-editor/components/MainGrid/MainGrid';
 import getPreventEditCase from '@/app/grid-editor/components/PreventEditing/PreventConditions';
@@ -23,9 +22,8 @@ import AddPaperModal from '@/components/PaperForm/AddPaperModal';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import Container from '@/components/Ui/Structure/Container';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
-import routes from '@/constants/routes';
+import ROUTES from '@/constants/routes';
 import requireAuthentication from '@/requireAuthentication';
 
 const GridEditorPage = () => {
@@ -70,8 +68,8 @@ const GridEditorPage = () => {
                                 tag={Link}
                                 href={`${
                                     comparisonId
-                                        ? reverse(routes.COMPARISON, { comparisonId })
-                                        : `${reverse(routes.COMPARISON_NOT_PUBLISHED)}?contributions=${entityIds.join(',')}`
+                                        ? reverse(ROUTES.COMPARISON, { comparisonId })
+                                        : `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${entityIds.join(',')}`
                                 }`}
                                 color="secondary"
                                 size="sm"
@@ -91,11 +89,6 @@ const GridEditorPage = () => {
             </TitleBar>
 
             {prevent.length > 0 && <PreventEditing />}
-            {entities && entities.length > 0 && (
-                <Container className="tw:px-4 tw:my-2">
-                    <ComparisonSupportWarning selectedEntities={entities} dismissible />
-                </Container>
-            )}
             {comparisonId && <UpdateComparison />}
             {prevent.length === 0 && entityIds && entityIds.length > 0 && <KeyboardBanner />}
             {prevent.length === 0 && (
@@ -115,6 +108,8 @@ const GridEditorPage = () => {
                 </GridProvider>
             )}
             <SelectEntities
+                entities={entities}
+                setEntityIds={setEntityIds}
                 allowCreate
                 showDialog={isOpenSelectEntities}
                 toggle={() => setIsOpenSelectEntities((v) => !v)}

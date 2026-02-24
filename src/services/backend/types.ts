@@ -574,7 +574,8 @@ export type ComparisonRelatedResource = {
     url: string;
 };
 
-// type not complete, but part of other issue: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/issues/1610
+export type ComparisonSourceType = 'THING' | 'ROSETTA_STONE_STATEMENT';
+
 export type Comparison = {
     id: string;
     title: string;
@@ -590,7 +591,6 @@ export type Comparison = {
         url: string | null;
     };
     authors: Author[];
-    contributions: Node[];
     visualizations: Node[];
     related_figures: Node[];
     related_resources: Node[];
@@ -608,39 +608,97 @@ export type Comparison = {
         published: ComparisonVersion[];
     };
     sdgs: Node[];
-    config: {
-        predicates: string[];
-        contributions: string[];
-        transpose: boolean;
-        type: 'PATH' | 'MERGE';
+    sources: {
+        id: string;
+        type: ComparisonSourceType;
+    }[];
+};
+
+export type ResourceThingReference = {
+    _class: 'resource_ref';
+    id: string;
+    label: string;
+    classes: string[];
+};
+
+export type PredicateThingReference = {
+    _class: 'predicate_ref';
+    id: string;
+    label: string;
+};
+
+export type LiteralThingReference = {
+    _class: 'literal_ref';
+    id: string | null;
+    label: string;
+    datatype: string;
+};
+
+export type ClassThingReference = {
+    _class: 'class_ref';
+    id: string;
+    label: string;
+    uri: string;
+};
+
+export type ThingReference = ResourceThingReference | PredicateThingReference | LiteralThingReference | ClassThingReference;
+
+export type ComparisonPathType = 'PREDICATE' | 'ROSETTA_STONE_STATEMENT' | 'ROSETTA_STONE_STATEMENT_VALUE';
+
+export type ComparisonTableValue = {
+    value: ThingReference;
+    children: {
+        [pathId: string]: ComparisonTableValue[];
     };
-    data: {
-        contributions: {
-            id: string;
-            label: string;
-            paper_id: string;
-            paper_label: string;
-            paper_year: string;
-            active: boolean;
-        }[];
-        predicates: {
-            id: string;
-            label: string;
-            n_contributions: string;
-            active: boolean;
-            similar_predicates: string[];
-        }[];
-        data: {
-            [predicateId: string]: {
-                id: string;
-                label: string;
-                classes: string[];
-                path: string[];
-                path_labels: string[];
-                _class: string;
-            }[][];
-        };
+};
+
+export type ComparisonTableColumn = {
+    title: ResourceThingReference;
+    subtitle: ResourceThingReference | null;
+    values: {
+        [pathId: string]: ComparisonTableValue[];
     };
+};
+
+export type ComparisonPath = {
+    id: string;
+    label: string;
+    description: string | null;
+    type: ComparisonPathType;
+    children: ComparisonPath[];
+};
+
+export type ComparisonSelectedPathFlattened = ComparisonPath & {
+    path?: string[];
+};
+
+export type ComparisonUpdateSelectedPath = {
+    id: string;
+    type: ComparisonPathType;
+    children: ComparisonUpdateSelectedPath[];
+};
+
+export type ComparisonTablePaths = ComparisonPath[];
+
+export type SelectedPathValues = {
+    values: ThingReference[];
+    children: {
+        [pathId: string]: SelectedPathValues[];
+    };
+};
+
+export type ComparisonContents = {
+    selected_paths: ComparisonPath[];
+    titles: ResourceThingReference[];
+    subtitles: ResourceThingReference[];
+    values: {
+        [pathId: string]: SelectedPathValues[];
+    };
+};
+
+export type ComparisonUpdateSelectedPathsParams = {
+    id: string;
+    selected_paths: ComparisonUpdateSelectedPath[];
 };
 
 export type ReviewSectionData = {

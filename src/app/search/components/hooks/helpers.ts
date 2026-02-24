@@ -1,5 +1,5 @@
 import { CLASSES } from '@/constants/graphSettings';
-import { getComparison } from '@/services/backend/comparisons';
+import { getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';
 import { getReview } from '@/services/backend/reviews';
 import { Thing } from '@/services/backend/things';
@@ -8,12 +8,15 @@ import { getAbstractByDoi, getAbstractByTitle } from '@/services/semanticScholar
 export const parseComparison = async (item: Thing): Promise<string> => {
     try {
         const comparisonDetails = await getComparison(item.id);
+        const comparisonContentsDetails = await getComparisonContents(item.id);
+
         if (comparisonDetails) {
-            const { description, data } = comparisonDetails;
+            const { description } = comparisonDetails;
+            const { titles } = comparisonContentsDetails;
             let paperTitles: string[] = [];
 
-            if (data?.contributions) {
-                paperTitles = data.contributions.map((contribution) => contribution.paper_label).filter(Boolean);
+            if (titles.length > 0) {
+                paperTitles = titles.map((title) => title?.label).filter(Boolean);
             }
 
             return [item.label, description, ...paperTitles].filter(Boolean).join(' - ');
@@ -44,13 +47,15 @@ export const parseSmartReview = async (item: Thing): Promise<string> => {
             const comparisonIds: string[] = comparisonSections.map((section) => section.comparison?.id).filter(Boolean) as string[];
 
             const comparisons = await Promise.all(comparisonIds.map((id) => getComparison(id)));
-            for (const comparison of comparisons) {
+            const comparisonsContents = await Promise.all(comparisonIds.map((id) => getComparisonContents(id)));
+            for (const [index, comparison] of comparisons.entries()) {
                 try {
-                    const { description, data, title: comparisonTitle } = comparison;
+                    const { description, title: comparisonTitle } = comparison;
+
                     let paperTitles: string[] = [];
 
-                    if (data?.contributions) {
-                        paperTitles = data.contributions.map((contribution) => contribution.paper_label).filter(Boolean);
+                    if (comparisonsContents?.[index]?.titles?.length > 0) {
+                        paperTitles = comparisonsContents[index].titles.map((title) => title?.label).filter(Boolean);
                     }
 
                     const compText = [comparisonTitle || '', description, ...paperTitles].filter(Boolean).join(' - ');

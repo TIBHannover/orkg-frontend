@@ -7,6 +7,7 @@ import { FC } from 'react';
 
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
+import PublishedBadge from '@/components/Badges/PublishedBadge/PublishedBadge';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
@@ -96,6 +97,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                 <Alert color="info" fade={false} className="d-none d-print-block">
                                     Read the full and interactive version of this article on the ORKG website: <Link href={url}>{url}</Link>
                                 </Alert>
+                                {review.published && <PublishedBadge />}
                                 <ResearchFieldBadge researchField={review.research_fields?.[0]} />
                                 <AuthorBadges authors={review.authors} />{' '}
                                 {review.identifiers.doi?.[0] && (

@@ -54,8 +54,6 @@ class FeaturedComparisonsItem extends Component {
     render() {
         const icon = require('@fortawesome/free-solid-svg-icons')[this.props.icon];
 
-        const contributionsLength = this.props.contributions ? this.props.contributions.length : 0;
-
         return (
             <Col sm="6" className="mb-4">
                 <Link style={{ textDecoration: 'none' }} href={reverse(ROUTES.COMPARISON, { comparisonId: this.props.id })}>
@@ -68,7 +66,7 @@ class FeaturedComparisonsItem extends Component {
                                 <Col sm="9">
                                     <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>
                                     <ComparisonText>{this.props.description}</ComparisonText>
-                                    <Badge color="light">{contributionsLength} contributions</Badge>
+                                    <Badge color="light">{this.props.sourcesCount} sources</Badge>
                                 </Col>
                             </Row>
                         </ComparisonBody>
@@ -84,7 +82,7 @@ FeaturedComparisonsItem.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    contributions: PropTypes.array.isRequired,
+    sourcesCount: PropTypes.number.isRequired,
 };
 
 export default FeaturedComparisonsItem;

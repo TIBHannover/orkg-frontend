@@ -2,17 +2,17 @@ import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 import pluralize from 'pluralize';
 import { FC } from 'react';
-import useSWR from 'swr';
 
+import useComparison from '@/components/Comparison/hooks/useComparison';
 import Alert from '@/components/Ui/Alert/Alert';
 import ROUTES from '@/constants/routes';
-import { comparisonUrl, getComparison } from '@/services/backend/comparisons';
 
 type PrintViewProps = {
     comparisonId?: string;
 };
 const PrintView: FC<PrintViewProps> = ({ comparisonId }) => {
-    const { data: comparison } = useSWR(comparisonId ? [comparisonId, comparisonUrl, 'getComparison'] : null, ([id]) => getComparison(id));
+    const { comparison, comparisonContents } = useComparison(comparisonId);
+
     const url = env('NEXT_PUBLIC_URL') + reverse(ROUTES.COMPARISON, { comparisonId });
 
     return (
@@ -38,16 +38,16 @@ const PrintView: FC<PrintViewProps> = ({ comparisonId }) => {
                             <td>{comparison.authors.map((author) => author.name).join(', ')}</td>
                         </tr>
                     )}
-                    {comparison?.contributions && (
+                    {comparisonContents?.titles && (
                         <tr>
                             <th className="fw-semibold">Number of contributions</th>
-                            <td>{comparison.contributions.length}</td>
+                            <td>{comparisonContents?.titles.length}</td>
                         </tr>
                     )}
-                    {comparison?.data.predicates && (
+                    {comparisonContents?.selected_paths && (
                         <tr>
-                            <th className="fw-semibold">Number of properties</th>
-                            <td>{comparison.data.predicates.length}</td>
+                            <th className="fw-semibold">Number of rows</th>
+                            <td>{comparisonContents.selected_paths.length}</td>
                         </tr>
                     )}
                     {comparison?.identifiers.doi && comparison.identifiers.doi.length > 0 && (

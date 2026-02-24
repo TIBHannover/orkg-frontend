@@ -86,7 +86,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
 
                     <div className="mb-1">
                         <small>
-                            <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {comparison.contributions?.length} Contributions
+                            <FontAwesomeIcon size="sm" icon={faFile} className="me-1" /> {comparison.sources?.length} Sources
                             <FontAwesomeIcon size="sm" icon={faChartBar} className="ms-2 me-1" /> {comparison.visualizations?.length} Visualizations
                             {(comparison.related_resources?.length > 0 || comparison.related_figures?.length > 0) && (
                                 <>

@@ -90,7 +90,7 @@ const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
             contentStyle={{ maxWidth: '470px', padding: 0, background: '#fff', boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)' }}
             content={
                 <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px' }}>
-                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.ADD_COMPARISON} className="d-flex p-2">
+                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.CREATE_COMPARISON} className="d-flex p-2">
                         <ImgContainer>
                             <Image src={ContributionEditor} style={{ width: '90%', height: 'auto' }} alt="Contribution editor preview" />
                         </ImgContainer>

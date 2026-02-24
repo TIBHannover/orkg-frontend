@@ -11,10 +11,11 @@ import useReview from '@/components/Review/hooks/useReview';
 import SectionComparison from '@/components/Review/Sections/Comparison/SectionComparison';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
-import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getComparison } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';
-import { ReviewSection } from '@/services/backend/types';
+import { getStatements } from '@/services/backend/statements';
+import { ReviewSection, Statement } from '@/services/backend/types';
 
 type EditSectionComparisonProps = {
     section: ReviewSection;
@@ -47,7 +48,14 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
     // it requires quite a lot of requests to get the metadata of the papers used in a comparison
     const getPaperMetadataFromComparison = async (comparisonId: string) => {
         const comparison = await getComparison(comparisonId);
-        const paperIds = uniq(comparison.data.contributions.map(({ paper_id }) => paper_id));
+
+        const sourceIds = comparison.sources.map(({ id }) => id);
+        // only fetch papers for sources, other sources shouldn't appear in the reference list
+        const paperStatementsPromises = sourceIds.map((sourceId) => getStatements({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: sourceId }));
+        const paperIds = uniq(
+            (await Promise.all(paperStatementsPromises)).flatMap((statements) => statements as Statement[]).map((statement) => statement.subject.id),
+        );
+
         const papers = await Promise.all(paperIds.map((paperId) => getPaper(paperId)));
         const references: string[] = [];
         for (const paper of papers) {
@@ -118,10 +126,11 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
                 value={selectedResource}
                 openMenuOnFocus={false}
                 allowCreate={false}
+                className="tw:!z-[50]"
             />
 
             {hasValue && (
-                <>
+                <div className="mt-2">
                     <Alert color="info" className="my-3" isOpen={shouldShowOntologyAlert} toggle={() => setShouldShowOntologyAlert(false)}>
                         Do you want to add an ontology section for this comparison?{' '}
                         <Button color="link" className="p-0" onClick={handleAddOntologySection}>
@@ -129,7 +138,7 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
                         </Button>
                     </Alert>
                     <SectionComparison section={section} />
-                </>
+                </div>
             )}
         </div>
     );

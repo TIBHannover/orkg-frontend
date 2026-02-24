@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import useSWR from 'swr';
 
-import ComparisonLoadingComponent from '@/components/Comparison/ComparisonLoadingComponent';
+import ComparisonLoading from '@/components/Comparison/ComparisonLoading/ComparisonLoading';
 import useReview from '@/components/Review/hooks/useReview';
 import THING_TYPES from '@/constants/thingTypes';
 import Visualization from '@/libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
@@ -33,7 +33,7 @@ const SectionVisualization: FC<SectionVisualizationProps> = ({ id, label }) => {
                     <p hidden>{label}</p>
                 </>
             )}
-            {id && isLoading && <ComparisonLoadingComponent />}
+            {id && isLoading && <ComparisonLoading />}
         </>
     );
 };

@@ -1,0 +1,84 @@
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FC, useState } from 'react';
+
+import EditMetadataModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/EditMetadataModal/EditMetadataModel';
+import usePublish from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Publish/hooks/usePublish';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useComparison from '@/components/Comparison/hooks/useComparison';
+import Alert from '@/components/Ui/Alert/Alert';
+import Button from '@/components/Ui/Button/Button';
+import Form from '@/components/Ui/Form/Form';
+import FormGroup from '@/components/Ui/Form/FormGroup';
+import Input from '@/components/Ui/Input/Input';
+import Label from '@/components/Ui/Label/Label';
+import Modal from '@/components/Ui/Modal/Modal';
+import ModalBody from '@/components/Ui/Modal/ModalBody';
+import ModalFooter from '@/components/Ui/Modal/ModalFooter';
+import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import Tooltip from '@/components/Utils/Tooltip';
+
+type PublishProps = {
+    toggle: () => void;
+};
+
+const Publish: FC<PublishProps> = ({ toggle }) => {
+    const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+    const { comparison } = useComparison();
+    const { isLoading, handleSubmit, shouldAssignDoi, setShouldAssignDoi, isPublishable } = usePublish();
+
+    return (
+        <Modal isOpen toggle={toggle}>
+            <ModalHeader toggle={toggle}>Publish comparison</ModalHeader>
+
+            <Form onSubmit={handleSubmit}>
+                <ModalBody>
+                    {isPublishable ? (
+                        <>
+                            <Alert color="info">Once a comparison is published, the current state is saved and will be persistent over time.</Alert>
+                            <FormGroup>
+                                <div>
+                                    <Tooltip message="Assign a DOI to the published version of this comparison">
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                onChange={(e) => {
+                                                    setShouldAssignDoi(e.target.checked);
+                                                }}
+                                                checked={shouldAssignDoi}
+                                                id="switchAssignDoi"
+                                                inline
+                                            />{' '}
+                                            Assign DOI to comparison
+                                        </Label>
+                                    </Tooltip>
+                                </div>
+                            </FormGroup>
+                        </>
+                    ) : (
+                        <Alert color="danger">
+                            Before publishing a comparison, make sure a comparison has a{' '}
+                            <em>title, description, research field, authors, and has at least two sources</em>.<br />
+                            <Button color="secondary" size="sm" className="mt-2 me-2" onClick={() => setIsOpenEditModal(true)}>
+                                <FontAwesomeIcon icon={faPen} /> Edit metadata
+                            </Button>
+                        </Alert>
+                    )}
+                </ModalBody>
+
+                {isPublishable && (
+                    <ModalFooter>
+                        <div className="text-align-center mt-2">
+                            <ButtonWithLoading type="submit" color="primary" isLoading={isLoading}>
+                                Publish
+                            </ButtonWithLoading>
+                        </div>
+                    </ModalFooter>
+                )}
+            </Form>
+            {isOpenEditModal && comparison && <EditMetadataModal toggle={() => setIsOpenEditModal((v) => !v)} comparisonId={comparison.id} />}
+        </Modal>
+    );
+};
+
+export default Publish;

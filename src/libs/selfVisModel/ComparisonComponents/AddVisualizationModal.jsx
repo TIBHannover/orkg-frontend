@@ -1,11 +1,12 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
 import styled from 'styled-components';
 
-import { activatedContributionsToList } from '@/components/Comparison/hooks/helpers';
+import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
+import useComparison from '@/components/Comparison/hooks/useComparison';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
@@ -19,7 +20,6 @@ import CellEditor from '@/libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from '@/libs/selfVisModel/RenderingComponents/CellSelector';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import VisualizationWidget from '@/libs/selfVisModel/VisRenderer/VisualizationWidget';
-import { setIsOpenVisualizationModal } from '@/slices/comparisonSlice';
 
 const TabButtons = styled.div`
     border-bottom: 2px solid ${(props) => props.theme.lightDarker};
@@ -46,27 +46,19 @@ const TabButton = styled.div`
     }
 `;
 
-function AddVisualizationModal() {
-    const { comparisonId } = useParams();
-
+function AddVisualizationModal({ isOpenVisualizationModal, setIsOpenVisualizationModal }) {
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
     const [loadedModel, setLoadedModel] = useState(false);
     const [showPublishVisualizationDialog, setShowPublishVisualizationDialog] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
+
+    const { comparisonId } = useParams();
     const prevProcessStep = usePrevious(processStep);
-
-    const dispatch = useDispatch();
-    const { data } = useSelector((state) => state.comparison);
-    const contributions = useSelector((state) => state.comparison.contributions.filter((c) => c.active));
-    const properties = useSelector((state) => state.comparison.properties.filter((c) => c.active));
-    const useReconstructedDataInVisualization = useSelector((state) => state.comparison.useReconstructedDataInVisualization);
-    const isOpenVisualizationModal = useSelector((state) => state.comparison.isOpenVisualizationModal);
+    const { comparison, comparisonContents, selectedPathsFlattened } = useComparison();
+    const { table } = useComparisonExport();
     const prevShowDialog = usePrevious(isOpenVisualizationModal);
-
-    const predicatesList = useSelector((state) => state.comparison.configuration.predicatesList);
-    const contributionsList = useSelector((state) => activatedContributionsToList(state.comparison.contributions));
 
     const updateDimensions = () => {
         const offset = 300;
@@ -92,14 +84,9 @@ function AddVisualizationModal() {
     useEffect(() => {
         if (isOpenVisualizationModal) {
             if (!prevShowDialog) {
-                if (useReconstructedDataInVisualization) {
-                    // set the state last tab;
-                    setProcessStep(2);
-                } else {
-                    // reset the model >> this is called when we start the visualization modal
-                    new SelfVisDataModel().resetCustomizationModel();
-                    setProcessStep(0);
-                }
+                // reset the model >> this is called when we start the visualization modal
+                new SelfVisDataModel().resetCustomizationModel();
+                setProcessStep(0);
             } else if (prevProcessStep === 0 && processStep === 2) {
                 // this shall trigger the cell validation
                 // shall be done when the user switches between select directly to visualize
@@ -122,19 +109,28 @@ function AddVisualizationModal() {
     const onLoadModal = () => {
         // check if we need to run the parser
         const mmr = new SelfVisDataModel(); // this is a singleton
+
+        const propsWithId = table
+            .map((row) => selectedPathsFlattened.find((prop) => prop?.id === row.pathId))
+            .map((p, index) => ({ ...p, id: `${index}${p.id}/${p.path.join('/')}` }));
+
+        // TODO trying to make the data compatible with visualizations code, needs to be refactored
         mmr.integrateInputData({
-            contributions,
-            properties,
-            data,
-            contributionsList,
-            predicatesList,
+            properties: propsWithId,
+            data: Object.fromEntries(propsWithId.map((p, index) => [p.id, table?.[index]?.values.map((v) => (v ? [v] : undefined))])),
+            sources:
+                comparisonContents?.titles?.map((title, i) => ({
+                    id: comparisonContents.subtitles[i]?.id ?? title.id,
+                    label: comparisonContents.subtitles[i]?.label ?? title.label,
+                })) ?? [],
+            sourceIds: comparison?.sources.map(({ id }) => id) ?? [],
         });
     };
 
     return (
         <Modal
             isOpen={isOpenVisualizationModal}
-            toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}
+            toggle={() => setIsOpenVisualizationModal(!isOpenVisualizationModal)}
             size="lg"
             onOpened={() => {
                 onLoadModal();
@@ -142,7 +138,7 @@ function AddVisualizationModal() {
             }}
             style={{ maxWidth: '90%', marginBottom: 0 }}
         >
-            <ModalHeader toggle={() => dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal))}>
+            <ModalHeader toggle={() => setIsOpenVisualizationModal(!isOpenVisualizationModal)}>
                 Create comparison visualization
                 <Button
                     outline
@@ -188,7 +184,7 @@ function AddVisualizationModal() {
                     toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
                     closeAllAndReloadVisualizations={() => {
                         setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                        dispatch(setIsOpenVisualizationModal(!isOpenVisualizationModal));
+                        setIsOpenVisualizationModal(!isOpenVisualizationModal);
                     }}
                     comparisonId={comparisonId}
                 />
@@ -236,5 +232,10 @@ function AddVisualizationModal() {
         </Modal>
     );
 }
+
+AddVisualizationModal.propTypes = {
+    isOpenVisualizationModal: PropTypes.bool.isRequired,
+    setIsOpenVisualizationModal: PropTypes.func.isRequired,
+};
 
 export default AddVisualizationModal;

@@ -6,12 +6,12 @@ import { CSSProperties, FC, useEffect, useState } from 'react';
 import ReactDiffViewer from 'react-diff-viewer-continued';
 import useSWR from 'swr';
 
-import { ContainerAnimated } from '@/components/Comparison/styled';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import DiffTitle, { type TitleData } from '@/components/DiffView/DiffTitle';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
+import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 
@@ -95,7 +95,7 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
             >
                 Compare {type} versions
             </TitleBar>
-            <ContainerAnimated style={containerStyle} className="box rounded p-0 overflow-hidden">
+            <Container style={containerStyle} className="box rounded p-0 overflow-hidden tw:transition-[max-width] tw:duration-500">
                 {switchedVersions && (
                     <div className="m-3">
                         <Alert color="info" toggle={handleDismiss}>
@@ -128,7 +128,7 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
                         <Alert color="danger">An error has occurred, please try this action again</Alert>
                     </div>
                 )}
-            </ContainerAnimated>
+            </Container>
         </>
     );
 };

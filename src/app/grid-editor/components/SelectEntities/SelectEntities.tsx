@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-import ComparisonSupportWarning from '@/app/grid-editor/components/ComparisonSupportWarning/ComparisonSupportWarning';
 import Item from '@/app/grid-editor/components/SelectEntities/Item';
 import SelectedItem from '@/app/grid-editor/components/SelectEntities/SelectedItem';
-import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useTemplates from '@/app/grid-editor/hooks/useTemplates';
 import Filters from '@/app/search/components/Filters';
 import useSearch, { IGNORED_CLASSES as DEFAULT_IGNORED_CLASSES } from '@/app/search/components/hooks/useSearch';
@@ -27,13 +25,15 @@ import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { updateResource } from '@/services/backend/resources';
 import { Thing } from '@/services/backend/things';
-import { PaginatedResponse } from '@/services/backend/types';
+import { PaginatedResponse, ResourceThingReference } from '@/services/backend/types';
 
 type AddEntityProps = {
     showDialog: boolean;
     toggle: () => void;
     allowCreate: boolean;
     onCreatePaper: () => void;
+    setEntityIds: (ids: string[]) => void;
+    entities: Thing[] | ResourceThingReference[] | undefined;
 };
 
 const DEFAULT_FILTERS = [
@@ -72,11 +72,10 @@ const IGNORED_CLASSES = [
     CLASSES.CONTRIBUTION,
 ];
 
-const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false, onCreatePaper = () => {} }) => {
-    const { setEntityIds, entities } = useEntities();
+const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false, onCreatePaper = () => {}, setEntityIds, entities }) => {
     const { templates } = useTemplates();
     const [isOpenViewSelectedEntities, setIsOpenViewSelectedEntities] = useState(false);
-    const [selectedEntities, setSelectedEntities] = useState<Thing[]>(entities ?? []);
+    const [selectedEntities, setSelectedEntities] = useState<(Thing | ResourceThingReference)[]>(entities ?? []);
 
     useEffect(() => {
         setSelectedEntities(entities ?? []);
@@ -288,7 +287,6 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
                         setIsOpenViewSelectedEntities(params[0] === 'selected');
                     }}
                 />
-                <ComparisonSupportWarning selectedEntities={selectedEntities} />
             </ModalBody>
             <ModalFooter className="d-flex">
                 {allowCreate && (
@@ -307,4 +305,4 @@ const AddEntity: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false
     );
 };
 
-export default AddEntity;
+export default SelectEntities;

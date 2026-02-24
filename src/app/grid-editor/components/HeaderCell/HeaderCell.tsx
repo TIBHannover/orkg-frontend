@@ -11,7 +11,6 @@ import useEntities from '@/app/grid-editor/hooks/useEntities';
 import usePaperContributionCheck from '@/app/grid-editor/hooks/usePaperContributionCheck';
 import useTemplates from '@/app/grid-editor/hooks/useTemplates';
 import ActionButton from '@/components/ActionButton/ActionButton';
-import { ContributionButton } from '@/components/Comparison/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
@@ -64,7 +63,12 @@ const HeaderCell = ({ entity }: HeaderCellParams) => {
                 </Tooltip>
             )}
             <div className="tw:flex tw:items-center tw:justify-between tw:w-full">
-                <ContributionButton color="link" className="user-select-auto tw:text-left!" onClick={() => setIsOpenEditEntityModal(true)}>
+                <Button
+                    color="link"
+                    className="user-select-auto tw:text-left! tw:!p-0 tw:text-inherit tw:text-decoration-none tw:font-inherit"
+                    style={{ padding: 0, color: 'inherit', fontSize: 'inherit', textDecoration: 'none' }}
+                    onClick={() => setIsOpenEditEntityModal(true)}
+                >
                     <Tooltip
                         content={
                             entity._class === ENTITIES.RESOURCE &&
@@ -109,7 +113,7 @@ const HeaderCell = ({ entity }: HeaderCellParams) => {
                     >
                         <strong className="tw:line-clamp-1">{entity.label}</strong>
                     </Tooltip>
-                </ContributionButton>
+                </Button>
                 <div
                     className={`tw:transition-opacity tw:duration-200 ${disableHover ? 'tw:opacity-100' : 'tw:opacity-0 tw:group-hover:opacity-100'}`}
                 >

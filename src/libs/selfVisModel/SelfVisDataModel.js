@@ -532,12 +532,12 @@ export default class SelfVisDataMode {
 
     __compareIfNewInput = (data) => {
         // no data yet in the input
-        if (!this._inputData.contributionsList) {
+        if (!this._inputData.sources) {
             this.__setInputData(data);
             this.requiresParing = true;
         } else {
             // we have some data, but check if we use the same contributions or not
-            if (this._inputData.contributionsList === data.contributionsList) {
+            if (this._inputData.sourceIds === data.sourceIds) {
                 this.requiresParing = false;
             } else {
                 this.__setInputData(data);

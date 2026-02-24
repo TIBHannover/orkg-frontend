@@ -1,8 +1,10 @@
+import { uniqBy } from 'lodash';
 import { useCallback } from 'react';
 
+import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import { isListSection, isTextSection } from '@/components/List/helpers/typeGuards';
 import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLink/ContentLink';
-import { Comparison, LiteratureList, Review } from '@/services/backend/types';
+import { Comparison, ComparisonContents, LiteratureList, Review } from '@/services/backend/types';
 
 const useDiff = () => {
     const reviewToPlainText = useCallback((article: Review) => {
@@ -70,40 +72,47 @@ const useDiff = () => {
         return articleText;
     }, []);
 
-    const comparisonToPlainText = useCallback((comparison: Comparison) => {
-        let comparisonText = '';
-        comparisonText += `Title: ${comparison.title}\n\n`;
+    const comparisonToPlainText = useCallback(
+        ({ comparison, comparisonContents }: { comparison: Comparison; comparisonContents: ComparisonContents }) => {
+            const predicates = uniqBy(flattenPaths(comparisonContents.selected_paths ?? []), 'id');
+            let comparisonText = '';
+            comparisonText += `Title: ${comparison.title}\n\n`;
 
-        if (comparison.research_fields?.[0]) {
-            comparisonText += `Research field: ${comparison.research_fields?.[0]?.label}\n\n`;
-        }
+            if (comparison.research_fields?.[0]) {
+                comparisonText += `Research field: ${comparison.research_fields?.[0]?.label}\n\n`;
+            }
 
-        if (comparison.description) {
-            comparisonText += `Description: ${comparison.description}\n\n`;
-        }
+            if (comparison.description) {
+                comparisonText += `Description: ${comparison.description}\n\n`;
+            }
 
-        for (const [index, author] of comparison.authors.entries()) {
-            comparisonText += `Author ${index + 1}: ${author.name}\n`;
-        }
+            for (const [index, author] of comparison.authors.entries()) {
+                comparisonText += `Author ${index + 1}: ${author.name}\n`;
+            }
 
-        if (comparison.identifiers?.doi?.[0]) {
-            comparisonText += `DOI: ${comparison.identifiers?.doi?.[0]}\n\n`;
-        }
+            if (comparison.identifiers?.doi?.[0]) {
+                comparisonText += `DOI: ${comparison.identifiers?.doi?.[0]}\n\n`;
+            }
 
-        for (const [index, contribution] of comparison.contributions.sort((a, b) => a.id.localeCompare(b.id)).entries()) {
-            comparisonText += `Contribution ${index + 1}: ${contribution.label}\n`;
-        }
+            const entities = comparisonContents.titles
+                .map((title, i) => ({ title, subtitle: comparisonContents.subtitles[i] ?? null }))
+                .sort((a, b) => (a.subtitle?.id ?? a.title.id).localeCompare(b.subtitle?.id ?? b.title.id));
+            for (const [index, entity] of entities.entries()) {
+                comparisonText += `Entity ${index + 1}: ${entity.title.label} ${entity.subtitle?.label}\n`;
+            }
 
-        for (const [index, reference] of comparison.references.entries()) {
-            comparisonText += `Reference ${index + 1}: ${reference}\n`;
-        }
+            for (const [index, reference] of comparison.references.entries()) {
+                comparisonText += `Reference ${index + 1}: ${reference}\n`;
+            }
 
-        for (const [index, property] of comparison.config.predicates.entries()) {
-            comparisonText += `Property ${index + 1}: ${property}\n`;
-        }
+            for (const [index, property] of predicates.entries()) {
+                comparisonText += `Property ${index + 1}: ${property.label}\n`;
+            }
 
-        return comparisonText;
-    }, []);
+            return comparisonText;
+        },
+        [],
+    );
 
     return { reviewToPlainText, comparisonToPlainText, listToPlainText };
 };
