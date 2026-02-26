@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import useReview from '@/components/Review/hooks/useReview';
 import OntologyItem from '@/components/Review/Sections/Ontology/OntologyItem/OntologyItem';
 import SelectEntitiesModal from '@/components/Review/Sections/Ontology/SelectEntitiesModal/SelectEntitiesModal';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Table from '@/components/Ui/Table/Table';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
@@ -79,6 +80,10 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
         setEditType(type);
         setIsOpenEntityModal(true);
     };
+
+    const hasLabels = (section.entities?.length ?? 0) > 0;
+    const hasProperties = (section.predicates?.length ?? 0) > 0;
+    const hasValues = (entityStatements?.length ?? 0) > 0;
 
     return (
         <Table size="sm" bordered responsive>
@@ -169,8 +174,24 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
 
                 {(!entityStatements || (entityStatements.length === 0 && !isLoading)) && (
                     <tr>
-                        <td colSpan={3} className="text-center text-muted font-italic">
-                            No entities added
+                        <td colSpan={3} className="text-center p-3">
+                            {!hasLabels && !hasProperties && (
+                                <Alert color="warning" fade={false} className="mb-0">
+                                    No labels and properties selected
+                                </Alert>
+                            )}
+
+                            {hasLabels && !hasProperties && (
+                                <Alert color="warning" fade={false} className="mb-0">
+                                    Labels selected but no properties selected
+                                </Alert>
+                            )}
+
+                            {hasLabels && hasProperties && !hasValues && (
+                                <Alert color="warning" fade={false} className="mb-0">
+                                    Labels and properties selected but no values to display
+                                </Alert>
+                            )}
                         </td>
                     </tr>
                 )}
