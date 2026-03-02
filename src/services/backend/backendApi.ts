@@ -51,7 +51,7 @@ export const configuration = new Configuration({
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);
         }
-        return fetch(input, { ...init, headers, next: { revalidate: 3600 } });
+        return fetch(input, { ...init, headers, credentials: 'omit', next: { revalidate: 3600 } });
     },
 });
 
