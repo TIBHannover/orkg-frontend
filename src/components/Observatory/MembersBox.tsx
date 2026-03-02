@@ -66,7 +66,7 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }: MembersBox
                                 <div key={member.id}>
                                     <ContributorCard
                                         id={member.id}
-                                        subTitle={organizationsList.find((o) => o.id.includes(member.organization_id))?.name}
+                                        subTitle={organizationsList.find((o) => o.id.includes(member.organizationId))?.name}
                                         options={
                                             !!user && user.isCurationAllowed
                                                 ? [

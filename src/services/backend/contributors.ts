@@ -1,11 +1,11 @@
-import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
-import { Contributor, PaginatedResponse } from '@/services/backend/types';
+import { ContributorsApi, ContributorsApiFindAllRequest } from '@orkg/orkg-client';
 
-export const contributorsUrl = `${url}contributors/`;
-export const contributorsApi = backendApi.extend(() => ({ prefixUrl: contributorsUrl }));
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration } from '@/services/backend/backendApi';
 
-export const getContributorInformationById = (contributorsId: string) => contributorsApi.get<Contributor>(contributorsId).json();
+export const contributorsUrl = `${urlNoTrailingSlash}/contributors`;
+const contributorsApi = new ContributorsApi(configuration);
 
-export const getContributors = (params: { page: number; size: number; q: string }) =>
-    contributorsApi.get<PaginatedResponse<Contributor>>('', { searchParams: params }).json();
+export const getContributorById = (contributorsId: string) => contributorsApi.findById({ id: contributorsId });
+
+export const getContributors = (params: ContributorsApiFindAllRequest) => contributorsApi.findAll(params);

@@ -30,7 +30,7 @@ export const USER_PROFILE_CONTENT_TABS = [
     { id: CLASSES.ROSETTA_NODE_SHAPE, label: 'Statement templates', params: { published: undefined } },
 ];
 
-function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUserId: string }) {
+function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUserId?: string }) {
     const router = useRouter();
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 

@@ -57,7 +57,7 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
                 placement="bottom"
                 content={
                     <>
-                        {contributor?.display_name}
+                        {contributor?.displayName}
                         {appendToTooltip}
                     </>
                 }
@@ -69,10 +69,10 @@ const UserAvatar: FC<UserAvatarProps> = ({ userId, size = 28, appendToTooltip = 
                             <>
                                 <StyledGravatar
                                     className="rounded-circle"
-                                    hashedEmail={contributor?.gravatar_id ?? 'example@example.com'}
+                                    hashedEmail={contributor?.gravatarId ?? 'example@example.com'}
                                     size={size}
                                 />
-                                {showDisplayName && !isLoadingContributor && <> {contributor?.display_name}</>}
+                                {showDisplayName && !isLoadingContributor && <> {contributor?.displayName}</>}
                             </>
                         )}
                         {userId && isLoadingContributor && (

@@ -1,4 +1,4 @@
-import { ClassRepresentation, LiteralRepresentation, PageOfAuthorRecordRepresentationsPage } from '@orkg/orkg-client';
+import { ClassRepresentation, Contributor as ContributorType, LiteralRepresentation, PageOfAuthorRecordRepresentationsPage } from '@orkg/orkg-client';
 
 export type EntityType = string;
 
@@ -85,6 +85,7 @@ export type Predicate = {
 };
 
 export type Literal = LiteralRepresentation;
+export type Contributor = ContributorType;
 
 export type Class = ClassRepresentation;
 
@@ -112,16 +113,6 @@ export type ConferenceSeries = {
         start_date: string;
         review_process: string;
     };
-};
-
-export type Contributor = {
-    id: string;
-    display_name: string;
-    joined_at: string;
-    organization_id: string;
-    observatory_id: string;
-    gravatar_id: string;
-    avatar_url: string;
 };
 
 export type List = {

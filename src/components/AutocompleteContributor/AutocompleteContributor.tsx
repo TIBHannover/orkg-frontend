@@ -15,7 +15,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import ROUTES from '@/constants/routes';
-import { contributorsUrl, getContributorInformationById, getContributors } from '@/services/backend/contributors';
+import { contributorsUrl, getContributorById, getContributors } from '@/services/backend/contributors';
 import { Contributor } from '@/services/backend/types';
 
 const PAGE_SIZE = 10;
@@ -31,8 +31,8 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
     const { user } = useAuthentication();
 
     const { data: currentUser } = useSWR(
-        currentContributor && !!user && user.id ? [user.id, contributorsUrl, 'getContributorInformationById'] : null,
-        ([params]) => getContributorInformationById(params),
+        currentContributor && !!user && user.id ? [user.id, contributorsUrl, 'getContributorById'] : null,
+        ([params]) => getContributorById(params),
     );
 
     const loadContributorOptions = async (
@@ -56,7 +56,7 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
                 page,
             });
             const items = result.content;
-            const hasMore = result.page.number < result.page.total_pages - 1;
+            const hasMore = result.page.number < result.page.totalPages - 1;
             return {
                 options: page === 0 ? uniqBy([...(currentUser ? [currentUser] : []), ...items], 'id') : items,
                 hasMore,
@@ -78,10 +78,10 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
                     additional={{
                         page: 0,
                     }}
-                    loadOptions={(inputValue, options, additional) => loadContributorOptions(inputValue, options, additional)}
+                    loadOptions={loadContributorOptions}
                     onChange={onChange}
-                    getOptionValue={({ id }) => id}
-                    getOptionLabel={({ display_name }) => display_name}
+                    getOptionValue={(option) => option.id}
+                    getOptionLabel={(option) => option.displayName}
                     inputId="select-contributor"
                     placeholder="Select a contributor"
                     isClearable

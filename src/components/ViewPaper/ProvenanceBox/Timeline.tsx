@@ -2,15 +2,31 @@ import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
-import PropTypes from 'prop-types';
 
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import { StyledActivity } from '@/components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { Contributor, Paper, Resource } from '@/services/backend/types';
 
-const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, hasNextPageContributors, handleLoadMoreContributors }) => (
+type TimelineProps = {
+    versions: { created_at: string; created_by: Contributor; publishedResource?: Resource }[];
+    paperResource: Paper;
+    createdBy?: Contributor;
+    isLoadingContributors: boolean;
+    hasNextPageContributors: boolean;
+    handleLoadMoreContributors: () => void;
+};
+
+const Timeline = ({
+    versions,
+    createdBy,
+    paperResource,
+    isLoadingContributors,
+    hasNextPageContributors,
+    handleLoadMoreContributors,
+}: TimelineProps) => (
     <div>
         <small>
             <Alert className="rounded-0 mb-1" color="info">
@@ -41,7 +57,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                                     userId: version.created_by.id,
                                                 })}
                                             >
-                                                <b>{version.created_by.display_name}</b>
+                                                <b>{version.created_by.displayName}</b>
                                             </Link>
                                             {version.publishedResource && (
                                                 <>
@@ -62,7 +78,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                             )}
                                         </>
                                     ) : (
-                                        <b>{version.created_by.display_name}</b>
+                                        <b>{version.created_by?.displayName}</b>
                                     )}
                                 </>
                             )}
@@ -90,7 +106,7 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
                                     userId: createdBy.id,
                                 })}
                             >
-                                <b>{createdBy.display_name}</b>
+                                <b>{createdBy.displayName}</b>
                             </Link>
                         ) : (
                             'Unknown'
@@ -107,13 +123,5 @@ const Timeline = ({ versions, createdBy, paperResource, isLoadingContributors, h
         </div>
     </div>
 );
-Timeline.propTypes = {
-    versions: PropTypes.array,
-    paperResource: PropTypes.object,
-    createdBy: PropTypes.object,
-    isLoadingContributors: PropTypes.bool,
-    hasNextPageContributors: PropTypes.bool,
-    handleLoadMoreContributors: PropTypes.func,
-};
 
 export default Timeline;

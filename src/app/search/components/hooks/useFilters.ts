@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUpdateEffect } from 'react-use';
 import useSWR from 'swr';
 
-import { contributorsUrl, getContributorInformationById } from '@/services/backend/contributors';
+import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 
 const useFilters = () => {
@@ -15,8 +15,8 @@ const useFilters = () => {
     const [, setPage] = useQueryState('page', parseAsInteger.withDefault(0));
 
     const { data: createdByData, isLoading: isLoadingContributor } = useSWR(
-        createdBy ? [createdBy, contributorsUrl, 'getContributorInformationById'] : null,
-        ([params]) => getContributorInformationById(params),
+        createdBy ? [createdBy, contributorsUrl, 'getContributorById'] : null,
+        ([params]) => getContributorById(params),
     );
 
     const { data: observatoryData, isLoading: isLoadingObservatory } = useSWR(

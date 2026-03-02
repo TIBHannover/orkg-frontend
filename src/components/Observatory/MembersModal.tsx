@@ -40,14 +40,14 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
         fetchFunctionName: 'getUsersByObservatoryId',
         fetchExtraParams: { id: observatoryId },
         defaultPageSize: 10,
-        prefixParams: 'members',
+        prefixParams: 'members_',
     });
 
     const renderListItem = (member: Contributor, lastItem?: boolean) => (
         <div key={`member${member.id}`}>
             <ContributorCard
                 id={member.id}
-                subTitle={organizationsList.find((o) => o.id.includes(member.organization_id))?.name}
+                subTitle={organizationsList.find((o) => o.id.includes(member.organizationId))?.name}
                 options={
                     isEditMode && !!user && user.isCurationAllowed
                         ? [
@@ -66,7 +66,15 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
     );
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
+        <Modal
+            isOpen={openModal}
+            toggle={() => setOpenModal((v) => !v)}
+            size="lg"
+            onExit={() => {
+                setPage(0);
+                setPageSize(10);
+            }}
+        >
             <ModalHeader toggle={() => setOpenModal((v) => !v)}>Observatory members</ModalHeader>
             <ModalBody>
                 <div className="clearfix">
@@ -84,6 +92,7 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
                         error={error}
                         totalPages={totalPages}
                         boxShadow={false}
+                        prefixParams="members_"
                     />
                 </div>
             </ModalBody>

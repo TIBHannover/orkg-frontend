@@ -1,6 +1,6 @@
 import type { IHighlight, Position } from 'react-pdf-highlighter';
 
-import { Paper, Resource } from '@/services/backend/types';
+import { ExtractionMethod } from '@/services/backend/types';
 import type { AppStore } from '@/store';
 
 export type Range = {
@@ -30,6 +30,16 @@ export type ViewPaper = {
 export type TemplateEditor = {
     id: string;
     diagramMode: boolean;
+    isSaving: boolean;
+    isLoading: boolean;
+    failureStatus: number | null;
+    hasFailed: boolean;
+    label: string;
+    created_by: string;
+    created_at: string;
+    extraction_method: ExtractionMethod;
+    observatory_id: string;
+    organization_id: string;
 };
 
 export type Annotation = IHighlight & {

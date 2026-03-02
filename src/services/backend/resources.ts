@@ -5,8 +5,9 @@ import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { getContributorInformationById } from '@/services/backend/contributors';
+import { getContributorById } from '@/services/backend/contributors';
 import {
+    Contributor,
     CreatedByParam,
     ExtractionMethod,
     FilterConfig,
@@ -178,10 +179,10 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
             const uniqContributors = uniqBy(contributors.content, 'created_by');
             const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
                 contributor.created_by === MISC.UNKNOWN_ID
-                    ? { id: MISC.UNKNOWN_ID, display_name: 'Unknown' }
-                    : getContributorInformationById(contributor.created_by).catch(() => ({
+                    ? { id: MISC.UNKNOWN_ID, displayName: 'Unknown' }
+                    : getContributorById(contributor.created_by).catch(() => ({
                           id: contributor.created_by,
-                          display_name: 'User not found',
+                          displayName: 'User not found',
                       })),
             );
             const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
@@ -189,7 +190,7 @@ export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: str
                 ...contributors,
                 content: contributors.content.map((u) => ({ ...u, created_by: uniqContributorsInfos.find((i) => u.created_by === i.id) })),
             };
-        });
+        }) as Promise<PaginatedResponse<{ created_by: Contributor; created_at: string }>>;
 };
 
 export const createSnapshot = ({ id, template_id, register_handle }: { id: string; template_id: string; register_handle: boolean }) =>
