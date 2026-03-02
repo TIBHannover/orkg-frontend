@@ -112,7 +112,7 @@ const Provenance: FC<ProvenanceProps> = ({
                             })}
                             className="ms-2"
                         >
-                            {createdBy.display_name}
+                            {createdBy.displayName}
                         </Link>
                     </StyledItemProvenanceBox>
                 )}
@@ -132,7 +132,7 @@ const Provenance: FC<ProvenanceProps> = ({
                                             userId: contributor.created_by.id,
                                         })}
                                     >
-                                        {contributor.created_by.display_name}
+                                        {contributor.created_by.displayName}
                                     </Link>
                                 </div>
                             ))}

@@ -6,8 +6,9 @@ import capitalize from 'capitalize';
 import dayjs from 'dayjs';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import useSWR from 'swr';
 
 import NotFound from '@/app/not-found';
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
@@ -22,9 +23,9 @@ import UserStatistics from '@/components/UserProfile/UserStatistics';
 import { MISC } from '@/constants/graphSettings';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
-import { getContributorById } from '@/services/backend/contributors';
-import { getObservatoryById } from '@/services/backend/observatories';
-import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
+import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
+import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
+import { getOrganization, getOrganizationLogoUrl, organizationsUrl } from '@/services/backend/organizations';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${(props) => props.theme.dark};
@@ -60,76 +61,42 @@ const StyledOrganizationCard = styled.div`
     }
 `;
 
-const UserProfile = (props) => {
-    const [userData, setUserData] = useState('');
-    const [observatoryData, setObservatoryData] = useState(null);
-    const [organizationData, setOrganizationData] = useState(null);
-    const [isLoadingUserData, setIsLoadingUserData] = useState(false);
-    const [notFound, setNotFound] = useState(false);
-    const params = useParams();
-    const { userId } = params;
+const UserProfile = () => {
+    const { userId } = useParams();
     const { user } = useAuthentication();
     const currentUserId = user?.id;
 
+    const {
+        data: userData,
+        isLoading: isLoadingUserData,
+        error,
+    } = useSWR(userId ? [userId, contributorsUrl, 'getContributorById'] : null, ([params]) => getContributorById(params), {
+        shouldRetryOnError: false,
+    });
+
+    const { data: observatoryData } = useSWR(
+        userData?.observatoryId && userData?.observatoryId !== MISC.UNKNOWN_ID
+            ? [userData.observatoryId, observatoriesUrl, 'getObservatoryById']
+            : null,
+        ([params]) => getObservatoryById(params),
+    );
+
+    const { data: organizationData } = useSWR(
+        userData?.organizationId && userData?.organizationId !== MISC.UNKNOWN_ID
+            ? [userData.organizationId, organizationsUrl, 'getOrganization']
+            : null,
+        ([params]) => getOrganization(params),
+    );
+
     useEffect(() => {
-        const getUserInformation = async () => {
-            setNotFound(false);
-            setIsLoadingUserData(true);
-            getContributorById(userId)
-                .then((userData) => {
-                    if (userData.observatoryId || userData.organizationId) {
-                        const promises = [];
-                        if (userData.organizationId !== MISC.UNKNOWN_ID) {
-                            const promise1 = getOrganization(userData.organizationId);
-                            promises.push(promise1);
-                        } else {
-                            promises.push(Promise.resolve());
-                        }
-                        if (userData.observatoryId !== MISC.UNKNOWN_ID) {
-                            const promise2 = getObservatoryById(userData.observatoryId);
-                            promises.push(promise2);
-                        } else {
-                            promises.push(Promise.resolve());
-                        }
+        if (userData) {
+            document.title = `${userData?.displayName} - ORKG`;
+        } else {
+            document.title = 'User profile - ORKG';
+        }
+    }, [userData]);
 
-                        Promise.all(promises)
-                            .then((obsOrgData) => {
-                                if (userData.organizationId) {
-                                    setOrganizationData(obsOrgData[0]);
-                                }
-                                if (userData.observatoryId) {
-                                    setObservatoryData(obsOrgData[1]);
-                                }
-                                setUserData(userData);
-                                setIsLoadingUserData(false);
-                            })
-                            .catch((e) => {
-                                if (userData.organizationId) {
-                                    setOrganizationData(null);
-                                }
-                                if (userData.observatoryId) {
-                                    setObservatoryData(null);
-                                }
-                                setUserData(userData);
-                                setIsLoadingUserData(false);
-                            });
-                    } else {
-                        setUserData(userData);
-                        setIsLoadingUserData(false);
-                    }
-                    document.title = `${userData.displayName} - ORKG`;
-                })
-                .catch((e) => {
-                    console.error(e);
-                    document.title = 'User profile - ORKG';
-                    setNotFound(true);
-                });
-        };
-
-        getUserInformation();
-    }, [userId]);
-
-    if (notFound) {
+    if (error || !userId) {
         return <NotFound />;
     }
 
@@ -138,7 +105,7 @@ const UserProfile = (props) => {
             <Container>
                 <Row className="justify-content-end">
                     <div className="col-md-3 d-flex justify-content-end mb-3">
-                        <HeaderSearchButton placeholder="Search in this user content..." type={null} userId={userId} />
+                        <HeaderSearchButton placeholder="Search in this user content..." userId={userId} />
                     </div>
                 </Row>
 
@@ -150,9 +117,9 @@ const UserProfile = (props) => {
                         <div className="col-md-10 row">
                             <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
                                 <div>
-                                    <h2 className="h3 flex-grow-1 m-0">{userData.displayName}</h2>
-                                    <div className="text-muted" title={userData.joinedAt}>
-                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {dayjs().from(dayjs(userData.joinedAt), true)}
+                                    <h2 className="h3 flex-grow-1 m-0">{userData?.displayName}</h2>
+                                    <div className="text-muted" title={userData?.joinedAt}>
+                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {dayjs().from(dayjs(userData?.joinedAt), true)}
                                     </div>
                                 </div>
                                 {observatoryData && (

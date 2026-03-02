@@ -2,8 +2,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
-import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 
 import { InputStyled, SearchButtonStyled, SearchStyled } from '@/components/styled';
@@ -11,11 +10,17 @@ import Button from '@/components/Ui/Button/Button';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 
-const HeaderSearchButton = ({ placeholder = '', type, userId = undefined }) => {
+type HeaderSearchButtonProps = {
+    placeholder?: string;
+    type?: string;
+    userId?: string;
+};
+
+const HeaderSearchButton = ({ placeholder = '', type, userId }: HeaderSearchButtonProps) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [value, setValue] = useState('');
     const refContainer = useRef(null);
-    const refInput = useRef(null);
+    const refInput = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -35,7 +40,7 @@ const HeaderSearchButton = ({ placeholder = '', type, userId = undefined }) => {
         }
     });
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Escape') {
             closeSearch();
         } else if (e.key === 'Enter') {
@@ -67,12 +72,6 @@ const HeaderSearchButton = ({ placeholder = '', type, userId = undefined }) => {
             <FontAwesomeIcon icon={faSearch} />
         </Button>
     );
-};
-
-HeaderSearchButton.propTypes = {
-    placeholder: PropTypes.string,
-    type: PropTypes.string,
-    userId: PropTypes.string,
 };
 
 export default HeaderSearchButton;

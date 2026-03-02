@@ -112,7 +112,28 @@ export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }: { id: str
         .get<PaginatedResponse<Contributor>>(`${encodeURIComponent(id)}/users`, {
             searchParams,
         })
-        .json();
+        .json()
+
+        .then((r) => {
+            return {
+                ...r,
+                content: r.content.map((c) => ({
+                    id: c.id,
+                    // @ts-expect-error TODO: not converted yet!
+                    displayName: c.display_name,
+                    // @ts-expect-error TODO: not converted yet!
+                    joinedAt: c.joined_at,
+                    // @ts-expect-error TODO: not converted yet!
+                    organizationId: c.organization_id,
+                    // @ts-expect-error TODO: not converted yet!
+                    observatoryId: c.observatory_id,
+                    // @ts-expect-error TODO: not converted yet!
+                    gravatarId: c.gravatar_id,
+                    // @ts-expect-error TODO: not converted yet!
+                    avatarUrl: c.avatar_url,
+                })),
+            };
+        });
 };
 
 export const createObservatory = ({

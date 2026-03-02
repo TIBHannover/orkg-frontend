@@ -4,29 +4,36 @@ import { env } from 'next-runtime-env';
 import { useState } from 'react';
 
 import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import useParams from '@/components/useParams/useParams';
 import useProvenance from '@/components/ViewPaper/hooks/useProvenance';
 import useTimeline from '@/components/ViewPaper/hooks/useTimeline';
+import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import Provenance from '@/components/ViewPaper/ProvenanceBox/Provenance';
 import { AnimationContainer, ErrorMessage, ProvenanceBoxTabs } from '@/components/ViewPaper/ProvenanceBox/styled';
 import Timeline from '@/components/ViewPaper/ProvenanceBox/Timeline';
 
 const ProvenanceBox = () => {
-    const { viewPaper, isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
-
+    const { resourceId } = useParams();
+    const { isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
+    const { paper: viewPaper } = useViewPaper({ paperId: resourceId });
     const {
         isNextPageLoading: isNextPageLoadingContributors,
         hasNextPage: hasNextPageContributors,
         contributors,
         handleLoadMore: handleLoadMoreContributors,
-    } = useTimeline(viewPaper.id);
+    } = useTimeline(resourceId);
 
     const _versions = orderBy([...contributors, ...versions], ['created_at'], ['desc']); // combining contributors and version with DOI information
 
     const [activeTab, setActiveTab] = useState(1);
 
+    if (!viewPaper) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
-            {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by && (
+            {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper?.created_by && (
                 <div className="tw:mb-2">
                     <PWCProvenanceBox />
                 </div>
@@ -58,7 +65,7 @@ const ProvenanceBox = () => {
                         Timeline
                     </div>
                 </ProvenanceBoxTabs>
-                {viewPaper.extraction_method === 'AUTOMATIC' && (
+                {viewPaper?.extraction_method === 'AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
                 <AnimatePresence mode="wait">
@@ -89,8 +96,6 @@ const ProvenanceBox = () => {
                             transition={{ duration: 0.5 }}
                         >
                             <Timeline
-                                observatoryInfo={observatoryInfo}
-                                organizationInfo={organizationInfo}
                                 paperResource={viewPaper}
                                 versions={_versions}
                                 createdBy={createdBy}

@@ -34,14 +34,14 @@ const ContributorCard: FC<ContributorCardProps> = ({ id, subTitle, options }) =>
                     <StyledGravatar
                         className="rounded-circle"
                         style={{ border: '3px solid #fff' }}
-                        hashedEmail={contributorData?.gravatar_id ?? 'example@example.com'}
+                        hashedEmail={contributorData?.gravatarId ?? 'example@example.com'}
                         size={50}
                     />
                 </Link>
                 <div className="d-flex justify-content-center" style={{ marginLeft: '10px', flexDirection: 'column' }}>
                     <div>
                         <Link href={reverse(ROUTES.USER_PROFILE, { userId: contributorData?.id ?? MISC.UNKNOWN_ID })}>
-                            {contributorData?.display_name ?? 'Unknown user'}
+                            {contributorData?.displayName ?? 'Unknown user'}
                         </Link>
                     </div>
                     {subTitle && (

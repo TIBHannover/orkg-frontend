@@ -1,12 +1,12 @@
 import useSWR from 'swr';
 
 import { MISC } from '@/constants/graphSettings';
-import { contributorsUrl, getContributorInformationById } from '@/services/backend/contributors';
+import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
 
 const useContributor = ({ userId }: { userId?: string }) => {
     const { data: contributor, isLoading } = useSWR(
-        userId && userId !== MISC.UNKNOWN_ID ? [userId, contributorsUrl, 'getContributorInformationById'] : null,
-        ([params]) => getContributorInformationById(params),
+        userId && userId !== MISC.UNKNOWN_ID ? [userId, contributorsUrl, 'getContributorById'] : null,
+        ([params]) => getContributorById(params),
         { shouldRetryOnError: false },
     );
     return {

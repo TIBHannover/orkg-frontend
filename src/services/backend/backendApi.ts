@@ -104,7 +104,7 @@ export const transformPaginationParams = <T extends SortByParam & { size?: numbe
     const sortTransformed = sortBy?.map(({ property, direction }) => `${property},${direction}`);
 
     return {
-        sort: sortBy ? sortTransformed : ['created_at,desc'],
+        sort: sortBy ? sortTransformed : ['createdAt,desc'],
         size: size ?? 9999,
         page: page ?? 0,
         ...params,

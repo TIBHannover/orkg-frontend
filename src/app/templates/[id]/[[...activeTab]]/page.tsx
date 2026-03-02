@@ -38,7 +38,9 @@ import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { Thing } from '@/services/backend/things';
 import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
 
 const Template = () => {
     const { id } = useParams();
@@ -58,13 +60,13 @@ const Template = () => {
         observatory_id: observatoryId,
         organization_id: organizationId,
         extraction_method: extractionMethod,
-    } = useSelector((state) => state.templateEditor);
+    } = useSelector((state: RootStore) => state.templateEditor);
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const [showExportCitation, setShowExportCitation] = useState(false);
 
-    const handleShowHeaderBar = (isVisible) => {
+    const handleShowHeaderBar = (isVisible: boolean) => {
         setShowHeaderBar(!isVisible);
     };
 
@@ -74,6 +76,7 @@ const Template = () => {
 
     useEffect(() => {
         if (id && loadedId !== id) {
+            // @ts-expect-error - TODO: not typed yet!
             dispatch(loadTemplate(id));
         }
     }, [loadedId, dispatch, id]);
@@ -83,14 +86,14 @@ const Template = () => {
     }, [label]);
 
     if (!isLoading && hasFailed && failureStatus === 500) {
-        return <InternalServerError error="Loading template failed" />;
+        return <InternalServerError error={new Error('Loading template failed')} />;
     }
 
     if (!isLoading && hasFailed) {
         return <NotFound />;
     }
 
-    const handleChangeLabel = (value) => {
+    const handleChangeLabel = (value: string) => {
         dispatch(updateLabel(value));
     };
 
@@ -141,6 +144,7 @@ const Template = () => {
                                             behavior: 'smooth',
                                             top: 0,
                                         });
+                                        // @ts-expect-error - TODO: not typed yet!
                                         const tID = await dispatch(saveTemplate(toggleIsEditMode));
                                         if (tID) {
                                             router.push(reverse(ROUTES.TEMPLATE, { id: tID }));
@@ -156,6 +160,7 @@ const Template = () => {
                                     color="secondary"
                                     size="sm"
                                     onClick={() => {
+                                        // @ts-expect-error - TODO: not typed yet!
                                         dispatch(loadTemplate(id));
                                         toggleIsEditMode(false);
                                     }}
@@ -207,14 +212,17 @@ const Template = () => {
                                 <EditableHeader id={id} value={label} onChange={handleChangeLabel} entityType={ENTITIES.RESOURCE} />
                             )}
                             <ItemMetadata
-                                item={{
-                                    id,
-                                    created_by: createdBy,
-                                    created_at: createdAt,
-                                    organization_id: organizationId,
-                                    observatory_id: observatoryId,
-                                    extraction_method: extractionMethod,
-                                }}
+                                item={
+                                    {
+                                        id,
+                                        label,
+                                        created_by: createdBy,
+                                        created_at: createdAt,
+                                        organization_id: organizationId,
+                                        observatory_id: observatoryId,
+                                        extraction_method: extractionMethod,
+                                    } as unknown as Thing
+                                }
                                 showCreatedAt
                                 showCreatedBy
                                 showProvenance
@@ -232,7 +240,7 @@ const Template = () => {
                 <ExportCitation
                     id={id}
                     title={label}
-                    authors={[{ literal: contributor?.display_name ?? '' }]}
+                    authors={[{ literal: contributor?.displayName ?? '' }]}
                     classId={CLASSES.NODE_SHAPE}
                     isOpen={showExportCitation}
                     toggle={() => setShowExportCitation((v) => !v)}

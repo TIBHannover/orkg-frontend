@@ -6,7 +6,7 @@ const useIsEditMode = () => {
     const { status } = useAuthentication();
     const [isEditMode, setIsEditMode] = useQueryState('isEditMode', parseAsBoolean.withDefault(false));
 
-    const toggleIsEditMode = (newValue = undefined) => {
+    const toggleIsEditMode = (newValue: boolean | undefined = undefined) => {
         setIsEditMode(newValue === undefined ? !isEditMode : newValue);
     };
 

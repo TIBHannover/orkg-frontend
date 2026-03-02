@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { getTimelineByResourceId } from '@/services/backend/resources';
+import { Contributor } from '@/services/backend/types';
 
-function useTimeline(id) {
+function useTimeline(id: string) {
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const pageSize = 10;
-    const [contributors, setContributors] = useState([]);
+    const [contributors, setContributors] = useState<{ created_by: Contributor; created_at: string }[]>([]);
 
     const loadMore = useCallback(
-        (p) => {
+        (p: number) => {
             setIsNextPageLoading(true);
             getTimelineByResourceId({ id, page: p, size: pageSize })
                 .then((result) => {
