@@ -37,7 +37,7 @@ const ReviewNew = () => {
         }
         try {
             const id = await createReview({ title, research_fields: ['R11'] });
-            router.push(reverse(ROUTES.REVIEW, { id }));
+            router.push(`${reverse(ROUTES.REVIEW, { id })}?isEditMode=true`);
         } catch (error: unknown) {
             toast.error('An error occurred while creating the review');
         } finally {
