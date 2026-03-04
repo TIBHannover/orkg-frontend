@@ -10,7 +10,8 @@ build/
 .eslintcache
 
 *.iml
-.vscode
+.vscode/*
+!.vscode/settings.json
 
 # IntelliJ  files
 .idea/
