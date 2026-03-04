@@ -37,7 +37,7 @@ const ListNew = () => {
 
         setIsLoading(true);
         const id = await createResource({ label: title, classes: [CLASSES.LITERATURE_LIST] });
-        router.push(reverse(ROUTES.LIST, { id }));
+        router.push(`${reverse(ROUTES.LIST, { id })}?isEditMode=true`);
         setIsLoading(false);
     };
 
