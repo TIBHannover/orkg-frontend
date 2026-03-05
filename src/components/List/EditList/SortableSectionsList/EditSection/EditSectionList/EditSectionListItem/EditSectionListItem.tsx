@@ -12,7 +12,7 @@ import invariant from 'tiny-invariant';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import Confirm from '@/components/Confirmation/Confirmation';
-import { supportedContentTypes } from '@/components/ContentType/types';
+import { additionalContentTypes } from '@/components/ContentType/types';
 import useList from '@/components/List/hooks/useList';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import { defaultDragHandleProps, type DragData, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
@@ -71,7 +71,7 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
     const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
 
     const isPaper = entry.value?.classes?.includes(CLASSES.PAPER);
-    const contentTypeClass = entry.value?.classes?.filter((classId) => supportedContentTypes.find((c) => c.id === classId))?.[0];
+    const contentTypeClass = entry.value?.classes?.filter((classId) => additionalContentTypes.find((c) => c.id === classId))?.[0];
 
     useEffect(() => {
         const element = ref.current;

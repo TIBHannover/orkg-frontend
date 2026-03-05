@@ -1,3 +1,5 @@
+'use client';
+
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, ReactNode, useState } from 'react';

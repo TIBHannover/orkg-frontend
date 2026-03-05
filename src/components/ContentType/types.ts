@@ -8,7 +8,7 @@ export type ContentType = {
     icon: IconDefinition;
 };
 
-export const supportedContentTypes: ContentType[] = [
+export const additionalContentTypes: ContentType[] = [
     {
         id: CLASSES.DATASET,
         label: 'dataset',

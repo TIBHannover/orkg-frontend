@@ -111,20 +111,15 @@ const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
                             <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
                         </TextContainer>
                     </RequireAuthentication>
-                    <RequireAuthentication
-                        onClick={handleClickMenuItem}
-                        component={ToolContainer}
-                        href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)}
-                        className="d-flex p-2"
-                    >
+                    <ToolContainer onClick={handleClickMenuItem} href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} className="d-flex p-2">
                         <ImgContainer>
                             <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
                         </ImgContainer>
                         <TextContainer className="ps-2 pe-2">
-                            <Header>Other</Header>
-                            <p className="m-0">Add other artifacts, such as datasets, software or general resources.</p>
+                            <Header>More...</Header>
+                            <p className="m-0">Add more content types, such as reviews, lists, datasets, or software.</p>
                         </TextContainer>
-                    </RequireAuthentication>
+                    </ToolContainer>
                 </div>
             }
         >

@@ -7,12 +7,11 @@ import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 
-import reviewsThumbnail from '@/assets/img/video_thumbnails/reviews.png';
 import ReviewCard from '@/components/Cards/ReviewCard/ReviewCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import VideoExplainer from '@/components/PaginatedContent/VideoExplainer';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ReviewVideo from '@/components/VideoThumbnails/ReviewVideo';
 import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
@@ -57,19 +56,7 @@ const Reviews = () => {
 
     const infoContainerText = (
         <div className="d-flex">
-            <VideoExplainer
-                previewStyle={{ width: 65, height: 35, background: `url(${reviewsThumbnail.src})` }}
-                video={
-                    <iframe
-                        width="560"
-                        height="315"
-                        src="https://www.youtube.com/embed/FIFQKx-0Bqg"
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                    />
-                }
-            />
+            <ReviewVideo />
             <span>
                 ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}
                 <a href="https://orkg.org/about/16/Reviews" rel="noreferrer" target="_blank">

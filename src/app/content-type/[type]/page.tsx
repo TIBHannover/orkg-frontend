@@ -8,7 +8,7 @@ import pluralize from 'pluralize';
 import { useEffect } from 'react';
 
 import NotFound from '@/app/not-found';
-import { supportedContentTypes } from '@/components/ContentType/types';
+import { additionalContentTypes } from '@/components/ContentType/types';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
@@ -22,7 +22,7 @@ function ContentTypes() {
     const { type } = useParams();
 
     let notFound = false;
-    const contentType = supportedContentTypes.find((ct) => ct.id === type);
+    const contentType = additionalContentTypes.find((ct) => ct.id === type);
     if (!contentType) {
         notFound = true;
     }
@@ -43,7 +43,7 @@ function ContentTypes() {
             color="secondary"
             size="sm"
             className="btn btn-secondary btn-sm flex-shrink-0"
-            href={reverse(ROUTES.CONTENT_TYPE_NEW, { type })}
+            href={`${ROUTES.CONTENT_TYPE_NEW}?type=${type}`}
         >
             <FontAwesomeIcon icon={faPlus} /> Create new
         </RequireAuthentication>
