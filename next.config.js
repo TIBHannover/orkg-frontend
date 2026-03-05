@@ -335,6 +335,11 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: '/add',
+                destination: '/content-type/create',
+                permanent: true,
+            },
+            {
                 source: '/content-type/:type/new',
                 destination: '/content-type/:type/create',
                 permanent: true,

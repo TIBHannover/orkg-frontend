@@ -91,7 +91,7 @@ const routes = {
     LIST_EMBED: '/lists/:id/:embed',
     LIST_NEW: '/lists/create',
     LIST_DIFF: '/lists/diff/:oldId/:newId',
-    CONTENT_TYPE_NEW: '/content-type/:type/create',
+    CONTENT_TYPE_NEW: '/content-type/create',
     CONTENT_TYPE_NEW_NO_TYPE: '/content-type/create',
     CONTENT_TYPE: '/content-type/:type/:id',
     CONTENT_TYPES: '/content-type/:type',

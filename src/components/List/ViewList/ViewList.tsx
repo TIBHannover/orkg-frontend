@@ -8,7 +8,7 @@ import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import PublishedBadge from '@/components/Badges/PublishedBadge/PublishedBadge';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
-import { supportedContentTypes } from '@/components/ContentType/types';
+import { additionalContentTypes } from '@/components/ContentType/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Contributors from '@/components/List/Contributors/Contributors';
 import { isListSection, isTextSection } from '@/components/List/helpers/typeGuards';
@@ -117,7 +117,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                         {section.entries.map((entry) => {
                                             const isPaper = entry?.value.classes?.includes(CLASSES.PAPER);
                                             const contentTypeClass = entry.value?.classes?.filter((classId) =>
-                                                supportedContentTypes.find((c) => c.id === classId),
+                                                additionalContentTypes.find((c) => c.id === classId),
                                             )?.[0];
                                             const route = !isPaper
                                                 ? reverse(ROUTES.CONTENT_TYPE, { id: entry.value?.id, type: contentTypeClass })

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
-import { supportedContentTypes } from '@/components/ContentType/types';
+import { additionalContentTypes } from '@/components/ContentType/types';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -35,14 +35,14 @@ function ContentType() {
             setIsLoading(true);
             try {
                 const _resource = await getResource(resourceId);
-                const contentTypes = _resource.classes.filter((classId) => supportedContentTypes.find((c) => c.id === classId));
+                const contentTypes = _resource.classes.filter((classId) => additionalContentTypes.find((c) => c.id === classId));
                 if (!contentTypes.length === 0) {
                     throw new Error('Content type not supported');
                 }
                 if (!contentTypes.length > 1) {
                     throw new Error('Multiple content types not supported');
                 }
-                const _contentType = supportedContentTypes.find((c) => c.id === contentTypes[0]);
+                const _contentType = additionalContentTypes.find((c) => c.id === contentTypes[0]);
                 setContentType(_contentType);
                 document.title = `${_resource.label} - ${_contentType.label} - ORKG`;
                 setResource(_resource);

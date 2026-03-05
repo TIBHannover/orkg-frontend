@@ -7,7 +7,7 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { supportedContentTypes } from '@/components/ContentType/types';
+import { additionalContentTypes } from '@/components/ContentType/types';
 import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
@@ -30,7 +30,7 @@ const ContentTypesMenu = ({ closeMenu }) => (
             More <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
         </DropdownToggle>
         <DropdownMenu>
-            {supportedContentTypes.map(({ id, label }) => (
+            {additionalContentTypes.map(({ id, label }) => (
                 <DropdownItem key={id} tag={Link} href={reverse(ROUTES.CONTENT_TYPES, { type: id })} onClick={closeMenu}>
                     {upperFirst(pluralize(label || '', 0, false))}
                 </DropdownItem>
