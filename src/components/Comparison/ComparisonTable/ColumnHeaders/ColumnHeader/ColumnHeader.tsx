@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import useColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useColumnWidth';
-import { classToType } from '@/components/Comparison/ComparisonTable/Cell/Cell';
+import classToType from '@/components/Comparison/ComparisonTable/Cell/helpers/classToType';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import Tooltip from '@/components/FloatingUI/Tooltip';

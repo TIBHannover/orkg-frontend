@@ -1,21 +1,13 @@
 import { isEqual } from 'lodash';
 import { memo, useState } from 'react';
 
+import CellDataBrowserDialog from '@/components/Comparison/ComparisonTable/Cell/CellDataBrowserDialog/CellDataBrowserDialog';
 import CellLiteral from '@/components/Comparison/ComparisonTable/Cell/CellLiteral/CellLiteral';
-import useComparison from '@/components/Comparison/hooks/useComparison';
-import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
+import classToType from '@/components/Comparison/ComparisonTable/Cell/helpers/classToType';
 import { getBackgroundColor } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
-import { ENTITIES } from '@/constants/graphSettings';
 import { ThingReference } from '@/services/backend/types';
-
-export const classToType = {
-    resource_ref: ENTITIES.RESOURCE,
-    predicate_ref: ENTITIES.PREDICATE,
-    literal_ref: ENTITIES.LITERAL,
-    class_ref: ENTITIES.CLASS,
-};
 
 type CellProps = {
     value?: ThingReference;
@@ -25,7 +17,6 @@ type CellProps = {
 
 const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
     const [isOpenDataBrowserModal, setIsOpenDataBrowserModal] = useState(false);
-    const { selectedPathsFlattened, comparisonContents, mutateComparisonContents, isEditMode } = useComparison();
     return (
         <>
             <div
@@ -59,17 +50,9 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
                 ) : null}
             </div>
 
-            <DataBrowserDialog
-                show={isOpenDataBrowserModal}
-                toggleModal={() => setIsOpenDataBrowserModal((v) => !v)}
-                id={value?.id ?? ''}
-                label={value?.label ?? ''}
-                type={classToType[value?._class ?? 'literal_ref']}
-                comparisonSelectedPaths={selectedPathsFlattened.map((selectedPath) => [...(selectedPath.path ?? []), selectedPath.id])}
-                isEditMode={isEditMode}
-                defaultHistory={dataBrowserHistory}
-                onCloseModal={() => isEditMode && mutateComparisonContents(comparisonContents, { revalidate: true })}
-            />
+            {isOpenDataBrowserModal && value && (
+                <CellDataBrowserDialog value={value} dataBrowserHistory={dataBrowserHistory} onClose={() => setIsOpenDataBrowserModal(false)} />
+            )}
         </>
     );
 };
