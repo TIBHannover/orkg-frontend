@@ -10,6 +10,7 @@ import Control from '@/components/Autocomplete/CustomComponents/Control';
 import CustomMultiValueLabel from '@/components/Autocomplete/CustomComponents/CustomMultiValueLabel';
 import Input from '@/components/Autocomplete/CustomComponents/Input';
 import Menu from '@/components/Autocomplete/CustomComponents/Menu';
+import MultiValueRemove from '@/components/Autocomplete/CustomComponents/MultiValueRemove';
 import { Option as CustomOption } from '@/components/Autocomplete/CustomComponents/Option';
 import { importExternalSelectedOption } from '@/components/Autocomplete/hooks/helpers';
 import useBaseClass from '@/components/Autocomplete/hooks/useBaseClass';
@@ -180,6 +181,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                     Input,
                     MultiValueLabel: CustomMultiValueLabel,
                     Control,
+                    MultiValueRemove,
                 }}
                 value={localValue}
                 getOptionValue={(option) => option.id}
