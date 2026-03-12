@@ -1,5 +1,5 @@
 import { findIndex } from 'lodash';
-import { parseAsJson, useQueryState } from 'nuqs';
+import { Options, parseAsJson, useQueryState } from 'nuqs';
 import { z } from 'zod';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
@@ -18,7 +18,10 @@ const useHistory = () => {
     const { rootId, config, history: stateHistory } = useDataBrowserState();
     const dispatch = useDataBrowserDispatch();
 
-    const [history, setHistory] = useQueryState('history', parseAsJson<History>(schemaHistory.parse).withDefault([]));
+    const [history, setHistory] = useQueryState(
+        'history',
+        parseAsJson<History>(schemaHistory.parse).withDefault([]).withOptions({ history: 'push' }),
+    );
 
     // Current history is the history that starts with the root id (from context)
     let currentHistory = history.find((h) => h.p.length > 0 && h.p[0] === rootId)?.p ?? [];
@@ -30,7 +33,7 @@ const useHistory = () => {
 
     const currentId = currentHistory.length > 1 ? currentHistory[currentHistory.length - 1] : rootId;
 
-    const setCurrentHistory = (newHistory: string[]) => {
+    const setCurrentHistory = (newHistory: string[], options?: Options) => {
         // if the defaultHistory is empty array, the history will be from the url
         if (!config.defaultHistory?.length) {
             const currentHistoryIndex = findIndex(history, (h) => h.p.length > 0 && h.p[0] === rootId);
@@ -44,10 +47,10 @@ const useHistory = () => {
                         newHistories.splice(currentHistoryIndex, 1);
                     }
                     return newHistories;
-                });
+                }, options);
                 dispatch({ type: 'SET_LOADED_RESOURCES', payload: {} });
             } else {
-                setHistory((prev) => [...prev, ...(newHistory.length > 1 ? [{ p: newHistory }] : [])]);
+                setHistory((prev) => [...prev, ...(newHistory.length > 1 ? [{ p: newHistory }] : [])], options);
                 dispatch({ type: 'SET_LOADED_RESOURCES', payload: {} });
             }
         } else {
