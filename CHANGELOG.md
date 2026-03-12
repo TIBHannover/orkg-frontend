@@ -3,6 +3,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
+
+### Changes
+
+- perf: conditional data browser rendering [`#1652`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1652)
+- feat: rework add content type page  [`#1640`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1640)
+- chore: remove duplicated user profile page [`#1645`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1645)
+- fix: enable edit mode after creating lists and reviews [`#1646`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1646)
+- chore: shared vscode settings [`#1647`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1647)
+- fix(review): add alert message when no entities are visible [`#1644`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1644)
+- fix: omit credentials to prevent sending cookies to backend API [`#1641`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1641)
+- fix: add default is_closed to create template request [`#1643`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1643)
+- refactor(types): pagination [`#1632`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1632)
+- feat: editable comparisons [`#1622`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1622)
+
+---
 ## [v0.176.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.0...v0.176.1) - 2026-02-16
 
 ### Changes
