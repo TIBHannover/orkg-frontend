@@ -129,6 +129,8 @@ export const CLASSES: {
     BENCHMARK: 'C14022',
     MODEL: 'Model',
     DATASET: 'Dataset',
+    CREATIVEWORK: 'CreativeWork',
+    THING: 'SCHEMAORG:Thing',
     EVALUATION: 'Evaluation',
     METRIC: 'Metric',
     SMART_REVIEW: 'SmartReview',

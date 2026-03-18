@@ -1,5 +1,6 @@
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { Resource } from '@/services/backend/types';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -83,6 +84,22 @@ const DEDICATED_PAGE_LINKS = {
         label: 'Statement template',
         route: ROUTES.RS_TEMPLATE,
         routeParams: 'id',
+    },
+    [CLASSES.DATASET]: {
+        label: 'Dataset',
+        route: ROUTES.CONTENT_TYPE,
+        getParams: (resource: Resource) => ({
+            type: CLASSES.DATASET,
+            id: resource.id,
+        }),
+    },
+    [CLASSES.SOFTWARE]: {
+        label: 'Software',
+        route: ROUTES.CONTENT_TYPE,
+        getParams: (resource: Resource) => ({
+            type: CLASSES.SOFTWARE,
+            id: resource.id,
+        }),
     },
 };
 

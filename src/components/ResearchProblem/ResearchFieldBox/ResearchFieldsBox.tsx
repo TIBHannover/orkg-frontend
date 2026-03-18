@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 
 import ROUTES from '@/constants/routes';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 type ResearchFieldsBoxProps = {
     isLoading: boolean;

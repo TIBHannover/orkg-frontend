@@ -94,6 +94,8 @@ const routes = {
     CONTENT_TYPE_NEW: '/content-type/create',
     CONTENT_TYPE_NEW_NO_TYPE: '/content-type/create',
     CONTENT_TYPE: '/content-type/:type/:id',
+    CONTENT_TYPE_TABS: '/content-type/:type/:id/:activeTab',
+    CONTENT_TYPE_SNAPSHOT: '/content-type/:type/:id/snapshots/:snapshotId',
     CONTENT_TYPES: '/content-type/:type',
     DIAGRAMS: '/diagrams',
     DIAGRAM: '/diagrams/:id',

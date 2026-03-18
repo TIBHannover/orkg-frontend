@@ -9,7 +9,7 @@ import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import ROUTES from '@/constants/routes';
 import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 type ResearchProblemsModalProps = {
     organizationId: string;

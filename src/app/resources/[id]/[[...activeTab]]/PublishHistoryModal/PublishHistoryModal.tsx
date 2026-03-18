@@ -10,9 +10,10 @@ type PublishHistoryModalProps = {
     id: string;
     snapshotId?: string;
     toggle: () => void;
+    contentType: string;
 };
 
-const PublishHistoryModal: FC<PublishHistoryModalProps> = ({ id, snapshotId, toggle }) => {
+const PublishHistoryModal: FC<PublishHistoryModalProps> = ({ id, snapshotId, toggle, contentType }) => {
     const { data: snapshots, isLoading } = useSWR(id ? [id, resourcesUrl, 'getSnapshots'] : null, ([resourceId]) =>
         getSnapshots({
             id: resourceId,
@@ -22,10 +23,17 @@ const PublishHistoryModal: FC<PublishHistoryModalProps> = ({ id, snapshotId, tog
     const versions =
         snapshots?.content?.map((snapshot) => ({
             id: snapshot.id,
-            link: reverse(ROUTES.RESOURCE_SNAPSHOT, {
-                id: snapshot.resource_id,
-                snapshotId: snapshot.id,
-            }),
+            link:
+                contentType === 'Resource'
+                    ? reverse(ROUTES.RESOURCE_SNAPSHOT, {
+                          id: snapshot.resource_id,
+                          snapshotId: snapshot.id,
+                      })
+                    : reverse(ROUTES.CONTENT_TYPE_SNAPSHOT, {
+                          type: contentType,
+                          id,
+                          snapshotId: snapshot.id,
+                      }),
             created_at: snapshot.created_at,
             created_by: snapshot.created_by,
         })) ?? [];

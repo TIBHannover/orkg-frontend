@@ -16,6 +16,7 @@ import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import useDeleteProperty from '@/components/Property/hooks/useDeleteProperty';
 import PropertyStatements from '@/components/Property/PropertyStatements/PropertyStatements';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Button from '@/components/Ui/Button/Button';
@@ -129,7 +130,15 @@ const Property = () => {
                             activeKey={activeTab ?? 'information'}
                             items={[
                                 {
-                                    label: 'Property information',
+                                    label: (
+                                        <TabLabel
+                                            group="things"
+                                            classId="statement-count"
+                                            label="Property information"
+                                            countParams={{ subject_id: propertyId }}
+                                            showCount
+                                        />
+                                    ),
                                     key: 'information',
                                     children: (
                                         <div className="p-4">
@@ -144,7 +153,15 @@ const Property = () => {
                                     ),
                                 },
                                 {
-                                    label: 'In statements',
+                                    label: (
+                                        <TabLabel
+                                            group="things"
+                                            classId="statement-count"
+                                            label="In statements"
+                                            countParams={{ predicate_id: propertyId }}
+                                            showCount
+                                        />
+                                    ),
                                     key: 'statements',
                                     children: <PropertyStatements id={propertyId} />,
                                 },

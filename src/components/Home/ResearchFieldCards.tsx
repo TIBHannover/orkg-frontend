@@ -15,7 +15,7 @@ import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const ArrowCards = styled.div`
     background: transparent;

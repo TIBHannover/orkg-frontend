@@ -10,7 +10,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
 import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const ResearchProblemBox = ({ id }: { id: string }) => {
     const [openModal, setOpenModal] = useState(false);

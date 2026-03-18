@@ -12,7 +12,7 @@ import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getHelpCategory } from '@/services/cms';
 import { HelpCategory } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const HelpCenterCategory = () => {
     const [category, setCategory] = useState<HelpCategory | null>(null);

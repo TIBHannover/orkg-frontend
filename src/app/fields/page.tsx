@@ -25,7 +25,7 @@ import { CLASSES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Node, VisibilityOptions } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);

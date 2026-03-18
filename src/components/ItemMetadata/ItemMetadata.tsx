@@ -7,7 +7,7 @@ import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import CopyId from '@/components/CopyId/CopyId';
-import ProvenanceBox from '@/components/Resource/ProvenanceBox';
+import ProvenanceBox from '@/components/ItemMetadata/ProvenanceBox';
 import Badge from '@/components/Ui/Badge/Badge';
 import Input from '@/components/Ui/Input/Input';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
@@ -27,6 +27,7 @@ type ItemMetadataProps = {
     showExtractionMethod?: boolean;
     item: Thing;
     handleUrl?: string;
+    updateCallBack?: () => void;
 };
 
 const ItemMetadata: FC<ItemMetadataProps> = ({
@@ -39,6 +40,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
     showExtractionMethod = false,
     handleUrl,
     item,
+    updateCallBack,
 }) => {
     const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(
         'extraction_method' in item ? item.extraction_method : EXTRACTION_METHODS.UNKNOWN,
@@ -141,7 +143,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
 
                     {showProvenance && (
                         <span className="d-inline-block">
-                            <ProvenanceBox item={item} editMode={editMode} />
+                            <ProvenanceBox item={item} editMode={editMode} updateCallBack={updateCallBack} />
                         </span>
                     )}
                 </div>

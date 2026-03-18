@@ -25,7 +25,7 @@ import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);

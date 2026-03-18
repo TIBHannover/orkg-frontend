@@ -18,7 +18,7 @@ import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getAboutPage, getAboutPages } from '@/services/cms';
 import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const About = () => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(false);
@@ -83,7 +83,7 @@ const About = () => {
                                     <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
                                         <Link
                                             className="nav-link"
-                                            href={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.attributes?.title })}
+                                            href={reverseWithSlug(ROUTES.ABOUT, { id: item.id.toString(), slug: item.attributes?.title })}
                                         >
                                             {item.attributes?.title}
                                         </Link>

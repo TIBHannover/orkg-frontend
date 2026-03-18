@@ -35,7 +35,7 @@ import Row from '@/components/Ui/Structure/Row';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResearchFields, newResearchFieldUrl as researchFieldUrl } from '@/services/backend/researchFields';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);

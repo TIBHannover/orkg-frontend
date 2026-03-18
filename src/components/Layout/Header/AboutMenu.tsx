@@ -15,7 +15,7 @@ import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import ROUTES from '@/constants/routes';
 import { getAboutPageCategories, getAboutPages } from '@/services/cms';
 import { AboutPageCategory, HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
     @media (max-width: ${(props) => props.theme.gridBreakpoints.md}) {
@@ -69,9 +69,9 @@ const AboutMenu: FC<AboutMenuProps> = ({ closeMenu }) => {
                                 key={id}
                                 tag={Link}
                                 exact
-                                href={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                href={reverseWithSlug(ROUTES.ABOUT, { id: id.toString(), slug: title })}
                                 onClick={() => closeMenu()}
-                                active={pathname === reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                active={pathname === reverseWithSlug(ROUTES.ABOUT, { id: id.toString(), slug: title })}
                             >
                                 {title}
                             </DropdownItem>
@@ -98,8 +98,8 @@ const AboutMenu: FC<AboutMenuProps> = ({ closeMenu }) => {
                                         <DropdownItem
                                             key={id}
                                             tag={Link}
-                                            href={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
-                                            active={pathname === reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                                            href={reverseWithSlug(ROUTES.ABOUT, { id: id.toString(), slug: title })}
+                                            active={pathname === reverseWithSlug(ROUTES.ABOUT, { id: id.toString(), slug: title })}
                                             onClick={() => closeMenu()}
                                         >
                                             {title}

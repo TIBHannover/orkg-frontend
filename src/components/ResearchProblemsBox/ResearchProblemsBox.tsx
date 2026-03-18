@@ -18,7 +18,7 @@ import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
 import { updateResource } from '@/services/backend/resources';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 type ResearchProblemsBoxProps = {
     id: string;

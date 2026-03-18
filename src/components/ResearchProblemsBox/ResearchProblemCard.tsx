@@ -7,7 +7,7 @@ import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFea
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import ROUTES from '@/constants/routes';
 import { Resource } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 type ResearchProblemCardProps = {
     problem: Resource;

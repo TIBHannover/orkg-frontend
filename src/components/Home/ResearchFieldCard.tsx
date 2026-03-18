@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import ROUTES from '@/constants/routes';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { Node } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */

@@ -19,7 +19,7 @@ import ROUTES from '@/constants/routes';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { getParentResearchFields, getStatements, statementsUrl } from '@/services/backend/statements';
 import { Literal, Resource } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const StyledDropdownItem = styled(DropdownItem)`
     &:active,
