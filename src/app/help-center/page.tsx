@@ -15,7 +15,7 @@ import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 import { getHelpCategories } from '@/services/cms';
 import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const HelpCenter = () => {
     const [categories, setCategories] = useState<HelpArticle[]>([]);

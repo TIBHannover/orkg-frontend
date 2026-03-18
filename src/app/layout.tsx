@@ -7,15 +7,27 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { Metadata } from 'next';
 import { CookiesProvider } from 'next-client-cookies/server';
 import { env, PublicEnvScript } from 'next-runtime-env';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 
 import Providers from '@/components/Providers/Providers';
 
-const RootLayout = ({ children }) => (
+export const metadata: Metadata = {
+    title: {
+        template: '%s | ORKG',
+        default: 'ORKG',
+    },
+};
+
+type Props = {
+    children: React.ReactNode;
+};
+
+const RootLayout: FC<Props> = ({ children }) => (
     <html lang="en">
         <head>
             <PublicEnvScript />
@@ -46,9 +58,5 @@ const RootLayout = ({ children }) => (
         </body>
     </html>
 );
-
-RootLayout.propTypes = {
-    children: PropTypes.node.isRequired,
-};
 
 export default RootLayout;

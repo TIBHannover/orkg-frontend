@@ -15,7 +15,7 @@ import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
 import ROUTES from '@/constants/routes';
 import { getHelpArticle, getHelpArticles } from '@/services/cms';
 import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const EditorHelpModal = () => {
     const { isHelpModalOpen, helpCenterArticleId } = useDataBrowserState();
@@ -95,7 +95,7 @@ const EditorHelpModal = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                            id: article.id,
+                                            id: article.id.toString(),
                                             slug: article.attributes.title,
                                         })}
                                     >

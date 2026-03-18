@@ -4,17 +4,17 @@ import SnapshotPage from '@/app/resources/[id]/snapshots/[[...snapshotId]]/Snaps
 import { getSnapshot } from '@/services/backend/resources';
 
 type Props = {
-    params: Promise<{ id: string; snapshotId: string }>;
+    params: Promise<{ id: string; type: string; snapshotId: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const PublishedResource = async ({ params }: Props) => {
-    const { id, snapshotId } = await params;
+const PublishedContentType = async ({ params }: Props) => {
+    const { id, type, snapshotId } = await params;
     const snapshot = await getSnapshot({ id, snapshotId });
     if (!snapshot) {
         return notFound();
     }
-    return <SnapshotPage contentType="Resource" id={id} snapshotId={snapshotId} />;
+    return <SnapshotPage contentType={type} id={id} snapshotId={snapshotId} />;
 };
 
-export default PublishedResource;
+export default PublishedContentType;

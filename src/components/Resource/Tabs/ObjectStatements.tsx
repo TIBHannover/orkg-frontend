@@ -8,23 +8,32 @@ import Alert from '@/components/Ui/Alert/Alert';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
+import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 
-const ObjectStatements = ({ id }: { id: string }) => {
+const ObjectStatements = ({ id, contentType, showInfoTabLink = true }: { id: string; contentType?: string; showInfoTabLink?: boolean }) => {
     const renderListItem = (statement: Statement) => <StatementCard key={statement.id} statement={statement} />;
 
     const [isFormattedLabelEnabled, setIsFormattedLabelEnabled] = useQueryState('isFormattedLabelEnabled', {
         defaultValue: true,
         parse: (value) => value === 'true',
     });
+
+    const link =
+        contentType === ENTITIES.RESOURCE
+            ? reverse(ROUTES.RESOURCE_TABS, { id, activeTab: 'information' })
+            : reverse(ROUTES.CONTENT_TYPE_TABS, { type: contentType, id, activeTab: 'information' });
+
     return (
         <div>
-            <Alert color="info" className="m-1">
-                <strong>Note:</strong> This tab shows statements pointing to this resource. For statements from this resource, visit the{' '}
-                <Link href={`${reverse(ROUTES.RESOURCE, { id })}?tab=information&noRedirect`}>Resource information</Link> tab.
-            </Alert>
+            {showInfoTabLink && (
+                <Alert color="info" className="m-1">
+                    <strong>Note:</strong> This tab shows statements pointing to this resource. For statements from this resource, visit the{' '}
+                    <Link href={`${link}?tab=information&noRedirect`}>{contentType} information</Link> tab.
+                </Alert>
+            )}
             <FormGroup check className="m-3">
                 <Label>
                     <Input type="checkbox" checked={isFormattedLabelEnabled} onChange={(e) => setIsFormattedLabelEnabled(e.target.checked)} /> Show

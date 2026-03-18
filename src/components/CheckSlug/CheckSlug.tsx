@@ -1,16 +1,15 @@
 import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { usePrevious } from 'react-use';
 
 import useParams from '@/components/useParams/useParams';
-import { slugify } from '@/utils';
+import { slugify } from '@/utilsTyped';
 
 /**
  * Component to check if query param slug is valid, and makes a redirect if not
  */
-const CheckSlug = ({ label = '', route }) => {
+const CheckSlug = ({ label = '', route }: { label?: string; route: string }) => {
     const params = useParams();
     const prevLabel = usePrevious(label);
 
@@ -22,14 +21,6 @@ const CheckSlug = ({ label = '', route }) => {
     }, [label, params, prevLabel, route]);
 
     return null;
-};
-
-CheckSlug.propTypes = {
-    /** Original label of the resource */
-    label: PropTypes.string,
-
-    /** Route used for redirect */
-    route: PropTypes.string.isRequired,
 };
 
 export default CheckSlug;

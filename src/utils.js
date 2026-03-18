@@ -3,7 +3,6 @@ import { unescape } from 'he';
 import { isNaN, isString, sortBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
-import slugifyString from 'slugify';
 
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
@@ -383,23 +382,9 @@ export const stringifySort = (sort) => {
 };
 
 /**
- * Use reverse from 'named-urls' and automatically slugifies the slug param
- * @param input string that should be slugified
- */
-export const slugify = (input) => slugifyString(input.replace('/', ' '), '_');
-
-/**
  * Get base url of the application
  */
 export const getPublicUrl = () => {
     const publicURL = env('NEXT_PUBLIC_PUBLIC_URL').endsWith('/') ? env('NEXT_PUBLIC_PUBLIC_URL').slice(0, -1) : env('NEXT_PUBLIC_PUBLIC_URL');
     return `${window.location.protocol}//${window.location.host}${publicURL}`;
 };
-
-/**
- * Use reverse from 'named-urls' and automatically slugifies the slug param
- * @param route name of the route
- * @param params route params to pass
- * @param params.slug the slug for this param
- */
-export const reverseWithSlug = (route, params) => reverse(route, { ...params, slug: params.slug ? slugify(params.slug) : undefined });

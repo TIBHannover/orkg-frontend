@@ -75,7 +75,7 @@ const getPreventEditCase = (resource: Resource) => {
             return preventCase;
         }
     }
-    return null;
+    return undefined;
 };
 
 export default getPreventEditCase;

@@ -6,7 +6,7 @@ import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
 import { deleteResource as deleteResourceNetwork } from '@/services/backend/resources';
 
-function useDeleteResource({ resourceId, redirect = false }) {
+function useDeleteResource({ resourceId, redirect = false }: { resourceId: string; redirect?: boolean }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +27,7 @@ function useDeleteResource({ resourceId, redirect = false }) {
                 }
             } catch (err) {
                 console.error(err);
-                toast.error(err.message);
+                toast.error((err as Error).message);
             }
 
             setIsLoading(false);

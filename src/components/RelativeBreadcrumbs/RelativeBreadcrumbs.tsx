@@ -10,7 +10,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import ROUTES from '@/constants/routes';
 import { getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
 import { Node } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 export const BreadcrumbStyled = styled.ul`
     list-style: none;

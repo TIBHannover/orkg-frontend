@@ -43,7 +43,7 @@ const Literal = () => {
 
                     <Container className="mt-3 px-0 py-4 box rounded">
                         <h3 className="ms-3">Statements</h3>
-                        <ObjectStatements id={literalId} />
+                        <ObjectStatements id={literalId} showInfoTabLink={false} />
                     </Container>
                 </>
             )}

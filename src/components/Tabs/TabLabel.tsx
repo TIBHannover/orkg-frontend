@@ -9,6 +9,7 @@ import { CLASSES } from '@/constants/graphSettings';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 type TabLabelProps = {
+    group?: 'content-types' | 'things';
     label: string;
     showCount?: boolean;
     classId: string;
@@ -18,6 +19,8 @@ type TabLabelProps = {
 
 const getStatsName = (classId: string) => {
     switch (classId) {
+        case 'statement-count':
+            return 'statement-count';
         case CLASSES.COMPARISON:
             return 'comparison-count';
         case CLASSES.PAPER:
@@ -39,12 +42,12 @@ const getStatsName = (classId: string) => {
     }
 };
 
-const TabLabel: FC<TabLabelProps> = ({ label, showCount = false, classId, countParams, description }) => {
+const TabLabel: FC<TabLabelProps> = ({ group = 'content-types', label, showCount = false, classId, countParams, description }) => {
     const { data: count, isLoading: isStatisticsLoading } = useSWR(
         showCount
             ? [
                   {
-                      group: 'content-types',
+                      group,
                       name: getStatsName(classId),
                       ...(countParams
                           ? { parameters: { ...countParams, ...(countParams.research_field ? { include_subfields: 'true' } : {}) } }

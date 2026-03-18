@@ -2,49 +2,54 @@ import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import useProvenance from '@/components/ItemMetadata/hooks/useProvenance';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
-import useProvenance from '@/components/Resource/hooks/useProvenance';
 import Badge from '@/components/Ui/Badge/Badge';
-import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { Thing } from '@/services/backend/things';
 
-function ProvenanceBox({ item, editMode = false }) {
+type ProvenanceBoxProps = {
+    item: Thing & { version_id?: string; observatories?: string[]; organizations?: string[]; observatory_id?: string; organization_id?: string };
+    editMode: boolean;
+    updateCallBack?: () => void;
+};
+
+function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBoxProps) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const _observatoryId = 'observatories' in item && item.observatories.length > 0 ? item.observatories[0] : item.observatory_id;
-    const _organizationId = 'observatories' in item && item.organizations.length > 0 ? item.organizations[0] : item.organization_id;
-    const { observatoryId, organizationId, provenance, updateCallBack } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
+    const _observatoryId =
+        'observatories' in item && item.observatories && item.observatories?.length > 0 ? item.observatories[0] : item.observatory_id;
+    const _organizationId =
+        'observatories' in item && item.organizations && item.organizations?.length > 0 ? item.organizations[0] : item.organization_id;
+    const { observatory, organization } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
     const { isCurationAllowed } = useAuthentication();
 
-    if (!provenance && !editMode) {
+    if (!organization && !observatory && !editMode) {
         return null;
     }
 
     return (
         <>
-            {provenance?.organization?.id && organizationId !== MISC.UNKNOWN_ID && (
+            {organization && (
                 <Badge color="light" className="me-2 mt-2">
                     <FontAwesomeIcon icon={faUsers} /> Organization
                     <span className="ms-1">
-                        <Link href={reverse(ROUTES.ORGANIZATION, { type: provenance.organization.type, id: provenance.organization.display_id })}>
-                            {provenance.organization.name}
-                        </Link>
+                        <Link href={reverse(ROUTES.ORGANIZATION, { type: organization.type, id: organization.display_id })}>{organization.name}</Link>
                     </span>
                 </Badge>
             )}
-            {provenance?.id && observatoryId !== MISC.UNKNOWN_ID && (
+            {observatory && (
                 <Badge color="light" className="me-2 mt-2">
                     <FontAwesomeIcon icon={faBinoculars} /> Observatory
                     <span className="ms-1">
-                        <Link href={reverse(ROUTES.OBSERVATORY, { id: provenance.display_id })}>{provenance.name}</Link>
+                        <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                     </span>
                 </Badge>
             )}
-            {editMode && isCurationAllowed && organizationId === MISC.UNKNOWN_ID && observatoryId === MISC.UNKNOWN_ID && (
+            {editMode && isCurationAllowed && !organization && !observatory && (
                 <Badge color="light" className="me-2 mt-2">
                     Not assigned to any observatory
                 </Badge>
@@ -55,8 +60,8 @@ function ProvenanceBox({ item, editMode = false }) {
             <ObservatoryModal
                 callBack={updateCallBack}
                 showDialog={showAssignObservatory}
-                observatory={provenance}
-                organization={provenance?.organization}
+                observatory={observatory}
+                organization={organization}
                 // rosetta statement require the version_id to be updated
                 resourceId={item.version_id ?? item.id}
                 toggle={() => setShowAssignObservatory((v) => !v)}
@@ -64,10 +69,5 @@ function ProvenanceBox({ item, editMode = false }) {
         </>
     );
 }
-
-ProvenanceBox.propTypes = {
-    item: PropTypes.object.isRequired,
-    editMode: PropTypes.bool.isRequired,
-};
 
 export default ProvenanceBox;

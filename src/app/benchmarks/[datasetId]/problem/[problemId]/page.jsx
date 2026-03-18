@@ -32,7 +32,7 @@ import Table from '@/components/Ui/Table/Table';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map((value) => value[0]);

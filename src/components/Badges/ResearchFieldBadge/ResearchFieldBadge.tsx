@@ -6,7 +6,7 @@ import { FC } from 'react';
 import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 type ResearchFieldBadgeProps = {
     researchField: Node;

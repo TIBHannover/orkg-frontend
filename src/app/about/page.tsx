@@ -5,7 +5,7 @@ import NotFound from '@/app/not-found';
 import ROUTES from '@/constants/routes';
 import { getAboutPages } from '@/services/cms';
 import { CmsResponsePaginated, HelpArticle } from '@/services/cms/types';
-import { slugify } from '@/utils';
+import { slugify } from '@/utilsTyped';
 
 const About = async () => {
     let pages: CmsResponsePaginated<HelpArticle> | void;
@@ -21,7 +21,7 @@ const About = async () => {
     if (!id) {
         return <NotFound />;
     }
-    return redirect(reverse(ROUTES.ABOUT, { id, slug: slugify(title) }));
+    return redirect(reverse(ROUTES.ABOUT, { id, slug: slugify(title ?? '') }));
 };
 
 export default About;

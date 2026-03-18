@@ -13,7 +13,6 @@ import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import useParams from '@/components/useParams/useParams';
-import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getResources, resourcesUrl } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';
@@ -56,7 +55,7 @@ function ContentTypes() {
     return (
         <ListPage
             label={pluralize(contentType.label, 0, false)}
-            resourceClass={ENTITIES.RESOURCE}
+            resourceClass={contentType.id}
             renderListItem={renderListItem}
             fetchFunction={getResources}
             fetchFunctionName="getResources"

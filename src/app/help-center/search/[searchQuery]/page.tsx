@@ -12,7 +12,7 @@ import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
 import { getHelpArticles } from '@/services/cms';
 import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const HelpCenterSearch = () => {
     const [articles, setArticles] = useState<HelpArticle[]>([]);
@@ -68,7 +68,7 @@ const HelpCenterSearch = () => {
                             <li key={article.id}>
                                 <Link
                                     href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                        id: article.id,
+                                        id: article.id.toString(),
                                         slug: article.attributes?.title,
                                     })}
                                 >

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Card from '@/components/Ui/Card/Card';
 import CardBody from '@/components/Ui/Card/CardBody';
 import ROUTES from '@/constants/routes';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 const BenchmarkCardStyled = styled.div`
     cursor: initial;

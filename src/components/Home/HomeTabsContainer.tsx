@@ -14,7 +14,7 @@ import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
 import { Item, VisibilityOptions } from '@/services/backend/types';
-import { reverseWithSlug } from '@/utils';
+import { reverseWithSlug } from '@/utilsTyped';
 
 export const HOME_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
