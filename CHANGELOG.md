@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.178.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.177.0...v0.178.0) - 2026-03-19
+
+### Changes
+
+- feat: improve dataset/software content type view [`#1649`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1649)
+
+---
 ## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
 
 ### Changes
