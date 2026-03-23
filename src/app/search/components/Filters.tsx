@@ -1,6 +1,6 @@
 import { faCaretDown, faCaretUp, faCircleInfo, faCircleXmark, faMagic, faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { startCase, toLower } from 'lodash';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 
@@ -53,7 +53,6 @@ const Filters: FC<FiltersProps> = ({
     facets,
 }) => {
     const { user } = useAuthentication();
-    const { trackEvent } = useMatomo();
 
     const {
         searchTerm,
@@ -83,7 +82,7 @@ const Filters: FC<FiltersProps> = ({
 
     const handleSmartFilterChange = (facetValue: string, checked: boolean) => {
         if (setSelectedSmartFilter) {
-            trackEvent({ category: 'smart filters', action: 'facet value toggled', name: checked.toString() });
+            sendEvent({ category: 'smart filters', action: 'facet value toggled', name: checked.toString() });
 
             setSelectedSmartFilter((prevLabels) => {
                 if (checked) {

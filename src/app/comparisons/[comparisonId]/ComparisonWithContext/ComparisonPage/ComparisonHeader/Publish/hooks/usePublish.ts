@@ -1,4 +1,4 @@
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -14,7 +14,6 @@ function usePublish() {
     const [isLoading, setIsLoading] = useState(false);
     const { comparison } = useComparison();
     const router = useRouter();
-    const { trackEvent } = useMatomo();
 
     const isPublishable =
         comparison &&
@@ -46,7 +45,7 @@ function usePublish() {
                     assign_doi: shouldAssignDoi,
                 });
 
-                trackEvent({ category: 'data-entry', action: 'publish-comparison' });
+                sendEvent({ category: 'data-entry', action: 'publish-comparison' });
                 toast.success('Comparison published successfully');
                 setIsLoading(false);
                 router.push(reverse(ROUTES.COMPARISON, { comparisonId: publishedComparisonId }));

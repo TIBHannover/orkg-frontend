@@ -5,9 +5,7 @@ import '@/assets/scss/global.css';
 
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
 import { detect } from 'detect-browser';
-import { ErrorBoundary } from 'next/dist/client/components/error-boundary';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { env } from 'next-runtime-env';
@@ -82,16 +80,16 @@ const StyledAlertCookie = styled(Alert)`
     }
 `;
 
-const CloseToastButton = ({ closeToast }) => (
+const CloseToastButton = ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => void }) => (
     <span
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent<HTMLSpanElement>) => {
             e.stopPropagation();
-            closeToast(e);
+            closeToast?.(e);
         }}
-        onKeyDown={(e) => {
+        onKeyDown={(e: React.KeyboardEvent<HTMLSpanElement>) => {
             if (e.keyCode === 13) {
                 e.stopPropagation();
-                closeToast(e);
+                closeToast?.(e);
             }
         }}
         role="button"
@@ -105,12 +103,11 @@ CloseToastButton.propTypes = {
     closeToast: PropTypes.func,
 };
 
-export default function DefaultLayout(props) {
+const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const showFooter = pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
     const [visible, setVisible] = useState(false);
-    const { trackPageView } = useMatomo();
     const browser = detect();
     const showBrowserWarning = browser && browser.name === 'ie';
 
@@ -120,13 +117,6 @@ export default function DefaultLayout(props) {
         setCookie('cookieInfoDismissed', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
         setVisible(false);
     };
-
-    useEffect(() => {
-        setTimeout(() => {
-            // Track page view
-            trackPageView();
-        }, 1000);
-    }, [pathname, trackPageView]);
 
     useEffect(() => {
         setVisible(!cookies.cookieInfoDismissed);
@@ -159,9 +149,7 @@ export default function DefaultLayout(props) {
                 </Alert>
             )}
             <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
-                <ErrorBoundary fallback="Something went wrong while loading the page!">
-                    <StyledAppContent>{props.children}</StyledAppContent>
-                </ErrorBoundary>
+                <StyledAppContent>{children}</StyledAppContent>
             </Suspense>
             {showFooter && (
                 <StyledFooter>
@@ -180,8 +168,5 @@ export default function DefaultLayout(props) {
             <ComparisonPopup />
         </StyledBody>
     );
-}
-
-DefaultLayout.propTypes = {
-    children: PropTypes.object.isRequired,
 };
+export default DefaultLayout;

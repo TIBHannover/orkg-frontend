@@ -1,4 +1,4 @@
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
@@ -30,7 +30,6 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
     const [changelog, setChangelog] = useState('');
     const [publishedId, setPublishedId] = useState<string | null>(null);
     const { list } = useList();
-    const { trackEvent } = useMatomo();
     const formId = useId();
 
     if (!list) {
@@ -43,7 +42,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
 
         try {
             setPublishedId(await publishList(list.id, { changelog }));
-            trackEvent({ category: 'data-entry', action: 'publish-list' });
+            sendEvent({ category: 'data-entry', action: 'publish-list' });
             toast.success('List published successfully');
         } catch (e) {
             errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });

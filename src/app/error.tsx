@@ -2,7 +2,7 @@
 
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { detect } from 'detect-browser';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -13,17 +13,15 @@ import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
 const InternalServerError = ({ error }: { error?: Error & { digest?: string } }) => {
-    const { trackEvent } = useMatomo();
-
     useEffect(() => {
         // log the error as matomo event
         const browser = detect();
-        trackEvent({
+        sendEvent({
             category: 'errors',
             action: error?.toString().replace(' ', '') || 'InternalServerError',
             name: `Location ${window.location.href} Browser:${JSON.stringify(browser)}`,
         });
-    }, [error, trackEvent]);
+    }, [error]);
 
     return (
         <div>

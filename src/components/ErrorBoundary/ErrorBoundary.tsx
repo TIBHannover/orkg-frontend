@@ -1,14 +1,13 @@
 'use client';
 
+import { sendEvent } from '@socialgouv/matomo-next';
 import { detect } from 'detect-browser';
 import { Component, ReactNode } from 'react';
 
 import ErrorFallback from '@/components/ErrorBoundary/ErrorFallback';
-import withMatomo from '@/components/Matomo/withMatomo';
 
 type ErrorBoundaryProps = {
     children: ReactNode;
-    trackEvent: (event: { category: string; action: string; name: string }) => void;
     fallback?: ReactNode;
 };
 
@@ -31,8 +30,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     componentDidCatch(error: Error) {
         // log the error as matomo event
         const browser = detect();
-        const { trackEvent } = this.props;
-        trackEvent({
+        sendEvent({
             category: 'errors',
             action: error.toString().replace(' ', ''),
             name: `Location ${window.location.href} Browser:${JSON.stringify(browser)}`,
@@ -50,4 +48,4 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
 }
 
-export default withMatomo(ErrorBoundary);
+export default ErrorBoundary;
