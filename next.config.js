@@ -180,7 +180,7 @@ const nextConfig = {
             },
             {
                 source: '/smart-review/new',
-                destination: '/review/new',
+                destination: '/reviews/create',
                 permanent: true,
             },
             {
@@ -195,37 +195,37 @@ const nextConfig = {
             },
             {
                 source: '/literature-list/new',
-                destination: '/list/new',
+                destination: '/lists/create',
                 permanent: true,
             },
             {
                 source: '/smart-review/diff/:oldId-:newId',
-                destination: '/review/diff/:oldId-:newId',
+                destination: '/reviews/diff/:oldId-:newId',
                 permanent: true,
             },
             {
                 source: '/predicate/:id',
-                destination: '/property/:id',
+                destination: '/properties/:id',
                 permanent: true,
             },
             {
                 source: '/smart-review/:id',
-                destination: '/review/:id',
+                destination: '/reviews/:id',
                 permanent: true,
             },
             {
                 source: '/literature-list/:id',
-                destination: '/list/:id',
+                destination: '/lists/:id',
                 permanent: true,
             },
             {
                 source: '/literature-list/:id/:embed',
-                destination: '/list/:id/:embed',
+                destination: '/lists/:id/:embed',
                 permanent: true,
             },
             {
                 source: '/literature-list/diff/:oldId-:newId',
-                destination: '/list/diff/:oldId/:newId',
+                destination: '/lists/diff/:oldId/:newId',
                 permanent: true,
             },
             {
