@@ -127,7 +127,6 @@
         "swiper": "^11.2.8",
         "swr": "^2.4.0",
         "tailwindcss": "^4.2.0",
-        "typed.js": "^2.1.0",
         "url-regex-safe": "^4.0.0",
         "zod": "^3.25.67",
         "zod-validation-error": "^3.5.2"
