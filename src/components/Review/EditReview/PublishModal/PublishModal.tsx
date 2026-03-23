@@ -1,4 +1,4 @@
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useState } from 'react';
@@ -33,8 +33,6 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
     const [shouldAssignDoi, setShouldAssignDoi] = useState(false);
     const [description, setDescription] = useState('');
 
-    const { trackEvent } = useMatomo();
-
     if (!review) {
         return null;
     }
@@ -56,7 +54,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
 
             mutate();
             toast.success('Review published successfully');
-            trackEvent({ category: 'data-entry', action: 'publish-review' });
+            sendEvent({ category: 'data-entry', action: 'publish-review' });
             setPublishedId(newId);
             setIsLoading(false);
         } catch (e) {

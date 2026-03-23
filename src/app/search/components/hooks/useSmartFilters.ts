@@ -1,4 +1,4 @@
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
@@ -16,11 +16,10 @@ const useSmartFilters = (searchTerm: string, results: PaginatedResponse<Thing> |
     const [smartFiltersVisible, setSmartFiltersVisible] = useState(false);
     const [selectedSmartFilter, setSelectedSmartFilter] = useState<string[]>([]);
     const [isGeneratingSmartFilters, setIsGeneratingSmartFilters] = useState(false);
-    const { trackEvent } = useMatomo();
 
     // Function to extract IDs and Abstracts from the results
     const generateSmartFilters = async () => {
-        trackEvent({ category: 'smart filters', action: 'generate button clicked', name: 'true' });
+        sendEvent({ category: 'smart filters', action: 'generate button clicked', name: 'true' });
 
         setIsGeneratingSmartFilters(true);
         try {

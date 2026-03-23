@@ -1,6 +1,6 @@
 import { faLightbulb, faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
@@ -28,7 +28,6 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isFailed, setIsFailed] = useState(false);
-    const { trackEvent } = useMatomo();
     const { mutateStatements } = useEntity();
 
     const taskName = {
@@ -92,7 +91,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
         }
         mutateStatements();
         setIsOpenSmartTooltip(false);
-        trackEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: taskName });
+        sendEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: taskName });
     };
 
     return (

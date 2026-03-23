@@ -1,6 +1,6 @@
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -19,8 +19,6 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isFailed, setIsFailed] = useState(false);
-
-    const { trackEvent } = useMatomo();
 
     const getChatResponse = useCallback(async () => {
         if (!properties || properties.length === 0) {
@@ -64,7 +62,7 @@ const SmartPropertySuggestions = ({ properties, handleCreate }) => {
             const _propertyId = await createPredicate(property.label);
             selectedProperty.id = _propertyId;
         }
-        trackEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: LLM_TASK_NAMES.RECOMMEND_PROPERTIES });
+        sendEvent({ category: 'smart-suggestions', action: 'click-suggestion', name: LLM_TASK_NAMES.RECOMMEND_PROPERTIES });
         handleCreate(selectedProperty);
         setIsOpenSmartTooltip(false);
     };

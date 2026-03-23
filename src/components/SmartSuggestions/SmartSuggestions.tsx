@@ -2,7 +2,7 @@
 
 import { faQuestionCircle, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useMatomo } from '@jonkoops/matomo-tracker-react';
+import { sendEvent } from '@socialgouv/matomo-next';
 import { forwardRef, useEffect } from 'react';
 import styled, { useTheme } from 'styled-components';
 
@@ -32,14 +32,13 @@ type SmartSuggestionsProps = {
 
 const SmartSuggestions = forwardRef<HTMLDivElement, SmartSuggestionsProps>(
     ({ children, tooltipContent, isOpenSmartTooltip, setIsOpenSmartTooltip, inputData, outputData, llmTask, handleReload }, ref) => {
-        const { trackEvent } = useMatomo();
         const theme = useTheme();
 
         useEffect(() => {
             if (isOpenSmartTooltip) {
-                trackEvent({ category: 'smart-suggestions', action: 'open-tooltip', name: llmTask });
+                sendEvent({ category: 'smart-suggestions', action: 'open-tooltip', name: llmTask });
             }
-        }, [isOpenSmartTooltip, llmTask, trackEvent]);
+        }, [isOpenSmartTooltip, llmTask]);
 
         return (
             <Popover
