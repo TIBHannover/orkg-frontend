@@ -50,7 +50,6 @@ const AddPaper = () => {
     } = useAddPaper({ onCreate });
 
     useEffect(() => {
-        document.title = 'Add paper - ORKG';
         const entry = searchParams.get('entry');
         const queryParamTitle = searchParams.get('title');
         if (entry) {
