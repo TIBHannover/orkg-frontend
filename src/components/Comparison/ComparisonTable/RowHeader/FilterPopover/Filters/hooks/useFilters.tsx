@@ -8,11 +8,23 @@ import { ComparisonFilter, FilterType, FilterValues } from '@/components/Compari
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import { SelectedPathValues, ThingReference } from '@/services/backend/types';
 
-const getValuesByPath = (values: Record<string, SelectedPathValues[]> | undefined, query: { id: string }): ThingReference[] => {
+const getValuesByPath = (values: Record<string, SelectedPathValues[]> | undefined, query: { id: string; path?: string[] }): ThingReference[] => {
     if (!values) return [];
-    const nodes = values[query.id];
-    if (!nodes) return [];
-    return nodes.flatMap((node) => node.values).filter(Boolean);
+    const path = query.path ?? [];
+
+    if (path.length === 0) {
+        const nodes = values[query.id];
+        if (!nodes) return [];
+        return nodes.flatMap((node) => node.values).filter(Boolean);
+    }
+
+    let currentNodes: SelectedPathValues[] = values[path[0]] ?? [];
+    for (let i = 1; i < path.length; i++) {
+        currentNodes = currentNodes.flatMap((node) => node.children?.[path[i]] ?? []);
+    }
+
+    const targetNodes = currentNodes.flatMap((node) => node.children?.[query.id] ?? []);
+    return targetNodes.flatMap((node) => node.values).filter(Boolean);
 };
 
 const EMPTY_FILTER: ComparisonFilter = {};
@@ -44,8 +56,8 @@ const useFilters = () => {
     );
 
     const getUniqueValues = useCallback(
-        ({ id }: { id: string; path?: string[] }) => {
-            const values = getValuesByPath(comparisonContents?.values, { id });
+        ({ id, path }: { id: string; path?: string[] }) => {
+            const values = getValuesByPath(comparisonContents?.values, { id, path });
 
             const valueCounts = values.reduce<Record<string, number>>((acc, curr) => {
                 acc[curr.label] = (acc[curr.label] || 0) + 1;
