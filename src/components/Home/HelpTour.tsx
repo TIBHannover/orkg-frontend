@@ -1,9 +1,11 @@
+'use client';
+
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Steps } from 'intro.js-react';
+import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
-import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -199,13 +201,13 @@ const TOUR_STEPS = [
 ];
 
 const HelpTour = () => {
-    const cookies = new Cookies();
+    const cookies = useCookies();
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [isTooltipVisible, setIsTooltipVisible] = useState(!cookies.get('isHiddenHomeTour'));
 
     const closeTooltip = () => {
         setIsTooltipVisible(false);
-        cookies.set('isHiddenHomeTour', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 60 * 60 * 24 * 365 });
+        cookies.set('isHiddenHomeTour', 'true', { path: env('NEXT_PUBLIC_PUBLIC_URL'), expires: 365 });
     };
 
     return (
