@@ -6,7 +6,6 @@ import '@/assets/scss/global.css';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { detect } from 'detect-browser';
-import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { env } from 'next-runtime-env';
 import PropTypes from 'prop-types';
@@ -15,13 +14,12 @@ import { useCookies } from 'react-cookie';
 import { Slide, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 
+import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Footer from '@/components/Layout/Footer';
 import Header from '@/components/Layout/Header/Header';
 import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
-
-const ComparisonPopup = dynamic(() => import('@/components/ComparisonPopup/ComparisonPopup'), { ssr: false });
 
 const StyledBody = styled.div`
     display: flex;

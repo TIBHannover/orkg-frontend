@@ -5,8 +5,8 @@ import { faCheck, faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawes
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
+import { useCookies } from 'next-client-cookies';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Cookies } from 'react-cookie';
 import styled from 'styled-components';
 
 import {
@@ -30,8 +30,6 @@ import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import Navbar from '@/components/Ui/Nav/Navbar';
 import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
-
-const cookies = new Cookies();
 
 type ComparisonPopupStyledProps = {
     $cookieInfoDismissed: boolean;
@@ -59,6 +57,8 @@ const ComparisonPopup: FC = () => {
     const [showComparisonBox, setShowComparisonBox] = useState(false);
     const [showConfirmationPopover, setShowConfirmationPopover] = useState(false);
     const comparisonPopupRef = useRef<HTMLDivElement>(null);
+    const cookies = useCookies();
+    const COOKIE_NAME = 'cookieInfoDismissed';
 
     const toggleComparisonBox = useCallback(() => {
         setShowComparisonBox((prev) => !prev);
@@ -103,7 +103,7 @@ const ComparisonPopup: FC = () => {
         };
     }, [handleClickOutside]);
 
-    const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
+    const cookieInfoDismissed = cookies.get(COOKIE_NAME) ? cookies.get(COOKIE_NAME) : null;
     const { allIds, byId } = comparison;
 
     if (allIds.length === 0) {
@@ -116,7 +116,7 @@ const ComparisonPopup: FC = () => {
 
     return (
         <ComparisonPopupStyled
-            $cookieInfoDismissed={cookieInfoDismissed}
+            $cookieInfoDismissed={!!cookieInfoDismissed}
             ref={comparisonPopupRef}
             className="fixed-bottom p-0 offset-sm-2 offset-md-8"
             style={{ width: '340px', zIndex: '1000' }}

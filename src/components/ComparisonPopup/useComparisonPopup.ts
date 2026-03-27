@@ -39,9 +39,14 @@ export const saveComparisonToLocalStorage = (comparison: Comparison): void => {
 /**
  * Custom hook to manage comparison state with automatic synchronization
  * Listens to both storage events (cross-tab) and custom events (same-tab)
+ * Uses empty initial state for SSR to avoid hydration mismatch (localStorage is client-only)
  */
-export const useComparisonPopup = () => {
-    const [comparison, setComparison] = useState<Comparison>(() => getComparisonFromLocalStorage());
+const useComparisonPopup = () => {
+    const [comparison, setComparison] = useState<Comparison>({ byId: {}, allIds: [] });
+
+    useEffect(() => {
+        setComparison(getComparisonFromLocalStorage());
+    }, []);
 
     useEffect(() => {
         // Handler for cross-tab synchronization (storage event)
