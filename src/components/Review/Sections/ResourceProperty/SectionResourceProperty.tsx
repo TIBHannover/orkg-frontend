@@ -53,6 +53,7 @@ const SectionResourceProperty: FC<SectionResourcePropertyProps> = ({ section }) 
                     isEditMode={false}
                     id={id}
                     statementsSnapshot={publishedContents.statements}
+                    snapshotCreatedAt={review.created_at}
                     propertiesAsLinks
                     valuesAsLinks
                     showHeader={false}

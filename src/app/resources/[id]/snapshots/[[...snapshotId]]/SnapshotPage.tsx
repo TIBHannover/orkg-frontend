@@ -118,7 +118,14 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                     {snapshotStatements && snapshotStatements.length > 0 && (
                         <Container className="mt-3 p-0 box rounded">
                             <div className="p-4">
-                                <DataBrowser isEditMode={false} id={id} valuesAsLinks propertiesAsLinks statementsSnapshot={snapshotStatements} />
+                                <DataBrowser
+                                    isEditMode={false}
+                                    id={id}
+                                    valuesAsLinks
+                                    propertiesAsLinks
+                                    statementsSnapshot={snapshotStatements}
+                                    snapshotCreatedAt={snapshot.created_at}
+                                />
                             </div>
                         </Container>
                     )}

@@ -50,6 +50,10 @@ export type DataBrowserConfig = {
      */
     statementsSnapshot?: Statement[];
     /**
+     * The created_at timestamp of the statements snapshot.
+     */
+    snapshotCreatedAt?: string;
+    /**
      * Paths selected in the comparison view, used to show predicates for non-existing values in the data browser.
      */
     comparisonSelectedPaths?: string[][];

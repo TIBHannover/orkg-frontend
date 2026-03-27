@@ -2,7 +2,7 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 
 import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ContributionTab from '@/components/ContributionTabs/ContributionTab';
@@ -16,10 +16,17 @@ import useParams from '@/components/useParams/useParams';
 import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import useContributions from '@/components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
 import ROUTES from '@/constants/routes';
+import { Resource, Statement } from '@/services/backend/types';
 
-const Contributions = (props) => {
+type ContributionsProps = {
+    contributions: (Resource & { statementId: string })[];
+    paperStatements: Statement[];
+    snapshotCreatedAt: string;
+};
+
+const Contributions: FC<ContributionsProps> = ({ contributions, paperStatements, snapshotCreatedAt }) => {
     const { resourceId, contributionId } = useParams();
-    const { contributions, paperStatements } = props;
+
     const { isLoading, isLoadingContributionFailed, selectedContribution } = useContributions({
         paperId: resourceId,
         contributionId,
@@ -28,7 +35,7 @@ const Contributions = (props) => {
     });
     const router = useRouter();
 
-    const onTabChange = (key) => {
+    const onTabChange = (key: string) => {
         router.push(
             reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId,
@@ -74,7 +81,12 @@ const Contributions = (props) => {
                                     {!isLoadingContributionFailed && (
                                         <div>
                                             <FormGroup>
-                                                <DataBrowser isEditMode={false} id={contribution.id} statementsSnapshot={paperStatements} />
+                                                <DataBrowser
+                                                    isEditMode={false}
+                                                    id={contribution.id}
+                                                    statementsSnapshot={paperStatements}
+                                                    snapshotCreatedAt={snapshotCreatedAt}
+                                                />
                                             </FormGroup>
                                         </div>
                                     )}
@@ -96,11 +108,6 @@ const Contributions = (props) => {
             </Row>
         </div>
     );
-};
-
-Contributions.propTypes = {
-    contributions: PropTypes.array,
-    paperStatements: PropTypes.array,
 };
 
 export default Contributions;

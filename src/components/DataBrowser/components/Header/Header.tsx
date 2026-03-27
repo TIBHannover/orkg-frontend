@@ -22,7 +22,7 @@ const Header = () => {
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config } = useDataBrowserState();
     const { error } = useEntity();
-    const { isEditMode } = config;
+    const { isEditMode, snapshotCreatedAt } = config;
     const dispatch = useDataBrowserDispatch();
     const { canEdit } = useCanEdit();
 
@@ -37,11 +37,10 @@ const Header = () => {
 
     return (
         <div>
-            {isUsingSnapshot && (
+            {isUsingSnapshot && snapshotCreatedAt && (
                 <Alert color="info" className="mb-0 p-2 rounded-0">
                     <p className="mb-0">
-                        You are viewing a version of the data. This version was created on{' '}
-                        {dayjs(config.statementsSnapshot?.[0].created_at)?.format('DD MMMM YYYY - H:mm:ss')}
+                        You are viewing a snapshot of the data, which was taken on {dayjs(snapshotCreatedAt)?.format('DD MMMM YYYY - H:mm:ss')}
                     </p>
                 </Alert>
             )}
