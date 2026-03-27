@@ -205,3 +205,5 @@ export const publishPaper = (paperId: string, data: PublishPaperParams) =>
             json: data,
         })
         .then(({ headers }) => getCreatedIdFromHeaders(headers));
+
+export const getPublishedContents = (paperId: string) => papersApi.get<{ statements: Statement[] }>(`${paperId}/published-contents`).json();

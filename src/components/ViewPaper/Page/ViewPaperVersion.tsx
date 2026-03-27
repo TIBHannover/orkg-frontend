@@ -53,6 +53,12 @@ const ViewPaperVersion = () => {
         }
     }, [state.value]);
 
+    useEffect(() => {
+        if (paper && !isLoadingPaperVersion) {
+            document.title = paper?.title;
+        }
+    }, [paper, isLoadingPaperVersion]);
+
     const { isLoading, isLoadingFailed, contributions, paperStatements } = useViewPaperVersion({
         paperId: resourceId,
     });
@@ -103,7 +109,11 @@ const ViewPaperVersion = () => {
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />
-                                <Contributions contributions={contributions} paperStatements={paperStatements} />
+                                <Contributions
+                                    contributions={contributions}
+                                    paperStatements={paperStatements}
+                                    snapshotCreatedAt={paper?.created_at}
+                                />
                             </>
                         )}
                     </Container>

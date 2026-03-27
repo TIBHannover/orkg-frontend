@@ -36,6 +36,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
     title,
     abstract,
     statementsSnapshot,
+    snapshotCreatedAt,
     comparisonSelectedPaths,
 }) => {
     const config = {
@@ -49,10 +50,11 @@ const DataBrowser: FC<DataBrowserProps> = ({
         showHeader,
         collapsedClasses,
         statementsSnapshot,
+        snapshotCreatedAt,
         showFooter,
         comparisonSelectedPaths,
     };
-    const context = { researchField, title, abstract };
+    const context = { researchField, title, abstract, snapshotCreatedAt };
     return (
         <ErrorBoundary fallback="Something went wrong while loading the data browser!">
             <DataBrowserProvider rootId={id} config={config} context={context}>
