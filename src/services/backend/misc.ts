@@ -4,18 +4,19 @@ import { ENTITIES } from '@/constants/graphSettings';
 import { getClasses } from '@/services/backend/classes';
 import { getPredicates } from '@/services/backend/predicates';
 import { getResources } from '@/services/backend/resources';
+import { getThings, Thing } from '@/services/backend/things';
 import {
     AuthorIdParam,
     AuthorNameParam,
     Class,
     CreatedByParam,
+    EntityType,
     Item,
     ObservatoryIdParam,
     OrganizationIdParam,
     PaginatedResponse,
     Pagination,
     PaginationParams,
-    Predicate,
     PublishedParam,
     ResearchFieldIdParams,
     Resource,
@@ -27,7 +28,7 @@ import {
 import { mergeAlternate } from '@/utils';
 
 export const getEntities = (
-    entityType: string,
+    entityType: EntityType,
     params: {
         page?: number;
         size?: number;
@@ -35,11 +36,13 @@ export const getEntities = (
         exclude?: string[];
         exact?: boolean;
     },
-): Promise<PaginatedResponse<Resource | Predicate> | Pagination<Class>> => {
+): Promise<PaginatedResponse<Thing> | Pagination<Class>> => {
     // { page = 0, size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
     // for resources there additional parameter: exclude
     // for resources there additional parameter: uri
     switch (entityType) {
+        case ENTITIES.THING:
+            return getThings(params);
         case ENTITIES.RESOURCE:
             return getResources(params);
         case ENTITIES.PREDICATE:
