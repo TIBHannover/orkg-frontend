@@ -3,6 +3,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.179.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.178.0...v0.179.0) - 2026-03-30
+
+### Changes
+
+- feat: implement Thing entity type for unified autocomplete [`#1658`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1658)
+- fix: hide "x" on template use cases when not in edit mode [`#1656`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1656)
+- fix: load ComparisonPopup statically [`#1660`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1660)
+- refactor: fetch published paper contents from backend [`#1663`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1663)
+- fix: filtering of nested comparison values [`#1662`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1662)
+- feat: add things route [`#1655`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1655)
+- fix(SEO): set canonical for duplicated create paper page [`#1642`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1642)
+- fix: push data browser history to browser [`#1657`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1657)
+- style: remove the typed animation from the home page [`#1651`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1651)
+- chore: update nextjs to 15.5.12 [`#1661`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1661)
+- chore: replace Matomo tracking package [`#1639`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1639)
+
+---
 ## [v0.178.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.177.0...v0.178.0) - 2026-03-19
 
 ### Changes
