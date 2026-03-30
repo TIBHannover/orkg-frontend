@@ -58,7 +58,8 @@ const EditEdge: FC<EditEdgeProps> = ({ isEditEdgeModalOpen, setIsEditEdgeModalOp
                                 }}
                             >
                                 {Object.keys(ENTITIES)
-                                    .filter((e) => ![ENTITIES.CLASS, ENTITIES.LITERAL].includes(ENTITIES[e]))
+                                    // Exclude THING to avoid confusion. Users should select specific entity types for precise diagram connections.
+                                    .filter((e) => ![ENTITIES.CLASS, ENTITIES.LITERAL, ENTITIES.THING].includes(ENTITIES[e]))
                                     .map((e) => (
                                         <option key={ENTITIES[e]} value={ENTITIES[e]}>
                                             {capitalize(ENTITIES[e])}

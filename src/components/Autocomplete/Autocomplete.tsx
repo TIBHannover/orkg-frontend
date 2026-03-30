@@ -20,6 +20,7 @@ import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/
 import { AdditionalType, AutocompleteProps, OptionType } from '@/components/Autocomplete/types';
 import errorHandler from '@/helpers/errorHandler';
 import { getThing } from '@/services/backend/things';
+import type { EntityType } from '@/services/backend/types';
 
 // This import is necessary for module augmentation.
 // It allows us to extend the 'Props' interface in the 'react-select/base' module
@@ -33,7 +34,7 @@ declare module 'react-select/base' {
         baseClass?: string;
         rootBaseClass?: string;
         onBaseClassChange?: (value: string | null) => void;
-        entityType?: string;
+        entityType?: EntityType;
         /** @internal */
         readonly __orkgAutocompleteAugmentation?: { option?: Option; isMulti?: IsMulti; group?: Group };
     }

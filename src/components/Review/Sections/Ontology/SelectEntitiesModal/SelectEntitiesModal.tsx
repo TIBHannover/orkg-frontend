@@ -1,4 +1,4 @@
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import capitalize from 'capitalize';
 import { uniqBy } from 'lodash';
@@ -12,6 +12,7 @@ import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import useReview from '@/components/Review/hooks/useReview';
 import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import ListGroupItem from '@/components/Ui/List/ListGroupItem';
@@ -22,9 +23,9 @@ import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { comparisonUrl, getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';
-import { getResource } from '@/services/backend/resources';
 import { getStatements } from '@/services/backend/statements';
-import { EntityType, ReviewSection, ReviewSectionData } from '@/services/backend/types';
+import { getThing } from '@/services/backend/things';
+import { ReviewSection, ReviewSectionData } from '@/services/backend/types';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     padding: 10px 10px 9px 5px !important;
@@ -45,6 +46,7 @@ type Entity = {
 
 const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, type }) => {
     const [selectedEntities, setSelectedEntities] = useState<ReviewSectionData[] | Omit<ReviewSectionData, 'classes'>[]>([]);
+    const [pendingEntityIds, setPendingEntityIds] = useState<string[]>([]);
     const [suggestionEntities, setSuggestionEntities] = useState<
         {
             title: string;
@@ -52,8 +54,9 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
         }[]
     >([]);
     const [suggestionProperties, setSuggestionProperties] = useState<Omit<ReviewSectionData, 'classes'>[]>([]);
-    const [addEntityType, setAddEntityType] = useState<EntityType | null>(null);
     const [instanceId] = useState(() => createInstanceId('select-entities-modal'));
+    const [autocompleteKey, setAutocompleteKey] = useState(0);
+    const [selectionMessage, setSelectionMessage] = useState<string | null>(null);
 
     const { review, updateSection } = useReview();
     const comparisonIds = review?.sections
@@ -69,8 +72,17 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
         ([ids]) => Promise.all(ids.map((id) => getComparisonContents(id))),
     );
 
+    const itemTypeLabel = type === 'properties' ? 'property' : 'entity';
+    const itemTypeLabelPlural = type === 'properties' ? 'Properties' : 'Entities';
+
+    const getDuplicateSelectionMessage = (label?: string) =>
+        `${
+            label ? `"${label}"` : `This ${itemTypeLabel}`
+        } is already selected or being added. ${itemTypeLabelPlural} are unique by ID and can only be added once.`;
+
     useEffect(() => {
         const populateLists = async () => {
+            setSelectionMessage(null);
             if (type === 'entities') {
                 if (comparisons) {
                     setSuggestionEntities(
@@ -87,33 +99,56 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                         })),
                     );
                 }
-                setSelectedEntities(section.entities!);
+                setSelectedEntities(uniqBy(section.entities ?? [], 'id'));
                 setSuggestionProperties([]);
             } else if (type === 'properties') {
                 setSuggestionEntities([]);
-                setSelectedEntities(section.predicates!);
-                setSuggestionProperties([await getPredicate(PREDICATES.DESCRIPTION), await getPredicate(PREDICATES.SAME_AS)]);
+                setSelectedEntities(uniqBy(section.predicates ?? [], 'id'));
+                setSuggestionProperties(uniqBy([await getPredicate(PREDICATES.DESCRIPTION), await getPredicate(PREDICATES.SAME_AS)], 'id'));
             }
         };
         populateLists();
     }, [comparisonContents, comparisons, section, type]);
 
-    const handleSelectEntity = async (id: string) => {
+    const handleSelectEntity = async (id: string, options?: { label?: string }) => {
+        const { label } = options ?? {};
+        if (selectedEntities.some((entity) => entity.id === id) || pendingEntityIds.includes(id)) {
+            const existingEntity = selectedEntities.find((entity) => entity.id === id);
+            setSelectionMessage(getDuplicateSelectionMessage(label ?? existingEntity?.label));
+            setAutocompleteKey((prev) => prev + 1);
+            return;
+        }
+        // Mark as loading immediately
+        setPendingEntityIds((prev) => [...prev, id]);
+
         try {
-            const entity = addEntityType === ENTITIES.RESOURCE ? await getResource(id) : await getPredicate(id);
-            const entityStatements = await getStatements({ subjectId: id });
-            setSelectedEntities((_entities) => [..._entities, { ...entity, statements: entityStatements }]);
-            setAddEntityType(null);
+            // Use specific API calls based on section type to maintain type consistency
+            const [entity, entityStatements] = await Promise.all([
+                type === 'properties' ? getPredicate(id) : getThing(id),
+                getStatements({ subjectId: id }),
+            ]);
+            setSelectedEntities((_entities) => {
+                if (_entities.some((_entity) => _entity.id === id)) {
+                    return _entities;
+                }
+                return [..._entities, { ...entity, statements: entityStatements }];
+            });
+            setSelectionMessage(null);
+            setAutocompleteKey((prev) => prev + 1);
         } catch (e) {
             toast.error('An error occurred, please reload the page and try again');
+        } finally {
+            // Always remove loading state, even on error
+            setPendingEntityIds((prev) => prev.filter((entityId) => entityId !== id));
         }
     };
 
     const handleRemoveEntity = (entityId: string) => {
+        setSelectionMessage(null);
         setSelectedEntities((_entities) => _entities.filter((_entity) => _entity.id !== entityId));
     };
 
-    const handleAddAllEntities = (entities: Entity[]) => entities.map((entity) => handleSelectEntity(entity.id));
+    const handleAddAllEntities = (entities: Entity[]) => entities.forEach((entity) => handleSelectEntity(entity.id, { label: entity.label }));
 
     const reorderEntities = useCallback(
         ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
@@ -171,34 +206,36 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                             totalItems={selectedEntities.length}
                         />
                     ))}
+                    {pendingEntityIds.length > 0 && (
+                        <ListGroupItem className="py-2 text-muted text-center">
+                            <FontAwesomeIcon icon={faSpinner} spin className="me-2" />
+                            Adding selected item...
+                        </ListGroupItem>
+                    )}
                     <ListGroupItemStyled className="py-2 d-flex justify-content-end">
-                        {addEntityType ? (
-                            <Autocomplete
-                                entityType={addEntityType}
-                                placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                                onChange={(value, { action }) => {
-                                    if (action === 'select-option' && value?.id) {
-                                        handleSelectEntity(value.id);
-                                    }
-                                }}
-                                openMenuOnFocus
-                                size="sm"
-                                allowCreate={false}
-                            />
-                        ) : (
-                            <>
-                                <Button color="secondary" size="sm" onClick={() => setAddEntityType(ENTITIES.PREDICATE)}>
-                                    Add property
-                                </Button>
-                                {type === 'entities' && (
-                                    <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
-                                        Add resource
-                                    </Button>
-                                )}
-                            </>
-                        )}
+                        <Autocomplete
+                            key={autocompleteKey}
+                            placeholder={type === 'properties' ? 'Enter a property' : 'Enter a property or resource'}
+                            entityType={type === 'properties' ? ENTITIES.PREDICATE : ENTITIES.THING}
+                            onChange={(value, { action }) => {
+                                if (action === 'select-option' && value?.id) {
+                                    handleSelectEntity(value.id, {
+                                        label: value.label,
+                                    });
+                                }
+                            }}
+                            openMenuOnFocus
+                            size="sm"
+                            allowCreate={false}
+                            excludeClasses={type === 'entities' ? ['Literal', 'Class'] : undefined}
+                        />
                     </ListGroupItemStyled>
                 </ListGroup>
+                {selectionMessage && (
+                    <Alert color="info" fade={false} className="mt-3 mb-0">
+                        {selectionMessage}
+                    </Alert>
+                )}
                 <h2 className="h5 mt-3">Suggestions</h2>
 
                 {suggestionEntities.map((comparison, index) => {
@@ -218,7 +255,11 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                             </ListGroupItemStyled>
                             {entities.map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
+                                    <Button
+                                        color="link"
+                                        className="p-0 me-2"
+                                        onClick={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
+                                    >
                                         <FontAwesomeIcon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}
@@ -235,7 +276,11 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                             .filter((property) => selectedEntities.filter((item) => item.id === property.id).length === 0)
                             .map((suggestion) => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
+                                    <Button
+                                        color="link"
+                                        className="p-0 me-2"
+                                        onClick={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
+                                    >
                                         <FontAwesomeIcon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}

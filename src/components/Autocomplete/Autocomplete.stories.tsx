@@ -21,6 +21,7 @@ const Template: StoryFn<typeof Autocomplete> = (args) => {
         <Autocomplete
             {...args}
             isMulti={false}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onChange={(newValue, actionMeta) => {
                 setValue(newValue as OptionType);
             }}
@@ -57,4 +58,12 @@ export const AdditionalOptions = Template.bind({});
 AdditionalOptions.args = {
     additionalOptions: [{ id: 'test', label: 'TEST 1' }],
     entityType: ENTITIES.RESOURCE,
+};
+
+// This new story demonstrate Thing entity type support and shows the unified autocomplete that can search across all entity types
+export const ThingEntityType = Template.bind({});
+
+ThingEntityType.args = {
+    entityType: ENTITIES.THING,
+    placeholder: 'Search across all entity types (Resources, Predicates, Classes, Literals)',
 };

@@ -13,7 +13,7 @@ import { getEntities } from '@/services/backend/misc';
 import { getResources } from '@/services/backend/resources';
 import { createLiteralStatement } from '@/services/backend/statements';
 import { getThing, Thing } from '@/services/backend/things';
-import { Class, EntityType, PaginatedResponse, Predicate, Resource } from '@/services/backend/types';
+import { Class, EntityType, PaginatedResponse } from '@/services/backend/types';
 import getGeoNames from '@/services/geoNames';
 import { EntityPath, getOntologyEntities, selectEntities } from '@/services/ols';
 import { searchEntity } from '@/services/wikidata';
@@ -33,7 +33,7 @@ export const orkgLookup = async ({
     value: string;
     page: number;
     pageSize: number;
-} & OptionsSettings): Promise<PaginatedResponse<Resource | Predicate | Class>> => {
+} & OptionsSettings): Promise<PaginatedResponse<Thing>> => {
     const exact = !!(value.startsWith('"') && value.endsWith('"') && value.length > 2);
     const isURI = new RegExp(REGEX.URL).test(value.trim());
     let localValue = value;
@@ -41,6 +41,7 @@ export const orkgLookup = async ({
         localValue = localValue.substring(1, localValue.length - 1).trim();
     }
     let responseJson;
+    // Keep resource-specific lookup to preserve baseClass/include/exclude filtering (including CSVW/LIST cases).
     if (entityType === ENTITIES.RESOURCE || includeClasses?.includes(CLASSES.CSVW_TABLE) || includeClasses?.includes(CLASSES.LIST)) {
         responseJson = await getResources({
             baseClass,
@@ -81,12 +82,13 @@ export const orkgLookup = async ({
             return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
         }
     } else {
-        // Predicate or Class
+        // Predicate or Class or Thing
         responseJson = await getEntities(entityType, {
             page,
             size: pageSize,
             q: localValue?.trim(),
             exact,
+            exclude: excludeClasses,
         }).then((res) => ({
             // TODO: remove snake case handling after finishing services migration
             content: res.content,
@@ -97,6 +99,11 @@ export const orkgLookup = async ({
                 number: res.page.number,
             },
         }));
+    }
+
+    // If no response, return empty results
+    if (!responseJson) {
+        return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
     }
 
     return responseJson;
@@ -174,7 +181,7 @@ export const getExternalData = ({
             [ENTITIES.PREDICATE]: 'property',
             [ENTITIES.RESOURCE]: 'item',
         };
-        promises.push(searchEntity({ value, page, pageSize, type: classes[entityType] || undefined }));
+        promises.push(searchEntity({ value, page, pageSize, type: classes[entityType] }));
     }
     // OLS
     const selectedOlsOntologies = selectedOntologies.filter((ontology) => ontology.source === AUTOCOMPLETE_SOURCE.OLS_API);
@@ -190,7 +197,7 @@ export const getExternalData = ({
                 selectEntities({
                     page,
                     pageSize,
-                    type: types[entityType] || types.default,
+                    type: types[entityType] ?? types.default,
                     q: encodeURIComponent(value.trim()),
                     ontologies: selectedOlsOntologies.map((o) => o.id) as string[],
                 }),
@@ -205,7 +212,7 @@ export const getExternalData = ({
                 };
                 promises.push(
                     getOntologyEntities({
-                        type: urlPath[entityType] || urlPath.default,
+                        type: urlPath[entityType] ?? urlPath.default,
                         ontology_id: o.id,
                         page,
                         pageSize,
@@ -219,8 +226,22 @@ export const getExternalData = ({
 
 export const importStatements = async (id: string, value: OptionType) => {
     for (const s of value.statements ?? []) {
+        // eslint-disable-next-line no-await-in-loop
         createLiteralStatement(id, s.predicate, await createLiteral(s.value.label));
     }
+};
+
+const resolveImportEntityType = (entityType: EntityType, value: OptionType) => {
+    // For RESOURCE, PREDICATE, CLASS - keep existing behavior
+    if (entityType !== ENTITIES.THING) {
+        return entityType;
+    }
+    // For THING - resolve to concrete type from the option itself
+    if ([ENTITIES.CLASS, ENTITIES.PREDICATE, ENTITIES.RESOURCE].includes(value._class ?? '')) {
+        return value._class as EntityType;
+    }
+    // For Unknown type
+    return null;
 };
 
 export const importExternalSelectedOption = async (entityType: EntityType, value: OptionType) => {
@@ -229,14 +250,17 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
         return value;
     }
     try {
+        const resolvedEntityType = resolveImportEntityType(entityType, value);
+
         // Import the option
-        if (entityType === ENTITIES.RESOURCE && value.ontology && value.uri && value._class !== ENTITIES.CLASS) {
+        if (resolvedEntityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
             importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-        } else if (entityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
+        } else if (resolvedEntityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
             importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
-            // If the option is a class, we need to import it as a class
-        } else if ((entityType === ENTITIES.CLASS || value._class === ENTITIES.CLASS) && value.ontology && value.uri) {
+        } else if (resolvedEntityType === ENTITIES.CLASS && value.ontology && value.uri) {
             importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+        } else if (entityType === ENTITIES.THING) {
+            throw new Error('Cannot import a THING option without a concrete entity type.');
         } else {
             throw new Error('No implemented yet.');
         }

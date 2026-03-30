@@ -230,9 +230,11 @@ export const MISC: {
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
+/* entity identifiers used across the app; most values come from backend _class, while THING is an internal lookup mode for mixed autocomplete searches */
 export const ENTITIES: {
     [key: string]: EntityType;
 } = {
+    THING: 'thing',
     CLASS: 'class',
     PREDICATE: 'predicate',
     RESOURCE: 'resource',
