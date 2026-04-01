@@ -23,4 +23,3 @@ public/storybook
 tsconfig.tsbuildinfo
 next-env.d.ts
 junit.xml
-.DS_Store
