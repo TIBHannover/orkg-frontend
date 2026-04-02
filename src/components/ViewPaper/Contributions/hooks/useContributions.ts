@@ -81,7 +81,7 @@ const useContributions = ({ paperId }: UseContributionsProps) => {
 
         if (result) {
             const objIndex = contributions?.findIndex((obj) => obj.id === contributionId);
-            if (!objIndex) {
+            if (objIndex === undefined || objIndex === -1) {
                 return;
             }
             const c = contributions?.[objIndex];
