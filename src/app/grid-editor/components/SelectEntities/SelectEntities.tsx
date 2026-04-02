@@ -78,6 +78,7 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
     const [selectedEntities, setSelectedEntities] = useState<(Thing | ResourceThingReference)[]>(entities ?? []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedEntities(entities ?? []);
     }, [entities]);
 

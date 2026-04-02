@@ -7,13 +7,17 @@ const getExistingPaper = async ({ doi, title }: { doi?: string; title?: string }
     if (doi && doi.includes('10.') && doi.startsWith('10.')) {
         try {
             paper = await getPaperByDoi(doi);
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
     }
     if (!paper && title) {
         // check if title exists
         try {
             paper = await getPaperByTitle(title);
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
     }
     return paper;
 };

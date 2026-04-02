@@ -152,7 +152,6 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                                             onChange={(values) => setCertainty(CertaintyVALUES[values[0]])}
                                             renderTrack={({ props: innerProps, children }) => (
                                                 <div
-                                                    // eslint-disable-next-line react/jsx-props-no-spreading
                                                     {...innerProps}
                                                     style={{
                                                         ...innerProps.style,
@@ -171,7 +170,6 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                                             )}
                                             renderThumb={({ props: innerProps }) => (
                                                 <div
-                                                    // eslint-disable-next-line react/jsx-props-no-spreading
                                                     {...innerProps}
                                                     style={{
                                                         ...innerProps.style,

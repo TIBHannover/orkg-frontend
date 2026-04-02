@@ -52,6 +52,7 @@ const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, orga
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
     }, [organizationsList]);
 

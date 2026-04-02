@@ -73,6 +73,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ disableLastField = false, backgroun
     }
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsOpen(new Array(parentResearchFields.length).fill(false));
         setSiblings(new Array(parentResearchFields.length).fill([]));
         setIsLoadingSiblings(new Array(parentResearchFields.length).fill(false));

@@ -4,7 +4,6 @@ import { isNaN, parseInt } from 'lodash';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 import useSWR from 'swr';
-import { undefined } from 'zod';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Badge from '@/components/Ui/Badge/Badge';

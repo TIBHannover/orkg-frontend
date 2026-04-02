@@ -43,6 +43,7 @@ function useBenchmarkDatasetPapers({ datasetId, problemId }) {
     }, [datasetId, problemId]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setBenchmarkDatasetPapers({});
         setDatasetProblems({});
         setMetrics([]);

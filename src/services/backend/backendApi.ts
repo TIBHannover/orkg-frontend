@@ -76,7 +76,9 @@ const backendApi = ky.create({
                 if (request.method !== 'GET') {
                     try {
                         return error.response.json();
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 return {
                     ...error,

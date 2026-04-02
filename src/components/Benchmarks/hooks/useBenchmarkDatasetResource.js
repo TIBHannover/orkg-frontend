@@ -40,6 +40,7 @@ function useBenchmarkDatasetResource({ datasetId = null, problemId = null }) {
     }, [datasetId, problemId]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setData(null);
         setProblemData(null);
         setIsLoadingData(true);

@@ -25,6 +25,7 @@ const TimeInput: FC<TimeInputProps> = ({ value, onChange }) => {
         if (!value) return;
         const parsedTime = parseTimeString(value);
         if (parsedTime) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTime(parsedTime);
         }
     }, [value]);

@@ -24,7 +24,9 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
 
     // Use ref to store current entities to avoid stale closure issues
     const entitiesRef = useRef(entities);
-    entitiesRef.current = entities;
+    useEffect(() => {
+        entitiesRef.current = entities;
+    }, [entities]);
 
     // Copy-paste functionality using keyboard events - setup once, no dependencies to avoid re-renders
     useEffect(() => {

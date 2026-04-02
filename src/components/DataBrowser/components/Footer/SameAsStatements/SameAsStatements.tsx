@@ -5,13 +5,12 @@ import WikidataDescription from '@/components/ExternalDescription/WikidataDescri
 import WikipediaSummary from '@/components/ExternalDescription/WikipediaSummary';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 
-// eslint-disable-next-line prefer-regex-literals
 const REG_DPPEDIA = new RegExp(/^(https?:)?\/\/dbpedia\.org(\/resource(\?.*)?)\//);
-// eslint-disable-next-line prefer-regex-literals
+
 const REG_WIKIDATA = new RegExp(/^(https?:)?\/\/(www\.)?wikidata\.org(\/entity(\?.*)?)\//);
-// eslint-disable-next-line prefer-regex-literals
+
 const REG_WIKIPEDIA = new RegExp(/^(https?:)?\/\/[a-zA-Z.0-9]{0,3}\.wikipedia\.org\/wiki\/([\w%]+)/g);
-// eslint-disable-next-line prefer-regex-literals
+
 const REG_GEONAME = new RegExp(/^https:\/\/sws\.geonames\.org\/\d+\/?$/g);
 
 const SameAsStatements = () => {

@@ -91,6 +91,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
         if (typeof label === 'undefined') {
             return;
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMarkdownValue(label);
     }, [label]);
 
@@ -109,6 +110,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, sectionId = nu
         const { start, end, length } = selectionRange;
         markdownEditorRef.focus();
         markdownEditorRef.setSelectionRange(start + length, end + length);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectionRange(null);
     }, [markdownEditorRef, selectionRange]);
 

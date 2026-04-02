@@ -15,6 +15,7 @@ const Description = ({ description, isEditable, handleUpdate }: DescriptionProps
     const [localDescription, setLocalDescription] = useState('');
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLocalDescription(description || '');
     }, [description]);
 

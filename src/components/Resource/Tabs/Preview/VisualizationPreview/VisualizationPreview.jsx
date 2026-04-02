@@ -13,6 +13,7 @@ function VisualizationPreview({ id, height = '500px', width = '100%', className 
     const [isLoadingFailed, setIsLoadingFailed] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoading(true);
         getThing({ thingType: THING_TYPES.VISUALIZATION, thingKey: id })
             .then((model) => {

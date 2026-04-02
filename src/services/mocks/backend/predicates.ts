@@ -8,8 +8,8 @@ const predicates = [
     http.get(predicatesUrl, ({ request }: { request: Request }) => {
         const allPredicates = db.predicates.getAll();
         const url = new URL(request.url);
-        const page = Number(url.searchParams.get('page')) ?? 0;
-        const size = Number(url.searchParams.get('size')) ?? 9999;
+        const page = Number(url.searchParams.get('page')) || 0;
+        const size = Number(url.searchParams.get('size')) || 9999;
 
         const currentPredicates = db.predicates.findMany({
             take: size ? Number(size) : undefined,

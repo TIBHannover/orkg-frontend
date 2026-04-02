@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { mutate } from 'swr';
 
@@ -26,14 +26,15 @@ const Label = () => {
     const { isValidating, entity, mutateEntity } = useEntity();
     const { history } = useHistory();
     const [value, setValue] = useState(entity?.label ?? '');
+    const prevLabelRef = useRef(entity?.label);
+    if (prevLabelRef.current !== entity?.label) {
+        prevLabelRef.current = entity?.label;
+        setValue(entity?.label ?? '');
+    }
     const { config } = useDataBrowserState();
     const { isEditMode } = config;
     const pathname = usePathname();
     const { canEdit } = useCanEdit();
-
-    useEffect(() => {
-        setValue(entity?.label ?? '');
-    }, [entity?.label]);
 
     const handleEditClick = () => {
         setIsEditing(true);

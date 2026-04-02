@@ -54,6 +54,7 @@ const useQualityReport = () => {
 
             const properties = uniqBy(selectedPathsFlattened, 'id');
 
+            let fetchedFeedbacks: Answers[] = [];
             try {
                 // get the feedbacks from all different comparison versions
                 const feedbackStatementsPromises =
@@ -67,11 +68,12 @@ const useQualityReport = () => {
                 const feedbackDataPromises = feedbackIds.map(
                     (feedbackId) => getThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackId }) as Promise<Feedback>,
                 );
-                const _feedbacks = (await Promise.all(feedbackDataPromises)).map((feedback) => feedback.data.answers) ?? [];
+                fetchedFeedbacks = (await Promise.all(feedbackDataPromises)).map((feedback) => feedback.data.answers) ?? [];
 
-                setFeedbacks(_feedbacks);
+                setFeedbacks(fetchedFeedbacks);
             } catch (e) {
                 console.error('Error fetching feedback data:', e);
+                fetchedFeedbacks = [];
                 setFeedbacks([]);
             }
 
@@ -238,8 +240,8 @@ const useQualityReport = () => {
                     performEvaluation: () => {
                         const MINIMUM_FEEDBACKS = 3;
                         return {
-                            passing: feedbacks.length >= MINIMUM_FEEDBACKS,
-                            evaluation: `The comparison has ${feedbacks.length} feedback evaluations, a minimum of ${MINIMUM_FEEDBACKS} evaluations is recommended.`,
+                            passing: fetchedFeedbacks.length >= MINIMUM_FEEDBACKS,
+                            evaluation: `The comparison has ${fetchedFeedbacks.length} feedback evaluations, a minimum of ${MINIMUM_FEEDBACKS} evaluations is recommended.`,
                         };
                     },
                 },
@@ -255,7 +257,7 @@ const useQualityReport = () => {
             setPassingRecommendations(suggestions.filter((suggestion) => suggestion.passing));
             setIsLoading(false);
         } catch (e) {
-            console.log(e);
+            console.error(e);
             toast.error('Something went wrong while evaluating the comparison. Please try again later.');
         }
     }, [comparison, selectedPathsFlattened, table]);
@@ -283,6 +285,7 @@ const useQualityReport = () => {
     );
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         performQualityEvaluation();
     }, [performQualityEvaluation]);
 

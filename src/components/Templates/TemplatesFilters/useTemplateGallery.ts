@@ -26,6 +26,7 @@ const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
     });
 
     // since the filters are not controlled by the user, we need to reset the key when the reset is called
+    // eslint-disable-next-line react-hooks/purity
     const [key, setKey] = useState(Date.now());
 
     const {

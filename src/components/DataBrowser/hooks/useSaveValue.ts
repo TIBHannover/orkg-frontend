@@ -153,6 +153,7 @@ const useSaveValue = (predicate: Predicate, toggleShowInput: () => void, value?:
 
     useEffect(() => {
         if (dataType === 'xsd:boolean') {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setInputValue((v) => Boolean(v === 'true').toString());
         }
     }, [dataType, setInputValue]);

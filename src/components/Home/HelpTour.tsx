@@ -51,7 +51,9 @@ const HelpIcon = styled(FontAwesomeIcon)`
     position: relative;
     border: none;
     border-radius: 50%;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+    box-shadow:
+        0 0 4px rgba(0, 0, 0, 0.14),
+        0 4px 8px rgba(0, 0, 0, 0.28);
     cursor: pointer;
     outline: none;
     padding: 12px;

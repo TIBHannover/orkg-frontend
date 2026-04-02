@@ -40,6 +40,7 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
             return;
         }
         const _columns = tableData[0];
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setColumns(_columns);
         setSelectedColumn(_columns[0]); // select the first option
     }, [tableData, setColumns, setSelectedColumn]);

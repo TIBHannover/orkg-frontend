@@ -12,7 +12,7 @@ export type CmsResponsePaginated<T> = {
 
 export type CmsResponseSingle<T> = {
     data: T;
-    meta: {};
+    meta: object;
 };
 
 export type HelpArticleSubData = {
@@ -52,7 +52,7 @@ export type HelpArticle = {
             attrributes: { id: string; title: string };
             data: {
                 id: null | undefined;
-                attributes: {};
+                attributes: object;
             };
         };
         help_category?: HelpCategorySubData;

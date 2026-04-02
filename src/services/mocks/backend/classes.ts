@@ -8,8 +8,8 @@ const resources = [
     http.get(classesUrl, ({ request }) => {
         const url = new URL(request.url);
         const query = url.searchParams.get('q');
-        const page = Number(url.searchParams.get('page')) ?? 0;
-        const size = Number(url.searchParams.get('size')) ?? 9999;
+        const page = Number(url.searchParams.get('page')) || 0;
+        const size = Number(url.searchParams.get('size')) || 9999;
         const allClasses = db.classes.getAll();
         const currentClasses = db.classes.findMany({
             ...(query

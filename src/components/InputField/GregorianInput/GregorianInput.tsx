@@ -29,6 +29,7 @@ const GregorianInput: FC<GregorianInputProps> = ({ value, onChange, type }) => {
         if (!value) return;
         const parsedDate = parseGregorianString(value, type);
         if (parsedDate) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setDate(parsedDate);
         }
     }, [value, type]);

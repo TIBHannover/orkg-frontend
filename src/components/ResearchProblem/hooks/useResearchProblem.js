@@ -47,6 +47,7 @@ function useResearchProblem({ id }) {
 
     useEffect(() => {
         if (id !== undefined) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             loadResearchProblemData(id);
         }
     }, [id, loadResearchProblemData]);

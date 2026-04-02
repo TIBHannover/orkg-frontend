@@ -6,12 +6,8 @@ import usePropertySuggestions from '@/app/grid-editor/hooks/usePropertySuggestio
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import { Predicate } from '@/services/backend/types';
 
-type PropertySuggestionsProps = {
-    gridRef: RefObject<AgGridReact | null>;
-};
-
-const PropertySuggestions = ({ gridRef }: PropertySuggestionsProps) => {
-    const { hasAvailableProperties, templates, existingProperties } = usePropertySuggestions({ gridRef });
+const PropertySuggestions = () => {
+    const { hasAvailableProperties, templates, existingProperties } = usePropertySuggestions();
     if (!hasAvailableProperties) {
         return null;
     }

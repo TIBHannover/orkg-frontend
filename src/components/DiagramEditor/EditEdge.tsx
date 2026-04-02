@@ -37,6 +37,7 @@ const EditEdge: FC<EditEdgeProps> = ({ isEditEdgeModalOpen, setIsEditEdgeModalOp
     const [selectedEntity, setSelectedEntity] = useState<EntityType>(ENTITIES.PREDICATE);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setValue(!edge?.id ? undefined : { label: edge.data?.label, id: edge.data?.id });
     }, [edge]);
 

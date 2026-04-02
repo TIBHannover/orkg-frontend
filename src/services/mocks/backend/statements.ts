@@ -9,8 +9,8 @@ const statements = [
         const url = new URL(request.url);
         const objectId = url.searchParams.get('object_id');
         const subjectId = url.searchParams.get('subject_id');
-        const page = Number(url.searchParams.get('page')) ?? 0;
-        const size = Number(url.searchParams.get('size')) ?? 9999;
+        const page = Number(url.searchParams.get('page')) || 0;
+        const size = Number(url.searchParams.get('size')) || 9999;
         const allStatements = db.statements.getAll();
         const currentStatements = db.statements.findMany({
             ...(subjectId

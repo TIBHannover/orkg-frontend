@@ -31,8 +31,7 @@ const Nfdi4dsButton = () => {
                 function () {
                     (w[o].q = w[o].q || []).push(arguments);
                 };
-            // eslint-disable-next-line no-unused-expressions, no-sequences
-            (js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]);
+            ((js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]));
             js.id = o;
             js.src = f;
             js.async = 1;

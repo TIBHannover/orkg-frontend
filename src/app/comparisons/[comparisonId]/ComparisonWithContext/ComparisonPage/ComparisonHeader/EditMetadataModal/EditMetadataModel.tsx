@@ -34,6 +34,7 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
 
     useEffect(() => {
         if (comparison) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(comparison.title);
             setDescription(comparison.description);
             setResearchField(comparison.research_fields[0]);

@@ -17,7 +17,7 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';
 
-const PropertyShapesTab: FC<{}> = () => {
+const PropertyShapesTab = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const [instanceId] = useState(() => createInstanceId('property-shapes-tab'));
     const dispatch = useDispatch();

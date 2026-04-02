@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import {
     arrow,
     autoUpdate,
@@ -66,6 +67,7 @@ export function useTooltip({
                 padding: 5,
             }),
             shift({ padding: 5 }),
+
             ...(showArrow ? [arrow({ element: arrowRef })] : []),
         ],
     });
@@ -171,6 +173,7 @@ export const TooltipContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
                     {...context.getFloatingProps(props)}
                 >
                     {props.children}
+
                     {context.showArrow && <FloatingArrow ref={context.arrowRef} context={context.context} fill={context.arrowFill ?? '#444'} />}
                 </FloatingContentStyled>
             </FloatingPortal>

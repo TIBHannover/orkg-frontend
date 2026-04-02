@@ -43,6 +43,7 @@ const AddConference = () => {
     useEffect(() => {
         document.title = 'Create conference series - ORKG';
         // make single-blind the default option
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setReviewType(CONFERENCE_REVIEW_TYPE.find((t) => t.label === 'Single-blind')?.id);
     }, []);
 

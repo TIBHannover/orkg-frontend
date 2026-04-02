@@ -65,6 +65,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
 
     useEffect(() => {
         if (prevIsEditing && !isEditMode && !prevIsOpenPublishModal) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsOpenShouldPublishModal(true);
         }
     }, [isEditMode, prevIsEditing, prevIsOpenPublishModal]);

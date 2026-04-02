@@ -67,6 +67,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
 
     useEffect(() => {
         if ('extraction_method' in item) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setExtractionMethod(item.extraction_method);
         }
     }, [item]);

@@ -57,6 +57,7 @@ const AddPaper = () => {
         }
         if (!entry && queryParamTitle) {
             setTitle(queryParamTitle);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsMetadataExpanded(true);
         }
     }, [searchParams, setDoi, setTitle, setIsMetadataExpanded]);

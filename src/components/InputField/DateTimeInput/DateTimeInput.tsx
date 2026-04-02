@@ -29,6 +29,7 @@ const DateTimeInput: FC<DateTimeInputProps> = ({ value, onChange, type = 'dateTi
         if (!value) return;
         const parsedDateTime = parseDateTimeString(value);
         if (parsedDateTime) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setDateTime(parsedDateTime);
         }
     }, [value]);

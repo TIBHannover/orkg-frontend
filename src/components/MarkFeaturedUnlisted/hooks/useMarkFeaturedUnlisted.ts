@@ -43,6 +43,7 @@ const useMarkFeaturedUnlisted = ({ resourceId, unlisted, featured }: MarkFeature
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsFeatured(featured);
         setIsUnlisted(unlisted);
     }, [featured, unlisted]);

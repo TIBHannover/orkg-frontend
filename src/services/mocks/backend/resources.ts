@@ -8,8 +8,8 @@ const resources = [
     http.get(resourcesUrl, ({ request }) => {
         const url = new URL(request.url);
         const include = url.searchParams.get('include');
-        const page = Number(url.searchParams.get('page')) ?? 0;
-        const size = Number(url.searchParams.get('size')) ?? 9999;
+        const page = Number(url.searchParams.get('page')) || 0;
+        const size = Number(url.searchParams.get('size')) || 9999;
         const allResources = db.resources.getAll();
         const currentResources = db.resources.findMany({
             ...(include

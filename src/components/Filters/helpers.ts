@@ -29,6 +29,8 @@ export const loadFiltersFromLocalStorage = async () => {
     try {
         const parsedData = JSON.parse(data ?? '') as FilterConfig[];
         return parsedData && Array.isArray(parsedData) ? parsedData : [];
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
     return [];
 };

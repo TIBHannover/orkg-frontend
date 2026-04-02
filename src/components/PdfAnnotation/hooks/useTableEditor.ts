@@ -248,7 +248,6 @@ function useTableEditor(tableId: string, tableRef: RefObject<HotTableRef> | null
             }
 
             // Prompt for separator
-            // eslint-disable-next-line no-alert
             const separator = prompt('Enter separator to split by (e.g., comma, semicolon, space):', ',');
             if (!separator) {
                 return;
@@ -270,7 +269,6 @@ function useTableEditor(tableId: string, tableRef: RefObject<HotTableRef> | null
                     }),
                 );
             } else {
-                // eslint-disable-next-line no-alert
                 alert('No split found with the given separator. Please try a different separator.');
             }
         }

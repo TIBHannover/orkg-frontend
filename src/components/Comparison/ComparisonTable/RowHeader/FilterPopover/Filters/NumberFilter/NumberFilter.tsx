@@ -46,6 +46,7 @@ const NumberFilter: FC<NumberFilterProps> = ({ predicateId, path, setIsOpenFilte
         if (!currentFilter) {
             return;
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMinValue(isNumber(currentFilter.filterValues.minValue) ? currentFilter.filterValues.minValue.toString() : '');
         setMaxValue(isNumber(currentFilter.filterValues.maxValue) ? currentFilter.filterValues.maxValue.toString() : '');
     }, [getFilter, path, predicateId]);

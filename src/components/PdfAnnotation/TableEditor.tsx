@@ -198,6 +198,7 @@ const TableEditor = ({ hotTableComponentRef, id, tableData, toggleExtractReferen
                     // Store isSurveyTable on the instance for access in editor
                     const instance = hotTableComponentRef.current?.hotInstance as ExtendedHandsontable | undefined;
                     if (instance) {
+                        // eslint-disable-next-line react-hooks/immutability
                         instance.isSurveyTable = isSurveyTable;
                     }
                 }}

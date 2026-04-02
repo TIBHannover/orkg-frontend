@@ -38,6 +38,7 @@ const SectionComparison: FC<SectionComparisonProps> = ({ section }) => {
     useEffect(() => {
         const { store: _store } = setupStore();
         // @ts-expect-error awaiting migration away from redux
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setStore(_store);
     }, []);
 

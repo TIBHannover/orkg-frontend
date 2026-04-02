@@ -173,6 +173,7 @@ const MainGrid = () => {
     const [colDefs, setColDefs] = useState<ColDef<TData>[]>(prepareColDefs(entityIds ?? []));
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setColDefs(prepareColDefs(entityIds ?? []));
     }, [entityIds, prepareColDefs]);
 

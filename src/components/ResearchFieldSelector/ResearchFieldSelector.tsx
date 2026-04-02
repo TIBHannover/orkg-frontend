@@ -128,6 +128,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                     });
                 });
             });
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setResearchFields((v) => {
                 const oldFields = v.filter((f) => !fields.find((f2) => f2.id === f.id));
                 return [...oldFields, ...fields].map((f) =>

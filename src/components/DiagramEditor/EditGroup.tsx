@@ -20,6 +20,7 @@ const EditGroup: FC<EditGroupProps> = ({ isEditGroupModalOpen, setIsEditGroupMod
     const [value, setValue] = useState(!currentGroup?.id ? '' : currentGroup.data.label);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setValue(!currentGroup?.id ? '' : currentGroup.data.label);
     }, [currentGroup]);
 

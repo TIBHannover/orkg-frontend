@@ -36,6 +36,7 @@ function useTimeline(id: string) {
 
     // reset resources when the id has changed
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setContributors([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
@@ -44,6 +45,7 @@ function useTimeline(id: string) {
     }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadMore(0);
     }, [loadMore]);
 

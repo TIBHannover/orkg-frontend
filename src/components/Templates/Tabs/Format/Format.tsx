@@ -10,7 +10,7 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape } from '@/services/backend/types';
 import { updateHasLabelFormat, updateLabelFormat } from '@/slices/templateEditorSlice';
 
-const Format: FC<{}> = () => {
+const Format = () => {
     const dispatch = useDispatch();
 
     // @ts-expect-error

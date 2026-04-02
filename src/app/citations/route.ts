@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import '@citation-js/plugin-bibtex';
 import '@citation-js/plugin-csl';
 import '@citation-js/plugin-doi';

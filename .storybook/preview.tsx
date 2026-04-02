@@ -1,11 +1,13 @@
-import type { Preview } from '@storybook/nextjs';
 import '@/assets/scss/CustomBootstrap.scss';
 import '@/assets/scss/DefaultLayout.scss';
 import 'leaflet/dist/leaflet.css';
-import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
+
+import type { Preview } from '@storybook/nextjs';
+import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { Wrapper } from '../src/testUtils';
+
+import { Wrapper } from '@/testUtils';
 
 export const parameters: Preview['parameters'] = {
     controls: {

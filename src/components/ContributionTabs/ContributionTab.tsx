@@ -69,6 +69,7 @@ const ContributionTab: FC<ContributionTabProps> = ({
     const refInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDraftLabel(contribution.label);
     }, [contribution.label]);
 

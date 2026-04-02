@@ -35,7 +35,7 @@ const Footer = ({ gridRef }: FooterProps) => {
                         </>
                     )}
                 </div>
-                <PropertySuggestions gridRef={gridRef} />
+                <PropertySuggestions />
             </div>
         </div>
     );

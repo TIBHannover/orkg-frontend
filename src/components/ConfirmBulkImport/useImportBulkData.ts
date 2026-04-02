@@ -135,7 +135,9 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                             _idToLabel[propertyId] = fetchedPredicate.label;
                             valueToId[property] = propertyId;
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
 
                 // no property id found
@@ -182,7 +184,9 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                                     _idToLabel[value] = resource.label;
                                     _idToEntityType[value] = resource._class;
                                 }
-                            } catch (e) {}
+                            } catch (e) {
+                                console.error(e);
+                            }
                         }
                         if (value in _idToLabel) {
                             valueObject = {

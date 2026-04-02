@@ -195,7 +195,7 @@ export const createFeedback = ({
     type: FeedbackType;
     options: string;
     comments: string;
-    inputData: {};
-    outputData: {};
+    inputData: object;
+    outputData: object;
 }): Promise<CmsResponsePaginated<Feedback>> =>
     cmsApi.post<CmsResponsePaginated<Feedback>>(`feedbacks`, { json: { data: { llmTask, type, options, comments, inputData, outputData } } }).json();
