@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json .npmrc ./
-RUN npm install
+RUN npm ci
 
 # Check https://nextjs.org/docs/messages/sharp-missing-in-production
 RUN npm install sharp

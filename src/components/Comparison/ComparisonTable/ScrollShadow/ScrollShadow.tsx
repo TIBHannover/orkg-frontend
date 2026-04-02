@@ -33,6 +33,7 @@ const ScrollShadow: FC<ScrollShadowProps> = ({ children, tbodyRef }) => {
         handleScroll(tbodyRef.current);
     });
 
+    // eslint-disable-next-line react-hooks/refs
     useEvent('scroll', (e) => handleScroll(e.target), tbodyRef.current);
 
     const scrollNext = () => {

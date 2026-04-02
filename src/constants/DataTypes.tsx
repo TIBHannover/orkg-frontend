@@ -250,13 +250,14 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:dateTime',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.DATE_TIME,
-        schema: z.string().regex(
-            // eslint-disable-next-line max-len
-            /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(?:\.\d{1,3})?(?:Z|(?:[+-](?:[01][0-9]|2[0-3]):[0-5][0-9]))?$/,
-            {
-                message: 'Invalid dateTime format. Expected format: YYYY-MM-DDThh:mm:ss[.sss][Z|(+|-)hh:mm]',
-            },
-        ),
+        schema: z
+            .string()
+            .regex(
+                /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(?:\.\d{1,3})?(?:Z|(?:[+-](?:[01][0-9]|2[0-3]):[0-5][0-9]))?$/,
+                {
+                    message: 'Invalid dateTime format. Expected format: YYYY-MM-DDThh:mm:ss[.sss][Z|(+|-)hh:mm]',
+                },
+            ),
         inputFormType: 'dateTime',
         weight: 1,
     },
@@ -265,13 +266,14 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:dateTimeStamp',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.DATE_TIME_STAMP,
-        schema: z.string().regex(
-            // eslint-disable-next-line max-len
-            /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(?:\.\d{1,3})?(?:Z|(?:[+-](?:[01][0-9]|2[0-3]):[0-5][0-9]))$/,
-            {
-                message: 'Invalid dateTimeStamp format. Expected format: YYYY-MM-DDThh:mm:ss[.sss](Z|(+|-)hh:mm)',
-            },
-        ),
+        schema: z
+            .string()
+            .regex(
+                /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(?:\.\d{1,3})?(?:Z|(?:[+-](?:[01][0-9]|2[0-3]):[0-5][0-9]))$/,
+                {
+                    message: 'Invalid dateTimeStamp format. Expected format: YYYY-MM-DDThh:mm:ss[.sss](Z|(+|-)hh:mm)',
+                },
+            ),
         inputFormType: 'dateTimeStamp',
         weight: 1,
     },

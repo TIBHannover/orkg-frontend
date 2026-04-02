@@ -105,9 +105,6 @@ const nextConfig = {
         ];
     },
     reactStrictMode: false, // otherwise, list items are rendered twice (e.g. /resources, /paper etc. ): https://github.com/vercel/next.js/issues/35822
-    eslint: {
-        ignoreDuringBuilds: true, // this allows production builds to successfully complete even if the project has ESLint errors
-    },
     compiler: {
         styledComponents: true, // to fix issue where class names on server and client don't match: https://github.com/vercel/next.js/issues/46605#issuecomment-1489135397
     },
@@ -159,10 +156,8 @@ const nextConfig = {
             },
         },
     },
-    experimental: {
-        reactCompiler: {
-            compilationMode: 'annotation',
-        },
+    reactCompiler: {
+        compilationMode: 'annotation',
     },
     transpilePackages: ['ky'],
     output: 'standalone',

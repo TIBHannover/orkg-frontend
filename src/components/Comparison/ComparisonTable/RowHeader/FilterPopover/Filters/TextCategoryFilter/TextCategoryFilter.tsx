@@ -65,6 +65,7 @@ const TextCategoryFilter: FC<TextCategoryFilterProps> = ({ predicateId, path, se
         }
         if (type === 'category') {
             const selected = uniqueValues.filter((v) => currentFilter.filterValues.values?.includes(v.label));
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSelectedValues(selected);
         } else if (type === 'text') {
             const selected = keywords.filter((v) => currentFilter.filterValues.values?.includes(v.label));

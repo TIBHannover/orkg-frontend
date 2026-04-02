@@ -14,7 +14,7 @@ module.exports = {
     },
     create(context) {
         // Skip files in the UI components directory
-        const filename = context.getFilename();
+        const filename = context.filename ?? context.getFilename();
         const normalizedPath = filename.replace(/\\/g, '/');
         if (normalizedPath.includes('/src/components/Ui/') || normalizedPath.includes('/components/Ui/')) {
             return {};
@@ -118,8 +118,6 @@ module.exports = {
 
                 // If we have UI imports to replace, create autofix
                 if (uiImports.length > 0) {
-                    const sourceCode = context.getSourceCode();
-
                     context.report({
                         node,
                         messageId: 'replaceReactstrapImport',

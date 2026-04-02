@@ -87,6 +87,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
     }, [filter]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         resetValues();
     }, [filter, resetValues]);
 

@@ -45,6 +45,7 @@ const DateFilter: FC<DateFilterProps> = ({ predicateId, path, setIsOpenFilterPop
         if (!currentFilter) {
             return;
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setStartDate(currentFilter.filterValues.startDate ?? '');
         setEndDate(currentFilter.filterValues.endDate ?? '');
     }, [getFilter, path, predicateId]);

@@ -58,6 +58,7 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
     const isPublishable = title && title.trim() !== '' && description && description.trim() !== '' && researchField && creators?.length > 0;
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setResearchField(viewPaper?.research_fields && viewPaper?.research_fields?.length > 0 ? viewPaper?.research_fields?.[0] : null);
         setCreators(viewPaper?.authors || []);
     }, [viewPaper]);

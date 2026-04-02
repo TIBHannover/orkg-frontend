@@ -52,6 +52,7 @@ const SideBar = () => {
         if (!isLoadedPdfViewer) {
             return;
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHelpIsOpen(true);
     }, [isLoadedPdfViewer]);
 

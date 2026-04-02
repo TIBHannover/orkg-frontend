@@ -117,6 +117,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setVisible(!cookies.cookieInfoDismissed);
     }, [cookies.cookieInfoDismissed]);
 

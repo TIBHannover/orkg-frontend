@@ -65,6 +65,7 @@ const createHeaderRenderer = (
 
 function useSkipper() {
     const shouldSkipRef = useRef(true);
+    // eslint-disable-next-line react-hooks/refs
     const shouldSkip = shouldSkipRef.current;
 
     // Wrap a function with this to skip a pagination reset temporarily
@@ -76,6 +77,7 @@ function useSkipper() {
         shouldSkipRef.current = true;
     });
 
+    // eslint-disable-next-line react-hooks/refs
     return [shouldSkip, skip] as const;
 }
 
@@ -248,7 +250,6 @@ const CSVWTable: FC<CSVWTableProps> = ({ id }) => {
                                                             onMouseLeave={() => isEditMode && setHoveredColumnIndex(null)}
                                                         >
                                                             {header.isPlaceholder ? null : (
-                                                                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                                                                 <div
                                                                     className={`tw:inline-flex tw:items-center ${
                                                                         header.column.getCanSort() ? 'tw:cursor-pointer tw:select-none' : ''

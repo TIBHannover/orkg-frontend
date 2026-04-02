@@ -14,8 +14,8 @@ import { FeedbackType } from '@/services/cms/types';
 
 type FeedbackProps = {
     type: FeedbackType;
-    inputData: [] | {};
-    outputData: [] | {};
+    inputData: object;
+    outputData: object;
     llmTask: string;
 };
 

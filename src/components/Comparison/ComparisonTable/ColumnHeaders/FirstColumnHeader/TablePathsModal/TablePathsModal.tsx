@@ -144,6 +144,7 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
 
     useEffect(() => {
         if (tablePaths && comparisonContents?.selected_paths) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPathsNew(mergeSelectedPathsWithTablePaths(comparisonContents?.selected_paths, tablePaths));
         }
     }, [comparisonContents?.selected_paths, tablePaths]);

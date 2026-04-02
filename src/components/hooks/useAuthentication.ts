@@ -16,7 +16,7 @@ const useAuthentication = () => {
             console.error('Invalid token:', error);
             return null;
         }
-    }, [session?.access_token]);
+    }, [session]);
 
     const user = session?.user
         ? {

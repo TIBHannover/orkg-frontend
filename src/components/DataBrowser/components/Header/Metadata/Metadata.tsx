@@ -41,6 +41,7 @@ const Metadata = () => {
     useEffect(() => {
         // Check if this entity's ID matches the URL hash
         if (hash === `#${entity?.id}`) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsHighlighted(true);
             setTimeout(() => setIsHighlighted(false), 3000);
             // Clear the hash after highlighting

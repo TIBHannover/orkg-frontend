@@ -133,7 +133,6 @@ const PdfAnnotation = () => {
                     isAreaHighlight
                 >
                     {/* the package doesn't support the onBlur and onFocus events, so disable this rule */}
-                    {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
                     <Popup
                         popupContent={
                             <AnnotationTooltipExisting
@@ -154,7 +153,7 @@ const PdfAnnotation = () => {
         // For text highlights, use the regular Popup
         return (
             // the package doesn't support the onBlur and onFocus events, so disable this rule
-            // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+
             <Popup
                 key={index}
                 popupContent={

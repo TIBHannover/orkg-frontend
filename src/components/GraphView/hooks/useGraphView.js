@@ -11,6 +11,27 @@ const COLOR_NODE_START = '#E86161';
 const MAX_NODE_LABEL_LENGTH = 20;
 const EDGE_SIZE = 3;
 
+function addStatementsLevel({ subjectId, statements, level: currentLevel = 0, maxLevel }) {
+    const result = [];
+    const level = currentLevel + 1;
+    for (const statement of statements) {
+        if (statement.subject.id === subjectId) {
+            let objectStatements = [];
+            if (level <= maxLevel) {
+                objectStatements = addStatementsLevel({ subjectId: statement.object.id, statements, level, maxLevel });
+            }
+            result.push({
+                level,
+                hasObjectStatements: objectStatements.length > 0,
+                hasFetchedObjectStatements: level < maxLevel,
+                ...statement,
+            });
+            result.push(...objectStatements);
+        }
+    }
+    return result;
+}
+
 const useGraphView = ({ resourceId }) => {
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
@@ -67,27 +88,6 @@ const useGraphView = ({ resourceId }) => {
         }
 
         return { nodes: _nodes, edges: _edges };
-    }, []);
-
-    const addStatementsLevel = useCallback(({ subjectId, statements, level: currentLevel = 0, maxLevel }) => {
-        const result = [];
-        const level = currentLevel + 1;
-        for (const statement of statements) {
-            if (statement.subject.id === subjectId) {
-                let objectStatements = [];
-                if (level <= maxLevel) {
-                    objectStatements = addStatementsLevel({ subjectId: statement.object.id, statements, level, maxLevel });
-                }
-                result.push({
-                    level,
-                    hasObjectStatements: objectStatements.length > 0,
-                    hasFetchedObjectStatements: level < maxLevel,
-                    ...statement,
-                });
-                result.push(...objectStatements);
-            }
-        }
-        return result;
     }, []);
 
     const fetchStatements = useCallback(
@@ -148,7 +148,7 @@ const useGraphView = ({ resourceId }) => {
             );
             return result;
         },
-        [addStatementsLevel, depth, processStatements],
+        [depth, processStatements],
     );
 
     const fetchIncomingStatements = async (nodeId) => {

@@ -10,7 +10,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Input from '@/components/Ui/Input/Input';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from '@/slices/pdfAnnotationSlice';
-// eslint-disable-next-line import/extensions
 import { summarizeText } from '@/services/annotation/index';
 
 const ANNOTATION_RATIO = 0.08;
@@ -179,7 +178,6 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
                 // prevent error in older browsers, that don't support lookbehinds (https://stackoverflow.com/a/50011952)
                 // see if the regex parses, otherwise use alternative (less sophisticated) regex
                 try {
-                    // eslint-disable-next-line no-useless-escape
                     // prettier-ignore
                     sentenceSplitterRegex = RegExp("(?<=\\s+|^)[\\\"\\'\\‘\\“\\'\\\"\\[\\(\\{\\⟨](.*?[.?!])(\\s[.?!])*[\\\"\\'\\’\\”\\'\\\"\\]\\)\\}\\⟩](?=\\s+|$)|(?<=\\s+|^)\\S(.*?[.?!])(\\s[.?!])*(?=\\s+|$)", 'g');
                 } catch (e) {

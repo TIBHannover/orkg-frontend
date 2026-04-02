@@ -49,6 +49,7 @@ function useResearchField(initialVal = {}) {
 
     useEffect(() => {
         if (researchFieldId !== undefined) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             loadResearchFieldData(researchFieldId);
         }
     }, [researchFieldId, loadResearchFieldData]);

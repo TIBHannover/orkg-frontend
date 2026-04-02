@@ -15,6 +15,7 @@ const useScrollSync = () => {
     // debounce to ensure the scroll event isn't trigger too often, which can cause performance issues
     // could possibly be optimized by removing the events listener when scrolling is performed:
     // http://github.com/okonet/react-scroll-sync/blob/master/src/ScrollSync.jsx#L128
+    // eslint-disable-next-line react-hooks/refs
     const syncScroll = debounce((event: UIEvent<HTMLTableSectionElement | HTMLDivElement>) => {
         const target = event.target as HTMLElement;
         if (!theadRef.current || !tbodyRef.current || !scrollbarRef.current) return;

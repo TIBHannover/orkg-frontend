@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import {
     arrow,
     autoUpdate,
@@ -60,6 +61,7 @@ export function usePopover({
                 padding: 5,
             }),
             shift({ padding: 5 }),
+
             ...(showArrow ? [arrow({ element: arrowRef })] : []),
         ],
     });
@@ -115,6 +117,7 @@ export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElemen
     if (asChild && isValidElement(children)) {
         return cloneElement(
             children,
+
             context.getReferenceProps({
                 ref,
                 ...props,

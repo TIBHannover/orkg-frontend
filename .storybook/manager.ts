@@ -1,5 +1,6 @@
 import { addons } from 'storybook/manager-api';
-import orkgTheme from './orkgTheme';
+
+import orkgTheme from '../.storybook/orkgTheme';
 
 addons.setConfig({
     theme: orkgTheme,

@@ -31,6 +31,7 @@ const ContentLink: FC<ContentLinkProps> = ({ section }) => {
         if (!sectionContent || selectedResource) {
             return;
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedResource({
             label: sectionContent.label,
             id: sectionContent.id,

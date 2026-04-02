@@ -23,6 +23,11 @@ function useDiagramEditor({ id }) {
     const [currentGroup, setCurrentGroup] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(!id);
+    const [prevId, setPrevId] = useState(id);
+    if (prevId !== id) {
+        setPrevId(id);
+        setEditMode(!id);
+    }
 
     const [diagram, setDiagram] = useState();
     const [diagramResource, setDiagramResource] = useState(null);
@@ -279,7 +284,7 @@ function useDiagramEditor({ id }) {
         (value) => {
             setNodes((prevNodes) =>
                 prevNodes.map((node) => {
-                    if (node.id === currentNode.id) {
+                    if (node.id === currentNode?.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
                         node.data = {
@@ -299,7 +304,7 @@ function useDiagramEditor({ id }) {
         (value) => {
             setNodes((prevNodes) =>
                 prevNodes.map((node) => {
-                    if (node.id === currentGroup.id) {
+                    if (node.id === currentGroup?.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
                         node.data = {
@@ -319,7 +324,7 @@ function useDiagramEditor({ id }) {
         (value) => {
             setEdges((prevEdges) =>
                 prevEdges.map((edge) => {
-                    if (edge.id === currentEdge.id) {
+                    if (edge.id === currentEdge?.id) {
                         // it's important that you create a new object here
                         // in order to notify react flow about the change
                         edge.data = {
@@ -348,8 +353,8 @@ function useDiagramEditor({ id }) {
             });
 
             if (confirm) {
-                setNodes(diagram.nodes);
-                setEdges(diagram.edges);
+                setNodes(diagram?.nodes);
+                setEdges(diagram?.edges);
                 setEditMode((v) => !v);
             }
         }
@@ -357,8 +362,8 @@ function useDiagramEditor({ id }) {
 
     useEffect(() => {
         if (id) {
-            setIsDataLoadedFromLocalStorage(false);
             getThing({ thingType: THING_TYPES.DIAGRAM, thingKey: id }).then((res) => {
+                setIsDataLoadedFromLocalStorage(false);
                 setDiagram(res.data);
                 setNodes(res.data.nodes);
                 setEdges(res.data.edges);
@@ -367,7 +372,6 @@ function useDiagramEditor({ id }) {
                 setDiagramResource(res);
             });
         }
-        setEditMode(!id);
     }, [id]);
 
     const nodeTypes = useMemo(() => ({ default: CustomNode, group: CustomGroup }), []);

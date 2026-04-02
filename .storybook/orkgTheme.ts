@@ -1,5 +1,5 @@
 import { create } from 'storybook/theming';
-// @ts-expect-error - logo is a valid SVG
+
 import logo from '../src/assets/img/logo.svg';
 
 export default create({

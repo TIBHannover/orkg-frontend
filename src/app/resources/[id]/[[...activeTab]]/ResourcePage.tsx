@@ -63,6 +63,7 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
             return;
         }
         const prevent = getPreventEditCase(resource);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPreventEditCase(prevent);
     }, [resource]);
 

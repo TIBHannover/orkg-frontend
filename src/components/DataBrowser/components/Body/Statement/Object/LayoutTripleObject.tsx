@@ -23,6 +23,7 @@ const LayoutTripleObject: FC<LayoutTripleObjectProps> = ({ children, level, stat
     useEffect(() => {
         // Check if this statement's ID matches the URL hash
         if (hash === `#${statement.object.id}` && isEqual(loadedResources[statement.object.id], path) && rootId !== statement.object.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsHighlighted(true);
             setTimeout(() => window.history.replaceState(null, '', window.location.pathname + window.location.search), 3000);
             // Clear the hash after highlighting

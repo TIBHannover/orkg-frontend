@@ -42,6 +42,7 @@ const AddEditRelatedFigureModal: FC<AddEditRelatedFigureModalProps> = ({ toggle,
             return;
         }
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setImage(relatedFigure?.image);
         setLabel(relatedFigure?.label);
         setDescription(relatedFigure?.description);

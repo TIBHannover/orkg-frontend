@@ -25,6 +25,7 @@ const EditNode: FC<EditNodeProps> = ({ isEditNodeModalOpen, setIsEditNodeModalOp
 
     useEffect(() => {
         if (node) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setValue({ label: node.data.label, id: node.data.id });
         }
     }, [node]);

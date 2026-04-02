@@ -251,7 +251,6 @@ const SlotForms: FC<SlotFormsProps> = ({ index, isLocked = false }) => {
                         <Label for={`description${index}`}>
                             Description{' '}
                             <HelpIcon
-                                // eslint-disable-next-line max-len
                                 content={`Here you can provide a short description for users who are adding a statement of that type, informing them what they should add for this ${
                                     index === 0 ? 'subject' : 'object'
                                 } position. The description is especially helpful in those cases in which the Placeholder is not self-explanatory.`}

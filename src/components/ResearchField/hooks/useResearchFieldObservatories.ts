@@ -30,6 +30,7 @@ function useResearchFieldObservatories({ researchFieldId }: { researchFieldId: s
     }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setData([]);
         if (researchFieldId !== undefined) {
             loadResearchFieldObservatories(researchFieldId);

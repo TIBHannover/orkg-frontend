@@ -146,12 +146,16 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                 if (doi) {
                     try {
                         paperData = await getPaperByDoi(doi);
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 if (paperTitle && !paperData) {
                     try {
                         paperData = await getPaperByTitle(title);
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
                 if (paperData) {
                     _results.push(paperToResult(paperData));

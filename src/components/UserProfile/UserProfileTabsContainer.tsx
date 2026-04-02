@@ -106,6 +106,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
     useEffect(() => {
         if (loadingDeletePapers) {
             mutate?.();
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSelectedItems([]);
         }
     }, [loadingDeletePapers, mutate]);

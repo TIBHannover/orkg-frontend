@@ -109,12 +109,12 @@ Please feel free to contribute to our code. In case you found any bugs, please [
 
 We use [React](https://reactjs.org/) as frontend framework. Additionally, we use [Redux](https://redux.js.org/) for state management (but we prefer a local state when possible). For styling we use [Bootstrap](https://getbootstrap.com/) with the package [Reactstrap](https://reactstrap.github.io/). We maintain the following code conventions:
 
--   Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and use [Angular commit types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type). Linting is applied on the commit message (i.e., you cannot commit if the message is not correctly formatted). You can use the [Commitizen](https://commitizen-tools.github.io/commitizen/) CLI to create a correctly formatted message via: `npm run commit`
--   Running lint on commit (you cannot commit when your code contains lint errors)
--   Run Prettier rules on commit for coding style consistency
--   The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
--   We are transitioning to fully adhere to the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). Currently, some rules are displayed to warnings instead of errors because of the transition period. Please ensure your code does not contain any warnings before commiting.
--   We are transitioning to TypeScript. When creating new components, consider doing this in TypeScript.
+- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and use [Angular commit types](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type). Linting is applied on the commit message (i.e., you cannot commit if the message is not correctly formatted). You can use the [Commitizen](https://commitizen-tools.github.io/commitizen/) CLI to create a correctly formatted message via: `npm run commit`
+- Running lint on commit (you cannot commit when your code contains lint errors)
+- Run Prettier rules on commit for coding style consistency
+- The [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format is used to automatically generate [our changelog](https://gitlab.com/TIBHannover/orkg/orkg-frontend/blob/master/CHANGELOG.md)
+- We lint JavaScript and TypeScript with [ESLint](https://eslint.org/) using the [Next.js ESLint setup](https://nextjs.org/docs/app/api-reference/config/eslint) (`eslint-config-next`, Core Web Vitals), extended in `eslint.config.mjs` with TypeScript and project-specific rules. Please ensure your code passes lint before committing.
+- We are transitioning to TypeScript. When creating new components, consider doing this in TypeScript.
 
 Happy coding! 😁☕️
 

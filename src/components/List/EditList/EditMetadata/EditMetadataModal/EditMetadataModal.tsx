@@ -29,6 +29,7 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
 
     useEffect(() => {
         if (list) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(list.title);
             setResearchField(list.research_fields[0]);
             setAuthors(list.authors);

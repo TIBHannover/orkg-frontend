@@ -44,7 +44,7 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                         typeof="foaf:Person"
                         aria-label={`Visit the author page of ${author.name}`}
                     >
-                        <Badge color="light" className="me-2 mb-2" typeof="foaf:Person">
+                        <Badge color="light" className="me-2 mb-2">
                             <FontAwesomeIcon icon={faUser} aria-label="Author name" /> {author.name}
                         </Badge>
                     </Link>

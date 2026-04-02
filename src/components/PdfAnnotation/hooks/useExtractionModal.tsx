@@ -17,7 +17,7 @@ const useExtractionModal = ({ id, hotTableComponentRef }: { id: string; hotTable
 
     const annotation = useSelector((state: RootStore) => state.pdfAnnotation.annotations.find((a) => a.id === id)) as Annotation;
     const scale = useSelector((state: RootStore) => state.pdfAnnotation.scale);
-    const { x1, y1, x2, y2, width, height } = annotation?.position?.boundingRect;
+    const { x1, y1, x2, y2 } = annotation?.position?.boundingRect ?? {};
 
     const { isLoading } = useSWR(
         annotation?.position?.boundingRect ? [annotation?.position, nlpServiceUrl, 'extractTable'] : null,

@@ -208,6 +208,7 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
 
     useEffect(() => {
         if (!showUploadForm && mappedColumns.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             handleOnFileLoaded({});
         }
     }, [mappedColumns, showUploadForm]);

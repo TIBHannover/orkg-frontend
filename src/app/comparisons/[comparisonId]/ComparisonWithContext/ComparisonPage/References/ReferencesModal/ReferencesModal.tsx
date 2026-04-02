@@ -26,6 +26,7 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
 
     useEffect(() => {
         if (comparison?.references) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setReferences(
                 comparison.references.map((text) => ({
                     text,

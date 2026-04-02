@@ -21,6 +21,7 @@ const ReferenceModal: FC<ReferenceModalProps> = ({ toggle, editReferenceIndex = 
 
     useEffect(() => {
         if (review && editReferenceIndex !== null) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setBibtex(review.references[editReferenceIndex]);
         }
     }, [editReferenceIndex, review]);

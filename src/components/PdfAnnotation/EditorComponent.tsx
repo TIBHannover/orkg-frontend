@@ -70,11 +70,13 @@ const EditorComponent = () => {
     };
 
     // Get the value of the cell in the header row of this cell
+    // eslint-disable-next-line react-hooks/refs
     const headerValue = hotInstanceRef.current && col !== undefined ? hotInstanceRef.current.getDataAtCell(0, col) : null;
 
     const { entityId: headerEntityId } = parseCellString(headerValue || '');
 
     let dataType = typeStr ?? MISC.DEFAULT_LITERAL_DATATYPE;
+    // eslint-disable-next-line react-hooks/refs
     if (headerEntityId && headerEntityId === PREDICATES.HAS_RESEARCH_FIELD && hotInstanceRef.current?.isSurveyTable === true) {
         dataType = ENTITIES.RESOURCE;
     }
@@ -84,9 +86,9 @@ const EditorComponent = () => {
 
     if (isLoading) return <Skeleton />;
 
-    if (row === 0 && hotInstanceRef.current?.isSurveyTable === true) {
+    // eslint-disable-next-line react-hooks/refs
+    if (row === 0 && hotInstanceRef?.current?.isSurveyTable === true) {
         return (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div
                 ref={mainElementRef}
                 className="tw:hidden tw:absolute tw:left-0 tw:top-0 tw:bg-white tw:border tw:border-black tw:p-4 tw:z-[9999] tw:w-[500px] tw:min-w-[500px]"
@@ -126,7 +128,6 @@ const EditorComponent = () => {
     }
 
     return (
-        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
             ref={mainElementRef}
             className="tw:hidden tw:absolute tw:left-0 tw:top-0 tw:bg-white tw:border tw:border-black tw:p-4 tw:z-[9999] tw:w-[500px] tw:min-w-[500px]"
@@ -136,6 +137,7 @@ const EditorComponent = () => {
                 <InputGroup size="sm" className="tw:flex-grow-1 tw:flex-nowrap">
                     {(!headerEntityId ||
                         headerEntityId !== PREDICATES.HAS_RESEARCH_FIELD ||
+                        // eslint-disable-next-line react-hooks/refs
                         (hotInstanceRef.current as ExtendedHandsontable)?.isSurveyTable === false) && (
                         <DatatypeSelector
                             _class={entity && '_class' in entity ? entity._class : undefined}

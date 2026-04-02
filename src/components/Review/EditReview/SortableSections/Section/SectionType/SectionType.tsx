@@ -72,6 +72,7 @@ const SectionType: FC<SectionTypeProps> = ({ section, type, isDisabled = false, 
                 },
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setOptions(_options);
         }
     }, [classes, options]);
@@ -82,6 +83,7 @@ const SectionType: FC<SectionTypeProps> = ({ section, type, isDisabled = false, 
             if (!selected) {
                 return;
             }
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTypeValue(selected);
         }
     }, [type, options]);

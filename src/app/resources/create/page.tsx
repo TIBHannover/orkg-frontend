@@ -115,8 +115,9 @@ const CreateResourcePage = () => {
                 label: selected[foundIndex].label,
             });
             if (newClass) {
-                classes[foundIndex] = newClass.id;
-                setClasses(classes);
+                const newClasses = [...classes];
+                newClasses[foundIndex] = newClass.id;
+                setClasses(newClasses);
             } else {
                 return null;
             }

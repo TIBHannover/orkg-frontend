@@ -1,0 +1,86 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { reverse } from 'named-urls';
+import Link from 'next/link';
+import { FC } from 'react';
+import styled from 'styled-components';
+
+import { resolveFeaturedComparisonSolidIcon } from '@/components/FeaturedComparisons/featuredComparisonSolidIcons';
+import Badge from '@/components/Ui/Badge/Badge';
+import Card from '@/components/Ui/Card/Card';
+import CardBody from '@/components/Ui/Card/CardBody';
+import CardText from '@/components/Ui/Card/CardText';
+import CardTitle from '@/components/Ui/Card/CardTitle';
+import Col from '@/components/Ui/Structure/Col';
+import Row from '@/components/Ui/Structure/Row';
+import ROUTES from '@/constants/routes';
+
+const Comparison = styled(Card)`
+    border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
+    cursor: pointer;
+    background: #f7f7f7 !important;
+    color: ${(props) => props.theme.bodyColor};
+    &:hover {
+        text-decoration: none !important;
+    }
+`;
+
+const ComparisonBody = styled(CardBody)`
+    padding: 10px !important;
+`;
+
+const ImageCol = styled(Col)`
+    font-size: 50px;
+    color: #80869b;
+    border-right: 1px solid #d9d9d9;
+`;
+
+const ComparisonTitle = styled(CardTitle)`
+    //color: #e86161;
+    margin-bottom: 5px;
+    font-weight: 600;
+`;
+
+const ComparisonText = styled(CardText)`
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+`;
+
+type FeaturedComparisonsItemProps = {
+    icon: string;
+    title: string;
+    description: string;
+    id: string;
+    sourcesCount: number;
+};
+
+const FeaturedComparisonsItem: FC<FeaturedComparisonsItemProps> = ({ icon, title, description, id, sourcesCount }) => {
+    const iconDefinition = resolveFeaturedComparisonSolidIcon(icon);
+
+    return (
+        <Col sm="6" className="mb-4">
+            <Link style={{ textDecoration: 'none' }} href={reverse(ROUTES.COMPARISON, { comparisonId: id })}>
+                <Comparison>
+                    <ComparisonBody>
+                        <Row>
+                            <ImageCol sm="3" className="d-flex justify-content-center align-items-center">
+                                <FontAwesomeIcon icon={iconDefinition} />
+                            </ImageCol>
+                            <Col sm="9">
+                                <ComparisonTitle tag="h5">{title}</ComparisonTitle>
+                                <ComparisonText>{description}</ComparisonText>
+                                <Badge color="light">{sourcesCount} sources</Badge>
+                            </Col>
+                        </Row>
+                    </ComparisonBody>
+                </Comparison>
+            </Link>
+        </Col>
+    );
+};
+
+export default FeaturedComparisonsItem;

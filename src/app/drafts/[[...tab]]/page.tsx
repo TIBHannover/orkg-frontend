@@ -52,6 +52,7 @@ const UserSettings = () => {
     const { tab } = useParams();
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActiveTab(tab || 'draft-comparisons');
     }, [tab]);
 

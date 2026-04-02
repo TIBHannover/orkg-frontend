@@ -111,12 +111,14 @@ function useAutoLayoutAndFitView(options: { direction: 'LR' | 'RL' | 'BT' }) {
         );
 
         setEdges((_edges) => _edges.map((edge) => ({ ...edge, style: { opacity: 1, strokeWidth: 3 } })));
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShouldFitView(true);
     }, [nodeCount, nodesInitialized, getNodes, getEdges, setNodes, setEdges, fitView, direction]);
 
     useEffect(() => {
         if (shouldFitView && fitView) {
             fitView();
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShouldFitView(false);
         }
     }, [shouldFitView, fitView]);

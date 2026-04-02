@@ -104,6 +104,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
         };
 
         if (defaultValueId && (!defaultValue || (!isMulti && defaultValueId !== (defaultValue as OptionType)?.id))) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setValue(null);
             loadNode();
         }

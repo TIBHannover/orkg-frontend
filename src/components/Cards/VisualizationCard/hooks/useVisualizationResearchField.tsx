@@ -30,6 +30,7 @@ function useVisualizationResearchField({ visualizationId }: { visualizationId: s
     }, [visualizationId]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadSubject();
     }, [loadSubject, visualizationId]);
 

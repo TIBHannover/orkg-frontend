@@ -1,4 +1,3 @@
-import { FloatingTree } from '@floating-ui/react';
 import { faLightbulb, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';

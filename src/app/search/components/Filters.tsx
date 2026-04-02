@@ -260,7 +260,6 @@ const Filters: FC<FiltersProps> = ({
                                         return (
                                             <div key={index} className="mb-2">
                                                 {/* Facet Title */}
-                                                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
                                                 <div onClick={() => toggleFacet(index)} className=" tw:cursor-pointer tw:font-bold">
                                                     {startCase(toLower(facet.facet || ''))}
                                                     <FontAwesomeIcon icon={isFacetOpen ? faCaretUp : faCaretDown} className="ms-1" />

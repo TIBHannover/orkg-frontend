@@ -29,7 +29,6 @@ function sendEndSessionEndpointToURL(token: JWT, redirectUri: string) {
     return NextResponse.json(response);
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export async function GET(req: NextRequest) {
     try {
         const redirectUri = req.nextUrl.searchParams.get('redirect_uri');

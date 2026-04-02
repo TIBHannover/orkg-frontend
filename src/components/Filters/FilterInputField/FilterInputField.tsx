@@ -42,6 +42,7 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
     const [values, setValues] = useState<FilterConfigValue[]>(filter?.values ?? []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setValues(filter?.values ?? []);
     }, [filter?.values]);
 

@@ -75,6 +75,7 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowSubLevel(level < 10 && showSubLevelDefault && preferences.expandValuesByDefault);
     }, [preferences.expandValuesByDefault, showSubLevelDefault, level]);
 

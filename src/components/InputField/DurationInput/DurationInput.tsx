@@ -43,6 +43,7 @@ const DurationInput: FC<DurationInputProps> = ({ value, onChange, type = 'durati
 
     useEffect(() => {
         const parsedDuration = parseDurationString(value);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (parsedDuration) setDuration(parsedDuration);
     }, [value]);
 
