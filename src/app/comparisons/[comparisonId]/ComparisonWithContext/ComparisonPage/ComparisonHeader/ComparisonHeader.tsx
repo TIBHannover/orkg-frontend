@@ -3,15 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Papa from 'papaparse';
 import pluralize from 'pluralize';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import ColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ColumnWidth/ColumnWidth';
 import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
 import ExportToLatex from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportToLatex';
 import GeneratePdf from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/GeneratePdf';
-import generateMatrix from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generateMatrix';
 import HistoryModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/HistoryModal/HistoryModal';
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import useRdfExport from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useRdfExport';
@@ -19,7 +18,6 @@ import Publish from '@/app/comparisons/[comparisonId]/ComparisonWithContext/Comp
 import QualityReportModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/QualityReportModal';
 import WriteFeedbackModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/WriteFeedbackModal/WriteFeedbackModal';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
-import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Confirm from '@/components/Confirmation/Confirmation';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -36,6 +34,7 @@ import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
+import { getComparisonTableCsv } from '@/services/backend/comparisons';
 
 const ComparisonHeader = () => {
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
@@ -48,28 +47,31 @@ const ComparisonHeader = () => {
     const [isOpenQualityReportModal, setIsOpenQualityReportModal] = useState(false);
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [isOpenFeedbackModal, setIsOpenFeedbackModal] = useState(false);
+    const [isOpenCsvDropdown, setIsOpenCsvDropdown] = useState(false);
 
-    const { comparison, isPublished, selectedPathsFlattened } = useComparison();
+    const { comparison, isPublished } = useComparison();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
-    const { table, columns } = useComparisonExport();
     const { generateRdfDataVocabularyFile } = useRdfExport();
     const numberOfSources = comparison?.sources.length ?? 0;
     const { isFullWidth, toggleIsFullWidth } = useFullWidth({ sourceAmount: numberOfSources });
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const handleExportCsv = () => {
+    const handleExportCsv = async ({ transposed = false }: { transposed?: boolean } = {}) => {
+        if (!comparison?.id) return;
         setIsOpenDropdown((v) => !v);
-        const matrixData = generateMatrix({ table, columns, predicates: selectedPathsFlattened });
-        const csv = Papa.unparse(matrixData);
-        const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const csvUrl = URL.createObjectURL(csvData);
-        const link = document.createElement('a');
-        link.href = csvUrl;
-        link.setAttribute('download', comparison?.id ? `${comparison.id} - ORKG Comparison.csv` : 'ORKG Comparison.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        try {
+            const csv = await getComparisonTableCsv(comparison.id, { transposed });
+            const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+            const link = Object.assign(document.createElement('a'), { href: url, download: `${comparison.id} - ORKG Comparison.csv` });
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error('Failed to export CSV:', e);
+            toast.error('An error occurred while exporting the CSV');
+        }
     };
 
     const handleOpenGridEditor = async () => {
@@ -162,7 +164,15 @@ const ComparisonHeader = () => {
                                 <DropdownItem divider />
                                 <DropdownItem header>Export</DropdownItem>
                                 <DropdownItem onClick={() => setIsOpenLatexModal((v) => !v)}>Export as LaTeX</DropdownItem>
-                                <DropdownItem onClick={handleExportCsv}>Export as CSV</DropdownItem>
+                                <Dropdown isOpen={isOpenCsvDropdown} toggle={() => setIsOpenCsvDropdown((v) => !v)} direction="start">
+                                    <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
+                                        Export as CSV <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={() => handleExportCsv()}>Default</DropdownItem>
+                                        <DropdownItem onClick={() => handleExportCsv({ transposed: true })}>Transposed</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
                                 <GeneratePdf id="comparisonTable" />
                                 <DropdownItem onClick={() => generateRdfDataVocabularyFile()}>Export as RDF</DropdownItem>
                                 {comparison.identifiers.doi?.[0] && (
