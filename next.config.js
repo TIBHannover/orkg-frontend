@@ -501,6 +501,10 @@ const nextConfig = {
             destination: `${backendUrl}api/nanopublications/:path*`,
         }));
     },
+    // fixes sass issue on windows when running the dev server
+    sassOptions: {
+        loadPaths: ['./node_modules/bootstrap/scss/'],
+    },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
