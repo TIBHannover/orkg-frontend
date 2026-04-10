@@ -5,6 +5,6 @@ const buildEslintCommand = (filenames) =>
 
 export default {
     '*.{js,jsx,ts,tsx}': [buildEslintCommand],
-    '*.{js,jsx,ts,tsx,json,css,scss,md}': ['prettier --write'],
+    '*.{js,jsx,ts,tsx,json,css,scss}': ['prettier --write'],
     'src/**/*.{ts,tsx}': [() => 'tsc -p tsconfig.json --noEmit'],
 };

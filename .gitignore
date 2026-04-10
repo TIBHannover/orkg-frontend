@@ -23,4 +23,9 @@ public/storybook
 tsconfig.tsbuildinfo
 next-env.d.ts
 junit.xml
+
 .DS_Store
+
+# coding agents
+.claude/settings.local.json
+screenshots/
