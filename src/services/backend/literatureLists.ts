@@ -153,6 +153,8 @@ export const publishList = (
     listId: string,
     data: {
         changelog: string;
+        assign_doi: boolean;
+        description?: string;
     },
 ) => {
     return listsApi

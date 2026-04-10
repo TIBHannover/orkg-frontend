@@ -96,6 +96,16 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                     <ResearchFieldBadge researchField={list.research_fields?.[0]} />
                                     <ListEntryAmount />
                                     <AuthorBadges authors={list.authors} />
+                                    {list.identifiers?.doi?.[0] && (
+                                        <div className="mb-1">
+                                            <small>
+                                                DOI:{' '}
+                                                <a href={`https://doi.org/${list.identifiers.doi[0]}`} target="_blank" rel="noopener noreferrer">
+                                                    https://doi.org/{list.identifiers.doi[0]}
+                                                </a>
+                                            </small>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div>
