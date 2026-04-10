@@ -290,6 +290,15 @@ type PublishComparisonParams = {
     assign_doi: boolean;
 };
 
+export const getComparisonTableCsv = (id: string, { transposed = false }: { transposed?: boolean } = {}): Promise<string> =>
+    comparisonsApi
+        .get(`${encodeURIComponent(id)}/contents`, {
+            headers: {
+                Accept: `text/csv${transposed ? ';transposed=true' : ''}`,
+            },
+        })
+        .text();
+
 export const publishComparison = (comparisonId: string, data: PublishComparisonParams) =>
     comparisonsApi
         .post<string>(`${encodeURIComponent(comparisonId)}/publish`, {
