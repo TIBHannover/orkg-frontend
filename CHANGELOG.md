@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.180.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.179.0...v0.180.0) - 2026-04-16
+
+### Changes
+
+- feat: implement additional CSV export option for comparisons [`#1670`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1670)
+- feat: add AGENTS.md with frontend instructions [`#1648`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1648)
+- fix: sass issue for dev server on Windows [`#1669`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1669)
+- chore: set min-release-age in npmrc [`#1666`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1666)
+- chore: update Nextjs to v16 [`#1664`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1664)
+- fix: deleting the first contribution [`#1665`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1665)
+- Revert "chore: set min-release-age in npmrc" [`#1667`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1667)
+
+---
 ## [v0.179.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.178.0...v0.179.0) - 2026-03-30
 
 ### Changes
