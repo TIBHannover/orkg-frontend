@@ -1,29 +1,26 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
+import CreateForm from '@/app/content-type/create/Sections/ListSection/CreateForm/CreateForm';
 import ROUTES from '@/constants/routes';
 
 const ListSection = () => (
     <ContentTypeSectionWrapper
         title="Lists"
         description={
-            <>
-                ORKG Lists enable researchers to create and share curated collections of related papers and resources, facilitating knowledge
-                organization and discovery.{' '}
-                <Link href="https://orkg.org/about/17/Lists" target="_blank">
-                    More about lists
-                </Link>
-                .
-            </>
+            <p>
+                ORKG lists provide a way to organize and describe state-of-the-art literature for a specific research domain. From lists, it is
+                possible to create ORKG comparisons.
+                <em>
+                    Please note: a list can be <strong>changed by anyone</strong> (just like Wikipedia)
+                </em>
+            </p>
         }
         helpfulResourcesSubtitle="Example lists within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:!m-0">
+            <ul className="tw:py-2 tw:m-0!">
                 <li>
                     <Link href="https://orkg.org/lists/R1385252" target="_blank">
                         Semantic table interpretation
@@ -42,9 +39,7 @@ const ListSection = () => (
             </ul>
         }
     >
-        <RequireAuthentication component={Button} color="light" href={reverse(ROUTES.LIST_NEW)}>
-            Add list
-        </RequireAuthentication>
+        <CreateForm />
     </ContentTypeSectionWrapper>
 );
 

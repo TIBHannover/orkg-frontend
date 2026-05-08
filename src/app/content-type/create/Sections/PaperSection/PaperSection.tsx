@@ -1,29 +1,27 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
+import CreateForm from '@/app/content-type/create/Sections/PaperSection/CreateForm/CreateForm';
 import ROUTES from '@/constants/routes';
 
 const PaperSection = () => (
     <ContentTypeSectionWrapper
         title="Papers"
         description={
-            <>
+            <p>
                 ORKG Papers are structured representations of scholarly knowledge that facilitate reuse. They generally serve as a supplement to
                 existing publications.{' '}
                 <Link href="https://orkg.org/about/20/Papers" target="_blank">
                     More about papers
                 </Link>{' '}
                 or{' '}
-                <Link href="https://academy.orkg.org/orkg-academy/main/courses/paper-course.html" target="_blank">
+                <Link href="https://academy.orkg.org/courses/paper-course.html" target="_blank">
                     learn more in the academy
                 </Link>
                 .
-            </>
+            </p>
         }
         helpfulResourcesSubtitle="Example papers within the ORKG"
         helpfulResourcesExamples={
@@ -41,9 +39,7 @@ const PaperSection = () => (
             </ul>
         }
     >
-        <RequireAuthentication component={Button} color="light" href={reverse(ROUTES.CREATE_PAPER)}>
-            Add paper
-        </RequireAuthentication>
+        <CreateForm />
     </ContentTypeSectionWrapper>
 );
 

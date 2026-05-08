@@ -251,6 +251,9 @@ export const parseCiteResult = (paper) => {
     let url = '';
 
     try {
+        if (!paper?.data?.[0]) {
+            return { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn, url };
+        }
         const { title, subtitle, author, issued, DOI, URL, 'container-title': containerTitle } = paper.data[0];
 
         paperTitle = title;

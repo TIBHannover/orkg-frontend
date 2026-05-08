@@ -3,22 +3,22 @@
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import Button from '@/components/Ui/Button/Button';
+import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
 const VisualizationSection = () => (
     <ContentTypeSectionWrapper
         title="Visualizations"
         description={
-            <>
+            <p>
                 ORKG Visualizations show comparison data in different formats and can only be added to comparisons. First, create a comparison
                 Afterward, you can create a visualization. More about visualizations in the{' '}
                 <Link href="https://academy.orkg.org/orkg-academy/main/tutorials/visualization-tutorial.html" target="_blank">
                     ORKG Academy
                 </Link>
                 .
-            </>
+            </p>
         }
         helpfulResourcesSubtitle="Example visualizations within the ORKG"
         helpfulResourcesExamples={
@@ -36,9 +36,9 @@ const VisualizationSection = () => (
             </ul>
         }
     >
-        <RequireAuthentication component={Button} color="light" href={ROUTES.CREATE_COMPARISON}>
+        <Button color="light" tag={Link} href={`${ROUTES.CONTENT_TYPE_NEW}?type=${CLASSES.COMPARISON}`}>
             Add comparison
-        </RequireAuthentication>
+        </Button>
     </ContentTypeSectionWrapper>
 );
 
