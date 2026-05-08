@@ -9,7 +9,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { plugins } from '@citation-js/core';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { RouterProvider } from '@heroui/react';
-import { MathJaxContext } from 'better-react-mathjax';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -25,7 +24,6 @@ import theme from '@/assets/css/ThemeVariables';
 import DefaultLayout from '@/components/Layout/DefaultLayout';
 import MatomoAnalytics from '@/components/Matomo/MatomoAnalytics';
 import ResetStoreOnNavigate from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import MATH_JAX_CONFIG from '@/constants/mathJax';
 import REGEX from '@/constants/regex';
 import StyledComponentsRegistry from '@/lib/registry';
 import SWR_CONFIG from '@/services/SWRConfig';
@@ -68,9 +66,8 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
                         <ResetStoreOnNavigate>
                             <ThemeProvider theme={theme}>
                                 <SWRConfig value={SWR_CONFIG}>
-                                    <MathJaxContext config={MATH_JAX_CONFIG}>
-                                        <DefaultLayout>{children}</DefaultLayout>
-                                    </MathJaxContext>
+                                    <DefaultLayout>{children}</DefaultLayout>
+
                                     <Suspense fallback={null}>
                                         <MatomoAnalytics />
                                     </Suspense>

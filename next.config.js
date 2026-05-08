@@ -14,8 +14,6 @@ const cspHeader = `
         https://support.tib.eu
         https://tibhannover.gitlab.io
         https://www.gstatic.com
-        https://cdn.jsdelivr.net/npm/mathjax@4.1.0/
-        https://cdn.jsdelivr.net/npm/@mathjax/
         https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs;
     style-src 'self' 'unsafe-inline'
         https://orkg.org
@@ -25,8 +23,7 @@ const cspHeader = `
     font-src 'self'
         data:
         https://orkg.org
-        https://*.orkg.org
-        https://cdn.jsdelivr.net/npm/@mathjax/;
+        https://*.orkg.org;
     frame-src 'self'
         localhost:*
         https://orkg.org
@@ -65,13 +62,7 @@ const cspHeader = `
         https://mastodon.social
         https://dbpedia.org
         https://api.terminology.tib.eu
-        https://www.ebi.ac.uk/ols4/api/
-        https://cdn.jsdelivr.net/npm/mathjax@4.1.0/sre/
-        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/0-ff.json
-        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/2000-20ff.json
-        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-meta/latin.json
-        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-files/latin/sans-serif.normal.100.woff
-        https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-files/latin/sans-serif.normal.400.woff;
+        https://www.ebi.ac.uk/ols4/api/;
 `;
 
 /** @type {import('next').NextConfig} */
