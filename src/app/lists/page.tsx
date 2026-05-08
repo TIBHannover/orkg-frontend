@@ -35,7 +35,7 @@ const Lists = () => {
     const buttons = (
         <>
             <VisibilityFilter />
-            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" style={{ marginLeft: 1 }}>
+            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.LIST_NEW}>
                 <FontAwesomeIcon icon={faPlus} /> Create list
             </RequireAuthentication>
             {!!user && (
