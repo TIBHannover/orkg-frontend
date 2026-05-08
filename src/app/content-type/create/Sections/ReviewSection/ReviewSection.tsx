@@ -1,11 +1,9 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
+import CreateForm from '@/app/content-type/create/Sections/ReviewSection/CreateForm/CreateForm';
 import ReviewVideo from '@/components/VideoThumbnails/ReviewVideo';
 import ROUTES from '@/constants/routes';
 
@@ -14,12 +12,22 @@ const ReviewSection = () => (
         title="Reviews"
         description={
             <>
-                ORKG Reviews enable dynamic literature reviews that can be updated as new research emerges, providing living documents of scholarly
-                knowledge.{' '}
-                <Link href="https://orkg.org/about/16/Reviews" target="_blank">
-                    More about reviews
-                </Link>
-                .
+                <p>
+                    ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers. Before creating a
+                    review, make sure you understand the following points:
+                </p>
+
+                <ul className="mt-4">
+                    <li>
+                        A review can be <strong>changed by anyone</strong> (indeed, just like Wikipedia)
+                    </li>
+                    <li>
+                        To make sure you work is not removed permanently by someone else, <strong>publish the article regularly</strong>{' '}
+                    </li>
+                    <li>
+                        Everything you write is <strong>immediately visible for everyone</strong>{' '}
+                    </li>
+                </ul>
             </>
         }
         helpfulResourcesSubtitle="Example reviews within the ORKG"
@@ -44,9 +52,7 @@ const ReviewSection = () => (
         }
         video={<ReviewVideo />}
     >
-        <RequireAuthentication component={Button} color="light" href={reverse(ROUTES.REVIEW_NEW)}>
-            Add review
-        </RequireAuthentication>
+        <CreateForm />
     </ContentTypeSectionWrapper>
 );
 

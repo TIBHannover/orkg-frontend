@@ -94,15 +94,17 @@ function PaperTitleInput({
                     offset: page * PAGE_SIZE,
                     fields: ['title', 'authors', 'venue', 'year', 'externalIds'],
                 });
-                options = [
-                    ...options,
-                    ...papers.data.map((item) => ({
-                        ...item,
-                        label: item.title,
-                        id: item.paperId,
-                    })),
-                ];
-                hasMore = !!papers.next;
+                if (papers?.data) {
+                    options = [
+                        ...options,
+                        ...papers.data.map((item) => ({
+                            ...item,
+                            label: item.title,
+                            id: item.paperId,
+                        })),
+                    ];
+                    hasMore = !!papers.next;
+                }
             }
         } catch (err) {
             console.error(err);

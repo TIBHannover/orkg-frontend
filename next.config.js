@@ -324,6 +324,7 @@ const nextConfig = {
                 destination: '/comparisons/featured',
                 permanent: true,
             },
+
             {
                 source: '/content-type/new',
                 destination: '/content-type/create',
@@ -364,6 +365,7 @@ const nextConfig = {
                 destination: '/lists/create',
                 permanent: true,
             },
+
             {
                 source: '/list/:id',
                 destination: '/lists/:id',
@@ -400,12 +402,14 @@ const nextConfig = {
                 destination: '/reviews/create',
                 permanent: true,
             },
+
             {
                 // NEVER REMOVE THIS REDIRECT (some registered doi links still point to this url)
                 source: '/review/:id',
                 destination: '/reviews/:id',
                 permanent: true,
             },
+
             {
                 source: '/sustainable-development-goal/:sdg',
                 destination: '/sustainable-development-goals/:sdg',
@@ -476,6 +480,21 @@ const nextConfig = {
                 destination: '/pdf-annotation',
                 permanent: true,
             },
+            {
+                source: '/comparisons/create',
+                destination: '/content-type/create?type=Comparison',
+                permanent: true,
+            },
+            {
+                source: '/lists/create',
+                destination: '/content-type/create?type=LiteratureList',
+                permanent: true,
+            },
+            { source: '/reviews/create', destination: '/content-type/create?type=SmartReview', permanent: true },
+            { source: '/visualizations/create', destination: '/content-type/create?type=Visualization', permanent: true },
+            { source: '/papers/create', destination: '/content-type/create?type=Paper', permanent: true },
+            { source: '/datasets/create', destination: '/content-type/create?type=Dataset', permanent: true },
+            { source: '/softwares/create', destination: '/content-type/create?type=Software', permanent: true },
         ];
     },
     async rewrites() {

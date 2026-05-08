@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { createLoader, parseAsString, SearchParams } from 'nuqs/server';
 import pluralize from 'pluralize';
 
-import ComparisonSection from '@/app/content-type/create/sections/ComparisonSection';
-import DatasetSection from '@/app/content-type/create/sections/DatasetSection';
-import ListSection from '@/app/content-type/create/sections/ListSection';
-import PaperSection from '@/app/content-type/create/sections/PaperSection';
-import ReviewSection from '@/app/content-type/create/sections/ReviewSection';
-import SoftwareSection from '@/app/content-type/create/sections/SoftwareSection';
-import VisualizationSection from '@/app/content-type/create/sections/VisualizationSection';
+import ComparisonSection from '@/app/content-type/create/Sections/ComparisonSection/ComparisonSection';
+import DatasetSection from '@/app/content-type/create/Sections/DatasetSection/DatasetSection';
+import ListSection from '@/app/content-type/create/Sections/ListSection/ListSection';
+import PaperSection from '@/app/content-type/create/Sections/PaperSection/PaperSection';
+import ReviewSection from '@/app/content-type/create/Sections/ReviewSection/ReviewSection';
+import SoftwareSection from '@/app/content-type/create/Sections/SoftwareSection/SoftwareSection';
+import VisualizationSection from '@/app/content-type/create/Sections/VisualizationSection/VisualizationSection';
 import { additionalContentTypes } from '@/components/ContentType/types';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
@@ -61,7 +61,6 @@ type ContentTypeNewProps = {
 
 const ContentTypeNew = async ({ searchParams }: ContentTypeNewProps) => {
     const { type: selectedClassId } = await loadSearchParams(searchParams);
-
     return (
         <>
             <TitleBar>Add to ORKG</TitleBar>

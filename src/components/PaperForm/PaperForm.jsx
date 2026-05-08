@@ -147,8 +147,8 @@ const PaperForm = ({
                 },
             })
         ) {
-            setDoi(paper.externalIds?.DOI);
-            setTitle(paper.label);
+            setDoi(paper.externalIds?.DOI ?? '');
+            setTitle(paper?.label);
             setAuthors(paper?.authors?.length > 0 ? paper.authors.map((author) => ({ name: author.name })) : []);
             setPublicationYear(paper.year || '');
             setPublishedIn({ label: paper.venue || '' });

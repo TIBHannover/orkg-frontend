@@ -9,24 +9,21 @@ import pluralize from 'pluralize';
 import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ComparisonInfoText from '@/app/comparisons/ComparisonInfoText';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useMembership from '@/components/hooks/useMembership';
-import TitleBar from '@/components/TitleBar/TitleBar';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import Alert from '@/components/Ui/Alert/Alert';
 import Form from '@/components/Ui/Form/Form';
 import FormGroup from '@/components/Ui/Form/FormGroup';
 import Input from '@/components/Ui/Input/Input';
 import Label from '@/components/Ui/Label/Label';
-import Container from '@/components/Ui/Structure/Container';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
-import requireAuthentication from '@/requireAuthentication';
 import { createComparison } from '@/services/backend/comparisons';
 
-const CreateComparison = () => {
+const CreateForm = () => {
     const [title, setTitle] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const router = useRouter();
@@ -77,49 +74,33 @@ const CreateComparison = () => {
     };
 
     return (
-        <>
-            <TitleBar>Create comparison</TitleBar>
-            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                <ComparisonInfoText />
-            </Container>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <Form onSubmit={handleCreate}>
-                    <p>
-                        <em>
-                            Please note: a comparison can be <strong>changed by anyone</strong> (just like Wikipedia)
-                        </em>
-                    </p>{' '}
-                    <hr className="mt-3 mb-4" />{' '}
-                    {sourceIds && sourceIds.length > 0 && (
-                        <Alert color="info">
-                            A comparison will be created containing {sourceIds.length} {pluralize('entity', sourceIds.length)}, you can change this
-                            later
-                        </Alert>
-                    )}
-                    <FormGroup>
-                        <Tooltip content="Choose the title of your comparison. You can always update the title later">
-                            <span>
-                                <Label for="comparisonTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
-                            </span>
-                        </Tooltip>
+        <Form onSubmit={handleCreate}>
+            {sourceIds && sourceIds.length > 0 && (
+                <Alert color="info">
+                    A comparison will be created containing {sourceIds.length} {pluralize('entity', sourceIds.length)}, you can change this later
+                </Alert>
+            )}
+            <FormGroup>
+                <Tooltip content="Choose the title of your comparison. You can always update the title later.">
+                    <span>
+                        <Label for="comparisonTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
+                    </span>
+                </Tooltip>
 
-                        <Input
-                            type="text"
-                            id="comparisonTitle"
-                            value={title}
-                            maxLength={MAX_LENGTH_INPUT}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                    </FormGroup>
-                    <div className="text-end">
-                        <ButtonWithLoading type="submit" color="primary" isLoading={isSaving}>
-                            Create
-                        </ButtonWithLoading>
-                    </div>
-                </Form>
-            </Container>
-        </>
+                <Input type="text" id="comparisonTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={(e) => setTitle(e.target.value)} />
+            </FormGroup>
+            <p>
+                <em>
+                    Please note: a comparison can be <strong>changed by anyone</strong> (just like Wikipedia)
+                </em>
+            </p>
+            <div className="text-end">
+                <RequireAuthentication component={ButtonWithLoading} type="submit" color="primary" isLoading={isSaving}>
+                    Create
+                </RequireAuthentication>
+            </div>
+        </Form>
     );
 };
 
-export default requireAuthentication(CreateComparison);
+export default CreateForm;

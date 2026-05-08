@@ -11,6 +11,7 @@ import ContributionEditor from '@/assets/img/tools/contribution-editor.png';
 import Popover from '@/components/FloatingUI/Popover';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import Button from '@/components/Ui/Button/Button';
+import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
 const LabelStyled = styled.span`
@@ -111,7 +112,7 @@ const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
                             <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
                         </TextContainer>
                     </RequireAuthentication>
-                    <ToolContainer onClick={handleClickMenuItem} href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} className="d-flex p-2">
+                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.CONTENT_TYPE_NEW} className="d-flex p-2">
                         <ImgContainer>
                             <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
                         </ImgContainer>

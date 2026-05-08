@@ -326,7 +326,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
             </ModalBody>
             <ModalFooter className="d-flex">
                 <div className="flex-grow-1">
-                    <Link href={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
+                    <Link href={reverse(ROUTES.CONTENT_TYPE_NEW)} target="_blank">
                         <Button color="light">Create new</Button>
                     </Link>
                 </div>

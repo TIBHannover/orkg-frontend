@@ -21,8 +21,8 @@ const ContentTypeSectionWrapper = ({
 }: ContentTypeSectionWrapperProps) => (
     <div className="tw:flex">
         <div className="tw:w-2/3 me-3">
-            <h1 className="tw:!text-2xl">{title}</h1>
-            <p>{description}</p>
+            <h1 className="tw:text-2xl!">{title}</h1>
+            <div>{description}</div>
             {children}
         </div>
         <div className="tw:w-1/3">

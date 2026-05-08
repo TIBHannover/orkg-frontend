@@ -1,11 +1,9 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
+import CreateForm from '@/app/content-type/create/Sections/ComparisonSection/CreateForm/CreateForm';
 import ComparisonVideo from '@/components/VideoThumbnails/ComparisonVideo';
 import ROUTES from '@/constants/routes';
 
@@ -13,18 +11,18 @@ const ComparisonSection = () => (
     <ContentTypeSectionWrapper
         title="Comparisons"
         description={
-            <>
+            <p>
                 ORKG Comparisons provide condensed overviews of the state-of-the-art literature for a particular research question. Comparisons
                 present their information in tabular form and can be extended via additional ORKG Visualizations.{' '}
                 <Link href="https://orkg.org/about/15/Comparisons" target="_blank">
                     More about comparisons
                 </Link>{' '}
                 or{' '}
-                <Link href="https://academy.orkg.org/orkg-academy/main/courses/comparison-course.html" target="_blank">
+                <Link href="https://academy.orkg.org/courses/comparison-course.html" target="_blank">
                     learn more in the academy
                 </Link>
                 .
-            </>
+            </p>
         }
         helpfulResourcesSubtitle="Example comparisons within the ORKG"
         helpfulResourcesExamples={
@@ -53,9 +51,7 @@ const ComparisonSection = () => (
         }
         video={<ComparisonVideo />}
     >
-        <RequireAuthentication component={Button} color="light" href={reverse(ROUTES.CREATE_COMPARISON)}>
-            Add comparison
-        </RequireAuthentication>
+        <CreateForm />
     </ContentTypeSectionWrapper>
 );
 
