@@ -1,9 +1,7 @@
 import qs from 'qs';
 
-import { MISC } from '@/constants/graphSettings';
 import { url as baseUrl } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { getOrganization, getOrganizationLogoUrl } from '@/services/backend/organizations';
 import { getResource } from '@/services/backend/resources';
 import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from '@/services/backend/types';
 
@@ -137,20 +135,20 @@ export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }: { id: str
 };
 
 export const createObservatory = ({
-    observatory_name,
+    name,
     organization_id,
     description,
     research_field,
     display_id,
 }: {
-    observatory_name: string;
+    name: string;
     organization_id: string;
     description: string;
     research_field: string;
     display_id: string;
 }) =>
     observatoriesApi
-        .post<Observatory>('', { json: { observatory_name, organization_id, description, research_field, display_id } })
+        .post<Observatory>('', { json: { name, organization_id, description, research_field, display_id } })
         .then(({ headers }) => getCreatedIdFromHeaders(headers));
 
 /**

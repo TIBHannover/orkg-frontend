@@ -32,7 +32,7 @@ import { Organization } from '@/services/backend/types';
 import { getPublicUrl } from '@/utils';
 
 const observatorySchema = z.object({
-    observatoryName: z.string().min(1, 'Please enter an observatory name').max(MAX_LENGTH_INPUT),
+    name: z.string().min(1, 'Please enter an observatory name').max(MAX_LENGTH_INPUT),
     permalink: z.string().regex(new RegExp(REGEX.PERMALINK), 'Only underscores ( _ ), numbers, and letters are allowed in the permalink field'),
     description: z.string().min(1, 'Please enter an observatory description').max(MAX_LENGTH_INPUT),
     researchField: z
@@ -54,7 +54,7 @@ const CreateObservatory = () => {
     const { data: organizations, isLoading } = useSWR([organizationsUrl, 'getAllOrganizations'], () => getAllOrganizations());
 
     const [editorState, setEditorState] = useState('edit');
-    const [observatoryName, setObservatoryName] = useState('');
+    const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState<OptionType | null>(null);
     const [organization, setOrganization] = useState<Organization | null>(prefilledOrganization || null);
@@ -70,7 +70,7 @@ const CreateObservatory = () => {
 
         try {
             const validatedData = observatorySchema.parse({
-                observatoryName,
+                name,
                 permalink,
                 description,
                 researchField,
@@ -78,7 +78,7 @@ const CreateObservatory = () => {
             });
 
             const newObservatoryId = await createObservatory({
-                observatory_name: validatedData.observatoryName,
+                name: validatedData.name,
                 organization_id: validatedData.organization?.id ?? '',
                 description: validatedData.description,
                 research_field: validatedData.researchField?.id ?? '',
@@ -86,7 +86,7 @@ const CreateObservatory = () => {
             });
             const observatory = await getObservatoryById(newObservatoryId);
             setEditorState('edit');
-            setObservatoryName('');
+            setName('');
             setDescription('');
             setResearchField(null);
             setPermalink('');
@@ -129,7 +129,7 @@ const CreateObservatory = () => {
                         <Label for="ObservatoryName">Name</Label>
                         <Input
                             onChange={(e) => {
-                                setObservatoryName(e.target.value);
+                                setName(e.target.value);
                                 setPermalink(
                                     slugify(e.target.value.trim(), {
                                         replacement: '_',
@@ -142,7 +142,7 @@ const CreateObservatory = () => {
                             name="name"
                             id="ObservatoryName"
                             disabled={loading}
-                            value={observatoryName}
+                            value={name}
                             maxLength={MAX_LENGTH_INPUT}
                         />
                     </FormGroup>
