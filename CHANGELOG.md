@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.181.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.180.0...v0.181.0) - 2026-05-13
+
+### Changes
+
+- fix(observatories): rename create payload field from observatory_name to name [`#1683`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1683)
+- fix: add missing link in lists page [`#1681`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1681)
+- feat(content-type/create/page): created new components for each content-type within each tab [`#1653`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1653)
+
+---
 ## [v0.180.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.179.0...v0.180.0) - 2026-04-16
 
 ### Changes
