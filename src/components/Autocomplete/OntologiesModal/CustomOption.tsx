@@ -1,12 +1,10 @@
 import { faExternalLink, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import { truncate } from 'lodash';
-import { useContext } from 'react';
 import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
-import { ThemeContext } from 'styled-components';
 
-import { SourceBadge } from '@/components/Autocomplete/styled';
 import { Ontology } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { MAXIMUM_DESCRIPTION_LENGTH } from '@/constants/autocompleteSources';
@@ -18,30 +16,30 @@ export const CustomOption = <OptionT extends Ontology, Group extends GroupBase<O
     const { data, children, isFocused, isSelected } = props;
     const { onClick, ...newInnerProps } = innerProps;
     const truncatedDescription = truncate(data.description ? data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
-    const theme = useContext(ThemeContext);
-
-    const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
+    const iconClassName = !isFocused ? 'text-muted' : 'text-secondary';
     const textClassName = !isFocused && !isSelected ? 'text-muted' : '';
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
-            <div className="d-flex justify-content-between align-items-center">
-                <div className="flex-grow-1 d-flex px-2 py-1 flex-column" role="button" tabIndex={0} onKeyDown={undefined} onClick={onClick}>
+            <div className="flex justify-between items-center">
+                <div className="grow flex px-2 py-1 flex-col" role="button" tabIndex={0} onKeyDown={undefined} onClick={onClick}>
                     <div>{children}</div>
-                    <span>{truncatedDescription && <div className={`small ${textClassName}`}>{truncatedDescription}</div>}</span>
+                    <span>{truncatedDescription && <div className={`text-sm ${textClassName}`}>{truncatedDescription}</div>}</span>
                 </div>
 
                 {data.description && data.description !== truncatedDescription && (
                     <Tooltip content={data.description}>
                         <span>
-                            <FontAwesomeIcon icon={faInfoCircle} color={iconColor} />
+                            <FontAwesomeIcon icon={faInfoCircle} className={iconClassName} />
                         </span>
                     </Tooltip>
                 )}
 
-                <SourceBadge href={data.uri} target="_blank" rel="noreferrer" className="ms-1 d-flex align-items-center px-2 py-1">
-                    {data.shortLabel} <FontAwesomeIcon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
-                </SourceBadge>
+                <a href={data.uri} target="_blank" rel="noreferrer" className="ml-1 shrink-0">
+                    <Chip size="sm" variant="soft">
+                        {data.shortLabel} <FontAwesomeIcon icon={faExternalLink} size="xs" className="ml-1 text-dark" />
+                    </Chip>
+                </a>
             </div>
         </components.Option>
     );

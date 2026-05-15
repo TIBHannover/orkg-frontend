@@ -1,55 +1,32 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AnimatePresence, motion } from 'framer-motion';
-import { FC } from 'react';
-import styled from 'styled-components';
+'use client';
 
-const Overlay = styled.div`
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffffffa3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-const AnimationContainer = styled(motion.div)`
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 10000;
-`;
+import { cn, Spinner } from '@heroui/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { FC, ReactNode } from 'react';
 
 type LoadingOverlayProps = {
     isLoading?: boolean;
-    children: React.ReactNode;
-    classNameOverlay?: string;
-    loadingText?: string | React.ReactNode;
+    className?: string;
+    loadingText?: ReactNode;
 };
 
-const LoadingOverlay: FC<LoadingOverlayProps> = ({
-    isLoading = false,
-    children,
-    classNameOverlay = '',
-    loadingText = <h1 className="h4 m-0">Loading</h1>,
-}) => (
-    <div style={{ position: 'relative' }}>
-        <AnimatePresence>
-            {isLoading && (
-                <AnimationContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7 }}>
-                    <Overlay className={classNameOverlay} aria-live="polite" aria-busy="true">
-                        <FontAwesomeIcon icon={faSpinner} className="me-2" spin style={{ fontSize: 30 }} />
-                        {loadingText}
-                    </Overlay>
-                </AnimationContainer>
-            )}
-        </AnimatePresence>
-        {children}
-    </div>
+const LoadingOverlay: FC<LoadingOverlayProps> = ({ isLoading = false, className, loadingText = <span className="text-2xl">Loading</span> }) => (
+    <AnimatePresence>
+        {isLoading && (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                aria-live="polite"
+                aria-busy="true"
+                className={cn('pointer-events-auto absolute inset-0 z-50 flex items-center justify-center gap-3 bg-white/65', className)}
+            >
+                <Spinner size="lg" />
+                {loadingText}
+            </motion.div>
+        )}
+    </AnimatePresence>
 );
 
 export default LoadingOverlay;

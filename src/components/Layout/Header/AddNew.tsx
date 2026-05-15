@@ -1,73 +1,23 @@
+'use client';
+
 import { faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, cn, Popover } from '@heroui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
-import styled from 'styled-components';
 
 import AddPaperWizard from '@/assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from '@/assets/img/tools/contribution-editor.png';
-import Popover from '@/components/FloatingUI/Popover';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
-import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
-const LabelStyled = styled.span`
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.lg}) {
-        display: none;
-    }
-`;
-
-const ToolContainer = styled(Link)`
-    display: block;
-    text-align: center;
-    color: inherit;
-    border-radius: 0;
-    border-bottom: 2px solid ${(props) => props.theme.lightDarker};
-    position: relative;
-    &:last-of-type {
-        border-bottom: 0;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-    }
-    &:first-of-type {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-    }
-
-    &:hover {
-        background-color: ${(props) => props.theme.lightLighter};
-        color: inherit;
-        text-decoration: none;
-    }
-    @media (max-width: 768px) {
-        width: calc(100% - 30px);
-    }
-`;
-
-const ImgContainer = styled.div`
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-`;
-
-const TextContainer = styled.div`
-    flex: 2;
-    color: #333;
-    text-align: left;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-`;
-
-const Header = styled.h3`
-    font-size: 1.2rem;
-    text-align: left;
-`;
+const toolLinkClass = cn(
+    'flex gap-3 border-b border-default p-3 text-inherit no-underline transition-colors',
+    'last:border-b-0',
+    'hover:bg-default/40 hover:text-inherit',
+);
 
 type AddNewProps = {
     isHomePageStyle: boolean;
@@ -83,54 +33,50 @@ const AddNew: FC<AddNewProps> = ({ isHomePageStyle, onAdd = null }) => {
     };
 
     return (
-        <Popover
-            showArrow={false}
-            open={isOpen}
-            onOpenChange={setIsOpen}
-            placement="bottom"
-            contentStyle={{ maxWidth: '470px', padding: 0, background: '#fff', boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)' }}
-            content={
-                <div style={{ border: '1px solid #d9d9d9', borderRadius: '4px' }}>
-                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.CREATE_COMPARISON} className="d-flex p-2">
-                        <ImgContainer>
-                            <Image src={ContributionEditor} style={{ width: '90%', height: 'auto' }} alt="Contribution editor preview" />
-                        </ImgContainer>
-                        <TextContainer className="ps-2 pe-2">
-                            <Header>Comparison</Header>
-                            <p className="m-0">
-                                Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
-                                simultaneously.
-                            </p>
-                        </TextContainer>
-                    </ToolContainer>
-                    <RequireAuthentication onClick={handleClickMenuItem} component={ToolContainer} href={ROUTES.CREATE_PAPER} className="d-flex p-2">
-                        <ImgContainer>
-                            <Image src={AddPaperWizard} style={{ width: '90%', height: 'auto' }} alt="Add paper wizard preview" />
-                        </ImgContainer>
-                        <TextContainer className="ps-2 pe-2">
-                            <Header>Paper</Header>
-                            <p className="m-0">The add paper form guides you to the process of generating structured data for your paper.</p>
-                        </TextContainer>
-                    </RequireAuthentication>
-                    <ToolContainer onClick={handleClickMenuItem} href={ROUTES.CONTENT_TYPE_NEW} className="d-flex p-2">
-                        <ImgContainer>
-                            <FontAwesomeIcon className="text-secondary" icon={faEllipsisH} style={{ fontSize: 40 }} />
-                        </ImgContainer>
-                        <TextContainer className="ps-2 pe-2">
-                            <Header>More...</Header>
-                            <p className="m-0">Add more content types, such as reviews, lists, datasets, or software.</p>
-                        </TextContainer>
-                    </ToolContainer>
-                </div>
-            }
-        >
-            <div className="mx-2 mb-2 mb-md-0 flex-shrink-0" id="tour-add-paper">
-                <Button onClick={() => setIsOpen((v) => !v)} color={!isHomePageStyle ? 'primary' : 'light'} className="px-3">
-                    <FontAwesomeIcon className="me-1" icon={faPlus} />
-                    <LabelStyled>Add new</LabelStyled>
+        <div className="shrink-0" id="tour-add-paper">
+            <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+                <Button variant={!isHomePageStyle ? 'primary' : 'tertiary'} className="w-full px-4 md:w-auto">
+                    <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                    <span className="inline lg:inline">Add new</span>
                 </Button>
-            </div>
-        </Popover>
+                <Popover.Content placement="bottom" className="w-[470px] max-w-[calc(100vw-2rem)] overflow-hidden p-0">
+                    <Popover.Dialog className="p-0">
+                        <Link onClick={handleClickMenuItem} href={ROUTES.CREATE_COMPARISON} className={toolLinkClass}>
+                            <div className="flex flex-1 items-center justify-center">
+                                <Image src={ContributionEditor} className="h-auto w-[90%]" alt="Contribution editor preview" />
+                            </div>
+                            <div className="flex flex-[2] flex-col justify-center px-2 text-left text-foreground">
+                                <h3 className="text-lg">Comparison</h3>
+                                <p className="m-0 text-sm">
+                                    Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
+                                    simultaneously.
+                                </p>
+                            </div>
+                        </Link>
+                        <RequireAuthentication onClick={handleClickMenuItem} component={Link} href={ROUTES.CREATE_PAPER} className={toolLinkClass}>
+                            <div className="flex flex-1 items-center justify-center">
+                                <Image src={AddPaperWizard} className="h-auto w-[90%]" alt="Add paper wizard preview" />
+                            </div>
+                            <div className="flex flex-[2] flex-col justify-center px-2 text-left text-foreground">
+                                <h3 className="text-lg">Paper</h3>
+                                <p className="m-0 text-sm">
+                                    The add paper form guides you to the process of generating structured data for your paper.
+                                </p>
+                            </div>
+                        </RequireAuthentication>
+                        <Link onClick={handleClickMenuItem} href={reverse(ROUTES.CONTENT_TYPE_NEW)} className={toolLinkClass}>
+                            <div className="flex flex-1 items-center justify-center">
+                                <FontAwesomeIcon className="text-secondary text-4xl" icon={faEllipsisH} />
+                            </div>
+                            <div className="flex flex-[2] flex-col justify-center px-2 text-left text-foreground">
+                                <h3 className="text-lg">More...</h3>
+                                <p className="m-0 text-sm">Add more content types, such as reviews, lists, datasets, or software.</p>
+                            </div>
+                        </Link>
+                    </Popover.Dialog>
+                </Popover.Content>
+            </Popover>
+        </div>
     );
 };
 

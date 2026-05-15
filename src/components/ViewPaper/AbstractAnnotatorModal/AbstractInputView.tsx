@@ -1,11 +1,10 @@
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Tooltip } from '@heroui/react';
 import { ClipboardEvent, FC } from 'react';
 import { useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 
-import Alert from '@/components/Ui/Alert/Alert';
-import FormFeedback from '@/components/Ui/Form/FormFeedback';
-import Label from '@/components/Ui/Label/Label';
-import Tooltip from '@/components/Utils/Tooltip';
 import { RootStore } from '@/slices/types';
 
 type AbstractInputViewProps = {
@@ -25,25 +24,51 @@ const AbstractInputView: FC<AbstractInputViewProps> = ({ validation, abstract, s
     };
 
     return (
-        <div>
+        <div className="flex flex-col gap-3">
             {!isAbstractLoading && isAbstractFailedFetching && (
-                <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually.</Alert>
+                <Alert status="default">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Abstract not available</Alert.Title>
+                        <Alert.Description>We couldn't fetch the abstract of the paper, please enter it manually.</Alert.Description>
+                    </Alert.Content>
+                </Alert>
             )}
-            <Alert color="info">
-                The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright issues
+            <Alert status="accent">
+                <Alert.Indicator />
+                <Alert.Content>
+                    <Alert.Title>Abstract is not stored</Alert.Title>
+                    <Alert.Description>
+                        The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright
+                        issues.
+                    </Alert.Description>
+                </Alert.Content>
             </Alert>
-            <Label for="paperAbstract">
-                <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">Enter the paper abstract</Tooltip>
-            </Label>
-            <Textarea
-                id="paperAbstract"
-                className={`form-control ps-2 pe-2 ${!validation ? 'is-invalid' : ''}`}
-                minRows={8}
-                value={abstract}
-                onChange={(event) => setAbstract(event.target.value)}
-                onPaste={stripLineBreaks}
-            />
-            {!validation && <FormFeedback className="order-1">Please enter the abstract.</FormFeedback>}
+            <div className="flex flex-col gap-1">
+                <label htmlFor="paperAbstract" className="text-sm font-medium inline-flex items-center gap-1">
+                    Enter the paper abstract
+                    <Tooltip delay={0}>
+                        <Tooltip.Trigger>
+                            <FontAwesomeIcon icon={faQuestionCircle} className="text-muted cursor-help" />
+                        </Tooltip.Trigger>
+                        <Tooltip.Content showArrow>
+                            <Tooltip.Arrow />
+                            Enter the paper abstract to get automatically generated concepts for your paper.
+                        </Tooltip.Content>
+                    </Tooltip>
+                </label>
+                <Textarea
+                    id="paperAbstract"
+                    className={`w-full px-3 py-2 rounded-md border bg-field-background text-field-foreground focus:outline-none focus:ring-2 focus:ring-focus/40 ${
+                        !validation ? 'border-danger' : 'border-border'
+                    }`}
+                    minRows={8}
+                    value={abstract}
+                    onChange={(event) => setAbstract(event.target.value)}
+                    onPaste={stripLineBreaks}
+                />
+                {!validation && <small className="text-danger">Please enter the abstract.</small>}
+            </div>
         </div>
     );
 };

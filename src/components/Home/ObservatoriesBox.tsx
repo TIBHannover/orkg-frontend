@@ -13,9 +13,9 @@ const ObservatoriesBox: FC<ObservatoriesBoxProps> = ({ researchFieldId }) => {
     const { observatories, isLoading } = useResearchFieldObservatories({ researchFieldId });
 
     return (
-        <div className="box rounded-3" style={{ overflow: 'hidden' }}>
+        <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
             <h2
-                className="h5"
+                className="text-xl"
                 style={{
                     marginBottom: 0,
                     padding: '15px',
@@ -31,7 +31,7 @@ const ObservatoriesBox: FC<ObservatoriesBoxProps> = ({ researchFieldId }) => {
                     <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More observatories</span>
                 </Link>
             </h2>
-            <hr className="mx-3 mt-0" />
+            <hr className="mx-4 mt-0" />
             <ObservatoriesCarousel observatories={observatories} isLoading={isLoading} />
         </div>
     );

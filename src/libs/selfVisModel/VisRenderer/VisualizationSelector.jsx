@@ -1,89 +1,57 @@
+import { ListBox, Select, Separator } from '@heroui/react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import Dropdown from '@/components/Ui/Dropdown/Dropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 
-export default class VisualizationSelector extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visualizationMethod: 'Table',
-            visSelectionOpen: false,
-            xAxisSelectorOpen: false,
-            yAxisSelectorOpen: false,
-            update: false,
-            xAxisSelector: undefined,
-            yAxisSelector: undefined,
-            errorMessage: '',
-            errorCode: -1,
-        };
-        this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart', 'PieChart'];
-        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
-        this.selfVisModel.setRenderingEngine('Google-Charts'); // we only have GC at the moment;
-    }
+const SUPPORTED_METHODS = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart', 'PieChart'];
 
-    componentDidMount() {
-        this.setState({ visualizationMethod: this.selfVisModel.getRenderingMethod() ? this.selfVisModel.getRenderingMethod() : 'Table' });
-    }
+const VisualizationSelector = ({ propagationFunction }) => {
+    const selfVisModel = useMemo(() => {
+        const model = new SelfVisDataModel();
+        model.setRenderingEngine('Google-Charts');
+        return model;
+    }, []);
 
-    componentDidUpdate(prevProps) {
-        this.selfVisModel.setRenderingMethod(this.state.visualizationMethod);
-        if (this.props.propagationFunction) {
-            this.props.propagationFunction();
-        }
-    }
+    const [visualizationMethod, setVisualizationMethod] = useState(() => selfVisModel.getRenderingMethod() || 'Table');
 
-    createVisualizationSelector = () => {
-        const items = this.supportedVisualizationMethods.map((item, id) => (
-            <div key={`visSelectionDropdownDivItemIndexKey_${id}`}>
-                <DropdownItem
-                    key={`visSelectionDropdownItemIndexKey_${id}`}
-                    onClick={() => {
-                        this.selfVisModel.setRenderingMethod(item);
-                        this.setState({ visualizationMethod: item });
-                    }}
-                >
-                    <span>{item}</span>
-                </DropdownItem>
-            </div>
-        ));
+    useEffect(() => {
+        selfVisModel.setRenderingMethod(visualizationMethod);
+        propagationFunction?.();
+    }, [visualizationMethod, selfVisModel, propagationFunction]);
 
-        return (
-            <Dropdown
-                color="secondary"
-                size="sm"
-                isOpen={this.state.visSelectionOpen}
-                className="mt-1"
-                toggle={() => {
-                    this.setState({
-                        visSelectionOpen: !this.state.visSelectionOpen,
-                    });
-                }}
+    return (
+        <div className="px-4">
+            <Separator className="my-3" />
+            <Select
+                aria-label="Visualization method"
+                value={visualizationMethod}
+                onChange={(key) => setVisualizationMethod(String(key))}
+                className="flex flex-row items-center gap-2"
             >
-                <DropdownToggle caret color="secondary">
-                    {this.state.visualizationMethod}
-                </DropdownToggle>
-                <DropdownMenu>{items}</DropdownMenu>
-            </Dropdown>
-        );
-    };
-
-    /** component rendering entrance point * */
-    render() {
-        return (
-            <div className="px-3">
-                <hr />
-                Visualization method{this.createVisualizationSelector()}
-                <hr />
-            </div>
-        );
-    }
-}
+                <span className="text-sm whitespace-nowrap">Visualization method</span>
+                <Select.Trigger className="min-w-40">
+                    <Select.Value />
+                    <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                    <ListBox>
+                        {SUPPORTED_METHODS.map((method) => (
+                            <ListBox.Item key={method} id={method} textValue={method}>
+                                {method}
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                        ))}
+                    </ListBox>
+                </Select.Popover>
+            </Select>
+            <Separator className="my-3" />
+        </div>
+    );
+};
 
 VisualizationSelector.propTypes = {
     propagationFunction: PropTypes.func,
 };
+
+export default VisualizationSelector;

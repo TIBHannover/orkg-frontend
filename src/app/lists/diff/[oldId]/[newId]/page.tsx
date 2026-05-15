@@ -1,7 +1,6 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 
 import DiffView from '@/components/DiffView/DiffView';
 import useDiff from '@/components/DiffView/useDiff';
@@ -9,6 +8,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import useList from '@/components/List/hooks/useList';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { LiteratureList } from '@/services/backend/types';
 
 const ListDiff = () => {
@@ -43,7 +43,11 @@ const ListDiff = () => {
     };
 
     const getData = async () => {
-        if (!oldList || !newList || oldList.versions.head?.id !== newList.versions.head?.id) {
+        if (!oldList || !newList) {
+            // Data still loading from SWR — stay in loading state until the next render provides a resolved getData.
+            return new Promise<never>(() => {});
+        }
+        if (oldList.versions.head?.id !== newList.versions.head?.id) {
             throw new Error('Lists not found');
         }
 

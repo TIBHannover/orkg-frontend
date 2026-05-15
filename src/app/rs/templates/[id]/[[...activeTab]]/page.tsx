@@ -2,13 +2,12 @@
 
 import { faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup, Chip, toast, Tooltip } from '@heroui/react';
 import { toInteger } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import ReactStringReplace from 'react-string-replace';
-import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 import InternalServerError from '@/app/error';
@@ -16,7 +15,6 @@ import NotFound from '@/app/not-found';
 import Confirm from '@/components/Confirmation/Confirmation';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
@@ -24,14 +22,13 @@ import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleSta
 import { SlotTooltip } from '@/components/RosettaStone/SlotTooltip/SlotTooltip';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { classesUrl, getClassById } from '@/services/backend/classes';
 import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { Thing } from '@/services/backend/things';
@@ -90,7 +87,7 @@ const RSTemplatePage = () => {
                 router.push(ROUTES.RS_TEMPLATES);
             } catch (err: unknown) {
                 console.error(err);
-                toast.error("Couldn't delete statement template");
+                toast.danger("Couldn't delete statement template");
             }
         }
     };
@@ -113,89 +110,96 @@ const RSTemplatePage = () => {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && (
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
+                </Container>
+            )}
             {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && template && (
                 <>
                     <TitleBar
                         buttonGroup={
-                            <>
-                                {!isEditMode && (
+                            <ButtonGroup size="sm">
+                                {!isEditMode ? (
                                     <RequireAuthentication
                                         component={Button}
-                                        className="float-end"
-                                        color="secondary"
-                                        style={{ marginRight: 2 }}
                                         size="sm"
+                                        className="button--orkg-secondary"
                                         onClick={() => toggleIsEditMode()}
                                     >
                                         <FontAwesomeIcon icon={faPen} /> Edit metadata
                                     </RequireAuthentication>
-                                )}
-                                {isEditMode && (
-                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
+                                ) : (
+                                    <Button size="sm" className="button--orkg-secondary" onPress={() => toggleIsEditMode()}>
                                         <FontAwesomeIcon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
-                                <Button
-                                    color="secondary"
-                                    size="sm"
-                                    tag={Link}
-                                    href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
-                                    disabled={!canEditTemplate}
-                                >
-                                    <Tooltip content={preventEditTooltipText} disabled={canEditTemplate}>
-                                        <span>
+                                <Tooltip isDisabled={canEditTemplate}>
+                                    {canEditTemplate ? (
+                                        <Button
+                                            size="sm"
+                                            className="button--orkg-secondary"
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            render={(props: any) => <Link {...props} href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })} />}
+                                        >
+                                            <ButtonGroup.Separator />
                                             <FontAwesomeIcon icon={faPen} /> Edit statement template
-                                        </span>
-                                    </Tooltip>
-                                </Button>
-                            </>
+                                        </Button>
+                                    ) : (
+                                        <Button size="sm" className="button--orkg-secondary" isDisabled>
+                                            <ButtonGroup.Separator />
+                                            <FontAwesomeIcon icon={faPen} /> Edit statement template
+                                        </Button>
+                                    )}
+                                    <Tooltip.Content>{preventEditTooltipText}</Tooltip.Content>
+                                </Tooltip>
+                            </ButtonGroup>
                         }
                     >
                         Statement template
                     </TitleBar>
                     <EditModeHeader isVisible={isEditMode} />
-                    <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <h3 className="mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                            {template?.label || (
-                                <i>
-                                    <small>No label</small>
-                                </i>
-                            )}
-                        </h3>
-                        {isEditMode && !!user && (
-                            <Tooltip content={preventDeletionTooltipText} disabled={canDeleteTemplate}>
-                                <span>
+                    <Container>
+                        <div className={`box flow-root pt-6 pb-6 pl-6 pr-6 ${isEditMode ? 'rounded-b' : 'rounded'}`}>
+                            <h3 className="mb-4" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {template?.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}
+                            </h3>
+                            {isEditMode && !!user && (
+                                <Tooltip isDisabled={canDeleteTemplate}>
                                     <Button
-                                        color="danger"
+                                        variant="danger"
                                         size="sm"
-                                        className="mb-3"
-                                        style={{ marginLeft: 'auto' }}
-                                        onClick={handleDeleteTemplate}
-                                        disabled={!canDeleteTemplate}
+                                        className="mb-4 ml-auto"
+                                        onPress={handleDeleteTemplate}
+                                        isDisabled={!canDeleteTemplate}
                                     >
                                         <FontAwesomeIcon icon={faTrash} /> Delete statement template
                                     </Button>
-                                </span>
-                            </Tooltip>
-                        )}
+                                    <Tooltip.Content>{preventDeletionTooltipText}</Tooltip.Content>
+                                </Tooltip>
+                            )}
 
-                        <ItemMetadata
-                            item={
-                                {
-                                    ...template,
-                                    observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
-                                    organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
-                                } as unknown as Thing
-                            }
-                            showCreatedAt
-                            showCreatedBy
-                            showProvenance
-                            editMode={isEditMode}
-                        />
+                            <ItemMetadata
+                                item={
+                                    {
+                                        ...template,
+                                        observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
+                                        organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
+                                    } as unknown as Thing
+                                }
+                                showCreatedAt
+                                showCreatedBy
+                                showProvenance
+                                editMode={isEditMode}
+                            />
+                        </div>
                     </Container>
-                    <Container className="mt-3 p-0">
+                    <Container className="mt-4">
                         <Tabs
                             className="box rounded"
                             destroyOnHidden
@@ -206,17 +210,17 @@ const RSTemplatePage = () => {
                                     label: 'Statement template information',
                                     key: 'information',
                                     children: (
-                                        <div className="p-4">
+                                        <div className="p-6">
                                             <p className="mb-1">
                                                 <b>Dynamic label:</b>
                                             </p>
-                                            <p className="mb-3">{formattedLabelWithPlaceholders}</p>
+                                            <p className="mb-4">{formattedLabelWithPlaceholders}</p>
 
                                             <p className="mb-1">
                                                 <b>Description:</b>
                                             </p>
-                                            {template.description && <div className="mb-3 text-muted">{template.description}</div>}
-                                            <p className="mb-3">
+                                            {template.description && <div className="mb-4 text-gray-500">{template.description}</div>}
+                                            <p className="mb-4">
                                                 <b>Target class: </b>
                                                 {isLoadingTargetClass && <>Loading...</>}
                                                 {!isLoadingTargetClass && targetClass && (
@@ -235,9 +239,9 @@ const RSTemplatePage = () => {
                                         <>
                                             Instances{' '}
                                             {isLoadingStatements ? (
-                                                <FontAwesomeIcon icon={faSpinner} className="me-2" spin />
+                                                <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />
                                             ) : (
-                                                <Badge pill>{page.total_elements}</Badge>
+                                                <Chip size="sm">{page.total_elements}</Chip>
                                             )}
                                         </>
                                     ),
@@ -251,7 +255,7 @@ const RSTemplatePage = () => {
                                                     ))}
                                                 </ListGroup>
                                             )}
-                                            {page.total_elements === 0 && <div className="text-center m-4">No instances</div>}
+                                            {page.total_elements === 0 && <div className="text-center m-6">No instances</div>}
                                         </div>
                                     ),
                                 },

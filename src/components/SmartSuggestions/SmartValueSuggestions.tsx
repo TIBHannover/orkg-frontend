@@ -1,5 +1,6 @@
-import { faLightbulb, faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Separator } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
 import { FC, useCallback, useEffect, useState } from 'react';
 
@@ -7,7 +8,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import SmartSuggestions from '@/components/SmartSuggestions/SmartSuggestions';
-import Button from '@/components/Ui/Button/Button';
+import SmartTriggerButton from '@/components/SmartSuggestions/SmartTriggerButton';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
 import { createResource, getResources } from '@/services/backend/resources';
@@ -21,9 +22,10 @@ type SmartValueSuggestionsProps = {
     resourceId: string;
     predicateId: string;
     classId?: string;
+    className?: string;
 };
 
-const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abstract = '', resourceId, predicateId, classId }) => {
+const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abstract = '', resourceId, predicateId, classId, className = '' }) => {
     const [recommendedValues, setRecommendedValues] = useState<(Resource | { label: string })[]>([]);
     const [isOpenSmartTooltip, setIsOpenSmartTooltip] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -104,7 +106,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                             {!abstract ? (
                                 <Tooltip content="The abstract is not found. To improve the suggestions, add the abstract in the 'Suggestions' box on the right">
                                     <span>
-                                        abstract (<FontAwesomeIcon icon={faWarning} className="text-warning" />){' '}
+                                        abstract (<FontAwesomeIcon icon={faWarning} className="text-yellow-600" />){' '}
                                     </span>
                                 </Tooltip>
                             ) : (
@@ -112,9 +114,9 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                             )}{' '}
                             and title, the following values might be suitable
                         </p>
-                        <hr />
+                        <Separator className="my-3" />
                         {isLoading && (
-                            <div className="ms-2 mb-2">
+                            <div className="ml-2 mb-2">
                                 <FontAwesomeIcon icon={faSpinner} spin />
                             </div>
                         )}
@@ -123,10 +125,9 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                                 {recommendedValues.map((value) => (
                                     <DescriptionTooltip key={value.label} _class={ENTITIES.RESOURCE} id={'id' in value ? value.id : undefined}>
                                         <Button
-                                            color="smart-darker"
-                                            className="me-2 mb-2 text-start rounded-pill"
                                             size="sm"
-                                            onClick={() => handleAddClick(value)}
+                                            className="mr-2 mb-2 text-left rounded-full bg-smart-darker text-white hover:bg-smart border-0"
+                                            onPress={() => handleAddClick(value)}
                                         >
                                             {value.label}
                                         </Button>
@@ -137,7 +138,12 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                         {(isFailed || (recommendedValues.length === 0 && !isLoading)) && (
                             <em>
                                 {isFailed ? 'Failed to fetch recommendations.' : 'No recommendations found'}{' '}
-                                <Button color="link" size="sm" className="text-white p-0 border-0 align-baseline" onClick={getChatResponse}>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onPress={getChatResponse}
+                                    className="!p-0 !min-w-0 !h-auto text-white border-0 bg-transparent align-baseline underline"
+                                >
                                     Try again.
                                 </Button>
                             </em>
@@ -151,9 +157,7 @@ const SmartValueSuggestions: FC<SmartValueSuggestionsProps> = ({ paperTitle, abs
                 llmTask={taskName}
                 handleReload={getChatResponse}
             >
-                <button type="button" className="btn btn-smart px-3 btn-sm tw:border-0" onClick={() => setIsOpenSmartTooltip((v) => !v)}>
-                    <FontAwesomeIcon icon={faLightbulb} style={{ fontSize: '120%' }} />
-                </button>
+                <SmartTriggerButton ariaLabel="Get value suggestions" onPress={() => setIsOpenSmartTooltip((v) => !v)} className={className} />
             </SmartSuggestions>
         </Tooltip>
     );

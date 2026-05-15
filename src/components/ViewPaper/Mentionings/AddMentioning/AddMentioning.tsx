@@ -1,15 +1,11 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { FC, useState } from 'react';
 import type { ActionMeta, SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
-import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import { StyledButton } from '@/components/StatementBrowser/styled';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
 
@@ -35,35 +31,35 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
         setIsVisibleAutocomplete(false);
     };
 
-    return (
-        <div>
-            {!isVisibleAutocomplete ? (
-                <ButtonGroup>
-                    <ButtonWithLoading color="secondary" onClick={() => setIsVisibleAutocomplete(true)}>
-                        <FontAwesomeIcon className="icon" icon={faPlus} /> Add item
-                    </ButtonWithLoading>
-                </ButtonGroup>
-            ) : (
-                <InputGroup>
-                    <span className="input-group-text">
-                        <FontAwesomeIcon className="icon" icon={faPlus} />
-                    </span>
+    if (!isVisibleAutocomplete) {
+        return (
+            <div className="flex h-[38px]">
+                <Button size="sm" className="button--orkg-secondary !h-[38px]" onPress={() => setIsVisibleAutocomplete(true)}>
+                    <FontAwesomeIcon icon={faPlus} /> Add item
+                </Button>
+            </div>
+        );
+    }
 
-                    <SelectGlobalStyle />
-                    <Autocomplete
-                        entityType={ENTITIES.RESOURCE}
-                        placeholder="Select a resource"
-                        onChange={onChange}
-                        enableExternalSources
-                        allowCreate
-                        autoFocus
-                        openMenuOnFocus
-                    />
-                    <StyledButton className="w-auto" outline onClick={() => setIsVisibleAutocomplete(false)}>
-                        Cancel
-                    </StyledButton>
-                </InputGroup>
-            )}
+    return (
+        <div className="flex items-stretch w-full h-[38px]">
+            <span className="inline-flex items-center px-3 border border-border border-e-0 rounded-s bg-surface-secondary text-muted">
+                <FontAwesomeIcon icon={faPlus} />
+            </span>
+            <div className="flex-1 min-w-0 [&_.form-control]:rounded-none">
+                <Autocomplete
+                    entityType={ENTITIES.RESOURCE}
+                    placeholder="Select a resource"
+                    onChange={onChange}
+                    enableExternalSources
+                    allowCreate
+                    autoFocus
+                    openMenuOnFocus
+                />
+            </div>
+            <Button size="sm" variant="secondary" className="rounded-s-none -ms-px !h-[38px]" onPress={() => setIsVisibleAutocomplete(false)}>
+                Cancel
+            </Button>
         </div>
     );
 };

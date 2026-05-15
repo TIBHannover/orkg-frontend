@@ -1,21 +1,17 @@
 import { faEllipsisV, faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button, Dropdown, Separator } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
-import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import useParams from '@/components/useParams/useParams';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import AccessPaperButton from '@/components/ViewPaper/PaperHeaderBar/AccessPaperButton';
 import Publish from '@/components/ViewPaper/Publish/Publish';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Paper } from '@/services/backend/types';
 
 type PaperMenuBarProps = {
@@ -36,7 +32,6 @@ const getPaperLink = (paper?: Paper) => {
 
 const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) => {
     const { resourceId } = useParams();
-    const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const { paper } = useViewPaper({ paperId: resourceId });
@@ -51,9 +46,7 @@ const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) 
             {!editMode && (
                 <RequireAuthentication
                     component={Button}
-                    className="flex-shrink-0"
-                    style={{ marginRight: 2 }}
-                    color="secondary"
+                    className="button--orkg-secondary shrink-0"
                     size="sm"
                     onClick={() => (!disableEdit ? toggle('editMode') : setIsOpenPWCModal(true))}
                 >
@@ -61,32 +54,30 @@ const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) 
                 </RequireAuthentication>
             )}
             {editMode && (
-                <Button
-                    className="flex-shrink-0"
-                    style={{ marginRight: 2 }}
-                    color="secondary-darker"
-                    size="sm"
-                    disabled={disableEdit}
-                    onClick={() => toggle('editMode')}
-                >
+                <Button className="button--orkg-secondary-darker shrink-0" size="sm" isDisabled={disableEdit} onPress={() => toggle('editMode')}>
                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                 </Button>
             )}
-            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
+            <ShareLinkMarker typeOfLink="paper" title={title ?? ''} buttonProps={{ className: 'button--orkg-secondary shrink-0' }} />
+            <Dropdown>
+                <Button size="sm" className="button--orkg-secondary shrink-0" isIconOnly aria-label="More options">
                     <FontAwesomeIcon icon={faEllipsisV} />
-                </DropdownToggle>
-                <DropdownMenu>
-                    <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog((v) => !v)}>
-                        Publish
-                    </RequireAuthentication>
-                    <DropdownItem divider />
-                    <DropdownItem onClick={() => toggle('showGraphModal')}>View graph</DropdownItem>
-                    <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
-                        View resource
-                    </DropdownItem>
-                </DropdownMenu>
-            </ButtonDropdown>
+                </Button>
+                <Dropdown.Popover placement="bottom end">
+                    <Dropdown.Menu>
+                        <RequireAuthentication component={Dropdown.Item} textValue="Publish" onAction={() => setShowPublishDialog((v) => !v)}>
+                            Publish
+                        </RequireAuthentication>
+                        <Separator className="my-1" />
+                        <Dropdown.Item textValue="View graph" onAction={() => toggle('showGraphModal')}>
+                            View graph
+                        </Dropdown.Item>
+                        <Dropdown.Item href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`} textValue="View resource">
+                            View resource
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown.Popover>
+            </Dropdown>
             <PreventModal
                 isOpen={isOpenPWCModal}
                 toggle={() => setIsOpenPWCModal((v) => !v)}
@@ -101,7 +92,7 @@ const PaperMenuBar: FC<PaperMenuBarProps> = ({ editMode, disableEdit, toggle }) 
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
+                            paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="mr-1" />
                         </a>{' '}
                         website to suggest changes.
                     </>

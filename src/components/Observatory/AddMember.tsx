@@ -1,18 +1,10 @@
+import { Input, Label, Modal, TextField, toast } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { Organization } from '@/services/backend/types';
 import { addUserToObservatory } from '@/services/backend/users';
 import { getErrorMessage } from '@/utils';
@@ -29,67 +21,75 @@ const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, orga
     const [selectedOrganization, setSelectedOrganization] = useState(organizationsList.length === 1 ? organizationsList[0] : null);
     const [contributorId, setContributorId] = useState('');
 
-    const handleSubmit = async () => {
-        setIsLoading(true);
-        if (selectedOrganization && contributorId.length > 0) {
-            await addUserToObservatory(contributorId, observatoryId, selectedOrganization.id)
-                .then(() => {
-                    toast.success('Member added successfully');
-                    mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
-                    setIsLoading(false);
-                    setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
-                    setContributorId('');
-                    toggle();
-                })
-                .catch((error) => {
-                    toast.error(`Error adding member! ${getErrorMessage(error, 'contributor_id') ?? error?.message}`);
-                    setIsLoading(false);
-                });
-        } else {
-            setIsLoading(false);
-            toast.error('Organization or user email is missing');
-        }
-    };
-
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
     }, [organizationsList]);
 
+    const handleSubmit = async () => {
+        if (!selectedOrganization || contributorId.length === 0) {
+            toast.danger('Organization or user email is missing');
+            return;
+        }
+        setIsLoading(true);
+        try {
+            await addUserToObservatory(contributorId, observatoryId, selectedOrganization.id);
+            toast.success('Member added successfully');
+            mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
+            setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
+            setContributorId('');
+            toggle();
+        } catch (error: any) {
+            toast.danger(`Error adding member! ${getErrorMessage(error, 'contributor_id') ?? error?.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <Modal isOpen={showDialog} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Add a member</ModalHeader>
-            <ModalBody>
-                <>
-                    <FormGroup>
-                        <Label for="organization">Organization</Label>
-                        <Select
-                            value={organizationsList.length === 1 ? organizationsList[0] : selectedOrganization}
-                            options={organizationsList}
-                            onChange={(selected) => setSelectedOrganization(selected)}
-                            getOptionValue={({ id }) => id}
-                            getOptionLabel={({ name }) => name}
-                            inputId="organization"
-                            classNamePrefix="react-select"
-                        />
-                        <SelectGlobalStyle />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="contributorId">Contributor ID</Label>
-                        <InputGroup>
-                            <Input id="contributorId" onChange={(e) => setContributorId(e.target.value)} type="text" value={contributorId} />
-                        </InputGroup>
-                    </FormGroup>
-                </>
-            </ModalBody>
-            <ModalFooter>
-                <div className="text-align-center mt-2">
-                    <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
-                        Save
-                    </ButtonWithLoading>
-                </div>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={showDialog}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-md">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Add a member</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="organization">Organization</Label>
+                                <Select
+                                    inputId="organization"
+                                    value={organizationsList.length === 1 ? organizationsList[0] : selectedOrganization}
+                                    options={organizationsList}
+                                    onChange={(selected) => setSelectedOrganization(selected)}
+                                    getOptionValue={({ id }) => id}
+                                    getOptionLabel={({ name }) => name}
+                                    classNamePrefix="react-select"
+                                    classNames={customClassNames as any}
+                                    styles={customStyles as any}
+                                    menuPosition="fixed"
+                                />
+                            </div>
+                            <TextField fullWidth name="contributorId" value={contributorId} onChange={setContributorId}>
+                                <Label>Contributor ID</Label>
+                                <Input />
+                            </TextField>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <ButtonWithLoading variant="primary" isLoading={isLoading} onPress={handleSubmit}>
+                            Save
+                        </ButtonWithLoading>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

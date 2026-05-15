@@ -1,10 +1,10 @@
-import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { RadialMenu } from 'reagraph';
 import styled from 'styled-components';
 
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 const StyledContextMenu = styled.div`
     --radial-menu-background: #fff;

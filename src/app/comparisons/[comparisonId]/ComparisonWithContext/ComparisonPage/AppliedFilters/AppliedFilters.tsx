@@ -1,10 +1,9 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Chip } from '@heroui/react';
 
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
 
 export default function AppliedFilters() {
     const { comparison, selectedPathsFlattened } = useComparison();
@@ -14,32 +13,42 @@ export default function AppliedFilters() {
         return null;
     }
 
-    return (
-        filters?.[comparison.id]?.length > 0 && (
-            <div className="tw:py-3 tw:flex tw:flex-col">
-                <h5 className="tw:m-0">Applied Filters</h5>
-                <div className="tw:flex tw:flex-wrap">
-                    {filters?.[comparison.id].map((filter) => (
-                        <Badge key={filter.id} color="light" className="tw:me-2 tw:mt-2" style={{ whiteSpace: 'normal' }}>
-                            <span className="tw:flex tw:items-center tw:gap-1">
-                                <span className="tw:font-bold">{selectedPathsFlattened.find((predicate) => predicate.id === filter.id)?.label}</span>
-                                {filter.filterValues.endDate && <span>until: {filter.filterValues.endDate}</span>}
-                                {filter.filterValues.startDate && <span>from: {filter.filterValues.startDate}</span>}
-                                {filter.filterValues.minValue && <span>minimum: {filter.filterValues.minValue}</span>}
-                                {filter.filterValues.maxValue && <span>maximum: {filter.filterValues.maxValue}</span>}
-                                {filter.filterValues.values && <span>contains: {filter.filterValues.values.join(', ')}</span>}
+    const applied = filters?.[comparison.id];
 
+    if (!applied || applied.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="py-3 flex flex-col gap-2">
+            <p className="m-0 text-xs font-semibold uppercase tracking-wide text-muted">Applied filters</p>
+            <div className="flex flex-wrap gap-2">
+                {applied.map((filter) => {
+                    const predicateLabel = selectedPathsFlattened.find((predicate) => predicate.id === filter.id)?.label;
+                    return (
+                        <Chip key={filter.id} variant="soft" className="h-auto py-1 whitespace-normal">
+                            <Chip.Label className="flex flex-wrap items-center gap-1.5 text-sm leading-snug">
+                                <span className="font-semibold">{predicateLabel}</span>
+                                {filter.filterValues.endDate && <span className="text-muted">until {filter.filterValues.endDate}</span>}
+                                {filter.filterValues.startDate && <span className="text-muted">from {filter.filterValues.startDate}</span>}
+                                {filter.filterValues.minValue && <span className="text-muted">min {filter.filterValues.minValue}</span>}
+                                {filter.filterValues.maxValue && <span className="text-muted">max {filter.filterValues.maxValue}</span>}
+                                {filter.filterValues.values && <span className="text-muted">contains {filter.filterValues.values.join(', ')}</span>}
                                 <Button
-                                    color="link"
-                                    className="tw:text-secondary tw:!p-0 tw:!leading-none tw:border-0 hover:tw:text-red-600 active:tw:text-red-600"
+                                    isIconOnly
+                                    size="sm"
+                                    variant="ghost"
+                                    aria-label="Remove filter"
+                                    className="h-4 w-4 min-w-0 p-0 bg-transparent hover:bg-transparent text-muted hover:text-danger"
+                                    onPress={() => removeFilter({ id: filter.id, path: filter.path })}
                                 >
-                                    <FontAwesomeIcon icon={faTimes} onClick={() => removeFilter({ id: filter.id, path: filter.path })} />
+                                    <FontAwesomeIcon icon={faTimes} size="xs" />
                                 </Button>
-                            </span>
-                        </Badge>
-                    ))}
-                </div>
+                            </Chip.Label>
+                        </Chip>
+                    );
+                })}
             </div>
-        )
+        </div>
     );
 }

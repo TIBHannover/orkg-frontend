@@ -1,15 +1,19 @@
+import { Input, Label, TextField } from '@heroui/react';
 import { FC, useEffect, useId, useState } from 'react';
 
 import { formatTimeValue, parseTimeString, TimeValues } from '@/components/InputField/TimeInput/helpers';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
 
 type TimeInputProps = {
     value: string;
     onChange: (value: string) => void;
 };
+
+const fields: { key: keyof TimeValues; label: string; placeholder: string; max: string }[] = [
+    { key: 'hours', label: 'Hours', placeholder: 'hh', max: '23' },
+    { key: 'minutes', label: 'Minutes', placeholder: 'mm', max: '59' },
+    { key: 'seconds', label: 'Seconds', placeholder: 'ss', max: '59' },
+    { key: 'milliseconds', label: 'Milliseconds', placeholder: 'sss', max: '999' },
+];
 
 const TimeInput: FC<TimeInputProps> = ({ value, onChange }) => {
     const [time, setTime] = useState<TimeValues>({
@@ -20,7 +24,6 @@ const TimeInput: FC<TimeInputProps> = ({ value, onChange }) => {
     });
     const formId = useId();
 
-    // Parse input string to object
     useEffect(() => {
         if (!value) return;
         const parsedTime = parseTimeString(value);
@@ -38,74 +41,18 @@ const TimeInput: FC<TimeInputProps> = ({ value, onChange }) => {
     };
 
     return (
-        <>
-            <FormGroup row>
-                <Label for={`${formId}hours`} sm={3}>
-                    Hours
-                </Label>
-                <Col sm={9}>
-                    <Input
-                        id={`${formId}hours`}
-                        placeholder="hh"
-                        type="number"
-                        min="0"
-                        max="23"
-                        value={time.hours}
-                        onChange={(e) => handleChange('hours', e.target.value)}
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label for={`${formId}minutes`} sm={3}>
-                    Minutes
-                </Label>
-                <Col sm={9}>
-                    <Input
-                        id={`${formId}minutes`}
-                        placeholder="mm"
-                        type="number"
-                        min="0"
-                        max="59"
-                        value={time.minutes}
-                        onChange={(e) => handleChange('minutes', e.target.value)}
-                    />
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label for={`${formId}seconds`} sm={3}>
-                    Seconds
-                </Label>
-                <Col sm={9}>
-                    <Input
-                        id={`${formId}seconds`}
-                        placeholder="ss"
-                        type="number"
-                        min="0"
-                        max="59"
-                        value={time.seconds}
-                        onChange={(e) => handleChange('seconds', e.target.value)}
-                    />
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label for={`${formId}milliseconds`} sm={3}>
-                    Milliseconds
-                </Label>
-                <Col sm={9}>
-                    <Input
-                        id={`${formId}milliseconds`}
-                        placeholder="sss"
-                        type="number"
-                        min="0"
-                        max="999"
-                        value={time.milliseconds}
-                        onChange={(e) => handleChange('milliseconds', e.target.value)}
-                    />
-                </Col>
-            </FormGroup>
-        </>
+        <div className="flex flex-col gap-3">
+            {fields.map(({ key, label, placeholder, max }) => (
+                <div key={key} className="grid grid-cols-[100px_1fr] items-center gap-2">
+                    <Label htmlFor={`${formId}${key}`} className="text-sm">
+                        {label}
+                    </Label>
+                    <TextField fullWidth value={time[key]} onChange={(v) => handleChange(key, v)}>
+                        <Input id={`${formId}${key}`} placeholder={placeholder} type="number" min="0" max={max} />
+                    </TextField>
+                </div>
+            ))}
+        </div>
     );
 };
 

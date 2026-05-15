@@ -1,5 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { useState } from 'react';
 
 import { SectionStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
@@ -10,7 +11,6 @@ import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
 import EditMetadataModal from '@/components/Review/EditReview/EditMetadata/EditMetadataModal/EditMetadataModal';
 import useReview from '@/components/Review/hooks/useReview';
 import SustainableDevelopmentGoals from '@/components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
-import Button from '@/components/Ui/Button/Button';
 
 const EditMetadata = () => {
     const { review, observatory, organization, mutate } = useReview();
@@ -27,20 +27,19 @@ const EditMetadata = () => {
                     <span>metadata</span>
                 </Tooltip>
             </SectionTypeStyled>
-
-            <div className="d-flex justify-content-between">
+            <div className="flex justify-between">
                 <div>
-                    <h1 className="py-2 m-0 h2">{review.title || <em>No title</em>}</h1>
+                    <h1 className="py-2 m-0 text-4xl">{review.title || <em>No title</em>}</h1>
 
                     {review.research_fields?.[0] && <ResearchFieldBadge researchField={review.research_fields[0]} />}
                     <AuthorBadges authors={review.authors} />
                     <div>
-                        <Button color="secondary" size="sm" className="mt-2 me-2" onClick={() => setIsOpenEditMetadataModal(true)}>
+                        <Button variant="secondary" size="sm" className="mt-2 mr-2" onPress={() => setIsOpenEditMetadataModal(true)}>
                             <FontAwesomeIcon icon={faPen} /> Edit metadata
                         </Button>
                     </div>
                 </div>
-                <div className="d-flex flex-column align-items-end gap-2 mt-2 border-start border-light ps-4 mt-3">
+                <div className="flex flex-col items-end gap-2 mt-2 border-start border-default pl-6 mt-4">
                     <ObservatoryBox resourceId={review.id} observatory={observatory} organization={organization} mutate={mutate} />
                     <div style={{ marginRight: -25 }}>
                         <SustainableDevelopmentGoals isEditable />

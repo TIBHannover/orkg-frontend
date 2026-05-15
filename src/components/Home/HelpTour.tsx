@@ -1,119 +1,44 @@
 'use client';
 
+import '@/components/Home/introjs-dark.css';
+
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Steps } from 'intro.js-react';
 import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
-import styled from 'styled-components';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
-
-const HelpButton = styled.div`
-    box-sizing: border-box;
-    position: fixed;
-    white-space: nowrap;
-    z-index: 9998;
-    padding-left: 0;
-    list-style: none;
-    padding: 0;
-    bottom: 24px;
-    right: 24px;
-
-    color: #80869b;
-
-    .text {
-        cursor: pointer;
-        display: inline-block;
-        margin-left: 8px;
-        font-weight: bold;
-        line-height: 56px;
-        font-size: large;
-    }
-
-    .white {
-        color: #fff;
-    }
-`;
-
-const HelpIcon = styled(FontAwesomeIcon)`
-    vertical-align: middle;
-    height: 28px;
-    width: 28px !important;
-    z-index: 9999;
-    background-color: ${(props) => props.theme.primary};
-    display: inline-flex;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-align-items: center;
-    align-items: center;
-    position: relative;
-    border: none;
-    border-radius: 50%;
-    box-shadow:
-        0 0 4px rgba(0, 0, 0, 0.14),
-        0 4px 8px rgba(0, 0, 0, 0.28);
-    cursor: pointer;
-    outline: none;
-    padding: 12px;
-    -webkit-user-drag: none;
-    font-weight: bold;
-    color: #f1f1f1;
-    font-size: 18px;
-`;
 
 const TOUR_STEPS = [
     {
         element: '#about',
         intro: (
-            <div style={{ width: 'auto' }}>
-                <h6>
-                    <b>About</b>
-                </h6>
-                <p>
+            <div>
+                <h6 className="font-bold text-base mb-2">About</h6>
+                <p className="text-sm">
                     The ORKG is a platform for semantic scholarly knowledge. We aim to save researchers from drowning in a flood of publications by
                     making research contributions machine-actionable and providing assistance in finding and comparing relevant literature.
                 </p>
-                <p>If you want to find out more, you can visit </p>
-                <b>About/Overview</b>
+                <p className="text-sm mt-2">
+                    If you want to find out more, you can visit <strong>About/Overview</strong>
+                </p>
             </div>
         ),
     },
-
     {
         element: '#tour-views',
         intro: (
-            <>
-                <h6>
-                    <b>Papers</b>
-                </h6>
-                <p>
+            <div>
+                <h6 className="font-bold text-base mb-2">Papers</h6>
+                <p className="text-sm">
                     In the ORKG, you can create a machine-actionable description of any research paper. This can then be connected and compared to
                     other papers or it can be used as an input for your own software.
                 </p>
-                <p>To find a list of papers that are already described, click </p> <b>View/Papers</b>
-            </>
-        ),
-    },
-
-    {
-        element: '#tour-views',
-        intro: (
-            <div>
-                <h6>
-                    <b>Comparisons</b>
-                </h6>
-                <p>
-                    ORKG’s core content are Comparisons – State of the Art Overviews of different papers are shown in a tabular view. Show picture of
-                    a good Comparison.
+                <p className="text-sm mt-2">
+                    To find a list of papers that are already described, click <strong>View/Papers</strong>
                 </p>
-                <p>
-                    Comparisons can be used in various ways, depending on the field. Examples might be to compare numerical values, show agreement and
-                    disagreement on a specific hypothesis, or highlight trends in current research.
-                </p>
-                <p>You can see a list of all comparisons under </p>
-                <b>View/Comparisons</b>
             </div>
         ),
     },
@@ -121,14 +46,17 @@ const TOUR_STEPS = [
         element: '#tour-views',
         intro: (
             <div>
-                <h6>
-                    <b>Comparisons</b>
-                </h6>
-                <p>
-                    In comparison matrix each column represents one research contribution. These contributions are then compared alongside relevant
-                    properties.
+                <h6 className="font-bold text-base mb-2">Comparisons</h6>
+                <p className="text-sm">
+                    ORKG&apos;s core content are Comparisons &ndash; State of the Art Overviews of different papers are shown in a tabular view.
                 </p>
-                <b>View/Comparisons</b>
+                <p className="text-sm mt-2">
+                    Comparisons can be used in various ways, depending on the field. Examples might be to compare numerical values, show agreement and
+                    disagreement on a specific hypothesis, or highlight trends in current research.
+                </p>
+                <p className="text-sm mt-2">
+                    You can see a list of all comparisons under <strong>View/Comparisons</strong>
+                </p>
             </div>
         ),
     },
@@ -136,10 +64,8 @@ const TOUR_STEPS = [
         element: '#tour-search-bar',
         intro: (
             <div>
-                <h6>
-                    <b>Search</b>
-                </h6>
-                <p>To find content related to your topic, you can use our search bar.</p>
+                <h6 className="font-bold text-base mb-2">Search</h6>
+                <p className="text-sm">To find content related to your topic, you can use our search bar.</p>
             </div>
         ),
     },
@@ -147,10 +73,8 @@ const TOUR_STEPS = [
         element: '#sign-in',
         intro: (
             <div>
-                <h6>
-                    <b>Sign-in</b>
-                </h6>
-                <p>Create account and sign in to add new paper. If you are already sign-in then move next</p>
+                <h6 className="font-bold text-base mb-2">Sign in</h6>
+                <p className="text-sm">Create an account and sign in to add new papers. If you are already signed in, move to the next step.</p>
             </div>
         ),
     },
@@ -158,10 +82,8 @@ const TOUR_STEPS = [
         element: '#tour-add-paper',
         intro: (
             <div>
-                <h6>
-                    <b>Add Paper</b>
-                </h6>
-                <p>Click on Add new to enter a paper or create a Comparison.</p>
+                <h6 className="font-bold text-base mb-2">Add Paper</h6>
+                <p className="text-sm">Click on Add new to enter a paper or create a Comparison.</p>
             </div>
         ),
     },
@@ -169,10 +91,8 @@ const TOUR_STEPS = [
         element: '#research-field-cards',
         intro: (
             <div>
-                <h6>
-                    <b>Research Fields</b>
-                </h6>
-                <p>To find content related to your topic, you can explore research fields.</p>
+                <h6 className="font-bold text-base mb-2">Research Fields</h6>
+                <p className="text-sm">To find content related to your topic, you can explore research fields.</p>
             </div>
         ),
     },
@@ -180,24 +100,20 @@ const TOUR_STEPS = [
         element: '#tour-research-field-bar',
         intro: (
             <div>
-                <h6>
-                    <b>Search</b>
-                </h6>
-                <p>You can also select the research field from the drop down.</p>
+                <h6 className="font-bold text-base mb-2">Search by Field</h6>
+                <p className="text-sm">You can also select the research field from the dropdown.</p>
             </div>
         ),
     },
     {
-        element: '#end',
         intro: (
-            <>
-                <p>You made it to the end of the tour! Once you are done with exploring the home page.</p>
-                <p>
-                    <em>
-                        <strong>Tip:</strong> if you want to start the tour again, click the ? on bottom right of the web screen.
-                    </em>
+            <div>
+                <h6 className="font-bold text-base mb-2">That&apos;s it!</h6>
+                <p className="text-sm">You made it to the end of the tour! Once you are done with exploring the home page.</p>
+                <p className="text-sm mt-2 italic">
+                    <strong>Tip:</strong> if you want to start the tour again, click the <strong>?</strong> button on the bottom right of the screen.
                 </p>
-            </>
+            </div>
         ),
     },
 ];
@@ -221,18 +137,24 @@ const HelpTour = () => {
                 steps={TOUR_STEPS}
                 options={{ tooltipClass: 'introjs-ORKG-tooltip' }}
             />
-
-            <HelpButton id="helpIcon">
+            <div className="fixed bottom-6 right-6 z-[9998] p-0 text-secondary" id="helpIcon">
                 <Tooltip
                     initialOpen={isTooltipVisible}
                     onTrigger={() => closeTooltip()}
                     content={<div className="p-1">Click to activate the tour guide</div>}
                 >
-                    <div className="px-3 py-1">
-                        <HelpIcon icon={faQuestion} onClick={() => setIsHelpOpen(true)} />
+                    <div className="px-4 py-1">
+                        <button
+                            type="button"
+                            onClick={() => setIsHelpOpen(true)}
+                            className="inline-flex size-[52px] cursor-pointer items-center justify-center rounded-full border-none bg-accent p-3 text-lg font-bold text-white shadow-[0_0_4px_rgba(0,0,0,0.14),0_4px_8px_rgba(0,0,0,0.28)] outline-none transition-transform hover:scale-110 active:scale-95"
+                            aria-label="Start help tour"
+                        >
+                            <FontAwesomeIcon icon={faQuestion} />
+                        </button>
                     </div>
                 </Tooltip>
-            </HelpButton>
+            </div>
         </>
     );
 };

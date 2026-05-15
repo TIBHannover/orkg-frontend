@@ -1,24 +1,12 @@
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import Body from '@/components/DataBrowser/components/Body/Body';
-import EditorHelpModal from '@/components/DataBrowser/components/EditorHelpModal/EditorHelpModal';
 import Footer from '@/components/DataBrowser/components/Footer/Footer';
 import Header from '@/components/DataBrowser/components/Header/Header';
 import DataBrowserProvider from '@/components/DataBrowser/context/DataBrowserContext';
 import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import { CLASSES } from '@/constants/graphSettings';
-
-const DataBrowserContentStyled = styled.div`
-    background: ${(props) => props.theme.lightLighter};
-    border: 1px solid ${(props) => props.theme.lightDarker};
-    border-radius: ${(props) => props.theme.borderRadius};
-
-    .br-bottom {
-        border-bottom: 1px solid ${(props) => props.theme.lightDarker};
-    }
-`;
 
 const DataBrowser: FC<DataBrowserProps> = ({
     id,
@@ -58,12 +46,11 @@ const DataBrowser: FC<DataBrowserProps> = ({
     return (
         <ErrorBoundary fallback="Something went wrong while loading the data browser!">
             <DataBrowserProvider rootId={id} config={config} context={context}>
-                <DataBrowserContentStyled className="mb-2">
+                <div className="bg-surface border border-border rounded-md overflow-hidden mb-2">
                     {showHeader && <Header />}
                     <Body />
-                </DataBrowserContentStyled>
+                </div>
                 {showFooter && <Footer />}
-                <EditorHelpModal />
             </DataBrowserProvider>
         </ErrorBoundary>
     );

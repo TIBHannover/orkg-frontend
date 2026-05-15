@@ -1,44 +1,41 @@
-import { faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, Button, Dropdown, Header, Label, Modal, Separator, toast } from '@heroui/react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import ColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ColumnWidth/ColumnWidth';
 import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
 import ExportToLatex from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportToLatex';
-import GeneratePdf from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/GeneratePdf';
+import generatePdf from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generatepdf';
 import HistoryModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/HistoryModal/HistoryModal';
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import useRdfExport from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useRdfExport';
 import Publish from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Publish/Publish';
 import QualityReportModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/QualityReportModal';
 import WriteFeedbackModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/WriteFeedbackModal/WriteFeedbackModal';
+import SelectEntities from '@/app/grid-editor/components/SelectEntities/SelectEntities';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Confirm from '@/components/Confirmation/Confirmation';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import GraphViewModal from '@/components/GraphView/GraphViewModal';
+import AddPaperModal from '@/components/PaperForm/AddPaperModal';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import ComparisonAuthorsModel from '@/components/TopAuthors/ComparisonAuthorsModel';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Dropdown from '@/components/Ui/Dropdown/Dropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
+import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getComparisonTableCsv } from '@/services/backend/comparisons';
 
 const ComparisonHeader = () => {
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-    const [isOpenViewDropdown, setIsOpenViewDropdown] = useState(false);
     const [isOpenLatexModal, setIsOpenLatexModal] = useState(false);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const [isOpenVersionsModal, setIsOpenVersionsModal] = useState(false);
@@ -47,9 +44,11 @@ const ComparisonHeader = () => {
     const [isOpenQualityReportModal, setIsOpenQualityReportModal] = useState(false);
     const [isOpenGraphViewModal, setIsOpenGraphViewModal] = useState(false);
     const [isOpenFeedbackModal, setIsOpenFeedbackModal] = useState(false);
-    const [isOpenCsvDropdown, setIsOpenCsvDropdown] = useState(false);
+    const [isOpenColumnWidthModal, setIsOpenColumnWidthModal] = useState(false);
+    const [isOpenSelectEntities, setIsOpenSelectEntities] = useState(false);
+    const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
 
-    const { comparison, isPublished } = useComparison();
+    const { comparison, isPublished, updateComparison, mutateComparisonContents, comparisonContents } = useComparison();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const { generateRdfDataVocabularyFile } = useRdfExport();
     const numberOfSources = comparison?.sources.length ?? 0;
@@ -57,10 +56,27 @@ const ComparisonHeader = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const handleExportCsv = async ({ transposed = false }: { transposed?: boolean } = {}) => {
+    const handleAddSources = async (sourceIds: string[]) => {
+        if (!comparison) {
+            return;
+        }
+        await updateComparison({
+            sources: sourceIds.map((id) => ({ id, type: 'THING' as const })),
+        });
+        mutateComparisonContents(undefined, { revalidate: true });
+    };
+
+    const handleCreatePaper = ({ contributionId }: { contributionId: string }) => {
+        if (!comparison) {
+            return;
+        }
+        handleAddSources([...comparison.sources.map((source) => source.id), contributionId]);
+        setIsOpenCreatePaper(false);
+    };
+
+    const handleExportCsv = ({ transposed = false }: { transposed?: boolean } = {}) => {
         if (!comparison?.id) return;
-        setIsOpenDropdown((v) => !v);
-        try {
+        const download = async () => {
             const csv = await getComparisonTableCsv(comparison.id, { transposed });
             const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
             const link = Object.assign(document.createElement('a'), { href: url, download: `${comparison.id} - ORKG Comparison.csv` });
@@ -68,10 +84,20 @@ const ComparisonHeader = () => {
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-        } catch (e) {
-            console.error('Failed to export CSV:', e);
-            toast.error('An error occurred while exporting the CSV');
-        }
+        };
+        toast.promise(download(), {
+            loading: 'Preparing CSV...',
+            success: 'CSV downloaded',
+            error: 'An error occurred while exporting the CSV',
+        });
+    };
+
+    const handleExportPdf = () => {
+        toast.promise(generatePdf('comparisonTable'), {
+            loading: 'Generating PDF, this may take a moment...',
+            success: 'PDF downloaded',
+            error: 'An error occurred while exporting the PDF',
+        });
     };
 
     const handleOpenGridEditor = async () => {
@@ -120,95 +146,208 @@ const ComparisonHeader = () => {
                 buttonGroup={
                     <>
                         {!isEditMode ? (
-                            <RequireAuthentication component={Button} color="secondary" onClick={handleEdit} size="sm" style={{ marginRight: 2 }}>
-                                <FontAwesomeIcon icon={faPen} className="me-1" /> Edit
+                            <RequireAuthentication component={Button} className="button--orkg-secondary shrink-0" onClick={handleEdit} size="sm">
+                                <FontAwesomeIcon icon={faPen} className="mr-1" /> Edit
                             </RequireAuthentication>
                         ) : (
                             <>
-                                <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => setIsOpenPublishModal((v) => !v)}>
+                                <Button variant="primary" className="shrink-0" size="sm" onPress={() => setIsOpenSelectEntities(true)}>
+                                    <FontAwesomeIcon icon={faPlus} className="mr-1" /> Add source
+                                </Button>
+                                <Button className="button--orkg-secondary shrink-0" size="sm" onPress={() => setIsOpenPublishModal((v) => !v)}>
                                     <FontAwesomeIcon icon={faUpload} /> Publish
                                 </Button>
-                                <Button active color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => toggleIsEditMode()}>
+                                <Button className="button--orkg-secondary shrink-0" size="sm" onPress={() => toggleIsEditMode()}>
                                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             </>
                         )}
 
-                        <Dropdown group isOpen={isOpenDropdown} toggle={() => setIsOpenDropdown((v) => !v)}>
-                            <DropdownToggle color="secondary" size="sm" className="rounded-end">
-                                <span className="me-2">Actions</span> <FontAwesomeIcon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu end="true" style={{ zIndex: '1031' }}>
-                                <Dropdown isOpen={isOpenViewDropdown} toggle={() => setIsOpenViewDropdown((v) => !v)} direction="start">
-                                    <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
-                                        View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem onClick={toggleIsFullWidth}>
-                                            <span className="me-2">{isFullWidth ? 'Reduced width' : 'Full width'}</span>
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <ColumnWidth />
-                                    </DropdownMenu>
-                                </Dropdown>
-                                <DropdownItem divider />
-                                <DropdownItem header>Customize</DropdownItem>
-                                <Tooltip content={publishedMessage} disabled={isEditMode}>
-                                    <span>
-                                        <DropdownItem onClick={handleOpenGridEditor} disabled={!isEditMode}>
-                                            Open grid editor
-                                        </DropdownItem>
-                                    </span>
-                                </Tooltip>
+                        <ShareLinkMarker
+                            typeOfLink="comparison"
+                            title={comparison.title}
+                            buttonProps={{ className: 'button--orkg-secondary shrink-0' }}
+                        />
 
-                                <DropdownItem divider />
-                                <DropdownItem header>Export</DropdownItem>
-                                <DropdownItem onClick={() => setIsOpenLatexModal((v) => !v)}>Export as LaTeX</DropdownItem>
-                                <Dropdown isOpen={isOpenCsvDropdown} toggle={() => setIsOpenCsvDropdown((v) => !v)} direction="start">
-                                    <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
-                                        Export as CSV <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem onClick={() => handleExportCsv()}>Default</DropdownItem>
-                                        <DropdownItem onClick={() => handleExportCsv({ transposed: true })}>Transposed</DropdownItem>
-                                    </DropdownMenu>
-                                </Dropdown>
-                                <GeneratePdf id="comparisonTable" />
-                                <DropdownItem onClick={() => generateRdfDataVocabularyFile()}>Export as RDF</DropdownItem>
-                                {comparison.identifiers.doi?.[0] && (
-                                    <DropdownItem onClick={() => setIsOpenExportCitationsModal((v) => !v)}>Export citation</DropdownItem>
-                                )}
-                                <DropdownItem
-                                    tag="a"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${comparison.id}%22%26autorun%3Dtrue`}
+                        <Dropdown isOpen={isOpenDropdown} onOpenChange={setIsOpenDropdown}>
+                            <Button className="button--orkg-secondary shrink-0" size="sm">
+                                <span className="mr-2">Actions</span> <FontAwesomeIcon icon={faEllipsisV} />
+                            </Button>
+                            <Dropdown.Popover placement="bottom end" style={{ zIndex: '1031' }}>
+                                <Dropdown.Menu
+                                    onAction={(key) => {
+                                        switch (key) {
+                                            case 'grid-editor':
+                                                handleOpenGridEditor();
+                                                break;
+                                            case 'export-latex':
+                                                setIsOpenLatexModal((v) => !v);
+                                                break;
+                                            case 'export-pdf':
+                                                handleExportPdf();
+                                                break;
+                                            case 'export-rdf':
+                                                generateRdfDataVocabularyFile();
+                                                break;
+                                            case 'export-citation':
+                                                setIsOpenExportCitationsModal((v) => !v);
+                                                break;
+                                            case 'history':
+                                                setIsOpenVersionsModal((v) => !v);
+                                                break;
+                                            case 'quality-report':
+                                                setIsOpenQualityReportModal(true);
+                                                break;
+                                            case 'top-authors':
+                                                setIsOpenTopAuthorsModal(true);
+                                                break;
+                                            case 'view-graph':
+                                                setIsOpenGraphViewModal(true);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }}
+                                    disabledKeys={[
+                                        ...(!isEditMode ? ['grid-editor'] : []),
+                                        ...(comparison.versions.published.length < 1 ? ['history'] : []),
+                                    ]}
                                 >
-                                    Jupyter Notebook <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
-                                </DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem header>Tools</DropdownItem>
-                                <Tooltip
-                                    disabled={comparison.versions.published.length > 0}
-                                    content="There is no history available for this comparison"
-                                >
-                                    <span>
-                                        <DropdownItem
-                                            onClick={() => setIsOpenVersionsModal((v) => !v)}
-                                            disabled={comparison.versions.published.length < 1}
+                                    <Dropdown.SubmenuTrigger>
+                                        <Dropdown.Item id="view-submenu" textValue="View">
+                                            <Label>View</Label>
+                                            <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} className="ml-auto" />
+                                        </Dropdown.Item>
+                                        <Dropdown.Popover>
+                                            <Dropdown.Menu
+                                                onAction={(key) => {
+                                                    switch (key) {
+                                                        case 'toggle-width':
+                                                            toggleIsFullWidth();
+                                                            break;
+                                                        case 'column-width':
+                                                            setIsOpenColumnWidthModal(true);
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }}
+                                            >
+                                                <Dropdown.Item id="toggle-width" textValue={isFullWidth ? 'Reduced width' : 'Full width'}>
+                                                    <Label>{isFullWidth ? 'Reduced width' : 'Full width'}</Label>
+                                                </Dropdown.Item>
+                                                <Dropdown.Item id="column-width" textValue="Column minimum width">
+                                                    <Label>Column minimum width...</Label>
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown.Popover>
+                                    </Dropdown.SubmenuTrigger>
+
+                                    <Separator />
+
+                                    <Dropdown.Section>
+                                        <Header>Customize</Header>
+                                        <Dropdown.Item id="grid-editor" textValue="Open grid editor">
+                                            <Tooltip content={publishedMessage} disabled={isEditMode}>
+                                                <Label>Open grid editor</Label>
+                                            </Tooltip>
+                                        </Dropdown.Item>
+                                    </Dropdown.Section>
+
+                                    <Separator />
+
+                                    <Dropdown.Section>
+                                        <Header>Export</Header>
+                                        <Dropdown.Item id="export-latex" textValue="Export as LaTeX">
+                                            <Label>Export as LaTeX</Label>
+                                        </Dropdown.Item>
+                                        <Dropdown.SubmenuTrigger>
+                                            <Dropdown.Item id="export-csv-submenu" textValue="Export as CSV">
+                                                <Label>Export as CSV</Label>
+                                                <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} className="ml-auto" />
+                                            </Dropdown.Item>
+                                            <Dropdown.Popover>
+                                                <Dropdown.Menu
+                                                    onAction={(key) => {
+                                                        switch (key) {
+                                                            case 'export-csv-default':
+                                                                handleExportCsv();
+                                                                break;
+                                                            case 'export-csv-transposed':
+                                                                handleExportCsv({ transposed: true });
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
+                                                    }}
+                                                >
+                                                    <Dropdown.Item id="export-csv-default" textValue="Default">
+                                                        <Label>Default</Label>
+                                                    </Dropdown.Item>
+                                                    <Dropdown.Item id="export-csv-transposed" textValue="Transposed">
+                                                        <Label>Transposed</Label>
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown.Popover>
+                                        </Dropdown.SubmenuTrigger>
+                                        <Dropdown.Item id="export-pdf" textValue="Export as PDF">
+                                            <Label>Export as PDF</Label>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item id="export-rdf" textValue="Export as RDF">
+                                            <Label>Export as RDF</Label>
+                                        </Dropdown.Item>
+                                        {comparison.identifiers.doi?.[0] && (
+                                            <Dropdown.Item id="export-citation" textValue="Export citation">
+                                                <Label>Export citation</Label>
+                                            </Dropdown.Item>
+                                        )}
+                                        <Dropdown.Item
+                                            id="jupyter"
+                                            textValue="Jupyter Notebook"
+                                            href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${comparison.id}%22%26autorun%3Dtrue`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                         >
-                                            <span className="me-2">History</span>
-                                        </DropdownItem>
-                                    </span>
-                                </Tooltip>
-                                <DropdownItem onClick={() => setIsOpenQualityReportModal(true)}>Quality report</DropdownItem>
-                                <DropdownItem onClick={() => setIsOpenTopAuthorsModal(true)}>Top authors</DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
-                                <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id: comparison.id })}?noRedirect`}>
-                                    View resource
-                                </DropdownItem>
-                            </DropdownMenu>
+                                            <Label>
+                                                Jupyter Notebook <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
+                                            </Label>
+                                        </Dropdown.Item>
+                                    </Dropdown.Section>
+
+                                    <Separator />
+
+                                    <Dropdown.Section>
+                                        <Header>Tools</Header>
+                                        <Dropdown.Item id="history" textValue="History">
+                                            <Tooltip
+                                                disabled={comparison.versions.published.length > 0}
+                                                content="There is no history available for this comparison"
+                                            >
+                                                <Label>History</Label>
+                                            </Tooltip>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item id="quality-report" textValue="Quality report">
+                                            <Label>Quality report</Label>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item id="top-authors" textValue="Top authors">
+                                            <Label>Top authors</Label>
+                                        </Dropdown.Item>
+                                    </Dropdown.Section>
+
+                                    <Separator />
+
+                                    <Dropdown.Item id="view-graph" textValue="View graph">
+                                        <Label>View graph</Label>
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        id="view-resource"
+                                        textValue="View resource"
+                                        href={`${reverse(ROUTES.RESOURCE, { id: comparison.id })}?noRedirect`}
+                                    >
+                                        <Label>View resource</Label>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
                         </Dropdown>
                     </>
                 }
@@ -216,36 +355,93 @@ const ComparisonHeader = () => {
             >
                 Comparison
             </TitleBar>
-
             {isPublished && comparison.id !== comparison.versions.published[0]?.id && (
-                <Alert color="warning" fade={false} className="container box-shadow">
-                    Warning: a newer version of this comparison is available.{' '}
-                    <Link href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.versions.published[0]?.id })}>View latest version</Link> or{' '}
-                    <Link href={reverse(ROUTES.COMPARISON_DIFF, { oldId: comparison.id, newId: comparison.versions.published[0]?.id })}>
-                        compare to latest version
-                    </Link>
-                    .
-                </Alert>
+                <Container className="mb-2">
+                    <Alert status="warning" className="shadow-sm">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>Newer version available</Alert.Title>
+                            <Alert.Description>A newer published version of this comparison exists.</Alert.Description>
+                        </Alert.Content>
+                        <div className="flex flex-wrap gap-2">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                render={(props) => (
+                                    <Link
+                                        {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+                                        href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.versions.published[0]?.id })}
+                                    />
+                                )}
+                            >
+                                View latest
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                render={(props) => (
+                                    <Link
+                                        {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+                                        href={reverse(ROUTES.COMPARISON_DIFF, {
+                                            oldId: comparison.id,
+                                            newId: comparison.versions.published[0]?.id,
+                                        })}
+                                    />
+                                )}
+                            >
+                                Compare to latest
+                            </Button>
+                        </div>
+                    </Alert>
+                </Container>
             )}
-
             {!isEditMode && !isPublished && (
-                <Alert color="warning" fade={false} className="container box-shadow border-0">
-                    Warning: you are viewing an unpublished version of this comparison. The content can be changed by anyone.{' '}
-                    <Button color="link" className="p-0" onClick={() => setIsOpenVersionsModal(true)}>
-                        View publish history
-                    </Button>
-                </Alert>
+                <Container className="mb-4">
+                    <Alert status="warning" className="shadow">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>Unpublished version</Alert.Title>
+                            <Alert.Description>
+                                You are viewing an unpublished version of this comparison. The content can be changed by anyone.{' '}
+                                <Button size="sm" onPress={() => setIsOpenVersionsModal(true)}>
+                                    View publish history
+                                </Button>
+                            </Alert.Description>
+                        </Alert.Content>
+                    </Alert>
+                </Container>
             )}
-
             {searchParams.get('requestFeedback') && (
-                <Alert color="info" className="container d-flex box-shadow align-items-center border-0">
-                    <span>
-                        You are requested to write a feedback about this comparison. Please have a look at the comparison and submit the feedback.
-                    </span>
-                    <RequireAuthentication component={Button} size="sm" color="primary" className="ms-2" onClick={() => setIsOpenFeedbackModal(true)}>
-                        Submit feedback
-                    </RequireAuthentication>
-                </Alert>
+                <Container className="mb-4">
+                    <Alert status="accent">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>Feedback requested</Alert.Title>
+                            <Alert.Description>
+                                You are requested to write a feedback about this comparison. Please have a look at the comparison and submit the
+                                feedback.
+                            </Alert.Description>
+                            <RequireAuthentication
+                                component={Button}
+                                size="sm"
+                                variant="primary"
+                                className="mt-2 sm:hidden"
+                                onClick={() => setIsOpenFeedbackModal(true)}
+                            >
+                                Submit feedback
+                            </RequireAuthentication>
+                        </Alert.Content>
+                        <RequireAuthentication
+                            component={Button}
+                            size="sm"
+                            variant="primary"
+                            className="hidden sm:block"
+                            onClick={() => setIsOpenFeedbackModal(true)}
+                        >
+                            Submit feedback
+                        </RequireAuthentication>
+                    </Alert>
+                </Container>
             )}
             {isOpenVersionsModal && <HistoryModal comparisonId={comparison.id} toggle={() => setIsOpenVersionsModal((v) => !v)} />}
             {isOpenPublishModal && <Publish toggle={() => setIsOpenPublishModal((v) => !v)} />}
@@ -259,6 +455,30 @@ const ComparisonHeader = () => {
             )}
             {isOpenFeedbackModal && <WriteFeedbackModal toggle={() => setIsOpenFeedbackModal((v) => !v)} />}
             {isOpenGraphViewModal && <GraphViewModal toggle={() => setIsOpenGraphViewModal((v) => !v)} resourceId={comparison?.id} />}
+            {isOpenSelectEntities && (
+                <SelectEntities
+                    allowCreate
+                    showDialog
+                    toggle={() => setIsOpenSelectEntities((v) => !v)}
+                    onCreatePaper={() => setIsOpenCreatePaper(true)}
+                    entities={comparisonContents?.titles.map((title, i) => comparisonContents.subtitles[i] ?? title)}
+                    setEntityIds={handleAddSources}
+                />
+            )}
+            {isOpenCreatePaper && <AddPaperModal isOpen onCreatePaper={handleCreatePaper} toggle={() => setIsOpenCreatePaper((v) => !v)} />}
+            <Modal.Backdrop isOpen={isOpenColumnWidthModal} onOpenChange={setIsOpenColumnWidthModal}>
+                <Modal.Container>
+                    <Modal.Dialog className="sm:max-w-sm">
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>Column width</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <ColumnWidth onApply={() => setIsOpenColumnWidthModal(false)} />
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </>
     );
 };

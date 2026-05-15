@@ -1,14 +1,11 @@
-import { ChangeEvent, FC } from 'react';
+import { Input, Label, TextField } from '@heroui/react';
+import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import FormText from '@/components/Ui/Form/FormText';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import { PropertyShape as PropertyShapeType, PropertyShapeStringType } from '@/services/backend/types';
+import { PropertyShapeStringType } from '@/services/backend/types';
 import { updatePropertyShapes } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
 
 type ValidationRulesStringProps = {
     id: number;
@@ -16,17 +13,14 @@ type ValidationRulesStringProps = {
 
 const ValidationRulesString: FC<ValidationRulesStringProps> = ({ id }) => {
     const dispatch = useDispatch();
-    // @ts-expect-error
-    const propertyShape: PropertyShapeStringType = useSelector((state) => state.templateEditor.properties[id]);
-    // @ts-expect-error
-    const propertyShapes: PropertyShapeType[] = useSelector((state) => state.templateEditor.properties);
+    const propertyShape = useSelector((state: RootStore) => state.templateEditor.properties[id]) as PropertyShapeStringType;
+    const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newValidationRules = { [e.target.name]: e.target.value };
+    const handlePatternChange = (value: string) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
             if (j === id) {
-                return { ...item, ...newValidationRules };
+                return { ...item, pattern: value };
             }
             return item;
         });
@@ -34,25 +28,22 @@ const ValidationRulesString: FC<ValidationRulesStringProps> = ({ id }) => {
     };
 
     return (
-        <div className="mt-2">
-            <FormGroup row>
-                <Label className="text-end text-muted" for="patternInput" sm={3}>
-                    <small>Pattern</small>
-                </Label>
-                <Col sm={9}>
-                    <Input
-                        disabled={!isEditMode}
-                        bsSize="sm"
-                        type="text"
-                        name="pattern"
-                        id="patternInput"
-                        value={propertyShape.pattern}
-                        placeholder="Enter a regular expression"
-                        onChange={onChange}
-                    />
-                    <FormText>It must begin with ^ and end with $.</FormText>
-                </Col>
-            </FormGroup>
+        <div className="grid grid-cols-12 items-start gap-2 mt-1">
+            <Label htmlFor="patternInput" className="col-span-12 md:col-span-3 text-muted text-sm md:text-right md:pt-2">
+                Pattern
+            </Label>
+            <div className="col-span-12 md:col-span-9">
+                <TextField
+                    fullWidth
+                    value={propertyShape.pattern || ''}
+                    onChange={handlePatternChange}
+                    isDisabled={!isEditMode}
+                    aria-label="Regex pattern"
+                >
+                    <Input id="patternInput" placeholder="Enter a regular expression" className="!border !border-border focus:!border-accent" />
+                </TextField>
+                <p className="text-muted text-xs mt-1">It must begin with ^ and end with $.</p>
+            </div>
         </div>
     );
 };

@@ -1,19 +1,10 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Alert, Button, Modal, ProgressBar, Spinner } from '@heroui/react';
 import { useEffect, useState } from 'react';
 
 import PaperList from '@/components/ConfirmBulkImport/PaperList';
 import useImportBulkData from '@/components/ConfirmBulkImport/useImportBulkData';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Progress from '@/components/Ui/Progress/Progress';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type ConfirmBulkImportProps = {
     data: string[][];
@@ -56,73 +47,108 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
     const progressPercentage =
         createdContributions.length > 0 && papers.length > 0 ? Math.round((createdContributions.length / papers.length) * 100) : 0;
 
+    const showReview = !isLoading && createdContributions.length === 0 && !isFinished;
+
     return (
-        <Modal isOpen={isOpen} size="lg" backdrop="static">
-            <ModalHeader toggle={toggle}>Review import</ModalHeader>
-            <ModalBody>
-                {!isLoading && createdContributions.length === 0 && !isFinished && (
-                    <>
-                        <Alert color="info" fade={false}>
-                            The following contributions will be imported, please review the content carefully
-                        </Alert>
-                        <PaperList
-                            papers={papers}
-                            existingPaperIds={existingPaperIds}
-                            idToLabel={idToLabel}
-                            idToEntityType={idToEntityType}
-                            validationErrors={validationErrors}
-                        />
-                    </>
-                )}
-                {isLoading && (
-                    <div className="text-center text-primary">
-                        <span style={{ fontSize: 80 }}>
-                            <FontAwesomeIcon icon={faSpinner} spin />
-                        </span>
-                        {createdContributions.length > 0 && (
-                            <div className="w-100 text-dark d-flex align-items-center flex-column mb-4">
-                                <Progress value={progressPercentage} className="w-50" />
-                                <div className="mt-1">
-                                    Importing paper {createdContributions.length}/{papers.length}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
-                {isFinished && (
-                    <>
-                        {createdContributions.length > 0 && (
+        <Modal.Backdrop
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable={false}
+        >
+            <Modal.Container size="lg" className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-4xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Review import</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-4">
+                        {showReview && (
                             <>
-                                <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
-                                The imported papers can be viewed in the grid editor <br />
-                                <Button tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                                    Grid editor
-                                </Button>
+                                <Alert status="accent">
+                                    <Alert.Indicator />
+                                    <Alert.Content>
+                                        <Alert.Description>
+                                            The following contributions will be imported, please review the content carefully
+                                        </Alert.Description>
+                                    </Alert.Content>
+                                </Alert>
+                                <PaperList
+                                    papers={papers}
+                                    existingPaperIds={existingPaperIds}
+                                    idToLabel={idToLabel}
+                                    idToEntityType={idToEntityType}
+                                    validationErrors={validationErrors}
+                                />
                             </>
                         )}
-                        {importFailed.length > 0 && (
-                            <Alert color="danger" className="mt-3">
-                                The following papers failed to import:{' '}
-                                <div>
-                                    <ul className="m-0">
-                                        {importFailed.map((paper) => (
-                                            <li key={paper}>{paper}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </Alert>
+                        {isLoading && (
+                            <div className="flex flex-col items-center gap-4 py-8 text-center">
+                                <Spinner size="lg" />
+                                {createdContributions.length > 0 && (
+                                    <div className="flex w-full flex-col items-center gap-2">
+                                        <ProgressBar value={progressPercentage} color="success" className="w-1/2">
+                                            <ProgressBar.Track>
+                                                <ProgressBar.Fill />
+                                            </ProgressBar.Track>
+                                        </ProgressBar>
+                                        <div>
+                                            Importing paper {createdContributions.length}/{papers.length}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
-                    </>
-                )}
-            </ModalBody>
-            {createdContributions.length === 0 && !isLoading && !isFinished && (
-                <ModalFooter>
-                    <Button color="primary" onClick={handleImport}>
-                        Import
-                    </Button>
-                </ModalFooter>
-            )}
-        </Modal>
+                        {isFinished && (
+                            <>
+                                {createdContributions.length > 0 && (
+                                    <>
+                                        <Alert status="success">
+                                            <Alert.Indicator />
+                                            <Alert.Content>
+                                                <Alert.Description>
+                                                    Import successful, {createdContributions.length} papers are imported
+                                                </Alert.Description>
+                                            </Alert.Content>
+                                        </Alert>
+                                        <p className="m-0">The imported papers can be viewed in the grid editor</p>
+                                        <Button
+                                            variant="primary"
+                                            onPress={() => {
+                                                if (comparisonUrl) window.open(comparisonUrl, '_blank', 'noopener');
+                                            }}
+                                        >
+                                            Grid editor
+                                        </Button>
+                                    </>
+                                )}
+                                {importFailed.length > 0 && (
+                                    <Alert status="danger">
+                                        <Alert.Indicator />
+                                        <Alert.Content>
+                                            <Alert.Description>The following papers failed to import:</Alert.Description>
+                                            <ul className="m-0 mt-1 list-disc ps-5">
+                                                {importFailed.map((paper) => (
+                                                    <li key={paper}>{paper}</li>
+                                                ))}
+                                            </ul>
+                                        </Alert.Content>
+                                    </Alert>
+                                )}
+                            </>
+                        )}
+                    </Modal.Body>
+                    {showReview && (
+                        <Modal.Footer>
+                            <Button variant="primary" onPress={handleImport}>
+                                Import
+                            </Button>
+                        </Modal.Footer>
+                    )}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

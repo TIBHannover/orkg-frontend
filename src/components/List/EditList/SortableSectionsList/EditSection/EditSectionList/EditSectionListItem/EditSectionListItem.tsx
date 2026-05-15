@@ -1,13 +1,13 @@
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { draggable, dropTargetForElements, type ElementDropTargetEventBasePayload } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { attachClosestEdge, type Edge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 import invariant from 'tiny-invariant';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
@@ -16,40 +16,10 @@ import { additionalContentTypes } from '@/components/ContentType/types';
 import useList from '@/components/List/hooks/useList';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import { defaultDragHandleProps, type DragData, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';
-
-const Toolbar = styled.div`
-    width: 200px;
-    background: ${(props) => props.theme.secondary};
-    height: 30px;
-    left: 50%;
-    margin-left: -100px;
-    position: absolute;
-    z-index: 100;
-    top: -15px;
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2px;
-    .sortable-handle {
-        cursor: move;
-        width: 100%;
-    }
-`;
-
-const DragHandle = styled.div`
-    cursor: move;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    flex-grow: 1;
-`;
 
 type EditSectionListItemProps = {
     entry: LiteratureListSectionListEntry;
@@ -113,6 +83,18 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                 element,
                 dragHandle: dragHandleElement || undefined,
                 getInitialData: () => data,
+                onGenerateDragPreview({ nativeSetDragImage }) {
+                    setCustomNativeDragPreview({
+                        nativeSetDragImage,
+                        render: ({ container }) => {
+                            const preview = document.createElement('div');
+                            preview.className =
+                                'inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
+                            preview.textContent = entry.value?.label ?? 'List item';
+                            container.appendChild(preview);
+                        },
+                    });
+                },
                 onDragStart() {
                     setIsDragging(true);
                 },
@@ -181,7 +163,7 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
     };
 
     return (
-        <ListGroupItem action className="p-0" style={{ opacity: isDragging ? 0.4 : 1 }}>
+        <li className="block w-full min-w-0 bg-surface p-3 text-foreground" style={{ opacity: isDragging ? 0.4 : 1 }}>
             <div
                 ref={ref}
                 tabIndex={0}
@@ -195,25 +177,38 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                     setIsHovering(false);
                 }}
                 role="presentation"
-                className="position-relative p-0"
+                className="relative p-0"
             >
                 {isHovering && (
-                    <Toolbar>
-                        <Button color="secondary" className="px-2 py-0" onClick={handleDelete}>
+                    <div className="absolute left-1/2 -top-3.75 z-100 flex h-7.5 w-50 -translate-x-1/2 items-center justify-between rounded-md bg-secondary px-0.5">
+                        <Button
+                            isIconOnly
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 min-w-0 px-2 py-0 text-white hover:bg-white/10"
+                            onPress={handleDelete}
+                        >
                             <FontAwesomeIcon icon={faTimes} />
                         </Button>
-                        <DragHandle
+                        <div
                             ref={(el) => {
                                 if (el) {
                                     setDragHandleElement(el);
                                 }
                             }}
+                            className="flex grow cursor-move items-center justify-center text-white [&_.sortable-handle]:w-full [&_.sortable-handle]:cursor-move"
                             {...defaultDragHandleProps}
                         >
                             <FontAwesomeIcon icon={faBars} className="sortable-handle" />
-                        </DragHandle>
+                        </div>
                         {isPaper ? (
-                            <Button color="secondary" className="px-2 py-0" onClick={handleEditPaper}>
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="ghost"
+                                className="h-6 min-w-0 px-2 py-0 text-white hover:bg-white/10"
+                                onPress={handleEditPaper}
+                            >
                                 <FontAwesomeIcon icon={faPen} />
                             </Button>
                         ) : (
@@ -221,12 +216,12 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                                 href={`${reverse(ROUTES.CONTENT_TYPE, { id: entry.value?.id, type: contentTypeClass })}?isEditMode=true`}
                                 target="_blank"
                             >
-                                <Button color="secondary" className="px-2 py-0">
+                                <Button isIconOnly size="sm" variant="ghost" className="h-6 min-w-0 px-2 py-0 text-white hover:bg-white/10">
                                     <FontAwesomeIcon icon={faPen} />
                                 </Button>
                             </Link>
                         )}
-                    </Toolbar>
+                    </div>
                 )}
                 <PaperCard
                     showCurationFlags={false}
@@ -246,14 +241,13 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
             </div>
             {isOpenEditModal && (
                 <EditPaperModal
-                    paperData={getPaperById(entry.value?.id)}
-                    // @ts-expect-error - afterUpdate is not typed
+                    paperData={getPaperById(entry.value?.id) ?? null}
                     afterUpdate={handleUpdatePaper}
-                    toggle={(v: boolean) => setIsOpenEditModal(!v)}
+                    toggle={() => setIsOpenEditModal(false)}
                     isPaperLinkVisible
                 />
             )}
-        </ListGroupItem>
+        </li>
     );
 };
 

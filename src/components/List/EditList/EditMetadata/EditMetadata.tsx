@@ -21,8 +21,8 @@ const EditMetadata = () => {
     }
 
     return (
-        <SectionStyled className="box rounded-bottom">
-            <div className="d-flex justify-content-between">
+        <SectionStyled className="box rounded-b">
+            <div className="flex justify-between">
                 <div>
                     <h1 className="py-2 m-0">{list.title || <em>No title</em>}</h1>
 
@@ -31,19 +31,18 @@ const EditMetadata = () => {
                     <ListEntryAmount />
                     <AuthorBadges authors={list.authors} />
                     <div>
-                        <Button color="secondary" size="sm" className="mt-2 me-2" onClick={() => setIsOpenEditMetadataModal(true)}>
+                        <Button color="secondary" size="sm" className="mt-2 mr-2" onClick={() => setIsOpenEditMetadataModal(true)}>
                             <FontAwesomeIcon icon={faPen} /> Edit metadata
                         </Button>
                     </div>
                 </div>
-                <div className="d-flex flex-column align-items-end gap-2 mt-2 border-start border-light ps-4">
+                <div className="flex flex-col items-end gap-2 mt-2 border-start border-default pl-6">
                     <ObservatoryBox resourceId={list.id} observatory={observatory} organization={organization} mutate={mutate} />
                     <div style={{ marginRight: -25 }}>
                         <SustainableDevelopmentGoals isEditable />
                     </div>
                 </div>
             </div>
-
             {isOpenEditMetadataModal && <EditMetadataModal toggle={() => setIsOpenEditMetadataModal((v) => !v)} />}
         </SectionStyled>
     );

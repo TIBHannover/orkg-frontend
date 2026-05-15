@@ -13,7 +13,7 @@ function ResearchProblem() {
         <div>
             <ResearchProblemHeader id={researchProblemId} />
             <Benchmarks id={researchProblemId} />
-            <Container className="p-0 mt-2">
+            <Container className="mt-6">
                 <ResearchProblemTabsContainer id={researchProblemId} />
             </Container>
         </div>

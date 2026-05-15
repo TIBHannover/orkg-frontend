@@ -19,7 +19,6 @@ import {
 } from '@floating-ui/react';
 import { cloneElement, createContext, forwardRef, isValidElement, useContext, useMemo, useRef, useState } from 'react';
 
-import { FloatingContentStyled } from '@/components/FloatingUI/styled';
 import { BaseFloatingOptions, FloatingComponentProps, FloatingContentProps, FloatingTriggerProps } from '@/components/FloatingUI/types';
 
 type PopoverOptions = BaseFloatingOptions & {
@@ -34,7 +33,7 @@ export function usePopover({
     onOpenChange: setControlledOpen,
     onTrigger,
     showArrow = true,
-    arrowFill = '#444',
+    arrowFill = 'var(--overlay)',
     modal,
 }: PopoverOptions = {}) {
     const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
@@ -93,7 +92,7 @@ export function usePopover({
 
 type ContextType = ReturnType<typeof usePopover> | null;
 
-const PopoverContext = createContext<ContextType>(null);
+export const PopoverContext = createContext<ContextType>(null);
 
 export const usePopoverContext = () => {
     const context = useContext(PopoverContext);
@@ -162,7 +161,8 @@ export const PopoverContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
         isMounted && (
             <FloatingPortal>
                 <FloatingFocusManager context={floatingContext} modal={context.modal}>
-                    <FloatingContentStyled
+                    <div
+                        className="popover p-2 w-max max-w-[calc(100vw-10px)] z-[99999] transition-opacity duration-300 data-[status=initial]:opacity-0 data-[status=close]:opacity-0 data-[status=close]:duration-[250ms]"
                         data-status={status}
                         ref={ref}
                         style={{ ...context.floatingStyles, ...style }}
@@ -170,9 +170,14 @@ export const PopoverContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
                     >
                         {props.children}
                         {context.showArrow && isArrowValid && (
-                            <FloatingArrow ref={context.arrowRef} context={floatingContext} fill={context.arrowFill ?? '#444'} />
+                            <FloatingArrow
+                                ref={context.arrowRef}
+                                context={floatingContext}
+                                fill={context.arrowFill ?? 'var(--overlay)'}
+                                className="stroke-border/40"
+                            />
                         )}
-                    </FloatingContentStyled>
+                    </div>
                 </FloatingFocusManager>
             </FloatingPortal>
         )

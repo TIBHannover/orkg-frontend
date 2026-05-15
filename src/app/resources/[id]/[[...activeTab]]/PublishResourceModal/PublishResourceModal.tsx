@@ -1,22 +1,12 @@
-import { reverse } from 'named-urls';
+import { Alert, Button, Checkbox, Label, ListBox, Modal, Select, toast, Tooltip } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { FC, useId, useState } from 'react';
-import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 
 import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Tooltip from '@/components/Utils/Tooltip';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { createSnapshot, resourcesUrl } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';
 
@@ -37,7 +27,7 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
 
     const handlePublish = async () => {
         if (!selectedTemplateId) {
-            toast.error('Please select a template to publish the resource');
+            toast.danger('Please select a template to publish the resource');
             return;
         }
         try {
@@ -49,7 +39,7 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
 
             toast.success('Resource published successfully');
         } catch (e) {
-            toast.error('An error occurred while publishing the resource');
+            toast.danger('An error occurred while publishing the resource');
         } finally {
             setIsLoadingPublishing(false);
         }
@@ -57,62 +47,93 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
     const isLoading = isLoadingUsedTemplates || isLoadingPublishing;
 
     return (
-        <ModalWithLoading isOpen toggle={toggle} isLoading={isLoading}>
-            <ModalHeader toggle={toggle}>Publish resource</ModalHeader>
-            <ModalBody>
+        <ModalWithLoading isOpen toggle={toggle} isLoading={isLoading} size="lg">
+            <Modal.Header>
+                <Modal.CloseTrigger />
+                <Modal.Heading>Publish resource</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="p-6">
                 {!canPublish && (
-                    <Alert color="danger">
-                        Publishing is only possible when at least one template is used in this resource. Only data linked to a template are persisted
-                        when publishing.
+                    <Alert status="danger">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>Publishing requires a template</Alert.Title>
+                            <Alert.Description>
+                                Publishing is only possible when at least one template is used in this resource. Only data linked to a template are
+                                persisted when publishing.
+                            </Alert.Description>
+                        </Alert.Content>
                     </Alert>
                 )}
                 {canPublish && (
-                    <Form>
-                        <FormGroup>
-                            <Label for={`${formId}-template`}>
-                                <Tooltip message="The selected template determines which data is stored when publishing. All data that is not part of the selected templates is not published.">
-                                    Template
+                    <div className="flex flex-col gap-4">
+                        <Select
+                            className="w-full"
+                            placeholder="Select template..."
+                            value={selectedTemplateId || null}
+                            onChange={(key) => setSelectedTemplateId(key == null ? '' : String(key))}
+                        >
+                            <Label htmlFor={`${formId}-template`} className="flex items-center gap-1">
+                                Template
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <span aria-label="Template help" className="text-secondary cursor-help">
+                                            (?)
+                                        </span>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content showArrow className="max-w-xs">
+                                        <Tooltip.Arrow />
+                                        The selected template determines which data is stored when publishing. All data that is not part of the
+                                        selected templates is not published.
+                                    </Tooltip.Content>
                                 </Tooltip>
                             </Label>
-                            <Input
-                                onChange={(e) => setSelectedTemplateId(e.target.value)}
-                                value={selectedTemplateId}
-                                type="select"
-                                id={`${formId}-template`}
-                            >
-                                <option value="" disabled>
-                                    Select template...
-                                </option>
-                                {usedTemplates.map((template) => (
-                                    <option key={template.id} value={template.id}>
-                                        {template.label}
-                                    </option>
-                                ))}
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <div>
-                                <Tooltip message="Assign a handle (i.e., a unique resolvable identifier) to the published version of this resource">
-                                    <Label check>
-                                        <Input
-                                            type="checkbox"
-                                            onChange={(e) => setIsAssignHandleSelected(e.target.checked)}
-                                            checked={isAssignHandleSelected}
-                                        />{' '}
-                                        Assign handle to resource
-                                    </Label>
-                                </Tooltip>
-                            </div>
-                        </FormGroup>
-                    </Form>
+                            <Select.Trigger id={`${formId}-template`}>
+                                <Select.Value />
+                                <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox>
+                                    {usedTemplates.map((template) => (
+                                        <ListBox.Item key={template.id} id={template.id} textValue={template.label}>
+                                            {template.label}
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
+                        </Select>
+
+                        <div className="flex items-center gap-2">
+                            <Checkbox id={`${formId}-handle`} isSelected={isAssignHandleSelected} onChange={setIsAssignHandleSelected}>
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Checkbox.Content>
+                                    <Label htmlFor={`${formId}-handle`}>Assign handle to resource</Label>
+                                </Checkbox.Content>
+                            </Checkbox>
+                            <Tooltip>
+                                <Tooltip.Trigger>
+                                    <span aria-label="Handle help" className="text-secondary cursor-help">
+                                        (?)
+                                    </span>
+                                </Tooltip.Trigger>
+                                <Tooltip.Content showArrow className="max-w-xs">
+                                    <Tooltip.Arrow />
+                                    Assign a handle (i.e., a unique resolvable identifier) to the published version of this resource
+                                </Tooltip.Content>
+                            </Tooltip>
+                        </div>
+                    </div>
                 )}
-            </ModalBody>
+            </Modal.Body>
             {canPublish && (
-                <ModalFooter>
-                    <Button color="primary" onClick={handlePublish}>
+                <Modal.Footer>
+                    <Button variant="primary" onPress={handlePublish}>
                         Publish
                     </Button>
-                </ModalFooter>
+                </Modal.Footer>
             )}
         </ModalWithLoading>
     );

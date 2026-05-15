@@ -12,7 +12,7 @@ const FirstColumnHeader = () => {
     const { isValidatingComparisonContents, isEditMode } = useComparison();
 
     return (
-        <div className="tw:bg-secondary tw:text-white tw:h-full tw:rounded-tl-md tw:ps-3 tw:py-2 tw:flex tw:flex-col tw:justify-between tw:items-start">
+        <div className="bg-secondary text-white h-full rounded-tl-md ps-3 py-2 flex flex-col justify-between items-start">
             <div>
                 Properties{' '}
                 {isValidatingComparisonContents && (

@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 

@@ -158,7 +158,7 @@ const DATA_TYPES: DataType[] = [
         type: 'xsd:date',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.DATE,
-        schema: z.string().date(),
+        schema: z.iso.date(),
         inputFormType: 'date',
         weight: 1,
     },
@@ -369,11 +369,8 @@ export const getConfigByClassId = (classId: string) =>
 export const getSuggestionByTypeAndValue = (type: string, value: string) => {
     const suggestions = DATA_TYPES.filter((dt) => dt.type !== type)
         .filter((dt) => {
-            let error;
-            if (dt.schema) {
-                error = dt.schema.safeParse(value).error;
-            }
-            return !error || error.errors.length === 0;
+            const { error } = dt.schema ? dt.schema.safeParse(value) : { error: undefined };
+            return !error || error.issues.length === 0;
         })
         .filter((dt) => getConfigByType(type).weight < dt.weight);
 

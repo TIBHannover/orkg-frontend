@@ -1,18 +1,10 @@
+import { Button, Input, Label, Modal, TextField, toast } from '@heroui/react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { findTypeByIdOrName, parseCellString } from '@/app/csv-import/steps/helpers';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useMembership from '@/components/hooks/useMembership';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import { createTable } from '@/services/backend/tables';
@@ -86,33 +78,48 @@ const SaveTableResourceModal = ({ isOpen, toggle, id }: SaveTableResourceModalPr
             toggle();
         } catch (error: unknown) {
             if (error instanceof Error) {
-                toast.error(error.message);
+                toast.danger(error.message);
             } else {
-                toast.error('An unknown error occurred');
+                toast.danger('An unknown error occurred');
             }
         } finally {
             setIsLoading(false);
         }
     };
+
     return (
-        <Modal isOpen={isOpen} toggle={toggle} backdrop="static">
-            <ModalHeader toggle={toggle}>Save table as resource</ModalHeader>
-            <ModalBody>
-                <p>Please provide a label for the resource.</p>
-                <FormGroup>
-                    <Label for="resourceLabel">Label</Label>
-                    <Input type="text" value={resourceLabel} onChange={(e) => setResourceLabel(e.target.value)} id="resourceLabel" />
-                </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="secondary" onClick={toggle} disabled={isLoading}>
-                    Cancel
-                </Button>
-                <ButtonWithLoading color="primary" onClick={handleSave} isLoading={isLoading} loadingMessage="Saving...">
-                    Save
-                </ButtonWithLoading>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable={false}
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Save table as resource</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-3">
+                        <p>Please provide a label for the resource.</p>
+                        <TextField fullWidth value={resourceLabel} onChange={setResourceLabel}>
+                            <Label htmlFor="resourceLabel">Label</Label>
+                            <Input id="resourceLabel" type="text" />
+                        </TextField>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onPress={toggle} isDisabled={isLoading}>
+                            Cancel
+                        </Button>
+                        <ButtonWithLoading variant="primary" onPress={handleSave} isLoading={isLoading} loadingMessage="Saving...">
+                            Save
+                        </ButtonWithLoading>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
+
 export default SaveTableResourceModal;

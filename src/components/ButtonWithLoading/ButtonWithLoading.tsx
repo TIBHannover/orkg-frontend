@@ -1,27 +1,22 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, type ButtonProps, Spinner } from '@heroui/react';
 import { FC, ReactNode } from 'react';
-
-import Button from '@/components/Ui/Button/Button';
 
 type ButtonWithLoadingProps = {
     children: ReactNode;
     isLoading?: boolean;
     isDisabled?: boolean;
     loadingMessage?: string;
-} & React.ComponentProps<typeof Button>;
+} & ButtonProps;
 
-/**
- * Wrapper for Reactstrap Button component that adds a loading state
- */
 const ButtonWithLoading: FC<ButtonWithLoadingProps> = ({ children, isLoading = false, loadingMessage = 'Loading', isDisabled = false, ...props }) => (
-    <Button disabled={isLoading || isDisabled} {...props}>
-        {!isLoading ? (
-            children
+    <Button isPending={isLoading} isDisabled={isLoading || isDisabled} {...props}>
+        {isLoading ? (
+            <>
+                <Spinner color="current" size="sm" />
+                {loadingMessage}
+            </>
         ) : (
-            <span>
-                <FontAwesomeIcon icon={faSpinner} spin /> {loadingMessage}
-            </span>
+            children
         )}
     </Button>
 );

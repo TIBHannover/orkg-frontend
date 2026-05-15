@@ -36,42 +36,36 @@ const Label = ({ id, resource, isShared, mutate, isDeletionAllowed }: LabelProps
         : "You cannot delete this resource because you are not the creator and you don't have the curator role";
 
     return (
-        <div>
+        <div className="mb-6">
             {!isEditMode ? (
-                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                    {resource?.label || (
-                        <i>
-                            <small>No label</small>
-                        </i>
-                    )}
+                <h2 className="text-2xl font-semibold mb-0 flex flex-wrap items-center gap-2 break-words">
+                    <span className="break-words">
+                        {resource?.label || (
+                            <i>
+                                <small>No label</small>
+                            </i>
+                        )}
+                    </span>
                     {resource?.classes?.some((c) => CONTENT_TYPES.includes(c)) && (
-                        <span className="ms-2">
+                        <span className="inline-flex items-center gap-1">
                             <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                            <div className="d-inline-block ms-1">
-                                <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                            </div>
+                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                         </span>
                     )}
-                </h3>
+                </h2>
             ) : (
-                <>
+                <div className="flex flex-col gap-3">
                     <EditableHeader id={id} value={resource?.label ?? ''} onChange={() => mutate()} entityType={ENTITIES.RESOURCE} />
-
-                    <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed ?? false}>
-                        <span>
-                            <Button
-                                color="danger"
-                                size="sm"
-                                className="mt-2 mb-3"
-                                style={{ marginLeft: 'auto' }}
-                                onClick={deleteResource}
-                                disabled={!isDeletionAllowed}
-                            >
-                                <FontAwesomeIcon icon={faTrash} /> Delete resource
-                            </Button>
-                        </span>
-                    </Tooltip>
-                </>
+                    <div className="flex justify-end">
+                        <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed ?? false}>
+                            <span>
+                                <Button color="danger" size="sm" onClick={deleteResource} disabled={!isDeletionAllowed}>
+                                    <FontAwesomeIcon icon={faTrash} /> Delete resource
+                                </Button>
+                            </span>
+                        </Tooltip>
+                    </div>
+                </div>
             )}
         </div>
     );

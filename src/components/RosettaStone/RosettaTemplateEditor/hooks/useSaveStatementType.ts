@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from '@heroui/react';
 import { mutate } from 'swr';
 
 import useMembership from '@/components/hooks/useMembership';

@@ -1,13 +1,13 @@
+import { Input } from '@heroui/react';
 import { isString } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { OptionType } from '@/components/Autocomplete/types';
 import NumberInputField from '@/components/Filters/FilterInputField/NumberInputField';
-import Input from '@/components/Ui/Input/Input';
 import { getConfigByClassId } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { getResourcesByIds, resourcesUrl } from '@/services/backend/resources';
@@ -18,21 +18,25 @@ type FilterInputFieldProps = {
     updateFilterValue: (_filter: FilterConfig, _value: FilterConfigValue[] | string) => void;
 };
 
-const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue }) => {
-    const notResource = [
-        CLASSES.STRING,
-        CLASSES.INTEGER,
-        CLASSES.DECIMAL,
-        CLASSES.BOOLEAN,
-        CLASSES.STRING,
-        CLASSES.RESOURCE,
-        CLASSES.URI,
-        CLASSES.CLASS,
-        CLASSES.PREDICATE,
-        CLASSES.DATE,
-    ];
+const NON_RESOURCE_CLASSES = [
+    CLASSES.STRING,
+    CLASSES.INTEGER,
+    CLASSES.DECIMAL,
+    CLASSES.BOOLEAN,
+    CLASSES.RESOURCE,
+    CLASSES.URI,
+    CLASSES.CLASS,
+    CLASSES.PREDICATE,
+    CLASSES.DATE,
+];
 
-    const shouldLoadResourcesData = !notResource.includes(filter.range) && filter.values?.some((v) => isString(v.value));
+const BOOLEAN_OPTIONS = [
+    { value: 'true', label: 'true' },
+    { value: 'false', label: 'false' },
+];
+
+const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue }) => {
+    const shouldLoadResourcesData = !!(!NON_RESOURCE_CLASSES.includes(filter.range) && filter.values?.some((v) => isString(v.value)));
 
     const { data: resources, isLoading } = useSWR(
         shouldLoadResourcesData && filter.values ? [filter.values.map((v) => v.value?.toString()), resourcesUrl, 'getResourcesByIds'] : null,
@@ -47,50 +51,47 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
     }, [filter?.values]);
 
     if (isLoading) {
-        return 'Loading...';
+        return <span className="text-sm text-muted">Loading...</span>;
     }
 
-    const updateValue = (_value: FilterConfigValue[]) => {
-        setValues(_value);
-        updateFilterValue(filter, _value);
+    const updateValue = (next: FilterConfigValue[]) => {
+        setValues(next);
+        updateFilterValue(filter, next);
     };
 
-    let inputFormType;
     const config = getConfigByClassId(filter.range);
-    inputFormType = config.inputFormType;
-    if (CLASSES.STRING === filter.range) {
-        inputFormType = 'text';
-    }
-    if (CLASSES.DECIMAL === filter.range || CLASSES.INTEGER === filter.range) {
-        inputFormType = 'number';
-    }
-    const BOOLEAN_OPTIONS = [
-        { value: 'true', label: 'true' },
-        { value: 'false', label: 'false' },
-    ];
+    let { inputFormType } = config;
+    if (filter.range === CLASSES.STRING) inputFormType = 'text';
+    if (filter.range === CLASSES.DECIMAL || filter.range === CLASSES.INTEGER) inputFormType = 'number';
 
     const convertFilterConfigValue2Resource = (filterConfigValue: FilterConfigValue) =>
         !isString(filterConfigValue.value) ? filterConfigValue.value : resources?.find((r) => r.id === filterConfigValue.value);
 
     const convertResource2FilterConfigValue = (value: OptionType) => ({ op: 'EQ', value });
 
-    const Forms = {
-        boolean: (
-            <>
-                <SelectGlobalStyle />
-                <Select
-                    onChange={(selected) => {
-                        updateValue(selected ? [{ op: 'EQ', value: selected.value }] : []);
-                    }}
-                    classNamePrefix="react-select"
-                    isClearable
-                    isSearchable={false}
-                    value={BOOLEAN_OPTIONS.find((o) => o.value === values?.[0]?.value)}
-                    options={BOOLEAN_OPTIONS}
-                />
-            </>
-        ),
-        autocomplete: (
+    if (inputFormType === 'boolean') {
+        return (
+            <Select
+                onChange={(selected) => {
+                    updateValue(selected ? [{ op: 'EQ', value: selected.value }] : []);
+                }}
+                classNamePrefix="react-select"
+                classNames={customClassNames as any}
+                styles={customStyles as any}
+                menuPosition="fixed"
+                isClearable
+                isSearchable={false}
+                value={BOOLEAN_OPTIONS.find((o) => o.value === values?.[0]?.value) ?? null}
+                options={BOOLEAN_OPTIONS}
+            />
+        );
+    }
+
+    if (inputFormType === 'autocomplete') {
+        const autocompleteValue = (values
+            ?.map((v) => convertFilterConfigValue2Resource(v))
+            .filter((v) => !!v && typeof v === 'object' && 'id' in (v as object)) ?? []) as OptionType[];
+        return (
             <Autocomplete
                 entityType={ENTITIES.RESOURCE}
                 baseClass={filter.range}
@@ -98,33 +99,35 @@ const FilterInputField: FC<FilterInputFieldProps> = ({ filter, updateFilterValue
                 onChange={(selected) =>
                     updateValue((selected as OptionType[])?.map((v) => convertResource2FilterConfigValue(v) as FilterConfigValue))
                 }
-                value={values?.map((v) => convertFilterConfigValue2Resource(v) as OptionType)}
+                value={autocompleteValue}
                 openMenuOnFocus
                 isClearable
                 enableExternalSources={false}
                 isMulti
                 allowCreate={false}
             />
-        ),
-        number: <NumberInputField filter={filter} updateValue={updateValue} />,
-        default: (
-            <Input
-                placeholder="Enter a value"
-                name="literalValue"
-                // @ts-expect-error
-                type={inputFormType}
-                value={(values?.[0]?.value as string) || ''}
-                onChange={(e) => updateValue([{ op: 'EQ', value: e.target.value }])}
-                className="flex-grow d-flex"
-                style={{ minWidth: '250px' }}
-                autoFocus
-            />
-        ),
-    };
-    if (inputFormType === 'boolean') return Forms.boolean;
-    if (inputFormType === 'autocomplete') return Forms.autocomplete;
-    if (inputFormType === 'number') return Forms.number;
-    return Forms.default;
+        );
+    }
+
+    if (inputFormType === 'number') {
+        return <NumberInputField filter={filter} updateValue={updateValue} />;
+    }
+
+    const currentValue = values?.[0]?.value;
+    const stringValue = currentValue == null ? '' : String(currentValue);
+
+    return (
+        <Input
+            placeholder="Enter a value"
+            name="literalValue"
+            type={inputFormType}
+            value={stringValue}
+            onChange={(e) => updateValue([{ op: 'EQ', value: e.target.value }])}
+            className="grow"
+            style={{ minWidth: '250px' }}
+            autoFocus
+        />
+    );
 };
 
 export default FilterInputField;

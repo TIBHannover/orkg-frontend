@@ -1,6 +1,6 @@
+import { Button, Card } from '@heroui/react';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
-import styled from 'styled-components';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -12,28 +12,6 @@ import IconFeedback from '@/assets/img/benefits/feedback.svg';
 import IconReputation from '@/assets/img/benefits/reputation.svg';
 import IconVisibility from '@/assets/img/benefits/visibility.svg';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import Button from '@/components/Ui/Button/Button';
-import Card from '@/components/Ui/Card/Card';
-import CardBody from '@/components/Ui/Card/CardBody';
-import CardSubtitle from '@/components/Ui/Card/CardSubtitle';
-import CardTitle from '@/components/Ui/Card/CardTitle';
-
-const ObservatoryCardStyled = styled.div`
-    cursor: initial;
-    .orgLogo {
-        border: 1px;
-        padding: 2px;
-    }
-
-    .observatoryName {
-        font-weight: bold;
-    }
-    &:hover {
-        .observatoryName {
-            text-decoration: underline;
-        }
-    }
-`;
 
 const ITEMS = [
     {
@@ -85,20 +63,19 @@ export default function Benefits() {
 
     return (
         <>
-            <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
-                <div className="flex-grow-1">
-                    <h2 className="h5 mb-1 mt-0 d-flex justify-content-between">{user ? 'Start contributing!' : 'Join ORKG!'}</h2>
+            <div className="flex items-center pt-4 pl-4 pr-4 pb-0">
+                <div className="grow">
+                    <h2 className="text-xl mb-1 mt-0 flex justify-between">{user ? 'Start contributing!' : 'Join ORKG!'}</h2>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     {!user && (
-                        <Button color="secondary" size="sm" onClick={() => signIn('keycloak')}>
-                            <span>Sign up</span>
+                        <Button variant="secondary" size="sm" onPress={() => signIn('keycloak')}>
+                            Sign up
                         </Button>
                     )}
                 </div>
             </div>
-
-            <hr className="mx-3 mt-1" />
+            <hr className="mx-4 mt-1" />
             <div>
                 <Swiper
                     pagination={{
@@ -110,21 +87,19 @@ export default function Benefits() {
                 >
                     {ITEMS.map((item) => (
                         <SwiperSlide key={`fp${item.title}`}>
-                            <ObservatoryCardStyled className="px-3">
-                                <Card style={{ border: 0, minHeight: 250 }}>
-                                    <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center flex-column">
-                                        <CardTitle tag="h5" className="pt-0 d-flex">
-                                            <div className="flex-shrink-0">
+                            <div className="px-4">
+                                <Card className="border-0 shadow-none min-h-[250px] bg-transparent">
+                                    <Card.Content className="pt-0 mb-0 flex justify-center items-center flex-col">
+                                        <div className="pt-0 flex gap-3">
+                                            <div className="shrink-0">
                                                 <Image src={item.Icon} width="50" alt="Icon representing benefits of using ORKG" />
                                             </div>
-                                            <div className="align-items-center d-flex">{item.title}</div>
-                                        </CardTitle>
-                                        <CardSubtitle tag="h6" className="mb-1 text-muted">
-                                            {item.description}
-                                        </CardSubtitle>
-                                    </CardBody>
+                                            <span className="items-center flex text-foreground font-medium">{item.title}</span>
+                                        </div>
+                                        <p className="mb-1 text-muted font-normal">{item.description}</p>
+                                    </Card.Content>
                                 </Card>
-                            </ObservatoryCardStyled>
+                            </div>
                         </SwiperSlide>
                     ))}
                 </Swiper>

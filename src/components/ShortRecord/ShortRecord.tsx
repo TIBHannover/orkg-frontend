@@ -30,7 +30,7 @@ interface ShortRecordProps {
 }
 
 const ShortRecord: FC<ShortRecordProps> = ({ href, header, children }) => (
-    <StyledShortRecord className="list-group-item px-4 py-3">
+    <StyledShortRecord className="list-group-item px-6 py-4">
         <Row>
             <Col sm={12}>
                 <Link href={href}>{header || <i>No label</i>}</Link>

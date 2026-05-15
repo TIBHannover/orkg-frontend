@@ -122,14 +122,13 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, create
                     isDisabled={isTypeSelectionDisabled}
                     section={section}
                 />
-                <h2 id={`section-${section.id}`} className="h4 border-bottom pb-1 mb-3">
+                <h2 id={`section-${section.id}`} className="text-2xl border-b pb-1 mb-4">
                     <EditableTitle
                         value={title}
                         className="focus-primary"
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                         onBlur={handleBlurTitle}
                         placeholder="Enter a section title..."
-                        resize="false"
                     />
                 </h2>
 
@@ -142,7 +141,6 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, create
                 {section.type === 'comparison' && <EditSectionComparison section={section} index={atIndex} />}
 
                 {section.type === 'text' && typeof section.text !== 'undefined' && (
-                    /* @ts-expect-error awaiting migration */
                     <MarkdownEditor label={section.text} handleUpdate={handleUpdateMarkdown} sectionId={section.id} references={parsedReferences} />
                 )}
             </SortableSection>

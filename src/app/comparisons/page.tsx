@@ -2,8 +2,7 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 
@@ -16,6 +15,7 @@ import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { comparisonUrl, getComparisons } from '@/services/backend/comparisons';
 import { Comparison, VisibilityOptions } from '@/services/backend/types';
 
@@ -36,23 +36,15 @@ const Comparisons = () => {
     const buttons = (
         <>
             <VisibilityFilter />
-            <RequireAuthentication
-                component={Link}
-                color="secondary"
-                size="sm"
-                className="btn btn-secondary btn-sm flex-shrink-0"
-                href={ROUTES.CREATE_COMPARISON}
-            >
+            <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.CREATE_COMPARISON}>
                 <FontAwesomeIcon icon={faPlus} /> Create comparison
             </RequireAuthentication>
             {!!user && (
                 <RequireAuthentication
-                    component={Link}
-                    color="secondary"
+                    component={Button}
                     size="sm"
-                    className="btn btn-secondary btn-sm"
+                    className="button--orkg-secondary"
                     href={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
-                    style={{ marginLeft: 1 }}
                 >
                     Draft comparisons
                 </RequireAuthentication>

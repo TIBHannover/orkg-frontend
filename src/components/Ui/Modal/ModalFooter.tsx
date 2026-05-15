@@ -1,8 +1,11 @@
-import React, { FC } from 'react';
-import { ModalFooter as ReactstrapModalFooter, ModalFooterProps } from 'reactstrap';
+import { Modal } from '@heroui/react';
+import { FC, ReactNode } from 'react';
 
-const ModalFooter: FC<ModalFooterProps> = ({ children, ...rest }) => {
-    return <ReactstrapModalFooter {...rest}>{children}</ReactstrapModalFooter>;
+type ModalFooterProps = {
+    className?: string;
+    children?: ReactNode;
 };
+
+const ModalFooter: FC<ModalFooterProps> = ({ className, children }) => <Modal.Footer className={className}>{children}</Modal.Footer>;
 
 export default ModalFooter;

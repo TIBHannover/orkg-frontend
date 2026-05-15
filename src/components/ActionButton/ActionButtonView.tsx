@@ -1,90 +1,64 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, cn } from '@heroui/react';
 import { isString } from 'lodash';
-import { forwardRef, MouseEvent, ReactNode } from 'react';
-import styled from 'styled-components';
+import { ComponentProps, forwardRef, MouseEvent, ReactNode } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
+const ACTION_BUTTON_SIZE_CLASSES = {
+    '2xs': '!h-5 !w-5 !min-w-5',
+    xs: '!h-6 !w-6 !min-w-6',
+    sm: '!h-8 !w-8 !min-w-8',
+    lg: '!h-10 !w-10 !min-w-10',
+} as const;
 
-const handleIconWrapperSize = (wrapperSize: string) => {
-    switch (wrapperSize) {
-        case '2xs':
-            return '1.25rem';
-        case 'xs':
-            return '1.5rem';
-        case 'lg':
-            return '2.5rem';
-        case 'sm':
-            return '2rem';
-        default:
-            return '1.5rem';
-    }
+const HERO_BUTTON_SIZE: Record<keyof typeof ACTION_BUTTON_SIZE_CLASSES, 'sm' | 'md' | 'lg'> = {
+    '2xs': 'sm',
+    xs: 'sm',
+    sm: 'md',
+    lg: 'lg',
 };
-
-type OptionButtonStyledProps = {
-    wrappersize: string;
-    theme: {
-        dark: string;
-        lightDarker: string;
-        secondary: string;
-    };
-};
-
-export const OptionButtonStyled = styled(Button)<OptionButtonStyledProps>`
-    border-radius: 100%;
-    background-color: ${(props) => props.theme.lightDarker};
-    color: ${(props) => props.theme.dark};
-    border-width: 0;
-
-    /* to override bootstrap button styles because var(--bs-btn-disabled-bg) is not defined */
-    &.disabled {
-        background-color: ${(props) => props.theme.lightDarker};
-    }
-
-    & .icon-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: ${({ wrappersize }) => handleIconWrapperSize(wrappersize)};
-        width: ${({ wrappersize }) => handleIconWrapperSize(wrappersize)};
-    }
-
-    &:hover {
-        background-color: ${(props) => props.theme.secondary};
-        color: #fff;
-    }
-
-    &:focus {
-        box-shadow: 0 0 0 0.2rem rgba(203, 206, 209, 0.5);
-    }
-`;
 
 export type ActionButtonViewProps = {
     title: ReactNode;
     icon: IconDefinition;
     iconSpin?: boolean;
     size?: '2xs' | 'xs' | 'sm' | 'lg';
-    action?: (e: MouseEvent) => void;
+    action?: (e: MouseEvent<HTMLButtonElement>) => void;
     isDisabled?: boolean;
     testId?: string;
 };
 
 const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
     ({ size = 'xs', iconSpin = false, isDisabled, action, title, icon, testId }, ref) => (
-        <span ref={ref} className="me-2">
-            <OptionButtonStyled
-                className="d-inline-block p-0"
-                wrappersize={size}
-                disabled={isDisabled}
-                color="link"
-                onClick={action}
+        <span ref={ref} className="mr-2">
+            <Button
+                isIconOnly
+                variant="ghost"
+                size={HERO_BUTTON_SIZE[size]}
+                isDisabled={isDisabled}
                 aria-label={isString(title) ? title : title?.toString()}
                 data-testid={testId}
+                className={cn(
+                    'inline-flex shrink-0 items-center justify-center rounded-full border-0 p-0',
+                    '!bg-default !text-dark',
+                    'hover:!bg-secondary hover:!text-white',
+                    'aria-[disabled=true]:!bg-default aria-[disabled=true]:opacity-100',
+                    'focus-visible:ring-2 focus-visible:ring-[rgba(203,206,209,0.5)]',
+                    ACTION_BUTTON_SIZE_CLASSES[size],
+                )}
+                render={(props: ComponentProps<'button'>) => (
+                    <button
+                        {...props}
+                        type="button"
+                        onClick={(e) => {
+                            props.onClick?.(e);
+                            action?.(e);
+                        }}
+                    />
+                )}
             >
-                <span className="icon-wrapper">
-                    <FontAwesomeIcon size={size} icon={icon} spin={iconSpin} />
-                </span>
-            </OptionButtonStyled>
+                <FontAwesomeIcon size={size} icon={icon} spin={iconSpin} />
+            </Button>
         </span>
     ),
 );

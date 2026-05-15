@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 
@@ -11,6 +12,7 @@ type RequireAuthenticationProps = {
 
 const RequireAuthentication = ({ component: Component, ...rest }: RequireAuthenticationProps) => {
     const { user } = useAuthentication();
+    const router = useRouter();
 
     const requireAuthentication = (e: React.MouseEvent) => {
         if (!user) {
@@ -23,6 +25,10 @@ const RequireAuthentication = ({ component: Component, ...rest }: RequireAuthent
         }
         if (rest.onClick) {
             return rest.onClick(e);
+        }
+        if (rest.href) {
+            router.push(rest.href);
+            return null;
         }
         return null;
     };

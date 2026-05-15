@@ -1,16 +1,16 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import capitalize from 'capitalize';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from '@/components/StatementBrowser/styled';
-import Badge from '@/components/Ui/Badge/Badge';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import { getConfigByType } from '@/constants/DataTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { EntityType } from '@/services/backend/types';
 import { getLinkByEntityType } from '@/utils';
 
@@ -24,8 +24,8 @@ type ListStatementsProps = {
 
 const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, idToEntityType, values, validationErrors = [] }) => (
     <StatementsGroupStyle className="list-group-item" style={{ marginBottom: -1 }}>
-        <div className="row gx-0">
-            <PropertyStyle className="col-4" tabIndex={0}>
+        <div className="flex flex-wrap items-stretch gap-x-0">
+            <PropertyStyle className="shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12" tabIndex={0}>
                 <div>
                     <span className="propertyLabel">
                         {idToLabel[property] ? (
@@ -40,43 +40,37 @@ const ListStatements: FC<ListStatementsProps> = ({ property, idToLabel, idToEnti
                     </span>
                 </div>
             </PropertyStyle>
-            <ValuesStyle className="col-8 valuesList">
-                <ListGroup flush className="px-3" style={{ listStyle: 'inside' }}>
+            <ValuesStyle className="shrink-0 grow-0 w-8/12 basis-8/12 max-w-8/12 valuesList">
+                <ListGroup flush className="px-4" style={{ listStyle: 'inside' }}>
                     {values.map((value, i) => (
                         <ValueItemStyle style={{ display: 'list-item' }} key={i}>
-                            <div className="d-inline">
+                            <div className="inline">
                                 {'id' in value && idToLabel[value.id] && (
                                     <>
                                         <Link href={getLinkByEntityType(idToEntityType[value.id], value.id)} target="_blank">
                                             {idToLabel[value.id]}
                                         </Link>
-                                        <Badge color="light" className="ms-2">
-                                            {capitalize(idToEntityType[value.id])}
-                                        </Badge>
+                                        <Chip className="ml-2">{capitalize(idToEntityType[value.id])}</Chip>
                                     </>
                                 )}
                                 {value.label && (
                                     <Tooltip content="A new resource will be created">
                                         <span>
-                                            <span className="text-primary">{value.label}</span>
-                                            <Badge color="light" className="ms-2">
-                                                Resource
-                                            </Badge>
+                                            <span className="text-accent">{value.label}</span>
+                                            <Chip className="ml-2">Resource</Chip>
                                         </span>
                                     </Tooltip>
                                 )}
                                 {value.text && (
                                     <>
                                         {value.text}
-                                        <Badge color="light" className="ms-2">
-                                            {getConfigByType(value.datatype).name}
-                                        </Badge>
+                                        <Chip className="ml-2">{getConfigByType(value.datatype).name}</Chip>
                                         {validationErrors?.[i] && (
                                             <Tooltip content="The provided datatype does not seem to match the cell value">
                                                 <span>
-                                                    <Badge color="warning" className="ms-2">
+                                                    <Chip color="warning" variant="soft" className="ml-2">
                                                         <FontAwesomeIcon icon={faExclamationTriangle} className="text-white" /> Warning
-                                                    </Badge>
+                                                    </Chip>
                                                 </span>
                                             </Tooltip>
                                         )}

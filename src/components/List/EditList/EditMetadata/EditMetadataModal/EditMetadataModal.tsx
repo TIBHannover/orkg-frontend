@@ -1,23 +1,28 @@
-import { FC, useEffect, useId, useState } from 'react';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input, Label, Modal, TextField, Tooltip } from '@heroui/react';
+import { FC, FormEvent, ReactNode, useEffect, useId, useState } from 'react';
 
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 import useList from '@/components/List/hooks/useList';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Tooltip from '@/components/Utils/Tooltip';
 import { Author, Node } from '@/services/backend/types';
 
 type EditMetadataModalProps = {
     toggle: () => void;
 };
+
+const HelpLabel: FC<{ htmlFor: string; tooltip: ReactNode; children: ReactNode }> = ({ htmlFor, tooltip, children }) => (
+    <Label htmlFor={htmlFor} className="inline-flex items-center gap-1">
+        {children}
+        <Tooltip>
+            <Tooltip.Trigger className="inline-flex">
+                <FontAwesomeIcon icon={faQuestionCircle} className="text-accent" />
+            </Tooltip.Trigger>
+            <Tooltip.Content className="max-w-[300px]">{tooltip}</Tooltip.Content>
+        </Tooltip>
+    </Label>
+);
 
 const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
     const [authors, setAuthors] = useState<Author[]>([]);
@@ -40,7 +45,8 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
         return null;
     }
 
-    const handleSave = async () => {
+    const handleSave = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         updateList({
             title,
             ...(researchField ? { research_fields: [researchField] } : {}),
@@ -50,36 +56,54 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
     };
 
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Edit metadata</ModalHeader>
-            <Form onSubmit={handleSave}>
-                <ModalBody>
-                    <FormGroup>
-                        <Label for={`${formId}-title`}>
-                            <Tooltip message="The title of the list">Title</Tooltip>
-                        </Label>
-                        <Input id={`${formId}-title`} value={title} onChange={(e) => setTitle(e.target.value)} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for={`${formId}-researchField`}>
-                            <Tooltip message="Provide the main research field of this list">Research field</Tooltip>
-                        </Label>
-                        <ResearchFieldInput value={researchField} onChange={setResearchField} inputId={`${formId}-researchField`} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for={`${formId}-authors`}>
-                            <Tooltip message="The author or authors of the list. Enter both the first and last name">Authors</Tooltip>
-                        </Label>
-                        <AuthorsInput value={authors} handler={setAuthors} buttonId={`${formId}-authors`} />
-                    </FormGroup>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" type="submit">
-                        Save
-                    </Button>
-                </ModalFooter>
-            </Form>
-        </Modal>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>Edit metadata</Modal.Heading>
+                    </Modal.Header>
+                    <form onSubmit={handleSave}>
+                        <Modal.Body className="flex flex-col gap-4 p-6">
+                            <TextField className="w-full" value={title} onChange={setTitle}>
+                                <HelpLabel htmlFor={`${formId}-title`} tooltip="The title of the list">
+                                    Title
+                                </HelpLabel>
+                                <Input id={`${formId}-title`} />
+                            </TextField>
+
+                            <div className="flex flex-col gap-1">
+                                <HelpLabel htmlFor={`${formId}-researchField`} tooltip="Provide the main research field of this list">
+                                    Research field
+                                </HelpLabel>
+                                <ResearchFieldInput value={researchField} onChange={setResearchField} inputId={`${formId}-researchField`} />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                                <HelpLabel
+                                    htmlFor={`${formId}-authors`}
+                                    tooltip="The author or authors of the list. Enter both the first and last name"
+                                >
+                                    Authors
+                                </HelpLabel>
+                                <AuthorsInput value={authors} handler={setAuthors} buttonId={`${formId}-authors`} />
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" type="submit">
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

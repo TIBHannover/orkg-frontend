@@ -1,5 +1,5 @@
+import { toast } from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import useSWR, { useSWRConfig } from 'swr';
 
 import useConstraints from '@/components/DataBrowser/hooks/useConstraints';
@@ -95,7 +95,7 @@ const useSaveValue = (predicate: Predicate, toggleShowInput: () => void, value?:
                     }
                 })
                 .catch(() => {
-                    toast.error('Something went wrong while adding the value.');
+                    toast.danger('Something went wrong while adding the value.');
                 });
         }
     };
@@ -109,7 +109,7 @@ const useSaveValue = (predicate: Predicate, toggleShowInput: () => void, value?:
             error = propertySchema.safeParse(inputValue.trim()).error;
         }
         if (error) {
-            setFormFeedback(error.errors?.[0]?.message);
+            setFormFeedback(error.issues?.[0]?.message);
         } else {
             setFormFeedback(null);
             // Check for a possible conversion possible

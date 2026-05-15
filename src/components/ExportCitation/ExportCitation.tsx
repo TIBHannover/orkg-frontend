@@ -1,17 +1,12 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal, TextArea, toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
 import { FC, useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
 
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { getResourceLink } from '@/utils';
 
@@ -51,24 +46,37 @@ const ExportCitation: FC<ExportCitationProps> = ({ isOpen, toggle, id, title, au
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('Latex citation copied');
         }
     }, [state.value]);
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Export citation</ModalHeader>
-            <ModalBody>
-                <p>
-                    <Input type="textarea" maxLength={MAX_LENGTH_INPUT} value={latex.get()} disabled rows="10" />
-                </p>
-
-                <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(latex.get())}>
-                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                </Button>
-            </ModalBody>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>Export citation</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="p-1">
+                            <TextArea fullWidth readOnly value={latex.get()} rows={10} maxLength={MAX_LENGTH_INPUT} className="font-mono text-sm" />
+                            <div className="mt-3 flex justify-end">
+                                <Button size="sm" variant="primary" onPress={() => copyToClipboard(latex.get())}>
+                                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                                </Button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

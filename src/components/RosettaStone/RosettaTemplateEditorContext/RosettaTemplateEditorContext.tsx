@@ -1,4 +1,3 @@
-import arrayMove from 'array-move';
 import { createContext, Dispatch, FC, ReactNode, useContext, useReducer } from 'react';
 
 import { RSPropertyShape } from '@/services/backend/types';
@@ -22,7 +21,7 @@ type RosettaTemplateEditorAction =
     | { type: 'setExamples'; payload: string }
     | { type: 'setIsSaving'; payload: boolean }
     | { type: 'setProperty'; payload: { index: number; data: RSPropertyShape } }
-    | { type: 'moveProperties'; payload: { dragIndex: number; hoverIndex: number } }
+    | { type: 'reorderProperties'; payload: RSPropertyShape[] }
     | { type: 'addObjectPosition'; payload: string }
     | { type: 'deleteObjectPosition'; payload: number };
 
@@ -68,8 +67,8 @@ export const rosettaTemplateEditorReducer = (autocompleteState: RosettaTemplateE
             autocompleteState.properties[action.payload.index] = action.payload.data;
             return { ...autocompleteState };
         }
-        case 'moveProperties': {
-            return { ...autocompleteState, properties: arrayMove(autocompleteState.properties, action.payload.dragIndex, action.payload.hoverIndex) };
+        case 'reorderProperties': {
+            return { ...autocompleteState, properties: action.payload };
         }
         case 'addObjectPosition': {
             return { ...autocompleteState, properties: [...autocompleteState.properties, { id: action.payload, placeholder: '', description: '' }] };

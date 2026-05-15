@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import selectEvent from 'react-select-event';
 
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
@@ -108,7 +109,7 @@ describe('DataBrowser.EditActions', () => {
         fireEvent.change(screen.getByPlaceholderText(/enter a Date/i), { target: { value: '2018-10-25' } });
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('2018-10-25')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Date')).toHaveAttribute('title', 'xsd:date'));
+        await waitFor(() => expect(screen.getByText('Date')).toBeInTheDocument());
     });
 });
 
@@ -129,7 +130,7 @@ describe('DataBrowser.EditActions', () => {
         fireEvent.change(screen.getByPlaceholderText(/enter a Integer/i), { target: { value: '1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('1')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Integer')).toHaveAttribute('title', 'xsd:integer'));
+        await waitFor(() => expect(screen.getByText('Integer')).toBeInTheDocument());
     });
 });
 
@@ -150,7 +151,7 @@ describe('DataBrowser.EditActions', () => {
         fireEvent.change(screen.getByPlaceholderText(/enter a Decimal/i), { target: { value: '1.5' } });
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('1.5')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Decimal')).toHaveAttribute('title', 'xsd:decimal'));
+        await waitFor(() => expect(screen.getByText('Decimal')).toBeInTheDocument());
     });
 });
 
@@ -171,7 +172,7 @@ describe('DataBrowser.EditActions', () => {
         fireEvent.change(screen.getByPlaceholderText(/enter a Text/i), { target: { value: 'Literal 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('Literal 1')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Text')).toHaveAttribute('title', 'xsd:string'));
+        await waitFor(() => expect(screen.getByText('Text')).toBeInTheDocument());
     });
 });
 
@@ -179,10 +180,12 @@ describe('DataBrowser.EditActions', () => {
     it('should show select form when editing a Boolean', async () => {
         await setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Boolean);
-        expect(screen.getAllByRole('combobox')).toHaveLength(2);
-        expect(screen.getByRole('option', { name: 'False' })).toBeInTheDocument();
-        // @ts-expect-error
-        expect(screen.getByRole('option', { name: 'False' }).selected).toBe(true);
+        const trigger = screen.getByLabelText('Boolean value');
+        expect(trigger).toBeInTheDocument();
+        expect(trigger).toHaveTextContent(/False/i);
+        await userEvent.click(trigger);
+        expect(screen.getByRole('option', { name: /True/i })).toBeInTheDocument();
+        expect(screen.getByRole('option', { name: /False/i })).toBeInTheDocument();
     });
 });
 
@@ -190,10 +193,11 @@ describe('DataBrowser.EditActions', () => {
     it('should change value of boolean after editing a Boolean', async () => {
         await setup();
         await clickOnEditValueButton(screen, VALUE_IDS.Boolean);
-        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'true' } });
+        await userEvent.click(screen.getByLabelText('Boolean value'));
+        await userEvent.click(screen.getByRole('option', { name: /True/i }));
         fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
+        await waitFor(() => expect(screen.getByText('Boolean')).toBeInTheDocument());
     });
 });
 
@@ -214,7 +218,7 @@ describe('DataBrowser.EditActions', () => {
         await fireEvent.change(screen.getByPlaceholderText(/enter a URL/i), { target: { value: 'http://www.tib.eu' } });
         await fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('http://www.tib.eu')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('URL')).toHaveAttribute('title', 'xsd:anyURI'));
+        await waitFor(() => expect(screen.getByText('URL')).toBeInTheDocument());
     });
 });
 

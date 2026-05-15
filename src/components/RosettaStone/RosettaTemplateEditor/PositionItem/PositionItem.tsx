@@ -2,6 +2,7 @@ import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Accordion } from '@heroui/react';
 import { parseInt } from 'lodash';
 import { FC, useEffect, useRef, useState } from 'react';
 
@@ -18,9 +19,6 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import AccordionBody from '@/components/Ui/Accordion/AccordionBody';
-import AccordionHeader from '@/components/Ui/Accordion/AccordionHeader';
-import AccordionItem from '@/components/Ui/Accordion/AccordionItem';
 import { RSPropertyShape } from '@/services/backend/types';
 
 // Create shared symbols and functions for position drag and drop
@@ -39,7 +37,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalIte
     const { numberLockedProperties } = useRosettaTemplateEditorState();
     const [isDragging, setIsDragging] = useState(false);
     const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const ref = useRef<HTMLElement>(null);
+    const ref = useRef<HTMLButtonElement>(null);
     const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
 
     const isLocked = !!numberLockedProperties && numberLockedProperties >= i + 1;
@@ -99,56 +97,70 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalIte
     const deleteButtonMessage = isLocked ? 'This position cannot be deleted because it is locked' : 'Delete object position';
 
     return (
-        <AccordionItem style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }}>
-            <AccordionHeader innerRef={ref} targetId={property?.id ?? i.toString()} className="d-flex">
-                {i !== 0 && i !== 1 && !isLocked && (
-                    <div
-                        ref={setDragHandleElement}
-                        className="me-1 d-flex flex-column"
-                        style={{ marginLeft: '-15px', cursor: 'move' }}
-                        role="button"
-                        tabIndex={0}
-                        aria-label="Drag to reorder position"
-                    >
-                        <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />
-                        <FontAwesomeIcon icon={faGripVertical} className="text-secondary" style={{ marginTop: '-1.4px' }} />
-                    </div>
-                )}
-                <div className="flex-grow-1">
-                    {i === 0 && <b>{property?.placeholder ? property.placeholder : ' Subject '} *</b>}
-                    {i === 1 && <b>{property?.placeholder ? property.placeholder : ' Verb '} *</b>}
-                    {i !== 0 && i !== 1 && (
-                        <>
-                            {property?.placeholder ? property.placeholder : ` Object ${i - 1}`} {isRequiredObject(property) ? '*' : null}
-                        </>
+        <Accordion.Item
+            id={property?.id ?? i.toString()}
+            className="relative rounded border border-separator"
+            style={{ opacity: isDragging ? 0.4 : 1 }}
+        >
+            <Accordion.Heading className="relative">
+                <Accordion.Trigger
+                    ref={ref}
+                    className="flex w-full items-center gap-2 rounded-t bg-surface-secondary px-3 py-2.5 pe-16 text-surface-secondary-foreground hover:bg-surface-tertiary aria-expanded:bg-surface-tertiary aria-expanded:rounded-b-none [&:not([aria-expanded='true'])]:rounded-b"
+                >
+                    {i !== 0 && i !== 1 && !isLocked && (
+                        <div
+                            ref={setDragHandleElement}
+                            className="-ml-1 flex flex-col text-muted"
+                            style={{ cursor: 'move' }}
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Drag to reorder position"
+                        >
+                            <FontAwesomeIcon icon={faGripVertical} />
+                            <FontAwesomeIcon icon={faGripVertical} style={{ marginTop: '-1.4px' }} />
+                        </div>
                     )}
+                    <div className="grow text-start">
+                        {i === 0 && <b>{property?.placeholder ? property.placeholder : ' Subject '} *</b>}
+                        {i === 1 && <b>{property?.placeholder ? property.placeholder : ' Verb '} *</b>}
+                        {i !== 0 && i !== 1 && (
+                            <>
+                                {property?.placeholder ? property.placeholder : ` Object ${i - 1}`} {isRequiredObject(property) ? '*' : null}
+                            </>
+                        )}
+                    </div>
+                    <Accordion.Indicator />
+                </Accordion.Trigger>
+                <div className="absolute end-1 top-1/2 z-10 -translate-y-1/2">
+                    <ActionButton
+                        title={i === 0 || i === 1 ? 'Subject and Verb position are required' : deleteButtonMessage}
+                        icon={faTrash}
+                        requireConfirmation
+                        isDisabled={i === 0 || i === 1 || isLocked}
+                        confirmationMessage="Are you sure to delete?"
+                        confirmationButtons={[
+                            {
+                                title: 'Delete',
+                                color: 'danger',
+                                icon: faCheck,
+                                action: () => handleDeleteObjectPosition(i),
+                            },
+                            {
+                                title: 'Cancel',
+                                color: 'secondary',
+                                icon: faTimes,
+                            },
+                        ]}
+                    />
                 </div>
-                <ActionButton
-                    title={i === 0 || i === 1 ? 'Subject and Verb position are required' : deleteButtonMessage}
-                    icon={faTrash}
-                    requireConfirmation
-                    isDisabled={i === 0 || i === 1 || isLocked}
-                    confirmationMessage="Are you sure to delete?"
-                    confirmationButtons={[
-                        {
-                            title: 'Delete',
-                            color: 'danger',
-                            icon: faCheck,
-                            action: () => handleDeleteObjectPosition(i),
-                        },
-                        {
-                            title: 'Cancel',
-                            color: 'secondary',
-                            icon: faTimes,
-                        },
-                    ]}
-                />
-            </AccordionHeader>
-            <AccordionBody accordionId={property.id ?? i.toString()} style={{ background: '#fff' }}>
-                <SlotForms index={i} isLocked={isLocked} />
-            </AccordionBody>
+            </Accordion.Heading>
+            <Accordion.Panel>
+                <Accordion.Body className="bg-surface p-4 text-surface-foreground border border-separator rounded-b">
+                    <SlotForms index={i} isLocked={isLocked} />
+                </Accordion.Body>
+            </Accordion.Panel>
             {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
-        </AccordionItem>
+        </Accordion.Item>
     );
 };
 

@@ -1,68 +1,15 @@
+import { cn } from '@heroui/react';
 import Link from 'next/link';
+import { useQueryState } from 'nuqs';
 import pluralize from 'pluralize';
-import { AnchorHTMLAttributes, FC } from 'react';
-import styled from 'styled-components';
+import { FC } from 'react';
 import useSWR from 'swr';
 
+import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { Node } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utilsTyped';
-
-/* Bootstrap card column is not working correctly working with vertical alignment,
-thus used custom styling here */
-
-type CardProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
-    disabled?: boolean;
-};
-
-export const Card = styled(Link)<CardProps>`
-    cursor: pointer;
-    background: #e86161 !important;
-    color: #fff !important;
-    border: 0 !important;
-    border-radius: 12px !important;
-    min-height: 85px;
-    flex: 0 0 calc(20% - 20px) !important;
-    margin: 10px;
-    transition: opacity 0.2s;
-    justify-content: center;
-    display: flex;
-    flex: 1 1 auto;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 140px;
-    overflow-wrap: anywhere;
-
-    &:hover {
-        opacity: 0.8;
-    }
-    &[disabled] {
-        opacity: 0.5;
-        cursor: default;
-        pointer-events: none;
-    }
-    &:active {
-        top: 4px;
-    }
-
-    @media (max-width: 400px) {
-        flex: 0 0 80% !important;
-    }
-`;
-
-const CardTitle = styled.h5`
-    color: #fff;
-    font-size: 16px;
-    padding: 0 5px;
-`;
-
-const PaperAmount = styled.div`
-    opacity: 0.5;
-    font-size: 80%;
-    text-align: center;
-`;
 
 type ResearchFieldCardProps = {
     field: Node;
@@ -76,25 +23,46 @@ const ResearchFieldCard: FC<ResearchFieldCardProps> = ({ field }) => {
         ]),
     );
 
+    const [contentType] = useQueryState('contentType', { defaultValue: CLASSES.COMPARISON });
+    const paperCount = stats?.[0]?.value ?? 0;
+    const comparisonCount = stats?.[1]?.value ?? 0;
+    const isEmpty = paperCount === 0;
+
+    const href = `${reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
+        researchFieldId: field.id,
+        slug: field.label,
+    })}?contentType=${contentType}`;
+
+    const cardClass = cn(
+        'flex min-h-[85px] min-w-[140px] flex-[0_0_calc(20%-20px)] flex-col items-center justify-center',
+        'rounded-xl bg-accent m-2.5 px-2 py-3 text-center no-underline',
+        'transition-opacity duration-200 break-anywhere',
+        'hover:opacity-80 active:relative active:top-1',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+        'max-[400px]:flex-[0_0_80%]',
+        isEmpty && 'pointer-events-none opacity-50',
+    );
+
     return (
-        <Card
-            disabled={stats?.[0]?.value === 0}
-            href={reverseWithSlug(ROUTES.HOME_WITH_RESEARCH_FIELD, {
-                researchFieldId: field.id,
-                slug: field.label,
-            })}
+        <Link
+            href={href}
+            className={cardClass}
+            aria-disabled={isEmpty || undefined}
+            aria-label={`${field.label} — ${pluralize('paper', paperCount, true)}, ${pluralize('comparison', comparisonCount, true)}`}
+            tabIndex={isEmpty ? -1 : undefined}
         >
-            <CardTitle className="card-title m-0 text-center"> {field.label}</CardTitle>
-            <PaperAmount>
+            <span className="text-base font-medium text-accent-foreground">{field.label}</span>
+            <span className="mt-1 text-xs text-accent-foreground/70">
                 {!isLoading ? (
                     <>
-                        {pluralize('paper', stats?.[0]?.value ?? 0, true)} - {pluralize('comparison', stats?.[1]?.value ?? 0, true)}
+                        {pluralize('paper', paperCount, true)} &middot; {pluralize('comparison', comparisonCount, true)}
                     </>
                 ) : (
-                    'Loading...'
+                    'Loading…'
                 )}
-            </PaperAmount>
-        </Card>
+            </span>
+        </Link>
     );
 };
+
 export default ResearchFieldCard;

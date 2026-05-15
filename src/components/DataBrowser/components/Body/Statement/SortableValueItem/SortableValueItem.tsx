@@ -73,7 +73,7 @@ const SortableValueItem: FC<SortableValueItemProps> = ({ statement, children }) 
     const opacity = isDragging ? 0 : 1;
 
     return (
-        <div ref={ref} className="d-flex align-items-center flex-grow-1 m-0 p-0 position-relative" style={{ opacity }}>
+        <div ref={ref} className="flex items-center grow m-0 p-0 relative" style={{ opacity }}>
             {isEditMode && (
                 <div className="px-2" ref={setDragHandleElement} style={{ cursor: 'move' }}>
                     <FontAwesomeIcon icon={faGripVertical} className="text-secondary" />

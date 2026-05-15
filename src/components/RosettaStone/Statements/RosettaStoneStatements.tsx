@@ -1,7 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { AnchorHTMLAttributes, FC, useState } from 'react';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -10,8 +11,6 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import AddStatement from '@/components/RosettaStone/AddStatement/AddStatement';
 import SingleStatement from '@/components/RosettaStone/SingleStatement/SingleStatement';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CERTAINTY, VISIBILITY } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';
@@ -89,12 +88,22 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
 
     return (
         <div>
-            <div className="text-end mb-1">
-                <Link target="_blank" className="btn btn-sm btn-outline-secondary" href="https://orkg.org/help-center/article/59/Statements">
-                    <FontAwesomeIcon className="me-1" icon={faQuestionCircle} /> Help
-                </Link>
+            <div className="text-right mb-1 px-4">
+                <Button
+                    size="sm"
+                    variant="outline"
+                    className="button--orkg-secondary"
+                    render={(props) => (
+                        <Link
+                            {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
+                            href="https://orkg.org/help-center/article/59/Statements"
+                            target="_blank"
+                        />
+                    )}
+                >
+                    <FontAwesomeIcon icon={faQuestionCircle} /> Help
+                </Button>
             </div>
-
             <ListPaginatedContent<RosettaStoneStatement>
                 renderListItem={renderListItem}
                 pageSize={pageSize}
@@ -111,23 +120,15 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
                 boxShadow={false}
                 flush={false}
                 noDataComponent={
-                    <ListGroup tag="div" className="mb-2">
-                        <ListGroupItem className="mb-0 rounded">
-                            No data yet
-                            <br />
-                            {isEditMode ? (
-                                <span style={{ fontSize: '0.875rem' }}>Start by adding a statements from below</span>
-                            ) : (
-                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
-                            )}
-                            <br />
-                        </ListGroupItem>
-                    </ListGroup>
+                    <div className="rounded border border-border bg-surface p-4 mb-2 text-center">
+                        No data yet
+                        <br />
+                        <span className="text-sm">{isEditMode ? 'Start by adding a statements from below' : 'Please contribute by editing'}</span>
+                    </div>
                 }
             />
-
             {isEditMode && (
-                <div className="mt-2">
+                <div className="mt-2 px-4">
                     <AddStatement handleAddStatement={handleAddStatement} context={context} />
                 </div>
             )}

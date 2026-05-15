@@ -1,26 +1,19 @@
 'use client';
 
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, Input, Label, TextField, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import pluralize from 'pluralize';
-import { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { SyntheticEvent, useEffect, useState } from 'react';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useMembership from '@/components/hooks/useMembership';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Alert from '@/components/Ui/Alert/Alert';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
+import Tooltip from '@/components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
+import { reverse } from '@/lib/namedRoute';
 import { createComparison } from '@/services/backend/comparisons';
 
 const CreateForm = () => {
@@ -39,10 +32,10 @@ const CreateForm = () => {
         document.title = 'Create comparison - ORKG';
     });
 
-    const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
+    const handleCreate = async (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!title) {
-            toast.error('Enter a title');
+            toast.danger('Enter a title');
             return;
         }
 
@@ -74,32 +67,36 @@ const CreateForm = () => {
     };
 
     return (
-        <Form onSubmit={handleCreate}>
-            {sourceIds && sourceIds.length > 0 && (
-                <Alert color="info">
-                    A comparison will be created containing {sourceIds.length} {pluralize('entity', sourceIds.length)}, you can change this later
-                </Alert>
-            )}
-            <FormGroup>
-                <Tooltip content="Choose the title of your comparison. You can always update the title later.">
-                    <span>
-                        <Label for="comparisonTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
-                    </span>
-                </Tooltip>
-
-                <Input type="text" id="comparisonTitle" value={title} maxLength={MAX_LENGTH_INPUT} onChange={(e) => setTitle(e.target.value)} />
-            </FormGroup>
-            <p>
+        <form onSubmit={handleCreate}>
+            <p className="m-0 mb-4">
                 <em>
                     Please note: a comparison can be <strong>changed by anyone</strong> (just like Wikipedia)
                 </em>
             </p>
-            <div className="text-end">
-                <RequireAuthentication component={ButtonWithLoading} type="submit" color="primary" isLoading={isSaving}>
+            {sourceIds && sourceIds.length > 0 && (
+                <Alert status="accent" className="mb-4">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Description>
+                            A comparison will be created containing {sourceIds.length} {pluralize('entity', sourceIds.length)}, you can change this
+                            later
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            )}
+            <TextField fullWidth isDisabled={isSaving} value={title} onChange={setTitle} className="mb-4">
+                <Label htmlFor="comparisonTitle">
+                    Title
+                    <Tooltip message="Choose the title of your comparison. You can always update the title later" />
+                </Label>
+                <Input id="comparisonTitle" type="text" maxLength={MAX_LENGTH_INPUT} />
+            </TextField>
+            <div className="text-right">
+                <RequireAuthentication component={ButtonWithLoading} type="submit" variant="primary" isLoading={isSaving}>
                     Create
                 </RequireAuthentication>
             </div>
-        </Form>
+        </form>
     );
 };
 

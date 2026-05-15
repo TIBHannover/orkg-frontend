@@ -1,11 +1,9 @@
+import { Checkbox } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
 
 import StatementCard from '@/components/Cards/StatementCard/StatementCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 
@@ -23,24 +21,22 @@ const PropertyStatements: FC<PropertyStatementsProps> = ({ id }) => {
 
     return (
         <div>
-            <FormGroup check className="m-3">
-                <Label>
-                    <Input type="checkbox" checked={isFormattedLabelEnabled} onChange={(e) => setIsFormattedLabelEnabled(e.target.checked)} /> Show
-                    formatted label when available
-                </Label>
-            </FormGroup>
-            <hr className="mb-0" />
-            <div className="py-2" style={{ backgroundColor: '#f8f9fb' }}>
-                <div className="row">
-                    <div className="col-sm col-3">
-                        <div className="px-3">Subject</div>
-                    </div>
-                    <div className="col-sm col-3">Property</div>
-                    <div className="col-sm col-3">Object</div>
-                    <div className="col-sm col-3">Options</div>
+            <Checkbox className="m-4" isSelected={isFormattedLabelEnabled} onChange={setIsFormattedLabelEnabled}>
+                <Checkbox.Control>
+                    <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>Show formatted label when available</Checkbox.Content>
+            </Checkbox>
+            <hr className="m-0" />
+            <div className="py-3 text-sm font-medium text-muted" style={{ backgroundColor: 'var(--surface)' }}>
+                <div className="flex flex-wrap items-center gap-y-2">
+                    <div className="w-full px-4 sm:flex-1 sm:basis-0 sm:min-w-0">Subject</div>
+                    <div className="w-full px-4 sm:flex-1 sm:basis-0 sm:min-w-0">Property</div>
+                    <div className="w-full px-4 sm:flex-1 sm:basis-0 sm:min-w-0">Object</div>
+                    <div className="w-full px-4 sm:flex-1 sm:basis-0 sm:min-w-0">Options</div>
                 </div>
             </div>
-            <hr className="mt-0" />
+            <hr className="m-0" />
             <ListPage
                 label="statements"
                 boxShadow={false}

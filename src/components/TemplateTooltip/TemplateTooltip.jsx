@@ -1,6 +1,5 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -10,6 +9,7 @@ import styled from 'styled-components';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getTemplate } from '@/services/backend/templates';
 
 export const HeaderStyled = styled.div`
@@ -65,11 +65,11 @@ const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = fa
             onTrigger={onTrigger}
             content={
                 <div style={{ maxWidth: 300 }}>
-                    <HeaderStyled className="pb-2 mb-2 d-flex">
-                        <div className="flex-grow-1">{template.label}</div>
+                    <HeaderStyled className="pb-2 mb-2 flex">
+                        <div className="grow">{template.label}</div>
                         <div>
                             <Tooltip content="Go to template page">
-                                <Link target="_blank" className="ms-2" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                <Link target="_blank" className="ml-2" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                     <FontAwesomeIcon icon={faLink} />
                                 </Link>
                             </Tooltip>
@@ -80,7 +80,7 @@ const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = fa
                             {template.description && (
                                 <div>
                                     <b>Description:</b>
-                                    <p className="small">{template.description}</p>
+                                    <p className="text-sm">{template.description}</p>
                                 </div>
                             )}
                             {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION && (
@@ -125,7 +125,7 @@ const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = fa
                             {template.properties?.length > 0 && (
                                 <div>
                                     <b>Properties: </b>
-                                    <ul className={`ps-3 ${template?.properties?.length > 7 && 'mb-0'}`}>
+                                    <ul className={`pl-4 ${template?.properties?.length > 7 && 'mb-0'}`}>
                                         {template.properties &&
                                             template.properties.length > 0 &&
                                             template.properties
@@ -133,7 +133,7 @@ const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = fa
                                                 .map((propertyShape) => <li key={`t-${propertyShape.path.id}`}>{propertyShape.path.label}</li>)}
                                     </ul>
                                     {template.properties && template.properties.length > 7 && (
-                                        <Link target="_blank" className="ms-2 mb-2 d-block" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                        <Link target="_blank" className="ml-2 mb-2 block" href={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                             + {(template.properties?.length ?? 0) - 5} more
                                         </Link>
                                     )}

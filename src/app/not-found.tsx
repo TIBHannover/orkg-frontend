@@ -17,18 +17,20 @@ const NotFound = () => {
     return (
         <div>
             <TitleBar>An error has occurred</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-md-12 text-center">
-                            <span className="display-1 d-block">404</span>
-                            <FontAwesomeIcon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
-                            <div className="mb-4 lead">The page you are looking for was not found.</div>
-                            <Link href={ROUTES.HOME}>
-                                <Button color="primary" className="me-3">
-                                    Back to home
-                                </Button>
-                            </Link>
+            <Container>
+                <div className="box rounded pt-6 pb-6 pl-12 pr-12">
+                    <div className="container mx-auto px-4">
+                        <div className="flex flex-wrap items-stretch justify-center">
+                            <div className="w-full md:shrink-0 md:grow-0 md:w-12/12 md:basis-12/12 md:max-w-12/12 text-center">
+                                <span className="display-1 block">404</span>
+                                <FontAwesomeIcon icon={faBug} className="text-accent mt-4 mb-4" style={{ fontSize: 25 }} />
+                                <div className="mb-6 lead">The page you are looking for was not found.</div>
+                                <Link href={ROUTES.HOME}>
+                                    <Button color="primary" className="mr-4">
+                                        Back to home
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

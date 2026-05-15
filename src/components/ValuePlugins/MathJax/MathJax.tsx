@@ -1,17 +1,6 @@
 import { MathJax as MathJaxPreview } from 'better-react-mathjax';
 import { FC } from 'react';
 import ReactStringReplace from 'react-string-replace';
-import styled from 'styled-components';
-
-const StyledMathJax = styled(MathJaxPreview)`
-    & div {
-        display: inline;
-    }
-
-    & .MathJax {
-        display: inline !important;
-    }
-`;
 
 const expression = /(\${2}.*\${2})/gm;
 const supportedValues = new RegExp(expression);
@@ -30,9 +19,9 @@ type MathJaxProps = {
 const MathJax: FC<MathJaxProps> = ({ text }) => {
     if (isMathJaxValue(text)) {
         return ReactStringReplace(text, supportedValues, (match, i) => (
-            <StyledMathJax key={i} inline>
+            <MathJaxPreview key={i} inline className="[&_div]:inline [&_.MathJax]:!inline">
                 {match}
-            </StyledMathJax>
+            </MathJaxPreview>
         ));
     }
     return text;

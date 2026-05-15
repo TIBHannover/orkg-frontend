@@ -1,23 +1,17 @@
-import 'handsontable/styles/handsontable.min.css';
-import 'handsontable/styles/ht-theme-main.min.css';
-
-import { faRedo, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faRedo, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { HotTable, HotTableRef } from '@handsontable/react-wrapper';
+import { Button, ButtonGroup, Dropdown } from '@heroui/react';
 import Handsontable from 'handsontable/base';
 import { registerAllModules } from 'handsontable/registry';
+import { mainTheme, registerTheme } from 'handsontable/themes';
+import DOMPurify from 'isomorphic-dompurify';
 import { RefObject } from 'react';
 import { useDispatch } from 'react-redux';
 
 import EditorComponent from '@/components/PdfAnnotation/EditorComponent';
 import useTableEditor from '@/components/PdfAnnotation/hooks/useTableEditor';
 import RendererComponent from '@/components/PdfAnnotation/RendererComponent';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { saveTableState, updateTableData } from '@/slices/pdfAnnotationSlice';
 
 // Extend Handsontable instance type to include custom property
@@ -27,6 +21,8 @@ interface ExtendedHandsontable extends Handsontable {
 
 // register Handsontable's modules
 registerAllModules();
+
+const theme = registerTheme(mainTheme);
 
 type TableEditorProps = {
     hotTableComponentRef: RefObject<HotTableRef>;
@@ -59,60 +55,89 @@ const TableEditor = ({ hotTableComponentRef, id, tableData, toggleExtractReferen
 
     return (
         <div>
-            <div className="d-flex align-items-center mb-2 tw:[&_button]:!px-3">
+            <div className="flex items-center mb-2 [&_button]:px-3">
                 <ButtonGroup size="sm">
-                    <Button color="light" onClick={undo} disabled={!canUndo}>
+                    <Button variant="ghost" onPress={undo} isDisabled={!canUndo}>
                         <FontAwesomeIcon icon={faUndo} /> Undo
                     </Button>
-                    <Button color="light" onClick={redo} disabled={!canRedo}>
+                    <Button variant="ghost" onPress={redo} isDisabled={!canRedo}>
                         <FontAwesomeIcon icon={faRedo} /> Redo
                     </Button>
                 </ButtonGroup>
-                <ButtonGroup size="sm" className=" ms-2">
-                    <Button color="light" onClick={() => mergeCellValues(undefined, undefined)}>
+                <ButtonGroup size="sm" className=" ml-2">
+                    <Button variant="ghost" onPress={() => mergeCellValues(undefined, undefined)}>
                         Merge cells
                     </Button>
-                    <Button color="light" onClick={() => splitIntoColumns(undefined, undefined)}>
+                    <Button variant="ghost" onPress={() => splitIntoColumns(undefined, undefined)}>
                         Split columns
                     </Button>
-                    <Button color="light" onClick={() => transposeTable()}>
+                    <Button variant="ghost" onPress={() => transposeTable()}>
                         Transpose
                     </Button>
                 </ButtonGroup>
-                <UncontrolledButtonDropdown size="sm" className="ms-2">
-                    <DropdownToggle caret color="light" size="sm">
-                        Insert
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem onClick={() => insertRowAbove(undefined, undefined)}>Insert row above</DropdownItem>
-                        <DropdownItem onClick={() => insertRowBelow(undefined, undefined)}>Insert row below</DropdownItem>
-                        <DropdownItem onClick={() => insertColumnLeft(undefined, undefined)}>Insert column left</DropdownItem>
-                        <DropdownItem onClick={() => insertColumnRight(undefined, undefined)}>Insert column right</DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledButtonDropdown>
-                <UncontrolledButtonDropdown size="sm" className="ms-2">
-                    <DropdownToggle caret color="light" size="sm">
-                        Remove
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem onClick={() => removeEmptyRows()}>Remove empty rows</DropdownItem>
-                        <DropdownItem onClick={() => removeRow(undefined, undefined)}>Remove row</DropdownItem>
-                        <DropdownItem onClick={() => removeColumn(undefined, undefined)}>Remove column</DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledButtonDropdown>
-                <ButtonGroup size="sm" className=" ms-2">
+                <Dropdown className="ml-2">
+                    <Button variant="ghost" size="sm">
+                        Insert <FontAwesomeIcon icon={faChevronDown} className="text-[0.6rem]" />
+                    </Button>
+                    <Dropdown.Popover>
+                        <Dropdown.Menu>
+                            <Dropdown.Item key="row-above" onAction={() => insertRowAbove(undefined, undefined)} textValue="Insert row above">
+                                Insert row above
+                            </Dropdown.Item>
+                            <Dropdown.Item key="row-below" onAction={() => insertRowBelow(undefined, undefined)} textValue="Insert row below">
+                                Insert row below
+                            </Dropdown.Item>
+                            <Dropdown.Item key="col-left" onAction={() => insertColumnLeft(undefined, undefined)} textValue="Insert column left">
+                                Insert column left
+                            </Dropdown.Item>
+                            <Dropdown.Item key="col-right" onAction={() => insertColumnRight(undefined, undefined)} textValue="Insert column right">
+                                Insert column right
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown.Popover>
+                </Dropdown>
+                <Dropdown className="ml-2">
+                    <Button variant="ghost" size="sm">
+                        Remove <FontAwesomeIcon icon={faChevronDown} className="text-[0.6rem]" />
+                    </Button>
+                    <Dropdown.Popover>
+                        <Dropdown.Menu>
+                            <Dropdown.Item key="empty-rows" onAction={() => removeEmptyRows()} textValue="Remove empty rows">
+                                Remove empty rows
+                            </Dropdown.Item>
+                            <Dropdown.Item key="remove-row" onAction={() => removeRow(undefined, undefined)} textValue="Remove row">
+                                Remove row
+                            </Dropdown.Item>
+                            <Dropdown.Item key="remove-col" onAction={() => removeColumn(undefined, undefined)} textValue="Remove column">
+                                Remove column
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown.Popover>
+                </Dropdown>
+                <ButtonGroup size="sm" className=" ml-2">
                     {isSurveyTable && (
-                        <Button size="sm" color="light" onClick={toggleExtractReferencesModal}>
+                        <Button size="sm" variant="ghost" onPress={toggleExtractReferencesModal}>
                             Extract references
                         </Button>
                     )}
-                    <Button size="sm" color="light" onClick={handleCsvDownload}>
+                    <Button size="sm" variant="ghost" onPress={handleCsvDownload}>
                         Download CSV
                     </Button>
                 </ButtonGroup>
             </div>
             <HotTable
-                themeName="ht-theme-main"
+                sanitizer={(content, source) => {
+                    if (source === 'CopyPaste.paste') {
+                        return DOMPurify.sanitize(content, {
+                            ADD_TAGS: ['meta'],
+                            ADD_ATTR: ['content'],
+                            FORCE_BODY: true,
+                        });
+                    }
+
+                    return DOMPurify.sanitize(content);
+                }}
+                theme={theme}
                 rowHeaders
                 colHeaders={false}
                 height="auto"
@@ -200,6 +225,16 @@ const TableEditor = ({ hotTableComponentRef, id, tableData, toggleExtractReferen
                     if (instance) {
                         // eslint-disable-next-line react-hooks/immutability
                         instance.isSurveyTable = isSurveyTable;
+
+                        // Opt the body-level Handsontable portal (host of context menu, dropdown menus,
+                        // filters, comments) out of React Aria's ariaHideOutside so it stays interactive
+                        // when this HotTable is rendered inside a HeroUI Modal.
+                        const portal = instance.rootPortalElement;
+                        if (portal) {
+                            portal.setAttribute('data-react-aria-top-layer', 'true');
+                            portal.removeAttribute('aria-hidden');
+                            portal.inert = false;
+                        }
                     }
                 }}
             />

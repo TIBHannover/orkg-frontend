@@ -1,17 +1,10 @@
+import { Input, Label, Modal, TextArea, TextField, toast } from '@heroui/react';
 import { isEqual } from 'lodash';
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { FC, useEffect, useState } from 'react';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateObservatory } from '@/services/backend/observatories';
@@ -42,7 +35,6 @@ const EditObservatory: FC<EditObservatoryProps> = ({
     const [description, setDescription] = useState(initialDescription);
     const [isLoading, setIsLoading] = useState(false);
     const [researchField, setResearchField] = useState(initialResearchField);
-
     const [sdgs, setSdgs] = useState(initialSdgs);
 
     useEffect(() => {
@@ -57,52 +49,46 @@ const EditObservatory: FC<EditObservatoryProps> = ({
         setResearchField(initialResearchField);
     }, [initialResearchField]);
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        if (name === 'label') {
-            setLabel(value);
-        } else if (name === 'description') {
-            setDescription(value);
-        }
-    };
-
-    const updateObservatoryData = async (id: string, name: string, description: string, researchField: Node | null, sdgs: Node[]) => {
+    const updateObservatoryData = async (
+        observatoryId: string,
+        name: string,
+        observatoryDescription: string,
+        observatoryResearchField: Node | null,
+        observatorySdgs: Node[],
+    ) => {
         setIsLoading(true);
-
         try {
-            await updateObservatory(id, {
+            await updateObservatory(observatoryId, {
                 name,
-                description,
-                research_field: researchField?.id,
-                sdgs: sdgs.map((sdg: Node) => sdg?.id),
+                description: observatoryDescription,
+                research_field: observatoryResearchField?.id,
+                sdgs: observatorySdgs.map((sdg: Node) => sdg?.id),
             });
         } catch (error: unknown) {
             console.error(error);
             if (error instanceof Error) {
-                toast.error(`Error updating an observatory: ${error.message}`);
+                toast.danger(`Error updating an observatory: ${error.message}`);
             } else {
-                toast.error('Error updating an observatory');
+                toast.danger('Error updating an observatory');
             }
         } finally {
             setIsLoading(false);
         }
     };
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        toast.dismiss();
+
+    const handleSubmit = async () => {
+        toast.clear();
 
         if (label !== initialLabel && label.length === 0) {
-            toast.error('Please enter an observatory name');
+            toast.danger('Please enter an observatory name');
             return;
         }
-
         if (description !== initialDescription && description.length === 0) {
-            toast.error('Please enter an observatory description');
+            toast.danger('Please enter an observatory description');
             return;
         }
-
         if (!isEqual(researchField, initialResearchField) && researchField === null) {
-            toast.error('Please enter an observatory research field');
+            toast.danger('Please enter an observatory research field');
             return;
         }
 
@@ -113,66 +99,71 @@ const EditObservatory: FC<EditObservatoryProps> = ({
     };
 
     return (
-        <Modal size="lg" isOpen={showDialog} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Update observatory</ModalHeader>
-            <ModalBody>
-                <FormGroup>
-                    <Label for="observatory-name">Name</Label>
-                    <Input
-                        onChange={handleChange}
-                        type="text"
-                        name="label"
-                        id="observatory-name"
-                        value={label}
-                        placeholder="Name"
-                        disabled={isLoading}
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="observatory-research-field">Research field</Label>
-                    <Autocomplete
-                        inputId="observatory-research-field"
-                        entityType={ENTITIES.RESOURCE}
-                        includeClasses={[CLASSES.RESEARCH_FIELD]}
-                        placeholder="Select research field"
-                        onChange={(value, { action }) => {
-                            if (action === 'select-option') {
-                                setResearchField(value);
-                            }
-                        }}
-                        allowCreate={false}
-                        value={researchField && researchField.id ? researchField : null}
-                        enableExternalSources={false}
-                        isDisabled={isLoading}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="observatory-description">Description</Label>
-                    <Input
-                        onChange={handleChange}
-                        type="textarea"
-                        name="description"
-                        id="observatory-description"
-                        value={description}
-                        rows={4}
-                        disabled={isLoading}
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Sustainable development goals</Label>
-                    <SdgBox handleSave={setSdgs} sdgs={sdgs} maxWidth="100%" isEditable />
-                </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-                <div className="text-align-center mt-2">
-                    <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
-                        {isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                    </Button>
-                </div>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={showDialog}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]" size="lg">
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Update observatory</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6">
+                        <div className="flex flex-col gap-4">
+                            <TextField fullWidth name="label" value={label} onChange={setLabel} isDisabled={isLoading}>
+                                <Label>Name</Label>
+                                <Input placeholder="Name" maxLength={MAX_LENGTH_INPUT} />
+                            </TextField>
+
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="observatory-research-field">Research field</Label>
+                                <Autocomplete
+                                    inputId="observatory-research-field"
+                                    entityType={ENTITIES.RESOURCE}
+                                    includeClasses={[CLASSES.RESEARCH_FIELD]}
+                                    placeholder="Select research field"
+                                    onChange={(value, { action }: { action: string }) => {
+                                        if (action === 'select-option') {
+                                            setResearchField(value);
+                                        }
+                                    }}
+                                    allowCreate={false}
+                                    value={researchField && researchField.id ? researchField : null}
+                                    enableExternalSources={false}
+                                    isDisabled={isLoading}
+                                />
+                            </div>
+
+                            <TextField
+                                fullWidth
+                                name="description"
+                                value={description}
+                                onChange={(value: string) => setDescription(value)}
+                                isDisabled={isLoading}
+                            >
+                                <Label>Description</Label>
+                                <TextArea rows={4} maxLength={MAX_LENGTH_INPUT} />
+                            </TextField>
+
+                            <div className="flex flex-col gap-1">
+                                <Label>Sustainable development goals</Label>
+                                <SdgBox handleSave={setSdgs} sdgs={sdgs} maxWidth="100%" isEditable />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <ButtonWithLoading variant="primary" isLoading={isLoading} onPress={handleSubmit}>
+                            Save
+                        </ButtonWithLoading>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
+
 export default EditObservatory;

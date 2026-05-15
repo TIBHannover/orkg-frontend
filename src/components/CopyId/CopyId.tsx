@@ -1,59 +1,44 @@
-import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, toast } from '@heroui/react';
 import { FC, useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import InputGroupText from '@/components/Ui/Input/InputGroupText';
 
 type CopyIdProps = {
     id: string;
     text?: string;
-    size?: 'sm' | 'lg' | undefined;
+    size?: 'sm' | 'lg';
+    fullWidth?: boolean;
 };
 
-const CopyId: FC<CopyIdProps> = ({ id, text = 'ID', size = 'sm' }) => {
+const CopyId: FC<CopyIdProps> = ({ id, text = 'ID', size = 'sm', fullWidth = false }) => {
     const [state, copyToClipboard] = useCopyToClipboard();
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('ID copied to clipboard');
         }
     }, [state.value]);
 
-    let iconSize = size === 'sm' ? 'xs' : size;
-
-    if (size === 'lg') {
-        iconSize = 'md';
-    }
+    const textSize = size === 'sm' ? 'text-xs' : 'text-sm';
+    const rootClass = fullWidth ? 'flex w-full' : 'inline-flex';
 
     return (
-        <InputGroup size={size}>
-            <InputGroupText className="py-0">{text}</InputGroupText>
-            <Input
-                bsSize={size}
-                className="text-muted py-0 bg-white"
-                length={id.length}
-                disabled
-                value={id}
-                style={{ width: 80, minHeight: 'initial', fontSize: size === 'sm' ? '80%' : '100%' }}
-                aria-label="ID"
-            />
-
+        <span className={`${rootClass} items-center border border-border rounded-lg overflow-hidden ${textSize}`}>
+            <span className="bg-default-100 text-default-600 px-2 py-0.5 border-r border-border whitespace-nowrap">{text}</span>
+            <span className={`text-default-500 px-2 py-0.5 select-all ${fullWidth ? 'flex-1 min-w-0 truncate' : ''}`}>{id}</span>
             <Button
-                className="py-0 border border-light-darker d-flex align-items-center"
-                size={size}
-                color="light"
-                onClick={() => copyToClipboard(id)}
+                size="sm"
+                isIconOnly
+                variant="tertiary"
+                className="rounded-none border-l border-border"
+                aria-label="Copy ID"
+                onPress={() => copyToClipboard(id)}
             >
-                <FontAwesomeIcon icon={faClipboard} color="#6c757d" size={iconSize as SizeProp} />
+                <FontAwesomeIcon icon={faClipboard} />
             </Button>
-        </InputGroup>
+        </span>
     );
 };
 

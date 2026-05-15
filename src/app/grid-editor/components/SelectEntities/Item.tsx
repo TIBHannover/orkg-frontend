@@ -1,13 +1,10 @@
+import { Checkbox } from '@heroui/react';
 import { Dispatch, FC, SetStateAction } from 'react';
 import useSWR from 'swr';
 
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import { CardBadge } from '@/components/styled';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Thing } from '@/services/backend/things';
@@ -76,77 +73,54 @@ const Item: FC<{
         const allContributionsSelected = contributionsList.every((c) => isSelected(c.id));
 
         if (allContributionsSelected) {
-            // Remove all contributions from selectedEntities
             const contributionIds = contributionsList.map((c) => c.id);
             setSelectedEntities((v) => v.filter((i) => !contributionIds.includes(i.id)));
         } else {
-            // Add contributions that aren't already selected
             const newContributions = contributionsList.filter((c) => !isSelected(c.id));
             setSelectedEntities((v) => [...v, ...newContributions]);
         }
     };
 
     return (
-        <ListGroupItem key={`result-${item.id}`} className="py-2" style={{ overflowWrap: 'anywhere' }}>
-            <div className="d-flex flex-column my-3">
-                <div className="d-flex align-items-center">
-                    <FormGroup check>
-                        <div className="float-start">
-                            <Input
-                                key={`checkbox-${item.id}`}
-                                id={`checkbox-${item.id}`}
-                                type="checkbox"
-                                value=""
-                                checked={isSelected?.(item.id)}
-                                onChange={() => handleSelect?.(item)}
-                            />
-                        </div>
-                        <Label check htmlFor={`checkbox-${item.id}`} className="tw:text-primary tw:capitalize">
-                            {item.label}
-                        </Label>{' '}
-                        {!!badge && (
-                            <div className="d-inline-block ms-2 flex-shrink-0">
-                                <CardBadge color="primary">{badge.label}</CardBadge>
-                            </div>
-                        )}
-                    </FormGroup>
-                </div>
-                {showContributions && (
-                    <div className="ms-4 d-flex flex-shrink-0 flex-column">
-                        {contributionsList && contributionsList.length > 0 && (
-                            <>
-                                <div className="tw:mb-2">
-                                    <button
-                                        type="button"
-                                        className="tw:px-1 tw:py-0.5 tw:text-xs tw:bg-gray-50 tw:text-gray-600 tw:border tw:border-gray-200 tw:rounded tw:hover:bg-gray-100 tw:transition-colors tw:duration-200"
-                                        style={{ fontSize: '0.625rem' }}
-                                        onClick={handleSelectAllContributions}
-                                    >
-                                        {contributionsList.every((c) => isSelected(c.id)) ? 'Deselect All' : 'Select All'}
-                                    </button>
-                                </div>
-                                {contributionsList.map((contribution) => (
-                                    <FormGroup check className="d-flex align-items-center" key={`${contribution.id}`}>
-                                        <Input
-                                            key={`checkbox-contrib-${contribution.id}`}
-                                            type="checkbox"
-                                            value=""
-                                            checked={isSelected?.(contribution.id)}
-                                            onChange={() => handleSelect?.(contribution)}
-                                            id={`checkbox-${contribution.id}`}
-                                        />
-                                        <Label check htmlFor={`checkbox-${contribution.id}`} className="ms-2 tw:capitalize tw:line-clamp-1">
-                                            {contribution.label}
-                                        </Label>
-                                    </FormGroup>
-                                ))}
-                            </>
-                        )}
-                        {isLoading && <div>Loading...</div>}
-                        {error && <div>Error: {error.message}</div>}
+        <div key={`result-${item.id}`} className="py-3 px-4 flex flex-col gap-2" style={{ overflowWrap: 'anywhere' }}>
+            <div className="flex flex-nowrap items-center gap-2">
+                <Checkbox isSelected={isSelected(item.id)} onChange={() => handleSelect(item)}>
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    <Checkbox.Content className="text-accent capitalize line-clamp-2 min-w-0">{item.label}</Checkbox.Content>
+                </Checkbox>
+                {!!badge && (
+                    <div className="shrink-0">
+                        <CardBadge color="primary">{badge.label}</CardBadge>
                     </div>
                 )}
             </div>
+            {showContributions && (
+                <div className="ml-6 flex flex-col gap-1">
+                    {contributionsList && contributionsList.length > 0 && (
+                        <>
+                            <button
+                                type="button"
+                                className="self-start px-1 py-0.5 text-[0.625rem] bg-default text-foreground border border-default rounded hover:bg-default/80 transition-colors duration-200"
+                                onClick={handleSelectAllContributions}
+                            >
+                                {contributionsList.every((c) => isSelected(c.id)) ? 'Deselect All' : 'Select All'}
+                            </button>
+                            {contributionsList.map((contribution) => (
+                                <Checkbox key={contribution.id} isSelected={isSelected(contribution.id)} onChange={() => handleSelect(contribution)}>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    <Checkbox.Content className="capitalize line-clamp-1">{contribution.label}</Checkbox.Content>
+                                </Checkbox>
+                            ))}
+                        </>
+                    )}
+                    {isLoading && <div>Loading...</div>}
+                    {error && <div>Error: {error.message}</div>}
+                </div>
+            )}
             <ItemMetadata
                 item={item}
                 showClasses={!badge}
@@ -154,7 +128,8 @@ const Item: FC<{
                 showCreatedAt={'classes' in item && item.classes && item.classes.includes(CLASSES.COMPARISON)}
                 showExtractionMethod={item._class === ENTITIES.RESOURCE && !badge}
             />
-        </ListGroupItem>
+        </div>
     );
 };
+
 export default Item;

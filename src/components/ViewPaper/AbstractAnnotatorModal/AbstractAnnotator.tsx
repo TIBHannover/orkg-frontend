@@ -1,4 +1,3 @@
-import rangy from 'rangy';
 import { FC, ReactElement, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,6 +5,24 @@ import { OptionType } from '@/components/Autocomplete/types';
 import AnnotationTooltip from '@/components/ViewPaper/AbstractAnnotatorModal/AnnotationTooltip';
 import { Range, RootStore } from '@/slices/types';
 import { createAnnotation } from '@/slices/viewPaperSlice';
+
+function isSelectionBackwards(selection: Selection): boolean {
+    const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+    if (!anchorNode || !focusNode || selection.isCollapsed) {
+        return false;
+    }
+    if (anchorNode === focusNode) {
+        return focusOffset < anchorOffset;
+    }
+    const position = anchorNode.compareDocumentPosition(focusNode);
+    if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+        return false;
+    }
+    if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+        return true;
+    }
+    return false;
+}
 
 function getAllIndexes(arr: string, val: string) {
     const indexes = [];
@@ -74,36 +91,31 @@ const AbstractAnnotator: FC<AbstractAnnotatorProps> = ({ predicateOptions, getPr
         if (!annotatorRef.current) {
             return null;
         }
-        // Get the selection
-        // @ts-expect-error: rangy is not typed
-        const sel = rangy.getSelection(annotatorRef.current);
-        if (sel.isCollapsed) {
+        const root = annotatorRef.current;
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
             return null;
         }
-        // Get position of the node at which the user started selecting
+        const { anchorNode, focusNode } = sel;
+        if (!anchorNode || !focusNode || !root.contains(anchorNode) || !root.contains(focusNode)) {
+            return null;
+        }
         let start = parseInt((sel.anchorNode?.parentNode as HTMLElement)?.dataset.position ?? '', 10);
-        // Get position of the node at which the user stopped selecting
         let end = parseInt((sel.focusNode?.parentNode as HTMLElement)?.dataset.position ?? '', 10);
-        // Get the text within the selection
         const text = sel.toString();
         if (!text.length) {
             return null;
         }
-        if (sel.isBackwards()) {
-            // if the selection's focus is earlier in the document than the anchor
+        if (isSelectionBackwards(sel)) {
             [start, end] = [end, start];
         }
-        // Find index of all occurrences of selected text in the abstract
         const pos = getAllIndexes(abstract, text);
-        // Get the closest number out of occurrences positions
         if (pos === undefined || pos.length === 0) {
             return null;
         }
         const closest = pos.reduce((prev, curr) => (Math.abs(curr - start) < Math.abs(prev - start) ? curr : prev), 0);
-        // Update position of selection
         start = closest;
         end = start + text.length - 1;
-        // Save range in state
         const range = {
             start,
             end,
@@ -119,18 +131,8 @@ const AbstractAnnotator: FC<AbstractAnnotatorProps> = ({ predicateOptions, getPr
 
     const annotatedText = getAnnotatedText();
     return (
-        <div>
-            <div
-                role="textbox"
-                tabIndex={0}
-                onMouseUp={handleMouseUp}
-                id="annotatedText"
-                className="mt-4"
-                style={{ lineHeight: '2.5em' }}
-                ref={annotatorRef}
-            >
-                {annotatedText}
-            </div>
+        <div role="textbox" tabIndex={0} onMouseUp={handleMouseUp} id="annotatedText" className="mt-6 leading-loose" ref={annotatorRef}>
+            {annotatedText}
         </div>
     );
 };

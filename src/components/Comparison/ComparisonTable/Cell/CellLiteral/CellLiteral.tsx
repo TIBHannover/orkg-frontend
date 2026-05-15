@@ -1,9 +1,9 @@
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { useState } from 'react';
 import { useMeasure } from 'react-use';
 
-import Button from '@/components/Ui/Button/Button';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { LiteralThingReference } from '@/services/backend/types';
 
@@ -23,7 +23,7 @@ const CellLiteral = ({ literal }: CellLiteralProps) => {
 
     return (
         <>
-            <div ref={ref} className="tw:overflow-hidden" style={{ maxHeight: isExpanded ? 'initial' : 200 }}>
+            <div ref={ref} className="overflow-hidden" style={{ maxHeight: isExpanded ? 'initial' : 200 }}>
                 <span>
                     <ValuePlugins type="literal" options={{ isModal: true }}>
                         {literal.label}
@@ -31,8 +31,9 @@ const CellLiteral = ({ literal }: CellLiteralProps) => {
                 </span>
             </div>
             {showButton && (
-                <Button color="secondary" outline size="sm" className="tw:mt-1 tw:border-0 " onClick={() => setIsExpanded((v) => !v)}>
-                    {isExpanded ? 'Show less' : 'Show more'} <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
+                <Button variant="ghost" size="sm" className="mt-1 border-0" onPress={() => setIsExpanded((v) => !v)}>
+                    {isExpanded ? 'Show less' : 'Show more'}{' '}
+                    <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} className="text-muted" />
                 </Button>
             )}
         </>

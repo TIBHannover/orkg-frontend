@@ -1,8 +1,7 @@
+import { Chip, Skeleton } from '@heroui/react';
 import React from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 
-import Badge from '@/components/Ui/Badge/Badge';
 import { getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { PaginatedResponse, Resource } from '@/services/backend/types';
@@ -38,14 +37,13 @@ const TabLabel = ({ tabKey, id, label, statsValue }: TabLabelProps) => {
     return (
         <span className="cursor-pointer">
             {label}
-
             {(isStatisticsLoading || count || statsValue !== undefined || isStatementsStatsLoading || countStatements !== undefined) && (
-                <Badge color="light" pill className="ms-1 px-2">
-                    {(isStatisticsLoading || isStatementsStatsLoading) && <Skeleton width={10} />}
+                <Chip className="ml-1 px-2">
+                    {(isStatisticsLoading || isStatementsStatsLoading) && <Skeleton className="w-2.5 h-4 rounded" />}
                     {!isStatisticsLoading && count?.page?.total_elements?.toLocaleString('en-US', { notation: 'compact' })}
                     {!isStatementsStatsLoading && countStatements?.value.toLocaleString('en-US', { notation: 'compact' })}
                     {!isStatisticsLoading && statsValue?.toLocaleString('en-US', { notation: 'compact' })}
-                </Badge>
+                </Chip>
             )}
         </span>
     );

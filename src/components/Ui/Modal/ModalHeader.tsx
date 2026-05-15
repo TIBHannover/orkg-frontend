@@ -1,8 +1,17 @@
-import React, { FC } from 'react';
-import { ModalHeader as ReactstrapModalHeader, ModalHeaderProps } from 'reactstrap';
+import { Modal } from '@heroui/react';
+import { FC, ReactNode } from 'react';
 
-const ModalHeader: FC<ModalHeaderProps> = ({ children, ...rest }) => {
-    return <ReactstrapModalHeader {...rest}>{children}</ReactstrapModalHeader>;
+type ModalHeaderProps = {
+    toggle?: () => void;
+    className?: string;
+    children?: ReactNode;
 };
+
+const ModalHeader: FC<ModalHeaderProps> = ({ toggle, className, children }) => (
+    <Modal.Header className={className}>
+        {toggle && <Modal.CloseTrigger />}
+        <Modal.Heading>{children}</Modal.Heading>
+    </Modal.Header>
+);
 
 export default ModalHeader;

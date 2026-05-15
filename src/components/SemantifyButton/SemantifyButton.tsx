@@ -1,8 +1,8 @@
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
+import { useSemantifyModal } from '@/app/grid-editor/context/SemantifyModalContext';
 import ActionButton from '@/components/ActionButton/ActionButton';
-import SemantifyButtonModal from '@/components/SemantifyButton/SemantifyButtonModal';
 import { Statement, Template } from '@/services/backend/types';
 
 type SemantifyButtonProps = {
@@ -12,30 +12,18 @@ type SemantifyButtonProps = {
     onSave: (deletedStatementIds: string[], newStatementIds: string[]) => void;
     templates?: Template[];
     currentPathStatements?: Statement[];
+    onOpen?: () => void;
 };
 
-const SemantifyButton: FC<SemantifyButtonProps> = ({ statement, title, isDisabled, onSave, templates, currentPathStatements }) => {
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const toggleModal = () => {
-        setIsModalOpen((prev) => !prev);
+const SemantifyButton: FC<SemantifyButtonProps> = ({ statement, title, isDisabled, onSave, templates, currentPathStatements, onOpen }) => {
+    const { openModal } = useSemantifyModal();
+
+    const handleOpen = () => {
+        onOpen?.();
+        openModal({ statement, templates, currentPathStatements, onSave });
     };
 
-    return (
-        <>
-            <ActionButton title={title} icon={faWandMagicSparkles} isDisabled={isDisabled} action={toggleModal} iconSize="xs" />
-
-            {isModalOpen && (
-                <SemantifyButtonModal
-                    currentPathStatements={currentPathStatements}
-                    isModalOpen={isModalOpen}
-                    toggleModal={toggleModal}
-                    statement={statement}
-                    templates={templates}
-                    onSave={onSave}
-                />
-            )}
-        </>
-    );
+    return <ActionButton title={title} icon={faWandMagicSparkles} isDisabled={isDisabled} action={handleOpen} iconSize="xs" />;
 };
 
 export default SemantifyButton;

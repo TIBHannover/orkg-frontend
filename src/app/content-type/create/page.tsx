@@ -1,5 +1,6 @@
 import { faBars, faChartLine, faComments, faFile, faTable } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card, CardContent, cn, Separator } from '@heroui/react';
 import { upperFirst } from 'lodash';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -15,7 +16,6 @@ import SoftwareSection from '@/app/content-type/create/Sections/SoftwareSection/
 import VisualizationSection from '@/app/content-type/create/Sections/VisualizationSection/VisualizationSection';
 import { additionalContentTypes } from '@/components/ContentType/types';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';
 
 export const metadata: Metadata = {
@@ -64,23 +64,30 @@ const ContentTypeNew = async ({ searchParams }: ContentTypeNewProps) => {
     return (
         <>
             <TitleBar>Add to ORKG</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                {SUPPORTED_CONTENT_TYPES.map((type) => (
-                    <Link
-                        key={type.id}
-                        href={`?type=${type.id}`}
-                        className={`btn ${
-                            type.id === selectedClassId ? 'btn-primary' : 'btn-link text-decoration-none text-dark'
-                        } px-2 me-1 tw:min-w-30 tw:text-center`}
-                    >
-                        <div style={{ fontSize: 30 }}>
-                            <FontAwesomeIcon icon={type.icon} className={type.id !== selectedClassId ? 'text-secondary' : ''} />
-                        </div>
-                        {upperFirst(pluralize(type?.label || '', 0, false))}
-                    </Link>
-                ))}
+            <div className="mx-auto px-8 max-w-container box rounded py-6">
+                <div className="flex flex-wrap gap-1">
+                    {SUPPORTED_CONTENT_TYPES.map((type) => (
+                        <Link
+                            key={type.id}
+                            href={`?type=${type.id}`}
+                            className={cn(
+                                'inline-flex flex-col items-center min-w-30 px-2 py-2 text-sm font-medium rounded-md text-center transition-colors',
+                                'focus:outline-none focus:ring-2 focus:ring-offset-2',
+                                type.id === selectedClassId
+                                    ? 'bg-accent text-white focus:ring-accent'
+                                    : 'bg-transparent text-dark hover:underline focus:ring-0',
+                            )}
+                        >
+                            <div className="text-[30px]">
+                                <FontAwesomeIcon icon={type.icon} className={type.id !== selectedClassId ? 'text-secondary' : ''} />
+                            </div>
+                            {upperFirst(pluralize(type?.label || '', 0, false))}
+                        </Link>
+                    ))}
+                </div>
 
-                <hr />
+                <Separator className="my-4" />
+
                 {selectedClassId === CLASSES.DATASET && <DatasetSection classId={selectedClassId} />}
                 {selectedClassId === CLASSES.SOFTWARE && <SoftwareSection classId={selectedClassId} />}
                 {selectedClassId === CLASSES.COMPARISON && <ComparisonSection />}
@@ -88,7 +95,7 @@ const ContentTypeNew = async ({ searchParams }: ContentTypeNewProps) => {
                 {selectedClassId === CLASSES.SMART_REVIEW && <ReviewSection />}
                 {selectedClassId === CLASSES.LITERATURE_LIST && <ListSection />}
                 {selectedClassId === CLASSES.PAPER && <PaperSection />}
-            </Container>
+            </div>
         </>
     );
 };

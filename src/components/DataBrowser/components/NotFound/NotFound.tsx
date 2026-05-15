@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Alert from '@/components/Ui/Alert/Alert';
 
 const NotFound = () => (
-    <Alert color="danger" className="mb-0 rounded d-flex">
-        <FontAwesomeIcon icon={faExclamation} className="text-primary my-4 mx-4 h4" />
+    <Alert color="danger" className="mb-0 rounded flex">
+        <FontAwesomeIcon icon={faExclamation} className="text-accent my-6 mx-6 text-2xl" />
         <div>
             The entity you are looking for was not found.
             <br />

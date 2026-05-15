@@ -62,11 +62,11 @@ const ScrollShadow: FC<ScrollShadowProps> = ({ children, tbodyRef }) => {
 
     return (
         <>
-            <div className="tw:[&>button]:w-[30px] tw:[&>button]:border-0 tw:[&>button]:absolute tw:[&>button]:z-30 tw:[&>button]:bg-transparent tw:[&>button]:transition-shadow tw:[&>button]:duration-500 tw:[&>button]:top-0  tw:[&>button]:outline-0">
+            <div className="[&>button]:w-[30px] [&>button]:border-0 [&>button]:absolute [&>button]:z-30 [&>button]:bg-transparent [&>button]:transition-shadow [&>button]:duration-500 [&>button]:top-0 [&>button]:outline-0">
                 {showBackButton && (
                     <button
                         type="button"
-                        className="tw:!cursor-pointer tw:left-[250px] tw:h-[calc(100%-12px)] tw:!shadow-[inset_9px_0px_5px_-5px_rgba(0,_0,_0,_0.18)] tw:hover:!shadow-[inset_13px_0px_5px_-5px_rgba(0,_0,_0,_0.25)]"
+                        className="cursor-pointer left-[250px] h-[calc(100%-12px)] shadow-[inset_9px_0px_5px_-5px_rgba(0,_0,_0,_0.18)] hover:shadow-[inset_13px_0px_5px_-5px_rgba(0,_0,_0,_0.25)]"
                         onClick={scrollBack}
                         aria-label="scroll to the left"
                         tabIndex={-1}
@@ -75,14 +75,13 @@ const ScrollShadow: FC<ScrollShadowProps> = ({ children, tbodyRef }) => {
                 {showNextButton && (
                     <button
                         type="button"
-                        className="tw:!cursor-pointer tw:right-0 tw:h-[calc(100%-2px)] tw:!shadow-[inset_-9px_0px_5px_-5px_rgba(0,_0,_0,_0.18)] tw:hover:!shadow-[inset_-13px_0px_5px_-5px_rgba(0,_0,_0,_0.25)]"
+                        className="cursor-pointer right-0 h-[calc(100%-2px)] shadow-[inset_-9px_0px_5px_-5px_rgba(0,_0,_0,_0.18)] hover:shadow-[inset_-13px_0px_5px_-5px_rgba(0,_0,_0,_0.25)]"
                         onClick={scrollNext}
                         aria-label="scroll to the right"
                         tabIndex={-1}
                     />
                 )}
             </div>
-
             {children}
         </>
     );

@@ -1,56 +1,45 @@
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import Showdown from 'showdown';
-import styled from 'styled-components';
+import { Card } from '@heroui/react';
 import { EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import useSWR from 'swr';
 
-import Card from '@/components/Ui/Card/Card';
-import CardBody from '@/components/Ui/Card/CardBody';
-import CardSubtitle from '@/components/Ui/Card/CardSubtitle';
-import CardTitle from '@/components/Ui/Card/CardTitle';
-import { getNewsCards } from '@/services/cms';
-import { NewsCard } from '@/services/cms/types';
-
-const CarouselContainer = styled.div`
-    width: 100%;
-
-    & li {
-        width: 10px !important;
-        height: 10px !important;
-        border-radius: 100% !important;
-        background-color: ${(props) => props.theme.primary} !important;
-    }
-`;
-
-const converter = new Showdown.Converter();
-converter.setFlavor('github');
+import { parseMarkdown } from '@/lib/markdown';
+import { getNewsCards, url as cmsUrl } from '@/services/cms';
 
 export default function News() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [items, setItems] = useState<NewsCard[]>([]);
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setDate(twoMonthsAgo.getDate() - 60);
 
-    useEffect(() => {
-        const loadNews = async () => {
-            setIsLoading(true);
-            setItems((await getNewsCards({ limit: 8, sort: 'createdAt:desc' }))?.data || []);
-            setIsLoading(false);
-        };
-        loadNews();
-    }, []);
+    const { data: _items, isLoading } = useSWR([cmsUrl, 'getNewsCards'], ([_]) =>
+        getNewsCards({
+            limit: 8,
+            sort: 'createdAt:desc',
+            filters: {
+                publishedAt: {
+                    $gte: twoMonthsAgo.toISOString(),
+                },
+            },
+        }),
+    );
 
-    return !isLoading && dayjs(items?.[0]?.attributes?.publishedAt) > dayjs().subtract(2, 'month') ? (
-        <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
-            <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
-                <div className="flex-grow-1">
-                    <h2 className="h5 mb-1 mt-0">Latest news</h2>
+    const items = _items?.data ?? [];
+
+    if (isLoading || !items || items.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="mt-4 box rounded flex flex-col overflow-hidden">
+            <div className="flex items-center pt-4 pl-4 pr-4 pb-0">
+                <div className="grow">
+                    <h2 className="text-xl mb-1 mt-0">Latest news</h2>
                 </div>
             </div>
 
-            <hr className="mx-3 mt-1" />
+            <hr className="mx-4 mt-1" />
 
-            <CarouselContainer>
-                {items.length === 0 && <div className="text-center mt-3 mb-4">No news messages found</div>}
+            <div className="w-full">
+                {items.length === 0 && <div className="text-center mt-4 mb-6">No news messages found</div>}
                 {items?.length > 0 && (
                     <Swiper
                         spaceBetween={30}
@@ -62,27 +51,26 @@ export default function News() {
                         }}
                         navigation
                         modules={[EffectFade, Pagination, Navigation]}
-                        className="orkgSwiper"
+                        className="orkgSwiper w-full"
                     >
                         {items.map((item) => (
-                            <SwiperSlide key={`news-${item.id}`} className="px-3 mb-3">
-                                <Card style={{ border: 0, minHeight: 150 }}>
-                                    <CardBody className="pt-0 mb-0 d-flex justify-content-center flex-column">
-                                        <CardTitle tag="h5" className="pt-0 d-flex">
-                                            {item.attributes?.title}
-                                        </CardTitle>
-                                        <CardSubtitle
-                                            tag="h6"
-                                            className="mb-1 text-muted"
-                                            dangerouslySetInnerHTML={{ __html: converter.makeHtml(item.attributes?.message) }}
+                            <SwiperSlide key={`news-${item.id}`} className="px-4 mb-4">
+                                <Card className="min-h-[150px]">
+                                    <Card.Header>
+                                        <Card.Title>{item.attributes?.title}</Card.Title>
+                                    </Card.Header>
+                                    <Card.Content>
+                                        <div
+                                            className="prose mb-1 text-gray-500"
+                                            dangerouslySetInnerHTML={{ __html: parseMarkdown(item.attributes?.message ?? '') }}
                                         />
-                                    </CardBody>
+                                    </Card.Content>
                                 </Card>
                             </SwiperSlide>
                         ))}
                     </Swiper>
                 )}
-            </CarouselContainer>
+            </div>
         </div>
-    ) : null;
+    );
 }

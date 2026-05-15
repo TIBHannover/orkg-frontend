@@ -1,22 +1,13 @@
+import { Alert, Button, Form, Label, ListBox, Modal, Select, toast } from '@heroui/react';
 import { cloneDeep } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import useSWR from 'swr';
 
-import ColumnOption from '@/components/PdfAnnotation/ColumnOption';
 import { citationKeyToInternalId, formatReferenceValue, getAllReferences } from '@/components/PdfAnnotation/helpers';
 import { ReferenceType } from '@/components/PdfAnnotation/types';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { PREDICATES } from '@/constants/graphSettings';
+import { getThing, thingsUrl } from '@/services/backend/things';
 import { updateTableData } from '@/slices/pdfAnnotationSlice';
 import { RootStore } from '@/slices/types';
 
@@ -24,6 +15,13 @@ type ExtractReferencesModalProps = {
     id: string;
     isOpen: boolean;
     toggle: () => void;
+};
+
+const ColumnLabel: FC<{ column: string }> = ({ column }) => {
+    const { data: entity } = useSWR(column && column.startsWith('orkg:') ? [column.replace('orkg:', ''), thingsUrl, 'getThing'] : null, ([params]) =>
+        getThing(params),
+    );
+    return <span>{entity?.label ?? column}</span>;
 };
 
 const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, toggle }) => {
@@ -39,10 +37,11 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
         if (!tableData || tableData.length === 0) {
             return;
         }
-        const _columns = tableData[0];
+        const [_columns] = [tableData[0]];
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setColumns(_columns);
-        setSelectedColumn(_columns[0]); // select the first option
+        const [firstColumn] = _columns;
+        setSelectedColumn(firstColumn);
     }, [tableData, setColumns, setSelectedColumn]);
 
     useEffect(() => {
@@ -60,8 +59,7 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
         const idMapping = citationKeyToInternalId(parsedPdfData);
         const allReferences = getAllReferences(parsedPdfData, formattingType);
         const _tableData = cloneDeep([...tableData]);
-        const tableHead = _tableData[0];
-        const tableBody = _tableData.slice(1);
+        const [tableHead, ...tableBody] = _tableData;
         const columnIndex = tableHead.indexOf(selectedColumn);
         const paperColumns = [
             'title',
@@ -99,7 +97,6 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
                     internalId = value;
                 }
 
-                // Only process if the citation has been found
                 if (internalId) {
                     const reference = allReferences[internalId];
 
@@ -130,57 +127,96 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
 
         dispatch(updateTableData({ id, dataChanges: tableUpdates }));
 
-        // close the modal
         toggle();
         if (foundCount > 0) {
             toast.success(`Successfully extracted ${foundCount} out of ${tableBody.length} references`);
         } else {
-            toast.error('No references could be extracted automatically, please add them manually');
+            toast.danger('No references could be extracted automatically, please add them manually');
         }
     };
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Reference extraction</ModalHeader>
-            <ModalBody>
-                <Alert color="info">References used within a table can be extracted. The extracted data will be added to the table</Alert>
-                <Form>
-                    <FormGroup>
-                        <Label for="columnSelect">Select the column that contains the citation key</Label>
-                        <Input type="select" value={selectedColumn} onChange={(e) => setSelectedColumn(e.target.value)} id="columnSelect">
-                            {columns.map((column: string) => (
-                                <ColumnOption key={`column${column}`} column={column} />
-                            ))}
-                        </Input>
-                    </FormGroup>
+        <Modal.Backdrop
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Reference extraction</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-4">
+                        <Alert>
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Description>
+                                    References used within a table can be extracted. The extracted data will be added to the table
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
+                        <Form className="space-y-3">
+                            <Select
+                                fullWidth
+                                name="columnSelect"
+                                value={selectedColumn}
+                                onChange={(value) => setSelectedColumn((value as string) ?? '')}
+                            >
+                                <Label htmlFor="columnSelect">Select the column that contains the citation key</Label>
+                                <Select.Trigger id="columnSelect">
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        {columns.map((column: string) => (
+                                            <ListBox.Item key={`column${column}`} id={column} textValue={column}>
+                                                <ColumnLabel column={column} />
+                                                <ListBox.ItemIndicator />
+                                            </ListBox.Item>
+                                        ))}
+                                    </ListBox>
+                                </Select.Popover>
+                            </Select>
 
-                    <FormGroup>
-                        <Label for="columnFormatting">Select the reference formatting</Label>
-                        <Input
-                            type="select"
-                            value={formattingType}
-                            onChange={(e) => setFormattingType(e.target.value as ReferenceType)}
-                            id="columnFormatting"
-                        >
-                            <option value="numerical">Numerical ([1]; [2])</option>
-                            <option value="author-names">Author last name (Doe, 2020; Doe et al., 2020)</option>
-                            {/*
-                            <option value="author-names2">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
-                            <option value="author-names3">
-                                Author last name (Doe, 2020; Doe and Reed, 2020; Doe and Reed and Li 2020; Doe et al. 2020)
-                            </option>
-                            */}
-                        </Input>
-                    </FormGroup>
-                </Form>
-            </ModalBody>
+                            <Select
+                                fullWidth
+                                name="columnFormatting"
+                                value={formattingType}
+                                onChange={(value) => setFormattingType((value as ReferenceType) ?? 'numerical')}
+                            >
+                                <Label htmlFor="columnFormatting">Select the reference formatting</Label>
+                                <Select.Trigger id="columnFormatting">
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        <ListBox.Item id="numerical" textValue="Numerical ([1]; [2])">
+                                            Numerical ([1]; [2])
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                        <ListBox.Item id="author-names" textValue="Author last name (Doe, 2020; Doe et al., 2020)">
+                                            Author last name (Doe, 2020; Doe et al., 2020)
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    </ListBox>
+                                </Select.Popover>
+                            </Select>
+                        </Form>
+                    </Modal.Body>
 
-            <ModalFooter>
-                <Button color="primary" onClick={handleExtractReferences}>
-                    Extract references
-                </Button>
-            </ModalFooter>
-        </Modal>
+                    <Modal.Footer>
+                        <Button variant="primary" onPress={handleExtractReferences}>
+                            Extract references
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

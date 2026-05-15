@@ -1,5 +1,4 @@
-import { Cookies } from 'react-cookie';
-import { z, ZodTypeAny } from 'zod';
+import { z, ZodType } from 'zod';
 
 import { preprocessNumber } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, RESOURCES } from '@/constants/graphSettings';
@@ -10,8 +9,6 @@ import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { createResource, getResource, updateResource } from '@/services/backend/resources';
 import { Class, EntityType, Node, Predicate, PropertyShape, Resource, Statement, Template } from '@/services/backend/types';
 
-const cookies = new Cookies();
-
 export const prioritizeDescriptionStatements = (_statements: Record<string, Statement[]>) => {
     const orderedKeys = Object.keys(_statements).sort((a, b) => {
         // Put description predicates first
@@ -21,11 +18,6 @@ export const prioritizeDescriptionStatements = (_statements: Record<string, Stat
         return a.localeCompare(b);
     });
     return orderedKeys;
-};
-
-export const getPreferenceFromCookies = (p: string) => {
-    const cookieName = `preferences.${p}`;
-    return cookies.get(cookieName) ?? undefined;
 };
 
 export const getListPropertiesFromTemplate = (template: Template, required = false) => {
@@ -39,32 +31,14 @@ export const getPropertyShapesByPredicateID = (template: Template, predicateId: 
     return template.properties.filter((ps) => ps.path.id === predicateId);
 };
 
-// https://css-tricks.com/snippets/javascript/lighten-darken-color/
-const LightenDarkenColor = (col: string, amt: number) => {
-    let usePound = false;
-    let _col = col;
-    if (col[0] === '#') {
-        _col = col.slice(1);
-        usePound = true;
-    }
-    const num = parseInt(_col, 16);
-    let r = (num >> 16) + amt;
-    if (r > 255) r = 255;
-    else if (r < 0) r = 0;
-    let b = ((num >> 8) & 0x00ff) + amt;
-    if (b > 255) b = 255;
-    else if (b < 0) b = 0;
-    let g = (num & 0x0000ff) + amt;
-    if (g > 255) g = 255;
-    else if (g < 0) g = 0;
-    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
-};
+const MAX_DB_LEVEL = 10;
 
 /**
- * Get the background color for the statement
+ * Returns a CSS var reference so the color follows the active theme.
  */
 export const getBackgroundColor = (index: number) => {
-    return index === 0 ? '#fff' : LightenDarkenColor('#f8f9fc', index * -9);
+    const clamped = Math.min(Math.max(index, 0), MAX_DB_LEVEL);
+    return `var(--db-level-${clamped})`;
 };
 
 /**
@@ -132,7 +106,7 @@ export const getStatementsBySubjectId = (id: string, statements: Statement[]) =>
 
 export const convertPropertyShapeToSchema = (propertyShape: PropertyShape) => {
     // Start with base schema based on the first validation rule
-    let baseSchema: ZodTypeAny;
+    let baseSchema: ZodType;
     if ('min_inclusive' in propertyShape && 'max_inclusive' in propertyShape && propertyShape.min_inclusive && propertyShape.max_inclusive) {
         baseSchema = z.preprocess(
             preprocessNumber,

@@ -2,7 +2,6 @@ import { invert, isNumber } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OPERATORS_MAP } from '@/constants/filters';
 import { FilterConfig, FilterConfigOperator, FilterConfigValue } from '@/services/backend/types';
 
@@ -23,7 +22,7 @@ const NumberInputField: FC<NumberInputFieldProps> = ({ filter, updateValue }) =>
         isNumber(input.inputValue) ? (
             'Possible operators: >, <, =, <=, >='
         ) : (
-            <div className="text-start">
+            <div className="text-left">
                 <small>
                     Enter an expression in the format "OperatorNumber" <br />
                     Supported operators are: &lt;, &gt;, =, !=, &lt;= and &gt;= <br />
@@ -64,7 +63,6 @@ const NumberInputField: FC<NumberInputFieldProps> = ({ filter, updateValue }) =>
 
     return (
         <div style={{ minWidth: '250px' }}>
-            <SelectGlobalStyle />
             <CreatableSelect
                 onChange={(selected) => {
                     updateValue(selected.map((v: { label: string; value: string; __isNew__?: boolean }) => convertString2FilterConfigValue(v)));

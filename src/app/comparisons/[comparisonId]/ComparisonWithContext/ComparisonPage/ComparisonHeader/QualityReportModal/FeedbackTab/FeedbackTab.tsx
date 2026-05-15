@@ -1,11 +1,8 @@
+import { Alert } from '@heroui/react';
 import { FC } from 'react';
 
 import FEEDBACK_QUESTIONS from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/hooks/feedbackQuestions';
 import InviteResearchersButton from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
-import Alert from '@/components/Ui/Alert/Alert';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
-import Progress from '@/components/Ui/Progress/Progress';
 
 type FeedbackTabProps = {
     feedbacks: {
@@ -15,6 +12,20 @@ type FeedbackTabProps = {
 };
 
 const FeedbackTab: FC<FeedbackTabProps> = ({ feedbacks, comparisonId }) => {
+    if (!comparisonId) {
+        return (
+            <div className="m-4">
+                <Alert status="danger">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Feedback unavailable</Alert.Title>
+                        <Alert.Description>User feedback is not available for unpublished comparisons.</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            </div>
+        );
+    }
+
     const questions = FEEDBACK_QUESTIONS.map((question) => ({
         ...question,
         score:
@@ -23,44 +34,38 @@ const FeedbackTab: FC<FeedbackTabProps> = ({ feedbacks, comparisonId }) => {
                 : undefined,
     }));
 
-    return comparisonId ? (
-        <div className="px-3">
-            <div className="d-flex justify-content-between align-items-center my-4">
-                <p className="m-0">
+    return (
+        <div className="px-4 pb-4">
+            <div className="flex flex-wrap justify-between items-center gap-3 my-6">
+                <p className="m-0 text-sm">
                     The displayed results are based on feedback from <strong>{feedbacks.length} different evaluators</strong>
                 </p>
-                <div>
-                    <InviteResearchersButton comparisonId={comparisonId} />
-                </div>
+                <InviteResearchersButton comparisonId={comparisonId} />
             </div>
             {questions.map((question) => (
-                <div key={question.id} className="border-top w-100 py-2">
-                    {question.question}
+                <div key={question.id} className="border-t border-default py-3">
+                    <div className="font-medium text-sm mb-3">{question.question}</div>
                     {question.input === 'likert' && (
-                        <div className="d-flex align-items-center my-3">
-                            <div className="fw-bold text-end me-2" style={{ width: '20%' }}>
-                                {question.score}% agrees
+                        <div className="flex items-center gap-3">
+                            <div className="font-semibold text-right w-[20%] text-xs">{question.score}% agrees</div>
+                            <div className="grow h-2 bg-default rounded overflow-hidden">
+                                <div className="h-full bg-accent transition-[width] duration-500" style={{ width: `${question.score ?? 0}%` }} />
                             </div>
-                            <Progress color="primary" value={question.score} className="flex-grow-1" />
-                            <div className="fw-bold ms-2" style={{ width: '20%' }}>
-                                {question.score ? 100 - question.score : 0}% disagrees
-                            </div>
+                            <div className="font-semibold w-[20%] text-xs">{question.score ? 100 - question.score : 0}% disagrees</div>
                         </div>
                     )}
                     {question.input === 'textarea' && (
-                        <ListGroup className="my-3 mx-5">
+                        <ul className="list-none p-0 m-0 flex flex-col gap-2 mx-6">
                             {feedbacks.map((review, index) => (
-                                <ListGroupItem key={index}>{review[question.id]}</ListGroupItem>
+                                <li key={index} className="bg-surface-secondary border border-default rounded px-3 py-2 text-sm">
+                                    {review[question.id]}
+                                </li>
                             ))}
-                        </ListGroup>
+                        </ul>
                     )}
                 </div>
             ))}
         </div>
-    ) : (
-        <Alert color="danger" className="m-3" fade={false}>
-            User feedback is not available for unpublished comparisons
-        </Alert>
     );
 };
 

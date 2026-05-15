@@ -1,6 +1,5 @@
 import { faAngleDoubleRight, faEllipsisH, faHome, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import styled from 'styled-components';
@@ -8,6 +7,7 @@ import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
 import { Node } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utilsTyped';
@@ -94,7 +94,7 @@ export const BreadcrumbStyled = styled.ul`
 export const TippyContentStyled = styled.div`
     text-align: left;
     a {
-        color: #fff;
+        color: inherit;
         &:hover {
             color: ${(props) => props.theme.primary};
         }
@@ -116,19 +116,19 @@ const RelativeBreadcrumbs: FC<RelativeBreadcrumbsProps> = ({ researchField }) =>
     if (!researchField) return null;
 
     return (
-        <BreadcrumbStyled className="d-flex p-0">
+        <BreadcrumbStyled className="flex p-0">
             <li>
                 <Tooltip
                     onTrigger={() => setIsOpen(true)}
                     content={
                         <TippyContentStyled>
                             {!isLoading ? (
-                                <small>
-                                    <Link href={reverse(ROUTES.HOME)}>
-                                        <FontAwesomeIcon className="me-1" icon={faHome} />
+                                <div>
+                                    <Link href={reverse(ROUTES.HOME)} aria-label="Home">
+                                        <FontAwesomeIcon className="mr-1" icon={faHome} />
                                     </Link>
                                     {parentResearchFields && parentResearchFields?.length > 1 && (
-                                        <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                        <FontAwesomeIcon className="mr-1 ml-1" icon={faAngleDoubleRight} aria-hidden />
                                     )}
                                     {parentResearchFields
                                         ?.slice()
@@ -139,30 +139,30 @@ const RelativeBreadcrumbs: FC<RelativeBreadcrumbsProps> = ({ researchField }) =>
                                                     {field.label}
                                                 </Link>
                                                 {index !== parentResearchFields.length - 1 && (
-                                                    <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                                    <FontAwesomeIcon className="mr-1 ml-1" icon={faAngleDoubleRight} aria-hidden />
                                                 )}
                                             </span>
                                         ))}
-                                </small>
+                                </div>
                             ) : (
-                                <FontAwesomeIcon icon={faSpinner} spin />
+                                <FontAwesomeIcon icon={faSpinner} spin aria-label="Loading" />
                             )}
                         </TippyContentStyled>
                     }
                 >
                     <Link
-                        className="d-block text-decoration-none"
+                        className="block text-decoration-none"
                         href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
+                        aria-label="Browse parent research fields"
                     >
-                        <FontAwesomeIcon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
+                        <FontAwesomeIcon size="sm" icon={faEllipsisH} className="ml-2 mr-1" />
                     </Link>
                 </Tooltip>
             </li>
-
             <li>
                 <Tooltip content={researchField.label} disabled={researchField.label?.length <= 18}>
                     <Link
-                        className="d-block text-decoration-none"
+                        className="block text-decoration-none"
                         href={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
                     >
                         <div className="truncate">{researchField.label}</div>

@@ -1,6 +1,5 @@
-All notable changes to the ORKG will be documented in this file. The format is based on [Keep a
-Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
-Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to the ORKG will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 ## [v0.181.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.180.0...v0.181.0) - 2026-05-13
@@ -49,12 +48,13 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: improve dataset/software content type view [`#1649`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1649)
 
 ---
+
 ## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
 
 ### Changes
 
 - perf: conditional data browser rendering [`#1652`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1652)
-- feat: rework add content type page  [`#1640`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1640)
+- feat: rework add content type page [`#1640`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1640)
 - chore: remove duplicated user profile page [`#1645`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1645)
 - fix: enable edit mode after creating lists and reviews [`#1646`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1646)
 - chore: shared vscode settings [`#1647`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1647)
@@ -65,15 +65,17 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: editable comparisons [`#1622`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1622)
 
 ---
+
 ## [v0.176.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.0...v0.176.1) - 2026-02-16
 
 ### Changes
 
 - fix: add missing is_anonymized property on create comparison [`#1638`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1638)
 - refactor: use new backend API endpoint [`#1637`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1637)
-- chore: remove react-helmet and update  pragmatic dnd and citation-js [`#1626`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1626)
+- chore: remove react-helmet and update pragmatic dnd and citation-js [`#1626`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1626)
 
 ---
+
 ## [v0.176.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.175.0...v0.176.0) - 2026-02-04
 
 ### Changes
@@ -90,6 +92,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: initial integration of @orkg/orkg-client [`#1621`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1621)
 
 ---
+
 ## [v0.175.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.174.0...v0.175.0) - 2026-01-07
 
 ### Changes
@@ -98,6 +101,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ImportSHACL): make target class optional as in the UI [`#1623`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1623)
 
 ---
+
 ## [v0.174.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.173.0...v0.174.0) - 2025-12-13
 
 ### Changes
@@ -109,6 +113,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ObjectStatements): add informational alert for resource statements tab [`#1613`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1613)
 
 ---
+
 ## [v0.173.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.172.0...v0.173.0) - 2025-12-04
 
 ### Changes
@@ -122,6 +127,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: statement type to statement template [`#1602`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1602)
 
 ---
+
 ## [v0.172.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.171.0...v0.172.0) - 2025-11-27
 
 ### Changes
@@ -132,6 +138,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: import resources from OLS [`#1604`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1604)
 
 ---
+
 ## [v0.171.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.170.0...v0.171.0) - 2025-10-28
 
 ### Changes
@@ -139,6 +146,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: remove Chatwoot [`#1605`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1605)
 
 ---
+
 ## [v0.170.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.169.0...v0.170.0) - 2025-10-13
 
 ### Changes
@@ -156,6 +164,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CSVImport): fix match header by label function [`#1591`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1591)
 
 ---
+
 ## [v0.169.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.168.0...v0.169.0) - 2025-09-25
 
 ### Changes
@@ -163,6 +172,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: introduce grid editor [`#1565`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1565)
 
 ---
+
 ## [v0.168.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.5...v0.168.0) - 2025-09-19
 
 ### Changes
@@ -179,6 +189,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: edit contribution label from tab [`#1572`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1572)
 
 ---
+
 ## [v0.167.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.4...v0.167.5) - 2025-09-08
 
 ### Changes
@@ -186,6 +197,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: list only papers on the research problem page [`#1586`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1586)
 
 ---
+
 ## [v0.167.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.3...v0.167.4) - 2025-09-04
 
 ### Changes
@@ -195,6 +207,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Autocomplete): handle errors when importing entities [`#1571`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1571)
 
 ---
+
 ## [v0.167.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.2...v0.167.3) - 2025-08-12
 
 ### Changes
@@ -206,6 +219,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - disable eslint [`#1564`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1564)
 
 ---
+
 ## [v0.167.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.1...v0.167.2) - 2025-07-28
 
 ### Changes
@@ -216,6 +230,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: pass the new contirubtion id correctly from useAddPaper [`#1567`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1567)
 
 ---
+
 ## [v0.167.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.167.0...v0.167.1) - 2025-07-10
 
 ### Changes
@@ -225,6 +240,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: update to Next.js 15 [`#1553`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1553)
 
 ---
+
 ## [v0.167.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.166.0...v0.167.0) - 2025-06-20
 
 ### Changes
@@ -238,6 +254,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Review): show comparison metadata in print view [`#1554`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1554)
 
 ---
+
 ## [v0.166.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.165.0...v0.166.0) - 2025-06-06
 
 ### Changes
@@ -245,6 +262,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: remove birthday label for header logo [`#1555`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1555)
 
 ---
+
 ## [v0.165.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.164.0...v0.165.0) - 2025-06-05
 
 ### Changes
@@ -255,6 +273,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: close header dropdown when item is clicked [`#1551`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1551)
 
 ---
+
 ## [v0.164.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.163.0...v0.164.0) - 2025-05-22
 
 ### Changes
@@ -269,6 +288,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: migrate to location header paths and remove deprecated endpoints [`#1539`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1539)
 
 ---
+
 ## [v0.163.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.5...v0.163.0) - 2025-05-14
 
 ### Changes
@@ -279,6 +299,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: semantify button in csv table with modal [`#1428`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1428)
 
 ---
+
 ## [v0.162.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.4...v0.162.5) - 2025-05-06
 
 ### Changes
@@ -286,6 +307,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: omit credentials to prevent sending cookies to backend API [`#1542`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1542)
 
 ---
+
 ## [v0.162.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.3...v0.162.4) - 2025-04-14
 
 ### Changes
@@ -293,6 +315,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(AbstractAnnotator): last character of each field is missing [`#1537`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1537)
 
 ---
+
 ## [v0.162.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.2...v0.162.3) - 2025-04-11
 
 ### Changes
@@ -301,6 +324,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: update compose file [`#1534`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1534)
 
 ---
+
 ## [v0.162.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.1...v0.162.2) - 2025-03-28
 
 ### Changes
@@ -314,6 +338,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: comparison page server component [`#1529`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1529)
 
 ---
+
 ## [v0.162.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.162.0...v0.162.1) - 2025-03-24
 
 ### Changes
@@ -321,6 +346,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: increase the timeout for SimComp, NLP and SimPaper calls [`#1528`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1528)
 
 ---
+
 ## [v0.162.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.161.0...v0.162.0) - 2025-03-24
 
 ### Changes
@@ -333,6 +359,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: use server component for paper page [`#1519`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1519)
 
 ---
+
 ## [v0.161.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.7...v0.161.0) - 2025-03-10
 
 ### Changes
@@ -355,6 +382,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: update widgets dependencies [`#1497`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1497)
 
 ---
+
 ## [v0.160.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.6...v0.160.7) - 2025-02-21
 
 ### Changes
@@ -363,6 +391,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: correct typos in README [`#1507`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1507)
 
 ---
+
 ## [v0.160.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.5...v0.160.6) - 2025-02-18
 
 ### Changes
@@ -370,6 +399,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: signout if getUserInformation returns 401 [`#1504`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1504)
 
 ---
+
 ## [v0.160.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.4...v0.160.5) - 2025-02-18
 
 ### Changes
@@ -377,6 +407,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: assume no forward slash in Keycloak URL endpoints [`#1503`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1503)
 
 ---
+
 ## [v0.160.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.3...v0.160.4) - 2025-02-17
 
 ### Changes
@@ -384,6 +415,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: replace keycloak-js with NextAuth + keycloak adapter [`#1490`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1490)
 
 ---
+
 ## [v0.160.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.2...v0.160.3) - 2025-02-12
 
 ### Changes
@@ -391,6 +423,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: return service.tib.eu to CORS config [`#1498`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1498)
 
 ---
+
 ## [v0.160.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.1...v0.160.2) - 2025-02-11
 
 ### Changes
@@ -404,6 +437,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: allow new lines in property descriptions (revert !1471) [`#1477`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1477)
 
 ---
+
 ## [v0.160.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.160.0...v0.160.1) - 2025-01-27
 
 ### Changes
@@ -414,6 +448,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: value plugins change loading method, use typescript [`#1486`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1486)
 
 ---
+
 ## [v0.160.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.159.0...v0.160.0) - 2025-01-24
 
 ### Changes
@@ -424,6 +459,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: update the heuristic approach to display the CategoricalFilter and fix the TextFilter [`#1484`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1484)
 
 ---
+
 ## [v0.159.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.158.0...v0.159.0) - 2025-01-17
 
 ### Changes
@@ -441,6 +477,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: search field breaks with small horizontal resolution [`#1472`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1472)
 
 ---
+
 ## [v0.158.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.157.0...v0.158.0) - 2025-01-14
 
 ### Changes
@@ -449,6 +486,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: add support for additional literal types (time and duration) [`#1425`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1425)
 
 ---
+
 ## [v0.157.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.156.0...v0.157.0) - 2025-01-13
 
 ### Changes
@@ -464,6 +502,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor(Lists): use publish endpoint [`#1453`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1453)
 
 ---
+
 ## [v0.156.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.155.0...v0.156.0) - 2024-12-20
 
 ### Changes
@@ -471,6 +510,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Search): add ORKG Ask example questions [`#1454`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1454)
 
 ---
+
 ## [v0.155.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.5...v0.155.0) - 2024-12-20
 
 ### Changes
@@ -487,6 +527,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: pagination for class instances [`#1445`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1445)
 
 ---
+
 ## [v0.154.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.4...v0.154.5) - 2024-12-17
 
 ### Changes
@@ -494,6 +535,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: update the comparison when a contribution is added or removed from the contribution editor [`#1455`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1455)
 
 ---
+
 ## [v0.154.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.3...v0.154.4) - 2024-12-16
 
 ### Changes
@@ -502,6 +544,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Resource): add missing 'Comparison view' link for published comparisons [`#1452`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1452)
 
 ---
+
 ## [v0.154.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.2...v0.154.3) - 2024-12-13
 
 ### Changes
@@ -510,6 +553,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: prevent mounting modals when not needed [`#1449`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1449)
 
 ---
+
 ## [v0.154.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.1...v0.154.2) - 2024-12-12
 
 ### Changes
@@ -518,6 +562,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: use ky for network requests [`#1418`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1418)
 
 ---
+
 ## [v0.154.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.154.0...v0.154.1) - 2024-12-10
 
 ### Changes
@@ -525,6 +570,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - test: mock things endpoint [`#1443`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1443)
 
 ---
+
 ## [v0.154.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.153.0...v0.154.0) - 2024-12-09
 
 ### Changes
@@ -536,6 +582,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: consolidate comparison editing and publishing [`#1402`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1402)
 
 ---
+
 ## [v0.153.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.152.0...v0.153.0) - 2024-12-03
 
 ### Changes
@@ -554,6 +601,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: hide "No Data" component in predicate DataBrowser [`#1431`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1431)
 
 ---
+
 ## [v0.152.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.151.1...v0.152.0) - 2024-11-21
 
 ### Changes
@@ -561,6 +609,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Pagination instead of "Load More" buttons [`#1403`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1403)
 
 ---
+
 ## [v0.151.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.151.0...v0.151.1) - 2024-11-21
 
 ### Changes
@@ -568,6 +617,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: add frame-ancestors CSP rule for accounts.orkg.org [`#1426`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1426)
 
 ---
+
 ## [v0.151.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.1...v0.151.0) - 2024-11-20
 
 ### Changes
@@ -583,14 +633,16 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Header): add link to ORKG Ask [`#1423`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1423)
 
 ---
+
 ## [v0.150.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.150.0...v0.150.1) - 2024-11-13
 
 ### Changes
 
 - fix(DataBrowser): remove duplicate statements in the paper version snapshot [`#1413`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1413)
-- fix: adapt LinkButton component to backend _class values [`#1414`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1414)
+- fix: adapt LinkButton component to backend \_class values [`#1414`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1414)
 
 ---
+
 ## [v0.150.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.149.0...v0.150.0) - 2024-11-07
 
 ### Changes
@@ -604,6 +656,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: remove alias for FontAwesomeIcon import [`#1408`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1408)
 
 ---
+
 ## [v0.149.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.148.0...v0.149.0) - 2024-10-30
 
 ### Changes
@@ -614,6 +667,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: update NextJs [`#1398`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1398)
 
 ---
+
 ## [v0.148.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.147.0...v0.148.0) - 2024-10-17
 
 ### Changes
@@ -621,6 +675,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Adding users should not require an email address [`#1397`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1397)
 
 ---
+
 ## [v0.147.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.3...v0.147.0) - 2024-10-17
 
 ### Changes
@@ -632,6 +687,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Observatory/EditObservatory =&gt; converted class component into functional component [`#1340`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1340)
 
 ---
+
 ## [v0.146.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.2...v0.146.3) - 2024-10-10
 
 ### Changes
@@ -639,6 +695,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): Clicking on smart suggestion for adding property [`#1391`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1391)
 
 ---
+
 ## [v0.146.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.1...v0.146.2) - 2024-09-20
 
 ### Changes
@@ -650,6 +707,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: move infosheet-data-protection to the root of public folder [`#1385`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1385)
 
 ---
+
 ## [v0.146.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.146.0...v0.146.1) - 2024-09-13
 
 ### Changes
@@ -659,6 +717,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: rename default exports for constants files [`#1384`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1384)
 
 ---
+
 ## [v0.146.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.145.0...v0.146.0) - 2024-09-12
 
 ### Changes
@@ -676,6 +735,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(LiteratureList): blacklist research fields when publishing [`#1372`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1372)
 
 ---
+
 ## [v0.145.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.144.0...v0.145.0) - 2024-08-08
 
 ### Changes
@@ -684,6 +744,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: prototype Rosetta Stone [`#1355`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1355)
 
 ---
+
 ## [v0.144.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.143.1...v0.144.0) - 2024-08-02
 
 ### Changes
@@ -698,6 +759,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Allow creators to edit their comparison [`#1365`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1365)
 
 ---
+
 ## [v0.143.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.143.0...v0.143.1) - 2024-07-04
 
 ### Changes
@@ -705,6 +767,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: issues while importing SHACL file [`#1360`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1360)
 
 ---
+
 ## [v0.143.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.1...v0.143.0) - 2024-06-25
 
 ### Changes
@@ -719,6 +782,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Observatory/EditObservatory =&gt; converted class component into functional component [`#1338`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1338)
 
 ---
+
 ## [v0.142.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.142.0...v0.142.1) - 2024-06-21
 
 ### Changes
@@ -726,6 +790,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ContributionEditor): cannot create new resources [`#1356`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1356)
 
 ---
+
 ## [v0.142.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.2...v0.142.0) - 2024-06-18
 
 ### Changes
@@ -742,6 +807,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - lint: update react/jsx-wrap-multilines [`#1337`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1337)
 
 ---
+
 ## [v0.141.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.1...v0.141.2) - 2024-05-30
 
 ### Changes
@@ -750,6 +816,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: check if research field is provided from SciKGTeX extraction [`#1339`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1339)
 
 ---
+
 ## [v0.141.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.141.0...v0.141.1) - 2024-05-24
 
 ### Changes
@@ -758,13 +825,14 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style(Observatory): allow description text to get a large space [`#1334`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1334)
 
 ---
+
 ## [v0.141.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.140.0...v0.141.0) - 2024-05-11
 
 ### Changes
 
 - refactor: migrate multiple components to TypeScript [`#1289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1289)
 - observatories(EditObservatories)=&gt; updated endpoint to updateObservatory [`#1307`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1307)
-- feat(Resource): support setting the extraction method  [`#1312`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1312)
+- feat(Resource): support setting the extraction method [`#1312`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1312)
 - Comparison(RelatedPaperCarousal)=&gt; added slidesToshow = 4, [`#1306`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1306)
 - fix: redirect to resource page if the visualization is not linked to any comparison [`#1314`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1314)
 - fix: applying template to all contributions in the contribution editor [`#1315`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1315)
@@ -784,6 +852,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style: always have parentheses for arrow function arguments [`#1302`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1302)
 
 ---
+
 ## [v0.140.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.139.1...v0.140.0) - 2024-04-25
 
 ### Changes
@@ -792,6 +861,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: migrate to Next.js [`#1198`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1198)
 
 ---
+
 ## [v0.139.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.139.0...v0.139.1) - 2024-04-23
 
 ### Changes
@@ -799,6 +869,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: listing instances [`#1311`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1311)
 
 ---
+
 ## [v0.139.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.2...v0.139.0) - 2024-04-22
 
 ### Changes
@@ -810,6 +881,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Templates: use new backend endpoints [`#1297`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1297)
 
 ---
+
 ## [v0.138.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.1...v0.138.2) - 2024-04-04
 
 ### Changes
@@ -817,6 +889,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ResearchField): wrong dependency check [`#1303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1303)
 
 ---
+
 ## [v0.138.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.138.0...v0.138.1) - 2024-04-04
 
 ### Changes
@@ -825,6 +898,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix tests, fix(StatementBrowser): filter list of help articles [`#1300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1300)
 
 ---
+
 ## [v0.138.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.137.0...v0.138.0) - 2024-04-04
 
 ### Changes
@@ -833,6 +907,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - HelpCenter=&gt; typescript conversion [`#1282`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1282)
 
 ---
+
 ## [v0.137.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.136.0...v0.137.0) - 2024-04-03
 
 ### Changes
@@ -840,7 +915,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Acknowledgements =&gt; changed the smart review methadology link and added The before orkg [`#1295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1295)
 - feat(Observatory): Faceted browsing of papers [`#1175`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1175)
 - chore: Browserslist package update [`#1298`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1298)
-- useQualityReport =&gt; changed entity.type into entity._class to fetch count of literals and resources [`#1288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1288)
+- useQualityReport =&gt; changed entity.type into entity.\_class to fetch count of literals and resources [`#1288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1288)
 - EditableHeader=&gt; added check if id===wikidata then hide the editable icon of the resouce label [`#1274`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1274)
 - chore: update twitter icon [`#1292`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1292)
 - fix: Adding papers via List are missing metadata (publicationMonth, publicationYear) [`#1294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1294)
@@ -850,6 +925,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Resource): support deletion of own unused resources [`#1287`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1287)
 
 ---
+
 ## [v0.136.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.2...v0.136.0) - 2024-03-19
 
 ### Changes
@@ -863,6 +939,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: use new paper endpoints [`#1263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1263)
 
 ---
+
 ## [v0.135.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.1...v0.135.2) - 2024-03-07
 
 ### Changes
@@ -870,6 +947,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Authors are missing from Review and List cards [`#1283`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1283)
 
 ---
+
 ## [v0.135.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.135.0...v0.135.1) - 2024-03-04
 
 ### Changes
@@ -877,6 +955,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: change predicate of published lists [`#1281`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1281)
 
 ---
+
 ## [v0.135.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.134.0...v0.135.0) - 2024-02-29
 
 ### Changes
@@ -889,6 +968,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(template): Add support for placeholder & description [`#1248`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1248)
 
 ---
+
 ## [v0.134.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.2...v0.134.0) - 2024-02-21
 
 ### Changes
@@ -901,6 +981,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Template): Prominent display of SHACL export [`#1265`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1265)
 
 ---
+
 ## [v0.133.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.1...v0.133.2) - 2024-02-08
 
 ### Changes
@@ -910,6 +991,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: remove indexing of contributions after adding a paper [`#1260`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1260)
 
 ---
+
 ## [v0.133.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.133.0...v0.133.1) - 2024-01-24
 
 ### Changes
@@ -919,6 +1001,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore(PublishComparison): migrate to new publish DOI endpoint [`#1253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1253)
 
 ---
+
 ## [v0.133.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.132.0...v0.133.0) - 2024-01-15
 
 ### Changes
@@ -930,6 +1013,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(DraftComparisons): show error message on failed deletion [`#1250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1250)
 
 ---
+
 ## [v0.132.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.131.0...v0.132.0) - 2023-12-19
 
 ### Changes
@@ -938,6 +1022,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: make sure that tokenExpire cookie exist before auto logout [`#1247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1247)
 
 ---
+
 ## [v0.131.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.2...v0.131.0) - 2023-12-15
 
 ### Changes
@@ -945,6 +1030,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(CodeValuePlugin): support TIB LDM URLs [`#1245`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1245)
 
 ---
+
 ## [v0.130.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.1...v0.130.2) - 2023-12-11
 
 ### Changes
@@ -953,6 +1039,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Datasets and Software cannot be edited [`#1243`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1243)
 
 ---
+
 ## [v0.130.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.130.0...v0.130.1) - 2023-12-11
 
 ### Changes
@@ -960,6 +1047,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Deprecated type field used in object endpoint requests [`#1241`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1241)
 
 ---
+
 ## [v0.130.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.4...v0.130.0) - 2023-12-04
 
 ### Changes
@@ -968,6 +1056,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(TemplateEditor): Persist the edit mode after creating a new template [`#1225`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1225)
 
 ---
+
 ## [v0.129.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.3...v0.129.4) - 2023-11-28
 
 ### Changes
@@ -976,6 +1065,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Review): ensure only Review authors are displayed [`#1238`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1238)
 
 ---
+
 ## [v0.129.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.2...v0.129.3) - 2023-11-23
 
 ### Changes
@@ -983,6 +1073,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor(Comparison): Sync with the new SimComp API [`#1078`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1078)
 
 ---
+
 ## [v0.129.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.1...v0.129.2) - 2023-11-17
 
 ### Changes
@@ -992,6 +1083,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): defaults props of Statements component [`#1235`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1235)
 
 ---
+
 ## [v0.129.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.129.0...v0.129.1) - 2023-11-15
 
 ### Changes
@@ -1000,17 +1092,19 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: support typescript [`#1157`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1157)
 
 ---
+
 ## [v0.129.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.128.0...v0.129.0) - 2023-11-08
 
 ### Changes
 
-- StatementBrowser(Statement):removed default props and renamed syncBackend =&gt; syncBackendValue and propertySuggestionsComponent =&gt;  propertySuggestionsComponentStore [`#1217`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1217)
+- StatementBrowser(Statement):removed default props and renamed syncBackend =&gt; syncBackendValue and propertySuggestionsComponent =&gt; propertySuggestionsComponentStore [`#1217`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1217)
 - fix(ResearchFieldCards): ensure words are correctly pluralized [`#1230`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1230)
 - docs: update CONTRIBUTING and remove docs folder [`#1231`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1231)
 - feat(AbstractModal): show warning for fetching abstract by title [`#1228`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1228)
 - feat(Diff): show link to compare to latest version [`#1229`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1229)
 
 ---
+
 ## [v0.128.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.127.0...v0.128.0) - 2023-11-01
 
 ### Changes
@@ -1025,6 +1119,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Home): replace 'react-responsive-tabs' with custom tabs [`#1190`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1190)
 
 ---
+
 ## [v0.127.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.1...v0.127.0) - 2023-10-24
 
 ### Changes
@@ -1034,6 +1129,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - legal: update license to CC0 [`#1219`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1219)
 
 ---
+
 ## [v0.126.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.126.0...v0.126.1) - 2023-10-17
 
 ### Changes
@@ -1041,6 +1137,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style(Tippy): Text in hover popup is difficult to read [`#1216`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1216)
 
 ---
+
 ## [v0.126.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.125.0...v0.126.0) - 2023-10-16
 
 ### Changes
@@ -1053,6 +1150,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Use the entrypoint mechanism provided by Nginx [`#1209`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1209)
 
 ---
+
 ## [v0.125.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.124.0...v0.125.0) - 2023-10-11
 
 ### Changes
@@ -1061,6 +1159,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Fix delivery of enviroment variables file [`#1210`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1210)
 
 ---
+
 ## [v0.124.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.123.0...v0.124.0) - 2023-10-05
 
 ### Changes
@@ -1069,6 +1168,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: provide null instead of empty string for author ORCIDs [`#1207`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1207)
 
 ---
+
 ## [v0.123.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.122.0...v0.123.0) - 2023-09-22
 
 ### Changes
@@ -1077,6 +1177,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(GraphView): support blacklisting of classes, show the full label of properties [`#1194`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1194)
 
 ---
+
 ## [v0.122.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.121.0...v0.122.0) - 2023-09-19
 
 ### Changes
@@ -1090,6 +1191,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ux(Autocomplete): copy the id of selected item instead of label [`#1184`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1184)
 
 ---
+
 ## [v0.121.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.120.0...v0.121.0) - 2023-09-08
 
 ### Changes
@@ -1098,6 +1200,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Home): integrate Mastodon timeline [`#1191`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1191)
 
 ---
+
 ## [v0.120.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.119.0...v0.120.0) - 2023-09-07
 
 ### Changes
@@ -1107,6 +1210,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(QualityReport): correctly evaluate DOI and property descriptions [`#1189`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1189)
 
 ---
+
 ## [v0.119.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.118.0...v0.119.0) - 2023-08-30
 
 ### Changes
@@ -1122,6 +1226,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Template): add description and export citation of resource in latex format [`#1171`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1171)
 
 ---
+
 ## [v0.118.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.117.0...v0.118.0) - 2023-08-17
 
 ### Changes
@@ -1130,6 +1235,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ViewPaper): add template to contribution is not synced with backend [`#1173`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1173)
 
 ---
+
 ## [v0.117.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.116.0...v0.117.0) - 2023-08-17
 
 ### Changes
@@ -1137,6 +1243,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ResearchFields): support smart suggestions [`#1159`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1159)
 
 ---
+
 ## [v0.116.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.115.0...v0.116.0) - 2023-08-15
 
 ### Changes
@@ -1145,6 +1252,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Debounce autocomplete [`#1170`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1170)
 
 ---
+
 ## [v0.115.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.1...v0.115.0) - 2023-08-10
 
 ### Changes
@@ -1156,6 +1264,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Search): catch decodeURIComponent failure [`#1168`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1168)
 
 ---
+
 ## [v0.114.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.114.0...v0.114.1) - 2023-08-01
 
 ### Changes
@@ -1165,6 +1274,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - HelpCenter:added title in browser [`#1162`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1162)
 
 ---
+
 ## [v0.114.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.113.0...v0.114.0) - 2023-07-27
 
 ### Changes
@@ -1174,6 +1284,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Template): Import SHACL [`#1152`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1152)
 
 ---
+
 ## [v0.113.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.112.0...v0.113.0) - 2023-07-14
 
 ### Changes
@@ -1181,6 +1292,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Home): add ORKG stories box [`#1156`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1156)
 
 ---
+
 ## [v0.112.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.111.0...v0.112.0) - 2023-07-06
 
 ### Changes
@@ -1191,6 +1303,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Contributors): hide contributors with a contribution less than 3 percent [`#1151`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1151)
 
 ---
+
 ## [v0.111.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.110.0...v0.111.0) - 2023-06-21
 
 ### Changes
@@ -1205,6 +1318,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ResearchFieldSelector): hide fields while loading [`#1143`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1143)
 
 ---
+
 ## [v0.110.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.109.0...v0.110.0) - 2023-06-12
 
 ### Changes
@@ -1215,6 +1329,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(uploadPdf):metadata compatibility [`#1128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1128)
 
 ---
+
 ## [v0.109.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.108.0...v0.109.0) - 2023-06-08
 
 ### Changes
@@ -1228,6 +1343,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Observatory): show message when no description is provided [`#1130`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1130)
 
 ---
+
 ## [v0.108.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.1...v0.108.0) - 2023-06-02
 
 ### Changes
@@ -1237,6 +1353,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: Sync with the backend refactoring of observatories endpoints [`#1089`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1089)
 
 ---
+
 ## [v0.107.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.107.0...v0.107.1) - 2023-05-30
 
 ### Changes
@@ -1247,6 +1364,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Revert fuzzy search string optimization [`#1114`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1114)
 
 ---
+
 ## [v0.107.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.106.0...v0.107.0) - 2023-05-24
 
 ### Changes
@@ -1262,6 +1380,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(AddPaperWizard): support PDF upload for metadata extraction [`#976`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/976)
 
 ---
+
 ## [v0.106.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.105.0...v0.106.0) - 2023-05-16
 
 ### Changes
@@ -1280,6 +1399,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): Breadcrumbs navigation for resources in comparisons [`#1108`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1108)
 
 ---
+
 ## [v0.105.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.1...v0.105.0) - 2023-05-10
 
 ### Changes
@@ -1287,6 +1407,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Comparison): Hide the authors and curator when the property "is anonymized" set to true [`#1103`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1103)
 
 ---
+
 ## [v0.104.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.104.0...v0.104.1) - 2023-05-05
 
 ### Changes
@@ -1294,6 +1415,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): disable row groups when sorting [`#1098`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1098)
 
 ---
+
 ## [v0.104.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.1...v0.104.0) - 2023-05-05
 
 ### Changes
@@ -1306,6 +1428,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(AboutPage): responsive images [`#1092`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1092)
 
 ---
+
 ## [v0.103.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.103.0...v0.103.1) - 2023-04-27
 
 ### Changes
@@ -1313,6 +1436,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Storybook): list docs for components [`#1091`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1091)
 
 ---
+
 ## [v0.103.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.2...v0.103.0) - 2023-04-26
 
 ### Changes
@@ -1324,6 +1448,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ResearchFieldsCards): fix word wrap, feat: change limit max displayed items [`#1087`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1087)
 
 ---
+
 ## [v0.102.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.1...v0.102.2) - 2023-04-21
 
 ### Changes
@@ -1334,6 +1459,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - internal: Update dependencies [`#1081`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1081)
 
 ---
+
 ## [v0.102.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.102.0...v0.102.1) - 2023-04-20
 
 ### Changes
@@ -1341,15 +1467,17 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): Load templates recommendation [`#1082`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1082)
 
 ---
+
 ## [v0.102.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.1...v0.102.0) - 2023-04-20
 
 ### Changes
 
-- feat(suggestions):added Recommendations  in view paper-edit mode [`#1062`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1062)
+- feat(suggestions):added Recommendations in view paper-edit mode [`#1062`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1062)
 - feat(Template): use SHACL vocab [`#1060`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1060)
 - ux: Show unlisted badge for authored resources for non-curators [`#1077`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1077)
 
 ---
+
 ## [v0.101.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.101.0...v0.101.1) - 2023-04-11
 
 ### Changes
@@ -1357,6 +1485,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CI): use cjs path instead of esm in Code component [`#1080`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1080)
 
 ---
+
 ## [v0.101.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.100.0...v0.101.0) - 2023-04-11
 
 ### Changes
@@ -1369,6 +1498,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(GeneratePdf): add loading indicator [`#1075`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1075)
 
 ---
+
 ## [v0.100.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.99.0...v0.100.0) - 2023-04-04
 
 ### Changes
@@ -1378,6 +1508,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: make env switching easier [`#1068`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1068)
 
 ---
+
 ## [v0.99.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.1...v0.99.0) - 2023-03-29
 
 ### Changes
@@ -1388,6 +1519,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Discussion): support discussions on papers [`#1040`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1040)
 
 ---
+
 ## [v0.98.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.98.0...v0.98.1) - 2023-03-28
 
 ### Changes
@@ -1395,6 +1527,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(TemplateEditor): losing statements while saving template [`#1063`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1063)
 
 ---
+
 ## [v0.98.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.1...v0.98.0) - 2023-03-27
 
 ### Changes
@@ -1403,6 +1536,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - enhancement(Benchmarks): paginate the list and refactor ListPage [`#1051`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1051)
 
 ---
+
 ## [v0.97.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.97.0...v0.97.1) - 2023-03-23
 
 ### Changes
@@ -1410,6 +1544,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: Sync with the backend changes and use the timline endpoint [`#1054`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1054)
 
 ---
+
 ## [v0.97.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.96.0...v0.97.0) - 2023-03-20
 
 ### Changes
@@ -1423,6 +1558,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(UserProfile): add user related statistics to profile [`#1052`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1052)
 
 ---
+
 ## [v0.96.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.1...v0.96.0) - 2023-03-15
 
 ### Changes
@@ -1430,6 +1566,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Support CSVW model for table view [`#970`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/970)
 
 ---
+
 ## [v0.95.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.95.0...v0.95.1) - 2023-03-14
 
 ### Changes
@@ -1445,6 +1582,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(About): blank page for about, fix issue with missing title [`#1043`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1043)
 
 ---
+
 ## [v0.95.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.94.0...v0.95.0) - 2023-03-10
 
 ### Changes
@@ -1457,6 +1595,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - doc: add explainer videos to comparison and review list [`#1036`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1036)
 
 ---
+
 ## [v0.94.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.93.0...v0.94.0) - 2023-03-06
 
 ### Changes
@@ -1472,6 +1611,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Header): prevent issue with wrong CMS env var [`#1033`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1033)
 
 ---
+
 ## [v0.93.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.92.0...v0.93.0) - 2023-03-01
 
 ### Changes
@@ -1481,6 +1621,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Header): solve issue with sorting of about pages and categories [`#1031`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1031)
 
 ---
+
 ## [v0.92.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.2...v0.92.0) - 2023-02-27
 
 ### Changes
@@ -1492,6 +1633,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ux: Show disabled selector when templates are used [`#1025`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1025)
 
 ---
+
 ## [v0.91.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.1...v0.91.2) - 2023-02-21
 
 ### Changes
@@ -1499,6 +1641,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: support Strapi V4 API [`#1000`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1000)
 
 ---
+
 ## [v0.91.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.91.0...v0.91.1) - 2023-02-10
 
 ### Changes
@@ -1508,6 +1651,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Visualization): fix broken comparisons and add error boundary [`#1018`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1018)
 
 ---
+
 ## [v0.91.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.90.0...v0.91.0) - 2023-02-03
 
 ### Changes
@@ -1520,6 +1664,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Observatories): logos moving after loading [`#1007`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1007)
 
 ---
+
 ## [v0.90.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.89.0...v0.90.0) - 2023-01-24
 
 ### Changes
@@ -1530,6 +1675,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ResearchFields): add input to copy field ID without leaving the page [`#999`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/999)
 
 ---
+
 ## [v0.89.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.88.0...v0.89.0) - 2023-01-09
 
 ### Changes
@@ -1539,6 +1685,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(AddPaperWizard): contribution tabs missing styling [`#996`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/996)
 
 ---
+
 ## [v0.88.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.87.0...v0.88.0) - 2022-12-13
 
 ### Changes
@@ -1549,6 +1696,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(AuthorBadges): collapse authors when there are more than 15 entries [`#993`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/993)
 
 ---
+
 ## [v0.87.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.2...v0.87.0) - 2022-12-08
 
 ### Changes
@@ -1560,6 +1708,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - internal: Update dependencies [`#980`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/980)
 
 ---
+
 ## [v0.86.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.1...v0.86.2) - 2022-11-24
 
 ### Changes
@@ -1567,6 +1716,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Disable similar contribution temporarily [`#987`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/987)
 
 ---
+
 ## [v0.86.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.86.0...v0.86.1) - 2022-11-21
 
 ### Changes
@@ -1578,6 +1728,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): hide the outline when the comparison is fullscreen [`#978`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/978)
 
 ---
+
 ## [v0.86.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.85.0...v0.86.0) - 2022-11-09
 
 ### Changes
@@ -1586,6 +1737,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - UX: Paper with no contributions [`#977`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/977)
 
 ---
+
 ## [v0.85.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.84.0...v0.85.0) - 2022-11-03
 
 ### Changes
@@ -1602,6 +1754,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Review): catch loading error and show message [`#969`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/969)
 
 ---
+
 ## [v0.84.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.83.0...v0.84.0) - 2022-10-12
 
 ### Changes
@@ -1611,6 +1764,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(LiteratureList): embed list [`#961`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/961)
 
 ---
+
 ## [v0.83.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.1...v0.83.0) - 2022-10-06
 
 ### Changes
@@ -1629,6 +1783,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: make ComparisonPopup visible on the research problem and observatory pages [`#942`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/942)
 
 ---
+
 ## [v0.82.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.82.0...v0.82.1) - 2022-09-22
 
 ### Changes
@@ -1637,6 +1792,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor(Comparison): use redux to manage the state [`#947`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/947)
 
 ---
+
 ## [v0.82.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.81.0...v0.82.0) - 2022-09-13
 
 ### Changes
@@ -1644,6 +1800,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CSP): Twitter timeline [`#944`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/944)
 
 ---
+
 ## [v0.81.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.80.1...v0.81.0) - 2022-09-12
 
 ### Changes
@@ -1656,6 +1813,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CSP): Loading description from Wikipedia [`#934`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/934)
 
 ---
+
 ## [v0.80.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.80.0...v0.80.1) - 2022-09-09
 
 ### Changes
@@ -1663,6 +1821,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CSP): Lookup by doi [`#936`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/936)
 
 ---
+
 ## [v0.80.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.1...v0.80.0) - 2022-09-05
 
 ### Changes
@@ -1680,6 +1839,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ContributionEditor): selecting the ontology sources for resources [`#918`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/918)
 
 ---
+
 ## [v0.79.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.79.0...v0.79.1) - 2022-09-01
 
 ### Changes
@@ -1687,6 +1847,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ViewPaper): Broken DOI link in provenance box [`#927`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/927)
 
 ---
+
 ## [v0.79.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.1...v0.79.0) - 2022-08-31
 
 ### Changes
@@ -1698,6 +1859,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(CS-NER): activate for Computational Linguistics research field [`#917`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/917)
 
 ---
+
 ## [v0.78.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.78.0...v0.78.1) - 2022-08-30
 
 ### Changes
@@ -1706,6 +1868,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: include CSP in meta tag [`#912`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/912)
 
 ---
+
 ## [v0.78.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.1...v0.78.0) - 2022-08-16
 
 ### Changes
@@ -1718,6 +1881,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Author): filter deleted papers [`#909`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/909)
 
 ---
+
 ## [v0.77.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.77.0...v0.77.1) - 2022-08-11
 
 ### Changes
@@ -1725,6 +1889,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(PdfTextAnnotation): use package instead of CDN for loading pdfjs worker [`#908`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/908)
 
 ---
+
 ## [v0.77.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.76.0...v0.77.0) - 2022-08-10
 
 ### Changes
@@ -1738,6 +1903,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ExistingPaperModal): disallow duplicate DOIs [`#900`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/900)
 
 ---
+
 ## [v0.76.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.1...v0.76.0) - 2022-08-04
 
 ### Changes
@@ -1747,6 +1913,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): Submitting autocomplete field using Keyboard [`#896`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/896)
 
 ---
+
 ## [v0.75.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.75.0...v0.75.1) - 2022-07-25
 
 ### Changes
@@ -1756,6 +1923,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Search): support DOI lookup by full URL, fix loading indicator [`#893`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/893)
 
 ---
+
 ## [v0.75.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.74.1...v0.75.0) - 2022-07-20
 
 ### Changes
@@ -1765,6 +1933,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(StatementBrowser): Applying a template to contribution doesn't update the classes [`#889`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/889)
 
 ---
+
 ## [v0.74.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.74.0...v0.74.1) - 2022-07-13
 
 ### Changes
@@ -1772,6 +1941,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Change production pipeline trigger to tag pipeline [`#888`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/888)
 
 ---
+
 ## [v0.74.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.73.0...v0.74.0) - 2022-07-12
 
 ### Changes
@@ -1780,6 +1950,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Add pipeline trigger for deploying to production [`#887`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/887)
 
 ---
+
 ## [v0.73.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.72.0...v0.73.0) - 2022-07-11
 
 ### Changes
@@ -1790,6 +1961,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ui: Switch main and sub-title for organizations and observatories [`#881`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/881)
 
 ---
+
 ## [v0.72.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.1...v0.72.0) - 2022-07-06
 
 ### Changes
@@ -1809,6 +1981,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Use sandbox in default.env [`#861`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/861)
 
 ---
+
 ## [v0.71.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.71.0...v0.71.1) - 2022-06-16
 
 ### Changes
@@ -1816,6 +1989,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): publish with property IDs starting with 'R' [`#863`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/863)
 
 ---
+
 ## [v0.71.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70.1...v0.71.0) - 2022-06-15
 
 ### Changes
@@ -1834,6 +2008,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Review: add link to SmartReview methodology [`#847`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/847)
 
 ---
+
 ## [V0.70.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70...V0.70.1) - 2022-05-20
 
 ### Changes
@@ -1841,6 +2016,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: circular store dependency [`#845`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/845)
 
 ---
+
 ## [V0.70](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.2...V0.70) - 2022-05-20
 
 ### Changes
@@ -1852,6 +2028,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Observatory): link contributors and organizations with observatories from the UI [`#549`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/549)
 
 ---
+
 ## [V0.69.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.1...V0.69.2) - 2022-05-16
 
 ### Changes
@@ -1862,6 +2039,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: broken slug redirect [`#837`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/837)
 
 ---
+
 ## [V0.69.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69...V0.69.1) - 2022-05-03
 
 ### Changes
@@ -1871,6 +2049,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Add GitLab CI configuration for deployment to test system [`#833`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/833)
 
 ---
+
 ## [V0.69](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.68.1...V0.69) - 2022-05-02
 
 ### Changes
@@ -1883,6 +2062,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Observatory): support description line breaks [`#827`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/827)
 
 ---
+
 ## [V0.68.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.68...V0.68.1) - 2022-04-19
 
 ### Changes
@@ -1895,6 +2075,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Contributions Help Tour issue [`#823`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/823)
 
 ---
+
 ## [V0.68](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67.2...V0.68) - 2022-04-13
 
 ### Changes
@@ -1913,6 +2094,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - CI: use https explicitly to install aoelen/react-pdf-highlighter-dist [`#814`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/814)
 
 ---
+
 ## [V0.67.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67.1...V0.67.2) - 2022-03-21
 
 ### Changes
@@ -1920,6 +2102,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): metadata not showing [`#812`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/812)
 
 ---
+
 ## [V0.67.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67...V0.67.1) - 2022-03-18
 
 ### Changes
@@ -1927,6 +2110,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): failed loading comparisons without an organization [`#811`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/811)
 
 ---
+
 ## [V0.67](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66...V0.67) - 2022-03-18
 
 ### Changes
@@ -1934,6 +2118,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ResearchField: Sync with backend changes [`#810`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/810)
 
 ---
+
 ## [V0.66](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.2...V0.66) - 2022-03-17
 
 ### Changes
@@ -1941,6 +2126,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Comparison): Anonymize authors while publishing [`#770`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/770)
 
 ---
+
 ## [V0.65.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.1...V0.65.2) - 2022-03-14
 
 ### Changes
@@ -1948,6 +2134,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ContributionEditor): creating resources with existing label not possible, error on select option with enter key [`#808`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/808)
 
 ---
+
 ## [V0.65.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65...V0.65.1) - 2022-03-14
 
 ### Changes
@@ -1955,6 +2142,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Autocomplete): doesn't show value [`#806`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/806)
 
 ---
+
 ## [V0.65](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.64...V0.65) - 2022-03-08
 
 ### Changes
@@ -1968,6 +2156,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Review): show comparison link for print view [`#799`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/799)
 
 ---
+
 ## [V0.64](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.63...V0.64) - 2022-03-03
 
 ### Changes
@@ -1978,6 +2167,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - internal: Rename env var for backend API [`#792`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/792)
 
 ---
+
 ## [V0.63](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62.1...V0.63) - 2022-03-01
 
 ### Changes
@@ -1994,6 +2184,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - docs(CsvImport): link to help center instead of modal [`#789`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/789)
 
 ---
+
 ## [V0.62.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62...V0.62.1) - 2022-02-15
 
 ### Changes
@@ -2010,6 +2201,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor(Reviews): rename SmartReviews to reviews [`#758`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/758)
 
 ---
+
 ## [V0.62](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.61...V0.62) - 2022-02-07
 
 ### Changes
@@ -2028,6 +2220,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(LiteratureList): make list embeddable [`#744`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/744)
 
 ---
+
 ## [V0.61](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.60...V0.61) - 2022-01-26
 
 ### Changes
@@ -2036,6 +2229,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Visualization): view visualization modal [`#739`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/739)
 
 ---
+
 ## [V0.60](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.59...V0.60) - 2022-01-24
 
 ### Changes
@@ -2046,6 +2240,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(LiteratureList): support BibTeX export [`#748`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/748)
 
 ---
+
 ## [V0.59](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.58...V0.59) - 2022-01-17
 
 ### Changes
@@ -2056,6 +2251,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(MarkdownEditor): support for video embedding [`#747`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/747)
 
 ---
+
 ## [V0.58](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.2...V0.58) - 2022-01-10
 
 ### Changes
@@ -2069,6 +2265,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - internal: Update dependencies [`#731`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/731)
 
 ---
+
 ## [V0.57.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.1...V0.57.2) - 2021-12-20
 
 ### Changes
@@ -2080,6 +2277,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(SmartReview): allow deletion of duplicate authors [`#736`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/736)
 
 ---
+
 ## [V0.57.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57...V0.57.1) - 2021-12-07
 
 ### Changes
@@ -2088,6 +2286,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Search): paper links do not show correctly [`#732`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/732)
 
 ---
+
 ## [V0.57](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.56...V0.57) - 2021-12-03
 
 ### Changes
@@ -2096,6 +2295,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: literature list [`#712`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/712)
 
 ---
+
 ## [V0.56](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55.1...V0.56) - 2021-12-02
 
 ### Changes
@@ -2104,6 +2304,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - docs: add contributing file [`#729`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/729)
 
 ---
+
 ## [V0.55.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55...V0.55.1) - 2021-11-19
 
 ### Changes
@@ -2111,6 +2312,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): Contribution data doesn't show in case no properties are selected [`#725`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/725)
 
 ---
+
 ## [V0.55](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54.1...V0.55) - 2021-11-16
 
 ### Changes
@@ -2125,6 +2327,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Bibtex are saved in "has doi" statement [`#721`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/721)
 
 ---
+
 ## [V0.54.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54...V0.54.1) - 2021-11-10
 
 ### Changes
@@ -2132,6 +2335,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ContributionEditor): infinite loop when adding a paper [`#722`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/722)
 
 ---
+
 ## [V0.54](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.53...V0.54) - 2021-11-08
 
 ### Changes
@@ -2144,6 +2348,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: transition to Redux Toolkit, starting with the contribution editor [`#706`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/706)
 
 ---
+
 ## [V0.53](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52.1...V0.53) - 2021-11-02
 
 ### Changes
@@ -2152,6 +2357,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(DataAccess): add link to visual SPARQL editor [`#709`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/709)
 
 ---
+
 ## [V0.52.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52...V0.52.1) - 2021-10-21
 
 ### Changes
@@ -2159,6 +2365,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(ContributionEditor): reset datatype on close, support for creating duplicate resources [`#705`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/705)
 
 ---
+
 ## [V0.52](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.51...V0.52) - 2021-10-18
 
 ### Changes
@@ -2183,6 +2390,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Homepage): support for news article cards [`#687`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/687)
 
 ---
+
 ## [V0.51](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50.1...V0.51) - 2021-10-07
 
 ### Changes
@@ -2196,6 +2404,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Autocomplete): resolve issue with selecting an existing class from external ontologies [`#679`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/679)
 
 ---
+
 ## [V0.50.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50...V0.50.1) - 2021-09-10
 
 ### Changes
@@ -2203,6 +2412,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Preview for visualization shows error message [`#678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/678)
 
 ---
+
 ## [V0.50](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.49...V0.50) - 2021-09-10
 
 ### Changes
@@ -2211,6 +2421,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(CSV import): Add paper venue column and fix fetching publication month and year [`#675`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/675)
 
 ---
+
 ## [V0.49](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.48...V0.49) - 2021-09-08
 
 ### Changes
@@ -2222,6 +2433,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Comparison): load live data, only allow editing when live data is fetched [`#662`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/662)
 
 ---
+
 ## [V0.48](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.47...V0.48) - 2021-08-09
 
 ### Changes
@@ -2236,6 +2448,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style(Comparison): make contribution labels better visible [`#659`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/659)
 
 ---
+
 ## [V0.47](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.46...V0.47) - 2021-08-03
 
 ### Changes
@@ -2251,6 +2464,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: remove unused packages [`#650`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/650)
 
 ---
+
 ## [V0.46](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.45...V0.46) - 2021-07-26
 
 ### Changes
@@ -2258,6 +2472,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Integration of Strapi CMS [`#564`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/564)
 
 ---
+
 ## [V0.45](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.44.1...V0.45) - 2021-07-21
 
 ### Changes
@@ -2271,6 +2486,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(SmartReview): preserve order of ontology items, rely on backend default sorting [`#612`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/612)
 
 ---
+
 ## [V0.44.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.44...V0.44.1) - 2021-07-15
 
 ### Changes
@@ -2278,6 +2494,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CSV import): Validation schema [`#642`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/642)
 
 ---
+
 ## [V0.44](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.43...V0.44) - 2021-07-13
 
 ### Changes
@@ -2289,6 +2506,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(ValuePlugins): support inline clickable links [`#635`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/635)
 
 ---
+
 ## [V0.43](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.42.1...V0.43) - 2021-07-07
 
 ### Changes
@@ -2301,6 +2519,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): display references [`#631`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/631)
 
 ---
+
 ## [V0.42.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.42...V0.42.1) - 2021-06-24
 
 ### Changes
@@ -2311,6 +2530,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(SmartReview): incorrect reference key for automatically generated references [`#621`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/621)
 
 ---
+
 ## [V0.42](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.41...V0.42) - 2021-06-22
 
 ### Changes
@@ -2328,6 +2548,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor(Visualization): Store the customization state [`#599`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/599)
 
 ---
+
 ## [V0.41](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.40.2...V0.41) - 2021-06-15
 
 ### Changes
@@ -2335,6 +2556,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Add benchmarks related pages [`#526`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/526)
 
 ---
+
 ## [V0.40.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.40.1...V0.40.2) - 2021-06-10
 
 ### Changes
@@ -2342,6 +2564,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Showing doi in ExistingDoiModal [`#610`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/610)
 
 ---
+
 ## [V0.40.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.40...V0.40.1) - 2021-06-08
 
 ### Changes
@@ -2349,6 +2572,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Visualizations): Loading while switching between comparison versions [`#607`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/607)
 
 ---
+
 ## [V0.40](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.39.1...V0.40) - 2021-06-08
 
 ### Changes
@@ -2357,6 +2581,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Comparison: Show history and enhancements on comparison cards [`#597`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/597)
 
 ---
+
 ## [V0.39.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.39...V0.39.1) - 2021-06-08
 
 ### Changes
@@ -2364,6 +2589,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): Publishing a comparison with a old response [`#605`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/605)
 
 ---
+
 ## [V0.39](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.38.1...V0.39) - 2021-06-07
 
 ### Changes
@@ -2382,6 +2608,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Template): Property range field doesn't show the class name [`#593`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/593)
 
 ---
+
 ## [V0.38.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.38...V0.38.1) - 2021-05-20
 
 ### Changes
@@ -2389,6 +2616,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Error when components of a templates don't have a range [`#588`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/588)
 
 ---
+
 ## [V0.38](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.3...V0.38) - 2021-05-19
 
 ### Changes
@@ -2405,6 +2633,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: sort contributors and show contribution percentage in tooltip [`#580`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/580)
 
 ---
+
 ## [V0.37.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.2...V0.37.3) - 2021-05-12
 
 ### Changes
@@ -2413,6 +2642,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(RelativeBreadcrumbs): fix alignment of list items [`#571`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/571)
 
 ---
+
 ## [V0.37.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.1...V0.37.2) - 2021-05-04
 
 ### Changes
@@ -2421,6 +2651,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Sort top contributors and top changes [`#542`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/542)
 
 ---
+
 ## [V0.37.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37...V0.37.1) - 2021-05-03
 
 ### Changes
@@ -2428,6 +2659,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Update curation call page [`#570`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/570)
 
 ---
+
 ## [V0.37](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.36...V0.37) - 2021-04-30
 
 ### Changes
@@ -2437,6 +2669,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: temporary fix of top contributors [`#567`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/567)
 
 ---
+
 ## [V0.36](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.35...V0.36) - 2021-04-26
 
 ### Changes
@@ -2450,6 +2683,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Edit author in AuthorsInput [`#561`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/561)
 
 ---
+
 ## [V0.35](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.34...V0.35) - 2021-04-21
 
 ### Changes
@@ -2457,6 +2691,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - page: Add video to curation grant call [`#557`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/557)
 
 ---
+
 ## [V0.34](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.33...V0.34) - 2021-04-16
 
 ### Changes
@@ -2466,6 +2701,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: force LF line endings for Windows users [`#552`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/552)
 
 ---
+
 ## [V0.33](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.32...V0.33) - 2021-04-14
 
 ### Changes
@@ -2482,6 +2718,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - geonames: use the property "same as" instead of "url" for the linking [`#541`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/541)
 
 ---
+
 ## [V0.32](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.31...V0.32) - 2021-03-30
 
 ### Changes
@@ -2510,6 +2747,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: support new backend pagination requests and responses [`#438`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/438)
 
 ---
+
 ## [V0.31](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.30.1...V0.31) - 2021-03-08
 
 ### Changes
@@ -2521,6 +2759,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: Paper card, max number of authors [`#512`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/512)
 
 ---
+
 ## [V0.30.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.30...V0.30.1) - 2021-02-25
 
 ### Changes
@@ -2528,6 +2767,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Deleting property statement browser results in error [`#514`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/514)
 
 ---
+
 ## [V0.30](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.29...V0.30) - 2021-02-19
 
 ### Changes
@@ -2545,6 +2785,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ci: Add cache control headers for static files nginx config [`#402`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/402)
 
 ---
+
 ## [V0.29](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.28...V0.29) - 2021-02-05
 
 ### Changes
@@ -2552,6 +2793,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Deleting property from statement browser [`#500`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/500)
 
 ---
+
 ## [V0.28](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.27...V0.28) - 2021-02-05
 
 ### Changes
@@ -2560,6 +2802,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - lint: Support Windows as development environment [`#496`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/496)
 
 ---
+
 ## [V0.27](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.26...V0.27) - 2021-02-03
 
 ### Changes
@@ -2582,6 +2825,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: search button on list pages [`#476`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/476)
 
 ---
+
 ## [V0.26](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.25...V0.26) - 2021-01-13
 
 ### Changes
@@ -2606,6 +2850,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Add creators when publishing comparison [`#457`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/457)
 
 ---
+
 ## [V0.25](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.24...V0.25) - 2020-12-16
 
 ### Changes
@@ -2622,6 +2867,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(CsvImport): require authentication [`#446`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/446)
 
 ---
+
 ## [V0.24](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.23...V0.24) - 2020-12-10
 
 ### Changes
@@ -2632,16 +2878,17 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ux: Add breadcrumbs on paper, research field and comparison pages [`#433`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/433)
 - enhancement: Comparison card [`#423`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/423)
 - enhancement: Delete a contribution without calling the comparison API [`#399`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/399)
-- enhancement (Add paper):  Search research field [`#428`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/428)
+- enhancement (Add paper): Search research field [`#428`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/428)
 - chore: update packages [`#440`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/440)
 - legal: update data protection [`#437`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/437)
-- fix: Save research problem when using  the CSV import tool [`#432`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/432)
+- fix: Save research problem when using the CSV import tool [`#432`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/432)
 - fix: skip null values on stringifying queries [`#434`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/434)
 - feat(FeaturedComparisons): support anchors to category headers [`#431`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/431)
 - fix: Changing display name [`#430`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/430)
 - Add accessibility linter rules [`#429`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/429)
 
 ---
+
 ## [V0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-17
 
 ### Changes
@@ -2655,6 +2902,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore: move getResourcesByClass to resources network file [`#422`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/422)
 
 ---
+
 ## [V0.22](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.21...V0.22) - 2020-11-10
 
 ### Changes
@@ -2668,6 +2916,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - ux: improve autocomplete component [`#415`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/415)
 
 ---
+
 ## [V0.21](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.20...V0.21) - 2020-10-28
 
 ### Changes
@@ -2681,6 +2930,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: links to resource page and vice versa [`#396`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/396)
 
 ---
+
 ## [V0.20](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.19...V0.20) - 2020-10-21
 
 ### Changes
@@ -2697,6 +2947,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: add terms of use page [`#394`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/394)
 
 ---
+
 ## [V0.19](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18.2...V0.19) - 2020-10-14
 
 ### Changes
@@ -2718,6 +2969,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - page: Export data page [`#372`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/372)
 
 ---
+
 ## [V0.18.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18.1...V0.18.2) - 2020-09-30
 
 ### Changes
@@ -2726,6 +2978,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: overlapping buttons pdf text annotator [`#371`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/371)
 
 ---
+
 ## [V0.18.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18...V0.18.1) - 2020-09-29
 
 ### Changes
@@ -2734,6 +2987,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Regex fallback [`#368`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/368)
 
 ---
+
 ## [V0.18](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17.1...V0.18) - 2020-09-28
 
 ### Changes
@@ -2749,6 +3003,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style: replace 'predicate' with 'property' throughout the UI [`#360`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/360)
 
 ---
+
 ## [V0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17...V0.17.1) - 2020-08-21
 
 ### Changes
@@ -2757,6 +3012,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Loading the template of predicates and Geonames CORS issues [`#351`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/351)
 
 ---
+
 ## [V0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-19
 
 ### Changes
@@ -2767,7 +3023,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Showing formatted label while showing a Pulse indicator [`#349`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/349)
 - fix: Change Predicate class ID constant [`#348`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/348)
 - Autocomplete improvements [`#346`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/346)
-- fix:  Prevent Scrolling on contribution selection change (ViewPaper) [`#341`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/341)
+- fix: Prevent Scrolling on contribution selection change (ViewPaper) [`#341`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/341)
 - fix: editing issue with Edge [`#347`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/347)
 - fix: shifting page when modal opens/closes [`#345`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/345)
 - feat: PDF survey table extractor [`#314`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/314)
@@ -2779,6 +3035,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: move fixed IDs out of .env file to separate config file [`#332`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/332)
 
 ---
+
 ## [V0.16](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.15...V0.16) - 2020-07-22
 
 ### Changes
@@ -2792,6 +3049,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - refactor: change file structure, use pages directory [`#325`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/325)
 
 ---
+
 ## [V0.15](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.14...V0.15) - 2020-07-10
 
 ### Changes
@@ -2800,6 +3058,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: fetching classes in add resource page [`#320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/320)
 
 ---
+
 ## [V0.14](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.13...V0.14) - 2020-07-09
 
 ### Changes
@@ -2815,6 +3074,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Literal linked to contribution [`#309`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/309)
 
 ---
+
 ## [V0.13](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.12...V0.13) - 2020-06-24
 
 ### Changes
@@ -2828,6 +3088,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - chore(lint): disallow unnecessary curly braces in JSX props [`#300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/300)
 
 ---
+
 ## [V0.12](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.11...V0.12) - 2020-06-19
 
 ### Changes
@@ -2853,6 +3114,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Resolve "editing publication month does not provide expectedtype" [`#273`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/273)
 
 ---
+
 ## [V0.11](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10.1...V0.11) - 2020-06-03
 
 ### Changes
@@ -2867,6 +3129,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Changelog): issue with wrong tag order [`#263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/263)
 
 ---
+
 ## [V0.10.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10...V0.10.1) - 2020-05-19
 
 ### Changes
@@ -2874,6 +3137,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Fix the issue if the paper is not part of an observatory [`#259`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/259)
 
 ---
+
 ## [V0.10](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.9...V0.10) - 2020-05-19
 
 ### Changes
@@ -2899,6 +3163,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Fix existing tests [`#240`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/240)
 
 ---
+
 ## [V0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-05-05
 
 ### Changes
@@ -2910,6 +3175,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Change position "Add contribution" for a comparison [`#233`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/233)
 
 ---
+
 ## [V0.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7.1...V0.8) - 2020-04-15
 
 ### Changes
@@ -2921,6 +3187,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: Support ordering for featured comparisons and papers on homepage [`#225`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/225)
 
 ---
+
 ## [V0.7.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7...V0.7.1) - 2020-04-02
 
 ### Changes
@@ -2928,6 +3195,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: delete property of template [`#224`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/224)
 
 ---
+
 ## [V0.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.2...V0.7) - 2020-04-02
 
 ### Changes
@@ -2946,6 +3214,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Replace Findable with FAIR on the home page header. [`#213`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/213)
 
 ---
+
 ## [V0.6.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.1...V0.6.2) - 2020-03-11
 
 ### Commits
@@ -2953,13 +3222,17 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Remove unuseful comments and variables [`e2d3a62`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/e2d3a623eeadc964772d57fcfa58fc00d711c859)
 - Update changelog [`ae2c3b2`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/ae2c3b22165152168275ef1c9ba68a0ed1d6ca20)
 - Fix RDF datacube vocabulary tabular view [`dd6a28b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/dd6a28b9c9299fbbe94e639244a2f3138a3ab90f)
+
 ---
+
 ## [V0.6.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6...V0.6.1) - 2020-03-10
 
 ### Commits
 
 - Fix datacube vocabulary tabular view [`1e770d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/1e770d8a25143736794893550ea3d869c1efed5a)
+
 ---
+
 ## [V0.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.8...V0.6) - 2020-03-10
 
 ### Changes
@@ -2972,6 +3245,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat: provide input templates to users and many small UX changes throughout the UI [`#210`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/210)
 
 ---
+
 ## [V0.5.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.7...V0.5.8) - 2020-03-03
 
 ### Changes
@@ -2979,6 +3253,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Search in graph [`#196`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/196)
 
 ---
+
 ## [V0.5.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.6...V0.5.7) - 2020-03-03
 
 ### Changes
@@ -3011,6 +3286,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - feat(Footer): add more partner logos [`#180`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/180)
 
 ---
+
 ## [V0.5.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.5...V0.5.6) - 2020-01-21
 
 ### Changes
@@ -3023,13 +3299,16 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix(Comparison): wrap long text in headers [`#172`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/172)
 
 ---
+
 ## [V0.5.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.4...V0.5.5) - 2020-01-17
 
 ### Commits
 
 - fix(Comparison): Export as RDF [`c6abbd6`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/c6abbd667fac2bcb441360dac68925ff12bd1674)
 - fix(Comparison): Comparison url [`27f3e7b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/27f3e7b7966de5fb28bdb197919a3fd5e49015de)
+
 ---
+
 ## [V0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
 
 ### Changes
@@ -3058,6 +3337,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - remove unused css files [`#161`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/161)
 
 ---
+
 ## [V0.5.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.2...V0.5.3) - 2019-12-17
 
 ### Changes
@@ -3067,6 +3347,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: Add FeaturedPaper class to default environment variables [`#147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/147)
 
 ---
+
 ## [V0.5.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.1...V0.5.2) - 2019-12-16
 
 ### Changes
@@ -3082,6 +3363,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: typos on homepage and license page [`#135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/135)
 
 ---
+
 ## [V0.5.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5...V0.5.1) - 2019-12-13
 
 ### Changes
@@ -3089,13 +3371,14 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: remove the token cookie if it's expired [`#134`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/134)
 
 ---
+
 ## [V0.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4.1...V0.5) - 2019-12-13
 
 ### Changes
 
 - style: change the about banner on the home page [`#132`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/132)
 - fix: disable send token by default on get requests [`#133`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/133)
-- Ensure that  no duplicate labels are in the new properties [`#117`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/117)
+- Ensure that no duplicate labels are in the new properties [`#117`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/117)
 - refator: Separated component for contribution help tour [`#120`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/120)
 - feat: User settings [`#128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/128)
 - feat: featured comparisons page and show slider on homepage [`#126`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/126)
@@ -3105,7 +3388,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - fix: scrolling to browser window top and page transition [`#127`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/127)
 - Visualization module [`#122`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/122)
 - replace some HTTP requests with bulk actions [`#119`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/119)
-- Integration of ORCID  and Author Class [`#115`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/115)
+- Integration of ORCID and Author Class [`#115`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/115)
 - fix: Misleading error message on comparison [`#121`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/121)
 - Add Gitlab template issue for Bugs [`#116`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/116)
 - style(header, footer): small style changes [`#114`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/114)
@@ -3124,7 +3407,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - style(home): add a banner that links to project page [`#104`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/104)
 - fix : edit the label of a resource [`#110`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/110)
 - feat: keep selected property on the resource history [`#107`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/107)
-- style(footer):  new footer design that shows the current version [`#101`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/101)
+- style(footer): new footer design that shows the current version [`#101`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/101)
 - feat(addpaper, viewpaper): support paper edit [`#92`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/92)
 - docs(readme): more information and include contributors information [`#103`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/103)
 - style(header): include new ORKG logo in the header [`#99`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/99)
@@ -3152,12 +3435,15 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Parse the full title from crossref #89 [`#76`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/76)
 
 ---
+
 ## [V0.4.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4...V0.4.1) - 2019-09-06
 
 ### Commits
 
 - add missing slashes [`766a1af`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/766a1afd40258265015f741e520138f8e40d042f)
+
 ---
+
 ## [V0.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.3...V0.4) - 2019-09-06
 
 ### Changes
@@ -3182,6 +3468,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - add a link to orkg in exported latex [`#49`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/49)
 
 ---
+
 ## [V0.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.2...V0.3) - 2019-06-27
 
 ### Changes
@@ -3204,6 +3491,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Add research problem input [`#33`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/33)
 
 ---
+
 ## [V0.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.1...V0.2) - 2019-06-27
 
 ### Changes
@@ -3212,6 +3500,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - New ui design [`#30`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/30)
 
 ---
+
 ## V0.1 - 2019-06-27
 
 ### Changes

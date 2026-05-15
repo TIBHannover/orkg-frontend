@@ -1,8 +1,8 @@
-import { reverse } from 'named-urls';
 import { notFound, redirect } from 'next/navigation';
 
 import SHORT_CODE_TO_COMPARISON_ID from '@/app/c/[shortCode]/shortCodeMapping';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 const RedirectShortLinks = async ({ params }: { params: Promise<{ shortCode: string }> }) => {
     const { shortCode } = await params;

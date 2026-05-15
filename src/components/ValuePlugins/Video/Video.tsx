@@ -63,7 +63,7 @@ const Video: FC<ValuePluginsProps> = ({ text, options = { inModal: false } }) =>
         return (
             <>
                 <span
-                    className="btn-link"
+                    className="bg-transparent p-0 text-accent focus:ring-0 hover:underline"
                     onClick={() => setShowVideoDialog(true)}
                     style={{ cursor: 'pointer' }}
                     onKeyDown={(e) => (e.keyCode === 13 ? setShowVideoDialog(true) : undefined)}

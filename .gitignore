@@ -29,3 +29,5 @@ junit.xml
 # coding agents
 .claude/settings.local.json
 screenshots/
+
+.worktrees

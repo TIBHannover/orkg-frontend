@@ -1,9 +1,9 @@
+import { toast } from '@heroui/react';
 import { Dispatch, FC, FormEvent, SetStateAction, useEffect, useId, useMemo, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
-import { toast } from 'react-toastify';
 import stopwords from 'stopwords-en';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import Footer from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/Footer/Footer';
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
 
@@ -36,7 +36,7 @@ const TextCategoryFilter: FC<TextCategoryFilterProps> = ({ predicateId, path, se
             });
             setIsOpenFilterPopover(false);
         } else {
-            toast.error('Please provide at least one filter value.');
+            toast.danger('Please provide at least one filter value.');
         }
     };
 
@@ -84,13 +84,15 @@ const TextCategoryFilter: FC<TextCategoryFilterProps> = ({ predicateId, path, se
                 inputId={`${formId}-values`}
                 isClearable={false}
                 classNamePrefix="react-select"
+                classNames={customClassNames as any}
+                styles={customStyles as any}
+                menuPosition="fixed"
                 isSearchable
                 isMulti
-                className="tw:max-w-72"
+                className="max-w-72"
             />
 
             <Footer predicateId={predicateId} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />
-            <SelectGlobalStyle />
         </form>
     );
 };

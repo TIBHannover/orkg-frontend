@@ -1,15 +1,14 @@
 import { faArrowRight, faCalendar, faSearch, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import type { Key } from '@heroui/react';
+import { Chip, ListBox, Select, toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import CopyId from '@/components/CopyId/CopyId';
 import ProvenanceBox from '@/components/ItemMetadata/ProvenanceBox';
-import Badge from '@/components/Ui/Badge/Badge';
-import Input from '@/components/Ui/Input/Input';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
@@ -78,83 +77,89 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
 
     return (
         <>
-            <div className="d-flex">
-                <div className="flex-grow-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                <div className="grow flex flex-wrap items-center gap-2 min-w-0">
                     {showCreatedAt && (
-                        <Badge color="light" className="me-2">
-                            <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1" /> {dayjs(createdAt).format('DD MMMM YYYY - H:mm')}
-                        </Badge>
+                        <Chip color="default" className="max-w-full">
+                            <FontAwesomeIcon size="sm" icon={faCalendar} className="mr-1 text-muted" />{' '}
+                            {dayjs(createdAt).format('DD MMMM YYYY - H:mm')}
+                        </Chip>
                     )}
                     {'shared' in item && item.shared > 0 && (
-                        <Badge color="light" className="me-2">
+                        <Chip color="default">
                             <span>
-                                <FontAwesomeIcon icon={faArrowRight} />
+                                <FontAwesomeIcon icon={faArrowRight} className="text-muted" />
                             </span>
                             {` Referred ${pluralize('time', item.shared, true)}`}
-                        </Badge>
+                        </Chip>
                     )}
                     {showDataType && 'datatype' in item && item.datatype !== null && (
-                        <Badge color="light" className="me-2">
+                        <Chip color="default">
                             <span>{' Datatype: '}</span>
                             {item.datatype}
-                        </Badge>
+                        </Chip>
                     )}
                     {showClasses && 'classes' in item && item.classes?.length > 0 && (
-                        <Badge color="light" className="me-2">
+                        <Chip color="default" className="max-w-full">
                             <span>
-                                <FontAwesomeIcon icon={faTags} /> {' Instance of '}
+                                <FontAwesomeIcon icon={faTags} className="text-muted" /> {' Instance of '}
                             </span>
-                            {item.classes.join(', ')}
-                        </Badge>
+                            <span className="truncate">{item.classes.join(', ')}</span>
+                        </Chip>
                     )}
                     {showCreatedBy && createdBy !== MISC.UNKNOWN_ID && (
-                        <Badge color="light" className="me-2">
-                            <FontAwesomeIcon icon={faUser} /> Created by{' '}
-                            <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                        <Chip color="default" className="max-w-full">
+                            <FontAwesomeIcon icon={faUser} className="text-muted" /> Created by{' '}
+                            <span className="ml-1 inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
                                 <UserAvatar size={20} userId={createdBy} showDisplayName />
                             </span>
-                        </Badge>
+                        </Chip>
                     )}
                     {showExtractionMethod && (
-                        <Badge color="light" className="me-2">
-                            <FontAwesomeIcon icon={faSearch} /> Extraction:{' '}
+                        <Chip color="default">
+                            <FontAwesomeIcon icon={faSearch} className="text-muted" /> Extraction:{' '}
                             {editMode ? (
-                                <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                                    <Input
-                                        bsSize="sm"
-                                        className="mb-3 py-0"
-                                        type="select"
+                                <span className="ml-1 inline-block align-middle" style={{ marginTop: -30, marginBottom: -30 }}>
+                                    <Select
+                                        aria-label="Extraction method"
+                                        className="w-28"
                                         value={extractionMethod}
-                                        onChange={(e) => handleSave(e.target.value as ExtractionMethod)}
+                                        onChange={(key: Key | null) => {
+                                            if (key) handleSave(key as ExtractionMethod);
+                                        }}
                                     >
-                                        {Object.values(EXTRACTION_METHODS).map((method) => (
-                                            <option key={method} value={method}>
-                                                {capitalize(method)}
-                                            </option>
-                                        ))}
-                                    </Input>
+                                        <Select.Trigger className="!h-6 !min-h-6 !py-0 !px-2 text-xs">
+                                            <Select.Value />
+                                            <Select.Indicator className="size-3" />
+                                        </Select.Trigger>
+                                        <Select.Popover>
+                                            <ListBox>
+                                                {Object.values(EXTRACTION_METHODS).map((method) => (
+                                                    <ListBox.Item key={method} id={method} textValue={capitalize(method)}>
+                                                        {capitalize(method)}
+                                                        <ListBox.ItemIndicator />
+                                                    </ListBox.Item>
+                                                ))}
+                                            </ListBox>
+                                        </Select.Popover>
+                                    </Select>
                                 </span>
                             ) : (
-                                <span className="ms-1 d-inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
+                                <span className="ml-1 inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
                                     {capitalize(extractionMethod)}
                                 </span>
                             )}
-                        </Badge>
+                        </Chip>
                     )}
 
-                    {showProvenance && (
-                        <span className="d-inline-block">
-                            <ProvenanceBox item={item} editMode={editMode} updateCallBack={updateCallBack} />
-                        </span>
-                    )}
+                    {showProvenance && <ProvenanceBox item={item} editMode={editMode} updateCallBack={updateCallBack} />}
                 </div>
                 {item.id && (
-                    <div className="d-flex align-items-end flex-shrink-0">
+                    <div className="flex shrink-0 sm:items-end">
                         <CopyId id={item.id} />
                     </div>
                 )}
             </div>
-
             {handleUrl && (
                 <div className="mt-2">
                     <small>

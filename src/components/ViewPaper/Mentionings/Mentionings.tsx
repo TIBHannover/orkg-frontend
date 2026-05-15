@@ -1,9 +1,7 @@
+import { Alert } from '@heroui/react';
 import { FC } from 'react';
 import useSWR from 'swr';
 
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
-import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import AddMentioning from '@/components/ViewPaper/Mentionings/AddMentioning/AddMentioning';
 import MentioningItem from '@/components/ViewPaper/Mentionings/MentioningItem/MentioningItem';
@@ -42,38 +40,35 @@ const Mentionings: FC<MentioningsProps> = ({ id }) => {
     };
 
     return (
-        <div>
-            <Container className="p-0 rounded mb-3 p-3 bg-light">
+        <div className="flex flex-col gap-4">
+            <div className="rounded p-4 bg-background text-sm">
                 Mentions list resources that are related to this paper{' '}
                 <a href="https://orkg.org/help-center/article/60/Mentionings" target="_blank" rel="noreferrer">
                     Learn more in the help center
                 </a>
                 .
-            </Container>
+            </div>
 
-            {isLoading && 'Loading...'}
-            <ListGroup className="mb-2">
-                {!isLoading &&
-                    id &&
-                    mentionings &&
-                    mentionings.map((item: Mentioning) => (
+            {isLoading && <div className="text-muted">Loading...</div>}
+
+            {!isLoading && id && mentionings && mentionings.length > 0 && (
+                <div className="rounded border border-border divide-y divide-border bg-surface">
+                    {mentionings.map((item: Mentioning) => (
                         <MentioningItem key={item.id} item={item} isEditMode={isEditMode} onDelete={handleDeleteMentioning} />
                     ))}
-            </ListGroup>
-            {!isLoading && mentionings?.length === 0 && (
-                <ListGroup className="mb-2">
-                    <ListGroupItem className="mb-0 rounded">
-                        No data yet
-                        <br />
-                        {isEditMode ? (
-                            <span style={{ fontSize: '0.875rem' }}>Start by adding a resource from below</span>
-                        ) : (
-                            <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
-                        )}
-                        <br />
-                    </ListGroupItem>
-                </ListGroup>
+                </div>
             )}
+
+            {!isLoading && mentionings?.length === 0 && (
+                <Alert status="warning">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>No data yet</Alert.Title>
+                        <Alert.Description>{isEditMode ? 'Start by adding a resource from below' : 'Please contribute by editing'}</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            )}
+
             {isEditMode && <AddMentioning handleAddMentioning={handleAddMentioning} />}
         </div>
     );

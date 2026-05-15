@@ -1,10 +1,10 @@
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Predicate } from '@/services/backend/types';
 
 type PredicateViewProps = {
@@ -19,7 +19,7 @@ const PredicateView: FC<PredicateViewProps> = ({ predicate, isNewPredicate = fal
             <Link
                 href={reverse(ROUTES.PROPERTY, { id: predicate.id })}
                 target={!config.propertiesAsLinks ? '_blank' : '_self'}
-                className={`${!config.propertiesAsLinks ? 'text-dark' : ''} ${isNewPredicate ? 'fst-italic fw-normal opacity-75' : ''}`}
+                className={`${!config.propertiesAsLinks ? 'text-dark' : ''}  ${isNewPredicate ? 'italic font-normal opacity-75' : ''}`}
                 style={{ fontWeight: 500 }}
             >
                 {predicate.label}

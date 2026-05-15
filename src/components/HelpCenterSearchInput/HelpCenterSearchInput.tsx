@@ -1,43 +1,39 @@
-import { reverse } from 'named-urls';
-import { useRouter } from 'next/navigation';
-import { KeyboardEvent, useState } from 'react';
+'use client';
 
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
+import { Label, SearchField } from '@heroui/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 import useParams from '@/components/useParams/useParams';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
-const HelpCenterSearchInput = () => {
+type HelpCenterSearchInputProps = {
+    placeholder?: string;
+    className?: string;
+};
+
+const HelpCenterSearchInput = ({ placeholder = 'Search for articles...', className }: HelpCenterSearchInputProps) => {
     const router = useRouter();
     const params = useParams();
-    const [value, setValue] = useState(params.searchQuery ?? '');
+    const [value, setValue] = useState((params.searchQuery ?? '').toString());
 
-    const handleSearch = () => {
-        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: encodeURIComponent(value.toString()) }));
-    };
-
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
+    const handleSubmit = (next: string) => {
+        const query = next.trim();
+        if (!query) return;
+        router.push(reverse(ROUTES.HELP_CENTER_SEARCH, { searchQuery: query }));
     };
 
     return (
-        <InputGroup className="mt-2 mb-4">
-            <Input
-                placeholder="Search for articles..."
-                bsSize="lg"
-                type="text"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                maxLength={MAX_LENGTH_INPUT}
-            />
-
-            <Button onClick={handleSearch}>Search</Button>
-        </InputGroup>
+        <SearchField aria-label="Search the help center" value={value} onChange={setValue} onSubmit={handleSubmit} fullWidth className={className}>
+            <Label className="sr-only">Search the help center</Label>
+            <SearchField.Group className="h-12">
+                <SearchField.SearchIcon />
+                <SearchField.Input placeholder={placeholder} maxLength={MAX_LENGTH_INPUT} />
+                <SearchField.ClearButton />
+            </SearchField.Group>
+        </SearchField>
     );
 };
 

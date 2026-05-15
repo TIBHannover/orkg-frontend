@@ -1,9 +1,8 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Chip, Separator } from '@heroui/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import styled from 'styled-components';
 
 import EU_LOGO from '@/assets/img/poweredby/co-funded-h2020-horiz_en.png';
 import EOSC_LOGO from '@/assets/img/poweredby/EOSC.png';
@@ -12,66 +11,34 @@ import L3S_LOGO from '@/assets/img/poweredby/L3S.png';
 import LUH_LOGO from '@/assets/img/poweredby/LUH.png';
 import TIB_LOGO from '@/assets/img/poweredby/TIB_Logo_EN.png';
 import Logo from '@/assets/img/vertical_logo.svg';
-import Badge from '@/components/Ui/Badge/Badge';
-import Col from '@/components/Ui/Structure/Col';
-import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
 import ROUTES_CMS from '@/constants/routesCms';
-
-const FooterWrapper = styled.div`
-    background: #e0e2ea;
-    margin-top: 75px;
-    border-top: 1px #d1d3d9 solid;
-`;
-
-const FooterCol = styled(Col)`
-    color: ${(props) => props.theme.secondaryDarker};
-    margin: 10px 0;
-    font-size: 0.95rem;
-
-    h5 {
-        font-weight: 500;
-        text-transform: uppercase;
-        color: ${(props) => props.theme.secondaryDarker};
-        font-size: 1.1rem;
-    }
-    .description {
-        font-size: 0.85rem;
-    }
-    a {
-        color: ${(props) => props.theme.secondaryDarker};
-    }
-`;
-
-const PartnerLogoCol = styled(Col)`
-    text-align: center;
-`;
+import { reverse } from '@/lib/namedRoute';
 
 const Footer = () => (
-    <FooterWrapper>
-        <Container>
-            <footer className="pt-4 pb-4">
-                <h1 className="tw:sr-only">More information about ORKG</h1>
-                <Row>
-                    <FooterCol md={3}>
-                        <h2 className="h5">ORKG</h2>
-                        <hr className="me-5" />
-                        <Row>
-                            <div className="float-start col-md-3">
+    <div className="mt-[75px] border-t separator--tertiary bg-surface-tertiary">
+        <div className="mx-auto max-w-container px-3">
+            <footer className="py-6">
+                <h1 className="sr-only">More information about ORKG</h1>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+                    <div className="my-2.5 text-[0.95rem] text-foreground-600 [&_a]:text-foreground-600 [&_a:hover]:text-foreground-800">
+                        <h2 className="text-xl">ORKG</h2>
+                        <Separator className="my-2 mr-12" variant="tertiary" />
+                        <div className="flex items-start gap-3">
+                            <div className="shrink-0">
                                 <Link href={ROUTES.HOME}>
                                     <Image src={Logo} height="80" alt="Small ORKG logo" />
                                 </Link>
                             </div>
-                            <div className="col-md-8 description">
+                            <p className="text-[0.85rem]">
                                 The Open Research Knowledge Graph aims to describe research papers in a structured manner
-                            </div>
-                        </Row>
-                    </FooterCol>
-                    <FooterCol md={3}>
-                        <h2 className="h5">About</h2>
-                        <hr className="me-5" />
-                        <ul className="p-0" style={{ listStyle: 'none' }}>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="my-2.5 text-[0.95rem] text-foreground-600 [&_a]:text-foreground-600 [&_a:hover]:text-foreground-800">
+                        <h2 className="text-xl">About</h2>
+                        <Separator className="my-2 mr-12" variant="tertiary" />
+                        <ul className="list-none space-y-1 p-0">
                             <li>
                                 <Link href={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}>About us</Link>
                             </li>
@@ -84,11 +51,7 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link> (
-                                <a href="/infosheet-data-protection.pdf" target="_blank" rel="noreferrer">
-                                    Info sheet
-                                </a>
-                                )
+                                <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link>
                             </li>
                             <li>
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
@@ -97,11 +60,11 @@ const Footer = () => (
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.IMPRINT })}>Imprint</Link>
                             </li>
                         </ul>
-                    </FooterCol>
-                    <FooterCol md={3}>
-                        <h2 className="h5">Technical</h2>
-                        <hr className="me-5" />
-                        <ul className="p-0" style={{ listStyle: 'none' }}>
+                    </div>
+                    <div className="my-2.5 text-[0.95rem] text-foreground-600 [&_a]:text-foreground-600 [&_a:hover]:text-foreground-800">
+                        <h2 className="text-xl">Technical</h2>
+                        <Separator className="my-2 mr-12" variant="tertiary" />
+                        <ul className="list-none space-y-1 p-0">
                             <li>
                                 <Link href={ROUTES.DATA}>Data access</Link>
                             </li>
@@ -122,15 +85,15 @@ const Footer = () => (
                                 </a>
                             </li>
                         </ul>
-                    </FooterCol>
-                    <FooterCol md={3}>
-                        <h2 className="h5">More</h2>
-                        <hr className="me-5" />
-                        <ul className="p-0" style={{ listStyle: 'none' }}>
+                    </div>
+                    <div className="my-2.5 text-[0.95rem] text-foreground-600 [&_a]:text-foreground-600 [&_a:hover]:text-foreground-800">
+                        <h2 className="text-xl">More</h2>
+                        <Separator className="my-2 mr-12" variant="tertiary" />
+                        <ul className="list-none space-y-1 p-0">
                             <li>
                                 <a href="https://mastodon.social/@orkg" target="_blank" rel="noopener noreferrer">
                                     Follow us
-                                    <FontAwesomeIcon className="ms-2" icon={faMastodon} />
+                                    <FontAwesomeIcon className="ml-2" icon={faMastodon} />
                                 </a>
                             </li>
                             <li>
@@ -145,69 +108,49 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <i className="me-3">Version</i>
-                                <span>
-                                    <Badge color="secondary">{process.env.version}</Badge>
-                                </span>
+                                <i className="mr-4">Version</i>
+                                <Chip size="sm" variant="soft">
+                                    {process.env.version}
+                                </Chip>
                             </li>
                         </ul>
-                    </FooterCol>
-                </Row>
-                <hr style={{ width: '70%', margin: '1rem auto' }} />
-                <Row className="mt-4">
-                    <PartnerLogoCol md={4} style={{}}>
-                        <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
-                            <Image src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0 }} height="50" />
-                        </a>
-                    </PartnerLogoCol>
-                    <Col md={8}>
-                        <Row className="g-0">
-                            <Col md={4} style={{ textAlign: 'center' }}>
-                                <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <Image src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0 }} height="45" />
-                                </a>
-                            </Col>
-                            <Col md={4} style={{ textAlign: 'center' }}>
-                                <a href="https://www.l3s.de/" target="_blank" rel="noopener noreferrer">
-                                    <Image src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0 }} height="40" />
-                                </a>
-                            </Col>
-                            <Col md={4} style={{ textAlign: 'center' }}>
-                                <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
-                                    <Image
-                                        src={INFAI_LOGO}
-                                        alt="Logo  Institute for Applied Informatics (InfAI)"
-                                        style={{ borderWidth: 0 }}
-                                        height="45"
-                                    />
-                                </a>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-                <hr style={{ width: '50%', margin: '1rem auto' }} />
-                <Row>
-                    <PartnerLogoCol md={{ size: 3, order: 1, offset: 3 }} style={{ textAlign: 'center' }}>
-                        <Image
-                            src={EU_LOGO}
-                            alt="Co-funded by the Horizon 2020 programme of the European Union"
-                            style={{ borderWidth: 0 }}
-                            height="50"
-                        />
-                    </PartnerLogoCol>
-                    <PartnerLogoCol md={{ size: 3, order: 2, offset: 0 }} style={{ textAlign: 'center' }}>
-                        <a
-                            href="https://marketplace.eosc-portal.eu/services/open-research-knowledge-graph-orkg"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <Image src={EOSC_LOGO} alt="European Open Science Cloud (EOSC)" style={{ borderWidth: 0 }} height="45" />
-                        </a>
-                    </PartnerLogoCol>
-                </Row>
+                    </div>
+                </div>
+
+                <Separator className="mx-auto my-4 w-[70%]" variant="tertiary" />
+
+                {/* Partner logos - first row */}
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-8">
+                    <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
+                        <Image src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" height="50" />
+                    </a>
+                    <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
+                        <Image src={LUH_LOGO} alt="Logo Leibniz University Hannover" height="45" />
+                    </a>
+                    <a href="https://www.l3s.de/" target="_blank" rel="noopener noreferrer">
+                        <Image src={L3S_LOGO} alt="Logo L3S Research Center" height="40" />
+                    </a>
+                    <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
+                        <Image src={INFAI_LOGO} alt="Logo Institute for Applied Informatics (InfAI)" height="45" />
+                    </a>
+                </div>
+
+                <Separator className="mx-auto my-4 w-[50%]" variant="tertiary" />
+
+                {/* Funding logos - second row */}
+                <div className="flex flex-wrap items-center justify-center gap-8">
+                    <Image src={EU_LOGO} alt="Co-funded by the Horizon 2020 programme of the European Union" height="50" />
+                    <a
+                        href="https://marketplace.eosc-portal.eu/services/open-research-knowledge-graph-orkg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Image src={EOSC_LOGO} alt="European Open Science Cloud (EOSC)" height="45" />
+                    </a>
+                </div>
             </footer>
-        </Container>
-    </FooterWrapper>
+        </div>
+    </div>
 );
 
 export default Footer;

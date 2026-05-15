@@ -93,7 +93,7 @@ const CellVE = (props) => {
             <>
                 {cellValueIsValid === true
                     ? props.data.label === props.data.originalLabel
-                        ? props.data.label ?? 'Empty'
+                        ? (props.data.label ?? 'Empty')
                         : `${props.data.originalLabel ?? 'Empty'} >> ${props.data.label ?? 'Empty'}`
                     : `ERROR:${errorMessage}  (${props.data.label ?? 'Empty'}) >> original label: ${props.data.originalLabel ?? 'Empty'}`}
                 {props.data.label !== props.data.originalLabel && (

@@ -1,5 +1,5 @@
+import { toast } from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import useConstraints from '@/app/grid-editor/hooks/useConstraints';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
@@ -85,7 +85,7 @@ const useSaveValue = (
                     onSuccess?.(statementId);
                 })
                 .catch(() => {
-                    toast.error('Something went wrong while adding the value.');
+                    toast.danger('Something went wrong while adding the value.');
                 });
         }
     };
@@ -96,14 +96,14 @@ const useSaveValue = (
             error = schema.safeParse(inputValue.trim()).error;
         }
         if (error) {
-            setFormFeedback(error.errors?.[0]?.message);
+            setFormFeedback(error.issues?.[0]?.message);
             return;
         }
         if (propertySchema) {
             error = propertySchema.safeParse(inputValue.trim()).error;
         }
         if (error) {
-            setFormFeedback(error.errors?.[0]?.message);
+            setFormFeedback(error.issues?.[0]?.message);
         } else {
             setFormFeedback(null);
             // Check for a possible conversion possible

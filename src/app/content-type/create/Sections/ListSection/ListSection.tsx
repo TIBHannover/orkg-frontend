@@ -20,7 +20,7 @@ const ListSection = () => (
         }
         helpfulResourcesSubtitle="Example lists within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:m-0!">
+            <ul className="py-2 m-0">
                 <li>
                     <Link href="https://orkg.org/lists/R1385252" target="_blank">
                         Semantic table interpretation

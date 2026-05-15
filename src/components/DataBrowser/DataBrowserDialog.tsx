@@ -1,16 +1,13 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Modal } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type DataBrowserDialogProps = {
     isEditMode?: boolean;
@@ -40,8 +37,6 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     let route = ROUTES.RESOURCE;
     switch (type) {
         case ENTITIES.PREDICATE:
-            route = ROUTES.PROPERTY;
-            break;
         case 'property':
             route = ROUTES.PROPERTY;
             break;
@@ -53,52 +48,58 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
             break;
     }
 
-    let rootId = id;
+    const typeLabel = type === ENTITIES.PREDICATE ? 'property' : type;
 
+    let rootId = id;
     if (defaultHistory && defaultHistory.length > 0) {
         [rootId] = defaultHistory;
     }
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggleModal();
+            onCloseModal?.();
+        }
+    };
+
     return (
-        <Modal
-            isOpen={show}
-            toggle={toggleModal}
-            size="xl"
-            onClosed={() => {
-                onCloseModal?.();
-            }}
-        >
-            <ModalHeader toggle={toggleModal}>
-                <span style={{ marginRight: 170, display: 'inline-block' }}>
-                    View existing {type === ENTITIES.PREDICATE ? 'property' : type}: {label}
-                </span>
-                <Link
-                    style={{ right: 45, position: 'absolute', top: 12 }}
-                    title={`Go to ${type === ENTITIES.PREDICATE ? 'property' : type} page`}
-                    className="ms-2"
-                    href={`${reverse(route, { id })}?noRedirect`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Button color="link" className="p-0">
-                        Open {type === ENTITIES.PREDICATE ? 'property' : type} <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
-                    </Button>
-                </Link>
-            </ModalHeader>
-            <ModalBody>
-                {show && (
-                    <DataBrowser
-                        isEditMode={isEditMode}
-                        key={rootId}
-                        id={rootId}
-                        canEditSharedRootLevel
-                        defaultHistory={defaultHistory}
-                        showFooter={showFooter}
-                        comparisonSelectedPaths={comparisonSelectedPaths}
-                    />
-                )}
-            </ModalBody>
-        </Modal>
+        <Modal.Backdrop isOpen={show} onOpenChange={handleOpenChange}>
+            <Modal.Container className="max-h-[calc(100vh-73px)] mt-[73px]">
+                <Modal.Dialog className="sm:max-w-6xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <div className="flex items-center justify-between gap-4 pr-8">
+                            <Modal.Heading>
+                                View existing {typeLabel}: {label}
+                            </Modal.Heading>
+                            <Link
+                                href={`${reverse(route, { id })}?noRedirect`}
+                                title={`Go to ${typeLabel} page`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="whitespace-nowrap text-sm text-accent hover:underline"
+                            >
+                                Open {typeLabel} <FontAwesomeIcon icon={faExternalLinkAlt} />
+                            </Link>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {show && (
+                            <DataBrowser
+                                isEditMode={isEditMode}
+                                key={rootId}
+                                id={rootId}
+                                canEditSharedRootLevel
+                                defaultHistory={defaultHistory}
+                                showFooter={showFooter}
+                                comparisonSelectedPaths={comparisonSelectedPaths}
+                            />
+                        )}
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
+
 export default DataBrowserDialog;

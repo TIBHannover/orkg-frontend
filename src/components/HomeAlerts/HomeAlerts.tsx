@@ -1,29 +1,29 @@
+import { Alert, AlertProps } from '@heroui/react';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import * as Showdown from 'showdown';
-import styled from 'styled-components';
+import useSWR from 'swr';
 
-import Alert from '@/components/Ui/Alert/Alert';
-import { getHomeAlerts } from '@/services/cms';
-import { Alert as AlertType } from '@/services/cms/types';
+import { parseMarkdown } from '@/lib/markdown';
+import { getHomeAlerts, url as cmsUrl } from '@/services/cms';
 
-const converter = new Showdown.Converter();
-converter.setFlavor('github');
-
-const AlertStyled = styled(Alert)`
-    p {
-        margin: 0;
+const mapColorToStatus = (color?: string): AlertProps['status'] => {
+    switch (color?.toLowerCase()) {
+        case 'accent':
+            return 'accent';
+        case 'success':
+            return 'success';
+        case 'warning':
+            return 'warning';
+        case 'danger':
+            return 'danger';
+        default:
+            return 'default';
     }
-`;
+};
 
 const HomeAlerts = () => {
-    const [alerts, setAlerts] = useState<AlertType[]>([]);
+    const { data: _alerts } = useSWR([cmsUrl, 'getHomeAlerts'], ([_]) => getHomeAlerts());
 
-    useEffect(() => {
-        (async () => {
-            setAlerts((await getHomeAlerts())?.data || []);
-        })();
-    }, []);
+    const alerts = _alerts?.data ?? [];
 
     if (alerts.length === 0) {
         return null;
@@ -31,9 +31,14 @@ const HomeAlerts = () => {
 
     return alerts.map((alert) =>
         !alert.attributes?.hideAfterDate || dayjs() < dayjs(alert.attributes?.hideAfterDate) ? (
-            <AlertStyled key={alert.id} color={alert.attributes?.color} className="box-shadow mt-2">
-                <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.attributes?.message) }} />
-            </AlertStyled>
+            <Alert key={alert.id} status={mapColorToStatus(alert.attributes?.color)} className="prose my-2 relative [&_p]:m-0">
+                <Alert.Indicator />
+                <Alert.Content>
+                    <Alert.Description>
+                        <div dangerouslySetInnerHTML={{ __html: parseMarkdown(alert.attributes?.message ?? '') }} />
+                    </Alert.Description>
+                </Alert.Content>
+            </Alert>
         ) : null,
     );
 };

@@ -25,8 +25,8 @@ const Option = <OptionT extends Organization, Group extends GroupBase<OptionT>, 
 
     return (
         <components.Option {...props}>
-            <div className="d-flex">
-                <LogoContainer className="me-2">
+            <div className="flex">
+                <LogoContainer className="mr-2">
                     <Image alt={data.name} src={getOrganizationLogoUrl(data?.id)} width={70} height={32} />
                 </LogoContainer>
                 {data.name}

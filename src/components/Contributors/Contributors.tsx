@@ -15,12 +15,12 @@ type ContributorsProps = {
 const Contributors: FC<ContributorsProps> = ({ contributors = [] }) => {
     const [shouldShowAll, setShouldShowAll] = useState(false);
     return (
-        <div className="d-flex mb-4 flex-wrap">
+        <div className="flex mb-6 flex-wrap mt-3">
             {contributors &&
                 contributors
                     .filter(({ percentage }) => (!shouldShowAll ? percentage > PERCENTAGE_THRESHOLD : true))
                     .map(({ id, percentage }) => (
-                        <div className="me-1" key={id}>
+                        <div className="mr-1" key={id}>
                             <UserAvatar
                                 userId={id}
                                 size={40}
@@ -30,10 +30,9 @@ const Contributors: FC<ContributorsProps> = ({ contributors = [] }) => {
                             />
                         </div>
                     ))}
-
             {contributors && contributors.find(({ percentage }) => percentage <= PERCENTAGE_THRESHOLD) && (
                 <Tooltip content={`${shouldShowAll ? 'Hide' : 'Show'} contributors that contributed less than ${PERCENTAGE_THRESHOLD}%`}>
-                    <StyledDotGravatar size={40} onClick={() => setShouldShowAll((v) => !v)} className="rounded-circle">
+                    <StyledDotGravatar size={40} onClick={() => setShouldShowAll((v) => !v)} className="rounded-full">
                         <FontAwesomeIcon icon={shouldShowAll ? faClose : faEllipsisH} />
                     </StyledDotGravatar>
                 </Tooltip>

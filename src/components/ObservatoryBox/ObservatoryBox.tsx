@@ -1,6 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import capitalize from 'capitalize';
-import { reverse } from 'named-urls';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
@@ -12,6 +11,7 @@ import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 import { ConferenceSeries, Observatory, Organization } from '@/services/backend/types';
 
@@ -55,10 +55,10 @@ const ObservatoryBox: FC<ObservatoryBoxProps> = ({ organization, observatory, co
     };
     return organization || observatory || conferenceSeries || isEditMode ? (
         <ObservatoryBoxStyled style={{ paddingRight: isEditMode ? 0 : 20 }}>
-            <div className="d-flex align-items-center">
+            <div className="flex items-center">
                 <Link href={link} className="text-center" style={{ fontSize: '95%' }}>
                     {(organization || conferenceSeries) && (
-                        <div className="position-relative" style={{ height: 65, width: 150 }}>
+                        <div className="relative" style={{ height: 65, width: 150 }}>
                             <Image
                                 className="p-2"
                                 src={getOrganizationLogoUrl(conferenceSeries?.organizationId || organization?.id || '')}
@@ -76,7 +76,7 @@ const ObservatoryBox: FC<ObservatoryBoxProps> = ({ organization, observatory, co
                 {isEditMode && !!user && user.isCurationAllowed && (
                     <>
                         {!organization && !observatory && !conferenceSeries && (
-                            <span className="text-muted ms-2 fst-italic">No observatory assigned</span>
+                            <span className="text-gray-500 ml-2 italic">No observatory assigned</span>
                         )}
                         <ActionButtonView icon={faPen} action={() => setIsOpenObservatoryModal(true)} isDisabled={false} title="Edit" />
                     </>

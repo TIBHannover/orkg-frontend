@@ -1,3 +1,4 @@
+import { Alert, Button } from '@heroui/react';
 import { AnimatePresence } from 'motion/react';
 import { FC, useMemo } from 'react';
 
@@ -8,8 +9,6 @@ import ScrollShadow from '@/components/Comparison/ComparisonTable/ScrollShadow/S
 import SelectedPath from '@/components/Comparison/ComparisonTable/SelectedPath/SelectedPath';
 import useScrollSync from '@/components/Comparison/ComparisonTable/useScrollSync/useScrollSync';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
 
 type ComparisonTableProps = { id: string };
 
@@ -23,22 +22,18 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
     const visibleColumns = useMemo(() => columns.filter((_, i) => activeColumns[i]), [columns, activeColumns]);
 
     return (
-        <div className="tw:relative">
+        <div className="relative">
             {(hasData || !hasFilters) && (
                 <ScrollShadow tbodyRef={tbodyRef}>
-                    <table id="comparisonTable" className="tw:mb-0 tw:p-0 tw:relative tw:flex tw:flex-col tw:h-max">
+                    <table id="comparisonTable" className="mb-0 p-0 relative flex flex-col h-max">
                         <thead
-                            className="tw:w-full tw:flex tw:overflow-x-scroll tw:scrollbar-hidden tw:sticky tw:z-20 tw:top-[71px]"
+                            className="w-full flex overflow-x-scroll [scrollbar-width:none] sticky z-20 top-[71px]"
                             ref={theadRef}
                             onScroll={syncScroll}
                         >
                             <ColumnHeaders columns={visibleColumns} />
                         </thead>
-                        <tbody
-                            className="tw:overflow-x-scroll tw:scrollbar-hidden tw:w-full tw:flex tw:flex-col"
-                            ref={tbodyRef}
-                            onScroll={syncScroll}
-                        >
+                        <tbody className="overflow-x-scroll [scrollbar-width:none] w-full flex flex-col" ref={tbodyRef} onScroll={syncScroll}>
                             <AnimatePresence initial={false}>
                                 {comparisonContents?.selected_paths.map((pathNode) => (
                                     <SelectedPath key={pathNode.id} pathNode={pathNode} rows={comparisonContents.values[pathNode.id] ?? []} />
@@ -47,13 +42,9 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
                         </tbody>
                     </table>
 
-                    <div
-                        className="tw:sticky tw:bottom-0 tw:left-0 tw:w-full tw:overflow-x-scroll tw:z-40 tw:scrollbar-always-visible tw:-mt-[12px]"
-                        onScroll={syncScroll}
-                        ref={scrollbarRef}
-                    >
+                    <div className="sticky bottom-0 left-0 w-full overflow-x-scroll z-40 -mt-[12px]" onScroll={syncScroll} ref={scrollbarRef}>
                         <div
-                            className="tw:h-[12px] tw:invisible"
+                            className="h-[12px] invisible"
                             style={{
                                 width: `${scrollWidth}px`,
                             }}
@@ -63,15 +54,16 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
             )}
 
             {!hasData && columns.length > 1 && (
-                <Alert color="info" className="tw:flex tw:gap-1 tw:!border-0">
-                    No matching data found
-                    {filters?.[id]?.length > 0 && (
-                        <>
-                            .{' '}
-                            <Button color="link" className="tw:!p-0 tw:!border-0" onClick={resetFilters}>
-                                Reset Filters
-                            </Button>
-                        </>
+                <Alert status="accent" className="border-0">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>No matching data</Alert.Title>
+                        {hasFilters && <Alert.Description>Try adjusting or resetting your filters to see more results.</Alert.Description>}
+                    </Alert.Content>
+                    {hasFilters && (
+                        <Button size="sm" variant="secondary" onPress={resetFilters}>
+                            Reset filters
+                        </Button>
                     )}
                 </Alert>
             )}

@@ -24,7 +24,7 @@ const PREVENT_EDIT_CASES: PreventEditCase[] = [
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
+                    paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="mr-1" />
                 </a>{' '}
                 website to suggest changes.
             </>

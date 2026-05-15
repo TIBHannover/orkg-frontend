@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import ListGroup from '@/components/Ui/List/ListGroup';

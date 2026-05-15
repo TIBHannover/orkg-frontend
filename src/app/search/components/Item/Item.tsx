@@ -4,7 +4,6 @@ import { FC } from 'react';
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import { CardBadge } from '@/components/styled';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Thing } from '@/services/backend/things';
 import { getResourceLink } from '@/utils';
@@ -54,13 +53,13 @@ const Item: FC<{ item: Thing }> = ({ item }) => {
     const badge = getBadge();
 
     return (
-        <ListGroupItem key={`result-${item.id}`} className="py-2" style={{ overflowWrap: 'anywhere' }}>
-            <div className="d-flex align-items-center my-3">
-                <Link href={getEntityLink(item)} className="tw:line-clamp-2">
+        <div className="flex flex-col gap-2" style={{ overflowWrap: 'anywhere' }}>
+            <div className="flex flex-nowrap items-center gap-2">
+                <Link href={getEntityLink(item)} className="line-clamp-2 min-w-0">
                     {item.label}
-                </Link>{' '}
+                </Link>
                 {!!badge && (
-                    <div className="d-inline-block ms-2 flex-shrink-0">
+                    <div className="shrink-0">
                         <CardBadge color="primary">{badge.label}</CardBadge>
                     </div>
                 )}
@@ -72,7 +71,7 @@ const Item: FC<{ item: Thing }> = ({ item }) => {
                 showCreatedAt={'classes' in item && item.classes && item.classes.includes(CLASSES.COMPARISON)}
                 showExtractionMethod={item._class === ENTITIES.RESOURCE && !badge}
             />
-        </ListGroupItem>
+        </div>
     );
 };
 export default Item;

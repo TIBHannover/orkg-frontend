@@ -1,3 +1,4 @@
+import { Button, Separator } from '@heroui/react';
 import { FC } from 'react';
 
 import useSaveStatementType from '@/components/RosettaStone/RosettaTemplateEditor/hooks/useSaveStatementType';
@@ -8,7 +9,6 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import Button from '@/components/Ui/Button/Button';
 
 type RosettaTemplateEditorProps = {
     saveButtonText: string;
@@ -32,16 +32,16 @@ const RosettaTemplateEditor: FC<RosettaTemplateEditorProps> = ({ saveButtonText,
     };
 
     return (
-        <div>
+        <div className="flex flex-col gap-6">
             <StepOne />
             <StepTwo />
             <StepThree />
-            <hr />
-            <div className="mt-2 d-flex justify-content-end">
-                <Button className="me-2" disabled={isSaving} color="light" onClick={() => onCancel?.()}>
+            <Separator />
+            <div className="flex justify-end gap-2">
+                <Button variant="secondary" isDisabled={isSaving} onPress={() => onCancel?.()}>
                     Cancel
                 </Button>
-                <Button disabled={isSaving} color="primary" onClick={handleNext}>
+                <Button variant="primary" isDisabled={isSaving} onPress={handleNext}>
                     {saveButtonText}
                 </Button>
             </div>

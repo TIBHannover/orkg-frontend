@@ -1,34 +1,9 @@
+import { Card, CardContent } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
-import styled from 'styled-components';
 
-import Card from '@/components/Ui/Card/Card';
-import CardBody from '@/components/Ui/Card/CardBody';
 import ROUTES from '@/constants/routes';
 import { reverseWithSlug } from '@/utilsTyped';
-
-const BenchmarkCardStyled = styled.div`
-    cursor: initial;
-    .researchProblemStats {
-        text-align: left;
-        font-size: smaller;
-    }
-
-    .orgLogo {
-        margin-top: 10px;
-        border: 1px;
-        padding: 2px;
-    }
-
-    .researchProblemName {
-        font-weight: bold;
-    }
-    &:hover {
-        .researchProblemName {
-            text-decoration: underline;
-        }
-    }
-`;
 
 type BenchmarkCardProps = {
     benchmark: {
@@ -41,31 +16,27 @@ type BenchmarkCardProps = {
         total_codes: number;
     };
 };
+
 const BenchmarkCard: FC<BenchmarkCardProps> = ({ benchmark }) => {
     return (
-        <BenchmarkCardStyled className="col-md-3 mb-4">
-            <Link
-                href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                    researchProblemId: benchmark.research_problem.id,
-                    slug: benchmark.research_problem.label,
-                })}
-                style={{ textDecoration: 'none' }}
-            >
-                <Card className="h-100">
-                    <CardBody>
-                        <div className="mt-2">
-                            <div className="researchProblemName">{benchmark.research_problem.label}</div>
-
-                            <div className="researchProblemStats text-muted">
-                                Papers: <b>{benchmark.total_papers}</b> <br />
-                                Datasets: <b>{benchmark.total_datasets}</b> <br />
-                                Code: <b>{benchmark.total_codes}</b>
-                            </div>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Link>
-        </BenchmarkCardStyled>
+        <Link
+            href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                researchProblemId: benchmark.research_problem.id,
+                slug: benchmark.research_problem.label,
+            })}
+            className="no-underline h-full block"
+        >
+            <Card className="h-full border border-default-200 hover:border-primary transition-colors">
+                <CardContent className="gap-3 p-4">
+                    <div className="font-semibold text-sm leading-snug">{benchmark.research_problem.label}</div>
+                    <div className="mt-2 text-xs text-gray-500">
+                        Papers: <b>{benchmark.total_papers}</b> <br />
+                        Datasets: <b>{benchmark.total_datasets}</b> <br />
+                        Code: <b>{benchmark.total_codes}</b>
+                    </div>
+                </CardContent>
+            </Card>
+        </Link>
     );
 };
 

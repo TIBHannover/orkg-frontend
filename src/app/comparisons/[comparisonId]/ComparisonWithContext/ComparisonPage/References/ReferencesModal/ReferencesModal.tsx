@@ -1,5 +1,6 @@
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Modal } from '@heroui/react';
 import { uniqueId } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
 
@@ -8,12 +9,6 @@ import ReferenceItem, {
 } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/ReferencesModal/ReferencesItem/ReferenceItem';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type ReferencesModalProps = {
     toggle: () => void;
@@ -90,36 +85,47 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
         toggle();
     };
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggle();
+        }
+    };
+
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Edit references</ModalHeader>
-            <ModalBody>
-                {references.length === 0 && (
-                    <Alert color="info" className="mb-0">
-                        No references added yet
-                    </Alert>
-                )}
-                {references.map((reference, index) => (
-                    <ReferenceItem
-                        key={reference.id}
-                        reference={reference}
-                        index={index}
-                        instanceId={instanceId}
-                        onDelete={handleDelete}
-                        onChange={handleChange}
-                        totalItems={references.length}
-                    />
-                ))}
-                <Button color="secondary" size="sm" className="mt-2" onClick={handleAdd}>
-                    <FontAwesomeIcon icon={faAdd} /> Add reference
-                </Button>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={handleSave}>
-                    Save
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop isOpen onOpenChange={handleOpenChange}>
+            <Modal.Container size="lg">
+                <Modal.Dialog className="max-w-3xl">
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Edit references</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-2">
+                        {references.length === 0 && (
+                            <Alert status="accent" className="mb-0">
+                                No references added yet
+                            </Alert>
+                        )}
+                        {references.map((reference, index) => (
+                            <ReferenceItem
+                                key={reference.id}
+                                reference={reference}
+                                index={index}
+                                instanceId={instanceId}
+                                onDelete={handleDelete}
+                                onChange={handleChange}
+                                totalItems={references.length}
+                            />
+                        ))}
+                        <Button variant="secondary" size="sm" className="mt-2 self-start" onPress={handleAdd}>
+                            <FontAwesomeIcon icon={faAdd} /> Add reference
+                        </Button>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onPress={handleSave}>Save</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

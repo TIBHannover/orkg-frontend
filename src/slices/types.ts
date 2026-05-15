@@ -1,6 +1,7 @@
 import type { IHighlight, Position } from 'react-pdf-highlighter';
 
-import { ExtractionMethod } from '@/services/backend/types';
+import { OptionType } from '@/components/Autocomplete/types';
+import { ExtractionMethod, PropertyShape } from '@/services/backend/types';
 import type { AppStore } from '@/store';
 
 export type Range = {
@@ -25,6 +26,7 @@ export type ViewPaper = {
         [key: string]: Range;
     };
     abstract: string;
+    nerProperties: Record<string, { id: string; label: string }>;
 };
 
 export type TemplateEditor = {
@@ -34,12 +36,25 @@ export type TemplateEditor = {
     isLoading: boolean;
     failureStatus: number | null;
     hasFailed: boolean;
+    hasFailedSaving?: boolean;
     label: string;
-    created_by: string;
-    created_at: string;
+    description: string;
+    target_class: OptionType | null;
+    relations: {
+        research_fields?: OptionType[];
+        research_problems?: OptionType[];
+    };
+    is_closed: boolean;
+    hasLabelFormat: boolean;
+    formatted_label: string;
+    properties: PropertyShape[];
+    templateFlow: unknown;
+    error: unknown;
+    created_by: string | null;
+    created_at: string | null;
     extraction_method: ExtractionMethod;
-    observatory_id: string;
-    organization_id: string;
+    observatory_id?: string;
+    organization_id?: string;
 };
 
 export type Annotation = IHighlight & {

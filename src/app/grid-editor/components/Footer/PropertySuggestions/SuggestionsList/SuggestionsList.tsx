@@ -1,6 +1,5 @@
 import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 
@@ -9,12 +8,15 @@ import { useGridDispatch } from '@/app/grid-editor/context/GridContext';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Predicate, Template } from '@/services/backend/types';
 
 type SuggestionsListProps = {
     template: Template;
     filteredProperties: Predicate[];
 };
+
+const MAX_VISIBLE = 6;
 
 const SuggestionsList: FC<SuggestionsListProps> = ({ template, filteredProperties }) => {
     const dispatch = useGridDispatch();
@@ -24,35 +26,35 @@ const SuggestionsList: FC<SuggestionsListProps> = ({ template, filteredPropertie
         return null;
     }
 
-    const displayedProperties = filteredProperties.slice(0, 6);
-    const hasMoreProperties = filteredProperties.length > 6;
+    const displayedProperties = filteredProperties.slice(0, MAX_VISIBLE);
+    const hasMoreProperties = filteredProperties.length > MAX_VISIBLE;
 
     return (
         <>
-            <div className="tw:bg-white tw:border tw:border-gray-200 tw:rounded-lg tw:shadow-sm tw:overflow-hidden">
-                <div className="tw:bg-gray-50 tw:px-4 tw:py-3 tw:border-b tw:border-gray-200">
-                    <h6 className="tw:text-sm tw:font-medium tw:text-gray-700 tw:m-0">
+            <div className="bg-surface border border-border rounded-[var(--radius)] shadow-sm overflow-hidden">
+                <div className="bg-default/40 px-4 py-3 border-b border-border">
+                    <h6 className="text-sm font-medium text-foreground m-0">
                         <Link
                             target="_blank"
                             href={reverse(ROUTES.TEMPLATE, { id: template.id })}
-                            className="tw:text-sm tw:font-medium tw:text-gray-700! tw:m-0"
+                            className="text-sm font-medium !text-foreground m-0"
                         >
                             {template.label}
                         </Link>
                     </h6>
                 </div>
-                <div className="tw:divide-y tw:divide-gray-100">
+                <div className="divide-y divide-border">
                     {displayedProperties.map((p) => (
                         <button
                             key={p.id}
                             type="button"
-                            className="tw:w-full tw:text-left tw:px-4 tw:py-2 tw:cursor-pointer tw:hover:bg-gray-50 tw:transition-colors tw:duration-150 tw:border-0 tw:bg-transparent"
+                            className="w-full text-left px-4 py-2 cursor-pointer hover:bg-default/40 transition-colors duration-150 border-0 bg-transparent"
                             onClick={() => dispatch({ type: 'ADD_PROPERTY', payload: { predicate: p } })}
                         >
                             <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE}>
-                                <div className="tw:flex tw:items-center">
-                                    <FontAwesomeIcon icon={faPlus} className="tw:text-gray-400 tw:mr-2 tw:text-xs" />
-                                    <span className="tw:text-sm tw:text-gray-700">{p.label}</span>
+                                <div className="flex items-center">
+                                    <FontAwesomeIcon icon={faPlus} className="text-muted mr-2 text-xs" />
+                                    <span className="text-sm text-foreground">{p.label}</span>
                                 </div>
                             </DescriptionTooltip>
                         </button>
@@ -60,14 +62,12 @@ const SuggestionsList: FC<SuggestionsListProps> = ({ template, filteredPropertie
                     {hasMoreProperties && (
                         <button
                             type="button"
-                            className="tw:w-full tw:text-left tw:px-4 tw:py-2 tw:cursor-pointer tw:hover:bg-gray-50 tw:transition-colors tw:duration-150 tw:border-0 tw:bg-transparent tw:border-t tw:border-gray-100"
+                            className="w-full text-left px-4 py-2 cursor-pointer hover:bg-default/40 transition-colors duration-150 border-0 bg-transparent"
                             onClick={() => setIsModalOpen(true)}
                         >
-                            <div className="tw:flex tw:items-center tw:justify-center">
-                                <FontAwesomeIcon icon={faChevronDown} className="tw:text-gray-400 tw:mr-2 tw:text-xs" />
-                                <span className="tw:text-sm tw:text-gray-600 tw:font-medium">
-                                    View {filteredProperties.length - 6} more properties
-                                </span>
+                            <div className="flex items-center justify-center">
+                                <FontAwesomeIcon icon={faChevronDown} className="text-muted mr-2 text-xs" />
+                                <span className="text-sm text-muted font-medium">View {filteredProperties.length - MAX_VISIBLE} more properties</span>
                             </div>
                         </button>
                     )}

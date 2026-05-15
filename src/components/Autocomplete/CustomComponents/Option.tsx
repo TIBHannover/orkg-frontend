@@ -1,20 +1,16 @@
 import { faArrowRight, faCircleExclamation, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip, toast } from '@heroui/react';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import { ThemeContext } from 'styled-components';
 
 import InfoBox from '@/components/Autocomplete/CustomComponents/InfoBox';
-import { SourceBadge } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import { getLinkByEntityType } from '@/utils';
 
@@ -27,52 +23,50 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
     const { data, children, isFocused, isSelected } = props;
     const { onClick, ...newInnerProps } = innerProps;
     const truncatedDescription = truncate(data.description ? data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
-    const theme = useContext(ThemeContext);
-
-    const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
+    const iconClassName = !isFocused ? 'text-muted' : 'text-secondary';
     const textClassName = !isFocused && !isSelected ? 'text-muted' : '';
     const [state, copyToClipboard] = useCopyToClipboard();
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('ID copied to clipboard');
         }
     }, [state.value]);
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
-            <div className="d-flex justify-content-between align-items-center">
-                <div className="flex-grow-1 d-flex px-2 py-1 flex-column" role="button" tabIndex={0} onKeyDown={undefined} onClick={onClick}>
+            <div className="flex justify-between items-center">
+                <div className="grow flex px-2 py-1 flex-col" role="button" tabIndex={0} onKeyDown={undefined} onClick={onClick}>
                     <div>
                         {children}{' '}
                         {data.isRecommended && (
-                            <span style={{ color: '#E8AD15' }}>
+                            <span className="text-warning">
                                 <FontAwesomeIcon icon={faStar} /> Recommended
                             </span>
                         )}
                     </div>
                     <div>
-                        {truncatedDescription && <div className={`small ${textClassName}`}>{truncatedDescription}</div>}
+                        {truncatedDescription && <div className={`text-sm ${textClassName}`}>{truncatedDescription}</div>}
                         {!data.external && !!data.shared && data.shared > 0 && (
-                            <span className="small">
-                                <FontAwesomeIcon icon={faArrowRight} color={iconColor} />{' '}
+                            <span className="text-sm">
+                                <FontAwesomeIcon icon={faArrowRight} className={iconClassName} />{' '}
                                 <i className={textClassName}>{` Referred: ${pluralize('time', data.shared, true)}`}</i>
                             </span>
                         )}
                         {!data.external && data.classes && data.classes?.length > 0 && (
-                            <span className="small">
+                            <span className="text-sm">
                                 {' '}
-                                <FontAwesomeIcon icon={faTags} color={iconColor} /> {' Instance of: '}
+                                <FontAwesomeIcon icon={faTags} className={iconClassName} /> {' Instance of: '}
                                 <i className={textClassName}>{data.classes.join(', ')}</i>
                             </span>
                         )}
                     </div>
                 </div>
                 {!data.__isNew__ && !data.hideLink && (
-                    <div className="d-flex">
+                    <div className="flex">
                         {(!data.external || (data.tooltipData && data.tooltipData?.length > 0)) && (
-                            <div className="d-inline-block me-1">
+                            <div className="inline-block mr-1">
                                 <InfoBox data={data} isFocused={isFocused} />
                             </div>
                         )}
@@ -80,42 +74,47 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                         {data._class && data._class === ENTITIES.CLASS && data.external && data.ontology === 'Wikidata' && (
                             <Tooltip
                                 contentStyle={{ zIndex: 99999, position: 'absolute' }}
-                                content={<div className="d-flex align-items-center text-break z-100">This option will be imported as a class</div>}
+                                content={<div className="flex items-center break-all z-100">This option will be imported as a class</div>}
                             >
                                 <span>
-                                    <Badge color="warning" className="small me-1">
+                                    <Chip color="warning" variant="soft" className="text-sm mr-1">
                                         <FontAwesomeIcon icon={faCircleExclamation} color="white" />
                                         {` `}
                                         Class
-                                    </Badge>
+                                    </Chip>
                                 </span>
                             </Tooltip>
                         )}
                         <Tooltip
                             contentStyle={{ zIndex: 99999, position: 'absolute' }}
                             content={
-                                <div className="d-flex align-items-center text-break z-100">
+                                <div className="flex items-center break-all z-100">
                                     {data.id}
-                                    <Button
-                                        className="py-0 border border-light-darker px-2 ms-2"
-                                        size="sm"
-                                        color="light"
-                                        onClick={() => copyToClipboard(data.id)}
+                                    <button
+                                        type="button"
+                                        className="py-0 border border-border px-2 ml-2 text-sm bg-transparent hover:bg-default rounded cursor-pointer"
+                                        onMouseDown={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            copyToClipboard(data.id);
+                                        }}
                                     >
-                                        <FontAwesomeIcon icon={faClipboard} color={theme?.dark} size="xs" />
-                                    </Button>
+                                        <FontAwesomeIcon icon={faClipboard} className="text-dark" size="xs" />
+                                    </button>
                                 </div>
                             }
                             disabled={data.external}
                         >
-                            <SourceBadge
+                            <a
                                 href={data.uri && data.ontology ? data.uri : getLinkByEntityType(data?._class ?? '', data.id)}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="d-flex align-items-center px-2 py-1 flex-shrink-0"
+                                className="shrink-0"
                             >
-                                {data.ontology ?? 'ORKG'} <FontAwesomeIcon icon={faExternalLink} color={theme?.dark} size="xs" className="ms-1" />
-                            </SourceBadge>
+                                <Chip size="sm" variant="soft">
+                                    {data.ontology ?? 'ORKG'} <FontAwesomeIcon icon={faExternalLink} size="xs" className="ml-1 text-dark" />
+                                </Chip>
+                            </a>
                         </Tooltip>
                     </div>
                 )}

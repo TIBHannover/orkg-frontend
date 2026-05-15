@@ -1,15 +1,7 @@
+import { Card } from '@heroui/react';
 import { FC, useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
 
 import RelatedFigureModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonCarousel/RelatedFigures/RelatedFigureModal/RelatedFigureModal';
-import Card from '@/components/Ui/Card/Card';
-import CardImg from '@/components/Ui/Card/CardImg';
-
-const GlobalStyle = createGlobalStyle`
-    .ril__image.ril-image-current:not(.ril-not-loaded) {
-        background: #fff;
-    }
-`;
 
 type RelatedFigureCardProps = {
     src?: string;
@@ -21,12 +13,14 @@ const RelatedFigureCard: FC<RelatedFigureCardProps> = ({ src = '', title = '', d
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="w-100 mx-1">
-            <GlobalStyle />
-            <Card className="overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
-                <CardImg top width="100%" height="120px" src={src} alt={`Thumbnail: ${title}`} />
+        <div className="w-full mx-1">
+            <Card
+                className="h-[122px] p-0 overflow-hidden cursor-pointer border border-default-200 hover:border-primary transition-colors"
+                onClick={() => setIsOpen(true)}
+            >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt={`Thumbnail: ${title}`} className="w-full h-full object-cover" />
             </Card>
-
             {isOpen && <RelatedFigureModal toggle={() => setIsOpen((v) => !v)} src={src} title={title} description={description} />}
         </div>
     );

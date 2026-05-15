@@ -19,12 +19,12 @@ const useExistingPaper = () => {
         return false;
     };
 
-    const ExistingPaperModels = useCallback(
+    const ExistingPaperModals = useCallback(
         () => isOpenExistingModal && existingPaper && <ExistingPaperModal toggle={() => setIsOpenExistingModal(false)} paper={existingPaper} />,
         [isOpenExistingModal, existingPaper],
     );
 
-    return { checkIfPaperExists, ExistingPaperModels };
+    return { checkIfPaperExists, ExistingPaperModals };
 };
 
 export default useExistingPaper;

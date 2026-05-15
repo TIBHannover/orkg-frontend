@@ -1,3 +1,4 @@
+import { Toast } from '@heroui/react';
 import type { RenderOptions } from '@testing-library/react';
 import { render as rtlRender } from '@testing-library/react';
 import { MathJaxContext } from 'better-react-mathjax';
@@ -7,11 +8,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
 import { ComponentProps, PropsWithChildren, ReactElement } from 'react';
 import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
 
-import theme from '@/assets/scss/ThemeVariables';
+import theme from '@/assets/css/ThemeVariables';
 import MATH_JAX_CONFIG from '@/constants/mathJax';
 import { RootStore } from '@/slices/types';
 import { AppStore, setupStore } from '@/store';
@@ -35,14 +35,7 @@ const Wrapper = ({ children, initialState = {}, store = setupStore(initialState)
                     <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
                         <MathJaxContext config={MATH_JAX_CONFIG}>
                             {children}
-                            <ToastContainer
-                                position="top-right"
-                                autoClose={5000}
-                                hideProgressBar
-                                className="toast-container"
-                                icon={false}
-                                theme="colored"
-                            />
+                            <Toast.Provider placement="top end" />
                         </MathJaxContext>
                     </SWRConfig>
                 </ThemeProvider>

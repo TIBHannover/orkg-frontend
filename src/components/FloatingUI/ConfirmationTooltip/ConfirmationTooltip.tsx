@@ -1,21 +1,20 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup,type ButtonProps } from '@heroui/react';
 import { ReactNode } from 'react';
-import styled from 'styled-components';
 
-import { usePopoverContext } from '@/components/FloatingUI/Popover';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
+type ConfirmationButtonVariant = NonNullable<ButtonProps['variant']>;
 
-const ConfirmationTooltipStyled = styled.div`
-    color: #fff;
-    font-size: 0.95rem;
-    word-break: normal;
-    .btn {
-        padding-top: 2px;
-        padding-bottom: 2px;
-    }
-`;
+const COLOR_TO_VARIANT: Record<string, ConfirmationButtonVariant> = {
+    primary: 'primary',
+    secondary: 'secondary',
+    tertiary: 'tertiary',
+    danger: 'danger',
+    success: 'primary',
+    warning: 'secondary',
+    info: 'secondary',
+    light: 'ghost',
+};
 
 type ConfirmationTooltipProps = {
     message: ReactNode;
@@ -25,38 +24,29 @@ type ConfirmationTooltipProps = {
         icon: IconDefinition;
         action?: () => void;
     }[];
+    onClose: () => void;
 };
 
-/**
- * This component is made to be a content for a tippy
- * Make sure to use ref props when you use this component
- */
-const ConfirmationTooltip = ({ message, buttons }: ConfirmationTooltipProps) => {
-    const { setOpen } = usePopoverContext();
-
-    return (
-        <ConfirmationTooltipStyled className="text-center p-1">
-            <div className="mb-2">{message}</div>
-            <ButtonGroup size="sm" className="my-1">
-                {buttons.map((button) => (
-                    <Button
-                        onClick={(e) => {
-                            button.action?.();
-                            setOpen(false);
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }}
-                        className="px-2"
-                        key={button.title}
-                        color={button.color}
-                    >
-                        <FontAwesomeIcon icon={button.icon} className="me-1" />
-                        {button.title}
-                    </Button>
-                ))}
-            </ButtonGroup>
-        </ConfirmationTooltipStyled>
-    );
-};
+const ConfirmationTooltip = ({ message, buttons, onClose }: ConfirmationTooltipProps) => (
+    <div role="alertdialog" aria-label="Confirm action" className="text-center p-1 text-[0.95rem] break-normal">
+        <div className="mb-2">{message}</div>
+        <ButtonGroup size="sm" className="my-1">
+            {buttons.map((button) => (
+                <Button
+                    key={button.title}
+                    variant={COLOR_TO_VARIANT[button.color] ?? 'primary'}
+                    className="px-2"
+                    onPress={() => {
+                        button.action?.();
+                        onClose();
+                    }}
+                >
+                    <FontAwesomeIcon icon={button.icon} className="mr-1" />
+                    {button.title}
+                </Button>
+            ))}
+        </ButtonGroup>
+    </div>
+);
 
 export default ConfirmationTooltip;

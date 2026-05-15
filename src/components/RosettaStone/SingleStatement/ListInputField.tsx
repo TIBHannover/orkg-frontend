@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { components, InputProps } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import { customClassNames, customStyles } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { Node } from '@/services/backend/types';
 
 type ListInputFieldProps = {
@@ -19,29 +19,30 @@ const ListInputField: FC<ListInputFieldProps> = ({ value, updateValue, inputForm
     };
 
     return (
-        <CreatableSelect
-            isClearable
-            isMulti
-            classNamePrefix="react-select"
-            size="sm"
-            styles={customStyles}
-            classNames={customClassNames}
-            className="w-50 d-inline-block"
-            onChange={(selected, metaAction) => {
-                if (metaAction.action === 'clear') {
-                    updateValue([]);
-                } else if (metaAction.action === 'remove-value') {
-                    updateValue((value.filter((v) => v.label !== metaAction.removedValue.label) as Node[]) ?? []);
-                } else {
-                    updateValue((selected as Node[]) ?? []);
-                }
-            }}
-            placeholder={inputFormType === 'date' ? '' : placeholder ?? 'Add a value'}
-            value={value}
-            components={{
-                Input,
-            }}
-        />
+        <span className="w-1/2 inline-block align-middle leading-normal">
+            <CreatableSelect
+                isClearable
+                isMulti
+                classNamePrefix="react-select"
+                size="sm"
+                styles={customStyles}
+                classNames={customClassNames}
+                onChange={(selected, metaAction) => {
+                    if (metaAction.action === 'clear') {
+                        updateValue([]);
+                    } else if (metaAction.action === 'remove-value') {
+                        updateValue((value.filter((v) => v.label !== metaAction.removedValue.label) as Node[]) ?? []);
+                    } else {
+                        updateValue((selected as Node[]) ?? []);
+                    }
+                }}
+                placeholder={inputFormType === 'date' ? '' : (placeholder ?? 'Add a value')}
+                value={value}
+                components={{
+                    Input,
+                }}
+            />
+        </span>
     );
 };
 

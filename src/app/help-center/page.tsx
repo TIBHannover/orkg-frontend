@@ -1,110 +1,46 @@
-'use client';
-
+import { Skeleton } from '@heroui/react';
 import { times } from 'lodash';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
+import HelpCenterContent from '@/app/help-center/HelpCenterContent';
 import HelpCenterSearchInput from '@/components/HelpCenterSearchInput/HelpCenterSearchInput';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Alert from '@/components/Ui/Alert/Alert';
-import Col from '@/components/Ui/Structure/Col';
-import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
-import ROUTES from '@/constants/routes';
-import { getHelpCategories } from '@/services/cms';
-import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utilsTyped';
 
-const HelpCenter = () => {
-    const [categories, setCategories] = useState<HelpArticle[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasFailed, setHasFailed] = useState(false);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            setIsLoading(true);
-            setHasFailed(false);
-            try {
-                setCategories((await getHelpCategories()).data);
-            } catch (e) {
-                setHasFailed(true);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchCategories();
-    }, []);
-
-    return (
-        <div>
-            <TitleBar>Help center</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <HelpCenterSearchInput />
-
-                {hasFailed && <Alert color="danger">Help categories are not loaded because an error occurred</Alert>}
-                {!isLoading && categories.length === 0 && <Alert color="info">No help categories are added</Alert>}
-
-                {isLoading && (
-                    <Row className="mt-5">
-                        {times(5, (i) => (
-                            <Col key={i} md="6">
-                                <ContentLoader speed={2} width="100%" height={130} viewBox="0 0 100% 50" style={{ width: '100% !important' }}>
-                                    <rect x="0" y="0" rx="3" ry="3" width="400" height="35" />
-                                    <rect x="0" y="40" rx="3" ry="3" width="300" height="15" />
-                                    <rect x="0" y="60" rx="3" ry="3" width="200" height="15" />
-                                    <rect x="0" y="80" rx="3" ry="3" width="250" height="15" />
-                                </ContentLoader>
-                            </Col>
-                        ))}
-                    </Row>
-                )}
-
-                <Row className="mt-5">
-                    {categories.map((category) => (
-                        <Col key={category.id} md="6">
-                            <h2 className="h4">
-                                <Link
-                                    href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id,
-                                    })}
-                                    className="text-body"
-                                >
-                                    {category.attributes.title}
-                                </Link>
-                            </h2>
-                            <ul className="ps-3 mb-0">
-                                {category.attributes?.help_articles?.data?.slice(0, 5)?.map((article) => (
-                                    <li key={article.id}>
-                                        <Link
-                                            href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                                id: article.id,
-                                                slug: article.attributes.title,
-                                            })}
-                                        >
-                                            {article.attributes.title}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="mt-2 mb-4">
-                                <Link
-                                    href={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: category.id,
-                                    })}
-                                    className="text-muted"
-                                >
-                                    View all {category.attributes?.help_articles?.data?.length} articles
-                                </Link>
-                            </div>
-                        </Col>
-                    ))}
-                </Row>
-            </Container>
-        </div>
-    );
+export const metadata: Metadata = {
+    title: 'Help center - ORKG',
+    description: 'Browse help articles and search the ORKG help center.',
 };
 
-export default HelpCenter;
+const HelpCenterFallback = () => (
+    <div>
+        <TitleBar>Help center</TitleBar>
+        <div className="max-w-container mx-auto px-3">
+            <div className="box rounded p-8 md:p-12">
+                <div className="max-w-2xl mx-auto text-center mb-10">
+                    <h1 className="text-3xl md:text-4xl font-semibold mb-3">How can we help?</h1>
+                    <p className="text-muted mb-6">Search help articles or browse the categories below.</p>
+                    <HelpCenterSearchInput />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                    {times(4, (i) => (
+                        <div key={i} className="flex flex-col gap-3">
+                            <Skeleton className="w-2/3 h-7 rounded" />
+                            <Skeleton className="w-full h-4 rounded" />
+                            <Skeleton className="w-5/6 h-4 rounded" />
+                            <Skeleton className="w-3/4 h-4 rounded" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+export default function HelpCenterPage() {
+    return (
+        <Suspense fallback={<HelpCenterFallback />}>
+            <HelpCenterContent />
+        </Suspense>
+    );
+}

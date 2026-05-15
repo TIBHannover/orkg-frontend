@@ -23,27 +23,39 @@ const Literal = () => {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && (
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
+                </Container>
+            )}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && literal && (
                 <>
                     <TitleBar>Literal</TitleBar>
 
-                    <Container className="box pt-4 pb-4 ps-4 pe-4  rounded">
-                        <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                            {literal?.label || (
-                                <i>
-                                    <small>No label</small>
-                                </i>
-                            )}
-                        </h3>
-                        <ItemMetadata item={literal} showDataType showCreatedAt showCreatedBy showProvenance showExtractionMethod />
+                    <Container>
+                        <div className="box flow-root pt-6 pb-6 pl-6 pr-6 rounded">
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-semibold mb-0 flex flex-wrap items-center gap-2 break-words">
+                                    <span className="break-words">
+                                        {literal?.label || (
+                                            <i>
+                                                <small>No label</small>
+                                            </i>
+                                        )}
+                                    </span>
+                                </h2>
+                            </div>
+                            <ItemMetadata item={literal} showDataType showCreatedAt showCreatedBy showProvenance showExtractionMethod />
+                        </div>
                     </Container>
 
-                    <Container className="mt-3 px-0 py-4 box rounded">
-                        <h3 className="ms-3">Statements</h3>
-                        <ObjectStatements id={literalId} showInfoTabLink={false} />
+                    <Container className="mt-4">
+                        <div className="py-6 box rounded">
+                            <h3 className="ml-4">Statements</h3>
+                            <ObjectStatements id={literalId} showInfoTabLink={false} />
+                        </div>
                     </Container>
                 </>
             )}

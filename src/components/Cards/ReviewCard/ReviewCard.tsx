@@ -1,29 +1,21 @@
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip, Tooltip } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import Authors from '@/components/Cards/PaperCard/Authors';
 import Coins from '@/components/Coins/Coins';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { CardBadge } from '@/components/styled';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { VISIBILITY } from '@/constants/contentTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Review } from '@/services/backend/types';
-
-const ReviewCardStyled = styled('div')<{ rounded?: string }>`
-    &:last-child {
-        border-bottom-right-radius: ${(props) => (props.rounded === 'true' ? '0 !important' : '')};
-    }
-`;
 
 type ReviewCardProps = {
     review: Review;
@@ -40,11 +32,11 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
     });
 
     return (
-        <ReviewCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
-            <div className="col-md-9 d-flex p-0">
+        <div className={`list-group-item flex flex-wrap py-4 pr-6 ${showCurationFlags ? 'pl-4' : 'pl-6'}`}>
+            <div className="flex w-full p-0 md:w-9/12 md:shrink-0 md:grow-0 md:basis-9/12 md:max-w-9/12">
                 {renderCoins && <Coins item={review} />}
                 {showCurationFlags && (
-                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                    <div className="flex w-[25px] shrink-0 flex-col">
                         <div>
                             <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                         </div>
@@ -53,13 +45,15 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                         </div>
                     </div>
                 )}
-                <div className="d-flex flex-column flex-grow-1">
+                <div className="flex grow flex-col">
                     <div className="mb-2">
                         <Link href={reverse(ROUTES.REVIEW, { id: review.id })}>{review.title}</Link>
                         {showBadge && (
-                            <div className="d-inline-block ms-2">
-                                <CardBadge color="primary">Review</CardBadge>
-                            </div>
+                            <span className="ml-2 inline-block align-middle">
+                                <Chip color="accent" variant="primary" size="sm">
+                                    Review
+                                </Chip>
+                            </span>
                         )}
                     </div>
                     <div className="mb-1">
@@ -67,7 +61,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                             <Authors authors={review.authors.length > 0 ? review.authors : []} />
                             {review.created_at && (
                                 <>
-                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />{' '}
                                     {dayjs(review.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
@@ -75,14 +69,17 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                     </div>
 
                     {review.versions?.published?.length > 1 && (
-                        <small>
+                        <small className="mt-2 block">
                             All versions:{' '}
                             {review.versions.published.map((version, index) => (
                                 <span key={version?.id}>
-                                    <Tooltip content={version?.changelog || 'no description'}>
-                                        <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>
-                                            Version {(review.versions.published?.length ?? 0) - index}
-                                        </Link>
+                                    <Tooltip>
+                                        <Tooltip.Trigger className="inline">
+                                            <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>
+                                                Version {(review.versions.published?.length ?? 0) - index}
+                                            </Link>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content>{version?.changelog || 'no description'}</Tooltip.Content>
                                     </Tooltip>{' '}
                                     {index < review.versions.published.length - 1 && ' • '}
                                 </span>
@@ -91,15 +88,15 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                     )}
                 </div>
             </div>
-            <div className="col-md-3 d-flex align-items-end flex-column p-0">
-                <div className="flex-grow-1 mb-1">
-                    <div className="d-none d-md-flex align-items-end justify-content-end">
+            <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
+                <div className="mb-1 grow">
+                    <div className="hidden items-end justify-end md:flex">
                         <RelativeBreadcrumbs researchField={review.research_fields?.[0]} />
                     </div>
                 </div>
                 <UserAvatar userId={review.created_by} />
             </div>
-        </ReviewCardStyled>
+        </div>
     );
 };
 

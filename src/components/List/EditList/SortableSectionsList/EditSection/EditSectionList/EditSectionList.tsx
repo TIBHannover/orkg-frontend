@@ -4,6 +4,7 @@ import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/clo
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button } from '@heroui/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import AddEntryModal from '@/components/List/EditList/SortableSectionsList/EditSection/EditSectionList/AddEntryModal/AddEntryModal';
@@ -16,9 +17,6 @@ import {
     createInstanceId,
     type ReorderParams,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
 import { LiteratureListSectionList, LiteratureListSectionListEntry } from '@/services/backend/types';
 
 type EditSectionListProps = {
@@ -98,16 +96,19 @@ const EditSectionList: FC<EditSectionListProps> = ({ section }) => {
     return (
         <>
             {section.entries.length === 0 && (
-                <Alert color="info" className="mt-2" fade={false}>
-                    No entries added yet
+                <Alert status="accent" className="mt-2 rounded-2xl flex-row items-center">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>No entries added yet</Alert.Title>
+                    </Alert.Content>
                 </Alert>
             )}
             {section.entries.length > 0 && (
-                <div className="mb-3 mt-2">
-                    <ListGroup>
+                <div className="mb-4 mt-2">
+                    <ul className="m-0 flex w-full flex-col divide-y divide-border overflow-hidden rounded-(--radius) border border-border bg-surface p-0 list-none">
                         {section.entries.map((entry, index) => (
                             <EditSectionListItem
-                                key={entry.value.id}
+                                key={`${entry.value?.id ?? 'no-id'}-${index}`}
                                 entry={entry}
                                 index={index}
                                 section={section}
@@ -117,14 +118,13 @@ const EditSectionList: FC<EditSectionListProps> = ({ section }) => {
                                 onReorder={reorderEntries}
                             />
                         ))}
-                    </ListGroup>
+                    </ul>
                 </div>
             )}
-            <Button color="secondary" size="sm" className="mb-2" onClick={() => setIsOpenAddEntryModal(true)}>
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
+            <Button variant="secondary" size="sm" className="mb-2 mt-2" onPress={() => setIsOpenAddEntryModal(true)}>
+                <FontAwesomeIcon icon={faPlus} className="mr-2" />
                 Add entries
             </Button>
-
             {isOpenAddEntryModal && <AddEntryModal toggle={() => setIsOpenAddEntryModal((v) => !v)} section={section} />}
         </>
     );

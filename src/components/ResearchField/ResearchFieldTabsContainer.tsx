@@ -67,7 +67,6 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
     return (
         <>
             <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} showSubFieldsFilter />
-
             <Tabs
                 className={`rounded mt-2 ${boxShadow ? 'box' : ''}`}
                 destroyOnHidden

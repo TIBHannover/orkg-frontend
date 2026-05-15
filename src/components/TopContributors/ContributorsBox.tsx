@@ -1,12 +1,11 @@
+import { Button, Skeleton } from '@heroui/react';
 import dayjs from 'dayjs';
 import pluralize from 'pluralize';
 import { FC, useState } from 'react';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ContributorsModal from '@/components/TopContributors/ContributorsModal';
-import Button from '@/components/Ui/Button/Button';
 import { contributorStatisticsUrl, getContributorStatisticsByResearchFieldId } from '@/services/backend/contributor-statistics';
 
 type ContributorsBoxProps = {
@@ -31,14 +30,14 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
     const [openModal, setOpenModal] = useState(false);
 
     return (
-        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
-            <h2 className="h5 mb-0">Top contributors</h2>
+        <div className="box rounded-lg p-4 flex flex-col">
+            <h2 className="text-xl mb-0">Top contributors</h2>
             <hr className="mt-2" />
-            <div className="flex-grow-1">
+            <div className="grow">
                 {!isLoading && contributors && contributors?.length > 0 && (
                     <div className="mt-2">
                         {contributors?.slice(0, 4).map((contributor, index) => (
-                            <div className="pt-1 ps-2 pe-2" key={`rp${contributor.contributorId}`}>
+                            <div className="pt-1 pl-2 pr-2" key={`rp${contributor.contributorId}`}>
                                 <ContributorCard
                                     id={contributor.contributorId}
                                     subTitle={`${pluralize('contribution', contributor.totalCount, true)}`}
@@ -49,30 +48,36 @@ const ContributorsBox: FC<ContributorsBoxProps> = ({ researchFieldId }) => {
                     </div>
                 )}
                 {!isLoading && contributors && contributors?.length === 0 && (
-                    <div className="mt-4 mb-4">
+                    <div className="mt-6 mb-6">
                         No contributors in this research field yet.
                         <br />
                         <i> Be the first contributor!</i>
                     </div>
                 )}
                 {!isLoading && contributors && contributors?.length > 4 && (
-                    <div className="text-center mt-3">
-                        <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
+                    <div className="text-center mt-4">
+                        <Button size="sm" onClick={() => setOpenModal((v) => !v)} variant="tertiary">
                             View more
                         </Button>
                         {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
                     </div>
                 )}
                 {isLoading && (
-                    <div className="mt-4 mb-4">
-                        <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
-                            <rect x="90" y="12" rx="3" ry="3" width="123" height="7" />
-                            <rect x="90" y="30" rx="3" ry="3" width="171" height="6" />
-                            <circle cx="44" cy="30" r="30" />
-                            <circle cx="44" cy="100" r="30" />
-                            <rect x="90" y="82" rx="3" ry="3" width="123" height="7" />
-                            <rect x="90" y="100" rx="3" ry="3" width="171" height="6" />
-                        </ContentLoader>
+                    <div className="mt-6 mb-6 flex flex-col gap-4">
+                        <div className="flex items-center gap-4">
+                            <Skeleton className="size-14 rounded-full shrink-0" />
+                            <div className="flex flex-col gap-2 grow">
+                                <Skeleton className="w-3/4 h-2 rounded" />
+                                <Skeleton className="w-full h-1.5 rounded" />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Skeleton className="size-14 rounded-full shrink-0" />
+                            <div className="flex flex-col gap-2 grow">
+                                <Skeleton className="w-3/4 h-2 rounded" />
+                                <Skeleton className="w-full h-1.5 rounded" />
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

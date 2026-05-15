@@ -68,9 +68,8 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
     };
 
     return (
-        <Container className="mt-4 p-0">
+        <Container className="mt-6">
             <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
-
             <Tabs
                 className="box rounded"
                 destroyOnHidden

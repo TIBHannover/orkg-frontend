@@ -1,9 +1,9 @@
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
-import styled from 'styled-components';
 
 import LayoutTripleObject from '@/components/DataBrowser/components/Body/Statement/Object/LayoutTripleObject';
 import SortableValueItem from '@/components/DataBrowser/components/Body/Statement/SortableValueItem/SortableValueItem';
@@ -11,7 +11,6 @@ import ValueDatatype from '@/components/DataBrowser/components/Body/Statement/Va
 import ValueInputField from '@/components/DataBrowser/components/Body/ValueInputField/ValueInputField';
 import ValueOptions from '@/components/DataBrowser/components/Body/ValueOptions/ValueOptions';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
-import Button from '@/components/Ui/Button/Button';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
@@ -30,20 +29,26 @@ type SingleStatementProps = {
     setIsEditingValue: Dispatch<SetStateAction<boolean>>;
 };
 
-const EntityTypeStyled = styled.div`
-    width: 18px;
-    height: 18px;
-    line-height: 15px;
-    text-align: center;
-    color: white;
-    display: inline-block;
-    border: 1px ${(props) => props.theme.secondaryDarker} solid;
-    margin-right: 3px;
-    border-radius: 100%;
-    font-size: 9px;
-    font-weight: bold;
-    background: ${(props) => props.theme.secondary};
-`;
+const EntityTypeBadge = ({ children }: { children: React.ReactNode }) => (
+    <span
+        aria-hidden="true"
+        className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full text-white text-[9px] font-bold border mr-[3px] align-middle"
+        style={{
+            background: 'var(--color-secondary)',
+            borderColor: 'var(--color-secondary-darker)',
+        }}
+    >
+        {children}
+    </span>
+);
+
+const ObjectLabel: FC<{ statement: Statement }> = ({ statement }) => (
+    <>
+        {statement.object._class === ENTITIES.CLASS && <EntityTypeBadge>C</EntityTypeBadge>}
+        {statement.object._class === ENTITIES.PREDICATE && <EntityTypeBadge>P</EntityTypeBadge>}
+        {('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || <i>No label</i>}
+    </>
+);
 
 const TripleObject: FC<SingleStatementProps> = ({
     level,
@@ -63,6 +68,14 @@ const TripleObject: FC<SingleStatementProps> = ({
     const elementListWrapper = (children: ReactElement) => <SortableValueItem statement={statement}>{children}</SortableValueItem>;
 
     if (!isEditingValue) {
+        const isNonLiteral = statement.object._class !== ENTITIES.LITERAL;
+        const canExpand =
+            !isEditMode &&
+            isNonLiteral &&
+            isEqual(loadedResources[statement.object.id], path) &&
+            !path.includes(statement.object.id) &&
+            hasObjectStatements;
+
         return (
             <LayoutTripleObject level={level} statement={statement} path={path}>
                 <ConditionalWrapper
@@ -74,26 +87,23 @@ const TripleObject: FC<SingleStatementProps> = ({
                     }
                     wrapper={elementListWrapper}
                 >
-                    <div className="text-break" style={{ overflowX: 'auto' }}>
-                        {valuesAsLinks && statement.object._class !== ENTITIES.LITERAL && (
-                            <Link href={getResourceLink(statement.object._class, statement.object.id)}>
-                                {statement.object._class === ENTITIES.CLASS && <EntityTypeStyled>C</EntityTypeStyled>}
-                                {statement.object._class === ENTITIES.PREDICATE && <EntityTypeStyled>P</EntityTypeStyled>}
-                                {('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || (
-                                    <i>No label</i>
-                                )}
+                    <div className="break-all overflow-x-auto overflow-y-hidden">
+                        {valuesAsLinks && isNonLiteral && (
+                            <Link
+                                href={getResourceLink(statement.object._class, statement.object.id)}
+                                className="text-accent hover:underline underline-offset-2"
+                            >
+                                <ObjectLabel statement={statement} />
                             </Link>
                         )}
-                        {!valuesAsLinks && statement.object._class !== ENTITIES.LITERAL && (
-                            <span>
-                                <Button className="p-0 text-start" color="link" onClick={() => handleOnClick()} style={{ userSelect: 'text' }}>
-                                    {statement.object._class === ENTITIES.CLASS && <EntityTypeStyled>C</EntityTypeStyled>}
-                                    {statement.object._class === ENTITIES.PREDICATE && <EntityTypeStyled>P</EntityTypeStyled>}
-                                    {('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || (
-                                        <i>No label</i>
-                                    )}
-                                </Button>
-                            </span>
+                        {!valuesAsLinks && isNonLiteral && (
+                            <button
+                                type="button"
+                                onClick={handleOnClick}
+                                className="p-0 bg-transparent border-0 text-accent hover:underline underline-offset-2 text-left select-text cursor-pointer"
+                            >
+                                <ObjectLabel statement={statement} />
+                            </button>
                         )}
                         {statement.object._class === ENTITIES.LITERAL && (
                             <ValuePlugins
@@ -104,20 +114,18 @@ const TripleObject: FC<SingleStatementProps> = ({
                             </ValuePlugins>
                         )}
                         {preferences.showInlineDataTypes && <ValueDatatype value={statement.object} />}
-                        {!isEditMode &&
-                            statement.object._class !== ENTITIES.LITERAL &&
-                            isEqual(loadedResources[statement.object.id], path) &&
-                            !path.includes(statement.object.id) &&
-                            hasObjectStatements && (
-                                <Button
-                                    color="link"
-                                    className="p-0 ms-1"
-                                    onClick={() => setShowSubLevel((v) => !v)}
-                                    aria-label={`${showSubLevel ? 'collapse' : 'expand'} nested statements`}
-                                >
-                                    <FontAwesomeIcon color="rgb(128, 134, 155)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
-                                </Button>
-                            )}
+                        {canExpand && (
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="ghost"
+                                className="ml-1 h-6 w-6 min-w-0 rounded-md align-middle"
+                                onPress={() => setShowSubLevel((v) => !v)}
+                                aria-label={`${showSubLevel ? 'collapse' : 'expand'} nested statements`}
+                            >
+                                <FontAwesomeIcon color="var(--color-secondary)" icon={showSubLevel ? faMinusSquare : faPlusSquare} />
+                            </Button>
+                        )}
                         <ValueOptions
                             showPreview={() => setShowSubLevel((v) => !v)}
                             path={path}

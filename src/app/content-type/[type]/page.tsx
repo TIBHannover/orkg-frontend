@@ -2,8 +2,7 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
 
@@ -14,6 +13,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getResources, resourcesUrl } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';
 
@@ -37,13 +37,7 @@ function ContentTypes() {
     );
 
     const buttons = (
-        <RequireAuthentication
-            component={Link}
-            color="secondary"
-            size="sm"
-            className="btn btn-secondary btn-sm flex-shrink-0"
-            href={`${ROUTES.CONTENT_TYPE_NEW}?type=${type}`}
-        >
+        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={`${ROUTES.CONTENT_TYPE_NEW}?type=${type}`}>
             <FontAwesomeIcon icon={faPlus} /> Create new
         </RequireAuthentication>
     );

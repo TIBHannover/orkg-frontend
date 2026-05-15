@@ -1,10 +1,9 @@
+import { Chip, Skeleton } from '@heroui/react';
 import { StatisticsApiFindMetricByGroupAndNameRequest } from '@orkg/orkg-client';
 import { FC } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
 import { CLASSES } from '@/constants/graphSettings';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
@@ -66,10 +65,10 @@ const TabLabel: FC<TabLabelProps> = ({ group = 'content-types', label, showCount
                 {label}
 
                 {showCount && (isStatisticsLoading || count) && (
-                    <Badge color="light" pill className="ms-1 px-2">
-                        {isStatisticsLoading && <Skeleton width={10} />}
+                    <Chip className="ml-1 px-2">
+                        {isStatisticsLoading && <Skeleton className="w-2.5 h-4 rounded" />}
                         {!isStatisticsLoading && count?.value.toLocaleString('en-US', { notation: 'compact' })}
-                    </Badge>
+                    </Chip>
                 )}
             </span>
         </Tooltip>

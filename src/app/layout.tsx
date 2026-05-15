@@ -1,8 +1,6 @@
-import '@/assets/scss/CustomBootstrap.scss';
+import '@/app/globals.css';
 import 'fast-text-encoding/text.min';
 import 'intro.js/introjs.css';
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-loading-skeleton/dist/skeleton.css';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -47,7 +45,7 @@ const RootLayout: FC<Props> = ({ children }) => (
             />
         </head>
         <body>
-            <NextTopLoader color="#e86161" />
+            <NextTopLoader color="var(--accent)" />
             {/* CookiesProvider is a server component so cannot be placed in <Providers> */}
             <CookiesProvider>
                 <NuqsAdapter>

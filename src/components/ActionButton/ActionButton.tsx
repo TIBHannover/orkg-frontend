@@ -1,11 +1,10 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Popover, Tooltip } from '@heroui/react';
 import { FC, ReactNode, useState } from 'react';
 
 import ActionButtonView from '@/components/ActionButton/ActionButtonView';
 import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
-import Popover from '@/components/FloatingUI/Popover';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 
 export type ActionButtonProps = {
     title: ReactNode;
@@ -37,17 +36,8 @@ const ActionButton: FC<ActionButtonProps> = ({
     icon,
     isDisabled,
     confirmationButtons = [
-        {
-            title: 'Delete',
-            color: 'danger',
-            icon: faCheck,
-            action,
-        },
-        {
-            title: 'Cancel',
-            color: 'secondary',
-            icon: faTimes,
-        },
+        { title: 'Delete', color: 'danger', icon: faCheck, action },
+        { title: 'Cancel', color: 'secondary', icon: faTimes },
     ],
     confirmationMessage = 'Are you sure?',
     iconSize,
@@ -59,39 +49,42 @@ const ActionButton: FC<ActionButtonProps> = ({
     const open = controlledOpen ?? uncontrolledOpen;
     const setOpen = setControlledOpen ?? setUncontrolledOpen;
 
-    const handleClick = () => {
-        if (!requireConfirmation) {
-            action();
-        } else {
-            setOpen(true);
-        }
-    };
+    const showConfirmation = requireConfirmation && confirmationButtons?.length && !isDisabled;
 
-    const tippyChildren = (
+    const trigger = (
         <ActionButtonView
             title={title}
             icon={!isLoading ? icon : faSpinner}
             iconSpin={!isLoading ? iconSpin : true}
-            action={handleClick}
+            action={showConfirmation ? undefined : action}
             isDisabled={!isLoading ? isDisabled : true}
             size={iconSize}
             testId={testId}
         />
     );
 
-    return requireConfirmation && confirmationButtons?.length && !isDisabled ? (
-        <Tooltip content={title}>
-            <Popover
-                open={open}
-                onOpenChange={setOpen}
-                content={<ConfirmationTooltip message={confirmationMessage} buttons={confirmationButtons} />}
-                modal
-            >
-                {tippyChildren}
-            </Popover>
-        </Tooltip>
+    const wrappedTrigger = showConfirmation ? (
+        <Popover isOpen={open} onOpenChange={setOpen}>
+            {trigger}
+            <Popover.Content>
+                <Popover.Dialog>
+                    <Popover.Arrow />
+                    <ConfirmationTooltip onClose={() => setOpen(false)} message={confirmationMessage} buttons={confirmationButtons} />
+                </Popover.Dialog>
+            </Popover.Content>
+        </Popover>
     ) : (
-        <Tooltip content={title}>{tippyChildren}</Tooltip>
+        trigger
+    );
+
+    return (
+        <Tooltip delay={0} isDisabled={open}>
+            <Tooltip.Trigger>{wrappedTrigger}</Tooltip.Trigger>
+            <Tooltip.Content showArrow>
+                <Tooltip.Arrow />
+                {title}
+            </Tooltip.Content>
+        </Tooltip>
     );
 };
 

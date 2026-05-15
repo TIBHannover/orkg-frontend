@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { sortBy } from 'lodash';
 import { DataFactory, Parser, Store } from 'n3';
-import { toast } from 'react-toastify';
 import format from 'string-format';
 
 import useMembership from '@/components/hooks/useMembership';
@@ -273,7 +273,7 @@ const useImportSHACL = () => {
                     (nodesShape.properties || []).map(async (propertyShape) => {
                         if (propertyShape.path && !('id' in propertyShape.path) && propertyShape.path.label) {
                             const newPid = await createPredicate(propertyShape.path?.label);
-                            return getPredicate(newPid).then((r) => ({ ...propertyShape.path, ...r } as MappedPredicate));
+                            return getPredicate(newPid).then((r) => ({ ...propertyShape.path, ...r }) as MappedPredicate);
                         }
                         return propertyShape.path;
                     }),
@@ -293,7 +293,7 @@ const useImportSHACL = () => {
                         const newClassId = await createClass(`${nodesShape.label} [C]`);
                         targetClassId = newClassId;
                     } catch (error) {
-                        toast.error(`Error creating target class for template ${nodesShape.label}`);
+                        toast.danger(`Error creating target class for template ${nodesShape.label}`);
                     }
                 }
                 if (!targetClassId) {

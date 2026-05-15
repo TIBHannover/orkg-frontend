@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import Video from '@/components/ValuePlugins/Video/Video';
 import { ENTITIES } from '@/constants/graphSettings';

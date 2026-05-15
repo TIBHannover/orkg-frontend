@@ -1,19 +1,7 @@
 import capitalize from 'capitalize';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import { RSPropertyShape } from '@/services/backend/types';
-
-const PositionCardStyled = styled.div`
-    background-color: white;
-    border-radius: 4px;
-    border: 2px solid ${(props) => props.color};
-`;
-
-const PlaceholderStyled = styled.div`
-    color: white;
-    background: ${(props) => props.color};
-`;
 
 type PositionCardProps = {
     index: number;
@@ -22,16 +10,14 @@ type PositionCardProps = {
     color?: string;
 };
 
-const PositionCard: FC<PositionCardProps> = ({ property, index, type, color }) => {
-    return (
-        <PositionCardStyled color={color} className="me-1 my-1 flex-shrink-0 d-flex">
-            {property.preposition && <div className="mx-1 px-1">{property.preposition}</div>}
-            <PlaceholderStyled color={color} className="px-1">
-                {property.placeholder ? property.placeholder : `${capitalize(type)} ${index !== 0 && index !== 1 ? index - 1 : ''}`}
-            </PlaceholderStyled>
-            {property.postposition && <div className="mx-1 px-1">{property.postposition}</div>}
-        </PositionCardStyled>
-    );
-};
+const PositionCard: FC<PositionCardProps> = ({ property, index, type, color }) => (
+    <div className="flex shrink-0 items-center overflow-hidden rounded border-2 bg-surface text-sm" style={{ borderColor: color }}>
+        {property.preposition && <div className="px-2 py-1 text-foreground">{property.preposition}</div>}
+        <div className="px-2 py-1 font-medium text-white" style={{ backgroundColor: color }}>
+            {property.placeholder ? property.placeholder : `${capitalize(type)} ${index !== 0 && index !== 1 ? index - 1 : ''}`}
+        </div>
+        {property.postposition && <div className="px-2 py-1 text-foreground">{property.postposition}</div>}
+    </div>
+);
 
 export default PositionCard;

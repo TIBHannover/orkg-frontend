@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import Boolean from '@/components/ValuePlugins/Boolean/Boolean';
 

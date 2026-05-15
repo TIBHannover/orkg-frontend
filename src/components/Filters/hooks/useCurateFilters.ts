@@ -1,5 +1,5 @@
+import { toast } from '@heroui/react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import { areFiltersEqual, loadFiltersFromLocalStorage } from '@/components/Filters/helpers';
@@ -35,12 +35,12 @@ const useCurateFilters = ({
         if (isCurationAllowed && filter.persisted) {
             if (filterId) {
                 await updateFiltersOfObservatory(oId, filterId, filter).catch((e) => {
-                    toast.error(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
+                    toast.danger(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
                     setIsSaving(false);
                 });
             } else {
                 await createFiltersInObservatory(oId, filter).catch((e) => {
-                    toast.error(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
+                    toast.danger(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
                     setIsSaving(false);
                 });
             }

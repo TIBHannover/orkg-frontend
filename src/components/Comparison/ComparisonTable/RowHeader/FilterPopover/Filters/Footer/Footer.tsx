@@ -1,7 +1,7 @@
+import { Button } from '@heroui/react';
 import { Dispatch, FC, SetStateAction } from 'react';
 
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
-import Button from '@/components/Ui/Button/Button';
 
 type FooterProps = {
     predicateId: string;
@@ -20,11 +20,11 @@ const Footer: FC<FooterProps> = ({ predicateId, path, setIsOpenFilterPopover }) 
     };
 
     return (
-        <div className="tw:flex tw:justify-between tw:mt-2">
-            <Button size="sm" color="light" onClick={handleReset} disabled={!filter}>
+        <div className="flex justify-between mt-3">
+            <Button size="sm" variant="tertiary" onPress={handleReset} isDisabled={!filter}>
                 Reset
             </Button>
-            <Button size="sm" color="primary" type="submit">
+            <Button size="sm" type="submit">
                 Apply
             </Button>
         </div>

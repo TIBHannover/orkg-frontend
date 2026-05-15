@@ -1,12 +1,9 @@
+import { Input, Label, toast } from '@heroui/react';
 import { isNumber } from 'lodash';
 import { Dispatch, FC, FormEvent, SetStateAction, useEffect, useId, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Footer from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/Footer/Footer';
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 
 type NumberFilterProps = {
     predicateId: string;
@@ -36,7 +33,7 @@ const NumberFilter: FC<NumberFilterProps> = ({ predicateId, path, setIsOpenFilte
             });
             setIsOpenFilterPopover(false);
         } else {
-            toast.error('Please provide at least one filter value.');
+            toast.danger('Please provide at least one filter value.');
         }
     };
 
@@ -53,28 +50,30 @@ const NumberFilter: FC<NumberFilterProps> = ({ predicateId, path, setIsOpenFilte
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="tw:flex tw:gap-2">
-                <FormGroup floating className="tw:!mb-0">
+            <div className="flex gap-2">
+                <div className="flex flex-col gap-1 flex-1">
+                    <Label htmlFor={`${formId}-minimum`}>Minimum</Label>
                     <Input
                         id={`${formId}-minimum`}
-                        placeholder="Minimum"
                         type="number"
+                        placeholder="Minimum"
                         value={minValue}
                         onChange={(e) => setMinValue(e.target.value)}
+                        fullWidth
                     />
-                    <Label for={`${formId}-minimum`}>Minimum</Label>
-                </FormGroup>
+                </div>
 
-                <FormGroup floating className="tw:!mb-0">
+                <div className="flex flex-col gap-1 flex-1">
+                    <Label htmlFor={`${formId}-maximum`}>Maximum</Label>
                     <Input
                         id={`${formId}-maximum`}
                         type="number"
                         placeholder="Maximum"
                         value={maxValue}
                         onChange={(e) => setMaxValue(e.target.value)}
+                        fullWidth
                     />
-                    <Label for={`${formId}-maximum`}>Maximum</Label>
-                </FormGroup>
+                </div>
             </div>
             <Footer predicateId={predicateId} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />
         </form>

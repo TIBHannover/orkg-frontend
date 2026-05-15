@@ -32,7 +32,7 @@ const ReviewSection = () => (
         }
         helpfulResourcesSubtitle="Example reviews within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:!m-0">
+            <ul className="py-2 m-0">
                 <li>
                     <Link href="https://orkg.org/reviews/R135360" target="_blank">
                         Scholarly Knowledge Graphs

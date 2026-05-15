@@ -1,15 +1,11 @@
 import { faFirefox, faGithub, faGitlab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, Modal, Table as HeroUITable, tableVariants } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Table from '@/components/Ui/Table/Table';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 function getCodeIconByURL(url: string) {
     let faIcon = faFirefox;
@@ -28,48 +24,57 @@ type CodeURLsTooltipProps = {
 };
 
 const CodeURLsTooltip: FC<CodeURLsTooltipProps> = ({ urls, title, id }) => {
-    const [showModal, setShowModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const tableSlots = tableVariants({ variant: 'primary' });
 
     if (urls?.length === 1) {
         return (
             <a href={urls[0] ?? '-'} rel="noreferrer" target="_blank">
-                <FontAwesomeIcon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ms-2 me-2" />
+                <FontAwesomeIcon icon={getCodeIconByURL(urls[0])} className="icon ml-2 mr-2" />
             </a>
         );
     }
     return (
         <>
-            <Modal isOpen={showModal} toggle={() => setShowModal((v) => !v)} size="lg">
-                <ModalHeader toggle={() => setShowModal((v) => !v)}>
-                    {' '}
-                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: id })} style={{ textDecoration: 'none' }}>
-                        {title}
-                    </Link>
-                </ModalHeader>
-                <ModalBody>
-                    <Table striped hover bordered>
-                        <thead>
-                            <tr>
-                                <th>Code</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {urls?.map((url, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-dark">
-                                            <FontAwesomeIcon icon={getCodeIconByURL(url)} className="icon ms-2 me-2" /> {url}
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </ModalBody>
-            </Modal>
-            <Button className="p-0" color="link" onClick={() => setShowModal((v) => !v)}>
-                <FontAwesomeIcon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
+            <Button variant="ghost" className="p-0 h-auto min-w-0" onPress={() => setIsOpen(true)}>
+                <FontAwesomeIcon icon={faGithub} className="icon ml-2 mr-2" style={{ color: 'var(--accent)' }} />
             </Button>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={setIsOpen}>
+                <Modal.Container size="lg">
+                    <Modal.Dialog>
+                        <Modal.CloseTrigger />
+                        <Modal.Header>
+                            <Modal.Heading>
+                                <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: id })} className="no-underline">
+                                    {title}
+                                </Link>
+                            </Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <HeroUITable className={tableSlots.base()}>
+                                <table className={tableSlots.content()}>
+                                    <thead className="table__header">
+                                        <tr>
+                                            <th className="table__column">Code</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="table__body">
+                                        {urls?.map((url) => (
+                                            <tr key={url} className="table__row">
+                                                <td className="table__cell">
+                                                    <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-foreground no-underline">
+                                                        <FontAwesomeIcon icon={getCodeIconByURL(url)} className="icon ml-2 mr-2" /> {url}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </HeroUITable>
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </>
     );
 };

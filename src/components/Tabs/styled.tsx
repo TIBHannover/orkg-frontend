@@ -291,7 +291,7 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs-right > div > .rc-tabs-content-holder {
         order: 0;
         margin-right: -1px;
-        border-right: 1px solid #d9d9d9;
+        border-right: 1px solid var(--border);
     }
     .rc-tabs-right > .rc-tabs-content-holder > .rc-tabs-content > .rc-tabs-tabpane,
     .rc-tabs-right > div > .rc-tabs-content-holder > .rc-tabs-content > .rc-tabs-tabpane {
@@ -320,7 +320,7 @@ export const ORKGTabsStyle = styled.div`
         overflow-y: auto;
         text-align: left;
         list-style-type: none;
-        background-color: #ffffff;
+        background-color: var(--surface);
         background-clip: padding-box;
         border-radius: 8px;
         outline: none;
@@ -335,7 +335,7 @@ export const ORKGTabsStyle = styled.div`
         min-width: 120px;
         margin: 0;
         padding: 4px 12px;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--foreground);
         font-weight: normal;
         font-size: 14px;
         line-height: 1.5714285714285714;
@@ -357,11 +357,11 @@ export const ORKGTabsStyle = styled.div`
         color: ${(props) => props.theme.primary};
     }
     .rc-tabs-dropdown .rc-tabs-dropdown-menu-item:hover {
-        background: rgba(0, 0, 0, 0.04);
+        background: color-mix(in oklch, var(--foreground) 8%, transparent);
     }
     .rc-tabs-dropdown .rc-tabs-dropdown-menu-item-disabled,
     .rc-tabs-dropdown .rc-tabs-dropdown-menu-item-disabled:hover {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--muted);
         background: transparent;
         cursor: not-allowed;
     }
@@ -369,14 +369,14 @@ export const ORKGTabsStyle = styled.div`
     .rc-tabs-card > div > .rc-tabs-nav .rc-tabs-tab {
         margin: 0;
         padding: 8px 16px;
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(5, 5, 5, 0.06);
+        background: var(--default);
+        border: 1px solid var(--border);
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
     .rc-tabs-card > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card > div > .rc-tabs-nav .rc-tabs-tab-active {
         color: ${(props) => props.theme.primary};
-        background: #ffffff;
+        background: var(--surface);
     }
     .rc-tabs-card > .rc-tabs-nav .rc-tabs-ink-bar,
     .rc-tabs-card > div > .rc-tabs-nav .rc-tabs-ink-bar {
@@ -394,7 +394,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-card.rc-tabs-top > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card.rc-tabs-top > div > .rc-tabs-nav .rc-tabs-tab-active {
-        border-bottom-color: #ffffff;
+        border-bottom-color: var(--surface);
     }
     .rc-tabs-card.rc-tabs-bottom > .rc-tabs-nav .rc-tabs-tab,
     .rc-tabs-card.rc-tabs-bottom > div > .rc-tabs-nav .rc-tabs-tab {
@@ -402,7 +402,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-card.rc-tabs-bottom > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card.rc-tabs-bottom > div > .rc-tabs-nav .rc-tabs-tab-active {
-        border-top-color: #ffffff;
+        border-top-color: var(--surface);
     }
     .rc-tabs-card.rc-tabs-left > .rc-tabs-nav .rc-tabs-tab + .rc-tabs-tab,
     .rc-tabs-card.rc-tabs-right > .rc-tabs-nav .rc-tabs-tab + .rc-tabs-tab,
@@ -416,7 +416,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-card.rc-tabs-left > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card.rc-tabs-left > div > .rc-tabs-nav .rc-tabs-tab-active {
-        border-right-color: #ffffff;
+        border-right-color: var(--surface);
     }
     .rc-tabs-card.rc-tabs-right > .rc-tabs-nav .rc-tabs-tab,
     .rc-tabs-card.rc-tabs-right > div > .rc-tabs-nav .rc-tabs-tab {
@@ -424,7 +424,7 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-card.rc-tabs-right > .rc-tabs-nav .rc-tabs-tab-active,
     .rc-tabs-card.rc-tabs-right > div > .rc-tabs-nav .rc-tabs-tab-active {
-        border-left-color: #ffffff;
+        border-left-color: var(--surface);
     }
     .rc-tabs {
         box-sizing: border-box;
@@ -439,7 +439,7 @@ export const ORKGTabsStyle = styled.div`
         display: flex;
         flex: none;
         align-items: center;
-        background #fff;
+        background var(--surface);
         border-radius: ${(props) => props.theme.borderRadius};
         border-width: ${(props) => props.theme.borderWidth};
         border-color: ${(props) => props.theme.lightDarker};
@@ -513,11 +513,11 @@ export const ORKGTabsStyle = styled.div`
         margin-left: 2px;
         padding: 0 8px;
         background: transparent;
-        border: 1px solid rgba(5, 5, 5, 0.06);
+        border: 1px solid var(--border);
         border-radius: 8px 8px 0 0;
         outline: none;
         cursor: pointer;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--foreground);
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
     .rc-tabs > .rc-tabs-nav .rc-tabs-nav-add:hover,
@@ -588,7 +588,7 @@ export const ORKGTabsStyle = styled.div`
         flex: none;
         margin-right: -4px;
         margin-left: 8px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--muted);
         font-size: 12px;
         background: transparent;
         border: none;
@@ -597,7 +597,7 @@ export const ORKGTabsStyle = styled.div`
         transition: all 0.3s;
     }
     .rc-tabs .rc-tabs-tab-remove:hover {
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--foreground);
     }
     .rc-tabs .rc-tabs-tab:hover {
         color: ${(props) => props.theme.primary};
@@ -615,22 +615,22 @@ export const ORKGTabsStyle = styled.div`
     }
     .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active {
         background: ${(props) => props.theme.primary};
-        color: #fff;
+        color: var(--accent-foreground);
         cursor: initial !important;
         border-color: ${(props) => props.theme.primary};
     }
     .rc-tabs-left .rc-tabs-tab.rc-tabs-tab-active .rc-tabs-tab-btn {
-        color: #fff;
+        color: var(--accent-foreground);
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--muted);
         cursor: not-allowed;
     }
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled .rc-tabs-tab-btn:focus,
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled .rc-tabs-remove:focus,
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled .rc-tabs-tab-btn:active,
     .rc-tabs .rc-tabs-tab.rc-tabs-tab-disabled .rc-tabs-remove:active {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--muted);
     }
     .rc-tabs .rc-tabs-tab .rc-tabs-tab-remove .anticon {
         margin: 0;
@@ -649,7 +649,7 @@ export const ORKGTabsStyle = styled.div`
         flex: auto;
         min-width: 0;
         min-height: 0;
-        background:#fff;
+        background: var(--surface);
         border-radius: ${(props) => props.theme.borderRadius};
         border-width: ${(props) => props.theme.borderWidth};
         border-color: ${(props) => props.theme.lightDarker};
@@ -783,7 +783,7 @@ export const AddContribution = styled(Button)`
         &:hover {
             background-color: ${(props) => props.theme.primary};
             border: 1px solid ${(props) => props.theme.primary};
-            color: #fff;
+            color: var(--accent-foreground);
         }
     }
 `;

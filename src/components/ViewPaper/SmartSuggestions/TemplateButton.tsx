@@ -1,39 +1,12 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, useContext, useState } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import { FC, useState } from 'react';
 import useSWR from 'swr';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
 import { getResource, resourcesUrl, updateResource } from '@/services/backend/resources';
 import { Template } from '@/services/backend/types';
-
-type IconWrapperProps = {
-    $wrappercolor?: string;
-    $wrapperbackgroundcolor?: string;
-};
-
-const IconWrapper = styled.span<IconWrapperProps>`
-    background-color: ${(props) => props.$wrapperbackgroundcolor};
-    position: absolute;
-    left: 0;
-    height: 100%;
-    top: 0;
-    width: 28px;
-    border-radius: inherit;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${(props) => props.$wrappercolor};
-    padding-left: 3px;
-`;
-
-const Label = styled.div`
-    padding-left: 28px;
-`;
 
 type TemplateButtonProps = {
     template: Template;
@@ -47,12 +20,10 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
 
     const { data: resource, mutate } = useSWR([resourceId, resourcesUrl, 'getResource'], ([params]) => getResource(params));
 
-    const theme = useContext(ThemeContext);
     const addTemplate = async () => {
         setIsSaving(true);
         if (resource && 'classes' in resource) {
             await updateResource(resourceId, { classes: [...(resource.classes ?? []), template.target_class.id] });
-            // revalidate the cache of the selected contribution
             mutate();
         }
         setIsSaving(false);
@@ -62,7 +33,6 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
         setIsSaving(true);
         if (resource && 'classes' in resource) {
             await updateResource(resourceId, { classes: [...(resource.classes.filter((c) => c !== template.target_class.id) ?? [])] });
-            // revalidate the cache of the selected contribution
             mutate();
         }
         setIsSaving(false);
@@ -70,39 +40,37 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
 
     const addMode = (resource && 'classes' in resource && !resource?.classes?.includes(template.target_class.id)) || isDisabled;
 
-    let color: string | undefined = 'danger';
-    let wrapperBackgroundColor: string | undefined = '#dc3545';
-    const wrapperColor = addMode && !isSmart ? theme?.secondary : 'white';
+    let variant: 'danger' | 'ghost' | 'outline' = 'danger';
+    let buttonClassName = '';
+    let iconBackground = 'var(--danger)';
+    const iconColor = addMode && !isSmart ? 'var(--color-secondary)' : 'white';
 
     if (addMode) {
-        color = isSmart ? 'smart' : 'light';
-        wrapperBackgroundColor = isSmart ? theme?.smart : '#d1d5e4';
+        variant = isSmart ? 'outline' : 'ghost';
+        buttonClassName = isSmart ? 'button--orkg-smart' : '';
+        iconBackground = isSmart ? 'var(--color-smart)' : 'color-mix(in srgb, var(--color-secondary) 25%, var(--surface))';
     }
 
     return (
         <TemplateTooltip id={template.id} disabled={isDisabled}>
             <span>
                 <ButtonWithLoading
-                    onClick={() => {
-                        if (addMode) {
-                            addTemplate();
-                        } else {
-                            deleteTemplate();
-                        }
-                    }}
+                    onClick={() => (addMode ? addTemplate() : deleteTemplate())}
                     isLoading={isSaving}
                     size="sm"
-                    outline={isSmart}
-                    color={color}
+                    variant={variant}
                     isDisabled={isDisabled}
-                    className={`me-2 mb-2 position-relative px-3 rounded-pill ${!isSmart && 'border-0'}`}
+                    className={`mr-2 mb-2 relative pr-4 pl-9 rounded-full max-w-full text-left whitespace-normal h-auto min-h-8 py-1 ${buttonClassName} ${!isSmart ? 'border-0' : ''}`}
                 >
-                    <IconWrapper $wrappercolor={wrapperColor} $wrapperbackgroundcolor={wrapperBackgroundColor}>
+                    <span
+                        className="absolute left-0 top-0 h-full w-7 rounded-l-full flex items-center justify-center"
+                        style={{ backgroundColor: iconBackground, color: iconColor }}
+                    >
                         {!isSaving && addMode && <FontAwesomeIcon size="sm" icon={faPlus} />}
                         {!isSaving && !addMode && <FontAwesomeIcon size="sm" icon={faTimes} />}
                         {isSaving && <FontAwesomeIcon icon={faSpinner} spin />}
-                    </IconWrapper>
-                    <Label>{template.label}</Label>
+                    </span>
+                    {template.label}
                 </ButtonWithLoading>
             </span>
         </TemplateTooltip>

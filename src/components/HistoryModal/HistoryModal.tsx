@@ -1,22 +1,18 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, cn, Modal, Separator, Spinner } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import Select, { components, GroupBase, OptionProps } from 'react-select';
-import styled from 'styled-components';
 import useSWR from 'swr';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import ActivityItem from '@/components/ActivityItem/ActivityItem';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import MarkFeaturedUnlistedContainer from '@/components/MarkFeaturedUnlisted/MarkFeaturedUnlistedContainer/MarkFeaturedUnlistedContainer';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import { reverse } from '@/lib/namedRoute';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 
 const Option = ({ children, ...props }: OptionProps<VersionOption, false, GroupBase<VersionOption>>) => (
@@ -27,44 +23,6 @@ const Option = ({ children, ...props }: OptionProps<VersionOption, false, GroupB
         </div>
     </components.Option>
 );
-
-const Activity = styled.div`
-    border-left: 3px solid #e9ebf2;
-    color: ${(props) => props.theme.bodyColor};
-
-    a {
-        color: ${(props) => props.theme.primary};
-    }
-
-    &:last-child {
-        border-left: none;
-        padding-left: 1.2rem !important;
-    }
-`;
-
-const Time = styled.div`
-    &:not(.selected) {
-        color: rgba(100, 100, 100, 0.57);
-    }
-    &.selected {
-        font-weight: 700;
-    }
-    margin-top: -0.2rem;
-    margin-bottom: 0.2rem;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    &::before {
-        width: 1rem;
-        height: 1rem;
-        margin-left: -1.6rem;
-        margin-right: 0.5rem;
-        border-radius: 15px;
-        content: '';
-        background-color: #c2c6d6;
-        display: inline-block;
-    }
-`;
 
 type Version = {
     id: string;
@@ -116,106 +74,143 @@ const HistoryModal: FC<HistoryModalProps> = ({
     );
 
     const handleCompare = () => {
+        if (!routeDiff) {
+            return;
+        }
         router.push(reverse(routeDiff, { oldId: selectedVersion1?.value, newId: selectedVersion2?.value }));
     };
 
+    const showCompareSection = routeDiff && versions.length > 1;
+
     return (
-        <Modal isOpen={show} toggle={toggle}>
-            <ModalHeader toggle={toggle}>{title}</ModalHeader>
-            <ModalBody>
-                {isLoading && (
-                    <div className="d-flex justify-content-center">
-                        <div className="spinner-border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                )}
-                {!isLoading && versions.length > 0 && (
-                    <div>
-                        <div className="p-2">
-                            {routeDiff && versions.length > 1 && (
-                                <div className="mb-4">
-                                    <h2 className="h6">Compare versions</h2>
-                                    <div className="d-flex w-100">
-                                        <Select<VersionOption>
-                                            value={selectedVersion1}
-                                            onChange={(v) => setSelectedVersion1(v)}
-                                            options={options}
-                                            components={{ Option }}
-                                            blurInputOnSelect
-                                            openMenuOnFocus
-                                            className="flex-grow-1 me-1 focus-primary"
-                                            classNamePrefix="react-select"
-                                            placeholder="Select version"
-                                        />
-                                        <Select
-                                            value={selectedVersion2}
-                                            onChange={(v) => setSelectedVersion2(v)}
-                                            options={options}
-                                            components={{ Option }}
-                                            blurInputOnSelect
-                                            openMenuOnFocus
-                                            className="flex-grow-1 me-1"
-                                            classNamePrefix="react-select"
-                                            placeholder="Select version"
-                                        />
-                                        <SelectGlobalStyle />
-                                        <Button
-                                            disabled={!selectedVersion2 || !selectedVersion1}
-                                            color="secondary"
-                                            className="px-2"
-                                            onClick={handleCompare}
-                                        >
-                                            <FontAwesomeIcon icon={faSearch} />
-                                        </Button>
-                                    </div>
-                                    <hr />
-                                </div>
-                            )}
-                            <h2 className="h6 mb-0">Version history</h2>
-                        </div>
-                        <div className="p-4">
-                            {versions.map((version, i) => (
-                                <Activity key={version.id} className="ps-3 pb-3">
-                                    <Time className={id === version.id ? 'selected' : ''}>
-                                        {version.created_at ? dayjs(version.created_at)?.format('DD MMMM YYYY - H:mm') : ''}{' '}
-                                        {id === version.id && <>(This version)</>}
-                                        <span className="ms-2">
-                                            <UserAvatar userId={version.created_by} />
-                                        </span>
-                                    </Time>
-                                    <div>
-                                        Version {versions.length - i}
-                                        {showFeaturedButtons && (
-                                            <div className="ms-1 d-inline-block ">
-                                                <MarkFeaturedUnlistedContainer
-                                                    size="xs"
-                                                    id={version.id}
-                                                    featured={resources?.find((resource) => resource.id === version.id)?.featured ?? false}
-                                                    unlisted={resources?.find((resource) => resource.id === version.id)?.unlisted ?? false}
+        <Modal.Backdrop
+            isOpen={show}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="md">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>{title}</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {isLoading && (
+                            <div className="flex justify-center py-6">
+                                <Spinner />
+                            </div>
+                        )}
+                        {!isLoading && versions.length > 0 && (
+                            <div>
+                                {showCompareSection && (
+                                    <>
+                                        <section>
+                                            <h3 className="text-base font-semibold mb-1">Compare versions</h3>
+                                            <p className="text-sm text-default-500 mb-3">
+                                                Select two versions to review the differences between them.
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <Select<VersionOption>
+                                                    value={selectedVersion1}
+                                                    onChange={(v) => setSelectedVersion1(v)}
+                                                    options={options}
+                                                    components={{ Option }}
+                                                    blurInputOnSelect
+                                                    openMenuOnFocus
+                                                    className="grow focus-primary"
+                                                    classNamePrefix="react-select"
+                                                    classNames={customClassNames as any}
+                                                    styles={customStyles as any}
+                                                    menuPosition="fixed"
+                                                    placeholder="Old version"
                                                 />
+                                                <span className="text-sm text-default-500">vs</span>
+                                                <Select
+                                                    value={selectedVersion2}
+                                                    onChange={(v) => setSelectedVersion2(v)}
+                                                    options={options}
+                                                    components={{ Option }}
+                                                    blurInputOnSelect
+                                                    openMenuOnFocus
+                                                    className="grow"
+                                                    classNamePrefix="react-select"
+                                                    classNames={customClassNames as any}
+                                                    styles={customStyles as any}
+                                                    menuPosition="fixed"
+                                                    placeholder="New version"
+                                                />
+                                                <Button
+                                                    isDisabled={!selectedVersion2 || !selectedVersion1}
+                                                    variant="secondary"
+                                                    className="px-3"
+                                                    onPress={handleCompare}
+                                                    aria-label="Compare selected versions"
+                                                >
+                                                    <FontAwesomeIcon icon={faSearch} />
+                                                </Button>
                                             </div>
-                                        )}
-                                        {version.changelog && (
-                                            <>
-                                                : <em>{version.changelog}</em>
-                                            </>
-                                        )}{' '}
-                                        <br />
-                                        {id !== version.id && (
-                                            <Link onClick={toggle} href={version.link}>
-                                                View this version
-                                            </Link>
-                                        )}
-                                    </div>
-                                </Activity>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                {versions.length === 0 && <Alert color="info">No versions have been found</Alert>}
-            </ModalBody>
-        </Modal>
+                                        </section>
+                                        <Separator className="my-5" />
+                                    </>
+                                )}
+                                <h3 className="text-base font-semibold mb-3">Version history</h3>
+                                <div>
+                                    {versions.map((version, i) => (
+                                        <ActivityItem key={version.id} isLast={i === versions.length - 1}>
+                                            <div
+                                                className={cn(
+                                                    'flex items-center text-[15px] mb-1',
+                                                    id === version.id ? 'font-bold text-foreground' : 'text-muted',
+                                                )}
+                                            >
+                                                {version.created_at ? dayjs(version.created_at)?.format('DD MMMM YYYY - H:mm') : ''}{' '}
+                                                {id === version.id && <>(This version)</>}
+                                                <span className="ml-2">
+                                                    <UserAvatar userId={version.created_by} />
+                                                </span>
+                                            </div>
+                                            <div className="text-foreground">
+                                                Version {versions.length - i}
+                                                {showFeaturedButtons && (
+                                                    <div className="ml-1 inline-block">
+                                                        <MarkFeaturedUnlistedContainer
+                                                            size="xs"
+                                                            id={version.id}
+                                                            featured={resources?.find((resource) => resource.id === version.id)?.featured ?? false}
+                                                            unlisted={resources?.find((resource) => resource.id === version.id)?.unlisted ?? false}
+                                                        />
+                                                    </div>
+                                                )}
+                                                {version.changelog && (
+                                                    <>
+                                                        : <em>{version.changelog}</em>
+                                                    </>
+                                                )}{' '}
+                                                <br />
+                                                {id !== version.id && (
+                                                    <Link onClick={toggle} href={version.link} className="text-accent hover:text-accent-darker">
+                                                        View this version
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </ActivityItem>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {!isLoading && versions.length === 0 && (
+                            <Alert status="accent">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>No versions have been found</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

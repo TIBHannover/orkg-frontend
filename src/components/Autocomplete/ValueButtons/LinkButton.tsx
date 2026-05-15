@@ -18,7 +18,7 @@ const LinkButton: FC<LinkButtonProps> = ({ value }) => {
         <Link
             target="_blank"
             href={getLinkByEntityType(value._class || 'class', value.id)}
-            className="btn btn-sm btn-outline-secondary align-items-center d-flex px-2"
+            className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 py-1.5 text-xs border border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white focus:ring-secondary flex px-2"
         >
             <span>View</span>
         </Link>

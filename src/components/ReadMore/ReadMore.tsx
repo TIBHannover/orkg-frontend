@@ -22,7 +22,7 @@ export default function ReadMore({ text = '', maxLength = 750 }: ReadMoreProps) 
             {isExpandable && (
                 <>
                     {!isExpanded ? '...' : ''}{' '}
-                    <Button color="link" className="p-0 m-0 border-0" variant="link" onClick={() => setIsExpanded(!isExpanded)}>
+                    <Button color="link" className="p-0 m-0 border-0" onClick={() => setIsExpanded(!isExpanded)}>
                         Read {isExpanded ? 'less' : 'more'}
                     </Button>
                 </>

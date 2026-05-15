@@ -11,17 +11,17 @@ type ResearchFieldsBoxProps = {
 };
 
 const ResearchFieldsBox: FC<ResearchFieldsBoxProps> = ({ isLoading, researchFields }) => (
-    <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
+    <div className="box rounded-lg p-4 grow flex flex-col">
         <h5>Research fields</h5>
         <div>
-            <small className="text-muted">
+            <small className="text-gray-500">
                 Research fields of <i>papers</i> that are addressing this problem
             </small>
         </div>
         {!isLoading ? (
-            <div className="mb-4 mt-4 ps-3 pe-3">
+            <div className="mb-6 mt-6 pl-4 pr-4">
                 {researchFields.length > 0 ? (
-                    <ul className="ps-1">
+                    <ul className="pl-1">
                         {researchFields.map((researchField) => (
                             <li key={`rf${researchField.id}`}>
                                 <Link
@@ -36,11 +36,11 @@ const ResearchFieldsBox: FC<ResearchFieldsBoxProps> = ({ isLoading, researchFiel
                         ))}
                     </ul>
                 ) : (
-                    <div className="text-center mt-4 mb-4">No research fields</div>
+                    <div className="text-center mt-6 mb-6">No research fields</div>
                 )}
             </div>
         ) : (
-            <div className="text-center mt-4 mb-4">Loading research fields ...</div>
+            <div className="text-center mt-6 mb-6">Loading research fields ...</div>
         )}
     </div>
 );

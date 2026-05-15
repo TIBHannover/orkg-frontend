@@ -1,20 +1,18 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup, Label, TextArea, TextField, toast, Tooltip } from '@heroui/react';
+import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
-import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
-import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import FormText from '@/components/Ui/Form/FormText';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { updateDescription, updateResearchFields, updateResearchProblems, updateTargetClass } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
+import { getLinkByEntityType } from '@/utils';
 
 export const MAX_DESCRIPTION_LENGTH = 350;
 
@@ -22,17 +20,13 @@ const GeneralSettings = () => {
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    // @ts-expect-error
-    const { description, target_class: targetClass } = useSelector((state) => state.templateEditor);
+    const description = useSelector((state: RootStore) => state.templateEditor.description);
+    const targetClass = useSelector((state: RootStore) => state.templateEditor.target_class);
+    const researchFields = useSelector((state: RootStore) => state.templateEditor.relations.research_fields);
+    const researchProblems = useSelector((state: RootStore) => state.templateEditor.relations.research_problems);
 
-    const {
-        research_problems: researchProblems,
-        research_fields: researchFields,
-        // @ts-expect-error
-    } = useSelector((state) => state.templateEditor.relations);
-
-    const handleChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(updateDescription(e.target.value));
+    const handleChangeDescription = (value: string) => {
+        dispatch(updateDescription(value));
     };
 
     const handleClassSelect = async (selected: SingleValue<OptionType>, { action }: ActionMeta<OptionType>) => {
@@ -43,8 +37,7 @@ const GeneralSettings = () => {
                 label: selected.label,
             });
             if (newClass) {
-                selected.id = newClass.id;
-                dispatch(updateTargetClass(selected));
+                dispatch(updateTargetClass({ ...selected, id: newClass.id }));
             }
         } else if (action === 'clear') {
             dispatch(updateTargetClass(null));
@@ -59,51 +52,98 @@ const GeneralSettings = () => {
         dispatch(updateResearchProblems(!selected ? [] : selected));
     };
 
+    const hasTargetClass = !!targetClass?.id;
+    const targetClassLink = hasTargetClass ? getLinkByEntityType(targetClass?._class || 'class', targetClass!.id) : '#';
+
+    const handleCopyTargetClassId = () => {
+        if (targetClass?.id && navigator.clipboard) {
+            navigator.clipboard.writeText(targetClass.id);
+            toast.success('ID copied to clipboard');
+        }
+    };
+
     return (
-        <div className="p-4">
-            <FormGroup className="mb-4">
-                <Label for="target-class">Target class</Label>
-                <InputGroup>
-                    <Autocomplete
-                        entityType={ENTITIES.CLASS}
-                        placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
-                        onChange={handleClassSelect}
-                        value={targetClass}
-                        openMenuOnFocus
-                        allowCreate
-                        isDisabled={!isEditMode}
-                        isClearable={false}
-                        inputId="target-class"
-                    />
-                    <CopyIdButton value={targetClass} />
-                    <LinkButton value={targetClass} />
-                </InputGroup>
-            </FormGroup>
-            <FormGroup className="mb-4">
-                <Label for="template-description">Description</Label>
-                <Input
-                    type="textarea"
+        <div className="p-6">
+            <div className="mb-6">
+                <Label htmlFor="target-class" className="mb-1 inline-block">
+                    Target class
+                </Label>
+                <div className="flex items-stretch">
+                    <div className="min-w-0 flex-1">
+                        <Autocomplete
+                            entityType={ENTITIES.CLASS}
+                            placeholder={isEditMode ? 'Select or type to enter a class' : 'No Classes'}
+                            onChange={handleClassSelect}
+                            value={targetClass}
+                            openMenuOnFocus
+                            allowCreate
+                            isDisabled={!isEditMode}
+                            isClearable={false}
+                            inputId="target-class"
+                            noFormControl={hasTargetClass}
+                        />
+                    </div>
+                    {hasTargetClass && (
+                        <ButtonGroup
+                            variant="tertiary"
+                            size="md"
+                            aria-label="Target class actions"
+                            className="shrink-0 [&>[data-slot='button']:first-child]:rounded-l-none"
+                        >
+                            <Tooltip delay={0}>
+                                <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyTargetClassId} variant="tertiary">
+                                    <FontAwesomeIcon icon={faClipboard} className="size-3.5 text-muted" />
+                                </Button>
+                                <Tooltip.Content>Copy ID to clipboard</Tooltip.Content>
+                            </Tooltip>
+                            <Tooltip delay={0}>
+                                <Button
+                                    variant="tertiary"
+                                    isIconOnly
+                                    aria-label="Open class page"
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    render={(props: any) => <Link {...props} href={targetClassLink} target="_blank" rel="noreferrer" />}
+                                >
+                                    <ButtonGroup.Separator />
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} className="size-3.5 text-muted" />
+                                </Button>
+                                <Tooltip.Content>Open class page</Tooltip.Content>
+                            </Tooltip>
+                        </ButtonGroup>
+                    )}
+                </div>
+            </div>
+            <div className="mb-6">
+                <Label htmlFor="template-description" className="mb-1 inline-block">
+                    Description
+                </Label>
+                <TextField
+                    fullWidth
                     value={description || ''}
                     onChange={handleChangeDescription}
-                    disabled={!isEditMode}
-                    id="template-description"
-                    placeholder="Give a brief description of the template. E.g. what are the intended use cases?"
-                    maxLength={MAX_DESCRIPTION_LENGTH}
-                />
-                <div className="text-muted text-end">
-                    {description?.length}/{MAX_DESCRIPTION_LENGTH}
+                    isDisabled={!isEditMode}
+                    aria-label="Template description"
+                >
+                    <TextArea
+                        id="template-description"
+                        placeholder="Give a brief description of the template. E.g. what are the intended use cases?"
+                        maxLength={MAX_DESCRIPTION_LENGTH}
+                        rows={4}
+                        className="!border !border-border focus:!border-accent"
+                    />
+                </TextField>
+                <div className="text-muted text-right text-sm">
+                    {description?.length ?? 0}/{MAX_DESCRIPTION_LENGTH}
                 </div>
-            </FormGroup>
-            <fieldset className="scheduler-border p-3">
-                <legend className="mt-3">Template use cases</legend>
-                <p>
-                    <small className="text-muted">
-                        These fields are optional. The research fields/problems are used to suggest this template in the relevant papers.
-                    </small>
+            </div>
+            <fieldset className="mt-6 rounded border border-border p-4">
+                <legend className="px-2 text-sm font-semibold">Template use cases</legend>
+                <p className="text-muted text-sm mb-4">
+                    These fields are optional. The research fields/problems are used to suggest this template in the relevant papers.
                 </p>
-                <FormGroup className="mb-4">
-                    <Label for="template-field">
-                        Research fields <span className="text-muted fst-italic">(optional)</span>
+                <div className="mb-6">
+                    <Label htmlFor="template-field" className="mb-1 inline-block">
+                        Research fields <span className="text-muted italic">(optional)</span>
                     </Label>
                     <Autocomplete
                         entityType={ENTITIES.RESOURCE}
@@ -119,11 +159,11 @@ const GeneralSettings = () => {
                         inputId="template-field"
                         enableExternalSources={false}
                     />
-                    {isEditMode && <FormText>Specify the research fields that uses this template.</FormText>}
-                </FormGroup>
-                <FormGroup className="mb-4">
-                    <Label for="template-problems">
-                        Research problems <span className="text-muted fst-italic">(optional)</span>
+                    {isEditMode && <p className="text-muted text-sm mt-1">Specify the research fields that uses this template.</p>}
+                </div>
+                <div className="mb-2">
+                    <Label htmlFor="template-problems" className="mb-1 inline-block">
+                        Research problems <span className="text-muted italic">(optional)</span>
                     </Label>
                     <Autocomplete
                         entityType={ENTITIES.RESOURCE}
@@ -139,8 +179,8 @@ const GeneralSettings = () => {
                         inputId="template-problems"
                         enableExternalSources={false}
                     />
-                    {isEditMode && <FormText>Specify the research problems that uses this template.</FormText>}
-                </FormGroup>
+                    {isEditMode && <p className="text-muted text-sm mt-1">Specify the research problems that uses this template.</p>}
+                </div>
             </fieldset>
         </div>
     );

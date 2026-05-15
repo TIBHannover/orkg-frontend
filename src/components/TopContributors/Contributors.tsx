@@ -1,16 +1,15 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Skeleton } from '@heroui/react';
 import dayjs from 'dayjs';
 import pluralize from 'pluralize';
 import { FC, useState } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import { ContributorsAvatars, StyledDotGravatar } from '@/components/styled';
 import ContributorsDropdownFilter from '@/components/TopContributors/ContributorsDropdownFilter';
 import ContributorsModal from '@/components/TopContributors/ContributorsModal';
-import CardTitle from '@/components/Ui/Card/CardTitle';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { contributorStatisticsUrl, getContributorStatisticsByResearchFieldId } from '@/services/backend/contributor-statistics';
 
@@ -38,10 +37,8 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
 
     return (
         <div>
-            <div className="d-flex mb-2">
-                <CardTitle tag="h5" className="flex-grow-1">
-                    Contributors
-                </CardTitle>
+            <div className="flex mb-2">
+                <h5 className="grow text-sm leading-6 font-medium text-foreground">Contributors</h5>
                 <div className="align-self-center">
                     <ContributorsDropdownFilter
                         sort={sort}
@@ -63,7 +60,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                                 showDisplayName={false}
                                 appendToTooltip={
                                     <div className="p-2">
-                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                        <ul className="pl-4 mb-0 mt-2">
                                             <li>{pluralize('paper', contributor.paperCount, true)}</li>
                                             <li>{pluralize('contribution', contributor.contributionCount, true)}</li>
                                             <li>{pluralize('comparison', contributor.comparisonCount, true)}</li>
@@ -72,7 +69,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                                         </ul>
 
                                         <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                        <ul className="pl-4 mb-0 mt-2">
                                             <li>
                                                 <i>
                                                     <b>{contributor.totalCount} </b>
@@ -87,7 +84,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                     ))}
                     {contributors?.length > 18 && (
                         <Tooltip key="contributor" content="View More">
-                            <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
+                            <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-full">
                                 <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
                         </Tooltip>
@@ -95,7 +92,7 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                 </ContributorsAvatars>
             )}
             {!isLoading && contributors?.length === 0 && (
-                <div className="mt-4 mb-4">
+                <div className="mt-6 mb-6">
                     {sort === 'top' ? 'No contributors in the last 30 days yet.' : 'No contributors in this research field yet.'}
                     <i> Be the first contributor!</i>
                 </div>
@@ -110,14 +107,12 @@ const Contributors: FC<ContributorsProps> = ({ researchFieldId }) => {
                 />
             )}
             {isLoading && (
-                <div className="mt-4 mb-4" style={{ width: '100% !important' }}>
-                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 4" style={{ width: '100% !important' }}>
-                        <circle cx="2" cy="2" r="2" />
-                        <circle cx="7" cy="2" r="2" />
-                        <circle cx="12" cy="2" r="2" />
-                        <circle cx="17" cy="2" r="2" />
-                        <circle cx="22" cy="2" r="2" />
-                    </ContentLoader>
+                <div className="mt-6 mb-6 flex gap-2">
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
                 </div>
             )}
         </div>

@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 
@@ -29,7 +29,7 @@ CustomStyling.args = {
     children: 'Submit',
     isLoading: false,
     loadingMessage: 'Loading',
-    color: 'primary',
+    variant: 'primary',
     size: 'sm',
 };
 

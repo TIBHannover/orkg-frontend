@@ -1,9 +1,10 @@
 'use client';
 
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 
 import ContentTypeSectionWrapper from '@/app/content-type/create/ContentTypeSectionWrapper/ContentTypeSectionWrapper';
-import Button from '@/components/Ui/Button/Button';
+import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 
@@ -22,7 +23,7 @@ const VisualizationSection = () => (
         }
         helpfulResourcesSubtitle="Example visualizations within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:!m-0">
+            <ul className="py-2 m-0">
                 <li>
                     <Link href="https://orkg.org/resources/R1586630/preview?noRedirect" target="_blank">
                         Visualization of Nutritional Composition of Condrès
@@ -36,9 +37,9 @@ const VisualizationSection = () => (
             </ul>
         }
     >
-        <Button color="light" tag={Link} href={`${ROUTES.CONTENT_TYPE_NEW}?type=${CLASSES.COMPARISON}`}>
+        <RequireAuthentication component={Button} variant="primary" href={`${ROUTES.CONTENT_TYPE_NEW}?type=${CLASSES.COMPARISON}`}>
             Add comparison
-        </Button>
+        </RequireAuthentication>
     </ContentTypeSectionWrapper>
 );
 

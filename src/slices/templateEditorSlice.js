@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { createSlice } from '@reduxjs/toolkit';
 import { match } from 'path-to-regexp';
-import { toast } from 'react-toastify';
 
 import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
 import { CLASSES } from '@/constants/graphSettings';
@@ -151,7 +151,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         // Make the template label mandatory
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
-        toast.error('Please enter the name of template');
+        toast.danger('Please enter the name of template');
         return null;
     }
 
@@ -159,7 +159,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         // Make the template target class mandatory
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
-        toast.error('Please select a target class');
+        toast.danger('Please select a target class');
         return null;
     }
 
@@ -167,7 +167,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         // Make the template properties mandatory
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
-        toast.error('Please add at least one property');
+        toast.danger('Please add at least one property');
         return null;
     }
 
@@ -177,7 +177,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         if (templates.length > 0 && !templates.includes(data.id)) {
             dispatch(setHasFailedSaving(true));
             dispatch(setIsSaving(false));
-            toast.error('The template of this class is already defined');
+            toast.danger('The template of this class is already defined');
             return null;
         }
     }

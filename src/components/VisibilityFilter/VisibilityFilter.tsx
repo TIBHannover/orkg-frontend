@@ -1,15 +1,20 @@
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Dropdown } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { FC } from 'react';
 
-import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { VisibilityOptions } from '@/services/backend/types';
 
 type VisibilityFilterProps = {
     defaultValue?: VisibilityOptions;
+};
+
+const VISIBILITY_LABELS: Partial<Record<VisibilityOptions, string>> = {
+    [VISIBILITY_FILTERS.ALL_LISTED]: 'Recently added',
+    [VISIBILITY_FILTERS.FEATURED]: 'Featured',
+    [VISIBILITY_FILTERS.UNLISTED]: 'Unlisted',
 };
 
 const VisibilityFilter: FC<VisibilityFilterProps> = ({ defaultValue = VISIBILITY_FILTERS.ALL_LISTED }) => {
@@ -18,23 +23,30 @@ const VisibilityFilter: FC<VisibilityFilterProps> = ({ defaultValue = VISIBILITY
         parse: (value) => value as VisibilityOptions,
     });
 
-    const handleChangeSort = (v: VisibilityOptions) => {
-        setVisibility(v);
-    };
-
     return (
-        <UncontrolledButtonDropdown size="sm" style={{ marginRight: 2 }}>
-            <DropdownToggle caret color="secondary">
-                {visibility === VISIBILITY_FILTERS.ALL_LISTED && 'Recently added'}
-                {visibility === VISIBILITY_FILTERS.FEATURED && 'Featured'}
-                {visibility === VISIBILITY_FILTERS.UNLISTED && 'Unlisted'}
-            </DropdownToggle>
-            <DropdownMenu>
-                <DropdownItem onClick={() => handleChangeSort(VISIBILITY_FILTERS.ALL_LISTED)}>Recently added</DropdownItem>
-                <DropdownItem onClick={() => handleChangeSort(VISIBILITY_FILTERS.FEATURED)}>Featured</DropdownItem>
-                <DropdownItem onClick={() => handleChangeSort(VISIBILITY_FILTERS.UNLISTED)}>Unlisted</DropdownItem>
-            </DropdownMenu>
-        </UncontrolledButtonDropdown>
+        <Dropdown>
+            <Button size="sm" className="button--orkg-secondary">
+                {VISIBILITY_LABELS[visibility]}
+                <FontAwesomeIcon icon={faChevronDown} className="text-[0.6rem]" />
+            </Button>
+            <Dropdown.Popover>
+                <Dropdown.Menu
+                    selectionMode="single"
+                    selectedKeys={new Set([visibility])}
+                    onAction={(key) => setVisibility(key as VisibilityOptions)}
+                >
+                    <Dropdown.Item id={VISIBILITY_FILTERS.ALL_LISTED} textValue="Recently added">
+                        Recently added
+                    </Dropdown.Item>
+                    <Dropdown.Item id={VISIBILITY_FILTERS.FEATURED} textValue="Featured">
+                        Featured
+                    </Dropdown.Item>
+                    <Dropdown.Item id={VISIBILITY_FILTERS.UNLISTED} textValue="Unlisted">
+                        Unlisted
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown.Popover>
+        </Dropdown>
     );
 };
 

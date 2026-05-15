@@ -1,16 +1,13 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Skeleton, Table as HeroUITable, tableVariants } from '@heroui/react';
 import { capitalize, orderBy, times } from 'lodash';
 import React, { FC, useMemo, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 
 import useReview from '@/components/Review/hooks/useReview';
 import OntologyItem from '@/components/Review/Sections/Ontology/OntologyItem/OntologyItem';
 import SelectEntitiesModal from '@/components/Review/Sections/Ontology/SelectEntitiesModal/SelectEntitiesModal';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Table from '@/components/Ui/Table/Table';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
@@ -26,6 +23,7 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
     const [editType, setEditType] = useState<'entities' | 'properties' | null>(null);
     const { review } = useReview();
     const { isEditMode } = useIsEditMode();
+    const tableSlots = tableVariants({ variant: 'primary' });
 
     const entityIds = section?.entities?.map(({ id }) => id);
 
@@ -59,7 +57,7 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
     const isLoading = isLoadingPublishedContents || isLoadingLiveContents || isValidatingPublishedContents || isValidatingLiveContents;
 
     const entityStatements = useMemo(() => {
-        const allStatements = review?.published ? publishedContents?.flatMap(({ statements }) => statements) ?? [] : liveContents?.flat() ?? [];
+        const allStatements = review?.published ? (publishedContents?.flatMap(({ statements }) => statements) ?? []) : (liveContents?.flat() ?? []);
         const properties = section.predicates ?? [];
         const propertyIds = properties.map((property) => property.id);
 
@@ -85,119 +83,157 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
     const hasProperties = (section.predicates?.length ?? 0) > 0;
     const hasValues = (entityStatements?.length ?? 0) > 0;
 
+    const renderEmptyAlert = () => {
+        if (!hasLabels && !hasProperties) {
+            return (
+                <Alert status="warning">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Nothing selected</Alert.Title>
+                        <Alert.Description>Select labels and properties to populate this ontology section.</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            );
+        }
+        if (hasLabels && !hasProperties) {
+            return (
+                <Alert status="warning">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>No properties selected</Alert.Title>
+                        <Alert.Description>Labels are selected; pick the properties you want to display for them.</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            );
+        }
+        if (hasLabels && hasProperties && !hasValues) {
+            return (
+                <Alert status="warning">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>No values to display</Alert.Title>
+                        <Alert.Description>Labels and properties are set, but the selected entities have no matching values.</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            );
+        }
+        return null;
+    };
+
     return (
-        <Table size="sm" bordered responsive>
-            <thead className="bg-light">
-                <tr>
-                    <th style={{ width: '20%' }}>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <span>Label</span>
-                            {isEditMode && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')} aria-label="Edit labels">
-                                    <FontAwesomeIcon icon={faPen} /> Edit
-                                </Button>
-                            )}
-                        </div>
-                    </th>
-                    <th style={{ width: '20%' }}>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <span>Property</span>
-                            {isEditMode && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')} aria-label="Edit properties">
-                                    <FontAwesomeIcon icon={faPen} /> Edit
-                                </Button>
-                            )}
-                        </div>
-                    </th>
-                    <th style={{ width: '60%' }} className="align-middle">
-                        Value
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {entityStatements?.map((entityStatement, index) => (
-                    <tr key={index}>
-                        <td>
-                            {!entityStatements[index - 1] ||
-                            (entityStatements[index - 1] && entityStatement.subject?.label !== entityStatements[index - 1].subject?.label) ? (
-                                <OntologyItem
-                                    id={entityStatement.subject?.id}
-                                    label={capitalize(entityStatement.subject?.label)}
-                                    type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
-                                    isEditable={
-                                        entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1 ? false : isEditMode
-                                    }
-                                    handleReloadData={handleReloadData}
-                                />
-                            ) : (
-                                ''
-                            )}
-                        </td>
-                        <td>
-                            {entityStatement.predicate?.label ? (
-                                capitalize(entityStatement.predicate?.label)
-                            ) : (
-                                <em className="text-muted">No data</em>
-                            )}
-                        </td>
-                        <td>
-                            {entityStatement.object?._class === 'resource' ? (
-                                <OntologyItem
-                                    id={entityStatement.object?.id}
-                                    label={entityStatement.object?.label}
-                                    isEditable={
-                                        entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1 ? false : isEditMode
-                                    }
-                                    type="resource"
-                                    handleReloadData={handleReloadData}
-                                />
-                            ) : (
-                                <ValuePlugins type="literal">{entityStatement.object?.label}</ValuePlugins>
-                            )}
-                        </td>
-                    </tr>
-                ))}
-                {isLoading &&
-                    times(5, (i) => (
-                        <tr key={i}>
-                            <td>
-                                <Skeleton width="100%" />
-                            </td>
-                            <td>
-                                <Skeleton width="100%" />
-                            </td>
-                            <td>
-                                <Skeleton width="100%" />
-                            </td>
+        <>
+            <HeroUITable className={tableSlots.base()}>
+                <table className={tableSlots.content()}>
+                    <thead className="table__header">
+                        <tr>
+                            <th className="table__column w-1/5">
+                                <div className="flex items-center justify-between">
+                                    <span>Label</span>
+                                    {isEditMode && (
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onPress={() => handleOpenEditModal('entities')}
+                                            aria-label="Edit labels"
+                                        >
+                                            <FontAwesomeIcon icon={faPen} /> Edit
+                                        </Button>
+                                    )}
+                                </div>
+                            </th>
+                            <th className="table__column w-1/5">
+                                <div className="flex items-center justify-between">
+                                    <span>Property</span>
+                                    {isEditMode && (
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onPress={() => handleOpenEditModal('properties')}
+                                            aria-label="Edit properties"
+                                        >
+                                            <FontAwesomeIcon icon={faPen} /> Edit
+                                        </Button>
+                                    )}
+                                </div>
+                            </th>
+                            <th className="table__column w-3/5 align-middle">Value</th>
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody className="table__body">
+                        {entityStatements?.map((entityStatement, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <tr key={index} className="table__row">
+                                <td className="table__cell">
+                                    {!entityStatements[index - 1] ||
+                                    (entityStatements[index - 1] && entityStatement.subject?.label !== entityStatements[index - 1].subject?.label) ? (
+                                        <OntologyItem
+                                            id={entityStatement.subject?.id}
+                                            label={capitalize(entityStatement.subject?.label)}
+                                            type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
+                                            isEditable={
+                                                entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1
+                                                    ? false
+                                                    : isEditMode
+                                            }
+                                            handleReloadData={handleReloadData}
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
+                                </td>
+                                <td className="table__cell">
+                                    {entityStatement.predicate?.label ? (
+                                        capitalize(entityStatement.predicate?.label)
+                                    ) : (
+                                        <em className="text-muted">No data</em>
+                                    )}
+                                </td>
+                                <td className="table__cell">
+                                    {entityStatement.object?._class === 'resource' ? (
+                                        <OntologyItem
+                                            id={entityStatement.object?.id}
+                                            label={entityStatement.object?.label}
+                                            isEditable={
+                                                entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1
+                                                    ? false
+                                                    : isEditMode
+                                            }
+                                            type="resource"
+                                            handleReloadData={handleReloadData}
+                                        />
+                                    ) : (
+                                        <ValuePlugins type="literal">{entityStatement.object?.label}</ValuePlugins>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        {isLoading &&
+                            times(5, (i) => (
+                                <tr key={i} className="table__row">
+                                    <td className="table__cell">
+                                        <Skeleton className="w-full h-4 rounded" />
+                                    </td>
+                                    <td className="table__cell">
+                                        <Skeleton className="w-full h-4 rounded" />
+                                    </td>
+                                    <td className="table__cell">
+                                        <Skeleton className="w-full h-4 rounded" />
+                                    </td>
+                                </tr>
+                            ))}
 
-                {(!entityStatements || (entityStatements.length === 0 && !isLoading)) && (
-                    <tr>
-                        <td colSpan={3} className="text-center p-3">
-                            {!hasLabels && !hasProperties && (
-                                <Alert color="warning" fade={false} className="mb-0">
-                                    No labels and properties selected
-                                </Alert>
-                            )}
-
-                            {hasLabels && !hasProperties && (
-                                <Alert color="warning" fade={false} className="mb-0">
-                                    Labels selected but no properties selected
-                                </Alert>
-                            )}
-
-                            {hasLabels && hasProperties && !hasValues && (
-                                <Alert color="warning" fade={false} className="mb-0">
-                                    Labels and properties selected but no values to display
-                                </Alert>
-                            )}
-                        </td>
-                    </tr>
-                )}
-            </tbody>
+                        {(!entityStatements || (entityStatements.length === 0 && !isLoading)) && (
+                            <tr className="table__row">
+                                <td colSpan={3} className="table__cell p-4">
+                                    {renderEmptyAlert()}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </HeroUITable>
             {isOpenEntityModal && <SelectEntitiesModal type={editType} toggle={() => setIsOpenEntityModal((v) => !v)} section={section} />}
-        </Table>
+        </>
     );
 };
 

@@ -7,7 +7,7 @@ import ViewVisualizationModal from '@/components/ViewVisualizationModal/ViewVisu
 
 export const VisualizationCardStyled = styled.div`
     cursor: pointer;
-    border: 1px solid rgb(219, 221, 229);
+    border: 1px solid var(--border);
     border-radius: 5px;
     width: 100%;
     height: 122px;
@@ -25,8 +25,8 @@ const VisualizationCard = ({ id }: { id: string }) => {
     const [isOpenViewModal, setIsOpenViewModal] = useState(false);
 
     return (
-        <VisualizationCardStyled onClick={() => setIsOpenViewModal(true)} id={`#Vis${id}`} className="tw:mx-1">
-            <div className="pe-none">
+        <VisualizationCardStyled onClick={() => setIsOpenViewModal(true)} id={`#Vis${id}`} className="mx-1">
+            <div className="pointer-events-none">
                 <VisualizationPreview id={id} width="100%" height="100px" />
             </div>
             {isOpenViewModal && <ViewVisualizationModal isOpen={isOpenViewModal} toggle={() => setIsOpenViewModal((v) => !v)} id={id} />}

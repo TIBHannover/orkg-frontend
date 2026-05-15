@@ -1,34 +1,14 @@
 import { faArrowsAltV, faCalendar, faExclamationCircle, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Chip, Tooltip } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import styled from 'styled-components';
 
 import StatementList from '@/components/ConfirmBulkImport/StatementList';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Alert from '@/components/Ui/Alert/Alert';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { EntityType } from '@/services/backend/types';
-
-const PaperCardStyled = styled.div`
-    & .options {
-        display: none;
-    }
-
-    &.selected {
-        background: ${(props) => props.theme.bodyBg};
-    }
-
-    &:hover .options,
-    &.selected .options {
-        display: block;
-    }
-`;
 
 type PaperListProps = {
     papers: any[];
@@ -41,127 +21,161 @@ type PaperListProps = {
 const PaperList: FC<PaperListProps> = ({ papers, existingPaperIds, idToLabel, idToEntityType, validationErrors = {} }) => {
     const [showContributions, setShowContributions] = useState<number[]>([]);
 
-    const handleCardClick = (i: number) => {
-        if (showContributions.includes(i)) {
-            setShowContributions((state) => state.filter((j) => j !== i));
-        } else {
-            setShowContributions((state) => [...state, i]);
-        }
+    const toggleCard = (i: number) => {
+        setShowContributions((state) => (state.includes(i) ? state.filter((j) => j !== i) : [...state, i]));
     };
 
-    const handleExpandAll = () => {
-        setShowContributions(papers.map((_, i) => i));
-    };
-
-    const handleCollapseAll = () => {
-        setShowContributions([]);
-    };
+    const handleExpandAll = () => setShowContributions(papers.map((_, i) => i));
+    const handleCollapseAll = () => setShowContributions([]);
 
     const hasValidationErrorsForPaper = (i: number) =>
-        validationErrors?.[i] && Object.keys(validationErrors?.[i]).find((property) => validationErrors?.[i][property]?.find((error) => error));
+        validationErrors?.[i] && Object.keys(validationErrors[i]).some((property) => validationErrors[i][property]?.some((error) => error));
 
-    const hasValidationErrors = validationErrors && Object.keys(validationErrors).find((_, i) => hasValidationErrorsForPaper(i));
+    const hasValidationErrors = validationErrors && Object.keys(validationErrors).some((_, i) => hasValidationErrorsForPaper(i));
+
+    const allExpanded = showContributions.length > 0;
 
     return (
-        <>
+        <div className="space-y-3">
             {hasValidationErrors && (
-                <Alert color="warning">Some provided data types are not matching cell values. Please check papers with a warning icon</Alert>
+                <Alert status="warning">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Description>
+                            Some provided data types are not matching cell values. Please check papers with a warning icon.
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert>
             )}
-            <div className="w-100 text-end">
-                {showContributions.length === 0 ? (
-                    <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
-                        <FontAwesomeIcon icon={faArrowsAltV} /> Expand all data
-                    </Button>
-                ) : (
-                    <Button size="sm" color="secondary" className="mb-2" onClick={handleCollapseAll}>
-                        <FontAwesomeIcon icon={faArrowsAltV} /> Collapse all data
-                    </Button>
-                )}
-            </div>
-            <ListGroup>
-                {papers.map((paper, i) => (
-                    <Fragment key={i}>
-                        <PaperCardStyled
-                            className="list-group-item list-group-item-action"
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleCardClick(i)}
-                        >
-                            <div className="d-flex">
-                                <span className="flex-grow-1">
-                                    {Object.keys(paper.contents[0]?.statements)?.length === 0 && (
-                                        <Alert color="danger">
-                                            <FontAwesomeIcon icon={faExclamationCircle} className="me-2" /> Paper can't be imported because it doesn't
-                                            contain any contribution data
-                                        </Alert>
-                                    )}
-                                    {hasValidationErrorsForPaper(i) && <FontAwesomeIcon icon={faExclamationTriangle} className="text-warning me-2" />}
 
-                                    {existingPaperIds[i] && (
-                                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
-                                            {paper.title ? paper.title : <i>No title</i>}
-                                        </Link>
-                                    )}
-                                    {!existingPaperIds[i] && paper.title && (
-                                        <>
-                                            <Tooltip content="A new ORKG paper will be created">
-                                                <span>
-                                                    <Badge color="info" className="me-1 py-1 px-2">
-                                                        New
-                                                    </Badge>
+            <div className="flex justify-end">
+                <Button size="sm" variant="secondary" onPress={allExpanded ? handleCollapseAll : handleExpandAll}>
+                    <FontAwesomeIcon icon={faArrowsAltV} className="me-2" />
+                    {allExpanded ? 'Collapse all data' : 'Expand all data'}
+                </Button>
+            </div>
+
+            <ul className="flex flex-col divide-y divide-divider rounded-lg border border-divider bg-default-50 overflow-hidden">
+                {papers.map((paper, i) => {
+                    const isOpen = showContributions.includes(i);
+                    const statements = paper.contents[0]?.statements ?? {};
+                    const statementKeys = Object.keys(statements);
+                    const isEmpty = statementKeys.length === 0;
+                    const paperHasErrors = hasValidationErrorsForPaper(i);
+
+                    return (
+                        <Fragment key={i}>
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={() => toggleCard(i)}
+                                    aria-expanded={isOpen}
+                                    aria-label={`Toggle paper ${i + 1} details`}
+                                    className="w-full text-left px-4 py-3 transition-colors hover:bg-default-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex-1 min-w-0 space-y-2">
+                                            {isEmpty && (
+                                                <Alert status="danger">
+                                                    <Alert.Indicator>
+                                                        <FontAwesomeIcon icon={faExclamationCircle} />
+                                                    </Alert.Indicator>
+                                                    <Alert.Content>
+                                                        <Alert.Description>
+                                                            Paper can't be imported because it doesn't contain any contribution data
+                                                        </Alert.Description>
+                                                    </Alert.Content>
+                                                </Alert>
+                                            )}
+
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                {paperHasErrors && (
+                                                    <Tooltip>
+                                                        <Tooltip.Trigger className="inline-flex">
+                                                            <FontAwesomeIcon icon={faExclamationTriangle} className="text-warning-600" />
+                                                        </Tooltip.Trigger>
+                                                        <Tooltip.Content>This paper contains data type warnings</Tooltip.Content>
+                                                    </Tooltip>
+                                                )}
+
+                                                {!existingPaperIds[i] && paper.title && (
+                                                    <Tooltip>
+                                                        <Tooltip.Trigger className="inline-flex">
+                                                            <Chip size="sm" variant="soft" color="accent">
+                                                                New
+                                                            </Chip>
+                                                        </Tooltip.Trigger>
+                                                        <Tooltip.Content>A new ORKG paper will be created</Tooltip.Content>
+                                                    </Tooltip>
+                                                )}
+
+                                                {existingPaperIds[i] ? (
+                                                    <Link
+                                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })}
+                                                        target="_blank"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="font-medium hover:underline"
+                                                    >
+                                                        {paper.title || <i>No title</i>}
+                                                    </Link>
+                                                ) : (
+                                                    <span className="font-medium">{paper.title || <i className="text-muted">No title</i>}</span>
+                                                )}
+                                            </div>
+
+                                            <div className="text-sm text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+                                                <span className="inline-flex items-center gap-1.5">
+                                                    <FontAwesomeIcon size="sm" icon={faUser} />
+                                                    {paper.authors.length > 0 ? (
+                                                        paper.authors.map((a: any) => a.name).join(' • ')
+                                                    ) : (
+                                                        <i>No authors provided</i>
+                                                    )}
                                                 </span>
-                                            </Tooltip>
-                                            {paper.title}
-                                        </>
-                                    )}
-                                    {!existingPaperIds[i] && !paper.title && <span>No title</span>}
-                                </span>
-                                <div className="flex-shrink-1 text-muted ps-3" style={{ fontSize: '140%', opacity: 0.7 }}>
-                                    #{i + 1}
-                                </div>
-                            </div>
-                            <small>
-                                <FontAwesomeIcon size="sm" icon={faUser} />{' '}
-                                {paper.authors.length > 0 ? (
-                                    paper.authors.map((a: any) => a.name).join(' • ')
-                                ) : (
-                                    <i className="ms-1">No authors provided</i>
-                                )}
-                                {(paper.publicationMonth || paper.publicationYear) && (
-                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
-                                )}
-                                {paper.publicationMonth && paper.publicationMonth > 0
-                                    ? dayjs()
-                                          .month(paper.publicationMonth - 1)
-                                          .format('MMMM')
-                                    : ''}{' '}
-                                {paper.publicationYear}
-                            </small>
-                        </PaperCardStyled>
-                        {showContributions.includes(i) && (
-                            <PaperCardStyled className="list-group-item">
-                                <ListGroup className="listGroupEnlarge" style={{ fontSize: '90%' }}>
-                                    {Object.keys(paper.contents[0].statements).length > 0 && (
-                                        <>
-                                            {Object.keys(paper.contents[0].statements).map((property) => (
+                                                {(paper.publicationMonth || paper.publicationYear) && (
+                                                    <span className="inline-flex items-center gap-1.5">
+                                                        <FontAwesomeIcon size="sm" icon={faCalendar} />
+                                                        {paper.publicationMonth && paper.publicationMonth > 0
+                                                            ? dayjs()
+                                                                  .month(paper.publicationMonth - 1)
+                                                                  .format('MMMM')
+                                                            : ''}{' '}
+                                                        {paper.publicationYear}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="shrink-0 text-muted text-lg font-semibold tabular-nums">#{i + 1}</div>
+                                    </div>
+                                </button>
+                            </li>
+
+                            {isOpen && (
+                                <li className="bg-default-100/40 px-4 py-3">
+                                    {!isEmpty ? (
+                                        <ul className="flex flex-col divide-y divide-divider rounded-md border border-divider bg-default-50 text-[90%]">
+                                            {statementKeys.map((property) => (
                                                 <StatementList
                                                     key={property}
                                                     property={property}
                                                     idToLabel={idToLabel}
                                                     idToEntityType={idToEntityType}
-                                                    values={paper.contents[0].statements[property]}
+                                                    values={statements[property]}
                                                     validationErrors={validationErrors?.[i]?.[property]}
                                                 />
                                             ))}
-                                        </>
+                                        </ul>
+                                    ) : (
+                                        <div className="text-sm text-muted">No contribution data to import.</div>
                                     )}
-                                    {Object.keys(paper.contents[0].statements).length === 0 && <>No contribution data to import.</>}
-                                </ListGroup>
-                            </PaperCardStyled>
-                        )}
-                    </Fragment>
-                ))}
-            </ListGroup>
-        </>
+                                </li>
+                            )}
+                        </Fragment>
+                    );
+                })}
+            </ul>
+        </div>
     );
 };
 

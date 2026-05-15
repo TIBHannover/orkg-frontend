@@ -1,26 +1,12 @@
+import { Button, Modal } from '@heroui/react';
 import { Edge } from '@xyflow/react';
 import capitalize from 'capitalize';
 import { FC, useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES } from '@/constants/graphSettings';
 import { EntityType, Predicate } from '@/services/backend/types';
-
-const StyledEntitySelector = styled.div`
-    select {
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-    }
-`;
 
 type OptionTypeWithLinked = { linked?: boolean; value?: string; id?: string; label?: string; _class?: EntityType };
 
@@ -42,64 +28,82 @@ const EditEdge: FC<EditEdgeProps> = ({ isEditEdgeModalOpen, setIsEditEdgeModalOp
     }, [edge]);
 
     return (
-        <Modal isOpen={isEditEdgeModalOpen} toggle={setIsEditEdgeModalOpen}>
-            <ModalHeader toggle={setIsEditEdgeModalOpen}>{!edge?.id ? 'Add' : 'Edit'} edge</ModalHeader>
-            <ModalBody>
-                {!edge?.id && 'Enter an ORKG property in the input below and click the "Add edge" button.'}
-                <div className="mt-2">
-                    <InputGroup>
-                        <StyledEntitySelector className="col-4 m-0 p-0">
-                            <Input
-                                name="select"
-                                type="select"
-                                value={selectedEntity}
-                                onChange={(e) => {
-                                    setSelectedEntity(e.target.value as EntityType);
-                                    setValue(undefined);
-                                }}
-                            >
-                                {Object.keys(ENTITIES)
-                                    // Exclude THING to avoid confusion. Users should select specific entity types for precise diagram connections.
-                                    .filter((e) => ![ENTITIES.CLASS, ENTITIES.LITERAL, ENTITIES.THING].includes(ENTITIES[e]))
-                                    .map((e) => (
-                                        <option key={ENTITIES[e]} value={ENTITIES[e]}>
-                                            {capitalize(ENTITIES[e])}
-                                        </option>
-                                    ))}
-                            </Input>
-                        </StyledEntitySelector>
-                        <Autocomplete
-                            entityType={selectedEntity}
-                            placeholder={`Select or type to enter a ${selectedEntity}`}
-                            allowCreate
-                            onChange={(item, { action }) => {
-                                if (action === 'select-option') {
-                                    setValue({ ...item, _class: selectedEntity, linked: true, value: item?.label });
-                                } else if (action === 'create-option' && item) {
-                                    setValue({ id: item.label, label: item.label, value: item.label, _class: selectedEntity, linked: false });
-                                }
-                            }}
-                            value={value as OptionType | undefined}
-                            enableExternalSources={false}
-                            key={selectedEntity}
-                            inputId={`selectEdge${selectedEntity}`}
-                        />
-                    </InputGroup>
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                <Button
-                    color="primary"
-                    onClick={() => (!edge?.id ? addEdge(value) : saveEdge(value))}
-                    disabled={!!value?.id && edge?.data?.id === value?.id}
-                >
-                    {!edge?.id ? 'Add edge' : 'Save'}
-                </Button>
-                <Button color="secondary" onClick={setIsEditEdgeModalOpen}>
-                    Cancel
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={isEditEdgeModalOpen}
+            onOpenChange={(open) => {
+                if (!open) setIsEditEdgeModalOpen();
+            }}
+        >
+            <Modal.Container size="md">
+                <Modal.Dialog className="sm:max-w-lg">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>{!edge?.id ? 'Add' : 'Edit'} edge</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="p-1 space-y-2">
+                            {!edge?.id && <p>Enter an ORKG property in the input below and click the &quot;Add edge&quot; button.</p>}
+                            <div className="flex items-stretch">
+                                <select
+                                    aria-label="Entity type"
+                                    className="w-4/12 shrink-0 rounded-s-[var(--radius)] rounded-e-none border border-default bg-background px-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={selectedEntity}
+                                    onChange={(e) => {
+                                        setSelectedEntity(e.target.value as EntityType);
+                                        setValue(undefined);
+                                    }}
+                                >
+                                    {Object.keys(ENTITIES)
+                                        // Exclude THING to avoid confusion. Users should select specific entity types for precise diagram connections.
+                                        .filter((e) => ![ENTITIES.CLASS, ENTITIES.LITERAL, ENTITIES.THING].includes(ENTITIES[e]))
+                                        .map((e) => (
+                                            <option key={ENTITIES[e]} value={ENTITIES[e]}>
+                                                {capitalize(ENTITIES[e])}
+                                            </option>
+                                        ))}
+                                </select>
+                                <div className="min-w-0 flex-1 -ms-px">
+                                    <Autocomplete
+                                        entityType={selectedEntity}
+                                        placeholder={`Select or type to enter a ${selectedEntity}`}
+                                        allowCreate
+                                        onChange={(item, { action }) => {
+                                            if (action === 'select-option') {
+                                                setValue({ ...item, _class: selectedEntity, linked: true, value: item?.label });
+                                            } else if (action === 'create-option' && item) {
+                                                setValue({
+                                                    id: item.label,
+                                                    label: item.label,
+                                                    value: item.label,
+                                                    _class: selectedEntity,
+                                                    linked: false,
+                                                });
+                                            }
+                                        }}
+                                        value={value as OptionType | undefined}
+                                        enableExternalSources={false}
+                                        key={selectedEntity}
+                                        inputId={`selectEdge${selectedEntity}`}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="primary"
+                            onPress={() => (!edge?.id ? addEdge(value) : saveEdge(value))}
+                            isDisabled={!!value?.id && edge?.data?.id === value?.id}
+                        >
+                            {!edge?.id ? 'Add edge' : 'Save'}
+                        </Button>
+                        <Button variant="secondary" onPress={setIsEditEdgeModalOpen}>
+                            Cancel
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

@@ -1,104 +1,104 @@
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, useContext, useState } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import { Button, cn } from '@heroui/react';
+import { FC, useState } from 'react';
 
-import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
 import { updateResource } from '@/services/backend/resources';
 import { Resource, Template } from '@/services/backend/types';
 
-type IconWrapperProps = {
-    $wrappercolor?: string;
-    $wrapperbackgroundcolor?: string;
-};
-
-const IconWrapper = styled.span<IconWrapperProps>`
-    background-color: ${(props) => props.$wrapperbackgroundcolor};
-    position: absolute;
-    left: 0;
-    height: 100%;
-    top: 0;
-    width: 28px;
-    border-radius: inherit;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${(props) => props.$wrappercolor};
-    padding-left: 3px;
-`;
-
-const Label = styled.div`
-    padding-left: 28px;
-`;
-
 type TemplateButtonProps = {
     template: Template;
     isSmart?: boolean;
     isDisabled?: boolean;
+    /** Render as a compact circular icon button (no label). Used inside richer list rows. */
+    iconOnly?: boolean;
 };
 
-const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, isDisabled }) => {
+/**
+ * Three visual states, all driven by globals.css theme variables:
+ *   - add (default)  → secondary tokens (neutral add action)
+ *   - add (smart)    → smart tokens (AI-suggested template)
+ *   - remove         → danger tokens (template already applied)
+ */
+const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, isDisabled, iconOnly = false }) => {
     const [isSaving, setIsSaving] = useState(false);
     const { entity, mutateEntity } = useEntity();
-    const theme = useContext(ThemeContext);
-    const addTemplate = async () => {
+
+    const isApplied = entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id);
+    const addMode = !isApplied || isDisabled;
+
+    const handleClick = async () => {
+        if (!entity) return;
         setIsSaving(true);
-        if (entity) {
-            await updateResource(entity?.id, { classes: [...((entity as Resource).classes ?? []), template.target_class.id] });
-            mutateEntity();
-        }
+        const existing = (entity as Resource).classes ?? [];
+        const next = addMode ? [...existing, template.target_class.id] : existing.filter((c) => c !== template.target_class.id);
+        await updateResource(entity.id, { classes: next });
+        mutateEntity();
         setIsSaving(false);
     };
 
-    const deleteTemplate = async () => {
-        setIsSaving(true);
-        if (entity) {
-            await updateResource(entity?.id, { classes: [...((entity as Resource).classes ?? []).filter((c) => c !== template.target_class.id)] });
-            mutateEntity();
-        }
-        setIsSaving(false);
-    };
+    // Color tokens: map state → globals.css CSS variables.
+    // Using var(--...) directly keeps dark-mode support automatic.
+    let badgeBg: string;
+    let badgeFg: string;
+    let buttonCls: string;
 
-    const addMode = (entity && 'classes' in entity && !entity?.classes?.includes(template.target_class.id)) || isDisabled;
+    if (!addMode) {
+        // Already applied → danger (remove)
+        badgeBg = 'var(--danger)';
+        badgeFg = 'var(--danger-foreground)';
+        buttonCls = 'bg-danger/10 text-danger border border-danger/30 hover:bg-danger/15';
+    } else if (isSmart) {
+        badgeBg = 'var(--color-smart)';
+        badgeFg = 'white';
+        buttonCls = 'bg-smart/10 text-smart-darker border border-smart/30 hover:bg-smart/15 dark:text-smart';
+    } else {
+        badgeBg = 'var(--color-secondary)';
+        badgeFg = 'white';
+        buttonCls = 'bg-secondary/15 text-secondary-darker border border-secondary/30 hover:bg-secondary/25 dark:text-secondary';
+    }
 
-    let color: string | undefined = 'danger';
-    let wrapperBackgroundColor: string | undefined = '#dc3545';
-    const wrapperColor = addMode && !isSmart ? theme?.secondary : 'white';
+    const icon = isSaving ? faSpinner : addMode ? faPlus : faTimes;
 
-    if (addMode) {
-        color = isSmart ? 'smart' : 'light';
-        wrapperBackgroundColor = isSmart ? theme?.smart : '#d1d5e4';
+    if (iconOnly) {
+        return (
+            <TemplateTooltip id={template.id} disabled={isDisabled}>
+                <span className="inline-block">
+                    <Button
+                        onPress={handleClick}
+                        isDisabled={isDisabled || isSaving}
+                        size="sm"
+                        isIconOnly
+                        aria-label={addMode ? `Add template ${template.label}` : `Remove template ${template.label}`}
+                        className="h-8 w-8 min-w-8 rounded-full"
+                        style={{ backgroundColor: badgeBg, color: badgeFg }}
+                    >
+                        <FontAwesomeIcon size="sm" icon={icon} spin={isSaving} />
+                    </Button>
+                </span>
+            </TemplateTooltip>
+        );
     }
 
     return (
         <TemplateTooltip id={template.id} disabled={isDisabled}>
-            <span>
-                <ButtonWithLoading
-                    onClick={() => {
-                        if (addMode) {
-                            addTemplate();
-                        } else {
-                            deleteTemplate();
-                        }
-                    }}
-                    isLoading={isSaving}
+            <span className="inline-block">
+                <Button
+                    onPress={handleClick}
+                    isDisabled={isDisabled || isSaving}
                     size="sm"
-                    outline={isSmart}
-                    color={color}
-                    isDisabled={isDisabled}
-                    className={`me-2 mb-2 position-relative px-3 rounded-pill ${!isSmart && 'border-0'}`}
+                    className={cn('mr-2 mb-2 relative rounded-full pl-9 pr-4 h-8 font-normal', buttonCls)}
                 >
-                    <IconWrapper $wrappercolor={wrapperColor} $wrapperbackgroundcolor={wrapperBackgroundColor}>
-                        {!isSaving && addMode && <FontAwesomeIcon size="sm" icon={faPlus} />}
-                        {!isSaving && !addMode && <FontAwesomeIcon size="sm" icon={faTimes} />}
-                        {isSaving && <FontAwesomeIcon icon={faSpinner} spin />}
-                    </IconWrapper>
-                    <Label>{template.label}</Label>
-                </ButtonWithLoading>
+                    <span
+                        className="absolute left-0 top-0 h-full w-7 flex items-center justify-center rounded-l-full"
+                        style={{ backgroundColor: badgeBg, color: badgeFg }}
+                    >
+                        <FontAwesomeIcon size="sm" icon={icon} spin={isSaving} />
+                    </span>
+                    {template.label}
+                </Button>
             </span>
         </TemplateTooltip>
     );

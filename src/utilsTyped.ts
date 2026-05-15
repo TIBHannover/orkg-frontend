@@ -1,16 +1,16 @@
-import { reverse } from 'named-urls';
 import slugifyString from 'slugify';
 
 import DEDICATED_PAGE_LINKS from '@/components/Resource/hooks/redirectionSettings';
+import { reverse } from '@/lib/namedRoute';
 
 /**
- * Use reverse from 'named-urls' and automatically slugifies the slug param
+ * Use reverse from '@/lib/namedRoute' and automatically slugifies the slug param
  * @param input string that should be slugified
  */
 export const slugify = (input: string) => slugifyString(input.replace('/', ' '), '_');
 
 /**
- * Use reverse from 'named-urls' and automatically slugifies the slug param
+ * Use reverse from '@/lib/namedRoute' and automatically slugifies the slug param
  * @param route name of the route
  * @param params route params to pass
  * @param params.slug the slug for this param

@@ -1,14 +1,14 @@
 import { faCalendar, faLock, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { CardBadge } from '@/components/styled';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Template } from '@/services/backend/types';
 
 type TemplateCardProps = {
@@ -17,26 +17,29 @@ type TemplateCardProps = {
 };
 
 const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) => (
-    <div className="list-group-item d-flex py-3 pe-4 ps-4">
-        <div className="col-md-9 d-flex p-0">
-            <div className="d-flex flex-column flex-grow-1">
+    <div className="list-group-item flex py-4 pr-6 pl-6">
+        <div className="flex w-full p-0 md:w-9/12 md:shrink-0 md:grow-0 md:basis-9/12 md:max-w-9/12">
+            <div className="flex grow flex-col">
                 <div className="mb-2">
                     <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                     {showBadge && (
-                        <div className="d-inline-block ms-2">
-                            <CardBadge color="primary">Template</CardBadge>
-                        </div>
+                        <span className="ml-2 inline-block align-middle">
+                            <Chip color="accent" variant="primary" size="sm">
+                                Template
+                            </Chip>
+                        </span>
                     )}
                 </div>
                 <div className="mb-1">
                     <small>
-                        <FontAwesomeIcon size="sm" icon={faShapes} className="me-1" /> {template.properties?.length} Properties
+                        <FontAwesomeIcon size="sm" icon={faShapes} className="mr-1 text-muted" /> {template.properties?.length} Properties
                         {template.is_closed && (
                             <>
-                                <FontAwesomeIcon size="sm" icon={faLock} className="ms-2 me-1" /> Closed
+                                <FontAwesomeIcon size="sm" icon={faLock} className="ml-2 mr-1 text-muted" /> Closed
                             </>
                         )}
-                        <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" /> {dayjs(template.created_at).format('DD-MM-YYYY')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />{' '}
+                        {dayjs(template.created_at).format('DD-MM-YYYY')}
                     </small>
                 </div>
                 <div className="mb-1">
@@ -54,13 +57,13 @@ const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) =>
                 )}
             </div>
         </div>
-        <div className="col-md-3 d-flex align-items-end flex-column p-0">
-            <div className="flex-grow-1 mb-1">
-                <div className="d-none d-md-flex align-items-end justify-content-end">
+        <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
+            <div className="mb-1 grow">
+                <div className="hidden items-end justify-end md:flex">
                     <RelativeBreadcrumbs researchField={template.relations.research_fields?.[0]} />
                 </div>
             </div>
-            <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
+            <div className="mt-1 hidden items-end justify-end md:flex">
                 <UserAvatar userId={template.created_by} />
             </div>
         </div>

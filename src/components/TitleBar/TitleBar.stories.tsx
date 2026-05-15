@@ -1,6 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 import Link from 'next/link';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
@@ -36,7 +36,13 @@ export const WithButtonGroup = Template.bind({});
 WithButtonGroup.args = {
     ...Default.args,
     buttonGroup: (
-        <Button component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm flex-shrink-0" href="https://orkg.org">
+        <Button
+            tag={Link}
+            color="secondary"
+            size="sm"
+            className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary text-white hover:bg-secondary-darker focus:ring-secondary px-3 py-1.5 text-xs shrink-0"
+            href="https://orkg.org"
+        >
             <FontAwesomeIcon icon={faPlus} /> Create paper
         </Button>
     ),
@@ -52,7 +58,9 @@ WithoutTitleAddition.args = {
 const TemplateWithContainer: StoryFn<typeof TitleBar> = (args) => (
     <div style={{ background: 'WhiteSmoke', padding: '10px 10px 50px 10px' }}>
         <TitleBar {...args} />
-        <Container className="box rounded p-4 clearfix">Lorum ipsum dolor sit amet</Container>
+        <Container>
+            <div className="box rounded p-6 flow-root">Lorum ipsum dolor sit amet</div>
+        </Container>
     </div>
 );
 

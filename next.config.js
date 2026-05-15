@@ -1,11 +1,6 @@
 const { version } = require('./package.json');
-const path = require('path');
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://orkg.org/';
-
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: process.env.ANALYZE === 'true',
-});
 
 const cspHeader = `
     default-src 'self';
@@ -19,33 +14,25 @@ const cspHeader = `
         https://support.tib.eu
         https://tibhannover.gitlab.io
         https://www.gstatic.com
-        https://platform.twitter.com
-        https://cdn.syndication.twimg.com
-        https://cdnjs.cloudflare.com
+        https://cdn.jsdelivr.net/npm/mathjax@4.1.0/
+        https://cdn.jsdelivr.net/npm/@mathjax/
         https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs;
     style-src 'self' 'unsafe-inline'
         https://orkg.org
         https://*.orkg.org
-        https://maxcdn.bootstrapcdn.com
         https://www.gstatic.com
-        https://platform.twitter.com
-        https://*.twimg.com
         https://unpkg.com/leaflet@1.9.4/dist/leaflet.css;
     font-src 'self'
         data:
         https://orkg.org
         https://*.orkg.org
-        https://maxcdn.bootstrapcdn.com
-        https://cdnjs.cloudflare.com;
+        https://cdn.jsdelivr.net/npm/@mathjax/;
     frame-src 'self'
         localhost:*
-        https://*.netlify.com
         https://orkg.org
         https://*.orkg.org
         https://av.tib.eu
         http://av.tib.eu
-        https://platform.twitter.com
-        https://syndication.twitter.com
         https://www.youtube.com
         https://time.graphics
         https://support.tib.eu;
@@ -54,7 +41,6 @@ const cspHeader = `
         blob:
         localhost:*
         127.0.0.1:*
-        https://*.netlify.com
         https://orkg.org
         https://*.orkg.org
         https://support.tib.eu
@@ -66,6 +52,7 @@ const cspHeader = `
         https://pub.orcid.org
         https://api.semanticscholar.org
         https://api.datacite.org
+        https://api.test.datacite.org
         https://api.crossref.org
         https://opencitations.net
         https://*.wikidata.org
@@ -79,6 +66,7 @@ const cspHeader = `
         https://dbpedia.org
         https://api.terminology.tib.eu
         https://www.ebi.ac.uk/ols4/api/
+        https://cdn.jsdelivr.net/npm/mathjax@4.1.0/sre/
         https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/0-ff.json
         https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/codepoint-index/plane0/2000-20ff.json
         https://cdn.jsdelivr.net/gh/lojjic/unicode-font-resolver@v1.0.1/packages/data/font-meta/latin.json
@@ -129,33 +117,7 @@ const nextConfig = {
             },
         ],
     },
-    webpack(config) {
-        config.resolve.fallback = {
-            // if you miss it, all the other options in fallback, specified
-            // by next.js will be dropped.
-            ...config.resolve.fallback,
-            fs: false, // the solution
-        };
-        config.module.rules.push({
-            test: /\.md$/,
-            use: 'raw-loader',
-        });
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            '@': path.resolve(__dirname, 'src'),
-        };
-        config.externals = [...config.externals, 'canvas', 'jsdom']; // to fix pdf-text-annotation: https://github.com/kkomelin/isomorphic-dompurify/issues/54
-        return config;
-    },
     serverExternalPackages: ['citeproc'],
-    turbopack: {
-        rules: {
-            '*.md': {
-                loaders: ['raw-loader'],
-                as: '*.js',
-            },
-        },
-    },
     reactCompiler: {
         compilationMode: 'annotation',
     },
@@ -520,10 +482,6 @@ const nextConfig = {
             destination: `${backendUrl}api/nanopublications/:path*`,
         }));
     },
-    // fixes sass issue on windows when running the dev server
-    sassOptions: {
-        loadPaths: ['./node_modules/bootstrap/scss/'],
-    },
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = nextConfig;

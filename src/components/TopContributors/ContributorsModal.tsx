@@ -1,16 +1,12 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Modal, Skeleton } from '@heroui/react';
 import dayjs from 'dayjs';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import ContributorsDropdownFilter from '@/components/TopContributors/ContributorsDropdownFilter';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Table from '@/components/Ui/Table/Table';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { contributorStatisticsUrl, getContributorStatisticsByResearchFieldId } from '@/services/backend/contributor-statistics';
 
@@ -58,99 +54,116 @@ const ContributorsModal: FC<ContributorsModalProps> = ({
     });
 
     return (
-        <Modal
+        <Modal.Backdrop
             isOpen={openModal}
-            toggle={() => setOpenModal((v) => !v)}
-            size="xl"
-            onExit={() => {
-                setPage(0);
-                setPageSize(50);
+            onOpenChange={(open) => {
+                if (!open) {
+                    setOpenModal(false);
+                    setPage(0);
+                    setPageSize(50);
+                }
             }}
+            isDismissable
         >
-            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <FontAwesomeIcon icon={faAward} className="text-primary" /> Top contributors
-                <div style={{ display: 'inline-block', marginLeft: '20px' }}>
-                    <ContributorsDropdownFilter
-                        sort={sort}
-                        isLoading={isLoading}
-                        includeSubFields={includeSubFields}
-                        setSort={setSort}
-                        researchFieldId={researchFieldId}
-                        setIncludeSubFields={setIncludeSubFields}
-                    />
-                </div>
-            </ModalHeader>
-            <ModalBody>
-                <div className="ps-3 pe-3">
-                    {!isLoading && (
-                        <Table striped bordered hover className="rounded" responsive>
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th className="w-50">Contributor</th>
-                                    <th className="text-center">Contributions</th>
-                                    <th className="text-center">Comparisons</th>
-                                    <th className="text-center">Papers</th>
-                                    <th className="text-center">Visualizations</th>
-                                    <th className="text-center">Problems</th>
-                                    <th className="text-center">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {contributors &&
-                                    contributors.map((contributor, index) => (
-                                        <tr key={`rp${contributor.contributorId}`}>
-                                            <td className="text-center align-middle">{page * pageSize + index + 1}.</td>
-                                            <td className="flex-grow-1">
-                                                <UserAvatar userId={contributor.contributorId} size={50} showDisplayName />
-                                            </td>
-                                            <td className="text-center align-middle">{contributor.contributionCount}</td>
-                                            <td className="text-center align-middle">{contributor.comparisonCount}</td>
-                                            <td className="text-center align-middle">{contributor.paperCount}</td>
-                                            <td className="text-center align-middle">{contributor.visualizationCount}</td>
-                                            <td className="text-center align-middle">{contributor.researchProblemCount}</td>
-                                            <td className="text-center align-middle">{contributor.totalCount}</td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </Table>
-                    )}
-                    {!isLoading && contributors?.length === 0 && (
-                        <div className="mt-4 mb-4">
-                            No contributors yet.
-                            <i> Be the first contributor!</i>
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-6xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>
+                            <FontAwesomeIcon icon={faAward} className="text-accent mr-2" /> Top contributors
+                            <div className="inline-block ml-5">
+                                <ContributorsDropdownFilter
+                                    sort={sort}
+                                    isLoading={isLoading}
+                                    includeSubFields={includeSubFields}
+                                    setSort={setSort}
+                                    researchFieldId={researchFieldId}
+                                    setIncludeSubFields={setIncludeSubFields}
+                                />
+                            </div>
+                        </Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="pl-4 pr-4">
+                            {!isLoading && (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full rounded border border-border [&_th]:border [&_th]:border-border [&_th]:p-2 [&_td]:border [&_td]:border-border [&_td]:p-2 [&_tbody_tr:nth-child(odd)]:bg-default/50 [&_tbody_tr:hover]:bg-default">
+                                        <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th className="w-1/2">Contributor</th>
+                                                <th className="text-center">Contributions</th>
+                                                <th className="text-center">Comparisons</th>
+                                                <th className="text-center">Papers</th>
+                                                <th className="text-center">Visualizations</th>
+                                                <th className="text-center">Problems</th>
+                                                <th className="text-center">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {contributors &&
+                                                contributors.map((contributor, index) => (
+                                                    <tr key={`rp${contributor.contributorId}`}>
+                                                        <td className="text-center align-middle">{page * pageSize + index + 1}.</td>
+                                                        <td className="grow">
+                                                            <UserAvatar userId={contributor.contributorId} size={50} showDisplayName />
+                                                        </td>
+                                                        <td className="text-center align-middle">{contributor.contributionCount}</td>
+                                                        <td className="text-center align-middle">{contributor.comparisonCount}</td>
+                                                        <td className="text-center align-middle">{contributor.paperCount}</td>
+                                                        <td className="text-center align-middle">{contributor.visualizationCount}</td>
+                                                        <td className="text-center align-middle">{contributor.researchProblemCount}</td>
+                                                        <td className="text-center align-middle">{contributor.totalCount}</td>
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                            {!isLoading && contributors?.length === 0 && (
+                                <div className="mt-6 mb-6">
+                                    No contributors yet.
+                                    <i> Be the first contributor!</i>
+                                </div>
+                            )}
+                            {!isLoading && (
+                                <PaginationControl
+                                    prefixParams="contributorStatistics_"
+                                    page={page}
+                                    setPage={setPage}
+                                    totalPages={totalPages ?? 0}
+                                    pageSize={pageSize}
+                                    setPageSize={setPageSize}
+                                    isLoading={isLoading}
+                                    hasNextPage={hasNextPage}
+                                    totalElements={totalElements ?? 0}
+                                    boxShadow={false}
+                                />
+                            )}
+                            {isLoading && (
+                                <div className="mt-6 mb-6 flex">
+                                    <div className="w-0.5 bg-gray-200 mr-4 shrink-0" />
+                                    <div className="flex flex-col gap-4 grow">
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-3/4 h-2 rounded" />
+                                            <Skeleton className="w-1/2 h-1.5 rounded" />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-3/4 h-2 rounded" />
+                                            <Skeleton className="w-3/4 h-1.5 rounded" />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-1/2 h-2 rounded" />
+                                            <Skeleton className="w-3/4 h-1.5 rounded" />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    )}
-                    {!isLoading && (
-                        <PaginationControl
-                            prefixParams="contributorStatistics_"
-                            page={page}
-                            setPage={setPage}
-                            totalPages={totalPages ?? 0}
-                            pageSize={pageSize}
-                            setPageSize={setPageSize}
-                            isLoading={isLoading}
-                            hasNextPage={hasNextPage}
-                            totalElements={totalElements ?? 0}
-                            boxShadow={false}
-                        />
-                    )}
-                    {isLoading && (
-                        <div className="mt-4 mb-4">
-                            <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
-                                <rect x="30" y="5" rx="3" ry="3" width="150" height="6" />
-                                <rect x="30" y="15" rx="3" ry="3" width="100" height="5" />
-                                <rect x="30" y="35" rx="3" ry="3" width="150" height="6" />
-                                <rect x="30" y="45" rx="3" ry="3" width="150" height="5" />
-                                <rect x="30" y="65" rx="3" ry="3" width="100" height="6" />
-                                <rect x="30" y="75" rx="3" ry="3" width="150" height="5" />
-                                <rect x="14" y="0" rx="3" ry="3" width="3" height="100" />
-                            </ContentLoader>
-                        </div>
-                    )}
-                </div>
-            </ModalBody>
-        </Modal>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

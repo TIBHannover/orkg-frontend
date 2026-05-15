@@ -18,26 +18,26 @@ export const StyledDropdownItem = styled(DropdownItem)`
 
 /* Template Wizard */
 export const StyledButton = styled(Button)`
-    border-color: #ced4da !important;
+    border-color: var(--border) !important;
     color: ${(props) => props.theme.dark} !important;
     background: ${(props) => props.theme.lightDarker} !important;
     &:hover {
-        color: #fff !important;
+        color: var(--surface) !important;
         background-color: ${(props) => props.theme.secondary} !important;
         border-color: ${(props) => props.theme.secondary} !important;
     }
 `;
 
-export const StyledDropdownToggle = styled(DropdownToggle)`
+export const StyledDropdownToggle = styled(DropdownToggle)<{ disableBorderRadiusLeft?: boolean; disableBorderRadiusRight?: boolean }>`
     border-top-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-top-right-radius: ${(props) => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     border-bottom-right-radius: ${(props) => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     background: ${(props) => props.theme.lightDarker} !important;
     color: ${(props) => props.theme.dark} !important;
-    border-color: #ced4da !important;
+    border-color: var(--border) !important;
     &:hover {
-        color: #fff !important;
+        color: var(--surface) !important;
         background-color: ${(props) => props.theme.secondary} !important;
         border-color: ${(props) => props.theme.secondary} !important;
     }
@@ -46,7 +46,7 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
 export const ValueItemStyle = styled.li.attrs({
     className: 'list-group-item', // refs are not passed correctly by reactstrap, so instead of using ListGroupItem, we manually apply the class
 })`
-    background-color: #fff;
+    background-color: var(--surface);
     overflow-wrap: anywhere;
     padding: 8px 0px !important;
 

@@ -1,18 +1,12 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
-import styled from 'styled-components';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ROUTES from '@/constants/routes';
-
-const NodeHeaderStyled = styled.div`
-    background: ${(props) => props.theme.secondary};
-    color: #fff;
-`;
+import { reverse } from '@/lib/namedRoute';
 
 type NodeHeaderProps = {
     label: string;
@@ -21,19 +15,34 @@ type NodeHeaderProps = {
 
 const NodeHeader: FC<NodeHeaderProps> = ({ label, id }) => {
     return (
-        <NodeHeaderStyled className="p-2 d-flex">
-            {/* eslint-disable-next-line react/no-unstable-nested-components */}
-            <ConditionalWrapper condition={label?.length > 40} wrapper={(children: React.ReactNode) => <Tooltip content={label}>{children}</Tooltip>}>
-                <div className="text-truncate d-inline-block me-2" style={{ maxWidth: 300 }}>
-                    {label}
-                </div>
+        <div className="bg-secondary text-white p-2 flex rounded-t-[4px]">
+            <ConditionalWrapper
+                condition={label?.length > 40}
+                // eslint-disable-next-line react/no-unstable-nested-components
+                wrapper={(children: React.ReactNode) => (
+                    <Tooltip>
+                        <Tooltip.Trigger>{children}</Tooltip.Trigger>
+                        <Tooltip.Content showArrow>
+                            <Tooltip.Arrow />
+                            {label}
+                        </Tooltip.Content>
+                    </Tooltip>
+                )}
+            >
+                <div className="truncate inline-block mr-2 max-w-[300px]">{label}</div>
             </ConditionalWrapper>{' '}
-            <Tooltip content="Go to template page">
-                <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id })}>
-                    <FontAwesomeIcon icon={faLink} color="#fff" />
-                </Link>
+            <Tooltip>
+                <Tooltip.Trigger>
+                    <Link target="_blank" href={reverse(ROUTES.TEMPLATE, { id })}>
+                        <FontAwesomeIcon icon={faLink} />
+                    </Link>
+                </Tooltip.Trigger>
+                <Tooltip.Content showArrow>
+                    <Tooltip.Arrow />
+                    Go to template page
+                </Tooltip.Content>
             </Tooltip>
-        </NodeHeaderStyled>
+        </div>
     );
 };
 

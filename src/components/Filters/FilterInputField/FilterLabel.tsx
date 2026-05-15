@@ -20,7 +20,7 @@ const FilterLabel: FC<FilterLabelProps> = ({ filter }) => {
 
     if (filter?.label) {
         return (
-            <span className="me-1">
+            <span className="mr-1">
                 {filter?.label} <FilterPath filter={filter} />
             </span>
         );

@@ -1,8 +1,8 @@
 'use client';
 
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
+import { Button, Dropdown } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
 
@@ -10,10 +10,6 @@ import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
@@ -45,26 +41,36 @@ const Papers: FC = () => {
         <>
             <VisibilityFilter />
             {!!user && user.isCurationAllowed && (
-                <UncontrolledButtonDropdown size="sm" style={{ marginRight: 2 }}>
-                    <DropdownToggle caret color="secondary">
+                <Dropdown>
+                    <Button size="sm" className="button--orkg-secondary">
                         {verified === true && 'Verified'}
                         {verified === false && 'Unverified'}
                         {verified === null && 'All'}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem onClick={() => setVerified(null, { scroll: false, history: 'push' })}>All</DropdownItem>
-                        <DropdownItem onClick={() => setVerified(true, { scroll: false, history: 'push' })}>Verified</DropdownItem>
-                        <DropdownItem onClick={() => setVerified(false, { scroll: false, history: 'push' })}>Unverified</DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledButtonDropdown>
+                        <FontAwesomeIcon icon={faChevronDown} className="text-[0.6rem]" />
+                    </Button>
+                    <Dropdown.Popover>
+                        <Dropdown.Menu
+                            selectionMode="single"
+                            selectedKeys={new Set([String(verified)])}
+                            onAction={(key) => {
+                                const value = key === 'null' ? null : key === 'true';
+                                setVerified(value, { scroll: false, history: 'push' });
+                            }}
+                        >
+                            <Dropdown.Item id="null" textValue="All">
+                                All
+                            </Dropdown.Item>
+                            <Dropdown.Item id="true" textValue="Verified">
+                                Verified
+                            </Dropdown.Item>
+                            <Dropdown.Item id="false" textValue="Unverified">
+                                Unverified
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown.Popover>
+                </Dropdown>
             )}
-            <RequireAuthentication
-                component={Link}
-                color="secondary"
-                size="sm"
-                className="btn btn-secondary btn-sm flex-shrink-0"
-                href={ROUTES.CREATE_PAPER}
-            >
+            <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.CREATE_PAPER}>
                 <FontAwesomeIcon icon={faPlus} /> Create paper
             </RequireAuthentication>
         </>

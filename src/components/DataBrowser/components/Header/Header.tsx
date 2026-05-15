@@ -1,5 +1,6 @@
 import { faQuestionCircle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Popover } from '@heroui/react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -7,23 +8,16 @@ import Breadcrumbs from '@/components/DataBrowser/components/Header/Breadcrumbs/
 import Metadata from '@/components/DataBrowser/components/Header/Metadata/Metadata';
 import Preferences from '@/components/DataBrowser/components/Header/Preferences/Preferences';
 import NotFound from '@/components/DataBrowser/components/NotFound/NotFound';
-import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
-import Popover from '@/components/FloatingUI/Popover';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Alert from '@/components/Ui/Alert/Alert';
-import UncontrolledAlert from '@/components/Ui/Alert/UncontrolledAlert';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 
 const Header = () => {
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config } = useDataBrowserState();
     const { error } = useEntity();
     const { isEditMode, snapshotCreatedAt } = config;
-    const dispatch = useDataBrowserDispatch();
     const { canEdit } = useCanEdit();
 
     const [preferencesPopover, setPreferencesPopover] = useState(false);
@@ -38,56 +32,59 @@ const Header = () => {
     return (
         <div>
             {isUsingSnapshot && snapshotCreatedAt && (
-                <Alert color="info" className="mb-0 p-2 rounded-0">
-                    <p className="mb-0">
-                        You are viewing a snapshot of the data, which was taken on {dayjs(snapshotCreatedAt)?.format('DD MMMM YYYY - H:mm:ss')}
-                    </p>
+                <Alert status="accent" className="mb-0 p-2 rounded-none">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>
+                            You are viewing a snapshot of the data, which was taken on {dayjs(snapshotCreatedAt)?.format('DD MMMM YYYY - H:mm:ss')}
+                        </Alert.Title>
+                    </Alert.Content>
                 </Alert>
             )}
-            <div className="d-flex tw:border-b tw:border-zinc-200 p-2 align-items-center">
+            <div className="flex border-b border-zinc-200 p-2 items-center gap-2">
                 <Breadcrumbs />
-                <ButtonGroup className="m-auto flex-shrink-0" size="sm">
-                    <Popover
-                        open={preferencesPopover}
-                        onOpenChange={setPreferencesPopover}
-                        content={<Preferences closeTippy={() => setPreferencesPopover(false)} />}
-                    >
-                        <div
-                            className="btn btn-sm btn-outline-secondary d-flex align-items-center"
-                            onClick={() => setPreferencesPopover((v) => !v)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => (e.code === 'Enter' ? setPreferencesPopover((v) => !v) : undefined)}
-                        >
-                            <div className="flex-grow-1">
-                                <FontAwesomeIcon fixedWidth icon={faSlidersH} />
-                            </div>
-                        </div>
+                <div className="ml-auto shrink-0 flex">
+                    <Popover isOpen={preferencesPopover} onOpenChange={setPreferencesPopover}>
+                        <Button variant="outline" size="sm" isIconOnly aria-label="Preferences" className="!rounded-e-none !border-r-0 text-zinc-500">
+                            <FontAwesomeIcon fixedWidth icon={faSlidersH} />
+                        </Button>
+                        <Popover.Content>
+                            <Popover.Dialog>
+                                <Popover.Arrow />
+                                <Preferences closeTippy={() => setPreferencesPopover(false)} />
+                            </Popover.Dialog>
+                        </Popover.Content>
                     </Popover>
-                    <Button outline size="sm" onClick={() => dispatch({ type: 'SET_IS_HELP_MODAL_OPEN', payload: { isOpen: true } })}>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        isIconOnly
+                        aria-label="Open help center"
+                        className="!rounded-s-none text-zinc-500"
+                        onPress={() => window.open('https://orkg.org/help-center/category/2', '_blank', 'noopener,noreferrer')}
+                    >
                         <FontAwesomeIcon fixedWidth icon={faQuestionCircle} />
                     </Button>
-                </ButtonGroup>
+                </div>
             </div>
             {!canEdit && isEditMode && (
-                <UncontrolledAlert color="info" className="mb-0 mt-2 mx-2">
-                    A shared resource cannot be edited directly{' '}
-                    <Tooltip content="Open help center">
-                        <span className="ms-2">
+                <Alert status="accent" className="mb-0 p-2 rounded-none border-t border-zinc-200">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>A shared resource cannot be edited directly</Alert.Title>
+                        <Alert.Description>
                             <a
                                 href="https://orkg.org/help-center/article/29/%22A_shared_resource_cannot_be_edited_directly%22_-_What_does_that_mean"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="text-secondary underline inline-flex items-center gap-1"
                             >
-                                <FontAwesomeIcon
-                                    icon={faQuestionCircle}
-                                    style={{ fontSize: 22, lineHeight: 1, marginTop: -4 }}
-                                    className="text-secondary p-0"
-                                />
+                                Learn more
+                                <FontAwesomeIcon icon={faQuestionCircle} />
                             </a>
-                        </span>
-                    </Tooltip>
-                </UncontrolledAlert>
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert>
             )}
             <Metadata />
         </div>

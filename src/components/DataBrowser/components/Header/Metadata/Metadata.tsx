@@ -1,37 +1,16 @@
 import { faArrowRight, faExternalLink, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { cn } from '@heroui/react';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { useHash } from 'react-use';
-import styled from 'styled-components';
 
-import Classes, { BadgeTagsStyle } from '@/components/DataBrowser/components/Header/Metadata/Classes';
+import BadgeTag from '@/components/DataBrowser/components/Header/Metadata/BadgeTag';
+import Classes from '@/components/DataBrowser/components/Header/Metadata/Classes';
 import Label from '@/components/DataBrowser/components/Header/Metadata/Label';
 import Templates from '@/components/DataBrowser/components/Header/Metadata/Templates';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import { ENTITIES } from '@/constants/graphSettings';
-
-export const MetadataStyled = styled.div`
-    &.highlight {
-        background: ${(props) => props.theme.primary} !important;
-        a.text-primary {
-            color: #fff !important;
-        }
-        animation: blinkAnimation 0.7s 3;
-    }
-
-    @keyframes blinkAnimation {
-        0% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-`;
 
 const Metadata = () => {
     const { entity } = useEntity();
@@ -39,42 +18,42 @@ const Metadata = () => {
     const [hash] = useHash();
 
     useEffect(() => {
-        // Check if this entity's ID matches the URL hash
         if (hash === `#${entity?.id}`) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsHighlighted(true);
-            setTimeout(() => setIsHighlighted(false), 3000);
-            // Clear the hash after highlighting
             window.history.replaceState(null, '', window.location.pathname + window.location.search);
         }
     }, [entity?.id, hash]);
 
     return (
-        <MetadataStyled
+        <div
             id={entity?.id}
-            className={`py-3 px-3 tw:border-b tw:border-zinc-200 ${isHighlighted ? 'highlight' : ''}`}
+            className={cn(
+                'py-4 px-4 border-b border-zinc-200',
+                isHighlighted && 'bg-accent animate-[blinkAnimation_0.7s_3] [&_a.text-accent]:!text-white',
+            )}
             onAnimationEnd={() => setIsHighlighted(false)}
         >
             <Label />
-            <div className="d-flex flex-wrap">
+            <div className="flex flex-wrap">
                 <Classes />
                 <Templates />
                 {entity && 'shared' in entity && entity.shared > 1 && (
-                    <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
-                        <FontAwesomeIcon icon={faArrowRight} className="me-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
-                    </BadgeTagsStyle>
+                    <BadgeTag>
+                        <FontAwesomeIcon icon={faArrowRight} className="mr-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
+                    </BadgeTag>
                 )}
                 {entity && entity._class === ENTITIES.CLASS && 'uri' in entity && entity.uri !== null && (
-                    <BadgeTagsStyle className="text-muted ps-2 my-1 me-1 pe-2 align-items-center d-flex">
-                        <FontAwesomeIcon icon={faHashtag} className="me-1" />
+                    <BadgeTag>
+                        <FontAwesomeIcon icon={faHashtag} className="mr-1" />
                         URI:{' '}
-                        <a href={entity.uri} target="_blank" rel="noopener noreferrer">
-                            {entity.uri} <FontAwesomeIcon icon={faExternalLink} className="me-1" />
+                        <a href={entity.uri} target="_blank" rel="noopener noreferrer" className="ml-1">
+                            {entity.uri} <FontAwesomeIcon icon={faExternalLink} className="mr-1" />
                         </a>
-                    </BadgeTagsStyle>
+                    </BadgeTag>
                 )}
             </div>
-        </MetadataStyled>
+        </div>
     );
 };
 

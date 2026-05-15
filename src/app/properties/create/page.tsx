@@ -1,20 +1,16 @@
 'use client';
 
-import { reverse } from 'named-urls';
+import { Form, Input, Label, TextField, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
-import { MouseEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { FormEvent, useEffect, useState } from 'react';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import Container from '@/components/Ui/Structure/Container';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
+import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { createPredicate } from '@/services/backend/predicates';
 
@@ -24,11 +20,10 @@ const AddProperty = () => {
     const router = useRouter();
 
     useEffect(() => {
-        // Set document title
         document.title = 'Add property - ORKG';
     }, []);
 
-    const handleAdd = async (e: MouseEvent) => {
+    const handleAdd = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         if (label.trim() !== '') {
@@ -42,7 +37,7 @@ const AddProperty = () => {
                 setIsLoading(false);
             }
         } else {
-            toast.error('Please enter a property label');
+            toast.danger('Please enter a property label');
             setIsLoading(false);
         }
     };
@@ -50,26 +45,25 @@ const AddProperty = () => {
     return (
         <>
             <TitleBar>Create property</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <Form>
-                    <div className="pt-2">
-                        <FormGroup>
-                            <Label for="propertyLabel">Property label</Label>
+            <Container>
+                <div className="box rounded pt-6 pb-6 pl-12 pr-12">
+                    <Form className="flex flex-col gap-6 pt-2" onSubmit={handleAdd}>
+                        <TextField fullWidth isDisabled={isLoading} name="value">
+                            <Label htmlFor="propertyLabel">Property label</Label>
                             <Input
-                                onChange={(e) => setLabel(e.target.value)}
-                                onKeyDown={(e) => (e.keyCode === 13 ? handleAdd : undefined)}
+                                id="propertyLabel"
                                 type="text"
                                 maxLength={MAX_LENGTH_INPUT}
-                                name="value"
-                                id="propertyLabel"
-                                disabled={isLoading}
+                                value={label}
+                                onChange={(e) => setLabel(e.target.value)}
                             />
-                        </FormGroup>
-                        <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isLoading}>
+                        </TextField>
+
+                        <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isLoading}>
                             Create property
                         </ButtonWithLoading>
-                    </div>
-                </Form>
+                    </Form>
+                </div>
             </Container>
         </>
     );

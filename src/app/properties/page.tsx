@@ -2,14 +2,14 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import { useEffect } from 'react';
 
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getPredicates, predicatesUrl } from '@/services/backend/predicates';
 import { Predicate } from '@/services/backend/types';
 
@@ -25,7 +25,7 @@ const Properties = () => {
     );
 
     const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.CREATE_PROPERTY}>
+        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.CREATE_PROPERTY}>
             <FontAwesomeIcon icon={faPlus} /> Create property
         </RequireAuthentication>
     );

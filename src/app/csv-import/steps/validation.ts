@@ -97,7 +97,7 @@ export const validateColumns = (data: string[][]) => {
 
     const { error } = columns.safeParse(header);
     if (error) {
-        return error.errors[0].message;
+        return error.issues[0].message;
     }
 
     if (values.length === 0) {
@@ -133,7 +133,7 @@ export const validateValueOfCell = <T extends boolean = true>(
     data: string,
     column: MappedColumn | null,
     returnOnlyError: T = true as T,
-): T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any> => {
+): T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any> => {
     let cellSchema;
     const currentYear = new Date().getFullYear();
 
@@ -141,9 +141,9 @@ export const validateValueOfCell = <T extends boolean = true>(
 
     if (!column) {
         if (returnOnlyError) {
-            return null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+            return null as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
         }
-        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
     }
 
     switch (column.predicate?.id) {
@@ -215,23 +215,23 @@ export const validateValueOfCell = <T extends boolean = true>(
 
     if (!cellSchema) {
         if (returnOnlyError) {
-            return null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+            return null as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
         }
-        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+        return { error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
     }
 
     // For required fields like research field, don't skip validation for empty strings
     const isRequiredField = column.predicate?.id === PREDICATES.HAS_RESEARCH_FIELD;
     if (data === '' && !isRequiredField) {
         return returnOnlyError
-            ? (null as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>)
-            : ({ error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>);
+            ? (null as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>)
+            : ({ error: null, data, success: true } as unknown as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>);
     }
 
     // If the value has a type, validate the parsed label against the type
     const result = cellSchema.safeParse(hasTypeInfo && typeStr ? label : data);
     if (returnOnlyError) {
-        return (result?.error ?? null) as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+        return (result?.error ?? null) as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
     }
-    return result as T extends true ? z.ZodError<any> | null : z.SafeParseReturnType<any, any>;
+    return result as T extends true ? z.ZodError<any> | null : z.ZodSafeParseResult<any>;
 };

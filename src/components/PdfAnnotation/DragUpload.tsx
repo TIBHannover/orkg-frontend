@@ -1,42 +1,13 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Spinner, toast } from '@heroui/react';
 import { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
 
 import { uploadPdf } from '@/slices/pdfAnnotationSlice';
 
-const DragPdf = styled.div`
-    margin: 20% auto 0;
-    width: 300px;
-    text-align: center;
-    border: 4px dashed #bbbdc0;
-    padding: 40px 20px;
-    border-radius: 15px;
-    font-weight: 500;
-    color: #a4a0a0;
-    transition: border-color 0.2s, color 0.2s;
-    outline: 0;
-
-    &:not(.loading) {
-        cursor: pointer;
-
-        &:hover,
-        &:focus,
-        &.active {
-            border-color: #8d8f91;
-            color: #636363;
-        }
-    }
-`;
-
-const FilePlaceholder = styled(FontAwesomeIcon)`
-    margin-bottom: 15px;
-    color: inherit;
-`;
+const baseClasses = 'mx-auto mt-[20%] w-[300px] text-center border-4 border-dashed rounded-2xl p-10 font-medium outline-none transition-colors';
 
 const DragUpload: FC<{ pdf?: string }> = ({ pdf }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -49,29 +20,36 @@ const DragUpload: FC<{ pdf?: string }> = ({ pdf }) => {
     };
 
     const onDropRejected = () => {
-        toast.error('Error uploading your file, only PDF files are accepted');
+        toast.danger('Error uploading your file, only PDF files are accepted');
         setIsLoading(false);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'application/pdf': ['.pdf'] } });
 
-    return (
-        <>
-            {!isLoading && !pdf && (
-                <DragPdf {...getRootProps()} className={isDragActive ? 'active' : undefined}>
-                    <FilePlaceholder icon={faFile} style={{ fontSize: 70 }} /> <br />
-                    Drag 'n' drop a PDF file here, or click here to upload one
-                    <input {...getInputProps()} />
-                </DragPdf>
-            )}
+    if (isLoading) {
+        return (
+            <div className={`${baseClasses} border-default-300 text-muted`}>
+                <Spinner size="lg" color="current" />
+                <div className="mt-3">Parsing your PDF...</div>
+            </div>
+        );
+    }
 
-            {isLoading && (
-                <DragPdf className="loading">
-                    <FilePlaceholder spin icon={faSpinner} style={{ fontSize: 70 }} /> <br />
-                    Parsing your PDF...
-                </DragPdf>
-            )}
-        </>
+    if (pdf) {
+        return null;
+    }
+
+    const interactiveClasses = isDragActive
+        ? 'border-default-500 text-foreground'
+        : 'border-default-300 text-muted hover:border-default-500 hover:text-foreground focus:border-default-500 focus:text-foreground';
+
+    return (
+        <div {...getRootProps()} className={`${baseClasses} cursor-pointer ${interactiveClasses}`}>
+            <FontAwesomeIcon icon={faFile} className="mb-4 text-[70px]" />
+            <br />
+            Drag &apos;n&apos; drop a PDF file here, or click here to upload one
+            <input {...getInputProps()} />
+        </div>
     );
 };
 

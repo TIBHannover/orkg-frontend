@@ -1,5 +1,6 @@
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Separator } from '@heroui/react';
 import type { ReactNode } from 'react';
 
 type HelpfulResourcesBoxProps = {
@@ -10,24 +11,22 @@ type HelpfulResourcesBoxProps = {
 };
 
 const HelpfulResourcesBox = ({ title, subtitle, children, video }: HelpfulResourcesBoxProps) => (
-    <div className="tw:bg-light tw:p-4 tw:rounded-xl">
-        <h2 className="tw:!text-xl">
-            <FontAwesomeIcon icon={faLightbulb} className="tw:text-secondary" /> {title}
+    <div className="bg-surface-secondary p-5 rounded-xl flex flex-col gap-3">
+        <h2 className="text-xl flex items-center gap-2 m-0">
+            <FontAwesomeIcon icon={faLightbulb} className="text-secondary" />
+            {title}
         </h2>
-        <hr />
-
-        <div className="mt-1">{subtitle}</div>
-
-        {children}
-
+        <Separator variant="secondary" />
+        <div className="flex flex-col gap-2">
+            <div>{subtitle}</div>
+            <div>{children}</div>
+        </div>
         {video && (
             <>
-                <hr />
-                <div className="tw:mt-3">
-                    <div className="tw:flex tw:items-center tw:gap-1">
-                        {video}
-                        Video explainer
-                    </div>
+                <Separator variant="secondary" />
+                <div className="flex items-center gap-2">
+                    {video}
+                    <span>Video explainer</span>
                 </div>
             </>
         )}

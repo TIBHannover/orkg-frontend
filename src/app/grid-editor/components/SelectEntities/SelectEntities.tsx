@@ -1,8 +1,7 @@
+import { Button, Modal, Skeleton, Tabs } from '@heroui/react';
 import { difference, intersection, uniq } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
 
 import Item from '@/app/grid-editor/components/SelectEntities/Item';
 import SelectedItem from '@/app/grid-editor/components/SelectEntities/SelectedItem';
@@ -12,17 +11,10 @@ import useSearch, { IGNORED_CLASSES as DEFAULT_IGNORED_CLASSES } from '@/app/sea
 import useSmartFilters from '@/app/search/components/hooks/useSmartFilters';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
-import Tabs from '@/components/Tabs/Tabs';
 import TemplateTooltip from '@/components/TemplateTooltip/TemplateTooltip';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { updateResource } from '@/services/backend/resources';
 import { Thing } from '@/services/backend/things';
 import { PaginatedResponse, ResourceThingReference } from '@/services/backend/types';
@@ -38,26 +30,11 @@ type AddEntityProps = {
 
 const DEFAULT_FILTERS = [
     { label: 'Paper', id: CLASSES.PAPER },
-    {
-        label: 'Research problem',
-        id: CLASSES.PROBLEM,
-    },
-    {
-        label: 'Resource',
-        id: 'Resource',
-    },
-    {
-        label: 'Property',
-        id: 'Predicate',
-    },
-    {
-        label: 'Class',
-        id: 'Class',
-    },
-    {
-        label: 'Venue',
-        id: CLASSES.VENUE,
-    },
+    { label: 'Research problem', id: CLASSES.PROBLEM },
+    { label: 'Resource', id: 'Resource' },
+    { label: 'Property', id: 'Predicate' },
+    { label: 'Class', id: 'Class' },
+    { label: 'Venue', id: CLASSES.VENUE },
 ];
 
 const IGNORED_CLASSES = [
@@ -74,7 +51,7 @@ const IGNORED_CLASSES = [
 
 const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = false, onCreatePaper = () => {}, setEntityIds, entities }) => {
     const { templates } = useTemplates();
-    const [isOpenViewSelectedEntities, setIsOpenViewSelectedEntities] = useState(false);
+    const [activeTab, setActiveTab] = useState<'search' | 'selected'>('search');
     const [selectedEntities, setSelectedEntities] = useState<(Thing | ResourceThingReference)[]>(entities ?? []);
 
     useEffect(() => {
@@ -113,7 +90,6 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
     } = useSmartFilters(searchTerm, _results);
 
     const handleSubmit = async () => {
-        // get the list of newly selected entities by comparing the ids
         const newEntities = difference(
             selectedEntities.map((e) => e.id),
             entities?.map((e) => e.id) ?? [],
@@ -121,25 +97,20 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
             .map((id) => selectedEntities?.find((e) => e.id === id))
             .filter((e) => e !== undefined);
 
-        // We calculate the new common classes because the user can select entities that are not instances of the current common classes
-        // get the list of unselected entities by comparing the ids
         const unselectedEntities = difference(
             entities?.map((e) => e.id) ?? [],
             selectedEntities.map((e) => e.id),
         )
             .map((id) => entities?.find((e) => e.id === id))
             .filter((e) => e !== undefined);
-        // get the list of old entities by comparing the ids
         const oldEntities = difference(
             entities?.map((e) => e.id) ?? [],
             unselectedEntities.map((e) => e.id),
         )
             .map((id) => entities?.find((e) => e.id === id))
             .filter((e) => e !== undefined);
-        // get the common classes of the old entities
         const oldAllClassesIds = oldEntities?.filter((entity) => 'classes' in entity).map((entity) => entity.classes) ?? [];
         const oldCommonClasses = uniq(intersection(...oldAllClassesIds));
-        // Ask the user if they want to apply the current common classes to the newly added entities ids
         const newAllClassesIds = newEntities?.filter((entity) => 'classes' in entity).map((entity) => entity.classes) ?? [];
         const newCommonClasses = uniq(intersection(...newAllClassesIds));
         const classesNeedToApply = difference(oldCommonClasses, newCommonClasses);
@@ -193,18 +164,34 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
         } as PaginatedResponse<Thing>;
     }
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            setSearchTerm('');
+            toggle();
+        }
+    };
+
     return (
-        <Modal isOpen={showDialog} toggle={toggle} size="xl" onClosed={() => setSearchTerm('')}>
-            <ModalHeader toggle={toggle}>Select entities</ModalHeader>
-            <ModalBody>
-                <Tabs
-                    items={[
-                        {
-                            label: 'Search',
-                            key: 'search',
-                            children: (
-                                <Row className="tw:p-4">
-                                    <Col md={4}>
+        <Modal.Backdrop isOpen={showDialog} onOpenChange={handleOpenChange}>
+            <Modal.Container placement="top">
+                <Modal.Dialog className="!max-w-5xl w-full max-h-[85vh]">
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Select entities</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1 overflow-y-auto">
+                        <Tabs selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(key as 'search' | 'selected')}>
+                            <Tabs.List>
+                                <Tabs.Tab id="search">
+                                    Search <Tabs.Indicator />
+                                </Tabs.Tab>
+                                <Tabs.Tab id="selected">
+                                    Selected entities ({selectedEntities.length}) <Tabs.Indicator />
+                                </Tabs.Tab>
+                            </Tabs.List>
+                            <Tabs.Panel id="search" shouldForceMount className="data-[inert]:hidden">
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4">
+                                    <div className="md:col-span-4">
                                         <Filters
                                             defaultFilters={DEFAULT_FILTERS}
                                             results={results ?? { content: [], page: { number: 0, size: 0, total_elements: 0, total_pages: 0 } }}
@@ -218,21 +205,19 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
                                             selectedSmartFilter={selectedSmartFilter}
                                             setSelectedSmartFilter={setSelectedSmartFilter}
                                         />
-                                    </Col>
-                                    <Col md={8}>
+                                    </div>
+                                    <div className="md:col-span-8">
                                         {isLoading && (
-                                            <div className="p-4">
-                                                <div className="flex-grow-1">
-                                                    <Skeleton width={100} />
-                                                    <Skeleton width={100} />
-                                                    <Skeleton width={100} />
-                                                    <Skeleton width={100} />
-                                                    <Skeleton width={100} />
-                                                </div>
+                                            <div className="p-6 flex flex-col gap-2">
+                                                <Skeleton className="w-[100px] h-4 rounded" />
+                                                <Skeleton className="w-[100px] h-4 rounded" />
+                                                <Skeleton className="w-[100px] h-4 rounded" />
+                                                <Skeleton className="w-[100px] h-4 rounded" />
+                                                <Skeleton className="w-[100px] h-4 rounded" />
                                             </div>
                                         )}
                                         {!isLoading && results && results?.content?.length > 0 && (
-                                            <div className="rounded pb-4 h-100">
+                                            <div className="rounded pb-6 h-full">
                                                 <ListPaginatedContent<Thing>
                                                     renderListItem={renderListItem}
                                                     pageSize={pageSize}
@@ -252,57 +237,42 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
                                             </div>
                                         )}
                                         {!isLoading && results?.content?.length === 0 && (
-                                            <div className="rounded p-4 h-100 tw:border-1 tw:border-gray-200">
-                                                <h2 className="h5">No results</h2>
-                                                <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                                            <div className="rounded p-6 h-full border border-default">
+                                                <h2 className="text-xl">No results</h2>
+                                                <div className="text-center mt-6 mb-6">There are no results, please try a different search term</div>
                                             </div>
                                         )}
-                                    </Col>
-                                </Row>
-                            ),
-                        },
-                        {
-                            label: `Selected entities (${selectedEntities.length})`,
-                            key: 'selected',
-                            children: (
-                                <div>
-                                    <div className="p-3 h-100 ">
-                                        <div className="tw:mt-4 tw:mb-4">
-                                            {selectedEntities.length === 0 ? (
-                                                <div className="tw:text-center tw:text-gray-500 tw:py-8">No entities selected</div>
-                                            ) : (
-                                                <div className="tw:space-y-2">
-                                                    {selectedEntities.map((entity) => (
-                                                        <SelectedItem key={entity.id} entity={entity} setSelectedEntities={setSelectedEntities} />
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
                                     </div>
                                 </div>
-                            ),
-                        },
-                    ]}
-                    activeKey={isOpenViewSelectedEntities ? 'selected' : 'search'}
-                    onChange={(...params) => {
-                        setIsOpenViewSelectedEntities(params[0] === 'selected');
-                    }}
-                />
-            </ModalBody>
-            <ModalFooter className="d-flex">
-                {allowCreate && (
-                    <div className="flex-grow-1">
-                        <Button color="light" onClick={() => onCreatePaper()}>
-                            Add new paper
-                        </Button>
-                    </div>
-                )}
-
-                <Button color="primary" className="float-end" onClick={handleSubmit}>
-                    Select
-                </Button>
-            </ModalFooter>
-        </Modal>
+                            </Tabs.Panel>
+                            <Tabs.Panel id="selected" shouldForceMount className="data-[inert]:hidden">
+                                <div className="p-4">
+                                    {selectedEntities.length === 0 ? (
+                                        <div className="text-center text-gray-500 py-8">No entities selected</div>
+                                    ) : (
+                                        <div className="flex flex-col gap-2">
+                                            {selectedEntities.map((entity) => (
+                                                <SelectedItem key={entity.id} entity={entity} setSelectedEntities={setSelectedEntities} />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </Tabs.Panel>
+                        </Tabs>
+                    </Modal.Body>
+                    <Modal.Footer className="flex">
+                        {allowCreate && (
+                            <div className="grow">
+                                <Button variant="secondary" onPress={() => onCreatePaper()}>
+                                    Add new paper
+                                </Button>
+                            </div>
+                        )}
+                        <Button onPress={handleSubmit}>Select</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

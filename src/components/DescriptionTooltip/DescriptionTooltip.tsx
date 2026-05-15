@@ -1,53 +1,19 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from '@heroui/react';
 import Link from 'next/link';
 import { FC, Fragment, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import styled from 'styled-components';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import Table from '@/components/Ui/Table/Table';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { EntityType, Statement } from '@/services/backend/types';
 import { getLinkByEntityType, getResourceLink } from '@/utils';
-
-const TableContentStyle = styled(Table)`
-    border-collapse: collapse;
-    color: #fff;
-    overflow-wrap: break-word;
-    table-layout: fixed;
-    max-width: 300px;
-
-    td,
-    th {
-        border: 1px solid black;
-    }
-    td:first-child {
-        width: 100px;
-    }
-    tr:first-child td {
-        border-top: 0;
-        border-bottom: 0;
-        border-left: 0;
-    }
-    tr:last-child td {
-        border-bottom: 0;
-    }
-    tr td:first-child,
-    tr th:first-child {
-        border-left: 0;
-    }
-    tr td:last-child,
-    tr th:last-child {
-        border-right: 0;
-    }
-`;
 
 type DescriptionTooltipProps = {
     id?: string;
@@ -82,7 +48,7 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('ID copied to clipboard');
         }
     }, [state.value]);
@@ -94,7 +60,7 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
         ([params]) => getStatements(params) as Promise<Statement[]>,
     );
 
-    let description = !contextDescription ? data?.[0]?.object.label ?? '' : contextDescription;
+    let description = !contextDescription ? (data?.[0]?.object.label ?? '') : contextDescription;
 
     description = description.length > 300 ? `${description.substring(0, 300)}...` : description;
 
@@ -121,94 +87,89 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
 
     return (
         <Tooltip
-            contentStyle={{
-                padding: 0,
-            }}
             onTrigger={() => setIsActive(true)}
             content={
-                <TableContentStyle className="rounded mb-0" style={{ padding: '0px' }}>
-                    <tbody>
-                        <tr>
-                            <td>{renderTypeLabel()} id</td>
-                            <td className="d-flex">
-                                <div className="flex-grow-1">
-                                    <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
-                                    {id && (
-                                        <Button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                copyToClipboard(id);
-                                            }}
-                                            title="Click to copy id"
-                                            className="py-0 px-0 ms-1"
-                                            size="sm"
-                                            color="link"
-                                            style={{ verticalAlign: 'middle' }}
-                                        >
-                                            <FontAwesomeIcon icon={faClipboard} size="xs" />
-                                        </Button>
-                                    )}
-                                </div>
-                                {id && showURL && (
-                                    <div>
-                                        <Tooltip content={`Go to ${renderTypeLabel()} page`}>
-                                            <Link href={getLinkByEntityType(_class, id)} target="_blank">
-                                                <FontAwesomeIcon icon={faLink} size="xs" />
-                                            </Link>
-                                        </Tooltip>
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                        {classes && classes?.length > 0 && (
-                            <tr>
-                                <td>Instance of</td>
-                                <td>
+                <div className="w-[300px] break-normal text-xs space-y-2 p-1">
+                    <div className="flex items-center justify-between gap-3">
+                        <span className="text-muted shrink-0">{renderTypeLabel()} id</span>
+                        <span className="flex items-center gap-1">
+                            <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
+                            {id && (
+                                <Button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        copyToClipboard(id);
+                                    }}
+                                    title="Click to copy id"
+                                    className="py-0 px-0"
+                                    size="sm"
+                                    color="link"
+                                >
+                                    <FontAwesomeIcon icon={faClipboard} size="xs" />
+                                </Button>
+                            )}
+                            {id && showURL && (
+                                <Tooltip content={`Go to ${renderTypeLabel()} page`}>
+                                    <Link href={getLinkByEntityType(_class, id)} target="_blank">
+                                        <FontAwesomeIcon icon={faLink} size="xs" />
+                                    </Link>
+                                </Tooltip>
+                            )}
+                        </span>
+                    </div>
+                    {classes && classes.length > 0 && (
+                        <>
+                            <hr className="border-border" />
+                            <div className="flex items-baseline justify-between gap-3">
+                                <span className="text-muted shrink-0">Instance of</span>
+                                <span>
                                     {classes.map((c, index: number) => (
                                         <Fragment key={c}>
                                             <Link href={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
                                                 {c}
                                             </Link>
-                                            {index + 1 < classes.length && ','}
+                                            {index + 1 < classes.length && ', '}
                                         </Fragment>
                                     ))}
-                                </td>
-                            </tr>
-                        )}
-                        {_class !== ENTITIES.LITERAL && (
-                            <tr>
-                                <td>Description</td>
-                                <td>
+                                </span>
+                            </div>
+                        </>
+                    )}
+                    {_class !== ENTITIES.LITERAL && (
+                        <>
+                            <hr className="border-border" />
+                            <div>
+                                <span className="text-muted">Description</span>
+                                <p className="mt-1 mb-0 leading-relaxed text-sm">
                                     {isLoading && <FontAwesomeIcon icon={faSpinner} spin />}
                                     {!isLoading && description && description}
-                                    {!isLoading && !description && <small className="font-italic"> No description yet</small>}
-                                </td>
-                            </tr>
-                        )}
-                        {extraContent}
-                        {buttons && buttons.length > 0 && (
-                            <tr>
-                                <td colSpan={2}>
-                                    <ButtonGroup tabIndex={0} size="sm">
-                                        {buttons?.map((button, i) => (
-                                            <Button
-                                                onClick={() => {
-                                                    button.action?.();
-                                                }}
-                                                className="px-2 py-0"
-                                                key={i}
-                                                color={button.color}
-                                            >
-                                                <FontAwesomeIcon icon={button.icon} className="me-1" />
-                                                {button.title}
-                                            </Button>
-                                        ))}
-                                    </ButtonGroup>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </TableContentStyle>
+                                    {!isLoading && !description && <span className="italic text-muted text-xs">No description yet</span>}
+                                </p>
+                            </div>
+                        </>
+                    )}
+                    {extraContent}
+                    {buttons && buttons.length > 0 && (
+                        <>
+                            <hr className="border-border" />
+                            <ButtonGroup tabIndex={0} size="sm">
+                                {buttons.map((button, i) => (
+                                    <Button
+                                        onClick={() => {
+                                            button.action?.();
+                                        }}
+                                        className="px-2 py-0"
+                                        key={i}
+                                        color={button.color}
+                                    >
+                                        <FontAwesomeIcon icon={button.icon} className="mr-1" />
+                                        {button.title}
+                                    </Button>
+                                ))}
+                            </ButtonGroup>
+                        </>
+                    )}
+                </div>
             }
             disabled={disabled}
         >

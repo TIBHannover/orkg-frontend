@@ -1,6 +1,6 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, cn } from '@heroui/react';
 import { FC, useEffect } from 'react';
 
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
@@ -9,10 +9,6 @@ import ContributionTab from '@/components/ContributionTabs/ContributionTab';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import RosettaStoneStatements from '@/components/RosettaStone/Statements/RosettaStoneStatements';
 import Tabs from '@/components/Tabs/Tabs';
-import Alert from '@/components/Ui/Alert/Alert';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import ContributionComparisons from '@/components/ViewPaper/ContributionComparisons/ContributionComparisons';
 import AutomaticContributionWarning from '@/components/ViewPaper/Contributions/AutomaticContributionWarning';
@@ -27,6 +23,7 @@ import SmartSuggestions from '@/components/ViewPaper/SmartSuggestions/SmartSugge
 import SustainableDevelopmentGoals from '@/components/ViewPaper/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type ContributionsProps = {
     enableEdit: boolean;
@@ -96,15 +93,14 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
 
     return (
         <div>
-            <Row>
-                <Col md="9">
+            <div className="flex flex-wrap gap-6">
+                <div className="w-full md:shrink-0 md:grow-0 md:basis-[calc(75%-1.5rem)] md:max-w-[calc(75%-1.5rem)]">
                     <Tabs
                         more={{ icon: <FontAwesomeIcon size="lg" icon={faAngleDown} /> }}
                         activeKey={selectedTab}
                         destroyOnHidden
                         onChange={onTabChange}
-                        className="rounded"
-                        style={{ background: '#F8F9FB' }}
+                        className="rounded bg-surface-secondary"
                         items={[
                             {
                                 label: <PaperSectionTabLabel paperId={resourceId} paperSection="contributions" label="Contributions" />,
@@ -141,13 +137,10 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                                         key: contribution.id,
                                                         children: (
                                                             <div
-                                                                className="p-4"
-                                                                style={{
-                                                                    backgroundColor:
-                                                                        contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC
-                                                                            ? '#ecf6f8'
-                                                                            : '',
-                                                                }}
+                                                                className={cn(
+                                                                    'p-6',
+                                                                    contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && 'bg-smart/10',
+                                                                )}
                                                             >
                                                                 {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
                                                                     <AutomaticContributionWarning
@@ -158,7 +151,7 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                                                 )}
                                                                 {selectedContributionId && (
                                                                     <div>
-                                                                        <FormGroup>
+                                                                        <div className="mb-4">
                                                                             <DataBrowser
                                                                                 isEditMode={enableEdit}
                                                                                 id={selectedContributionId}
@@ -167,7 +160,7 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                                                                 title={paper?.title}
                                                                                 abstract={abstract}
                                                                             />
-                                                                        </FormGroup>
+                                                                        </div>
 
                                                                         {contribution.id && (
                                                                             <ContributionComparisons contributionId={contribution.id} />
@@ -181,23 +174,29 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                             />
                                         )}
                                         {failedContributionId && (
-                                            <Alert className="m-3" color="danger">
-                                                Contribution doesn't exist
-                                            </Alert>
+                                            <div className="p-4">
+                                                <Alert status="danger">
+                                                    <Alert.Indicator />
+                                                    <Alert.Content>
+                                                        <Alert.Title>Contribution doesn't exist</Alert.Title>
+                                                    </Alert.Content>
+                                                </Alert>
+                                            </div>
                                         )}
                                         {contributions?.length === 0 && (
-                                            <Alert className="m-3 rounded" color="warning">
-                                                This paper has no contributions yet
-                                                <br />
-                                                {enableEdit ? (
-                                                    <span style={{ fontSize: '0.875rem' }}>
-                                                        Start by adding a contribution using the top right (+) button
-                                                    </span>
-                                                ) : (
-                                                    <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
-                                                )}
-                                                <br />
-                                            </Alert>
+                                            <div className="p-4">
+                                                <Alert status="warning">
+                                                    <Alert.Indicator />
+                                                    <Alert.Content>
+                                                        <Alert.Title>No contributions yet</Alert.Title>
+                                                        <Alert.Description>
+                                                            {enableEdit
+                                                                ? 'Start by adding a contribution using the top right (+) button'
+                                                                : 'Please contribute by editing'}
+                                                        </Alert.Description>
+                                                    </Alert.Content>
+                                                </Alert>
+                                            </div>
                                         )}
                                     </>
                                 ),
@@ -206,7 +205,7 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                 label: <PaperSectionTabLabel paperId={resourceId} paperSection="statements" label="Statements" />,
                                 key: 'statements',
                                 children: (
-                                    <div className="p-4">
+                                    <div className="py-6 px-2">
                                         <RosettaStoneStatements context={resourceId} />
                                     </div>
                                 ),
@@ -215,38 +214,38 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                 label: <PaperSectionTabLabel paperId={resourceId} paperSection="mentions" label="Mentions" />,
                                 key: 'mentions',
                                 children: (
-                                    <div className="p-4">
+                                    <div className="p-6">
                                         <Mentionings id={resourceId} />
                                     </div>
                                 ),
                             },
                         ]}
                     />
-                </Col>
+                </div>
 
-                <div className="col-md-3">
-                    <SustainableDevelopmentGoals isEditable={enableEdit} />
+                <div className="w-full md:shrink-0 md:grow-0 md:basis-1/4 md:max-w-[25%] flex flex-col gap-4">
+                    <div className="w-full empty:hidden [&>*]:!flex [&>*]:!w-full">
+                        <SustainableDevelopmentGoals isEditable={enableEdit} />
+                    </div>
 
                     {contributions && contributions?.length > 0 && (
-                        <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
+                        <div className="flex w-full rounded px-4 py-2 border border-border">
                             <AddToComparison showLabel paper={{ id: resourceId, label: paper?.title, contributions }} />
                         </div>
                     )}
 
                     {selectedContributionId && contributionId !== 'statements' && contributionId !== 'mentions' && enableEdit && (
-                        <div className="mb-3">
-                            <SmartSuggestions
-                                isLoadingAbstract={isLoadingAbstract}
-                                title={paper?.title}
-                                abstract={abstract}
-                                resourceId={selectedContributionId}
-                            />
-                        </div>
+                        <SmartSuggestions
+                            isLoadingAbstract={isLoadingAbstract}
+                            title={paper?.title}
+                            abstract={abstract}
+                            resourceId={selectedContributionId}
+                        />
                     )}
 
                     <ProvenanceBox />
                 </div>
-            </Row>
+            </div>
         </div>
     );
 };

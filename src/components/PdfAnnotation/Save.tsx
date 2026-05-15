@@ -1,32 +1,20 @@
 import { Cite } from '@citation-js/core';
 import { faCheck, faCheckCircle, faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, ButtonGroup, Input, Label, Modal, TextField, toast } from '@heroui/react';
 import { uniqueId } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useMembership from '@/components/hooks/useMembership';
 import { CSVW_TABLE_IRI, SURVEY_TABLES_IRI } from '@/components/PdfAnnotation/hooks/useOntology';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Table from '@/components/Ui/Table/Table';
 import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
+import { reverse } from '@/lib/namedRoute';
 import { Author, CreateContributionData, NewContribution } from '@/services/backend/types';
 import { deleteAnnotation, updateAnnotationIsExtractionModalOpen } from '@/slices/pdfAnnotationSlice';
 import { RootStore } from '@/slices/types';
@@ -64,15 +52,18 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
         publishedIn: null,
     });
 
+    const textAnnotations = annotations.filter((a) => a.type !== SURVEY_TABLES_IRI && a.type !== CSVW_TABLE_IRI);
+    const tableAnnotations = annotations.filter((a) => a.type === SURVEY_TABLES_IRI || a.type === CSVW_TABLE_IRI);
+
     const handleSave = async () => {
         const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi: _doi, publishedIn } = paperData;
         const _title = saveBy === 'doi' ? paperTitle : title;
 
         if (!_title) {
             if (saveBy === 'doi') {
-                toast.error("The DOI data is not fetched. Enter a valid DOI and click 'Lookup'");
+                toast.danger("The DOI data is not fetched. Enter a valid DOI and click 'Lookup'");
             } else {
-                toast.error('Please enter a paper title');
+                toast.danger('Please enter a paper title');
             }
             return;
         }
@@ -87,7 +78,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
             literals: {},
         };
 
-        for (const annotation of annotations.filter((a) => a.type !== SURVEY_TABLES_IRI && a.type !== CSVW_TABLE_IRI)) {
+        for (const annotation of textAnnotations) {
             const resourceId: string = uniqueId('#');
             createContributionData.resources![resourceId] = {
                 label: annotation.type,
@@ -127,7 +118,6 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                     published_month: paperPublicationMonth,
                     published_year: paperPublicationYear,
                     published_in: publishedIn || null,
-                    // url,
                 },
                 authors: paperAuthors,
                 observatories: observatoryId ? [observatoryId] : [],
@@ -143,7 +133,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
 
     const fetchDoi = async () => {
         if (!doi) {
-            toast.error('Please enter a DOI');
+            toast.danger('Please enter a DOI');
             return;
         }
 
@@ -153,20 +143,19 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
             .catch((e: Error) => {
                 switch (e.message) {
                     case 'This format is not supported or recognized':
-                        toast.error('This format is not supported or recognized');
+                        toast.danger('This format is not supported or recognized');
                         break;
                     case 'Server responded with status code 404':
-                        toast.error('No paper has been found');
-
+                        toast.danger('No paper has been found');
                         break;
                     default:
-                        toast.error('An error occurred, reload the page and try again');
+                        toast.danger('An error occurred, reload the page and try again');
                         break;
                 }
                 setDoiIsFetching(false);
                 return null;
             })
-            // @ts-expect-error
+            // @ts-expect-error legacy untyped Cite return
             .then((paper) => {
                 if (paper) {
                     const parseResult = parseCiteResult(paper);
@@ -191,90 +180,141 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} toggle={handleClose}>
-            <ModalHeader toggle={handleClose}>Save annotations</ModalHeader>
-            <ModalBody>
-                {!paperId &&
-                    annotations.filter((annotation) => annotation.type !== SURVEY_TABLES_IRI && annotation.type !== CSVW_TABLE_IRI).length > 0 && (
-                        <>
-                            <Label for="exampleUrl">Add paper by</Label>
-                            <br />
-                            <ButtonGroup size="sm">
-                                <Button color={saveBy === 'doi' ? 'primary' : 'light'} onClick={() => setSaveBy('doi')}>
-                                    Paper DOI
-                                </Button>
-                                <Button color={saveBy === 'title' ? 'primary' : 'light'} onClick={() => setSaveBy('title')}>
-                                    Paper title
-                                </Button>
-                            </ButtonGroup>
-                            <hr />
-                            {saveBy === 'doi' && (
-                                <>
-                                    <FormGroup>
-                                        <Label for="exampleUrl">Paper DOI</Label>
-                                        <InputGroup id="doiInputGroup">
-                                            <Input type="url" name="url" value={doi} onChange={(e) => setDoi(e.target.value)} />
-
+        <Modal.Backdrop
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                if (!open) handleClose();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Save annotations</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-4">
+                        {!paperId && textAnnotations.length > 0 && (
+                            <>
+                                <div>
+                                    <Label className="mb-1 inline-block">Add paper by</Label>
+                                    <br />
+                                    <ButtonGroup size="sm">
+                                        <Button variant={saveBy === 'doi' ? 'primary' : 'secondary'} onPress={() => setSaveBy('doi')}>
+                                            Paper DOI
+                                        </Button>
+                                        <Button variant={saveBy === 'title' ? 'primary' : 'secondary'} onPress={() => setSaveBy('title')}>
+                                            Paper title
+                                        </Button>
+                                    </ButtonGroup>
+                                </div>
+                                <hr className="border-border" />
+                                {saveBy === 'doi' && (
+                                    <div>
+                                        <Label className="mb-1 inline-block" htmlFor="doiInput">
+                                            Paper DOI
+                                        </Label>
+                                        <div className="flex h-9 items-stretch">
+                                            <TextField aria-label="Paper DOI" className="min-w-0 flex-1" value={doi} onChange={setDoi}>
+                                                <Input id="doiInput" type="url" className="!h-9 !rounded-e-none" />
+                                            </TextField>
                                             <Button
-                                                outline
-                                                color="primary"
-                                                style={{ minWidth: 130 }}
-                                                onClick={fetchDoi}
-                                                disabled={doiIsFetching}
+                                                size="sm"
+                                                variant="primary"
+                                                className="!h-9 !rounded-s-none -ms-px min-w-[130px]"
+                                                onPress={fetchDoi}
+                                                isDisabled={doiIsFetching}
                                                 data-test="lookupDoi"
                                             >
                                                 {!doiIsFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                                             </Button>
-                                        </InputGroup>
-                                    </FormGroup>
-                                    {paperData.paperTitle && (
-                                        <p>
-                                            <strong>Paper title:</strong> {paperData.paperTitle}
-                                        </p>
-                                    )}
-                                </>
-                            )}
-                            {saveBy === 'title' && (
-                                <FormGroup>
-                                    <Label for="exampleUrl">Paper title</Label>
-                                    <Input type="url" name="url" value={title} onChange={(e) => setTitle(e.target.value)} />
-                                </FormGroup>
-                            )}
-                        </>
-                    )}
-                {!paperId &&
-                    annotations.filter((annotation) => annotation.type !== SURVEY_TABLES_IRI && annotation.type !== CSVW_TABLE_IRI).length === 0 && (
-                        <Alert color="danger">You didn't make any text annotations yet, so there is nothing to save</Alert>
-                    )}
-                {annotations.filter((annotation) => annotation.type === SURVEY_TABLES_IRI || annotation.type === CSVW_TABLE_IRI).length > 0 && (
-                    <div>
-                        <p>You have made the following table annotations:</p>
-                        <Table bordered>
-                            <thead>
-                                <tr>
-                                    <th>Table</th>
-                                    <th>Page</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {annotations
-                                    .filter((annotation) => annotation.type === SURVEY_TABLES_IRI || annotation.type === CSVW_TABLE_IRI)
-                                    .map((annotation, index) => (
-                                        <tr key={`row${annotation?.id}`}>
-                                            <th scope="row">Table {index + 1}</th>
-                                            <td>{annotation.position.pageNumber}</td>
-                                            <td>
-                                                {annotation.view !== 'done' && 'Editing'}
-                                                {annotation.view === 'done' && 'Done'}
-                                            </td>
-                                            <td>
-                                                {annotation.view !== 'done' && (
-                                                    <>
+                                        </div>
+                                        {paperData.paperTitle && (
+                                            <p className="mt-2">
+                                                <strong>Paper title:</strong> {paperData.paperTitle}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                                {saveBy === 'title' && (
+                                    <TextField fullWidth value={title} onChange={setTitle}>
+                                        <Label htmlFor="titleInput">Paper title</Label>
+                                        <Input id="titleInput" type="text" />
+                                    </TextField>
+                                )}
+                            </>
+                        )}
+                        {!paperId && textAnnotations.length === 0 && (
+                            <Alert className="bg-danger/10 text-danger">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>You didn&apos;t make any text annotations yet, so there is nothing to save</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                        {tableAnnotations.length > 0 && (
+                            <div>
+                                <p>You have made the following table annotations:</p>
+                                <table className="w-full border border-border [&_th]:border [&_th]:border-border [&_td]:border [&_td]:border-border [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Table</th>
+                                            <th>Page</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tableAnnotations.map((annotation, index) => (
+                                            <tr key={`row${annotation?.id}`}>
+                                                <th scope="row">Table {index + 1}</th>
+                                                <td>{annotation.position.pageNumber}</td>
+                                                <td>
+                                                    {annotation.view !== 'done' && 'Editing'}
+                                                    {annotation.view === 'done' && 'Done'}
+                                                </td>
+                                                <td>
+                                                    {annotation.view !== 'done' && (
+                                                        <>
+                                                            <ActionButton
+                                                                title="Edit annotation table"
+                                                                icon={faPen}
+                                                                action={() =>
+                                                                    dispatch(
+                                                                        updateAnnotationIsExtractionModalOpen({
+                                                                            id: annotation.id,
+                                                                            isExtractionModalOpen: true,
+                                                                        }),
+                                                                    )
+                                                                }
+                                                            />
+                                                            <ActionButton
+                                                                title="Remove annotation"
+                                                                icon={faTrash}
+                                                                requireConfirmation
+                                                                confirmationMessage="Are you sure?"
+                                                                confirmationButtons={[
+                                                                    {
+                                                                        title: 'Delete',
+                                                                        color: 'danger',
+                                                                        icon: faCheck,
+                                                                        action: async () => {
+                                                                            await dispatch(deleteAnnotation(annotation.id));
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        title: 'Cancel',
+                                                                        color: 'secondary',
+                                                                        icon: faTimes,
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </>
+                                                    )}
+                                                    {annotation.view === 'done' && (
                                                         <ActionButton
-                                                            title="Edit annotation table"
-                                                            icon={faPen}
+                                                            title="View imported data"
+                                                            icon={faCheckCircle}
                                                             action={() =>
                                                                 dispatch(
                                                                     updateAnnotationIsExtractionModalOpen({
@@ -284,67 +324,36 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                                                                 )
                                                             }
                                                         />
-
-                                                        <ActionButton
-                                                            title="Remove annotation"
-                                                            icon={faTrash}
-                                                            requireConfirmation
-                                                            confirmationMessage="Are you sure?"
-                                                            confirmationButtons={[
-                                                                {
-                                                                    title: 'Delete',
-                                                                    color: 'danger',
-                                                                    icon: faCheck,
-                                                                    action: async () => {
-                                                                        await dispatch(deleteAnnotation(annotation.id));
-                                                                    },
-                                                                },
-                                                                {
-                                                                    title: 'Cancel',
-                                                                    color: 'secondary',
-                                                                    icon: faTimes,
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </>
-                                                )}
-                                                {annotation.view === 'done' && (
-                                                    <ActionButton
-                                                        title="View imported data"
-                                                        icon={faCheckCircle}
-                                                        action={() =>
-                                                            dispatch(
-                                                                updateAnnotationIsExtractionModalOpen({
-                                                                    id: annotation.id,
-                                                                    isExtractionModalOpen: true,
-                                                                }),
-                                                            )
-                                                        }
-                                                    />
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </Table>
-                    </div>
-                )}
-                {paperId && (
-                    <Alert color="success">
-                        Annotations successfully saved{' '}
-                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>click here to view the paper</Link>
-                    </Alert>
-                )}
-            </ModalBody>
-            {annotations.filter((annotation) => annotation.type !== SURVEY_TABLES_IRI && annotation.type !== CSVW_TABLE_IRI).length > 0 &&
-            !paperId ? (
-                <ModalFooter>
-                    <ButtonWithLoading color="primary" onClick={handleSave} isLoading={isLoading}>
-                        Save
-                    </ButtonWithLoading>
-                </ModalFooter>
-            ) : null}
-        </Modal>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {paperId && (
+                            <Alert className="bg-success/10 text-success">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>
+                                        Annotations successfully saved{' '}
+                                        <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId })}>click here to view the paper</Link>
+                                    </Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                    </Modal.Body>
+                    {textAnnotations.length > 0 && !paperId ? (
+                        <Modal.Footer>
+                            <ButtonWithLoading variant="primary" onPress={handleSave} isLoading={isLoading}>
+                                Save
+                            </ButtonWithLoading>
+                        </Modal.Footer>
+                    ) : null}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

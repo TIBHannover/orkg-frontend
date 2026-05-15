@@ -1,24 +1,15 @@
+import { Alert, Checkbox, Input, Label, Modal, TextArea, TextField, toast } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useReview from '@/components/Review/hooks/useReview';
-import Alert from '@/components/Ui/Alert/Alert';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
+import { reverse } from '@/lib/namedRoute';
 import { publishReview } from '@/services/backend/reviews';
 
 type PublishModalProps = {
@@ -40,7 +31,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
         event.preventDefault();
 
         if (shouldAssignDoi && (!description || description.trim() === '')) {
-            toast.error('Please enter a description');
+            toast.danger('Please enter a description');
             return;
         }
         setIsLoading(true);
@@ -66,77 +57,69 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
     };
 
     return (
-        <Modal isOpen toggle={toggle}>
-            <Form onSubmit={handlePublish}>
-                <ModalHeader toggle={toggle}>Publish review</ModalHeader>
-                <ModalBody>
-                    {!publishedId ? (
-                        <>
-                            <Alert color="info">
-                                Once an article is published, the current state is saved and will be persistent over time. The update message is used
-                                to identify why a version is published
-                            </Alert>
-                            <FormGroup>
-                                <Label for="update-message">Update message</Label>
-                                <Input
-                                    type="text"
-                                    id="update-message"
-                                    placeholder="Example: added introduction section"
-                                    value={updateMessage}
-                                    onChange={(e) => setUpdateMessage(e.target.value)}
-                                    maxLength={MAX_LENGTH_INPUT}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <div>
-                                    <Tooltip message="Assign a DOI to the published version of this review">
-                                        <Label check>
-                                            <Input
-                                                type="checkbox"
-                                                onChange={(e) => {
-                                                    setShouldAssignDoi(e.target.checked);
-                                                }}
-                                                checked={shouldAssignDoi}
-                                                id="switchAssignDoi"
-                                                inline
-                                            />{' '}
-                                            Assign DOI to article
-                                        </Label>
-                                    </Tooltip>
-                                </div>
-                            </FormGroup>
-                            {shouldAssignDoi && (
-                                <FormGroup>
-                                    <Label for="description">
-                                        <Tooltip message="Briefly describe the contents of the article">Description</Tooltip>
-                                    </Label>
-                                    <Input
-                                        type="textarea"
-                                        name="description"
-                                        value={description}
-                                        id="description"
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        maxLength={MAX_LENGTH_INPUT}
-                                    />
-                                </FormGroup>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <form onSubmit={handlePublish}>
+                        <Modal.Header>
+                            <Modal.CloseTrigger />
+                            <Modal.Heading>Publish review</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body className="p-6 space-y-4">
+                            {!publishedId ? (
+                                <>
+                                    <Alert status="accent">
+                                        <Alert.Indicator />
+                                        <Alert.Content>
+                                            <Alert.Description>
+                                                Once an article is published, the current state is saved and will be persistent over time. The update
+                                                message is used to identify why a version is published
+                                            </Alert.Description>
+                                        </Alert.Content>
+                                    </Alert>
+                                    <TextField value={updateMessage} onChange={setUpdateMessage} className="w-full" isRequired>
+                                        <Label>Update message</Label>
+                                        <Input id="update-message" placeholder="Example: added introduction section" maxLength={MAX_LENGTH_INPUT} />
+                                    </TextField>
+                                    <Checkbox isSelected={shouldAssignDoi} onChange={setShouldAssignDoi} id="switchAssignDoi">
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                        <Checkbox.Content>
+                                            <Tooltip message="Assign a DOI to the published version of this review">Assign DOI to article</Tooltip>
+                                        </Checkbox.Content>
+                                    </Checkbox>
+                                    {shouldAssignDoi && (
+                                        <TextField value={description} onChange={setDescription} className="w-full">
+                                            <Label>
+                                                <Tooltip message="Briefly describe the contents of the article">Description</Tooltip>
+                                            </Label>
+                                            <TextArea id="description" maxLength={MAX_LENGTH_INPUT} rows={4} />
+                                        </TextField>
+                                    )}
+                                </>
+                            ) : (
+                                <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
+                                    View the published article
+                                </Link>
                             )}
-                        </>
-                    ) : (
-                        <Link href={reverse(ROUTES.REVIEW, { id: publishedId })} onClick={toggle}>
-                            View the published article
-                        </Link>
-                    )}
-                </ModalBody>
-                {!publishedId && (
-                    <ModalFooter>
-                        <ButtonWithLoading type="submit" isLoading={isLoading} color="primary">
-                            Publish
-                        </ButtonWithLoading>
-                    </ModalFooter>
-                )}
-            </Form>
-        </Modal>
+                        </Modal.Body>
+                        {!publishedId && (
+                            <Modal.Footer>
+                                <ButtonWithLoading type="submit" isLoading={isLoading} variant="primary">
+                                    Publish
+                                </ButtonWithLoading>
+                            </Modal.Footer>
+                        )}
+                    </form>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
+import { Alert, Switch } from '@heroui/react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 
@@ -8,24 +9,18 @@ import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Foot
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import AddPropertyView from '@/components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
 import PropertyShape, { isPropertyShapeData } from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
 
-const PropertyShapesTab = () => {
+const PropertyShapesTab: FC = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const [instanceId] = useState(() => createInstanceId('property-shapes-tab'));
     const dispatch = useDispatch();
-    // @ts-expect-error
-    const propertyShapes: PropertyShapeType[] = useSelector((state) => state.templateEditor.properties);
+    const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
-    // @ts-expect-error
-    const isClosedTemplate = useSelector((state) => state.templateEditor.is_closed);
+    const isClosedTemplate = useSelector((state: RootStore) => state.templateEditor.is_closed);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
@@ -62,7 +57,7 @@ const PropertyShapesTab = () => {
     }, [instanceId, propertyShapes, reorderPropertyShapes]);
 
     const handleDeletePropertyShape = (index: number) => {
-        dispatch(updatePropertyShapes(propertyShapes.filter((item, j: number) => index !== j)));
+        dispatch(updatePropertyShapes(propertyShapes.filter((_item, j: number) => index !== j)));
     };
 
     const handlePropertiesSelect = async (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => {
@@ -83,7 +78,7 @@ const PropertyShapesTab = () => {
     };
 
     const handleCreate = ({ id }: { id: string }) => {
-        let templatePropertyShapes = [];
+        let templatePropertyShapes: PropertyShapeType[] = [];
 
         // when updating existing components the propertyIndex is set, otherwise a new component is added
         if (propertyIndex) {
@@ -100,14 +95,9 @@ const PropertyShapesTab = () => {
                 ...propertyShapes,
                 {
                     path: { id, label: propertyLabel },
-                    value: {},
-                    min_count: '0',
-                    max_count: null,
-                    order: null,
-                    max_inclusive: null,
-                    min_inclusive: null,
                     placeholder: '',
                     description: '',
+                    min_count: '0',
                 },
             ];
             setShowAddProperty(false);
@@ -117,28 +107,29 @@ const PropertyShapesTab = () => {
     };
 
     const handleClassOfPropertySelect = async (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => {
-        if (selected && action.action === 'create-option') {
+        let resolved: OptionType | null = selected;
+        if (resolved && action.action === 'create-option') {
             const newClass = await ConfirmClass({
-                label: selected.label,
+                label: resolved.label,
             });
             if (newClass) {
-                selected = { id: newClass.id, label: newClass.label } as OptionType;
+                resolved = { id: newClass.id, label: newClass.label } as OptionType;
             } else {
-                return null;
+                return;
             }
         }
         const templatePropertyShapes = propertyShapes.map((item, j: number) => {
             const _item = { ...item };
             if (j === index) {
-                if (selected && ['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(selected?.id)) {
-                    if ('class' in _item) delete _item.class;
-                    (_item as PropertyShapeLiteralType).datatype = selected;
-                } else if (selected) {
-                    (_item as PropertyShapeResourceType).class = selected;
-                    if ('datatype' in _item) delete _item.datatype;
+                if (resolved && ['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(resolved?.id)) {
+                    if ('class' in _item) delete (_item as PropertyShapeResourceType).class;
+                    (_item as PropertyShapeLiteralType).datatype = resolved;
+                } else if (resolved) {
+                    (_item as PropertyShapeResourceType).class = resolved;
+                    if ('datatype' in _item) delete (_item as PropertyShapeLiteralType).datatype;
                 } else {
-                    if ('datatype' in _item) delete _item.datatype;
-                    if ('class' in _item) delete _item.class;
+                    if ('datatype' in _item) delete (_item as PropertyShapeLiteralType).datatype;
+                    if ('class' in _item) delete (_item as PropertyShapeResourceType).class;
                 }
             }
             return _item;
@@ -148,7 +139,10 @@ const PropertyShapesTab = () => {
     };
 
     const handleSelectNewProperty = ({ id, label }: { id: string; label: string }) => {
-        const templatePropertyShapes = [...propertyShapes, { path: { id, label }, value: {}, min_count: '0', max_count: null, order: null }];
+        const templatePropertyShapes: PropertyShapeType[] = [
+            ...propertyShapes,
+            { path: { id, label }, placeholder: '', description: '', min_count: '0' },
+        ];
         dispatch(updatePropertyShapes(templatePropertyShapes));
         setShowAddProperty(false);
     };
@@ -159,12 +153,12 @@ const PropertyShapesTab = () => {
         setPropertyIndex(null);
     };
 
-    const handleSwitchIsClosedTemplate = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(updateIsClosed(e.target.checked));
+    const handleSwitchIsClosedTemplate = (isSelected: boolean) => {
+        dispatch(updateIsClosed(isSelected));
     };
 
     return (
-        <div className="p-4">
+        <div className="p-6">
             {isOpenConfirmModal && (
                 <ConfirmCreatePropertyModal
                     isOpen={isOpenConfirmModal}
@@ -173,12 +167,12 @@ const PropertyShapesTab = () => {
                     toggle={() => setIsOpenConfirmModal((v) => !v)}
                 />
             )}
-            <div className="pb-4">
+            <div className="pb-6">
                 {propertyShapes && propertyShapes.length > 0 && (
-                    <Row className="text-center">
-                        <Col md={6}>Property</Col>
-                        <Col md={5}>Type</Col>
-                    </Row>
+                    <div className="grid grid-cols-12 text-center text-sm text-muted mb-2">
+                        <div className="col-span-12 md:col-span-5 px-2">Property</div>
+                        <div className="col-span-12 md:col-span-7 px-2">Type</div>
+                    </div>
                 )}
                 {propertyShapes &&
                     propertyShapes.length > 0 &&
@@ -193,7 +187,14 @@ const PropertyShapesTab = () => {
                             handleClassOfPropertySelect={handleClassOfPropertySelect}
                         />
                     ))}
-                {propertyShapes && propertyShapes.length === 0 && <i>No properties specified.</i>}
+                {propertyShapes && propertyShapes.length === 0 && (
+                    <Alert status="default">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>No properties specified.</Alert.Title>
+                        </Alert.Content>
+                    </Alert>
+                )}
                 {isEditMode && (
                     <AddPropertyView
                         showAddProperty={showAddProperty}
@@ -203,20 +204,17 @@ const PropertyShapesTab = () => {
                         key={`p${showAddProperty}`}
                     />
                 )}
-                <FormGroup className="mt-3">
-                    <div>
-                        <Input
-                            onChange={handleSwitchIsClosedTemplate}
-                            checked={isClosedTemplate}
-                            id="switchIsClosedTemplate"
-                            type="switch"
-                            disabled={!isEditMode}
-                        />{' '}
-                        <Label for="switchIsClosedTemplate" className="mb-0">
-                            This template is strict (users cannot add additional properties themselves)
-                        </Label>
-                    </div>
-                </FormGroup>
+                <Switch
+                    className="mt-6 flex items-center gap-3"
+                    isSelected={isClosedTemplate}
+                    onChange={handleSwitchIsClosedTemplate}
+                    isDisabled={!isEditMode}
+                >
+                    <Switch.Control>
+                        <Switch.Thumb />
+                    </Switch.Control>
+                    <Switch.Content>This template is strict (users cannot add additional properties themselves)</Switch.Content>
+                </Switch>
             </div>
         </div>
     );

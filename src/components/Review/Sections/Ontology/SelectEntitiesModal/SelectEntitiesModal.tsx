@@ -1,10 +1,9 @@
-import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Modal, Spinner, toast } from '@heroui/react';
 import capitalize from 'capitalize';
 import { uniqBy } from 'lodash';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -12,25 +11,12 @@ import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import useReview from '@/components/Review/hooks/useReview';
 import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { comparisonUrl, getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';
 import { getStatements } from '@/services/backend/statements';
 import { getThing } from '@/services/backend/things';
 import { ReviewSection, ReviewSectionData } from '@/services/backend/types';
-
-const ListGroupItemStyled = styled(ListGroupItem)`
-    padding: 10px 10px 9px 5px !important;
-    display: flex !important;
-`;
 
 type SelectEntitiesModalProps = {
     toggle: () => void;
@@ -43,6 +29,10 @@ type Entity = {
     id: string;
     type: string;
 };
+
+const LIST_BASE =
+    'm-0 flex w-full flex-col list-none divide-y divide-default-200 overflow-hidden rounded-[var(--radius)] border border-default-200 bg-surface p-0';
+const ROW_BASE = 'flex items-center text-foreground';
 
 const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, type }) => {
     const [selectedEntities, setSelectedEntities] = useState<ReviewSectionData[] | Omit<ReviewSectionData, 'classes'>[]>([]);
@@ -118,11 +108,9 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
             setAutocompleteKey((prev) => prev + 1);
             return;
         }
-        // Mark as loading immediately
         setPendingEntityIds((prev) => [...prev, id]);
 
         try {
-            // Use specific API calls based on section type to maintain type consistency
             const [entity, entityStatements] = await Promise.all([
                 type === 'properties' ? getPredicate(id) : getThing(id),
                 getStatements({ subjectId: id }),
@@ -136,9 +124,8 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
             setSelectionMessage(null);
             setAutocompleteKey((prev) => prev + 1);
         } catch (e) {
-            toast.error('An error occurred, please reload the page and try again');
+            toast.danger('An error occurred, please reload the page and try again');
         } finally {
-            // Always remove loading state, even on error
             setPendingEntityIds((prev) => prev.filter((entityId) => entityId !== id));
         }
     };
@@ -191,110 +178,138 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
     };
 
     return (
-        <Modal isOpen toggle={toggle}>
-            <ModalHeader toggle={toggle}>Select {type}</ModalHeader>
-            <ModalBody>
-                <ListGroup>
-                    <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
-                    {selectedEntities.map((entity, index) => (
-                        <EntityListItem
-                            key={entity.id}
-                            entity={entity}
-                            index={index}
-                            instanceId={instanceId}
-                            onRemove={handleRemoveEntity}
-                            totalItems={selectedEntities.length}
-                        />
-                    ))}
-                    {pendingEntityIds.length > 0 && (
-                        <ListGroupItem className="py-2 text-muted text-center">
-                            <FontAwesomeIcon icon={faSpinner} spin className="me-2" />
-                            Adding selected item...
-                        </ListGroupItem>
-                    )}
-                    <ListGroupItemStyled className="py-2 d-flex justify-content-end">
-                        <Autocomplete
-                            key={autocompleteKey}
-                            placeholder={type === 'properties' ? 'Enter a property' : 'Enter a property or resource'}
-                            entityType={type === 'properties' ? ENTITIES.PREDICATE : ENTITIES.THING}
-                            onChange={(value, { action }) => {
-                                if (action === 'select-option' && value?.id) {
-                                    handleSelectEntity(value.id, {
-                                        label: value.label,
-                                    });
-                                }
-                            }}
-                            openMenuOnFocus
-                            size="sm"
-                            allowCreate={false}
-                            excludeClasses={type === 'entities' ? ['Literal', 'Class'] : undefined}
-                        />
-                    </ListGroupItemStyled>
-                </ListGroup>
-                {selectionMessage && (
-                    <Alert color="info" fade={false} className="mt-3 mb-0">
-                        {selectionMessage}
-                    </Alert>
-                )}
-                <h2 className="h5 mt-3">Suggestions</h2>
-
-                {suggestionEntities.map((comparison, index) => {
-                    const entities =
-                        comparison?.properties?.filter((entity) => selectedEntities.filter((item) => item.id === entity.id).length === 0) ?? [];
-                    return (
-                        <ListGroup className="mt-3" key={index}>
-                            <ListGroupItemStyled className="bg-light ps-2 py-2 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span className="font-weight-bold me-2">Comparison</span> {comparison.title}
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="lg" className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Select {type}</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-4">
+                        <ul className={LIST_BASE}>
+                            <li className={`${ROW_BASE} bg-default-100 px-2 py-2 font-bold`}>Selected {type}</li>
+                            {selectedEntities.map((entity, index) => (
+                                <EntityListItem
+                                    key={entity.id}
+                                    entity={entity}
+                                    index={index}
+                                    instanceId={instanceId}
+                                    onRemove={handleRemoveEntity}
+                                    totalItems={selectedEntities.length}
+                                />
+                            ))}
+                            {pendingEntityIds.length > 0 && (
+                                <li className={`${ROW_BASE} justify-center gap-2 px-2 py-2 text-muted`}>
+                                    <Spinner size="sm" />
+                                    Adding selected item...
+                                </li>
+                            )}
+                            <li className={`${ROW_BASE} px-2 py-2`}>
+                                <div className="w-full">
+                                    <Autocomplete
+                                        key={autocompleteKey}
+                                        placeholder={type === 'properties' ? 'Enter a property' : 'Enter a property or resource'}
+                                        entityType={type === 'properties' ? ENTITIES.PREDICATE : ENTITIES.THING}
+                                        onChange={(value, { action }) => {
+                                            if (action === 'select-option' && value?.id) {
+                                                handleSelectEntity(value.id, {
+                                                    label: value.label,
+                                                });
+                                            }
+                                        }}
+                                        openMenuOnFocus
+                                        size="sm"
+                                        allowCreate={false}
+                                        excludeClasses={type === 'entities' ? ['Literal', 'Class'] : undefined}
+                                    />
                                 </div>
-                                {entities.length > 0 && (
-                                    <Button color="secondary" size="sm" className="flex-shrink-0" onClick={() => handleAddAllEntities(entities)}>
-                                        Add all
-                                    </Button>
-                                )}
-                            </ListGroupItemStyled>
-                            {entities.map((suggestion) => (
-                                <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button
-                                        color="link"
-                                        className="p-0 me-2"
-                                        onClick={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
-                                    >
-                                        <FontAwesomeIcon icon={faPlusCircle} />
-                                    </Button>
-                                    {capitalize(suggestion.label)}
-                                </ListGroupItem>
-                            ))}
-                            {entities.length === 0 && <ListGroupItem className="py-2 text-muted text-center">No suggestions available</ListGroupItem>}
-                        </ListGroup>
-                    );
-                })}
+                            </li>
+                        </ul>
 
-                {suggestionProperties.length > 0 && (
-                    <ListGroup className="mt-3">
-                        {suggestionProperties
-                            .filter((property) => selectedEntities.filter((item) => item.id === property.id).length === 0)
-                            .map((suggestion) => (
-                                <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button
-                                        color="link"
-                                        className="p-0 me-2"
-                                        onClick={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
-                                    >
-                                        <FontAwesomeIcon icon={faPlusCircle} />
-                                    </Button>
-                                    {capitalize(suggestion.label)}
-                                </ListGroupItem>
-                            ))}
-                    </ListGroup>
-                )}
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={handleSave}>
-                    Save
-                </Button>
-            </ModalFooter>
-        </Modal>
+                        {selectionMessage && (
+                            <Alert status="accent">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Already selected</Alert.Title>
+                                    <Alert.Description>{selectionMessage}</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+
+                        <h2 className="text-lg font-semibold mt-3">Suggestions</h2>
+
+                        {suggestionEntities.map((comparison, index) => {
+                            const entities =
+                                comparison?.properties?.filter((entity) => selectedEntities.filter((item) => item.id === entity.id).length === 0) ??
+                                [];
+                            return (
+                                // eslint-disable-next-line react/no-array-index-key
+                                <ul key={index} className={LIST_BASE}>
+                                    <li className={`${ROW_BASE} justify-between bg-default-100 px-2 py-2`}>
+                                        <div>
+                                            <span className="font-bold mr-2">Comparison</span> {comparison.title}
+                                        </div>
+                                        {entities.length > 0 && (
+                                            <Button variant="secondary" size="sm" className="shrink-0" onPress={() => handleAddAllEntities(entities)}>
+                                                Add all
+                                            </Button>
+                                        )}
+                                    </li>
+                                    {entities.map((suggestion) => (
+                                        <li key={suggestion.id} className={`${ROW_BASE} gap-2 px-2 py-2`}>
+                                            <Button
+                                                isIconOnly
+                                                variant="ghost"
+                                                aria-label={`Add ${suggestion.label}`}
+                                                className="!h-auto !min-w-0 !bg-transparent !p-0 text-primary hover:!bg-transparent"
+                                                onPress={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
+                                            >
+                                                <FontAwesomeIcon icon={faPlusCircle} />
+                                            </Button>
+                                            {capitalize(suggestion.label)}
+                                        </li>
+                                    ))}
+                                    {entities.length === 0 && (
+                                        <li className={`${ROW_BASE} justify-center px-2 py-2 text-muted`}>No suggestions available</li>
+                                    )}
+                                </ul>
+                            );
+                        })}
+
+                        {suggestionProperties.length > 0 && (
+                            <ul className={LIST_BASE}>
+                                {suggestionProperties
+                                    .filter((property) => selectedEntities.filter((item) => item.id === property.id).length === 0)
+                                    .map((suggestion) => (
+                                        <li key={suggestion.id} className={`${ROW_BASE} gap-2 px-2 py-2`}>
+                                            <Button
+                                                isIconOnly
+                                                variant="ghost"
+                                                aria-label={`Add ${suggestion.label}`}
+                                                className="!h-auto !min-w-0 !bg-transparent !p-0 text-primary hover:!bg-transparent"
+                                                onPress={() => handleSelectEntity(suggestion.id, { label: suggestion.label })}
+                                            >
+                                                <FontAwesomeIcon icon={faPlusCircle} />
+                                            </Button>
+                                            {capitalize(suggestion.label)}
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onPress={handleSave}>
+                            Save
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

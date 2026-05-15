@@ -1,10 +1,10 @@
-import { reverse } from 'named-urls';
+import { toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { createResource, getResource } from '@/services/backend/resources';
 
 const CLASS_ID_TO_CLASSES = {
@@ -28,7 +28,7 @@ const useCreateContentType = (classId: string) => {
         } catch (error) {
             console.error(error);
             setIsLoading(false);
-            toast.error(`Error creating resource : ${(error as Error).message}`);
+            toast.danger(`Error creating resource : ${(error as Error).message}`);
         }
     };
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, toast } from '@heroui/react';
 import {
     AllCommunityModule,
     CellEditingStartedEvent,
@@ -12,7 +13,6 @@ import {
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import CustomCellEditor, { ROW_HEIGHT } from '@/app/grid-editor/components/CustomCellEditor/CustomCellEditor';
 import Footer from '@/app/grid-editor/components/Footer/Footer';
@@ -30,7 +30,6 @@ import useDeleteValue from '@/app/grid-editor/hooks/useDeleteValue';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import useGridEditor from '@/app/grid-editor/hooks/useGridEditor';
 import useScrollToNewProperty from '@/app/grid-editor/hooks/useScrollToNewProperty';
-import Alert from '@/components/Ui/Alert/Alert';
 import Container from '@/components/Ui/Structure/Container';
 
 // Register all Community features
@@ -58,7 +57,7 @@ const MainGrid = () => {
             const canAddValue = canAddValueFn(data.predicate.id, colDef.field);
             if (!canAddValue) {
                 params.api.stopEditing();
-                toast.error('This property reached the maximum number of values set by template');
+                toast.danger('This property reached the maximum number of values set by template');
                 return;
             }
             // Check if we should add a blank node
@@ -135,8 +134,8 @@ const MainGrid = () => {
                     lockPosition: 'left',
                     cellRenderer: PropertyCell,
                     suppressMovable: true,
-                    cellStyle: { backgroundColor: 'var(--tw-color-light)', lineHeight: '1.5' },
-                    headerStyle: { backgroundColor: 'var(--tw-color-light)', fontWeight: 700 },
+                    cellStyle: { backgroundColor: 'var(--surface-secondary)', color: 'var(--foreground)', lineHeight: '1.5' },
+                    headerStyle: { backgroundColor: 'var(--surface-secondary)', fontWeight: 700, color: 'var(--foreground)' },
                     editable: true,
                     cellEditor: PropertyCellEditor,
                     suppressKeyboardEvent,
@@ -154,7 +153,7 @@ const MainGrid = () => {
                     cellRendererParams: {
                         gridRef,
                     },
-                    headerStyle: { backgroundColor: 'var(--tw-color-dark)', color: 'white' },
+                    headerStyle: { backgroundColor: 'var(--color-secondary-darker)', color: 'white' },
                     cellRenderer: ValueCell,
                     cellEditor: CustomCellEditor,
                     suppressKeyboardEvent,
@@ -168,6 +167,18 @@ const MainGrid = () => {
         },
         [gridRef, entities],
     );
+
+    const gridTheme = themeQuartz.withParams({
+        backgroundColor: 'var(--surface)',
+        foregroundColor: 'var(--foreground)',
+        headerBackgroundColor: 'var(--surface-secondary)',
+        headerTextColor: 'var(--foreground)',
+        borderColor: 'var(--border)',
+        chromeBackgroundColor: 'var(--surface-secondary)',
+        rowHoverColor: 'var(--surface-tertiary)',
+        selectedRowBackgroundColor: 'color-mix(in oklch, var(--accent) 20%, transparent)',
+        oddRowBackgroundColor: 'var(--surface-secondary)',
+    });
 
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<ColDef<TData>[]>(prepareColDefs(entityIds ?? []));
@@ -185,13 +196,13 @@ const MainGrid = () => {
             {isLoadingStatements && <TableLoadingIndicator contributionAmount={entityIds?.length ?? 0} />}
             {!isLoadingStatements && entityIds && entityIds.length > 0 && (
                 // Data Grid with sticky header
-                <div className="tw:px-4">
+                <div className="px-4">
                     <div style={{ height: '600px' }} className="box rounded">
                         <AgGridReact
                             ref={gridRef}
                             rowData={rowData}
                             columnDefs={colDefs}
-                            theme={themeQuartz}
+                            theme={gridTheme}
                             rowHeight={ROW_HEIGHT}
                             getRowId={(params) => params.data.id}
                             onCellEditingStarted={onCellEditingStarted}
@@ -213,22 +224,28 @@ const MainGrid = () => {
                             }}
                         />
                     </div>
-                    <div className="tw:mt-2">
+                    <div className="mt-2">
                         <Footer gridRef={gridRef} />
                     </div>
                 </div>
             )}
             {!isLoadingStatements && (!entityIds || entityIds.length === 0) && (
-                <Container className="tw:mt-2">
-                    <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+                <Container className="mt-2">
+                    <Container className="rounded mb-4 p-4 bg-surface-tertiary">
                         This tool allows you to edit multiple entities at the same time in a convenient table format. Simply select entities and their
                         properties will appear as columns, making it easy to compare and modify data across entities. All changes are{' '}
                         <strong>saved automatically</strong> as you edit. This view is just a working tool - it doesn't create any new content types
                         (like comparisons or reviews), it's simply a two-dimensional table view of your existing entities for efficient batch editing.
                     </Container>
 
-                    <Alert color="info">
-                        Start adding entities by clicking the button <em>Select entities</em> on the top right
+                    <Alert status="accent" className="shadow">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>Get started</Alert.Title>
+                            <Alert.Description>
+                                Start adding entities by clicking the button <em>Select entities</em> on the top right.
+                            </Alert.Description>
+                        </Alert.Content>
                     </Alert>
                 </Container>
             )}

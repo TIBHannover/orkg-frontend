@@ -1,7 +1,7 @@
+import { Skeleton } from '@heroui/react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import EventsCard from '@/components/Organization/EventsCard';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
@@ -30,9 +30,9 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
 
     return (
         <>
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Conference events</h1>
+            <Container className="flex items-center mt-6 mb-6">
+                <div className="flex grow">
+                    <h1 className="text-xl shrink-0 mb-0">Conference events</h1>
                 </div>
             </Container>
             <Container className="p-0 box rounded">
@@ -45,17 +45,15 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                                 ))}
                             </>
                         ) : (
-                            <div className="text-center mt-4 mb-4">No conferences</div>
+                            <div className="text-center mt-6 mb-6">No conferences</div>
                         )}
                     </ListGroup>
                 )}
                 {isLoadingConferences && (
-                    <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-start">
-                            <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
-                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
-                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
-                            </ContentLoader>
+                    <div className="mt-6 mb-6 container mx-auto px-4 box rounded">
+                        <div className="text-left flex flex-col gap-2">
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-3/4 h-5 rounded" />
                         </div>
                     </div>
                 )}

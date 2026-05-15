@@ -1,6 +1,6 @@
 import { faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
 import { OptionType } from '@/components/Autocomplete/types';
@@ -17,43 +17,46 @@ type TreeSelectorButtonProps = {
     value: SingleValue<OptionType>;
     isDisabled?: boolean;
     onChange: (value: OptionType, actionMeta: ActionMeta<OptionType>) => void;
+    /**
+     * Optional render function for a custom trigger. When provided, it replaces the default trigger button
+     * and is responsible for opening the modal via the supplied `open` handler.
+     */
+    renderTrigger?: (args: { open: () => void; isDisabled?: boolean; hasValue: boolean }) => ReactNode;
 };
 
-const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, onChange }) => {
+const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, onChange, renderTrigger }) => {
     const [showTree, setShowTree] = useState(false);
     const [valueFromTree, setValueFromTree] = useState(value);
     const toggleTree = () => setShowTree((prev) => !prev);
+    const open = () => setShowTree(true);
 
     useEffect(() => {
         setValueFromTree(value);
     }, [value]);
 
-    if (!value) {
+    if (!value && !renderTrigger) {
         return null;
     }
 
     return (
         <>
-            <Button
-                disabled={!value || !value?.id}
-                onClick={() => {
-                    setShowTree(true);
-                }}
-                outline
-                className="px-2"
-            >
-                <Tooltip content="Show class tree">
-                    <span>
-                        <FontAwesomeIcon icon={faSitemap} size="sm" />
-                    </span>
-                </Tooltip>
-            </Button>
+            {renderTrigger ? (
+                renderTrigger({ open, isDisabled, hasValue: !!value?.id })
+            ) : (
+                <Button disabled={!value || !value?.id} onClick={open} outline className="px-2">
+                    <Tooltip content="Show class tree">
+                        <span>
+                            <FontAwesomeIcon icon={faSitemap} size="sm" />
+                        </span>
+                    </Tooltip>
+                </Button>
+            )}
             <Modal isOpen={showTree} toggle={toggleTree} size="lg">
                 <ModalHeader toggle={toggleTree}>Tree view</ModalHeader>
                 <ModalBody>
                     {!isDisabled && <Alert color="info">Selected class: {valueFromTree?.label}</Alert>}
                     <TreeView
-                        id={value?.id}
+                        id={value?.id ?? ''}
                         onSelect={
                             !isDisabled
                                 ? (_info: string[], { node }: { node: TreeNode }) => {
@@ -66,14 +69,14 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
                         reloadTree={false}
                     />
                 </ModalBody>
-                <ModalFooter className="d-flex">
-                    <Button className="float-start" color="light" onClick={toggleTree}>
+                <ModalFooter className="flex">
+                    <Button className="float-left" color="light" onClick={toggleTree}>
                         Cancel
                     </Button>
                     {!isDisabled && (
                         <Button
                             color="primary"
-                            className="float-end"
+                            className="float-right"
                             onClick={() => {
                                 if (valueFromTree) {
                                     onChange(valueFromTree, { option: valueFromTree, action: 'select-option' });

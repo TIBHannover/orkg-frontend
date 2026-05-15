@@ -34,12 +34,11 @@ const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue,
     }, [statement.object.id]);
 
     return (
-        <div className="ms-2 d-inline-block">
+        <div className="ml-2 inline-flex items-center gap-0.5 align-middle">
             {'classes' in statement.object &&
                 (statement.object.classes?.includes(CLASSES.QB_DATASET_CLASS) || statement.object.classes?.includes(CLASSES.CSVW_TABLE)) && (
                     <ActionButton title="Visualize data in tabular form" icon={faTable} action={() => showPreview()} />
                 )}
-
             {path.includes(statement.object.id) && !isEditMode && hasObjectStatements && (
                 <ActionButton title="Cycle" icon={faRotateLeft} action={scrollToElement} />
             )}
@@ -53,7 +52,7 @@ const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue,
                         action={scrollToElement}
                     />
                 )}
-            <div className=" d-inline-block actionButtons">
+            <div className="inline-flex items-center gap-0.5 actionButtons">
                 {canEdit && isEditMode && statement.object._class === ENTITIES.LITERAL && (
                     <ActionButton title="Edit value" testId={statement.object.id} icon={faPen} action={toggleEditValue} />
                 )}

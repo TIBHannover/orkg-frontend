@@ -1,7 +1,6 @@
 'use client';
 
 import capitalize from 'capitalize';
-import { reverse } from 'named-urls';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 
@@ -11,6 +10,7 @@ import Container from '@/components/Ui/Structure/Container';
 import Row from '@/components/Ui/Structure/Row';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 const CONTENT_TYPES_NAMES = [
@@ -75,7 +75,6 @@ const Stats = () => {
     return (
         <div>
             <TitleBar>General statistics</TitleBar>
-
             <Container>
                 <Row>
                     <ColoredStatsBox
@@ -182,9 +181,8 @@ const Stats = () => {
                 </Row>
             </Container>
             <Container>
-                <h1 className="h4 mt-4 mb-4">Technical values</h1>
+                <h1 className="text-2xl mt-6 mb-6">Technical values</h1>
             </Container>
-
             <Container>
                 <Row>
                     <ColoredStatsBox

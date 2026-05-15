@@ -10,9 +10,8 @@ import {
     faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Dropdown } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
@@ -29,14 +28,10 @@ import HistoryModal from '@/components/Review/HistoryModal/HistoryModal';
 import useReview from '@/components/Review/hooks/useReview';
 import { SubTitle } from '@/components/styled';
 import TitleBarOriginal from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type TitleBarProps = {
     isOpenHistoryModal: boolean;
@@ -106,9 +101,13 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                 buttonGroup={
                     <>
                         {isEditMode && (
-                            <div color="light-darker" className="btn btn-light-darker btn-sm px-2" style={{ cursor: 'default' }}>
+                            <div
+                                color="light-darker"
+                                className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-default text-dark hover:bg-background focus:ring-default py-1.5 text-xs px-2"
+                                style={{ cursor: 'default' }}
+                            >
                                 {isLoadingInline ? (
-                                    <FontAwesomeIcon icon={faSpinner} spin className="me-2 text-secondary" />
+                                    <FontAwesomeIcon icon={faSpinner} spin className="mr-2 text-secondary" />
                                 ) : (
                                     <Tooltip content="All changes are saved">
                                         <span>
@@ -124,14 +123,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                             </div>
                         )}
                         {!isEditMode && (
-                            <Button
-                                className="flex-shrink-0"
-                                color="secondary"
-                                size="sm"
-                                style={{ marginRight: 2 }}
-                                onClick={() => window?.print()}
-                                aria-label="Print article"
-                            >
+                            <Button className="button--orkg-secondary shrink-0" size="sm" onPress={() => window?.print()} aria-label="Print article">
                                 <FontAwesomeIcon icon={faDownload} />
                             </Button>
                         )}
@@ -139,72 +131,54 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                         {!isEditMode ? (
                             <>
                                 <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
+                                    className="button--orkg-secondary shrink-0"
                                     size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => setIsOpenHistoryModal(true)}
+                                    onPress={() => setIsOpenHistoryModal(true)}
                                     aria-label="View article history"
                                 >
                                     <FontAwesomeIcon icon={faHistory} /> History
                                 </Button>
 
-                                <RequireAuthentication
-                                    component={Button}
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={handleEdit}
-                                >
+                                <RequireAuthentication component={Button} className="button--orkg-secondary shrink-0" size="sm" onClick={handleEdit}>
                                     <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             </>
                         ) : (
                             <>
                                 <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
+                                    className="button--orkg-secondary shrink-0"
                                     size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => setIsOpenReferencesModal(true)}
+                                    onPress={() => setIsOpenReferencesModal(true)}
                                     aria-label="Manage article references"
                                 >
                                     <FontAwesomeIcon icon={faQuoteRight} /> References
                                 </Button>
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => setIsOpenPublishModal(true)}
-                                >
+                                <Button className="button--orkg-secondary shrink-0" size="sm" onPress={() => setIsOpenPublishModal(true)}>
                                     <FontAwesomeIcon icon={faUpload} /> Publish
                                 </Button>
-                                <Button
-                                    className="flex-shrink-0"
-                                    active
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => toggleIsEditMode()}
-                                >
+                                <Button className="button--orkg-secondary shrink-0" size="sm" onPress={() => toggleIsEditMode()}>
                                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             </>
                         )}
-                        <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
+                        <Dropdown>
+                            <Button size="sm" className="button--orkg-secondary px-4 rounded-r" isIconOnly aria-label="More options">
                                 <FontAwesomeIcon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu end="true">
-                                <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
-                                <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
-                                <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id: review?.id })}?noRedirect`}>
-                                    View resource
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
+                            </Button>
+                            <Dropdown.Popover placement="bottom end">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item textValue="Export citation" onAction={() => setShowExportCitation((v) => !v)}>
+                                        Export citation
+                                    </Dropdown.Item>
+                                    <Dropdown.Item textValue="View graph" onAction={() => setIsOpenGraphViewModal(true)}>
+                                        View graph
+                                    </Dropdown.Item>
+                                    <Dropdown.Item href={`${reverse(ROUTES.RESOURCE, { id: review?.id })}?noRedirect`} textValue="View resource">
+                                        View resource
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
                     </>
                 }
             >

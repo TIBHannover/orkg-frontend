@@ -1,7 +1,6 @@
-import { reverse } from 'named-urls';
+import { toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 
 import Confirm from '@/components/Confirmation/Confirmation';
@@ -9,6 +8,7 @@ import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { createResource, updateResource } from '@/services/backend/resources';
 import { createResourceStatement, deleteStatementById } from '@/services/backend/statements';
 import { thingsUrl } from '@/services/backend/things';
@@ -35,7 +35,7 @@ const useContributions = ({ paperId }: UseContributionsProps) => {
                 });
                 toast.success('Contribution name updated successfully');
             } catch {
-                toast.error('Something went wrong while updating contribution label.');
+                toast.danger('Something went wrong while updating contribution label.');
             }
         }
     };
@@ -47,7 +47,7 @@ const useContributions = ({ paperId }: UseContributionsProps) => {
             mutatePaper();
             toast.success('Contribution extraction method updated successfully.');
         } catch {
-            toast.error('Something went wrong while verifying contribution.');
+            toast.danger('Something went wrong while verifying contribution.');
         }
     };
 
@@ -69,7 +69,7 @@ const useContributions = ({ paperId }: UseContributionsProps) => {
             toast.success('Contribution created successfully');
         } catch {
             setIsAddingContribution(false);
-            toast.error('Something went wrong while creating a new contribution.');
+            toast.danger('Something went wrong while creating a new contribution.');
         }
     };
 
@@ -102,7 +102,7 @@ const useContributions = ({ paperId }: UseContributionsProps) => {
                 mutatePaper();
                 toast.success('Contribution deleted successfully');
             } catch {
-                toast.error('Something went wrong while deleting the contribution.');
+                toast.danger('Something went wrong while deleting the contribution.');
             }
         }
     };

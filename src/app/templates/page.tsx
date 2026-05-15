@@ -2,9 +2,8 @@
 
 import { faEllipsisV, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Button, Chip, Dropdown } from '@heroui/react';
+import { useEffect } from 'react';
 
 import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
@@ -12,14 +11,9 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Template } from '@/services/backend/types';
 
 const Templates = () => {
@@ -45,8 +39,6 @@ const Templates = () => {
 
     const renderListItem = (template: Template) => <TemplateCard template={template} key={template.id} />;
 
-    const [menuOpen, setMenuOpen] = useState(false);
-
     const infoContainerText = (
         <>
             Templates allows to specify the structure of content types, and they can be used when describing research contributions.{' '}
@@ -65,11 +57,11 @@ const Templates = () => {
         <>
             <TitleBar
                 titleAddition={
-                    <div className="text-muted mt-1">
+                    <div className="text-gray-500 mt-1">
                         {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
-                            <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
+                            <Button onPress={resetFilters} className="ml-1 pl-2 pr-2" size="sm" variant="ghost">
                                 Reset
                             </Button>
                         )}
@@ -77,49 +69,37 @@ const Templates = () => {
                 }
                 buttonGroup={
                     <>
-                        <RequireAuthentication
-                            component={Link}
-                            color="secondary"
-                            size="sm"
-                            className="btn btn-secondary btn-sm flex-shrink-0"
-                            href={reverse(ROUTES.ADD_TEMPLATE)}
-                        >
+                        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={reverse(ROUTES.ADD_TEMPLATE)}>
                             <FontAwesomeIcon icon={faPlus} /> Create template
                         </RequireAuthentication>
-                        <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                        <Dropdown>
+                            <Button size="sm" className="button--orkg-secondary" isIconOnly aria-label="More options">
                                 <FontAwesomeIcon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu end="true">
-                                <RequireAuthentication
-                                    component={DropdownItem}
-                                    tag={Link}
-                                    color="secondary"
-                                    size="sm"
-                                    end="true"
-                                    href={reverse(ROUTES.IMPORT_SHACL)}
-                                >
-                                    Import SHACL{' '}
-                                    <small className="ms-2">
-                                        <Badge color="info">Beta</Badge>
-                                    </small>
-                                </RequireAuthentication>
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                            </Button>
+                            <Dropdown.Popover placement="bottom end">
+                                <Dropdown.Menu>
+                                    <RequireAuthentication component={Dropdown.Item} href={reverse(ROUTES.IMPORT_SHACL)} textValue="Import SHACL">
+                                        Import SHACL
+                                        <Chip color="accent" size="sm" className="ml-2">
+                                            Beta
+                                        </Chip>
+                                    </RequireAuthentication>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
                     </>
                 }
             >
                 Templates
             </TitleBar>
-
-            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                {infoContainerText}
+            <div className="mx-auto mb-4 max-w-container px-3">
+                <div className="rounded bg-surface-tertiary p-4">{infoContainerText}</div>
+            </div>
+            <Container className="mb-4">
+                <div className="box rounded pt-6 pb-4 pl-6 pr-6 flow-root">
+                    <TemplatesFilters isLoading={isLoading} key={key} />
+                </div>
             </Container>
-
-            <Container className="box rounded pt-4 pb-3 ps-4 pe-4 clearfix mb-3">
-                <TemplatesFilters isLoading={isLoading} key={key} />
-            </Container>
-
             <ListPaginatedContent<Template>
                 renderListItem={renderListItem}
                 pageSize={pageSize}

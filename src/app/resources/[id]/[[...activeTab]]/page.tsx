@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import React from 'react';
 
 import ResourcePage from '@/app/resources/[id]/[[...activeTab]]/ResourcePage';
 import { getResource } from '@/services/backend/resources';

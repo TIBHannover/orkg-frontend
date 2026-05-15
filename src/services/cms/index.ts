@@ -168,9 +168,13 @@ export const getHomeAlerts = () =>
         .json()
         .catch(() => {});
 
-export const getNewsCards = ({ limit = 10, sort = 'created_at' }) => {
+export const getNewsCards = ({ limit = 10, sort = 'created_at', filters = {} }) => {
     const query = qs.stringify(
-        { pagination: { pageSize: limit }, sort },
+        {
+            pagination: { pageSize: limit },
+            sort,
+            filters,
+        },
         {
             encodeValuesOnly: true,
         },

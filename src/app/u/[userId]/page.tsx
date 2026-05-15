@@ -2,69 +2,36 @@
 
 import { faCakeCandles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Skeleton } from '@heroui/react';
 import capitalize from 'capitalize';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import NotFound from '@/app/not-found';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Gravatar from '@/components/Gravatar/Gravatar';
 import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import UserProfileTabsContainer from '@/components/UserProfile/UserProfileTabsContainer';
 import UserStatistics from '@/components/UserProfile/UserStatistics';
 import { MISC } from '@/constants/graphSettings';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 import { getOrganization, getOrganizationLogoUrl, organizationsUrl } from '@/services/backend/organizations';
-
-const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${(props) => props.theme.dark};
-`;
-
-const StyledOrganizationCard = styled.div`
-    border: 0;
-    text-align: center;
-    .logoContainer {
-        position: relative;
-        display: block;
-
-        &::before {
-            // for aspect ratio
-            content: '';
-            display: block;
-            padding-bottom: 100px;
-        }
-        img {
-            position: absolute;
-            max-width: 100%;
-            max-height: 100px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        &:active,
-        &:focus {
-            outline: 0;
-            border: none;
-            -moz-outline-style: none;
-        }
-    }
-`;
 
 const UserProfile = () => {
     const { userId } = useParams();
     const { user } = useAuthentication();
     const currentUserId = user?.id;
+    const [optimizedLogo, setOptimizedLogo] = useState(true);
 
     const {
         data: userData,
@@ -102,77 +69,103 @@ const UserProfile = () => {
 
     return (
         <>
-            <Container>
-                <Row className="justify-content-end">
-                    <div className="col-md-3 d-flex justify-content-end mb-3">
-                        <HeaderSearchButton placeholder="Search in this user content..." userId={userId} />
-                    </div>
-                </Row>
-
-                {!isLoadingUserData && (
-                    <div className="box rounded p-4 row">
-                        <div className="col-md-2 text-center d-flex justify-content-center mb-3 mb-md-0">
-                            <StyledGravatar className="rounded-circle" hashedEmail={userData?.gravatarId ?? 'example@example.com'} size={100} />
+            <TitleBar buttonGroup={<HeaderSearchButton placeholder="Search in this user content..." userId={userId} />} />
+            <Container className="mb-4">
+                <div className="box rounded p-6">
+                    {isLoadingUserData ? (
+                        <div className="flex flex-col md:flex-row gap-6">
+                            <div className="flex flex-col items-center gap-3 md:w-1/4 md:border-r md:border-divider md:pr-6">
+                                <Skeleton className="size-[120px] rounded-full" />
+                                <Skeleton className="w-32 h-5 rounded" />
+                                <Skeleton className="w-40 h-4 rounded" />
+                            </div>
+                            <div className="flex-1 flex flex-col gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <Skeleton className="flex-1 h-[72px] rounded-md" />
+                                    <Skeleton className="flex-1 h-[72px] rounded-md" />
+                                </div>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                                    {Array.from({ length: 7 }).map((_, i) => (
+                                        // eslint-disable-next-line react/no-array-index-key
+                                        <Skeleton key={i} className="h-16 rounded-md" />
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-10 row">
-                            <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
-                                <div>
-                                    <h2 className="h3 flex-grow-1 m-0">{userData?.displayName}</h2>
-                                    <div className="text-muted" title={userData?.joinedAt}>
-                                        <FontAwesomeIcon icon={faCakeCandles} /> Member for {dayjs().from(dayjs(userData?.joinedAt), true)}
+                    ) : (
+                        <div className="flex flex-col md:flex-row gap-6">
+                            <div className="flex flex-col items-center gap-3 md:w-1/4 md:border-r md:border-divider md:pr-6">
+                                <Gravatar
+                                    className="rounded-full border-3 border-primary/20 shadow-sm"
+                                    hashedEmail={userData?.gravatarId ?? 'example@example.com'}
+                                    size={120}
+                                />
+                                <div className="text-center">
+                                    <h2 className="text-xl font-semibold leading-tight">{userData?.displayName}</h2>
+                                    <div className="text-sm text-default-500 mt-1" title={userData?.joinedAt}>
+                                        <FontAwesomeIcon icon={faCakeCandles} className="mr-1" />
+                                        Member for {dayjs().from(dayjs(userData?.joinedAt), true)}
                                     </div>
                                 </div>
-                                {observatoryData && (
-                                    <div className="mt-3 align-items-end">
-                                        <b className="d-block">Member of the observatory</b>
-                                        <Link href={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.display_id })} className="text-center">
-                                            {observatoryData?.name}
-                                        </Link>
+                            </div>
+
+                            <div className="flex-1 flex flex-col gap-4">
+                                {(observatoryData || organizationData) && (
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        {observatoryData && (
+                                            <div className="flex-1 rounded-md bg-default-100 p-4">
+                                                <div className="text-xs uppercase tracking-wide text-default-500 font-medium mb-1">Observatory</div>
+                                                <Link
+                                                    href={reverse(ROUTES.OBSERVATORY, { id: observatoryData.display_id })}
+                                                    className="text-base font-medium text-primary hover:underline"
+                                                >
+                                                    {observatoryData.name}
+                                                </Link>
+                                            </div>
+                                        )}
+                                        {organizationData && (
+                                            <div className="flex items-center gap-3 flex-1 rounded-md bg-default-100 p-4">
+                                                <Link
+                                                    href={reverse(ROUTES.ORGANIZATION, {
+                                                        type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                        id: organizationData.display_id,
+                                                    })}
+                                                    className="relative size-16 shrink-0 bg-white rounded-md p-1"
+                                                >
+                                                    <Image
+                                                        className="object-contain p-1"
+                                                        src={getOrganizationLogoUrl(organizationData.id)}
+                                                        alt={`${organizationData.name} logo`}
+                                                        fill
+                                                        unoptimized={!optimizedLogo}
+                                                        onError={() => optimizedLogo && setOptimizedLogo(false)}
+                                                    />
+                                                </Link>
+                                                <div className="flex flex-col min-w-0">
+                                                    <div className="text-xs uppercase tracking-wide text-default-500 font-medium mb-1">
+                                                        Organization
+                                                    </div>
+                                                    <Link
+                                                        href={reverse(ROUTES.ORGANIZATION, {
+                                                            type: capitalize(ORGANIZATIONS_MISC.GENERAL),
+                                                            id: organizationData.display_id,
+                                                        })}
+                                                        className="text-base font-medium text-primary hover:underline truncate"
+                                                    >
+                                                        {organizationData.name}
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 <UserStatistics userId={userId} />
                             </div>
-                            <div className="col-md-4 mt-4 mt-md-0">
-                                {organizationData && (
-                                    <StyledOrganizationCard>
-                                        <Link
-                                            className="logoContainer"
-                                            href={reverse(ROUTES.ORGANIZATION, {
-                                                type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                id: organizationData.display_id,
-                                            })}
-                                        >
-                                            <img
-                                                className="mx-auto p-2"
-                                                src={getOrganizationLogoUrl(organizationData.id)}
-                                                alt={`${organizationData.name} logo`}
-                                            />
-                                        </Link>
-                                        <Link
-                                            href={reverse(ROUTES.ORGANIZATION, {
-                                                type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                id: organizationData.display_id,
-                                            })}
-                                        >
-                                            {organizationData?.name}
-                                        </Link>
-                                    </StyledOrganizationCard>
-                                )}
-                            </div>
                         </div>
-                    </div>
-                )}
-                {isLoadingUserData && (
-                    <div className="mt-4 ms-3">
-                        <ContentLoader speed={2} width={500} height={100} viewBox="0 0 500 100" style={{ width: '100% !important' }}>
-                            <rect x="160" y="8" rx="3" ry="3" width="400" height="20" />
-                            <rect x="160" y="50" rx="3" ry="3" width="300" height="20" />
-                            <circle cx="50" cy="50" r="50" />
-                        </ContentLoader>
-                    </div>
-                )}
+                    )}
+                </div>
             </Container>
-            <Container className="mt-4 p-0">
+            <Container className="mt-6">
                 <UserProfileTabsContainer currentUserId={currentUserId} id={userId} />
             </Container>
         </>

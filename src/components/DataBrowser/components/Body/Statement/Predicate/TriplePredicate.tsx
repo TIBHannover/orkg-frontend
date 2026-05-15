@@ -29,9 +29,9 @@ const TriplePredicate: FC<TriplePredicateProps> = ({ level, statement, deleteSta
     return (
         <>
             {level > 0 && <HierarchyIndicator path={range(level).map((c) => c.toString())} side="left" />}
-            <StatementWrapperStyled className="px-2 py-1 d-flex align-items-center flex-grow-1">
+            <StatementWrapperStyled className="px-2 py-1 flex items-center grow">
                 {isHidden && (
-                    <div className="me-2">
+                    <div className="mr-2">
                         <Tooltip content="This property is not displayed inside the comparison. To show this property, edit the comparison and click on 'Manage properties'">
                             <FontAwesomeIcon icon={faEyeSlash} />
                         </Tooltip>
@@ -39,7 +39,7 @@ const TriplePredicate: FC<TriplePredicateProps> = ({ level, statement, deleteSta
                 )}
                 <PredicateView predicate={statement.predicate} />{' '}
                 {canEdit && isEditMode && (
-                    <span className={`ms-1 ${!isFocused && 'actionButtons'}`}>
+                    <span className={`ml-1 ${!isFocused && 'actionButtons'}`}>
                         <ActionButton
                             open={isFocused}
                             setOpen={setIsFocused}

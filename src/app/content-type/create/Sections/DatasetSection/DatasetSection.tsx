@@ -22,7 +22,7 @@ const DatasetSection = ({ classId }: DatasetSectionProps) => {
             }
             helpfulResourcesSubtitle="Example datasets within the ORKG"
             helpfulResourcesExamples={
-                <ul className="tw:py-2 tw:m-0!">
+                <ul className="py-2 m-0">
                     <li>
                         <Link href="https://orkg.org/content-type/Dataset/R75321" target="_blank">
                             SemEval-2021 Task 11

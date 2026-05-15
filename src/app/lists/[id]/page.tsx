@@ -2,9 +2,8 @@
 
 import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Dropdown } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -24,14 +23,10 @@ import ViewList from '@/components/List/ViewList/ViewList';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import UncontrolledButtonDropdown from '@/components/Ui/Button/UncontrolledButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 const List = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
@@ -106,11 +101,11 @@ const List = () => {
                         {isEditMode && (
                             <div
                                 color="light-darker"
-                                className="btn btn-light-darker btn-sm px-2 py-0 align-items-center d-flex"
-                                style={{ cursor: 'default', marginRight: 2 }}
+                                className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-default text-dark hover:bg-background focus:ring-default text-xs px-2 py-0 flex"
+                                style={{ cursor: 'default' }}
                             >
                                 {isLoadingInline ? (
-                                    <FontAwesomeIcon icon={faSpinner} spin className="me-2 text-secondary" />
+                                    <FontAwesomeIcon icon={faSpinner} spin className="mr-2 text-secondary" />
                                 ) : (
                                     <Tooltip content="All changes are saved">
                                         <span>
@@ -129,62 +124,52 @@ const List = () => {
                         {!isEditMode ? (
                             <>
                                 <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
+                                    className="shrink-0 button--orkg-secondary"
                                     size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => setIsOpenHistoryModal(true)}
+                                    onPress={() => setIsOpenHistoryModal(true)}
                                     aria-label="View article history"
                                 >
                                     <FontAwesomeIcon icon={faHistory} /> History
                                 </Button>
 
-                                <RequireAuthentication
-                                    component={Button}
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={handleEdit}
-                                >
+                                <RequireAuthentication component={Button} className="shrink-0 button--orkg-secondary" size="sm" onPress={handleEdit}>
                                     <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             </>
                         ) : (
                             <>
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => setIsOpenPublishModal(true)}
-                                >
+                                <Button className="shrink-0 button--orkg-secondary" size="sm" onPress={() => setIsOpenPublishModal(true)}>
                                     <FontAwesomeIcon icon={faUpload} /> Publish
                                 </Button>
-                                <Button
-                                    className="flex-shrink-0"
-                                    active
-                                    color="secondary"
-                                    size="sm"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => toggleIsEditMode()}
-                                >
+                                <Button className="shrink-0 button--orkg-secondary" size="sm" onPress={() => toggleIsEditMode()}>
                                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             </>
                         )}
-                        <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
+                        <Dropdown>
+                            <Button size="sm" className="button--orkg-secondary px-4 rounded-r" isIconOnly aria-label="More options">
                                 <FontAwesomeIcon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu end="true">
-                                <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
-                                <DropdownItem onClick={() => setIsOpenGraphViewModal(true)}>View graph</DropdownItem>
-                                <DropdownItem tag={Link} href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
-                                    View resource
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
+                            </Button>
+                            <Dropdown.Popover placement="bottom end">
+                                <Dropdown.Menu
+                                    aria-label="Options"
+                                    onAction={(key) => {
+                                        if (key === 'export-bibtex') setIsOpenExportBibtexModal(true);
+                                        if (key === 'view-graph') setIsOpenGraphViewModal(true);
+                                    }}
+                                >
+                                    <Dropdown.Item id="export-bibtex" textValue="Export as BibTeX">
+                                        Export as BibTeX
+                                    </Dropdown.Item>
+                                    <Dropdown.Item id="view-graph" textValue="View graph">
+                                        View graph
+                                    </Dropdown.Item>
+                                    <Dropdown.Item href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`} textValue="View resource">
+                                        View resource
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
                     </>
                 }
             >

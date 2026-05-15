@@ -22,7 +22,7 @@ export const validateCellMapping = (mapper, cellValue) => {
         if (!error) {
             return { error: { message: 'Value must be a valid data (YYYY-MM-DD) ' }, value: cellValue };
         }
-        const validationSchema = z.string().date();
+        const validationSchema = z.iso.date();
         return validationSchema.safeParse(cellValue);
     }
 

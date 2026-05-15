@@ -1,27 +1,11 @@
 import { Position } from '@xyflow/react';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Handle from '@/components/Templates/ShaclFlow/Node/Handle';
 import DATA_TYPES from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import { PropertyShape } from '@/services/backend/types';
-
-const PropertyShapeStyled = styled.div`
-    background: ${(props) => props.theme.light};
-    color: ${(props) => props.theme.secondaryDarker};
-    border-bottom: 1px solid #000;
-`;
-
-const Circle = styled.div`
-    width: 22px;
-    height: 22px;
-    text-align: center;
-    color: #fff;
-    border-radius: 100%;
-    background: ${(props) => props.theme.secondaryDarker};
-`;
 
 type PropertyShapeProps = {
     data: PropertyShape;
@@ -51,39 +35,39 @@ const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
     }
 
     return (
-        <PropertyShapeStyled className="py-1 px-2 position-relative">
+        <div className="bg-background text-secondary-darker border-b border-border last:border-b-0 py-1 px-2 relative">
             {initialType === 'C' && <Handle id={data.path.id} type="source" position={Position.Right} />}
-
-            <div className="d-flex">
-                <div className="flex-grow-1 me-2 d-flex">
+            <div className="flex">
+                <div className="grow mr-2 flex">
                     <DescriptionTooltip
                         id={data.path.id}
                         _class={ENTITIES.PREDICATE}
                         showURL
                         extraContent={
                             data.path.label?.length > 40 ? (
-                                <tr>
-                                    <td>Label</td>
-                                    <td>{data.path.label}</td>
-                                </tr>
-                            ) : (
-                                ''
-                            )
+                                <>
+                                    <hr className="my-1.5 border-border" />
+                                    <div className="flex items-baseline justify-between gap-2">
+                                        <span className="text-muted shrink-0">Label</span>
+                                        <span>{data.path.label}</span>
+                                    </div>
+                                </>
+                            ) : undefined
                         }
                     >
-                        <span className="text-truncate d-inline-block me-1" style={{ maxWidth: 300 }}>
-                            {data.path.label}
-                        </span>
+                        <span className="truncate inline-block mr-1 max-w-[300px]">{data.path.label}</span>
                     </DescriptionTooltip>{' '}
                     [{data.min_count}..{data.max_count ?? '*'}]
                 </div>
                 {initialType && range && (
                     <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showURL>
-                        <Circle>{initialType}</Circle>
+                        <span className="w-[22px] h-[22px] rounded-full bg-secondary-darker text-white text-center text-xs leading-[22px] inline-block shrink-0">
+                            {initialType}
+                        </span>
                     </DescriptionTooltip>
                 )}
             </div>
-        </PropertyShapeStyled>
+        </div>
     );
 };
 

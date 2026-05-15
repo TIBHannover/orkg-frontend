@@ -1,8 +1,8 @@
-import { reverse } from 'named-urls';
 import { notFound, redirect } from 'next/navigation';
 
 import NotFound from '@/app/not-found';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getAboutPages } from '@/services/cms';
 import { CmsResponsePaginated, HelpArticle } from '@/services/cms/types';
 import { slugify } from '@/utilsTyped';

@@ -3,13 +3,12 @@ import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indi
 import { faSquareMinus, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { Button, Checkbox } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FC, useEffect, useId, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
 import { createDraggableItem, createEdgeChangeHandler, DragData } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
 
 type PathListItemProps = {
     index: number;
@@ -37,7 +36,6 @@ const PathListItem: FC<PathListItemProps> = ({
     const [isDragging, setIsDragging] = useState(false);
     const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
     const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
-    const id = useId();
     const ref = useRef<HTMLLIElement>(null);
 
     const hasChildren = currentPath.children && currentPath.children.length > 0;
@@ -45,7 +43,7 @@ const PathListItem: FC<PathListItemProps> = ({
 
     useEffect(() => {
         const element = ref.current;
-        if (!element) return;
+        if (!element) return undefined;
 
         const edgeChangeHandler = createEdgeChangeHandler({
             targetElement: element,
@@ -54,7 +52,7 @@ const PathListItem: FC<PathListItemProps> = ({
             setClosestEdge,
         });
 
-        createDraggableItem({
+        return createDraggableItem({
             element,
             item: currentPath,
             index,
@@ -72,25 +70,30 @@ const PathListItem: FC<PathListItemProps> = ({
     const fullPath = [...parentPathIds, currentPath.id];
 
     return (
-        <li ref={ref} style={{ opacity: isDragging ? 0.4 : 1 }} className="tw:relative">
-            <div className="d-flex me-2">
+        <li ref={ref} style={{ opacity: isDragging ? 0.4 : 1 }} className="relative">
+            <div className="flex mr-2 items-center">
                 <Button
-                    color="link"
-                    onClick={() => handleToggleExpandPath(fullPath)}
-                    className="p-0 text-secondary"
+                    isIconOnly
+                    variant="ghost"
+                    size="sm"
+                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                    onPress={() => handleToggleExpandPath(fullPath)}
+                    className="min-w-0 h-auto w-auto p-0 bg-transparent hover:bg-transparent text-secondary"
                     style={{ visibility: hasChildren ? 'visible' : 'hidden' }}
                 >
                     <Icon icon={isExpanded ? faSquareMinus : faSquarePlus} size="lg" />
                 </Button>
 
-                <div className="tw:border tw:border-[#e4e4e4] tw:rounded tw:py-2 tw:px-3 tw:my-[2px] tw:ml-3 tw:flex-grow">
-                    <span className="tw:cursor-move tw:me-4 tw:ms-1 tw:py-3 tw:opacity-50" ref={setDragHandleElement}>
+                <div className="border border-[#e4e4e4] rounded py-2 px-3 my-[2px] ml-3 grow flex items-center gap-3">
+                    <span className="cursor-move opacity-50" ref={setDragHandleElement}>
                         <Icon className="text-secondary" icon={faGripVertical} size="lg" />
                     </span>
-                    <Input type="checkbox" checked={!!isSelected} onChange={() => handleSelectPath(fullPath)} className="me-3" id={id} />
-                    <label htmlFor={id} className={`${!isSelected ? 'text-muted' : ''}`}>
-                        {currentPath.label}
-                    </label>
+                    <Checkbox isSelected={!!isSelected} onChange={() => handleSelectPath(fullPath)}>
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <Checkbox.Content className={!isSelected ? 'text-gray-500' : ''}>{currentPath.label}</Checkbox.Content>
+                    </Checkbox>
                 </div>
             </div>
             <AnimatePresence>

@@ -8,19 +8,20 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { plugins } from '@citation-js/core';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { RouterProvider } from '@heroui/react';
 import { MathJaxContext } from 'better-react-mathjax';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useRouter } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
 import { Suspense } from 'react';
-import { CookiesProvider } from 'react-cookie';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
 
-import theme from '@/assets/scss/ThemeVariables';
+import theme from '@/assets/css/ThemeVariables';
 import DefaultLayout from '@/components/Layout/DefaultLayout';
 import MatomoAnalytics from '@/components/Matomo/MatomoAnalytics';
 import ResetStoreOnNavigate from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
@@ -56,28 +57,31 @@ const { store } = setupStore();
 const configCitationJs = plugins.config.get('@bibtex');
 configCitationJs.format.useIdAsLabel = true;
 
-const Providers = ({ children }: { children: React.ReactNode }) => (
+const Providers = ({ children }: { children: React.ReactNode }) => {
     // The session provider would make sure that the session is kept alive by polling the nextjs server every 4 minutes
-    <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
-        <StyledComponentsRegistry>
-            <CookiesProvider>
-                <Provider store={store}>
-                    <ResetStoreOnNavigate>
-                        <ThemeProvider theme={theme}>
-                            <SWRConfig value={SWR_CONFIG}>
-                                <MathJaxContext config={MATH_JAX_CONFIG}>
-                                    <DefaultLayout>{children}</DefaultLayout>
-                                </MathJaxContext>
-                                <Suspense fallback={null}>
-                                    <MatomoAnalytics />
-                                </Suspense>
-                            </SWRConfig>
-                        </ThemeProvider>
-                    </ResetStoreOnNavigate>
-                </Provider>
-            </CookiesProvider>
-        </StyledComponentsRegistry>
-    </SessionProvider>
-);
+    const router = useRouter();
+    return (
+        <RouterProvider navigate={router.push}>
+            <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
+                <StyledComponentsRegistry>
+                    <Provider store={store}>
+                        <ResetStoreOnNavigate>
+                            <ThemeProvider theme={theme}>
+                                <SWRConfig value={SWR_CONFIG}>
+                                    <MathJaxContext config={MATH_JAX_CONFIG}>
+                                        <DefaultLayout>{children}</DefaultLayout>
+                                    </MathJaxContext>
+                                    <Suspense fallback={null}>
+                                        <MatomoAnalytics />
+                                    </Suspense>
+                                </SWRConfig>
+                            </ThemeProvider>
+                        </ResetStoreOnNavigate>
+                    </Provider>
+                </StyledComponentsRegistry>
+            </SessionProvider>
+        </RouterProvider>
+    );
+};
 
 export default Providers;

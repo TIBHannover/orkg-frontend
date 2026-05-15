@@ -1,8 +1,17 @@
-import React, { FC } from 'react';
-import { ButtonGroup as ButtonGroupReactstrap, ButtonGroupProps } from 'reactstrap';
+import { ButtonGroup as HeroUIButtonGroup, type ButtonGroupProps as HeroUIButtonGroupProps } from '@heroui/react';
+import { type CSSProperties, forwardRef } from 'react';
 
-const ButtonGroup: FC<ButtonGroupProps> = ({ children, ...rest }) => {
-    return <ButtonGroupReactstrap {...rest}>{children}</ButtonGroupReactstrap>;
+export type ButtonGroupProps = Omit<HeroUIButtonGroupProps, 'orientation'> & {
+    vertical?: boolean;
+    orientation?: HeroUIButtonGroupProps['orientation'];
+    tabIndex?: number;
+    style?: CSSProperties;
 };
+
+const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(({ vertical, orientation, ...rest }, ref) => {
+    return <HeroUIButtonGroup ref={ref} orientation={orientation ?? (vertical ? 'vertical' : undefined)} {...rest} />;
+});
+
+ButtonGroup.displayName = 'ButtonGroup';
 
 export default ButtonGroup;

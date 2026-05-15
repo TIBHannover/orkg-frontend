@@ -1,27 +1,11 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal, Tabs, TextArea, toast } from '@heroui/react';
 import { zipObject } from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import styled from 'styled-components';
 
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Nav from '@/components/Ui/Nav/Nav';
-import NavItem from '@/components/Ui/Nav/NavItem';
-import NavLink from '@/components/Ui/Nav/NavLink';
-import TabContent from '@/components/Ui/Tab/TabContent';
-import TabPane from '@/components/Ui/Tab/TabPane';
 import { getCitationByDOI } from '@/services/datacite/index';
-
-const Textarea = styled(Input)`
-    font-family: 'Courier New';
-    font-size: 85% !important;
-`;
 
 const CITATION_STYLES = [
     { styleID: 'apa', styleTabID: 'APA', styleLabel: 'APA', header: null },
@@ -43,17 +27,19 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('Citation copied to clipboard');
         }
     }, [state.value]);
 
-    const getCitation = () => {
+    useEffect(() => {
+        let cancelled = false;
         Promise.all(
             CITATION_STYLES.map((s) =>
                 getCitationByDOI(DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(() => 'Failed to load citation'),
             ),
         ).then((c) => {
+            if (cancelled) return;
             setCitations(
                 zipObject(
                     CITATION_STYLES.map((s) => s.styleID),
@@ -61,53 +47,54 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
                 ),
             );
         });
-    };
+        return () => {
+            cancelled = true;
+        };
+    }, [DOI]);
 
     return (
-        <Modal
+        <Modal.Backdrop
             isOpen
-            toggle={toggle}
-            size="lg"
-            onOpened={() => {
-                getCitation();
+            onOpenChange={(open) => {
+                if (!open) toggle();
             }}
         >
-            <ModalHeader toggle={toggle}>Export citation</ModalHeader>
-            <ModalBody>
-                <Nav tabs className="mb-4">
-                    {CITATION_STYLES.map((style) => (
-                        <NavItem key={`navItem${style.styleTabID}`}>
-                            <NavLink href="#" active={selectedTab === style.styleTabID} onClick={() => setSelectedTab(style.styleTabID)}>
-                                {style.styleLabel}
-                            </NavLink>
-                        </NavItem>
-                    ))}
-                </Nav>
-                <TabContent activeTab={selectedTab}>
-                    {CITATION_STYLES.map((style) => (
-                        <TabPane key={`tabPane${style.styleTabID}`} tabId={style.styleTabID}>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={citations[style.styleID] ? citations[style.styleID].replace(/<[^>]+>/g, '') : 'Loading...'}
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <Button
-                                color="primary"
-                                className="pl-3 pr-3 float-right"
-                                size="sm"
-                                onClick={() => copyToClipboard(citations[style.styleID])}
-                            >
-                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                            </Button>
-                        </TabPane>
-                    ))}
-                </TabContent>
-            </ModalBody>
-        </Modal>
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>Export citation</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(String(key))} className="w-full p-1">
+                            <Tabs.ListContainer className="mb-6">
+                                <Tabs.List aria-label="Citation format">
+                                    {CITATION_STYLES.map((style) => (
+                                        <Tabs.Tab key={style.styleTabID} id={style.styleTabID}>
+                                            {style.styleLabel}
+                                        </Tabs.Tab>
+                                    ))}
+                                </Tabs.List>
+                            </Tabs.ListContainer>
+                            {CITATION_STYLES.map((style) => {
+                                const value = citations[style.styleID];
+                                const displayValue = value ? value.replace(/<[^>]+>/g, '') : 'Loading...';
+                                return (
+                                    <Tabs.Panel key={style.styleTabID} id={style.styleTabID}>
+                                        <TextArea fullWidth readOnly value={displayValue} rows={10} className="font-mono text-sm" />
+                                        <div className="mt-3 flex justify-end">
+                                            <Button size="sm" variant="primary" isDisabled={!value} onPress={() => value && copyToClipboard(value)}>
+                                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                                            </Button>
+                                        </div>
+                                    </Tabs.Panel>
+                                );
+                            })}
+                        </Tabs>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

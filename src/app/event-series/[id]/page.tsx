@@ -14,9 +14,6 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Col from '@/components/Ui/Structure/Col';
-import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
@@ -68,7 +65,11 @@ const ConferenceDetails = () => {
 
     return (
         <>
-            {isLoadingConference && <Container className="box rounded py-4 px-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoadingConference && (
+                <div className="max-w-container mx-auto px-3 mt-12">
+                    <div className="box rounded py-6 px-12 flow-root">Loading ...</div>
+                </div>
+            )}
             {!isLoadingConference &&
                 errorConference &&
                 (errorConference.statusCode === 404 ? <NotFound /> : <InternalServerError error={errorConference} />)}
@@ -77,16 +78,12 @@ const ConferenceDetails = () => {
                     <TitleBar titleAddition={<SubTitle>Conference event</SubTitle>} wrap={false}>
                         {conference.name}
                     </TitleBar>
-                    <Container className="p-0 mb-3">
-                        <Row className="mt-3">
-                            <Col md="6" className="d-flex">
-                                <ResearchProblemBox id={conference.id} />
-                            </Col>
-                            <Col md="6" className="d-flex">
-                                <ConferenceMetadataBox url={conference.homepage} metadata={conference?.metadata} isLoading={isLoading} />
-                            </Col>
-                        </Row>
-                    </Container>
+                    <div className="max-w-container mx-auto px-3 mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 items-stretch">
+                            <ResearchProblemBox id={conference.id} />
+                            <ConferenceMetadataBox url={conference.homepage} metadata={conference?.metadata} isLoading={isLoading} />
+                        </div>
+                    </div>
                     <TitleBar
                         titleSize="h5"
                         buttonGroup={<VisibilityFilter />}

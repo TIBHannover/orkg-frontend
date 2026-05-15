@@ -1,6 +1,6 @@
 'use client';
 
-import { reverse } from 'named-urls';
+import { Alert } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -19,12 +19,12 @@ import getPreventEditCase, { PreventEditCase } from '@/components/Resource/hooks
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import TabsContainer from '@/components/Resource/Tabs/TabsContainer';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Alert from '@/components/Ui/Alert/Alert';
 import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getResource, getSnapshots, resourcesUrl } from '@/services/backend/resources';
 
 type ResourcePageProps = {
@@ -69,7 +69,11 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && (
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
+                </Container>
+            )}
             {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && resource && !error && (
                 <>
@@ -90,48 +94,55 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                     </TitleBar>
 
                     {snapshots?.content?.[0] && (
-                        <Alert color="warning" className="mt-1 container d-flex box-shadow" fade={false}>
-                            <div className="flex-grow-1">
-                                A published version of this {contentType.toLowerCase()} is available.{' '}
-                                <Link
-                                    href={
-                                        contentType === 'Resource'
-                                            ? reverse(ROUTES.RESOURCE_SNAPSHOT, {
-                                                  id: snapshots?.content?.[0].resource_id,
-                                                  snapshotId: snapshots?.content?.[0].id,
-                                              })
-                                            : `${reverse(ROUTES.CONTENT_TYPE_SNAPSHOT, {
-                                                  type: contentType,
-                                                  id,
-                                                  snapshotId: snapshots?.content?.[0].id,
-                                              })}`
-                                    }
-                                >
-                                    View the latest published version
-                                </Link>{' '}
-                                or{' '}
-                                <Button color="link" className="p-0 border-0 align-baseline" onClick={() => setIsOpenPublishHistoryModal(true)}>
-                                    view publish history
+                        <Container className="mt-1 mb-3">
+                            <Alert status="warning" className="shadow-sm">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Published version available</Alert.Title>
+                                    <Alert.Description>
+                                        A published version of this {contentType.toLowerCase()} is available. You are currently viewing the live data.{' '}
+                                        <Link
+                                            href={
+                                                contentType === 'Resource'
+                                                    ? reverse(ROUTES.RESOURCE_SNAPSHOT, {
+                                                          id: snapshots?.content?.[0].resource_id,
+                                                          snapshotId: snapshots?.content?.[0].id,
+                                                      })
+                                                    : `${reverse(ROUTES.CONTENT_TYPE_SNAPSHOT, {
+                                                          type: contentType,
+                                                          id,
+                                                          snapshotId: snapshots?.content?.[0].id,
+                                                      })}`
+                                            }
+                                        >
+                                            View the latest published version
+                                        </Link>
+                                        .
+                                    </Alert.Description>
+                                </Alert.Content>
+                                <Button color="secondary" size="sm" className="shrink-0" onClick={() => setIsOpenPublishHistoryModal(true)}>
+                                    Publish history
                                 </Button>
-                                .
-                            </div>
-                        </Alert>
+                            </Alert>
+                        </Container>
                     )}
 
                     {isEditMode && preventEditCase?.warningOnEdit && preventEditCase.warningOnEdit}
                     <EditModeHeader isVisible={isEditMode} />
-                    <Container className={`box clearfix pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <Label id={id} resource={resource} isShared={isShared} mutate={mutate} isDeletionAllowed={isDeletionAllowed} />
+                    <Container>
+                        <div className={`box flow-root pt-6 pb-6 pl-6 pr-6 ${isEditMode ? 'rounded-b' : 'rounded'}`}>
+                            <Label id={id} resource={resource} isShared={isShared} mutate={mutate} isDeletionAllowed={isDeletionAllowed} />
 
-                        <ItemMetadata
-                            item={resource}
-                            showCreatedAt
-                            showCreatedBy
-                            showProvenance
-                            showExtractionMethod
-                            editMode={isEditMode}
-                            updateCallBack={() => mutate()}
-                        />
+                            <ItemMetadata
+                                item={resource}
+                                showCreatedAt
+                                showCreatedBy
+                                showProvenance
+                                showExtractionMethod
+                                editMode={isEditMode}
+                                updateCallBack={() => mutate()}
+                            />
+                        </div>
                     </Container>
                     <TabsContainer resource={resource} id={id} editMode={isEditMode} contentType={contentType} />
 

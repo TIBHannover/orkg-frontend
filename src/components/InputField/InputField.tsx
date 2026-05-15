@@ -1,3 +1,4 @@
+import { cn, Input, ListBox, Select, TextField } from '@heroui/react';
 import { FC, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 
@@ -7,7 +8,6 @@ import DurationInput from '@/components/InputField/DurationInput/DurationInput';
 import GregorianInput from '@/components/InputField/GregorianInput/GregorianInput';
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
-import Input from '@/components/Ui/Input/Input';
 import { getConfigByType, InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import { EntityType, Node } from '@/services/backend/types';
@@ -57,23 +57,35 @@ const InputField: FC<InputFieldProps> = ({
                 name="literalValue"
                 value={inputValue}
                 onChange={(e) => setInputValue(e ? e.target.value : '')}
-                className="form-control form-control-sm flex-grow d-flex"
+                className="flex-1 min-w-0 min-h-9 rounded-[var(--radius)] border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:border-accent"
                 autoFocus={autoFocus}
                 minRows={1}
             />
         ),
         boolean: (
-            <Input
-                onChange={(e) => setInputValue(e ? e.target.value : 'false')}
-                value={inputValue}
-                type="select"
-                name="literalValue"
-                bsSize="sm"
-                className="flex-grow-1 d-flex"
+            <Select
+                aria-label="Boolean value"
+                value={inputValue || 'false'}
+                onChange={(key) => setInputValue(key ? String(key) : 'false')}
+                className="flex-1 min-w-0 relative focus-within:z-10"
             >
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </Input>
+                <Select.Trigger className="h-9 w-full">
+                    <Select.Value />
+                    <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                    <ListBox>
+                        <ListBox.Item id="true" textValue="True">
+                            True
+                            <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                        <ListBox.Item id="false" textValue="False">
+                            False
+                            <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                    </ListBox>
+                </Select.Popover>
+            </Select>
         ),
         duration: (
             <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
@@ -96,59 +108,69 @@ const InputField: FC<InputFieldProps> = ({
         gDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gDay" />,
         gMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonth" />,
         autocomplete: (
-            <Autocomplete
-                key={entityType}
-                entityType={entityType}
-                excludeClasses={[
-                    CLASSES.CONTRIBUTION,
-                    CLASSES.NODE_SHAPE,
-                    CLASSES.PROPERTY_SHAPE,
-                    CLASSES.PAPER_DELETED,
-                    CLASSES.CONTRIBUTION_DELETED,
-                    CLASSES.EXTERNAL,
-                    CLASSES.CSVW_CELL,
-                    CLASSES.CSVW_ROW,
-                    CLASSES.CSVW_COLUMN,
-                ]}
-                includeClasses={includeClasses}
-                placeholder={placeholder ?? `Enter a ${dataType}`}
-                isMulti={false}
-                onChange={(i, { action }) => {
-                    if (action === 'select-option') {
-                        onChange?.(i as Node);
-                    }
-                    if (action === 'create-option') {
-                        onCreate?.(i as Node);
-                    }
-                }}
-                allowCreate={allowCreate}
-                enableExternalSources={!range?.id}
-                onInputChange={(newValue, actionMeta) => {
-                    if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
-                        setInputValue(newValue);
-                    }
-                }}
-                inputValue={inputValue}
-                openMenuOnFocus
-                autoFocus={autoFocus}
-                size="sm"
-                onFailure={onFailure}
-                menuPortalTarget={menuPortalTarget}
-            />
+            <div className="flex-1 min-w-0">
+                <Autocomplete
+                    key={entityType}
+                    entityType={entityType}
+                    excludeClasses={[
+                        CLASSES.CONTRIBUTION,
+                        CLASSES.NODE_SHAPE,
+                        CLASSES.PROPERTY_SHAPE,
+                        CLASSES.PAPER_DELETED,
+                        CLASSES.CONTRIBUTION_DELETED,
+                        CLASSES.EXTERNAL,
+                        CLASSES.CSVW_CELL,
+                        CLASSES.CSVW_ROW,
+                        CLASSES.CSVW_COLUMN,
+                    ]}
+                    includeClasses={includeClasses}
+                    placeholder={placeholder ?? `Enter a ${dataType}`}
+                    isMulti={false}
+                    onChange={(i, { action }) => {
+                        if (action === 'select-option') {
+                            onChange?.(i as Node);
+                        }
+                        if (action === 'create-option') {
+                            onCreate?.(i as Node);
+                        }
+                    }}
+                    allowCreate={allowCreate}
+                    enableExternalSources={!range?.id}
+                    onInputChange={(newValue, actionMeta) => {
+                        if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {
+                            setInputValue(newValue);
+                        }
+                    }}
+                    inputValue={inputValue}
+                    openMenuOnFocus
+                    autoFocus={autoFocus}
+                    size="sm"
+                    onFailure={onFailure}
+                    menuPortalTarget={menuPortalTarget}
+                />
+            </div>
         ),
-        empty: <Input value="Value not reported in paper" type="text" bsSize="sm" className="flex-grow-1 d-flex" disabled />,
+        empty: (
+            <TextField fullWidth value="Value not reported in paper" isDisabled className="flex-1 min-w-0 relative">
+                <Input type="text" />
+            </TextField>
+        ),
         default: (
-            <Input
-                placeholder={placeholder ?? 'Enter a value'}
-                name="literalValue"
-                type={inputFormType as StandardInputType}
-                bsSize="sm"
+            <TextField
+                fullWidth
                 value={inputValue}
-                onChange={(e) => setInputValue(e ? e.target.value : '')}
-                invalid={!isValid}
-                className="flex-grow d-flex"
-                autoFocus={autoFocus}
-            />
+                onChange={setInputValue}
+                isInvalid={!isValid}
+                className="flex-1 min-w-0 relative focus-within:z-10"
+            >
+                <Input
+                    placeholder={placeholder ?? 'Enter a value'}
+                    name="literalValue"
+                    type={inputFormType as StandardInputType}
+                    autoFocus={autoFocus}
+                    className={cn(!isValid && 'border-danger')}
+                />
+            </TextField>
         ),
         dateTime: (
             <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>

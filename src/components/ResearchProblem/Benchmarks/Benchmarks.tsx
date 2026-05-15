@@ -1,6 +1,6 @@
+import { Skeleton } from '@heroui/react';
 import useSWRInfinite from 'swr/infinite';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import BenchmarksCarousel from '@/components/ResearchProblem/Benchmarks/BenchmarksCarousel';
 import Container from '@/components/Ui/Structure/Container';
 import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';
@@ -38,12 +38,12 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
 
     return (
         <>
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-md-grow-1  align-items-center">
-                    <h1 className="h5 mb-0 me-2">Benchmarks</h1>
+            <Container className="flex items-center mt-6 mb-6">
+                <div className="flex md:grow items-center">
+                    <h1 className="text-xl mb-0 mr-2">Benchmarks</h1>
                 </div>
             </Container>
-            <Container className="p-0">
+            <Container>
                 <BenchmarksCarousel
                     problemId={id}
                     benchmarks={[...(benchmarks?.map((_content) => _content.content).flat() ?? [])]}
@@ -56,12 +56,12 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
                 />
 
                 {isLoading && (
-                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }}>
-                        <rect x="0" y="0" rx="1" ry="1" width="20" height="10" />
-                        <rect x="25" y="0" rx="1" ry="1" width="20" height="10" />
-                        <rect x="50" y="0" rx="1" ry="1" width="20" height="10" />
-                        <rect x="75" y="0" rx="1" ry="1" width="20" height="10" />
-                    </ContentLoader>
+                    <div className="flex gap-4">
+                        <Skeleton className="w-1/5 h-10 rounded" />
+                        <Skeleton className="w-1/5 h-10 rounded" />
+                        <Skeleton className="w-1/5 h-10 rounded" />
+                        <Skeleton className="w-1/5 h-10 rounded" />
+                    </div>
                 )}
             </Container>
         </>

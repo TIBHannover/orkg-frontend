@@ -1,44 +1,26 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Label, ListBox, Select as HeroSelect, Skeleton, toast, Tooltip } from '@heroui/react';
 import { isString, upperFirst } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { Content, ScaledPosition } from 'react-pdf-highlighter';
 import Select, { components, GroupBase, OptionProps } from 'react-select';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
-import Tooltip from '@/components/FloatingUI/Tooltip';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import useOntology, { CSVW_TABLE_IRI, OntologyClass, SURVEY_TABLES_IRI } from '@/components/PdfAnnotation/hooks/useOntology';
 import useSuggestions from '@/components/PdfAnnotation/hooks/useSuggestions';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-
-const Container = styled.div`
-    background: #333333;
-    padding: 10px;
-    border-radius: 6px;
-    color: #fff;
-    width: 430px;
-    box-shadow: 0px 0px 5px 2px #c9c9c9;
-`;
-
-const StyledSelectOption = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-`;
 
 const Option: FC<OptionProps<OntologyClass, boolean, GroupBase<OntologyClass>>> = ({ children, ...props }) => (
     <components.Option {...props}>
-        <StyledSelectOption>
+        <div className="flex items-center justify-between">
             <span>{children}</span>
-            <Tooltip content={props.data.comment} contentStyle={{ maxWidth: '300px' }}>
-                <span>
+            <Tooltip>
+                <Tooltip.Trigger className="inline-flex" aria-label={props.data.comment}>
                     <FontAwesomeIcon icon={faQuestionCircle} />
-                </span>
+                </Tooltip.Trigger>
+                <Tooltip.Content className="max-w-[300px]">{props.data.comment}</Tooltip.Content>
             </Tooltip>
-        </StyledSelectOption>
+        </div>
     </components.Option>
 );
 
@@ -86,7 +68,7 @@ const AnnotationTooltipNew: FC<AnnotationTooltipNewProps> = ({ content, position
 
     const handleAnnotation = (value: string | null = null) => {
         if (!type && !value) {
-            toast.error('Please enter an annotation type');
+            toast.danger('Please enter an annotation type');
             return;
         }
         const valueType = value ?? type?.iri;
@@ -94,7 +76,7 @@ const AnnotationTooltipNew: FC<AnnotationTooltipNewProps> = ({ content, position
         handleAnnotate({
             content: {
                 ...content,
-                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text, // replace double white spaces that could occur when copying text from PDFs
+                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text,
             },
             position,
             type: valueType ?? '',
@@ -131,18 +113,40 @@ const AnnotationTooltipNew: FC<AnnotationTooltipNewProps> = ({ content, position
                     }
                 }}
                 onClick={focusContainer}
-                className="tw:bg-gray-800 tw:p-2.5 tw:rounded-md tw:text-white tw:shadow-[0px_0px_5px_2px_#c9c9c9] tw:cursor-pointer"
+                className="bg-foreground text-background p-2.5 rounded-md shadow-[0_0_5px_2px_rgb(0_0_0_/_15%)] cursor-pointer w-[260px]"
             >
-                <p>Select table type, to extract the table from the PDF</p>
-                <div className="mb-2">
-                    <Input type="select" value={selectedTableType} onChange={(e) => setSelectedTableType(e.target.value)}>
-                        <option value={SURVEY_TABLES_IRI}>Survey table</option>
-                        <option value={CSVW_TABLE_IRI}>Regular table</option>
-                    </Input>
-                </div>
+                <p className="mb-2">Select table type, to extract the table from the PDF</p>
+                <HeroSelect
+                    fullWidth
+                    name="tableType"
+                    value={selectedTableType}
+                    onChange={(value) => setSelectedTableType((value as string) ?? SURVEY_TABLES_IRI)}
+                    className="mb-2 text-foreground"
+                >
+                    <Label className="sr-only" htmlFor="tableTypeSelect">
+                        Table type
+                    </Label>
+                    <HeroSelect.Trigger id="tableTypeSelect" className="bg-surface text-foreground">
+                        <HeroSelect.Value />
+                        <HeroSelect.Indicator />
+                    </HeroSelect.Trigger>
+                    <HeroSelect.Popover>
+                        <ListBox>
+                            <ListBox.Item id={SURVEY_TABLES_IRI} textValue="Survey table">
+                                Survey table
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                            <ListBox.Item id={CSVW_TABLE_IRI} textValue="Regular table">
+                                Regular table
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                        </ListBox>
+                    </HeroSelect.Popover>
+                </HeroSelect>
                 <Button
-                    onClick={(e) => {
-                        e.stopPropagation();
+                    variant="primary"
+                    size="sm"
+                    onPress={() => {
                         handleAnnotate({
                             content,
                             position,
@@ -159,33 +163,35 @@ const AnnotationTooltipNew: FC<AnnotationTooltipNewProps> = ({ content, position
     }
 
     return (
-        <Container onClick={focusContainer}>
+        <div
+            className="bg-foreground text-background p-2.5 rounded-md w-[430px] shadow-[0_0_5px_2px_rgb(0_0_0_/_15%)]"
+            onClick={focusContainer}
+            role="presentation"
+        >
             <div className="mb-1">Select type</div>
-
-            <div style={{ color: '#000' }}>
+            <div className="text-foreground">
                 <Select<OntologyClass>
                     value={type}
                     onChange={(selected) => setType(selected)}
                     options={options}
                     components={{ Option }}
                     getOptionValue={(option) => option.iri}
+                    classNamePrefix="react-select"
+                    classNames={customClassNames as never}
+                    styles={customStyles as never}
+                    menuPosition="fixed"
                 />
             </div>
-
             <div className="mt-2 mb-1">Smart suggestions</div>
-
             {!suggestionsIsLoading ? (
-                <div style={{ minHeight: 62 }}>
+                <div className="min-h-[62px] flex flex-wrap gap-1">
                     {suggestedClasses && suggestedClasses?.length > 0 ? (
                         suggestedClasses.map((suggestion) => (
                             <Button
-                                active={!!(type && type.iri === suggestion.iri)}
-                                className="rounded-pill me-2 mb-1"
-                                style={{ paddingTop: 2, paddingBottom: 2 }}
+                                className="button--orkg-smart rounded-full py-0.5"
                                 size="sm"
-                                color="smart"
                                 key={suggestion.iri}
-                                onClick={() => handleSuggestionClick(suggestion.iri)}
+                                onPress={() => handleSuggestionClick(suggestion.iri)}
                             >
                                 {upperFirst(suggestion.label)}
                             </Button>
@@ -195,31 +201,21 @@ const AnnotationTooltipNew: FC<AnnotationTooltipNewProps> = ({ content, position
                     )}
                 </div>
             ) : (
-                <ContentLoader
-                    height="100%"
-                    width="100%"
-                    viewBox="0 0 100 10"
-                    style={{ width: '100% !important' }}
-                    speed={2}
-                    backgroundColor="#6f6b6b"
-                    foregroundColor="#989393"
-                >
-                    <rect x="0" y="0" rx="1" ry="1" width="20" height="4" />
-                    <rect x="24" y="0" rx="1" ry="1" width="20" height="4" />
-                    <rect x="48" y="0" rx="1" ry="1" width="20" height="4" />
-                    <rect x="0" y="6" rx="1" ry="1" width="20" height="4" />
-                    <rect x="24" y="6" rx="1" ry="1" width="20" height="4" />
-                </ContentLoader>
+                <div className="flex flex-wrap gap-2">
+                    <Skeleton className="w-[20%] h-4 rounded bg-default-700" />
+                    <Skeleton className="w-[20%] h-4 rounded bg-default-700" />
+                    <Skeleton className="w-[20%] h-4 rounded bg-default-700" />
+                    <Skeleton className="w-[20%] h-4 rounded bg-default-700" />
+                    <Skeleton className="w-[20%] h-4 rounded bg-default-700" />
+                </div>
             )}
-
-            <hr style={{ background: 'rgb(255 255 255 / 25%)' }} />
-
-            <div className="d-flex justify-content-center">
-                <Button size="sm" color="primary" onClick={() => handleAnnotation()}>
+            <hr className="my-2 border-white/25" />
+            <div className="flex justify-center">
+                <Button size="sm" variant="primary" onPress={() => handleAnnotation()}>
                     Annotate
                 </Button>
             </div>
-        </Container>
+        </div>
     );
 };
 

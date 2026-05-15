@@ -77,11 +77,8 @@ const ColumnHeaders = ({ columns }: { columns?: ComparisonTableColumn[] }) => {
     }, [columns, reorderItems]);
 
     return (
-        <tr className="tw:flex tw:items-stretch tw:flex-grow">
-            <th
-                className="p-0 tw:!sticky tw:left-0 tw:font-medium tw:z-20"
-                style={{ boxSizing: 'border-box', flex: ' 2 0 auto', minWidth: 250, width: 2 }}
-            >
+        <tr className="flex items-stretch flex-grow">
+            <th className="p-0 sticky left-0 font-medium z-20" style={{ boxSizing: 'border-box', flex: ' 2 0 auto', minWidth: 250, width: 2 }}>
                 <FirstColumnHeader />
             </th>
             {columns?.map((column, index) => (

@@ -1,5 +1,5 @@
+import { toast } from '@heroui/react';
 import { useCallback, useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 import { INSTANCE_ID, isDragData } from '@/components/DataBrowser/components/Body/Statement/SortableValueItem/SortableValueItem';
 import { createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
@@ -37,11 +37,11 @@ const useListOrdering = ({ statements, entity, isEditMode, mutateStatements }: U
             try {
                 await updateList({ id: entity.id, elements: reorderedItems.map((s) => s.object.id) });
                 // await mutateOriginalOrder();
-                toast.dismiss();
+                toast.clear();
                 toast.success('Order updated successfully');
             } catch (err) {
                 console.error('Failed to update list order:', err);
-                toast.error('Failed to update order');
+                toast.danger('Failed to update order');
             }
         },
         [statements, entity, mutateStatements],

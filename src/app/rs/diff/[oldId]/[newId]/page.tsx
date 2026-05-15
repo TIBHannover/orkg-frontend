@@ -2,7 +2,6 @@
 
 import dayjs from 'dayjs';
 import { toInteger } from 'lodash';
-import { reverse } from 'named-urls';
 import reactStringReplace from 'react-string-replace';
 
 import NotFound from '@/app/not-found';
@@ -14,6 +13,7 @@ import useRosettaStatements from '@/components/RosettaStone/SingleStatement/hook
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { RosettaStoneStatement, RosettaStoneTemplate } from '@/services/backend/types';
 
 const StatementDiff = () => {
@@ -105,7 +105,11 @@ const StatementDiff = () => {
     };
 
     if (isLoadingOldStatement || isLoadingNewStatement || isLoadingVersions) {
-        return <Container className="box rounded p-4 overflow-hidden">Loading...</Container>;
+        return (
+            <Container>
+                <div className="box rounded p-6 overflow-hidden">Loading...</div>
+            </Container>
+        );
     }
 
     if (oldStatementError || newStatementError) {

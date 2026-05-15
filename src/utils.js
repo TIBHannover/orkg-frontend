@@ -1,11 +1,11 @@
 import capitalize from 'capitalize';
 import { unescape } from 'he';
 import { isNaN, isString, sortBy } from 'lodash';
-import { reverse } from 'named-urls';
 import { env } from 'next-runtime-env';
 
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getStatements } from '@/services/backend/statements';
 
 export const guid = () => {

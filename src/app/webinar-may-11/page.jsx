@@ -13,12 +13,12 @@ export default function WebinarMay11() {
     return (
         <div>
             <Container>
-                <h1 className="h4 mt-4 mb-4">Webinar</h1>
+                <h1 className="text-2xl mt-6 mb-6">Webinar</h1>
             </Container>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
+            <Container className="box rounded pt-6 pb-6 pl-12 pr-12">
                 <h2>Webinar: Open Research Knowledge Graph</h2>
 
-                <div className="d-flex align-items-center flex-column my-3">
+                <div className="flex items-center flex-col my-4">
                     <div className="ratio ratio-16x9" style={{ maxWidth: 750 }}>
                         <iframe
                             width="750"
@@ -32,7 +32,7 @@ export default function WebinarMay11() {
                     </div>
                     <strong>Online 11th May 2021, 14:00 - 15:00 (CEST)</strong>
                 </div>
-                <p className="mt-4">
+                <p className="mt-6">
                     Scholarly work is mainly communicated through publications, in the form of unstructured texts. Considering the continuously
                     increasing number of publications, researchers are finding it increasingly difficult to stay current with the literature that is
                     relevant to them. The <Link href={ROUTES.HOME}>Open Research Knowledge Graph</Link> (ORKG, see also{' '}
@@ -47,7 +47,7 @@ export default function WebinarMay11() {
                     In this Webinar, we introduce the Open Research Knowledge Graph and explain how you can add content. Besides a brief introduction
                     to the main ideas and goals, we show how to use the interface to enter your data.{' '}
                 </p>
-                <h2 className="mt-5">Agenda</h2>
+                <h2 className="mt-12">Agenda</h2>
                 <table className="table">
                     <tbody>
                         <tr>

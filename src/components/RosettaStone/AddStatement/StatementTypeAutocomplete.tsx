@@ -5,7 +5,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 import Creatable from 'react-select/creatable';
 import { withAsyncPaginate } from 'react-select-async-paginate';
 
-import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import SelectOption, { type RosettaStoneTemplateOption } from '@/components/RosettaStone/AddStatement/SelectOption';
 import { getRSTemplates } from '@/services/backend/rosettaStone';
 import { RosettaStoneTemplate } from '@/services/backend/types';
@@ -68,35 +68,33 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
     };
 
     return (
-        <>
-            <SelectGlobalStyle />
-            <AsyncPaginateCreatable<RosettaStoneTemplateOption, GroupBase<RosettaStoneTemplateOption>, AdditionalType, false>
-                defaultValue={defaultValue}
-                instanceId={instanceId}
-                classNamePrefix="react-select"
-                // @ts-expect-error different type from OptionType
-                styles={customStyles}
-                classNames={customClassNames}
-                debounceTimeout={300}
-                loadOptions={loadOptions}
-                additional={defaultAdditional}
-                getOptionValue={({ id }) => id}
-                isMulti={false}
-                components={{ Option: SelectOption }}
-                onChange={onChange}
-                formatCreateLabel={(inputValue: string) => `Create new statement template "${inputValue}"`}
-                placeholder="Search statement template by verb/predicate (e.g., has measurement, develops from) or define a new one"
-                createOptionPosition="first"
-                autoFocus={autoFocus}
-                openMenuOnFocus={openMenuOnFocus}
-                isValidNewOption={(val: string) => {
-                    if (val) {
-                        return true;
-                    }
-                    return false;
-                }}
-            />
-        </>
+        <AsyncPaginateCreatable<RosettaStoneTemplateOption, GroupBase<RosettaStoneTemplateOption>, AdditionalType, false>
+            defaultValue={defaultValue}
+            instanceId={instanceId}
+            classNamePrefix="react-select"
+            // @ts-expect-error customStyles is typed for OptionType but works with any option type
+            styles={customStyles}
+            // @ts-expect-error customClassNames is typed for OptionType but works with any option type
+            classNames={customClassNames}
+            debounceTimeout={300}
+            loadOptions={loadOptions}
+            additional={defaultAdditional}
+            getOptionValue={({ id }) => id}
+            isMulti={false}
+            components={{ Option: SelectOption }}
+            onChange={onChange}
+            formatCreateLabel={(inputValue: string) => `Create new statement template "${inputValue}"`}
+            placeholder="Search statement template by verb/predicate (e.g., has measurement, develops from) or define a new one"
+            createOptionPosition="first"
+            autoFocus={autoFocus}
+            openMenuOnFocus={openMenuOnFocus}
+            isValidNewOption={(val: string) => {
+                if (val) {
+                    return true;
+                }
+                return false;
+            }}
+        />
     );
 };
 

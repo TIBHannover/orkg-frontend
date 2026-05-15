@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash';
 import { parseAsJson, useQueryState } from 'nuqs';
 import { useCallback, useMemo } from 'react';
-import z from 'zod';
+import { z } from 'zod';
 
 import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
 import { ComparisonFilter, FilterType, FilterValues } from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/types';
@@ -33,6 +33,7 @@ const useFilters = () => {
     const { comparisonContents } = useComparison();
     const { id: comparisonId } = useComparisonState();
     const filterSchema = z.record(
+        z.string(),
         z.array(
             z.object({
                 id: z.string(),
@@ -86,7 +87,7 @@ const useFilters = () => {
         const isDate = () =>
             uniqueValues.length ===
             uniqueValues.filter((value) => {
-                const { error } = z.string().date().safeParse(value.label);
+                const { error } = z.iso.date().safeParse(value.label);
                 return !error;
             }).length;
 

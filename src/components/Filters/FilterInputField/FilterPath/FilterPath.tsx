@@ -1,6 +1,5 @@
 import { faAngleDoubleRight, faEllipsis, faRoute, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import useSWR from 'swr';
@@ -10,6 +9,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import { BreadcrumbStyled, TippyContentStyled } from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getPredicatesByIds, predicatesUrl } from '@/services/backend/predicates';
 import { FilterConfig } from '@/services/backend/types';
 
@@ -23,7 +23,7 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
     );
 
     return (
-        <BreadcrumbStyled className="d-inline">
+        <BreadcrumbStyled className="inline">
             <Tooltip
                 content={
                     <TippyContentStyled>
@@ -32,12 +32,12 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                                 {filter.exact ? (
                                     <>
                                         This filter is applied on this path: <br /> Contribution{' '}
-                                        <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />
+                                        <FontAwesomeIcon className="mr-1 ml-1" icon={faAngleDoubleRight} />
                                     </>
                                 ) : (
                                     <>
                                         This filter search for the following path anywhere within the subgraph of the contribution nodes: <br />{' '}
-                                        <FontAwesomeIcon className="me-1 ms-1" icon={faEllipsis} />
+                                        <FontAwesomeIcon className="mr-1 ml-1" icon={faEllipsis} />
                                     </>
                                 )}
                                 {path &&
@@ -48,7 +48,7 @@ const FilterPath: FC<FilterPathProps> = ({ filter }) => {
                                                     {property.label}
                                                 </Link>
                                             </DescriptionTooltip>
-                                            {index !== path.length - 1 && <FontAwesomeIcon className="me-1 ms-1" icon={faAngleDoubleRight} />}
+                                            {index !== path.length - 1 && <FontAwesomeIcon className="mr-1 ml-1" icon={faAngleDoubleRight} />}
                                         </span>
                                     ))}
                             </small>

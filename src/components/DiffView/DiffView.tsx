@@ -1,18 +1,16 @@
 import { faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, Button, CloseButton, Skeleton } from '@heroui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CSSProperties, FC, useEffect, useState } from 'react';
 import ReactDiffViewer from 'react-diff-viewer-continued';
 import useSWR from 'swr';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import DiffTitle, { type TitleData } from '@/components/DiffView/DiffTitle';
+import useColorMode from '@/components/hooks/useColorMode';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
+import { reverse } from '@/lib/namedRoute';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 
 type DiffViewProps = {
@@ -33,6 +31,7 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fullWidth, setFullWidth] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
+    const isDark = useColorMode() === 'dark';
 
     const { data: oldResource, isLoading: isOldResourceLoading } = useSWR(oldId ? [oldId, resourcesUrl, 'getResource'] : null, ([params]) =>
         getResource(params),
@@ -45,9 +44,11 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
     const searchParams = useSearchParams();
     const switchedVersions = searchParams.get('switchedVersions');
 
-    if (!isOldResourceLoading && !isNewResourceLoading && oldResource && newResource && oldResource.created_at > newResource.created_at) {
-        router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
-    }
+    useEffect(() => {
+        if (!isOldResourceLoading && !isNewResourceLoading && oldResource && newResource && oldResource.created_at > newResource.created_at) {
+            router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
+        }
+    }, [isOldResourceLoading, isNewResourceLoading, oldResource, newResource, oldId, newId, diffRoute, router]);
 
     useEffect(() => {
         document.title = `Compare ${type} versions - ORKG`;
@@ -81,54 +82,79 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
         router.push(reverse(diffRoute, { oldId, newId }));
     };
 
-    const containerStyle: CSSProperties = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
-    containerStyle.background = '#FAFBFC';
+    const wrapperStyle: CSSProperties = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
+    const containerStyle: CSSProperties = {
+        background: isDark ? '#1a1d21' : '#FAFBFC',
+    };
 
     return (
         <>
             <TitleBar
                 buttonGroup={
-                    <Button size="sm" color="secondary" onClick={() => setFullWidth((v) => !v)}>
-                        <FontAwesomeIcon icon={faArrowsAltH} className="me-1" /> Full width
+                    <Button size="sm" variant="secondary" onPress={() => setFullWidth((v) => !v)}>
+                        <FontAwesomeIcon icon={faArrowsAltH} /> Full width
                     </Button>
                 }
             >
                 Compare {type} versions
             </TitleBar>
-            <Container style={containerStyle} className="box rounded p-0 overflow-hidden tw:transition-[max-width] tw:duration-500">
-                {switchedVersions && (
-                    <div className="m-3">
-                        <Alert color="info" toggle={handleDismiss}>
-                            We have switched the versions for you. On the left side you find the old version and on the right the new version
-                        </Alert>
-                    </div>
-                )}
-                {!isLoading && !hasFailed && (
-                    <ReactDiffViewer
-                        oldValue={oldText}
-                        newValue={newText}
-                        splitView
-                        showDiffOnly={false}
-                        leftTitle={<DiffTitle data={oldTitleData} />}
-                        rightTitle={<DiffTitle data={newTitleData} />}
-                    />
-                )}
-                {isLoading && !hasFailed && (
-                    <div className="p-4">
-                        <ContentLoader height={350} width="100%" speed={2}>
-                            <rect x="0" y="0" rx="2" ry="2" width="50" height="50" style={{ width: '49%' }} />
-                            <rect x="0" y="60" rx="2" ry="2" width="50" height="300" style={{ width: '49%' }} />
-                            <rect x="50%" y="0" rx="2" ry="2" width="50" height="50" style={{ width: '50%' }} />
-                            <rect x="50%" y="60" rx="2" ry="2" width="50" height="300" style={{ width: '50%' }} />
-                        </ContentLoader>
-                    </div>
-                )}
-                {hasFailed && (
-                    <div className="p-4">
-                        <Alert color="danger">An error has occurred, please try this action again</Alert>
-                    </div>
-                )}
-            </Container>
+            <div style={wrapperStyle} className="mx-auto px-3 max-w-container transition-[max-width] duration-500">
+                <div style={containerStyle} className="box rounded overflow-hidden">
+                    {switchedVersions && (
+                        <div className="m-4">
+                            <Alert status="accent">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Versions switched</Alert.Title>
+                                    <Alert.Description>On the left side you find the old version and on the right the new version.</Alert.Description>
+                                </Alert.Content>
+                                <CloseButton aria-label="Close" onPress={handleDismiss} />
+                            </Alert>
+                        </div>
+                    )}
+                    {!isLoading && !hasFailed && (
+                        <ReactDiffViewer
+                            oldValue={oldText}
+                            newValue={newText}
+                            splitView
+                            showDiffOnly={false}
+                            useDarkTheme={isDark}
+                            leftTitle={<DiffTitle data={oldTitleData} />}
+                            rightTitle={<DiffTitle data={newTitleData} />}
+                            styles={{
+                                titleBlock: {
+                                    height: 'auto',
+                                    overflow: 'visible',
+                                    padding: '0 8px',
+                                },
+                            }}
+                        />
+                    )}
+                    {isLoading && !hasFailed && (
+                        <div className="p-6 grid grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-2">
+                                <Skeleton className="w-full h-12 rounded" />
+                                <Skeleton className="w-full h-72 rounded" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Skeleton className="w-full h-12 rounded" />
+                                <Skeleton className="w-full h-72 rounded" />
+                            </div>
+                        </div>
+                    )}
+                    {hasFailed && (
+                        <div className="p-6">
+                            <Alert status="danger">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Something went wrong</Alert.Title>
+                                    <Alert.Description>An error has occurred, please try this action again.</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        </div>
+                    )}
+                </div>
+            </div>
         </>
     );
 };

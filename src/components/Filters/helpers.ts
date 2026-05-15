@@ -26,11 +26,14 @@ export const mergeFilters = (initialFilters: FilterConfig[], newFilters: FilterC
 
 export const loadFiltersFromLocalStorage = async () => {
     const data = await asyncLocalStorage.getItem(FILTERS_LOCAL_STORAGE_NAME);
+    if (!data) {
+        return [];
+    }
     try {
-        const parsedData = JSON.parse(data ?? '') as FilterConfig[];
-        return parsedData && Array.isArray(parsedData) ? parsedData : [];
+        const parsedData = JSON.parse(data) as FilterConfig[];
+        return Array.isArray(parsedData) ? parsedData : [];
     } catch (e) {
         console.error(e);
+        return [];
     }
-    return [];
 };

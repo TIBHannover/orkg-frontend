@@ -1,6 +1,5 @@
 import { faCheck, faPen, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ColDef, GridApi, IRowNode } from 'ag-grid-community';
-import classNames from 'classnames';
 import { useState } from 'react';
 
 import { TData, useGridDispatch } from '@/app/grid-editor/context/GridContext';
@@ -20,9 +19,10 @@ type TableCellButtonsProps = {
     api?: GridApi<TData>;
     node?: IRowNode<TData>;
     colDef?: ColDef<TData>;
+    onClose?: () => void;
 };
 
-const CellButtons = ({ value, api, node, colDef }: TableCellButtonsProps) => {
+const CellButtons = ({ value, api, node, colDef, onClose }: TableCellButtonsProps) => {
     const { entityIds, getStatementsBySubjectAndPredicate } = useGridEditor();
     const { canAddValue: canAddValueFn, getRanges, getScopedTemplates } = useConstraints();
     const templates = getScopedTemplates(value.subject.id);
@@ -88,7 +88,7 @@ const CellButtons = ({ value, api, node, colDef }: TableCellButtonsProps) => {
     const isDisabledSemantify = isNonDefaultDatatype || isFormatted || isEmptyObject;
 
     return (
-        <div className={classNames({ 'cell-buttons': true, disableHover })}>
+        <div className="flex items-center gap-1">
             <InfoTippy statement={value} />
             <SemantifyButton
                 statement={value}
@@ -97,6 +97,7 @@ const CellButtons = ({ value, api, node, colDef }: TableCellButtonsProps) => {
                 onSave={onSaveSemantify}
                 templates={templates}
                 currentPathStatements={getStatementsBySubjectAndPredicate(value.subject.id, value.predicate.id)}
+                onOpen={onClose}
             />
             {isLoadingTemplates ? (
                 <ActionButton isDisabled title="Loading templates" icon={faSpinner} />

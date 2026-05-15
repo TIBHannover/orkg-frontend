@@ -1,8 +1,8 @@
+import { Skeleton } from '@heroui/react';
 import { ReactNode } from 'react';
 
 import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
@@ -52,16 +52,20 @@ const ListPaginatedContent = <ItemType,>({
         flush,
     },
     loadingComponent = (
-        <div className={`text-start p-5 container rounded ${boxShadow ? 'box' : ''}`}>
-            <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
-                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
-                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
-            </ContentLoader>
+        <div className={`text-left rounded ${boxShadow ? 'box' : ''}`}>
+            {[...Array(5)].map((_, i) => (
+                <div key={i} className="p-3 flex items-center gap-3 border-b border-divider last:border-b-0">
+                    <div className="flex-1 flex flex-col gap-2">
+                        <Skeleton className="w-3/5 h-4 rounded" />
+                        <Skeleton className="w-2/5 h-3 rounded" />
+                    </div>
+                </div>
+            ))}
         </div>
     ),
     noDataComponent = (
-        <div className={boxShadow ? 'container box rounded' : ''}>
-            <div className="p-5 text-center mt-4 mb-4">There are no content for this {label} that matches this filter, yet</div>
+        <div className={boxShadow ? 'container mx-auto px-4 box rounded' : ''}>
+            <div className="p-12 text-center mt-6 mb-6">There are no content for this {label} that matches this filter, yet</div>
         </div>
     ),
 }: ListPaginatedContentProps<ItemType>) => {
@@ -69,7 +73,7 @@ const ListPaginatedContent = <ItemType,>({
     const { flush: _, ...safeListGroupProps } = listGroupProps;
     const componentProps = ListGroupComponent === ListGroup ? listGroupProps : safeListGroupProps;
     return (
-        <Container className="p-0">
+        <Container>
             {isLoading && loadingComponent}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
@@ -80,10 +84,10 @@ const ListPaginatedContent = <ItemType,>({
             )}
             {!isLoading && !error && items && items.length === 0 && noDataComponent}
             {showPagination && !isLoading && !!totalElements && !!totalPages && totalPages > 1 && totalElements > 0 && (
-                <div className="mt-3">
+                <div className="mt-4">
                     {!isLoading && flush && !boxShadow && <hr />}
                     {!isLoading && boxShadow && <div className="mt-2" />}
-                    <div className={`${flush ? 'ms-2 me-2' : ''}`}>
+                    <div className={`${flush ? 'ml-2 mr-2' : ''}`}>
                         <PaginationControl
                             prefixParams={prefixParams}
                             page={page}

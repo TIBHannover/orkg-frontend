@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 
 import AuthorHeader from '@/components/Author/AuthorHeader';
@@ -9,7 +10,6 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Alert from '@/components/Ui/Alert/Alert';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
@@ -69,19 +69,21 @@ const AuthorPage = () => {
     };
 
     return (
-        <Container className="p-0">
+        <Container>
             {authorId && <AuthorHeader authorId={authorId} />}
             {authorString && <TitleBar titleAddition={<div className="text-muted">Author</div>}>{authorString}</TitleBar>}
-
             {authorString && (
-                <Alert color="info" className="box-shadow">
-                    Results include work from all authors matching this name. This means that the results may include work by other people with the
-                    same name.
+                <Alert status="accent" className="shadow-sm mb-4">
+                    <Alert.Indicator />
+                    <Alert.Content className="min-w-0 flex-1">
+                        <Alert.Title>Results may include other authors with the same name</Alert.Title>
+                        <Alert.Description>
+                            We could not match this name to a single author profile, so the results below combine work from everyone matching it.
+                        </Alert.Description>
+                    </Alert.Content>
                 </Alert>
             )}
-
             <ContentTypeListHeader label="Works" isLoading={isLoading} totalElements={totalElements} />
-
             <Tabs
                 className="box rounded mt-2"
                 destroyOnHidden

@@ -1,7 +1,10 @@
+'use client';
+
+import { useCookies } from 'next-client-cookies';
 import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 
 import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext } from '@/components/DataBrowser/types/DataBrowserTypes';
-import { getPreferenceFromCookies } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { parseBooleanPreferenceCookie } from '@/lib/cookieHelpers';
 import { Predicate } from '@/services/backend/types';
 
 type DataBrowserState = {
@@ -10,8 +13,6 @@ type DataBrowserState = {
     config: DataBrowserConfig;
     preferences: DataBrowserPreferences;
     context: DataBrowserResourceContext;
-    isHelpModalOpen: boolean;
-    helpCenterArticleId?: string;
     history?: string[];
     loadedResources: Record<string, string[]>; // key is the resource id, value is the path to the resource
 };
@@ -22,7 +23,6 @@ type DataBrowserAction =
     | { type: 'SET_IS_EDIT_MODE'; payload: boolean }
     | { type: 'SET_HISTORY'; payload: string[] }
     | { type: 'UPDATE_PREFERENCES'; payload: Partial<DataBrowserPreferences> }
-    | { type: 'SET_IS_HELP_MODAL_OPEN'; payload: { isOpen: boolean; articleId?: string } }
     | { type: 'ADD_LOADED_RESOURCES'; payload: Record<string, string[]> }
     | { type: 'SET_LOADED_RESOURCES'; payload: Record<string, string[]> };
 
@@ -35,7 +35,6 @@ const initialState = {
         showInlineDataTypes: false,
         expandValuesByDefault: true,
     },
-    isHelpModalOpen: getPreferenceFromCookies('showInlineDataTypes') ?? false,
     loadedResources: {},
 };
 
@@ -67,9 +66,6 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
         }
         case 'SET_HISTORY': {
             return { ...state, history: action.payload };
-        }
-        case 'SET_IS_HELP_MODAL_OPEN': {
-            return { ...state, isHelpModalOpen: action.payload.isOpen, helpCenterArticleId: action.payload.articleId };
         }
         case 'UPDATE_PREFERENCES': {
             return {
@@ -105,19 +101,23 @@ type DataBrowserProviderProps = {
 };
 
 const DataBrowserProvider: FC<DataBrowserProviderProps> = ({ children, rootId, config, context }) => {
-    const [dataBrowserState, dispatch] = useReducer(dataBrowserReducer, {
-        rootId,
-        newProperties: {},
-        config,
-        preferences: {
-            showInlineDataTypes: getPreferenceFromCookies('showInlineDataTypes') ?? true,
-            expandValuesByDefault: getPreferenceFromCookies('expandValuesByDefault') ?? true,
-        },
-        context,
-        isHelpModalOpen: false,
-        loadedResources: {},
-        ...(config.defaultHistory && config.defaultHistory.length > 0 && { history: config.defaultHistory }),
-    });
+    const cookies = useCookies();
+    const [dataBrowserState, dispatch] = useReducer(
+        dataBrowserReducer,
+        { rootId, config, context, cookies },
+        ({ rootId: rid, config: cfg, context: ctx, cookies: c }) => ({
+            rootId: rid,
+            newProperties: {},
+            config: cfg,
+            preferences: {
+                showInlineDataTypes: parseBooleanPreferenceCookie(c.get('preferences.showInlineDataTypes')) ?? true,
+                expandValuesByDefault: parseBooleanPreferenceCookie(c.get('preferences.expandValuesByDefault')) ?? true,
+            },
+            context: ctx,
+            loadedResources: {},
+            ...(cfg.defaultHistory && cfg.defaultHistory.length > 0 && { history: cfg.defaultHistory }),
+        }),
+    );
 
     useEffect(() => {
         dispatch({ type: 'SET_IS_EDIT_MODE', payload: !!config.isEditMode });

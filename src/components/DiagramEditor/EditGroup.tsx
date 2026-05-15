@@ -1,12 +1,7 @@
+import { Button, Input, Modal, TextField } from '@heroui/react';
 import { Node } from '@xyflow/react';
 import { FC, useEffect, useState } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { Resource } from '@/services/backend/types';
 
 type EditGroupProps = {
@@ -16,6 +11,7 @@ type EditGroupProps = {
     addGroup: (value: string) => void;
     currentGroup: Node<Resource> | undefined;
 };
+
 const EditGroup: FC<EditGroupProps> = ({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) => {
     const [value, setValue] = useState(!currentGroup?.id ? '' : currentGroup.data.label);
 
@@ -25,23 +21,37 @@ const EditGroup: FC<EditGroupProps> = ({ isEditGroupModalOpen, setIsEditGroupMod
     }, [currentGroup]);
 
     return (
-        <Modal isOpen={isEditGroupModalOpen} toggle={setIsEditGroupModalOpen}>
-            <ModalHeader toggle={setIsEditGroupModalOpen}>{!currentGroup?.id ? 'Add' : 'Edit'} group</ModalHeader>
-            <ModalBody>
-                {!currentGroup?.id && "Enter an group label in the input below and click the 'Add group' button."}
-                <div className="mt-2">
-                    <Input value={value} onChange={(event) => setValue(event.target.value)} />
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={() => (!currentGroup?.id ? addGroup(value) : saveGroup(value))}>
-                    {!currentGroup?.id ? 'Add group' : 'Save'}
-                </Button>
-                <Button color="secondary" onClick={setIsEditGroupModalOpen}>
-                    Cancel
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={isEditGroupModalOpen}
+            onOpenChange={(open) => {
+                if (!open) setIsEditGroupModalOpen();
+            }}
+        >
+            <Modal.Container size="md">
+                <Modal.Dialog className="sm:max-w-lg">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>{!currentGroup?.id ? 'Add' : 'Edit'} group</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="p-1 space-y-2">
+                            {!currentGroup?.id && <p>Enter a group label in the input below and click the &apos;Add group&apos; button.</p>}
+                            <TextField value={value} onChange={setValue} className="w-full">
+                                <Input autoFocus aria-label="Group label" />
+                            </TextField>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onPress={() => (!currentGroup?.id ? addGroup(value) : saveGroup(value))}>
+                            {!currentGroup?.id ? 'Add group' : 'Save'}
+                        </Button>
+                        <Button variant="secondary" onPress={setIsEditGroupModalOpen}>
+                            Cancel
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

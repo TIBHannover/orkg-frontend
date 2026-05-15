@@ -1,4 +1,3 @@
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import useSWR from 'swr';
@@ -6,6 +5,7 @@ import useSWR from 'swr';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import useReview from '@/components/Review/hooks/useReview';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
 import { ReviewSection } from '@/services/backend/types';
 
@@ -32,7 +32,7 @@ const SectionResourceProperty: FC<SectionResourcePropertyProps> = ({ section }) 
 
     return (
         <>
-            <div className="mt-3 mb-2">
+            <div className="mt-4 mb-2">
                 <Link
                     href={
                         section.type === 'resource'

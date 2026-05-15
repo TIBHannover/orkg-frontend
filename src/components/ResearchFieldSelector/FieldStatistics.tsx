@@ -1,8 +1,7 @@
-import Skeleton from 'react-loading-skeleton';
+import { Chip, Skeleton } from '@heroui/react';
 import useSWR from 'swr';
 
 import { type ResearchField } from '@/components/ResearchFieldSelector/ResearchFieldSelector';
-import Badge from '@/components/Ui/Badge/Badge';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 
 const FieldStatistics = ({ field }: { field: ResearchField }) => {
@@ -20,11 +19,11 @@ const FieldStatistics = ({ field }: { field: ResearchField }) => {
     );
 
     return (
-        <div className="justify-content-end">
-            <Badge color="light" pill>
+        <div className="justify-end">
+            <Chip>
                 {!isLoading && statistics?.value.toLocaleString('en-US')}
-                {isLoading && <Skeleton width={30} />}
-            </Badge>
+                {isLoading && <Skeleton className="w-[30px] h-4 rounded" />}
+            </Chip>
         </div>
     );
 };

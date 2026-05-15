@@ -22,7 +22,7 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="tw:p-0 tw:flex tw:items-stretch tw:flex-grow tw:min-w-fit"
+            className="p-0 flex items-stretch flex-grow min-w-fit"
         >
             <RowHeader row={pathNode} path={path} />
             {columns.map((column, colIdx) => {
@@ -34,7 +34,7 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
                     <td
                         key={`${pathNode.id}-${columnId}`}
                         style={{ minWidth: `${columnWidth}px` }}
-                        className="tw:p-0 tw:bg-inherit tw:w-[2px] tw:grow-[2] tw:shrink-0 tw:basis-auto"
+                        className="p-0 bg-inherit w-[2px] grow-[2] shrink-0 basis-auto"
                     >
                         <Cell value={value ?? undefined} path={path} dataBrowserHistory={[...historyPrefix, pathNode.id, value?.id ?? '']} />
                     </td>

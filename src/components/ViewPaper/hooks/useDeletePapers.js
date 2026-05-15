@@ -1,7 +1,7 @@
+import { toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import pluralize from 'pluralize';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';

@@ -1,87 +1,30 @@
 'use client';
 
-import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { faCheck, faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronUp, faCircleXmark, faTimes, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, Chip, cn, Drawer, ScrollShadow } from '@heroui/react';
 import Link from 'next/link';
 import { useCookies } from 'next-client-cookies';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { FC, useCallback, useState } from 'react';
 
-import {
-    ComparisonBox,
-    ComparisonBoxButton,
-    ContributionItem,
-    Header,
-    List,
-    Number,
-    Remove,
-    StartComparison,
-    Title,
-} from '@/components/ComparisonPopup/styled';
 import useComparisonPopup from '@/components/ComparisonPopup/useComparisonPopup';
-import Popover from '@/components/FloatingUI/Popover';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import Navbar from '@/components/Ui/Nav/Navbar';
-import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
-
-type ComparisonPopupStyledProps = {
-    $cookieInfoDismissed: boolean;
-};
-
-const ComparisonPopupStyled = styled.div<ComparisonPopupStyledProps>`
-    &&& {
-        bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '50px')};
-    }
-
-    @media (min-width: 481px) and (max-width: 1100px) {
-        &&& {
-            bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '70px')};
-        }
-    }
-    @media (max-width: 480px) {
-        &&& {
-            bottom: ${(props) => (props.$cookieInfoDismissed ? '0px' : '120px')};
-        }
-    }
-`;
+import { isCookieInfoDismissed } from '@/lib/cookieHelpers';
+import { reverse } from '@/lib/namedRoute';
 
 const ComparisonPopup: FC = () => {
     const { comparison, updateComparison } = useComparisonPopup();
-    const [showComparisonBox, setShowComparisonBox] = useState(false);
-    const [showConfirmationPopover, setShowConfirmationPopover] = useState(false);
-    const comparisonPopupRef = useRef<HTMLDivElement>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const cookies = useCookies();
     const COOKIE_NAME = 'cookieInfoDismissed';
-
-    const toggleComparisonBox = useCallback(() => {
-        setShowComparisonBox((prev) => !prev);
-    }, []);
-
-    const handleClickOutside = useCallback(
-        (event: MouseEvent) => {
-            if (
-                comparisonPopupRef.current &&
-                !comparisonPopupRef.current.contains(event.target as Node) &&
-                showComparisonBox &&
-                !showConfirmationPopover
-            ) {
-                toggleComparisonBox();
-            }
-        },
-        [showComparisonBox, showConfirmationPopover, toggleComparisonBox],
-    );
 
     const removeFromComparison = useCallback(
         (id: string) => {
             updateComparison((prev) => {
-                const { [id]: removed, ...remainingById } = prev.byId;
+                const { [id]: _, ...remainingById } = prev.byId;
                 return {
                     byId: remainingById,
                     allIds: prev.allIds.filter((contributionId) => contributionId !== id),
@@ -93,17 +36,15 @@ const ComparisonPopup: FC = () => {
 
     const removeAllContributionsFromComparison = useCallback(() => {
         updateComparison(() => ({ byId: {}, allIds: [] }));
+        setShowConfirmation(false);
     }, [updateComparison]);
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
+    const handleOpenChange = useCallback((open: boolean) => {
+        if (!open) setShowConfirmation(false);
+        setIsDrawerOpen(open);
+    }, []);
 
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [handleClickOutside]);
-
-    const cookieInfoDismissed = cookies.get(COOKIE_NAME) ? cookies.get(COOKIE_NAME) : null;
+    const cookieInfoDismissed = isCookieInfoDismissed(cookies.get(COOKIE_NAME));
     const { allIds, byId } = comparison;
 
     if (allIds.length === 0) {
@@ -115,133 +56,117 @@ const ComparisonPopup: FC = () => {
     const comparisonUrl = `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${ids}`;
 
     return (
-        <ComparisonPopupStyled
-            $cookieInfoDismissed={!!cookieInfoDismissed}
-            ref={comparisonPopupRef}
-            className="fixed-bottom p-0 offset-sm-2 offset-md-8"
-            style={{ width: '340px', zIndex: '1000' }}
-        >
-            <Navbar className="p-0">
-                <Container>
-                    {!showComparisonBox ? (
-                        <ComparisonBoxButton color="primary" className="ms-auto" onClick={toggleComparisonBox}>
-                            <Badge color="primary-darker" className="ps-2 pe-2">
-                                {contributionAmount}
-                            </Badge>{' '}
-                            Compare contributions <FontAwesomeIcon icon={faChevronUp} />
-                        </ComparisonBoxButton>
-                    ) : (
-                        <ComparisonBox className="ms-auto">
-                            <Header className="d-flex">
-                                <Badge color="primary-darker" className="ps-2 pe-2 me-1" onClick={toggleComparisonBox}>
-                                    {contributionAmount}
-                                </Badge>{' '}
-                                <Button
-                                    color="link"
-                                    className="flex-grow-1 text-decoration-none p-0 text-white"
-                                    style={{ textAlign: 'left' }}
-                                    onClick={toggleComparisonBox}
-                                >
-                                    Compare contributions
-                                </Button>
-                                <div className="float-end">
-                                    <Tooltip content="Remove all contributions from comparison" disabled={showConfirmationPopover}>
-                                        <Popover
-                                            modal
-                                            open={showConfirmationPopover}
-                                            onOpenChange={(open) => setShowConfirmationPopover(open)}
-                                            content={
-                                                <div className="text-center p-1" style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
-                                                    <p className="mb-2">Are you sure?</p>
-                                                    <ButtonGroup size="sm" className="mt-1 mb-1">
-                                                        <Button
-                                                            onClick={() => {
-                                                                removeAllContributionsFromComparison();
-                                                                setShowConfirmationPopover(false);
-                                                            }}
-                                                            className="px-2"
-                                                            color="danger"
-                                                            style={{ paddingTop: 2, paddingBottom: 2 }}
-                                                        >
-                                                            <FontAwesomeIcon icon={faCheck} className="me-1" />
-                                                            Remove
-                                                        </Button>
-                                                        <Button
-                                                            onClick={() => {
-                                                                setShowConfirmationPopover(false);
-                                                            }}
-                                                            className="px-2"
-                                                            style={{ paddingTop: 2, paddingBottom: 2 }}
-                                                        >
-                                                            <FontAwesomeIcon icon={faTimes} className="me-1" /> Cancel
-                                                        </Button>
-                                                    </ButtonGroup>
-                                                </div>
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                onClick={() => setShowConfirmationPopover(true)}
-                                                className="ms-2 me-2"
-                                                size="sm"
-                                                icon={faTrash}
-                                            />
-                                        </Popover>
-                                    </Tooltip>
+        <>
+            <Button
+                variant="primary"
+                className={cn(
+                    'fixed right-8 z-[1000] rounded-b-none rounded-t-xl shadow-lg',
+                    cookieInfoDismissed ? 'bottom-0' : 'bottom-[50px] max-[480px]:bottom-[120px] max-[1100px]:bottom-[70px]',
+                )}
+                onPress={() => setIsDrawerOpen(true)}
+            >
+                <Chip color="accent" variant="secondary" size="sm">
+                    {contributionAmount}
+                </Chip>
+                Compare contributions
+                <FontAwesomeIcon icon={faChevronUp} />
+            </Button>
 
-                                    <FontAwesomeIcon icon={faChevronDown} onClick={toggleComparisonBox} />
+            <Drawer.Backdrop className="z-[1055]" isOpen={isDrawerOpen} onOpenChange={handleOpenChange} isDismissable>
+                <Drawer.Content placement="right">
+                    <Drawer.Dialog>
+                        <Drawer.Header className="flex flex-row flex-nowrap items-center gap-3 border-b border-border bg-surface px-5 py-3">
+                            <Chip color="accent" variant="secondary" size="sm">
+                                {contributionAmount}
+                            </Chip>
+                            <span className="shrink-0 grow font-semibold text-foreground">Compare contributions</span>
+
+                            <Tooltip content="Remove all contributions">
+                                <Button
+                                    isIconOnly
+                                    variant="ghost"
+                                    aria-label="Remove all contributions from comparison"
+                                    onPress={() => setShowConfirmation(true)}
+                                    size="sm"
+                                >
+                                    <FontAwesomeIcon icon={faTrashCan} size="sm" className="text-danger" />
+                                </Button>
+                            </Tooltip>
+
+                            <Drawer.CloseTrigger aria-label="Collapse comparison panel" />
+                        </Drawer.Header>
+
+                        {showConfirmation && (
+                            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-danger/5 px-5 py-2.5">
+                                <span className="text-sm font-medium text-danger">Remove all contributions?</span>
+                                <div className="flex shrink-0 gap-2">
+                                    <Button size="sm" variant="danger" onPress={removeAllContributionsFromComparison}>
+                                        <FontAwesomeIcon icon={faCheck} />
+                                        Remove
+                                    </Button>
+                                    <Button size="sm" variant="secondary" onPress={() => setShowConfirmation(false)}>
+                                        <FontAwesomeIcon icon={faTimes} />
+                                        Cancel
+                                    </Button>
                                 </div>
-                            </Header>
-                            <List>
-                                {allIds.map((contributionId) => (
-                                    <ContributionItem key={contributionId}>
-                                        <div className="d-flex">
-                                            <div className="pe-3">
-                                                <FontAwesomeIcon icon={faFile} />
-                                            </div>
-                                            <div className="flex-grow-1 text-break">
-                                                <Title
+                            </div>
+                        )}
+
+                        <Drawer.Body className="bg-surface p-0">
+                            <ScrollShadow className="h-full" orientation="vertical">
+                                <ul className="divide-y divide-border p-0">
+                                    {allIds.map((contributionId) => (
+                                        <li key={contributionId} className="flex items-center gap-2 px-3 py-2.5 hover:bg-default/40">
+                                            <div className="min-w-0 grow">
+                                                <Link
                                                     href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                         resourceId: byId[contributionId].paperId,
                                                         contributionId,
                                                     })}
+                                                    className="line-clamp-2 text-sm font-medium text-foreground no-underline hover:text-accent"
                                                 >
                                                     <PaperTitle title={byId[contributionId].paperTitle} />
-                                                </Title>
-                                                <Number>{byId[contributionId].contributionTitle}</Number>
+                                                </Link>
+                                                <p className="m-0 text-xs text-foreground/50">{byId[contributionId].contributionTitle}</p>
                                             </div>
-                                            <Tooltip content="Remove from comparison">
-                                                <span>
-                                                    <Remove>
-                                                        <FontAwesomeIcon icon={faTimes} onClick={() => removeFromComparison(contributionId)} />
-                                                    </Remove>
-                                                </span>
-                                            </Tooltip>
-                                        </div>
-                                    </ContributionItem>
-                                ))}
-                            </List>
-                            <div className="w-100 text-center">
-                                {contributionAmount > 1 ? (
-                                    <Link href={comparisonUrl}>
-                                        <StartComparison disabled={false} color="primary-darker" className="mb-2">
+                                            <div>
+                                                <Tooltip content="Remove from comparison">
+                                                    <Button
+                                                        isIconOnly
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onPress={() => removeFromComparison(contributionId)}
+                                                        aria-label={`Remove ${byId[contributionId].paperTitle} from comparison`}
+                                                    >
+                                                        <FontAwesomeIcon icon={faCircleXmark} className="text-danger" />
+                                                    </Button>
+                                                </Tooltip>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </ScrollShadow>
+                        </Drawer.Body>
+
+                        <Drawer.Footer className="justify-center border-t border-border bg-surface px-5 py-3">
+                            {contributionAmount > 1 ? (
+                                <Link href={comparisonUrl}>
+                                    <Button variant="primary">Start comparison</Button>
+                                </Link>
+                            ) : (
+                                <Tooltip content="Please select at least two contributions">
+                                    <span>
+                                        <Button variant="primary" isDisabled>
                                             Start comparison
-                                        </StartComparison>
-                                    </Link>
-                                ) : (
-                                    <Tooltip content="Please select at least two contributions">
-                                        <span>
-                                            <StartComparison disabled color="primary-darker" className="mb-2">
-                                                Start comparison
-                                            </StartComparison>
-                                        </span>
-                                    </Tooltip>
-                                )}
-                            </div>
-                        </ComparisonBox>
-                    )}
-                </Container>
-            </Navbar>
-        </ComparisonPopupStyled>
+                                        </Button>
+                                    </span>
+                                </Tooltip>
+                            )}
+                        </Drawer.Footer>
+                    </Drawer.Dialog>
+                </Drawer.Content>
+            </Drawer.Backdrop>
+        </>
     );
 };
 

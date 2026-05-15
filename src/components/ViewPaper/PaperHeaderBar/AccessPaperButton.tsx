@@ -1,13 +1,9 @@
-import { faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Dropdown, Skeleton } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import { getLinksByDoi, getLinksByTitle } from '@/services/unpaywall';
 
 type AccessPaperButtonProps = {
@@ -42,56 +38,77 @@ const AccessPaperButton: FC<AccessPaperButtonProps> = ({ paperLink = null, doi =
         doi ? `identifier:doi\\:${doi}` : `"${title}"`,
     )}`;
 
+    const staticItems: { key: string; label: string; href: string }[] = [];
+    if (paperLink) {
+        staticItems.push({ key: 'visit-paper', label: 'Visit paper', href: paperLink });
+    }
+    staticItems.push({ key: 'tib-portal', label: 'View in TIB portal', href: tibLink });
+
+    const linkItems = links.map((link, index) => ({
+        key: `unpaywall-${index}`,
+        label: link.name,
+        href: link.url,
+    }));
+
     return (
-        <ButtonDropdown isOpen={isMenuOpen} toggle={() => setIsMenuOpen((v) => !v)}>
-            <DropdownToggle style={{ marginRight: 2 }} size="sm" color="secondary" className="px-3 d-flex align-items-center">
-                Access paper <FontAwesomeIcon icon={faSortDown} style={{ margin: '-4px 0 0 6px' }} />
-            </DropdownToggle>
-            <DropdownMenu>
-                {paperLink && (
-                    <DropdownItem tag="a" href={paperLink} target="_blank" rel="noopener noreferrer">
-                        Visit paper
-                    </DropdownItem>
-                )}
-                <DropdownItem tag="a" href={tibLink} target="_blank" rel="noopener noreferrer">
-                    View in TIB portal
-                </DropdownItem>
-                {isLoading && (
-                    <DropdownItem disabled>
-                        <ContentLoader height="80" width="200" viewBox="0 0 200 50" speed={2}>
-                            <rect x="0" y="0" rx="0" ry="0" width="100%" height="20" />
-                            <rect x="0" y="30" rx="0" ry="0" width="100%" height="20" />
-                        </ContentLoader>
-                    </DropdownItem>
-                )}
-                {!isLoading && links.length > 0 && (
-                    <>
-                        {paperLink && <DropdownItem divider />}
-                        <Tooltip
-                            contentStyle={{ maxWidth: '300px' }}
-                            content="Results can be incomplete or incorrect (especially if no DOI is available for this paper)"
-                        >
-                            <span>
-                                <DropdownItem
-                                    tag="a"
-                                    className="dropdown-header"
-                                    href="https://unpaywall.org/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Alternative sources by Unpaywall
-                                </DropdownItem>
-                            </span>
-                        </Tooltip>
-                        {links.map((link, index) => (
-                            <DropdownItem key={index} tag="a" href={link.url} target="_blank" rel="noopener noreferrer">
-                                {link.name}
-                            </DropdownItem>
+        <Dropdown isOpen={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <Button size="sm" className="button--orkg-secondary shrink-0">
+                Access paper <FontAwesomeIcon icon={faChevronDown} className="text-[0.6rem] ml-1" />
+            </Button>
+            <Dropdown.Popover>
+                <Dropdown.Menu>
+                    <Dropdown.Section>
+                        {staticItems.map((item) => (
+                            <Dropdown.Item key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" textValue={item.label}>
+                                {item.label}
+                            </Dropdown.Item>
                         ))}
-                    </>
-                )}
-            </DropdownMenu>
-        </ButtonDropdown>
+                    </Dropdown.Section>
+                    {isLoading ? (
+                        <Dropdown.Section>
+                            <Dropdown.Item key="loading" isDisabled textValue="Loading">
+                                <div className="flex flex-col gap-2 w-full">
+                                    <Skeleton className="w-full h-5 rounded" />
+                                    <Skeleton className="w-full h-5 rounded" />
+                                </div>
+                            </Dropdown.Item>
+                        </Dropdown.Section>
+                    ) : (
+                        <Dropdown.Section>
+                            {linkItems.length > 0 && (
+                                <>
+                                    <Dropdown.Item
+                                        key="unpaywall-header"
+                                        href="https://unpaywall.org/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        textValue="Alternative sources by Unpaywall"
+                                    >
+                                        <Tooltip
+                                            contentStyle={{ maxWidth: '300px' }}
+                                            content="Results can be incomplete or incorrect (especially if no DOI is available for this paper)"
+                                        >
+                                            <span>Alternative sources by Unpaywall</span>
+                                        </Tooltip>
+                                    </Dropdown.Item>
+                                    {linkItems.map((item) => (
+                                        <Dropdown.Item
+                                            key={item.key}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            textValue={item.label}
+                                        >
+                                            {item.label}
+                                        </Dropdown.Item>
+                                    ))}
+                                </>
+                            )}
+                        </Dropdown.Section>
+                    )}
+                </Dropdown.Menu>
+            </Dropdown.Popover>
+        </Dropdown>
     );
 };
 

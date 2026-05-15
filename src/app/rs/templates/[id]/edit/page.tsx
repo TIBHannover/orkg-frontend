@@ -1,6 +1,5 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -14,6 +13,7 @@ import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { PaginatedResponse, Statement } from '@/services/backend/types';
@@ -80,8 +80,10 @@ const RSTemplateEditPage = () => {
 
     if (!canEditTemplate) {
         return (
-            <Container className="box clearfix pt-4 pb-4 ps-5 pe-5 rounded">
-                You cannot edit this statement template because it has some instances or you are not the creator
+            <Container>
+                <div className="box flow-root pt-6 pb-6 pl-12 pr-12 rounded">
+                    You cannot edit this statement template because it has some instances or you are not the creator
+                </div>
             </Container>
         );
     }
@@ -110,32 +112,38 @@ const RSTemplateEditPage = () => {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && (
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
+                </Container>
+            )}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && template && (
                 <>
                     <TitleBar>Edit Statement template: {template?.label}</TitleBar>
-                    <Container className="box clearfix pt-4 pb-4 ps-5 pe-5 rounded">
-                        <RosettaTemplateEditorProvider initialState={initializeRosettaTemplateEditor}>
-                            <RosettaTemplateEditor
-                                saveButtonText="Update statement template"
-                                onCancel={() =>
-                                    router.push(
-                                        reverse(ROUTES.RS_TEMPLATE, {
-                                            id,
-                                        }),
-                                    )
-                                }
-                                onCreate={async (templateId) => {
-                                    router.push(
-                                        reverse(ROUTES.RS_TEMPLATE, {
-                                            id: templateId,
-                                        }),
-                                    );
-                                }}
-                            />
-                        </RosettaTemplateEditorProvider>
+                    <Container>
+                        <div className="box flow-root pt-6 pb-6 pl-12 pr-12 rounded">
+                            <RosettaTemplateEditorProvider initialState={initializeRosettaTemplateEditor}>
+                                <RosettaTemplateEditor
+                                    saveButtonText="Update statement template"
+                                    onCancel={() =>
+                                        router.push(
+                                            reverse(ROUTES.RS_TEMPLATE, {
+                                                id,
+                                            }),
+                                        )
+                                    }
+                                    onCreate={async (templateId) => {
+                                        router.push(
+                                            reverse(ROUTES.RS_TEMPLATE, {
+                                                id: templateId,
+                                            }),
+                                        );
+                                    }}
+                                />
+                            </RosettaTemplateEditorProvider>
+                        </div>
                     </Container>
                 </>
             )}

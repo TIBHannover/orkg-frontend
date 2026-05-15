@@ -1,15 +1,10 @@
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Modal, Tooltip } from '@heroui/react';
 import { ClipboardEvent, FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Tooltip from '@/components/Utils/Tooltip';
 import TitleWarningAlert from '@/components/ViewPaper/AbstractModal/TitleWarningAlert';
 import { RootStore } from '@/slices/types';
 import { setAbstract as setAbstractStore } from '@/slices/viewPaperSlice';
@@ -39,32 +34,64 @@ const AbstractModal: FC<AbstractModalProps> = ({ toggle }) => {
     };
 
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Abstract</ModalHeader>
-            <ModalBody>
-                <TitleWarningAlert />
-                <Alert color="info">
-                    Paper abstracts are only used to generate better suggestions and are not stored in the ORKG. After reloading the page, the
-                    abstract will be lost
-                </Alert>
-                <Label for="paper-abstract">
-                    <Tooltip message="Enter the paper abstract to get better suggestions for you paper">Paper abstract</Tooltip>
-                </Label>
-                <Textarea
-                    id="paper-abstract"
-                    className="form-control ps-2 pe-2"
-                    minRows={8}
-                    value={abstract}
-                    onChange={(e) => setAbstract(e.target.value)}
-                    onPaste={stripLineBreaks}
-                />
-            </ModalBody>
-            <ModalFooter className="d-flex">
-                <Button color="primary" className="float-end" onClick={handleSave}>
-                    Fetch suggestions
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-2xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Abstract</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6">
+                        <div className="flex flex-col gap-3">
+                            <TitleWarningAlert />
+                            <Alert status="accent">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Abstract is not stored</Alert.Title>
+                                    <Alert.Description>
+                                        Paper abstracts are only used to generate better suggestions and are not stored in the ORKG. After reloading
+                                        the page, the abstract will be lost.
+                                    </Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="paper-abstract" className="text-sm font-medium inline-flex items-center gap-1">
+                                    Paper abstract
+                                    <Tooltip delay={0}>
+                                        <Tooltip.Trigger>
+                                            <FontAwesomeIcon icon={faQuestionCircle} className="text-muted cursor-help" />
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content showArrow>
+                                            <Tooltip.Arrow />
+                                            Enter the paper abstract to get better suggestions for your paper
+                                        </Tooltip.Content>
+                                    </Tooltip>
+                                </label>
+                                <Textarea
+                                    id="paper-abstract"
+                                    className="w-full px-3 py-2 rounded-md border border-border bg-field-background text-field-foreground focus:outline-none focus:ring-2 focus:ring-focus/40"
+                                    minRows={8}
+                                    value={abstract}
+                                    onChange={(e) => setAbstract(e.target.value)}
+                                    onPaste={stripLineBreaks}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onPress={handleSave}>
+                            Fetch suggestions
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

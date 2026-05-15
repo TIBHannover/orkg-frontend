@@ -229,7 +229,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Node and Edge definitions needed to visualize the nodes that are directly related with the subject term. Ontology ID and encoded iri are required.  */
+        /** @description Node and Edge definitions needed to visualize the nodes that are directly related with the subject term. Ontology ID and encoded iri are required. */
         get: operations['retrieveImmediateGraph'];
         put?: never;
         post?: never;
@@ -644,6 +644,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    '/api/v2/defined-fields': {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations['getDefinedFields'];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     '/api/v2/classes': {
         parameters: {
             query?: never;
@@ -1029,22 +1045,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    '/api/ontologies/{onto}/terms/{iri}/json': {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations['getJson'];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     '/api/ontologies/{onto}/terms/{iri}/instances': {
         parameters: {
             query?: never;
@@ -1295,7 +1295,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Node and Edge definitions needed to visualize the nodes that are directly related with the subject term. Ontology ID and encoded iri are required.  */
+        /** @description Node and Edge definitions needed to visualize the nodes that are directly related with the subject term. Ontology ID and encoded iri are required. */
         get: operations['retrieveImmediateGraph_1'];
         put?: never;
         post?: never;
@@ -1838,6 +1838,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    '/api/fulljson/{onto}/entity/{iri}/find': {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations['getJson'];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    '/api/fulljson/entities': {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations['getEntities_1'];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     '/error': {
         parameters: {
             query?: never;
@@ -1845,13 +1877,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations['handleError_2'];
-        put: operations['handleError_3'];
-        post: operations['handleError_6'];
-        delete: operations['handleError_5'];
-        options: operations['handleError_1'];
-        head: operations['handleError'];
-        patch: operations['handleError_4'];
+        get: operations['handleError_5'];
+        put: operations['handleError_2'];
+        post: operations['handleError_1'];
+        delete: operations['handleError'];
+        options: operations['handleError_4'];
+        head: operations['handleError_3'];
+        patch: operations['handleError_6'];
         trace?: never;
     };
     '/api/v2/health': {
@@ -1861,13 +1893,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations['checkHealth_2'];
-        put: operations['checkHealth_3'];
-        post: operations['checkHealth_6'];
-        delete: operations['checkHealth_5'];
-        options: operations['checkHealth_1'];
-        head: operations['checkHealth'];
-        patch: operations['checkHealth_4'];
+        get: operations['checkHealth_5'];
+        put: operations['checkHealth_2'];
+        post: operations['checkHealth_1'];
+        delete: operations['checkHealth'];
+        options: operations['checkHealth_4'];
+        head: operations['checkHealth_3'];
+        patch: operations['checkHealth_6'];
         trace?: never;
     };
 }
@@ -2019,6 +2051,12 @@ export interface components {
             sorted?: boolean;
             empty?: boolean;
             unsorted?: boolean;
+        };
+        DefinedFieldDto: {
+            ols4FieldName?: string;
+            ols3FieldName?: string;
+            description?: string;
+            dataType?: string;
         };
         PagedModelV1Term: {
             links?: components['schemas']['Link'][];
@@ -2553,16 +2591,48 @@ export interface operations {
     getProperties: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example definition
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     [key: string]: string[];
                 };
+                schema?: string[];
+                classification?: string[];
+                ontology?: string[];
+                /** @description Set to true (default setting is false) for intersection (default behavior is union) of classifications. */
+                exclusive?: boolean;
+                /** @description Use License option to filter based on license.label, license.logo and license.url variables. Use Composite Option to filter based on the objects (i.e. collection, subject) within the classifications variable. Use Linear option to filter based on String and Collection<String> based variables. */
+                option?: 'COMPOSITE' | 'LINEAR' | 'LICENSE';
             };
             header?: never;
             path?: never;
@@ -2591,13 +2661,38 @@ export interface operations {
     getOntologies: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example efo
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label, ontologyId and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example ontologyId
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     [key: string]: string[];
                 };
@@ -2640,6 +2735,10 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
             };
             cookie?: never;
@@ -3025,13 +3124,32 @@ export interface operations {
     getProperties_1: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example definition
+                 */
                 search?: string;
-                searchFields?: string;
-                boostFields?: string;
+                /** @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1 */
+                'search fields'?: string;
+                /** @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. */
+                'boost fields'?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3043,6 +3161,10 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to search properties in.
+                 * @example efo
+                 */
                 onto: string;
             };
             cookie?: never;
@@ -3074,7 +3196,15 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to search properties in.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the property, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000742
+                 */
                 property: string;
             };
             cookie?: never;
@@ -3102,12 +3232,27 @@ export interface operations {
     getChildrenByOntology: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to search properties in.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the property, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000824
+                 */
                 property: string;
             };
             cookie?: never;
@@ -3135,12 +3280,27 @@ export interface operations {
     getAncestorsByOntology: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to search properties in.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the property, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000742
+                 */
                 property: string;
             };
             cookie?: never;
@@ -3168,13 +3328,38 @@ export interface operations {
     getIndividuals: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example metadata complete
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3186,6 +3371,10 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to search individuals in.
+                 * @example efo
+                 */
                 onto: string;
             };
             cookie?: never;
@@ -3218,7 +3407,15 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the individual, this value must be double URL encoded
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000002
+                 */
                 individual: string;
             };
             cookie?: never;
@@ -3247,12 +3444,27 @@ export interface operations {
     getIndividualAncestorsByOntology: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example afo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the individual, this value must be double URL encoded
+                 * @example http%3A%2F%2Fpurl.allotrope.org%2Fontologies%2Fprocess%23AFP_0003781
+                 */
                 individual: string;
             };
             cookie?: never;
@@ -3280,14 +3492,40 @@ export interface operations {
     getTerms: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example liver disease
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description This parameter is a white space separated list of fields to facet data by. */
                 facetFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3299,6 +3537,10 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
             };
             cookie?: never;
@@ -3330,7 +3572,15 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the entity, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_1000967
+                 */
                 entity: string;
             };
             cookie?: never;
@@ -3358,13 +3608,38 @@ export interface operations {
     getClasses: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example liver disease
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3376,6 +3651,10 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
             };
             cookie?: never;
@@ -3407,7 +3686,15 @@ export interface operations {
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the class, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_1000967
+                 */
                 class: string;
             };
             cookie?: never;
@@ -3435,12 +3722,21 @@ export interface operations {
     getClassIndividuals: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /** @description Ontology Id to get the information about. */
                 onto: string;
+                /** @description The IRI of the class, this value must be double URL encoded */
                 class: string;
             };
             cookie?: never;
@@ -3468,12 +3764,27 @@ export interface operations {
     getHierarchicalChildrenByOntology: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the class, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000001
+                 */
                 class: string;
             };
             cookie?: never;
@@ -3501,12 +3812,27 @@ export interface operations {
     getHierarchicalAncestorsByOntology: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the class, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_1000967
+                 */
                 class: string;
             };
             cookie?: never;
@@ -3534,12 +3860,27 @@ export interface operations {
     getChildrenByOntology_1: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the class, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000001
+                 */
                 class: string;
             };
             cookie?: never;
@@ -3567,12 +3908,27 @@ export interface operations {
     getAncestorsByOntology_1: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
             };
             header?: never;
             path: {
+                /**
+                 * @description Ontology Id to get the information about.
+                 * @example efo
+                 */
                 onto: string;
+                /**
+                 * @description The IRI of the class, this value must be double URL encoded
+                 * @example http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_1000967
+                 */
                 class: string;
             };
             cookie?: never;
@@ -3665,13 +4021,38 @@ export interface operations {
     getIndividuals_1: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example metadata complete
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3680,6 +4061,13 @@ export interface operations {
                 } & {
                     [key: string]: string[];
                 };
+                schema?: string[];
+                classification?: string[];
+                ontology?: string[];
+                /** @description Set to true (default setting is false) for intersection (default behavior is union) of classifications. */
+                exclusive?: boolean;
+                /** @description Use License option to filter based on license.label, license.logo and license.url variables. Use Composite Option to filter based on the objects (i.e. collection, subject) within the classifications variable. Use Linear option to filter based on String and Collection<String> based variables. */
+                option?: 'COMPOSITE' | 'LINEAR' | 'LICENSE';
             };
             header?: never;
             path?: never;
@@ -3709,14 +4097,40 @@ export interface operations {
     getEntities: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example liver disease
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description This parameter is a white space separated list of fields to facet data by. */
                 facetFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3725,6 +4139,13 @@ export interface operations {
                 } & {
                     [key: string]: string[];
                 };
+                schema?: string[];
+                classification?: string[];
+                ontology?: string[];
+                /** @description Set to true (default setting is false) for intersection (default behavior is union) of classifications. */
+                exclusive?: boolean;
+                /** @description Use License option to filter based on license.label, license.logo and license.url variables. Use Composite Option to filter based on the objects (i.e. collection, subject) within the classifications variable. Use Linear option to filter based on String and Collection<String> based variables. */
+                option?: 'COMPOSITE' | 'LINEAR' | 'LICENSE';
             };
             header?: never;
             path?: never;
@@ -3750,16 +4171,68 @@ export interface operations {
             };
         };
     };
+    getDefinedFields: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    '*/*': components['schemas']['DefinedFieldDto'][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getClasses_1: {
         parameters: {
             query: {
+                /**
+                 * @description Specify the size of the result you want to get in the output
+                 * @example {
+                 *       "page": 0,
+                 *       "size": 20
+                 *     }
+                 */
                 pageable: components['schemas']['Pageable'];
                 lang?: string;
+                /**
+                 * @description This parameter specify the search query text.
+                 * @example liver disease
+                 */
                 search?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields to search in. The fields are weighted equally. The fields are defined in the schema. The default fields are label and definition. The fields weights can be boosted by appending a caret ^ and a positive integer to the field name. For example, label^3 synonyms^2 description^1 logical_definition^1
+                 * @example label^100 description
+                 */
                 searchFields?: string;
+                /**
+                 * @description This parameter is a white space separated list of fields appended with a caret to boost in search. The default fields are type, is_defining_ontology, label, curie, shortForm and synonym . The fields weights can be boosted by appending a caret ^ and a positive integer to the field name.
+                 * @example label^100 curie^50
+                 */
                 boostFields?: string;
+                /** @description As the name suggests its a boolean parameter to specify if search should be exact match or not.The default value is false */
                 exactMatch?: boolean;
+                /** @description A boolean parameter to specify if obsolete entities should be included or not. Default value is false. */
                 includeObsoleteEntities?: boolean;
+                /**
+                 * @description Specify any other search field here which are not specified by searchFields or boostFields.
+                 * @example {}
+                 */
                 searchProperties: {
                     all?: {
                         [key: string]: string;
@@ -3768,6 +4241,13 @@ export interface operations {
                 } & {
                     [key: string]: string[];
                 };
+                schema?: string[];
+                classification?: string[];
+                ontology?: string[];
+                /** @description Set to true (default setting is false) for intersection (default behavior is union) of classifications. */
+                exclusive?: boolean;
+                /** @description Use License option to filter based on license.label, license.logo and license.url variables. Use Composite Option to filter based on the objects (i.e. collection, subject) within the classifications variable. Use Linear option to filter based on String and Collection<String> based variables. */
+                option?: 'COMPOSITE' | 'LINEAR' | 'LICENSE';
             };
             header?: never;
             path?: never;
@@ -3863,8 +4343,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -3946,8 +4426,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -4239,8 +4719,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the property, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @description The IRI of the property
+                 * @example http://purl.obolibrary.org/obo/DUO_0000041
                  */
                 iri?: string;
                 /**
@@ -4320,18 +4800,18 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the property, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @description The IRI of the property.
+                 * @example http://purl.obolibrary.org/obo/GALLONT_0000000
                  */
                 iri?: string;
                 /**
                  * @description This refers to the short form of the property.
-                 * @example DUO_0000041
+                 * @example GALLONT_0000000
                  */
                 short_form?: string;
                 /**
                  * @description This refers to the OBO ID of the property.
-                 * @example DUO:0000041
+                 * @example GALLONT:0000000
                  */
                 obo_id?: string;
                 lang?: string;
@@ -4467,8 +4947,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -4784,7 +5264,7 @@ export interface operations {
                 onto: string;
                 /**
                  * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBFO_0000051
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
                  */
                 iri: string;
                 /**
@@ -4804,45 +5284,6 @@ export interface operations {
                 };
                 content: {
                     'application/json': string;
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getJson: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /**
-                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
-                 * @example duo
-                 */
-                onto: string;
-                /**
-                 * @description The IRI of the term, this value must be single URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
-                 */
-                iri: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': string;
-                    'application/hal+json': string;
                 };
             };
             /** @description Not Found */
@@ -5699,8 +6140,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000041
                  */
                 iri?: string;
                 /**
@@ -5801,7 +6242,7 @@ export interface operations {
                 onto: string;
                 /**
                  * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBFO_0000179
                  */
                 iri: string;
             };
@@ -5924,13 +6365,13 @@ export interface operations {
             header?: never;
             path: {
                 /**
-                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
-                 * @example duo
+                 * @description The ID of the ontology.
+                 * @example mondo
                  */
                 onto: string;
                 /**
                  * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBFO_0000051
                  */
                 iri: string;
             };
@@ -5965,13 +6406,13 @@ export interface operations {
             header?: never;
             path: {
                 /**
-                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
-                 * @example duo
+                 * @description The ID of the ontology.
+                 * @example mondo
                  */
                 onto: string;
                 /**
                  * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBFO_0000051
                  */
                 iri: string;
             };
@@ -6006,13 +6447,13 @@ export interface operations {
             header?: never;
             path: {
                 /**
-                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
-                 * @example duo
+                 * @description The ID of the ontology.
+                 * @example mondo
                  */
                 onto: string;
                 /**
                  * @description The IRI of the property, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000041
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBFO_0000051
                  */
                 iri: string;
             };
@@ -6084,8 +6525,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6137,18 +6578,18 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the individual, this IRI should exist in the specified ontology by {onto} param. This value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000103
+                 * @description The IRI of the individual, this IRI should exist in the specified ontology by {onto} param.
+                 * @example http://purl.obolibrary.org/obo/IAO_0000002
                  */
                 iri?: string;
                 /**
                  * @description This refers to the short form of the individual, it should exist in the specified ontology by {onto} param.
-                 * @example IAO_0000124
+                 * @example IAO_0000002
                  */
                 short_form?: string;
                 /**
                  * @description This refers to the OBO ID of the individual, it should exist in the specified ontology by {onto} param.
-                 * @example IAO:0000124
+                 * @example IAO:0000002
                  */
                 obo_id?: string;
                 lang?: string;
@@ -6351,8 +6792,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6404,8 +6845,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6457,8 +6898,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6510,8 +6951,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6563,8 +7004,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6616,8 +7057,8 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the term, this value must be double URL encoded
-                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 * @description The IRI of the term.
+                 * @example http://purl.obolibrary.org/obo/DUO_0000017
                  */
                 iri?: string;
                 /**
@@ -6772,18 +7213,18 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description The IRI of the individual, this value must be double URL encoded
-                 * @example http%3A%252F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000124
+                 * @description The IRI of the individual.
+                 * @example http://purl.obolibrary.org/obo/GAZ_00043159
                  */
                 iri?: string;
                 /**
                  * @description This refers to the short form of the individual.
-                 * @example IAO_0000124
+                 * @example GAZ_00043159
                  */
                 short_form?: string;
                 /**
                  * @description This refers to the OBO ID of the individual.
-                 * @example IAO:0000124
+                 * @example GAZ:00043159
                  */
                 obo_id?: string;
                 lang?: string;
@@ -6822,7 +7263,7 @@ export interface operations {
             path: {
                 /**
                  * @description The IRI of the individual, this value must be double URL encoded
-                 * @example http%3A%252F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000124
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FGAZ_00043159
                  */
                 iri: string;
             };
@@ -6854,17 +7295,17 @@ export interface operations {
             query?: {
                 /**
                  * @description The IRI of the individual, this value must be double URL encoded
-                 * @example http%3A%252F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000124
+                 * @example http://purl.obolibrary.org/obo/OHD_0000363
                  */
                 iri?: string;
                 /**
                  * @description This refers to the short form of the individual.
-                 * @example IAO_0000124
+                 * @example OHD_0000363
                  */
                 short_form?: string;
                 /**
                  * @description This refers to the OBO ID of the individual.
-                 * @example IAO:0000124
+                 * @example OHD:0000363
                  */
                 obo_id?: string;
                 lang?: string;
@@ -6903,7 +7344,7 @@ export interface operations {
             path: {
                 /**
                  * @description The IRI of the individual, this value must be double URL encoded
-                 * @example http%3A%252F%2Fpurl.obolibrary.org%2Fobo%2FIAO_0000124
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FOHD_0000363
                  */
                 iri: string;
             };
@@ -6930,11 +7371,25 @@ export interface operations {
             };
         };
     };
-    handleError_2: {
+    getJson: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description entity type */
+                entity_type: 'ONTOLOGY' | 'TERM' | 'PROPERTY' | 'INDIVIDUAL';
+            };
             header?: never;
-            path?: never;
+            path: {
+                /**
+                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
+                 * @example duo
+                 */
+                onto: string;
+                /**
+                 * @description The IRI of the term, this value must be single URL encoded
+                 * @example http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDUO_0000017
+                 */
+                iri: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -6945,7 +7400,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    'application/json': components['schemas']['ErrorResponse'];
+                    'application/json': string;
+                    'application/hal+json': string;
                 };
             };
             /** @description Not Found */
@@ -6957,9 +7413,17 @@ export interface operations {
             };
         };
     };
-    handleError_3: {
+    getEntities_1: {
         parameters: {
-            query?: never;
+            query: {
+                /**
+                 * @description The ID of the ontology. For example for Data Use Ontology, the ID is duo.
+                 * @example duo
+                 */
+                onto?: string;
+                /** @description entity type */
+                entity_type: 'ONTOLOGY' | 'TERM' | 'PROPERTY' | 'INDIVIDUAL';
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -6972,34 +7436,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    'application/json': components['schemas']['ErrorResponse'];
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    handleError_6: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['ErrorResponse'];
+                    'application/json': components['schemas']['PageString'];
+                    'application/hal+json': components['schemas']['PageString'];
                 };
             };
             /** @description Not Found */
@@ -7012,6 +7450,33 @@ export interface operations {
         };
     };
     handleError_5: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['ErrorResponse'];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    handleError_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -7119,7 +7584,7 @@ export interface operations {
             };
         };
     };
-    checkHealth_2: {
+    handleError_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -7134,7 +7599,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    '*/*': string;
+                    'application/json': components['schemas']['ErrorResponse'];
                 };
             };
             /** @description Not Found */
@@ -7146,7 +7611,7 @@ export interface operations {
             };
         };
     };
-    checkHealth_3: {
+    handleError_6: {
         parameters: {
             query?: never;
             header?: never;
@@ -7161,34 +7626,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    '*/*': string;
-                };
-            };
-            /** @description Not Found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    checkHealth_6: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    '*/*': string;
+                    'application/json': components['schemas']['ErrorResponse'];
                 };
             };
             /** @description Not Found */
@@ -7201,6 +7639,33 @@ export interface operations {
         };
     };
     checkHealth_5: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    '*/*': string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    checkHealth_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -7282,6 +7747,60 @@ export interface operations {
         };
     };
     checkHealth_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    '*/*': string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    checkHealth_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    '*/*': string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    checkHealth_6: {
         parameters: {
             query?: never;
             header?: never;

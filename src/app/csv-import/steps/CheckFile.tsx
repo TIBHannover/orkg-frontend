@@ -1,12 +1,11 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Alert } from '@heroui/react';
+import { FC, useState } from 'react';
 import { ZodError } from 'zod';
 import { fromError } from 'zod-validation-error';
 
 import Body from '@/app/csv-import/steps/components/Body';
 import Header from '@/app/csv-import/steps/components/Header';
 import { MappedColumn } from '@/app/csv-import/steps/helpers';
-import Alert from '@/components/Ui/Alert/Alert';
-import Table from '@/components/Ui/Table/Table';
 
 type CheckFileProps = {
     data: string[][];
@@ -42,7 +41,7 @@ const CheckFile: FC<CheckFileProps> = ({
                     cell === false ? (
                         // eslint-disable-next-line react/no-array-index-key
                         <div key={`error-${i}-${j}`}>
-                            <strong>Row {i + 1}</strong> - <b>{initialHeaders[j] || `Column ${j + 1}`}</b>: {fromError(cellValidation[i][j]).message}
+                            <strong>Row {i + 1}</strong>- <b>{initialHeaders[j] || `Column ${j + 1}`}</b>: {fromError(cellValidation[i][j]).message}
                         </div>
                     ) : null,
                 ),
@@ -72,29 +71,39 @@ const CheckFile: FC<CheckFileProps> = ({
             {data && data.length > 0 && (
                 <>
                     {!allCellsValid && (
-                        <Alert color="danger" className="mt-3" fade={false}>
-                            Some cells contain invalid data. Please review the highlighted errors in the table below.
-                            {generateInvalidationMessage().length > 0 && (
-                                <>
-                                    <div className="mt-2 mb-1">
-                                        <strong>Examples of errors:</strong>
-                                    </div>
-                                    {generateInvalidationMessage()}
-                                    {booleanCellValidation.flat().filter((cell) => cell === false).length > 5 && (
-                                        <div className="mt-1 font-italic">And more errors not shown...</div>
+                        <Alert status="warning" className="mt-2 mb-6">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>Invalid data detected</Alert.Title>
+                                <Alert.Description>
+                                    Some cells contain invalid data. Please review the highlighted errors in the table below.
+                                    {generateInvalidationMessage().length > 0 && (
+                                        <>
+                                            <div className="mt-2 mb-1">
+                                                <strong>Examples of errors:</strong>
+                                            </div>
+                                            {generateInvalidationMessage()}
+                                            {booleanCellValidation.flat().filter((cell) => cell === false).length > 5 && (
+                                                <div className="mt-1 italic">And more errors not shown...</div>
+                                            )}
+                                        </>
                                     )}
-                                </>
-                            )}
+                                </Alert.Description>
+                            </Alert.Content>
                         </Alert>
                     )}
 
-                    <div className="tw:overflow-auto tw:bg-[var(--color-light-lighter)] tw:text-sm tw:max-h-[500px] tw:border-2 tw:border-[var(--color-secondary)] tw:rounded">
-                        <Table size="sm" bordered hover className="m-0 p-0">
-                            <thead className="tw:sticky tw:top-0 tw:z-8 tw:!bg-white">
+                    <div className="overflow-auto bg-surface text-sm max-h-[500px] border-2 border-secondary rounded">
+                        <table className="w-full border-separate border-spacing-0 text-xs [&_th]:border-b [&_th]:border-separator [&_th]:px-2 [&_th]:py-1.5 [&_td]:border-b [&_td]:border-separator [&_td]:px-3 [&_td]:py-2">
+                            <thead className="sticky top-0 z-8 bg-white">
                                 <tr>
-                                    <th className="tw:w-[50px] tw:min-w-[50px] tw:max-w-[65px] tw:sticky tw:left-0 tw:!bg-white">#</th>
+                                    <th className="w-[50px] min-w-[50px] max-w-[65px] sticky left-0 bg-white text-left">#</th>
                                     {mappedColumns.map((column, i) => (
-                                        <th key={i} style={{ width: ColumnWidth, minWidth: ColumnWidth, maxWidth: ColumnWidth }}>
+                                        <th
+                                            key={i}
+                                            className="text-left"
+                                            style={{ width: ColumnWidth, minWidth: ColumnWidth, maxWidth: ColumnWidth }}
+                                        >
                                             <Header debugMode={debugMode} data={data} i={i} column={column} />
                                         </th>
                                     ))}
@@ -111,7 +120,7 @@ const CheckFile: FC<CheckFileProps> = ({
                                 handleBlur={handleBlur}
                                 debugMode={debugMode}
                             />
-                        </Table>
+                        </table>
                     </div>
                 </>
             )}

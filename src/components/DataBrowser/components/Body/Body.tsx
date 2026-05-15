@@ -1,6 +1,6 @@
+import { Skeleton } from '@heroui/react';
 import { groupBy, uniqBy } from 'lodash';
 import { Fragment, ReactElement } from 'react';
-import Skeleton from 'react-loading-skeleton';
 
 import AddStatement from '@/components/DataBrowser/components/Body/AddStatement/AddStatement';
 import NoData from '@/components/DataBrowser/components/Body/NoData/NoData';
@@ -51,7 +51,12 @@ const Body = () => {
     }
 
     if (isLoadingStatements) {
-        return <Skeleton count={2} />;
+        return (
+            <div className="flex flex-col gap-2">
+                <Skeleton className="w-full h-4 rounded" />
+                <Skeleton className="w-full h-4 rounded" />
+            </div>
+        );
     }
 
     const valueWrapper = (children: ReactElement) => <ValuePreviewFactory value={entity as Resource}>{children}</ValuePreviewFactory>;

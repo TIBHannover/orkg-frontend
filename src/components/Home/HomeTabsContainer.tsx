@@ -101,7 +101,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                     key: tab.id,
                     children: (
                         <>
-                            <div className="d-flex justify-content-end align-items-center my-2">
+                            <div className="flex justify-end items-center my-2">
                                 <ContentTypeVisibilityFilter isLoading={isLoading} />
                             </div>
                             <hr className="my-0" />
@@ -139,7 +139,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
                         }
                         color="primary"
                         size="sm"
-                        className="flex-shrink-0 me-2"
+                        className="shrink-0 mr-2"
                     >
                         View more
                     </Button>

@@ -16,7 +16,7 @@ const Filters: FC<FiltersProps> = ({ predicateId, path, setIsOpenFilterPopover }
     const type = getType({ id: predicateId, path });
 
     return (
-        <div className="tw:text-body tw:min-w-72 tw:py-2">
+        <div className="min-w-72">
             {type === 'date' && <DateFilter predicateId={predicateId} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />}
             {type === 'number' && <NumberFilter predicateId={predicateId} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />}
             {(type === 'text' || type === 'category') && (

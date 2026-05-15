@@ -2,6 +2,7 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Checkbox, Label } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { ZodError } from 'zod';
 
@@ -21,10 +22,6 @@ import { validateColumns, validateCsvStructure, validateRequiredFields, validate
 import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import DATA_TYPES from '@/constants/DataTypes';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { getPredicate, getPredicates } from '@/services/backend/predicates';
@@ -53,26 +50,18 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
         setData(newData);
     };
 
-    // Function to properly escape CSV values
     const escapeCsvValue = (value: string): string => {
-        // Convert to string if not already
         const str = String(value);
-
-        // If the value contains double quotes, commas, newlines, or carriage returns, it needs to be quoted
         if (str.includes('"') || str.includes(',') || str.includes('\n') || str.includes('\r')) {
-            // Escape double quotes by doubling them and wrap the entire value in quotes
             return `"${str.replace(/"/g, '""')}"`;
         }
-
         return str;
     };
 
-    // Function to generate properly escaped CSV content
     const generateCsvContent = (csvData: string[][]): string => {
         return csvData.map((row) => row.map((cell) => escapeCsvValue(cell)).join(',')).join('\n');
     };
 
-    // Function to handle CSV download
     const handleCsvDownload = () => {
         const csvContent = generateCsvContent(data);
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -92,19 +81,16 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
         setColumnValidation(validateColumns(_data));
 
         const _cellValidations = _data.slice(1).map((row) => {
-            // Validate required fields (title/doi) once per row
             const requiredFieldsError = validateRequiredFields(row, columnTypes);
 
             return row.map((cell, colIndex) => {
                 const currentColumn = columnTypes[colIndex];
                 if (!currentColumn) return false;
 
-                // If there's a required fields error and this is a title or doi column, return that error
                 if (requiredFieldsError && (currentColumn.predicate?.id === 'title' || currentColumn.predicate?.id === PREDICATES.HAS_DOI)) {
                     return requiredFieldsError;
                 }
 
-                // Otherwise, validate the individual cell
                 return validateValueOfCell(cell, currentColumn, true);
             });
         });
@@ -134,13 +120,11 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
     };
 
     const handleOnFileLoaded = async ({ _data }: { _data?: string[][] }) => {
-        // First, validate the CSV structure
         const _d = _data ?? data;
         const structuralError = validateCsvStructure(_d);
         setStructuralValidation(structuralError);
 
         if (structuralError) {
-            // If there are structural issues, stop processing and clear existing data
             setInitialHeaders([]);
             setMappedColumns([]);
             handleUpdateData([]);
@@ -152,12 +136,10 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
 
         setInitialHeaders(_d[0]);
         const newData = [..._d];
-        // Step 1: determine column types either from header<type> or by auto-detection
         const rows = _d.slice(1);
         const types = newData[0].map((header, colIndex) => {
             const { hasTypeInfo, typeStr } = parseCellString(header);
             if (hasTypeInfo && typeStr) {
-                // If a type is specified in the header (e.g., <string>), use it directly
                 const typeObj = findTypeByIdOrName(typeStr);
                 if (typeObj) {
                     return typeObj;
@@ -168,11 +150,10 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                 TYPE_DROPDOWN_OPTIONS,
             );
         });
-        // Step 2: map columns by trimming of a <type>, if provided
         const _mappingColumns = await Promise.all(
             newData[0].map(async (header, colIndex) => {
                 const { label, entityId } = parseCellString(header);
-                let matchedProperty = matchHeaderByLabel(label); // if label fits with the default properties
+                let matchedProperty = matchHeaderByLabel(label);
 
                 if (!matchedProperty) {
                     if (entityId) {
@@ -227,7 +208,7 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                         <>
                             CSV import
                             <Tooltip content="Open help center">
-                                <span className="ms-3">
+                                <span className="ml-4">
                                     <a
                                         href="https://www.orkg.org/help-center/article/16/Import_CSV_files_in_ORKG"
                                         target="_blank"
@@ -249,15 +230,16 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                 >
                     <UploadForm handleOnFileLoaded={handleOnFileLoaded} />
                     {structuralValidation && (
-                        <div className="mt-3">
-                            <div className="alert alert-danger" role="alert">
-                                <strong>CSV Structure Error:</strong> {structuralValidation}
-                            </div>
-                        </div>
+                        <Alert status="danger" className="mt-4">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>CSV Structure Error</Alert.Title>
+                                <Alert.Description>{structuralValidation}</Alert.Description>
+                            </Alert.Content>
+                        </Alert>
                     )}
                 </StepContainer>
             )}
-
             <StepContainer
                 step={`${stepCounter + 2}`}
                 title="Map properties"
@@ -298,16 +280,21 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
             <StepContainer
                 step={`${stepCounter + 4}`}
                 title={
-                    <div className="d-flex justify-content-between">
+                    <div className="flex justify-between">
                         Check file{' '}
                         {data && data.length > 0 && (
-                            <div className="d-flex align-items-center">
-                                <FormGroup check className="me-2 d-flex align-items-center" style={{ fontSize: '14px' }}>
-                                    <Label check>
-                                        <Input type="checkbox" onChange={() => setDebugMode((v) => !v)} checked={debugMode} /> Debug mode
-                                    </Label>
-                                </FormGroup>
-                                <Button className="text-decoration-none btn-sm btn-secondary btn" onClick={handleCsvDownload}>
+                            <div className="flex items-center gap-3">
+                                <Checkbox id="csv-debug-mode" isSelected={debugMode} onChange={setDebugMode}>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    <Checkbox.Content>
+                                        <Label htmlFor="csv-debug-mode" className="text-sm font-normal">
+                                            Debug mode
+                                        </Label>
+                                    </Checkbox.Content>
+                                </Checkbox>
+                                <Button variant="secondary" size="sm" onPress={handleCsvDownload}>
                                     Export as CSV
                                 </Button>
                             </div>
@@ -331,7 +318,6 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                     debugMode={debugMode}
                 />
             </StepContainer>
-
             <StepContainer
                 step={`${stepCounter + 5}`}
                 title="Import papers"
@@ -340,11 +326,11 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                 hasBorder={!showUploadForm}
             >
                 {!isFinished ? (
-                    <Button color="primary" onClick={() => setIsOpenConfirmModal(true)}>
+                    <Button variant="primary" onPress={() => setIsOpenConfirmModal(true)}>
                         Preview & import
                     </Button>
                 ) : (
-                    <Button color="primary" disabled>
+                    <Button variant="primary" isDisabled>
                         Import finished
                     </Button>
                 )}

@@ -1,54 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Card, Chip } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import { resolveFeaturedComparisonSolidIcon } from '@/components/FeaturedComparisons/featuredComparisonSolidIcons';
-import Badge from '@/components/Ui/Badge/Badge';
-import Card from '@/components/Ui/Card/Card';
-import CardBody from '@/components/Ui/Card/CardBody';
-import CardText from '@/components/Ui/Card/CardText';
-import CardTitle from '@/components/Ui/Card/CardTitle';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
 import ROUTES from '@/constants/routes';
-
-const Comparison = styled(Card)`
-    border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
-    cursor: pointer;
-    background: #f7f7f7 !important;
-    color: ${(props) => props.theme.bodyColor};
-    &:hover {
-        text-decoration: none !important;
-    }
-`;
-
-const ComparisonBody = styled(CardBody)`
-    padding: 10px !important;
-`;
-
-const ImageCol = styled(Col)`
-    font-size: 50px;
-    color: #80869b;
-    border-right: 1px solid #d9d9d9;
-`;
-
-const ComparisonTitle = styled(CardTitle)`
-    //color: #e86161;
-    margin-bottom: 5px;
-    font-weight: 600;
-`;
-
-const ComparisonText = styled(CardText)`
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-`;
+import { reverse } from '@/lib/namedRoute';
 
 type FeaturedComparisonsItemProps = {
     icon: string;
@@ -62,24 +19,24 @@ const FeaturedComparisonsItem: FC<FeaturedComparisonsItemProps> = ({ icon, title
     const iconDefinition = resolveFeaturedComparisonSolidIcon(icon);
 
     return (
-        <Col sm="6" className="mb-4">
-            <Link style={{ textDecoration: 'none' }} href={reverse(ROUTES.COMPARISON, { comparisonId: id })}>
-                <Comparison>
-                    <ComparisonBody>
-                        <Row>
-                            <ImageCol sm="3" className="d-flex justify-content-center align-items-center">
+        <div className="w-full sm:w-1/2 px-2 mb-6">
+            <Link href={reverse(ROUTES.COMPARISON, { comparisonId: id })} className="block no-underline text-foreground hover:no-underline">
+                <Card className="cursor-pointer border bg-surface-secondary">
+                    <Card.Content className="!p-2.5">
+                        <div className="flex">
+                            <div className="w-1/4 px-2 flex justify-center items-center text-[50px] text-secondary border-r border-[#d9d9d9]">
                                 <FontAwesomeIcon icon={iconDefinition} />
-                            </ImageCol>
-                            <Col sm="9">
-                                <ComparisonTitle tag="h5">{title}</ComparisonTitle>
-                                <ComparisonText>{description}</ComparisonText>
-                                <Badge color="light">{sourcesCount} sources</Badge>
-                            </Col>
-                        </Row>
-                    </ComparisonBody>
-                </Comparison>
+                            </div>
+                            <div className="w-3/4 px-2">
+                                <h5 className="text-sm leading-6 text-foreground mb-[5px] font-semibold">{title}</h5>
+                                <p className="text-[0.9rem] mb-[5px] line-clamp-3">{description}</p>
+                                <Chip>{sourcesCount} sources</Chip>
+                            </div>
+                        </div>
+                    </Card.Content>
+                </Card>
             </Link>
-        </Col>
+        </div>
     );
 };
 

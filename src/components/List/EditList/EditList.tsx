@@ -7,17 +7,17 @@ import SortableSectionsList from '@/components/List/EditList/SortableSectionsLis
 import Container from '@/components/Ui/Structure/Container';
 
 const EditList = () => (
-    <main>
+    <div>
         <header>
-            <Container className="p-0">
+            <Container>
                 <EditMetadata />
             </Container>
         </header>
         <AddSection index={0} />
         <SortableSectionsList />
-        <Container className="p-0">
-            <SectionStyled className="box rounded mb-4">
-                <h2 className="h4 border-bottom pb-1 mb-3">
+        <Container>
+            <SectionStyled className="box rounded mb-6">
+                <h2 className="text-2xl border-b pb-1 mb-4">
                     <Tooltip content="This section is automatically generated, it is not possible to change it">
                         <span>Contributors</span>
                     </Tooltip>
@@ -26,7 +26,7 @@ const EditList = () => (
                 <Contributors />
             </SectionStyled>
         </Container>
-    </main>
+    </div>
 );
 
 export default EditList;
