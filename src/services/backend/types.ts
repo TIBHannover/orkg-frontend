@@ -848,6 +848,9 @@ export type LiteratureList = {
     observatory_id: string;
     visibility: Visibility;
     published: boolean;
+    identifiers: {
+        doi: string[];
+    };
     sections: LiteratureListSection[];
     acknowledgements: {
         [contributorId: string]: number;
