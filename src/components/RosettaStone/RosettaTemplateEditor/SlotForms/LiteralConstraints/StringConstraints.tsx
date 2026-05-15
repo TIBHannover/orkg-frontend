@@ -1,12 +1,10 @@
+import { Input, Label, TextField } from '@heroui/react';
 import { FC } from 'react';
 
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { PropertyShapeStringType } from '@/services/backend/types';
 
@@ -21,21 +19,15 @@ const StringConstraints: FC<ValidationRulesNumberProps> = ({ index, isLocked }) 
     const dispatch = useRosettaTemplateEditorDispatch();
 
     return (
-        <div className="mt-2">
-            <FormGroup className="mt-2">
-                <Label for={`patternInput${index}`}>Pattern</Label>
-                <Input
-                    disabled={isLocked}
-                    onChange={(e) => dispatch({ type: 'setProperty', payload: { index, data: { ...slot, pattern: e.target.value } } })}
-                    type="text"
-                    value={slot.pattern}
-                    name="pattern"
-                    id={`patternInput${index}`}
-                    placeholder="Enter a regular expression"
-                    maxLength={MAX_LENGTH_INPUT}
-                />
-            </FormGroup>
-        </div>
+        <TextField
+            fullWidth
+            isDisabled={isLocked}
+            value={slot.pattern ?? ''}
+            onChange={(value) => dispatch({ type: 'setProperty', payload: { index, data: { ...slot, pattern: value } } })}
+        >
+            <Label>Pattern</Label>
+            <Input type="text" name="pattern" id={`patternInput${index}`} placeholder="Enter a regular expression" maxLength={MAX_LENGTH_INPUT} />
+        </TextField>
     );
 };
 

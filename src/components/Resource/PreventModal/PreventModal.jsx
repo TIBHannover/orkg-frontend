@@ -10,7 +10,7 @@ const PreventModal = ({ isOpen, toggle, header, content }) => (
     <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>{header}</ModalHeader>
         <ModalBody>{content}</ModalBody>
-        <ModalFooter className="d-flex justify-content-center">
+        <ModalFooter className="flex justify-center">
             <Button onClick={toggle} color="primary">
                 Close
             </Button>

@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { AgGridReact } from 'ag-grid-react';
 import { useEffect, useRef } from 'react';
-import { toast } from 'react-toastify';
 
 import { TData } from '@/app/grid-editor/context/GridContext';
 import { getFocusedCellInfo, isInEditMode as checkIsInEditMode } from '@/app/grid-editor/hooks/gridKeyboardHelpers';
@@ -35,8 +35,8 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
             try {
                 const rowNode = api.getDisplayedRowAtIndex(rowIndex);
                 if (!rowNode?.data) {
-                    toast.dismiss();
-                    toast.error('Unable to paste: row data not found');
+                    toast.clear();
+                    toast.danger('Unable to paste: row data not found');
                     return;
                 }
 
@@ -45,23 +45,23 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
                 const { predicate } = rowNode.data;
 
                 if (!entity) {
-                    toast.dismiss();
-                    toast.error(`Unable to paste: entity not found for column ${colId}`);
+                    toast.clear();
+                    toast.danger(`Unable to paste: entity not found for column ${colId}`);
                     return;
                 }
                 if (!predicate) {
-                    toast.dismiss();
-                    toast.error('Unable to paste: predicate not found');
+                    toast.clear();
+                    toast.danger('Unable to paste: predicate not found');
                     return;
                 }
                 if (!copiedStatement?.object) {
-                    toast.dismiss();
-                    toast.error('Unable to paste: no copied data');
+                    toast.clear();
+                    toast.danger('Unable to paste: no copied data');
                     return;
                 }
                 if (!isValidValue(predicate.id, colId, copiedStatement.object)) {
-                    toast.dismiss();
-                    toast.error('Unable to paste: copied data is not a valid range');
+                    toast.clear();
+                    toast.danger('Unable to paste: copied data is not a valid range');
                     return;
                 }
 
@@ -97,12 +97,12 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
                 mutateStatement(updatedStatement, editMode ? currentStatement : undefined);
 
                 const action = editMode ? 'updated' : 'created';
-                toast.dismiss();
+                toast.clear();
                 toast.success(`Cell value pasted and ${action}`);
             } catch (error) {
-                toast.dismiss();
+                toast.clear();
                 console.error('Error persisting pasted data:', error);
-                toast.error('Failed to save pasted value');
+                toast.danger('Failed to save pasted value');
             }
         };
         const handleKeyDown = async (event: KeyboardEvent) => {
@@ -135,10 +135,10 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
                     const cellValue = rowNode.data.statements[colId];
                     if (cellValue) {
                         copiedValueRef.current = cellValue;
-                        toast.dismiss();
+                        toast.clear();
                         toast.success('Cell value copied');
                     } else {
-                        toast.dismiss();
+                        toast.clear();
                         toast.info('No value to copy');
                     }
                 }
@@ -162,8 +162,8 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
                     if (isEmpty) {
                         const canAddValueResult = canAddValue(data.predicate.id, colId);
                         if (!canAddValueResult) {
-                            toast.dismiss();
-                            toast.error('This property reached the maximum number of values set by template');
+                            toast.clear();
+                            toast.danger('This property reached the maximum number of values set by template');
                             return;
                         }
                     }

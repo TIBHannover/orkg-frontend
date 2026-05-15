@@ -2,7 +2,7 @@
 
 import { faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 
@@ -19,12 +19,12 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getPredicate, predicatesUrl } from '@/services/backend/predicates';
 
 const Property = () => {
@@ -67,7 +67,11 @@ const Property = () => {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && (
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
+                </Container>
+            )}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && property && (
@@ -77,15 +81,14 @@ const Property = () => {
                             !isEditMode ? (
                                 <RequireAuthentication
                                     component={Button}
-                                    className="float-end flex-shrink-0"
-                                    color="secondary"
+                                    className="button--orkg-secondary"
                                     size="sm"
-                                    onClick={() => toggleIsEditMode()}
+                                    onPress={() => toggleIsEditMode()}
                                 >
                                     <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
                             ) : (
-                                <Button className="float-end flex-shrink-0" color="secondary-darker" size="sm" onClick={() => toggleIsEditMode()}>
+                                <Button className="button--orkg-secondary-darker" size="sm" onPress={() => toggleIsEditMode()}>
                                     <FontAwesomeIcon icon={faTimes} /> Stop editing
                                 </Button>
                             )
@@ -94,35 +97,43 @@ const Property = () => {
                         Property
                     </TitleBar>
                     <EditModeHeader isVisible={isEditMode} />
-                    <Container className={`box pt-4 pb-4 ps-4 pe-4 ${isEditMode ? 'rounded-bottom' : 'rounded'}`}>
-                        {!isEditMode ? (
-                            <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                {property?.label || (
-                                    <i>
-                                        <small>No label</small>
-                                    </i>
+                    <Container>
+                        <div className={`box flow-root pt-6 pb-6 pl-6 pr-6 ${isEditMode ? 'rounded-b' : 'rounded'}`}>
+                            <div className="mb-6">
+                                {!isEditMode ? (
+                                    <h2 className="text-2xl font-semibold mb-0 flex flex-wrap items-center gap-2 break-words">
+                                        <span className="break-words">
+                                            {property?.label || (
+                                                <i>
+                                                    <small>No label</small>
+                                                </i>
+                                            )}
+                                        </span>
+                                    </h2>
+                                ) : (
+                                    <div className="flex flex-col gap-3">
+                                        <EditableHeader
+                                            id={propertyId}
+                                            value={property?.label || ''}
+                                            onChange={handleHeaderChange}
+                                            entityType={ENTITIES.PREDICATE}
+                                            curatorsOnly
+                                        />
+                                        {isDeletionAllowed && (
+                                            <div className="flex justify-end">
+                                                <Button variant="danger" size="sm" onPress={deleteProperty}>
+                                                    <FontAwesomeIcon icon={faTrash} /> Delete property
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
-                            </h3>
-                        ) : (
-                            <>
-                                <EditableHeader
-                                    id={propertyId}
-                                    value={property?.label || ''}
-                                    onChange={handleHeaderChange}
-                                    entityType={ENTITIES.PREDICATE}
-                                    curatorsOnly
-                                />
-                                {isDeletionAllowed && (
-                                    <Button color="danger" size="sm" className="mt-2 mb-3" style={{ marginLeft: 'auto' }} onClick={deleteProperty}>
-                                        <FontAwesomeIcon icon={faTrash} /> Delete property
-                                    </Button>
-                                )}
-                            </>
-                        )}
-                        <ItemMetadata item={property} showCreatedAt showCreatedBy />
+                            </div>
+                            <ItemMetadata item={property} showCreatedAt showCreatedBy />
+                        </div>
                     </Container>
 
-                    <Container className="mt-3 p-0">
+                    <Container className="mt-4">
                         <Tabs
                             className="box rounded"
                             destroyOnHidden
@@ -141,7 +152,7 @@ const Property = () => {
                                     ),
                                     key: 'information',
                                     children: (
-                                        <div className="p-4">
+                                        <div className="p-6">
                                             <DataBrowser
                                                 isEditMode={isEditMode}
                                                 id={propertyId}

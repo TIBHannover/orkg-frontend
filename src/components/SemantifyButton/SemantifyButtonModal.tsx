@@ -1,35 +1,21 @@
 import { faCheck, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, Button, Checkbox, Input, Label, Modal, TextField, toast, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { toast } from 'react-toastify';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import InputField from '@/components/InputField/InputField';
 import { getCanAddValueCount, getRange, getRestrictingTemplate, type Item, validateValue } from '@/components/SemantifyButton/utils';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
-import Table from '@/components/Ui/Table/Table';
 import { getConfigByClassId, getConfigByType, getSuggestionByValue } from '@/constants/DataTypes';
 import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { createLiteral } from '@/services/backend/literals';
 import { createResource } from '@/services/backend/resources';
 import { createStatement, deleteStatementById } from '@/services/backend/statements';
@@ -43,6 +29,7 @@ type SemantifyButtonModalProps = {
     currentPathStatements?: Statement[];
     onSave: (deletedStatementIds: string[], newStatementIds: string[]) => void;
 };
+
 const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, toggleModal, statement, templates, currentPathStatements, onSave }) => {
     const [items, setItems] = useState<Item[]>([]);
     const [isCheckedSeparated, setIsCheckedSeparated] = useState(false);
@@ -84,7 +71,6 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
     const handleResourceSelect = (index: number, resource: SingleValue<OptionType>) => {
         setItems((prevItems) => {
             const updatedItems = [...prevItems];
-            // Update the item at the specified index
             updatedItems[index] = {
                 ...updatedItems[index],
                 resource,
@@ -121,7 +107,7 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
             toast.success('Value semantified successfully');
         } catch (error) {
             console.error('Error saving entity:', error);
-            toast.error('Error saving entity');
+            toast.danger('Error saving entity');
         } finally {
             onSave([statement.id], newStatementIds);
             toggleModal();
@@ -174,182 +160,206 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
     };
 
     const handleAddValue = () => {
-        setItems((prevItems) => {
-            const updatedItems = [...prevItems];
-            updatedItems.push({ value: '', resource: null, type: getConfigByType(MISC.DEFAULT_LITERAL_DATATYPE), inputValue: '' });
-            return updatedItems;
-        });
+        setItems((prevItems) => [...prevItems, { value: '', resource: null, type: getConfigByType(MISC.DEFAULT_LITERAL_DATATYPE), inputValue: '' }]);
     };
+
+    const handleOpenChange = (open: boolean) => {
+        if (!open) toggleModal();
+    };
+
     const isValid = items.every((item) => validateValue(template, item, statement.predicate.id));
     const isDisabled = !items.length || (canAddValue !== undefined && items.length - 1 > canAddValue) || !isValid;
 
     return (
-        <Modal isOpen={isModalOpen} toggle={toggleModal} size="lg" backdrop="static" unmountOnClose>
-            <ModalHeader toggle={toggleModal}>Semantify</ModalHeader>
-            <ModalBody>
-                <Table bordered>
-                    <tbody>
-                        <tr>
-                            <td className="col-2">
-                                <strong>Subject</strong>
-                            </td>
-                            <td>
-                                <Link href={reverse(ROUTES.RESOURCE, { resourceId: statement.subject.id })} target="_blank">
+        <Modal.Backdrop isOpen={isModalOpen} onOpenChange={handleOpenChange} isDismissable={false}>
+            <Modal.Container size="lg" className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-3xl">
+                    <Modal.Header>
+                        <Modal.Heading>Semantify</Modal.Heading>
+                        <Modal.CloseTrigger />
+                    </Modal.Header>
+                    <Modal.Body className="p-1">
+                        <div className="divide-default bg-surface-secondary divide-y overflow-hidden rounded-lg border text-sm">
+                            <div className="flex items-start gap-3 p-3">
+                                <span className="text-muted w-28 shrink-0 font-medium">Subject</span>
+                                <Link
+                                    href={reverse(ROUTES.RESOURCE, { resourceId: statement.subject.id })}
+                                    target="_blank"
+                                    className="text-accent break-all"
+                                >
                                     {statement.subject.label || 'No value'}
                                 </Link>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>Property</strong>
-                            </td>
-                            <td>
+                            </div>
+                            <div className="flex items-start gap-3 p-3">
+                                <span className="text-muted w-28 shrink-0 font-medium">Property</span>
                                 <DescriptionTooltip id={statement.predicate.id} _class={ENTITIES.PREDICATE}>
-                                    <Link href={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })} target="_blank">
+                                    <Link
+                                        href={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}
+                                        target="_blank"
+                                        className="text-accent break-all"
+                                    >
                                         {statement.predicate.label || 'No value'}
                                     </Link>
                                 </DescriptionTooltip>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>Original Value</strong>
-                            </td>
-                            <td> {statement.object?.label || 'No value'}</td>
-                        </tr>
-                    </tbody>
-                </Table>
-                <hr />
-                {template && (
-                    <Alert color="info">
-                        <strong className="me-2">Template:</strong>
-                        This value has an applied template:{' '}
-                        <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })} target="_blank" className="text-primary">
-                            {template.label}
-                        </Link>
-                    </Alert>
-                )}
-                {canAddValue === 0 && (
-                    <Alert color="warning">
-                        <strong className="me-2">Warning:</strong>
-                        This value has reached the maximum count of values.
-                    </Alert>
-                )}
-                {!!canAddValue && canAddValue > 0 && (
-                    <Alert color="info">
-                        <strong className="me-2">Info:</strong>
-                        This semantification can have {canAddValue} more values.
-                    </Alert>
-                )}
-                <FormGroup row className="align-items-center">
-                    <Col sm={5} className="d-flex align-items-center">
-                        <Input type="checkbox" checked={isCheckedSeparated} onChange={toggleIsChecked} className="me-2" id="separated-checkbox" />
-                        <Label className="mb-0" htmlFor="separated-checkbox">
-                            Split the original value with separator:
-                        </Label>
-                    </Col>
-                    <Col sm={1}>
-                        <Input
-                            type="text"
-                            value={separator}
-                            disabled={!isCheckedSeparated}
-                            maxLength={1}
-                            onChange={(e) => handleSeparatorChange(e.target.value)}
-                            className="text-center p-1 tw:w-2 inline-block"
-                        />
-                    </Col>
-                </FormGroup>
+                            </div>
+                            <div className="flex items-start gap-3 p-3">
+                                <span className="text-muted w-28 shrink-0 font-medium">Original value</span>
+                                <span className="break-all">{statement.object?.label || 'No value'}</span>
+                            </div>
+                        </div>
 
-                <FormGroup row sm={4}>
-                    <Col sm={8}>
-                        <strong>Select Type / Resource</strong>
-                    </Col>
-                    <Col sm={2} className="text-center">
-                        <strong>Valid</strong>
-                    </Col>
-                    <Col sm={2} className="text-end">
-                        <strong>Actions</strong>
-                    </Col>
-                </FormGroup>
+                        {template && (
+                            <Alert status="accent" className="mt-4">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Template applied</Alert.Title>
+                                    <Alert.Description>
+                                        This value uses template{' '}
+                                        <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })} target="_blank" className="text-accent underline">
+                                            {template.label}
+                                        </Link>
+                                        .
+                                    </Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                        {canAddValue === 0 && (
+                            <Alert status="warning" className="mt-3">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Maximum reached</Alert.Title>
+                                    <Alert.Description>This value has reached the maximum count of values.</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                        {!!canAddValue && canAddValue > 0 && (
+                            <Alert status="accent" className="mt-3">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>
+                                        This semantification can have up to <strong>{canAddValue}</strong> more value{canAddValue > 1 ? 's' : ''}.
+                                    </Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
 
-                {items.map((item, idx) => (
-                    <Row key={idx} sm={4} className="mb-3">
-                        <Col sm={8}>
-                            <InputGroup>
-                                <DatatypeSelector
-                                    _class={item.resource?._class}
-                                    range={range}
-                                    isDisabled={!!range?.id}
-                                    dataType={item.type.type}
-                                    setDataType={(newDataType) => {
-                                        setItems((prevItems) => {
-                                            const updatedItems = [...prevItems];
-                                            const dataTypeValue = newDataType;
-                                            updatedItems[idx].type = getConfigByType(dataTypeValue || MISC.DEFAULT_LITERAL_DATATYPE);
-                                            return updatedItems;
-                                        });
-                                    }}
-                                />
-                                <InputField
-                                    range={range}
-                                    inputValue={item.inputValue || ''}
-                                    setInputValue={(v) => {
-                                        setItems((prevItems) => {
-                                            const updatedItems = [...prevItems];
-                                            updatedItems[idx].inputValue = v;
-                                            return updatedItems;
-                                        });
-                                    }}
-                                    inputFormType={item.type.inputFormType || 'text'}
-                                    dataType={item.type.type}
-                                    isValid
-                                    includeClasses={optionsClasses}
-                                    allowCreate
-                                    onChange={(selectedValue) => {
-                                        if (selectedValue) {
-                                            handleResourceSelect(idx, selectedValue);
-                                        }
-                                    }}
-                                    autoFocus={false}
-                                />
-                            </InputGroup>
-                        </Col>
-                        <Col sm={2} className="text-center">
-                            {validateValue(template, item, statement.predicate.id) ? (
-                                <FontAwesomeIcon icon={faCheck} className="text-success" />
-                            ) : (
-                                <FontAwesomeIcon icon={faXmark} className="text-danger" />
-                            )}
-                        </Col>
-                        <Col sm={2} className="text-end">
-                            <ActionButton action={() => handleDelete(idx)} icon={faXmark} title="Remove" />
-                        </Col>
-                    </Row>
-                ))}
-                <Button color="secondary" onClick={handleAddValue} className="tw:flex tw:items-center tw:gap-2" size="sm">
-                    <FontAwesomeIcon icon={faPlus} /> Add value
-                </Button>
-            </ModalBody>
+                        <div className="mt-5 flex flex-wrap items-center gap-3">
+                            <Checkbox isSelected={isCheckedSeparated} onChange={toggleIsChecked}>
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Checkbox.Content>Split the original value by separator</Checkbox.Content>
+                            </Checkbox>
+                            <TextField
+                                value={separator}
+                                onChange={handleSeparatorChange}
+                                isDisabled={!isCheckedSeparated}
+                                aria-label="Separator character"
+                            >
+                                <Label className="sr-only">Separator</Label>
+                                <Input maxLength={1} className="w-12 text-center" />
+                            </TextField>
+                        </div>
 
-            <ModalFooter>
-                <Tooltip
-                    content={
-                        isDisabled
-                            ? 'You cannot save this semantification because of the restrictions of the template, try to remove some values or change the values.'
-                            : ''
-                    }
-                >
-                    <div className="d-inline-block">
-                        <ButtonWithLoading disabled={isDisabled} color="primary" onClick={saveEntity} isLoading={isSaving} loadingMessage="Saving...">
-                            Save
-                        </ButtonWithLoading>
-                    </div>
-                </Tooltip>
-                <Button color="secondary" onClick={toggleModal}>
-                    Close
-                </Button>
-            </ModalFooter>
-        </Modal>
+                        <div className="mt-5 mb-2 grid grid-cols-12 items-center gap-3 px-1">
+                            <div className="text-muted col-span-8 text-xs font-semibold tracking-wide uppercase">Select type / resource</div>
+                            <div className="text-muted col-span-2 text-center text-xs font-semibold tracking-wide uppercase">Valid</div>
+                            <div className="text-muted col-span-2 text-right text-xs font-semibold tracking-wide uppercase">Actions</div>
+                        </div>
+
+                        <div className="divide-default flex flex-col divide-y">
+                            {items.map((item, idx) => (
+                                <div key={idx} className="grid grid-cols-12 items-center gap-3 py-2">
+                                    <div className="col-span-8 flex min-h-9 min-w-0 grow items-stretch [&_.react-select__control]:!min-h-9">
+                                        <DatatypeSelector
+                                            _class={item.resource?._class}
+                                            range={range}
+                                            isDisabled={!!range?.id}
+                                            dataType={item.type.type}
+                                            setDataType={(newDataType) => {
+                                                setItems((prevItems) => {
+                                                    const updatedItems = [...prevItems];
+                                                    const dataTypeValue = newDataType;
+                                                    updatedItems[idx].type = getConfigByType(dataTypeValue || MISC.DEFAULT_LITERAL_DATATYPE);
+                                                    return updatedItems;
+                                                });
+                                            }}
+                                        />
+                                        <InputField
+                                            range={range}
+                                            inputValue={item.inputValue || ''}
+                                            setInputValue={(v) => {
+                                                setItems((prevItems) => {
+                                                    const updatedItems = [...prevItems];
+                                                    updatedItems[idx].inputValue = v;
+                                                    return updatedItems;
+                                                });
+                                            }}
+                                            inputFormType={item.type.inputFormType || 'text'}
+                                            dataType={item.type.type}
+                                            isValid
+                                            includeClasses={optionsClasses}
+                                            allowCreate
+                                            onChange={(selectedValue) => {
+                                                if (selectedValue) {
+                                                    handleResourceSelect(idx, selectedValue);
+                                                }
+                                            }}
+                                            autoFocus={false}
+                                        />
+                                    </div>
+                                    <div className="col-span-2 flex justify-center">
+                                        {validateValue(template, item, statement.predicate.id) ? (
+                                            <span className="bg-success-soft text-success-soft-foreground inline-flex size-7 items-center justify-center rounded-full">
+                                                <FontAwesomeIcon icon={faCheck} />
+                                            </span>
+                                        ) : (
+                                            <span className="bg-danger-soft text-danger-soft-foreground inline-flex size-7 items-center justify-center rounded-full">
+                                                <FontAwesomeIcon icon={faXmark} />
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="col-span-2 flex justify-end">
+                                        <ActionButton action={() => handleDelete(idx)} icon={faXmark} title="Remove" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <Button variant="secondary" size="sm" onPress={handleAddValue} className="mt-3 gap-2">
+                            <FontAwesomeIcon icon={faPlus} /> Add value
+                        </Button>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onPress={toggleModal}>
+                            Close
+                        </Button>
+                        <Tooltip isDisabled={!isDisabled} delay={300}>
+                            <Tooltip.Trigger>
+                                <span className="inline-block">
+                                    <ButtonWithLoading
+                                        isDisabled={isDisabled}
+                                        variant="primary"
+                                        onPress={saveEntity}
+                                        isLoading={isSaving}
+                                        loadingMessage="Saving..."
+                                    >
+                                        Save
+                                    </ButtonWithLoading>
+                                </span>
+                            </Tooltip.Trigger>
+                            <Tooltip.Content showArrow>
+                                <Tooltip.Arrow />
+                                <p className="max-w-xs">
+                                    You cannot save this semantification because of the template restrictions. Try to remove some values or change the
+                                    current values.
+                                </p>
+                            </Tooltip.Content>
+                        </Tooltip>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

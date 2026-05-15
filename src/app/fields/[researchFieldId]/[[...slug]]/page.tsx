@@ -7,9 +7,7 @@ import useResearchFieldObservatories from '@/components/ResearchField/hooks/useR
 import ResearchFieldHeader from '@/components/ResearchField/ResearchFieldHeader';
 import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
 import ResearchProblemsBox from '@/components/ResearchProblemsBox/ResearchProblemsBox';
-import Col from '@/components/Ui/Structure/Col';
 import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 
 const ResearchField = () => {
@@ -19,28 +17,26 @@ const ResearchField = () => {
 
     return (
         <>
-            <Breadcrumbs researchFieldId={researchFieldId} disableLastField />
+            <Breadcrumbs researchFieldId={researchFieldId} />
             <ResearchFieldHeader id={researchFieldId} />
-
-            <Container className="p-0">
-                <Row className="mt-4">
-                    <Col md="4" className="d-flex">
+            <Container className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="flex">
                         <ResearchProblemsBox id={researchFieldId} by="ResearchField" />
-                    </Col>
-                    <Col md="4" className="d-flex mt-3 mt-md-0">
+                    </div>
+                    <div className="flex">
                         <LastUpdatesBox researchFieldId={researchFieldId} />
-                    </Col>
-                    <Col md="4" className="mt-3 mt-md-0 d-flex">
-                        <div className="box rounded-3 flex-grow-1 flex-column d-flex" style={{ overflow: 'hidden' }}>
-                            <h5 className="pe-3 ps-3 pt-3 pb-2 m-0">Observatories</h5>
-                            <hr className="mb-3 mt-0" />
+                    </div>
+                    <div className="flex">
+                        <div className="box rounded-lg grow flex-col flex overflow-hidden">
+                            <h5 className="pr-4 pl-4 pt-4 pb-2 m-0">Observatories</h5>
+                            <hr className="mb-4 mt-0" />
                             <ObservatoriesCarousel observatories={observatories} isLoading={isLoading} />
                         </div>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             </Container>
-
-            <Container className="p-0 mt-2">
+            <Container className="mt-2">
                 <ResearchFieldTabsContainer id={researchFieldId} />
             </Container>
         </>

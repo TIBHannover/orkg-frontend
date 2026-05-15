@@ -1,5 +1,6 @@
 'use client';
 
+import { Skeleton } from '@heroui/react';
 import { useEffect } from 'react';
 
 import Filters from '@/app/search/components/Filters';
@@ -7,7 +8,6 @@ import useSearch from '@/app/search/components/hooks/useSearch';
 import useSmartFilters from '@/app/search/components/hooks/useSmartFilters';
 import OrkgAskBanner from '@/app/search/components/OrkgAskBanner/OrkgAskBanner';
 import Results from '@/app/search/components/Results';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Col from '@/components/Ui/Structure/Col';
 import Container from '@/components/Ui/Structure/Container';
@@ -61,7 +61,7 @@ export default function Search() {
             <Container>
                 <Row>
                     <Col md="4">
-                        <div className="box rounded p-4 h-100">
+                        <div className="box rounded p-6 h-full">
                             <Filters
                                 results={results as PaginatedResponse<Thing>}
                                 countResults={countResults}
@@ -77,22 +77,20 @@ export default function Search() {
                         </div>
                     </Col>
                     <Col md="8">
-                        <div className="tw:h-full tw:flex tw:flex-col">
+                        <div className="h-full flex flex-col">
                             {searchTerm && <OrkgAskBanner />}
 
                             {isLoading && (
-                                <div className="box rounded p-4">
-                                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 25" style={{ width: '100% !important' }} speed={2}>
-                                        <rect x="0" y="0" width="50" height="3" />
-                                        <rect x="0" y="5" width="100%" height="3" />
-                                        <rect x="0" y="10" width="100%" height="3" />
-                                        <rect x="0" y="15" width="100%" height="3" />
-                                        <rect x="0" y="20" width="100%" height="3" />
-                                    </ContentLoader>
+                                <div className="box rounded p-6 flex flex-col gap-3">
+                                    <Skeleton className="w-1/2 h-3 rounded" />
+                                    <Skeleton className="w-full h-3 rounded" />
+                                    <Skeleton className="w-full h-3 rounded" />
+                                    <Skeleton className="w-full h-3 rounded" />
+                                    <Skeleton className="w-full h-3 rounded" />
                                 </div>
                             )}
                             {!isLoading && results && results?.content?.length > 0 && (
-                                <div className="box rounded pb-4 h-100">
+                                <div className="box rounded pb-6 h-full">
                                     <Results
                                         query={searchTerm}
                                         hasNextPage={hasNextPage}
@@ -109,9 +107,9 @@ export default function Search() {
                                 </div>
                             )}
                             {!isLoading && results?.content?.length === 0 && (
-                                <div className="box rounded p-4 h-100">
-                                    <h2 className="h5">No results</h2>
-                                    <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                                <div className="box rounded p-6 h-full">
+                                    <h2 className="text-xl">No results</h2>
+                                    <div className="text-center mt-6 mb-6">There are no results, please try a different search term</div>
                                 </div>
                             )}
                         </div>

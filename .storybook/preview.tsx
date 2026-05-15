@@ -1,11 +1,8 @@
-import '@/assets/scss/CustomBootstrap.scss';
-import '@/assets/scss/DefaultLayout.scss';
+import '@/app/globals.css';
 import 'leaflet/dist/leaflet.css';
-import 'react-toastify/dist/ReactToastify.css';
 
-import type { Preview } from '@storybook/nextjs';
+import type { Preview } from '@storybook/nextjs-vite';
 import React from 'react';
-import { createGlobalStyle } from 'styled-components';
 
 import { Wrapper } from '@/testUtils';
 
@@ -18,18 +15,9 @@ export const parameters: Preview['parameters'] = {
     },
 };
 
-// override the default background color
-const GlobalStyle = createGlobalStyle`
-    html,
-    body {
-        background-color: #fff!important;
-    }
-`;
-
 export const decorators: Preview['decorators'] = [
     (Story: React.ComponentType) => (
         <Wrapper>
-            <GlobalStyle />
             <div className="bg-white" style={{ background: '#fff!important' }}>
                 <Story />
             </div>

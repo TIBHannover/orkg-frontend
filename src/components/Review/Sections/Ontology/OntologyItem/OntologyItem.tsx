@@ -1,7 +1,7 @@
+import { Button } from '@heroui/react';
 import { FC, memo, useState } from 'react';
 
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
-import Button from '@/components/Ui/Button/Button';
 
 type OntologyItemProps = {
     id: string;
@@ -22,7 +22,11 @@ const OntologyItem: FC<OntologyItemProps> = ({ id, label, type, isEditable, hand
     };
     return (
         <>
-            <Button color="link" className="p-0 text-wrap text-start" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
+            <Button
+                variant="ghost"
+                onPress={() => setIsModalOpen(true)}
+                className="!h-auto !min-w-0 !max-w-full !whitespace-normal !bg-transparent !p-0 !text-left text-primary underline-offset-2 hover:!bg-transparent hover:underline"
+            >
                 {label}
             </Button>
             {isModelOpen && <DataBrowserDialog toggleModal={handleToggleModal} id={id} label={label} show isEditMode={isEditable} />}

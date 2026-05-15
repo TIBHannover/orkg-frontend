@@ -1,24 +1,15 @@
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Label, Modal, toast } from '@heroui/react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { toast } from 'react-toastify';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import SortableAuthorItem, { isAuthorData } from '@/components/Input/AuthorsInput/SortableAuthorItem';
-import { AddAuthor, AuthorTags, GlobalStyle } from '@/components/Input/AuthorsInput/styled';
 import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getStatements } from '@/services/backend/statements';
@@ -40,7 +31,6 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
     const [editMode, setEditMode] = useState(false);
     const [editIndex, setEditIndex] = useState(0);
     const [instanceId] = useState(() => createInstanceId('authors-input'));
-    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (selected: SingleValue<OptionType>) => {
         setAuthorInput(selected);
@@ -52,7 +42,6 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
         if (_authorInput && _authorInput.label) {
             if (isORCID(_authorInput.label)) {
                 setAuthorNameLoading(true);
-                // Get the full name from ORCID API
                 const orcid = _authorInput.label?.replaceAll('−', '-').match(REGEX.ORCID)?.[0];
                 if (orcid) {
                     getPersonFullNameByORCID(orcid)
@@ -76,7 +65,7 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
                         })
                         .catch(() => {
                             setAuthorNameLoading(false);
-                            toast.error(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
+                            toast.danger(`Invalid ORCID ID. Please enter the ${itemLabel} name`);
                         });
                 }
             } else {
@@ -101,7 +90,7 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
                 setShowAuthorForm((v) => !v);
             }
         } else {
-            toast.error(`Please enter the ${itemLabel} name`);
+            toast.danger(`Please enter the ${itemLabel} name`);
         }
     };
 
@@ -153,81 +142,89 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
         };
     }, [instanceId, value, reorderAuthors, isDisabled]);
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            setShowAuthorForm(false);
+        }
+    };
+
     return (
-        <div className=" clearfix">
-            <GlobalStyle />
-            <div>
-                {value.length > 0 && (
-                    <AuthorTags onClick={value.length === 0 && !isDisabled ? () => setShowAuthorForm((v) => !v) : undefined}>
-                        {value.map((author, index) => (
-                            <SortableAuthorItem
-                                key={`author-${author.id || author.name}-${index}`}
-                                author={author}
-                                authorIndex={index}
-                                itemLabel={itemLabel}
-                                editAuthor={editAuthor}
-                                removeAuthor={removeAuthor}
-                                instanceId={instanceId}
-                                totalItems={value.length}
-                                isDisabled={isDisabled ?? false}
-                            />
-                        ))}
-                    </AuthorTags>
-                )}
-            </div>
-            <div>
-                <AddAuthor
-                    disabled={isDisabled}
-                    id={buttonId}
-                    color="light"
-                    className="w-100"
-                    onClick={() => {
-                        setAuthorNameLoading(false);
-                        setAuthorInput(null);
-                        setEditMode(false);
-                        setShowAuthorForm((v) => !v);
-                    }}
-                >
-                    <FontAwesomeIcon icon={faPlus} className="me-2" /> Add {itemLabel}
-                </AddAuthor>
-            </div>
-            <Modal onOpened={() => inputRef?.current?.focus()} isOpen={showAuthorForm} toggle={() => setShowAuthorForm((v) => !v)}>
-                <Form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation(); // in case this is a nested modal, stop the submit event propagation to the parent form
-                    }}
-                >
-                    <ModalHeader>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</ModalHeader>
-                    <ModalBody>
-                        <FormGroup>
-                            <Label for="authorInput">
-                                Enter {itemLabel} name <b>or</b> ORCID <FontAwesomeIcon color="#A6CE39" icon={faOrcid} />
-                            </Label>
-                            <Autocomplete
-                                entityType={ENTITIES.RESOURCE}
-                                includeClasses={[CLASSES.AUTHOR]}
-                                placeholder="Search for author or enter a new author..."
-                                onChange={handleChange}
-                                value={authorInput}
-                                allowCreate
-                                inputId="authorInput"
-                                enableExternalSources={false}
-                                autoFocus
-                            />
-                        </FormGroup>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="light" onClick={() => setShowAuthorForm((v) => !v)}>
-                            Cancel
-                        </Button>
-                        <ButtonWithLoading type="submit" isLoading={authorNameLoading} color="primary" onClick={() => saveAuthor(authorInput)}>
-                            {editMode && 'Save'}
-                            {!editMode && 'Add'}
-                        </ButtonWithLoading>
-                    </ModalFooter>
-                </Form>
-            </Modal>
+        <div className="flow-root">
+            {value.length > 0 && (
+                <div className="flex flex-col relative overflow-hidden">
+                    {value.map((author, index) => (
+                        <SortableAuthorItem
+                            key={`author-${author.id || author.name}-${index}`}
+                            author={author}
+                            authorIndex={index}
+                            itemLabel={itemLabel}
+                            editAuthor={editAuthor}
+                            removeAuthor={removeAuthor}
+                            instanceId={instanceId}
+                            totalItems={value.length}
+                            isDisabled={isDisabled ?? false}
+                        />
+                    ))}
+                </div>
+            )}
+            <Button
+                isDisabled={isDisabled}
+                id={buttonId}
+                variant="secondary"
+                fullWidth
+                className="mb-0.5"
+                onPress={() => {
+                    setAuthorNameLoading(false);
+                    setAuthorInput(null);
+                    setEditMode(false);
+                    setShowAuthorForm((v) => !v);
+                }}
+            >
+                <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add {itemLabel}
+            </Button>
+            {showAuthorForm && (
+                <Modal.Backdrop isOpen onOpenChange={handleOpenChange}>
+                    <Modal.Container>
+                        <Modal.Dialog>
+                            <Modal.Header className="flex-row items-center justify-between gap-3">
+                                <Modal.Heading>{editMode ? `Edit ${itemLabel}` : `Add ${itemLabel}`}</Modal.Heading>
+                                <Modal.CloseTrigger className="static" />
+                            </Modal.Header>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
+                            >
+                                <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-2">
+                                    <Label htmlFor="authorInput">
+                                        Enter {itemLabel} name <b>or</b> ORCID <FontAwesomeIcon color="#A6CE39" icon={faOrcid} />
+                                    </Label>
+                                    <Autocomplete
+                                        entityType={ENTITIES.RESOURCE}
+                                        includeClasses={[CLASSES.AUTHOR]}
+                                        placeholder="Search for author or enter a new author..."
+                                        onChange={handleChange}
+                                        value={authorInput}
+                                        allowCreate
+                                        inputId="authorInput"
+                                        enableExternalSources={false}
+                                        autoFocus
+                                    />
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onPress={() => setShowAuthorForm((v) => !v)}>
+                                        Cancel
+                                    </Button>
+                                    <ButtonWithLoading type="submit" isLoading={authorNameLoading} onPress={() => saveAuthor(authorInput)}>
+                                        {editMode ? 'Save' : 'Add'}
+                                    </ButtonWithLoading>
+                                </Modal.Footer>
+                            </form>
+                        </Modal.Dialog>
+                    </Modal.Container>
+                </Modal.Backdrop>
+            )}
         </div>
     );
 };

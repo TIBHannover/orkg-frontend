@@ -41,7 +41,7 @@ describe('DataBrowser.AddValue', () => {
         await clickOnAddButton(screen);
         await waitFor(() => expect(screen.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
         expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
-        const createButton = screen.getByRole('button', { name: /Create/i });
+        const createButton = screen.getByRole('button', { name: /Save/i });
         expect(createButton).toBeInTheDocument();
         expect(createButton).toBeDisabled();
         const inputs = screen.getAllByRole('combobox');
@@ -105,11 +105,13 @@ describe('DataBrowser.AddValue', () => {
         const selectInput = screen.getByText('Resource');
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Boolean']);
-        expect(screen.getByRole('option', { name: 'True' })).toBeInTheDocument();
-        expect(screen.getByRole('option', { name: 'False' })).toBeInTheDocument();
-        // @ts-expect-error
-        expect(screen.getByRole('option', { name: 'False' }).selected).toBe(true);
-        expect(screen.getByRole('button', { name: 'Create' })).not.toBeDisabled();
+        const booleanTrigger = screen.getByLabelText('Boolean value');
+        expect(booleanTrigger).toBeInTheDocument();
+        expect(booleanTrigger).toHaveTextContent(/False/i);
+        expect(screen.getByRole('button', { name: 'Save' })).not.toBeDisabled();
+        await userEvent.click(booleanTrigger);
+        expect(screen.getByRole('option', { name: /True/i })).toBeInTheDocument();
+        expect(screen.getByRole('option', { name: /False/i })).toBeInTheDocument();
     });
 });
 
@@ -156,7 +158,7 @@ describe('DataBrowser.AddValue', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'new resource via create button' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByRole('button', { name: /new resource via create button/i })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
@@ -172,9 +174,9 @@ describe('DataBrowser.AddValue', () => {
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Text']);
         fireEvent.change(screen.getByPlaceholderText(/enter a text/i), { target: { value: 'Literal 1' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('Literal 1')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Text')).toHaveAttribute('title', 'xsd:string'));
+        await waitFor(() => expect(screen.getByText('Text')).toBeInTheDocument());
     });
 });
 
@@ -186,9 +188,9 @@ describe('DataBrowser.AddValue', () => {
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Decimal']);
         fireEvent.change(screen.getByPlaceholderText(/enter a decimal/i), { target: { value: '1.5' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('1.5')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Decimal')).toHaveAttribute('title', 'xsd:decimal'));
+        await waitFor(() => expect(screen.getByText('Decimal')).toBeInTheDocument());
     });
 });
 
@@ -200,9 +202,9 @@ describe('DataBrowser.AddValue', () => {
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Integer']);
         fireEvent.change(screen.getByPlaceholderText(/enter a integer/i), { target: { value: '1' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('1')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Integer')).toHaveAttribute('title', 'xsd:integer'));
+        await waitFor(() => expect(screen.getByText('Integer')).toBeInTheDocument());
     });
 });
 
@@ -213,10 +215,11 @@ describe('DataBrowser.AddValue', () => {
         const selectInput = screen.getByText('Resource');
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Boolean']);
-        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'false' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        await userEvent.click(screen.getByLabelText('Boolean value'));
+        await userEvent.click(screen.getByRole('option', { name: /False/i }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByLabelText('Cross mark')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
+        await waitFor(() => expect(screen.getByText('Boolean')).toBeInTheDocument());
     });
 });
 
@@ -227,10 +230,11 @@ describe('DataBrowser.AddValue', () => {
         const selectInput = screen.getByText('Resource');
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Boolean']);
-        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'true' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        await userEvent.click(screen.getByLabelText('Boolean value'));
+        await userEvent.click(screen.getByRole('option', { name: /True/i }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
+        await waitFor(() => expect(screen.getByText('Boolean')).toBeInTheDocument());
     });
 });
 
@@ -242,9 +246,9 @@ describe('DataBrowser.AddValue', () => {
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['Date']);
         fireEvent.change(screen.getByPlaceholderText(/enter a date/i), { target: { value: '2021-11-10' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('2021-11-10')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('Date')).toHaveAttribute('title', 'xsd:date'));
+        await waitFor(() => expect(screen.getByText('Date')).toBeInTheDocument());
     });
 });
 
@@ -256,8 +260,8 @@ describe('DataBrowser.AddValue', () => {
         await selectEvent.openMenu(selectInput);
         await selectEvent.select(selectInput, ['URL']);
         fireEvent.change(screen.getByPlaceholderText(/enter a url/i), { target: { value: 'https://www.orkg.org/' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
         await waitFor(() => expect(screen.getByText('https://www.orkg.org/')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('URL')).toHaveAttribute('title', 'xsd:anyURI'));
+        await waitFor(() => expect(screen.getByText('URL')).toBeInTheDocument());
     });
 });

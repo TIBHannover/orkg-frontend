@@ -5,7 +5,6 @@ import { faPen, faSort, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { AuthorTag, StyledDragHandle } from '@/components/Input/AuthorsInput/styled';
 import {
     createDragDataFactory,
     createDragDataKey,
@@ -15,7 +14,6 @@ import {
 } from '@/components/shared/dnd/dragAndDropUtils';
 import { Author } from '@/services/backend/types';
 
-// Create shared symbols and functions for author drag and drop
 export const authorKey = createDragDataKey('sortableAuthor');
 export const createAuthorData = createDragDataFactory<Author>(authorKey);
 export const isAuthorData = createDragDataValidator<Author>(authorKey);
@@ -79,35 +77,33 @@ const SortableAuthorItem: FC<SortableAuthorItemProps> = ({
         });
     }, [author, authorIndex, instanceId, totalItems, dragHandleElement, isDisabled]);
 
-    const opacity = isDragging ? 0.4 : 1;
-
     return (
-        <div ref={ref} style={{ opacity, position: 'relative' }}>
-            <AuthorTag>
-                <StyledDragHandle
-                    className="ms-2 me-2"
+        <div ref={ref} className="relative" style={{ opacity: isDragging ? 0.4 : 1 }}>
+            <div className="flex mb-1 rounded-xl overflow-hidden bg-default text-foreground select-none">
+                <div
                     ref={setDragHandleElement}
                     role="button"
                     tabIndex={0}
                     aria-label="Drag to reorder author"
+                    className="px-2.5 py-2 text-gray-400 hover:text-gray-600"
                     style={{ cursor: isDisabled ? 'default' : 'move' }}
                 >
                     <FontAwesomeIcon icon={faSort} />
-                </StyledDragHandle>
+                </div>
                 <div
-                    className="name"
+                    className="flex-1 flex items-center px-2 py-2 truncate cursor-pointer"
                     onClick={() => !isDisabled && editAuthor(authorIndex)}
                     onKeyDown={(e) => (e.key === 'Enter' && !isDisabled ? editAuthor(authorIndex) : undefined)}
                     role="button"
                     tabIndex={0}
                 >
                     {author.name}
-                    {author.identifiers?.orcid?.[0] && <FontAwesomeIcon style={{ margin: '4px' }} icon={faOrcid} />}
+                    {author.identifiers?.orcid?.[0] && <FontAwesomeIcon className="mx-1" icon={faOrcid} style={{ color: '#A6CE39' }} />}
                 </div>
                 {!isDisabled && (
                     <>
                         <div
-                            style={{ padding: '8px' }}
+                            className="px-2 py-2 cursor-pointer text-gray-400 hover:text-gray-600 hover:bg-default-200"
                             onClick={() => editAuthor(authorIndex)}
                             onKeyDown={(e) => (e.key === 'Enter' ? editAuthor(authorIndex) : undefined)}
                             role="button"
@@ -117,7 +113,7 @@ const SortableAuthorItem: FC<SortableAuthorItemProps> = ({
                         </div>
                         <div
                             title={`Delete ${itemLabel}`}
-                            className="delete"
+                            className="px-2 py-2 ml-0.5 cursor-pointer text-gray-400 hover:bg-danger-100 hover:text-danger"
                             onClick={() => removeAuthor(authorIndex)}
                             onKeyDown={(e) => (e.key === 'Enter' ? removeAuthor(authorIndex) : undefined)}
                             role="button"
@@ -127,7 +123,7 @@ const SortableAuthorItem: FC<SortableAuthorItemProps> = ({
                         </div>
                     </>
                 )}
-            </AuthorTag>
+            </div>
             {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
         </div>
     );

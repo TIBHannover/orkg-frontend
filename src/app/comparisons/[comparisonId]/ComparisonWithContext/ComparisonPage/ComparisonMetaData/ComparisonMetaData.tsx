@@ -1,5 +1,6 @@
 import { faCalendar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Chip } from '@heroui/react';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 
@@ -11,10 +12,7 @@ import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchF
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import MarkFeaturedUnlistedContainer from '@/components/MarkFeaturedUnlisted/MarkFeaturedUnlistedContainer/MarkFeaturedUnlistedContainer';
-import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import LinkValuePlugins from '@/components/ValuePlugins/Link/Link';
@@ -32,15 +30,14 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
 
     return (
         <>
-            {comparison.id && <ShareLinkMarker typeOfLink="comparison" title={comparison.title} />}
             {comparison.id && (
-                <div className="pt-2 pb-3" style={{ minHeight: 150 }}>
-                    <div className="p-0 d-flex tw:flex-col tw:md:flex-row tw:md:items-start">
-                        <div className="flex-grow-1">
+                <div className="py-6 md:py-8" style={{ minHeight: 150 }}>
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                        <div className="grow min-w-0">
                             {(comparison.title || comparison.id) && (
                                 <>
-                                    <h4 className="mb-2 mt-4">
-                                        {comparison.title}{' '}
+                                    <h2 className="text-2xl mb-3 flex flex-wrap items-center gap-2">
+                                        <span>{comparison.title}</span>
                                         {comparison.id && (
                                             <MarkFeaturedUnlistedContainer
                                                 size="xs"
@@ -49,81 +46,72 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                                                 unlisted={comparison.visibility === VISIBILITY.UNLISTED}
                                             />
                                         )}
-                                    </h4>
-                                    <div>
-                                        <div>
-                                            {isPublished && comparison.created_at && (
-                                                <Badge color="light" className="me-2 mb-2">
-                                                    <FontAwesomeIcon icon={faCalendar} /> {dayjs(comparison.created_at).format('MMMM')}{' '}
-                                                    {dayjs(comparison.created_at).format('YYYY')}
-                                                </Badge>
-                                            )}
-                                            {isPublished && <PublishedBadge />}
-                                            {comparison.research_fields?.[0] && (
-                                                <ResearchFieldBadge researchField={comparison.research_fields?.[0]} />
-                                            )}
-                                            {comparison.authors?.length > 0 && !isAnonymized && <AuthorBadges authors={comparison.authors} />}
-                                            {isAnonymized && (
-                                                <Tooltip content="The authors are hidden because the comparison is anonymized">
-                                                    <span>
-                                                        <Badge color="light" className="me-2 mb-2" typeof="foaf:Person">
-                                                            <FontAwesomeIcon icon={faUser} aria-label="Author name" /> Anonymized
-                                                        </Badge>
-                                                    </span>
-                                                </Tooltip>
-                                            )}
-                                        </div>
-                                        {comparison.description && (
-                                            <div style={{ lineHeight: 1.5, whiteSpace: 'pre-wrap' }} className="h6 mb-2">
-                                                <LinkValuePlugins text={comparison.description} />
-                                            </div>
+                                    </h2>
+                                    <div className="mb-2">
+                                        {isPublished && comparison.created_at && (
+                                            <Chip color="default" className="mr-2 mb-2">
+                                                <FontAwesomeIcon icon={faCalendar} /> {dayjs(comparison.created_at).format('MMMM')}{' '}
+                                                {dayjs(comparison.created_at).format('YYYY')}
+                                            </Chip>
                                         )}
-                                        {comparison.identifiers?.doi?.[0] && (
-                                            <div className="mb-1" style={{ lineHeight: 1.5 }}>
-                                                <small>
-                                                    DOI:{' '}
-                                                    <a
-                                                        href={`https://doi.org/${comparison.identifiers?.doi?.[0]}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                    >
-                                                        https://doi.org/{comparison.identifiers?.doi?.[0]}
-                                                    </a>
-                                                </small>
-                                            </div>
+                                        {isPublished && <PublishedBadge />}
+                                        {comparison.research_fields?.[0] && <ResearchFieldBadge researchField={comparison.research_fields?.[0]} />}
+                                        {comparison.authors?.length > 0 && !isAnonymized && <AuthorBadges authors={comparison.authors} />}
+                                        {isAnonymized && (
+                                            <Tooltip content="The authors are hidden because the comparison is anonymized">
+                                                <span>
+                                                    <Chip color="default" className="mr-2 mb-2" typeof="foaf:Person">
+                                                        <FontAwesomeIcon icon={faUser} aria-label="Author name" /> Anonymized
+                                                    </Chip>
+                                                </span>
+                                            </Tooltip>
                                         )}
                                     </div>
+                                    {comparison.description && (
+                                        <div className="text-base leading-relaxed mb-3 whitespace-pre-wrap text-default-700">
+                                            <LinkValuePlugins text={comparison.description} />
+                                        </div>
+                                    )}
+                                    {comparison.identifiers?.doi?.[0] && (
+                                        <div className="text-sm text-default-500 mb-1 leading-6">
+                                            DOI:{' '}
+                                            <a
+                                                href={`https://doi.org/${comparison.identifiers?.doi?.[0]}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="break-all"
+                                            >
+                                                https://doi.org/{comparison.identifiers?.doi?.[0]}
+                                            </a>
+                                        </div>
+                                    )}
                                 </>
                             )}
                             {isEditMode && (
-                                <Button color="secondary" size="sm" className="mt-2 me-2" onClick={() => setIsOpenEditModal(true)}>
-                                    <FontAwesomeIcon icon={faPen} /> Edit metadata
+                                <Button variant="secondary" size="sm" className="mt-3" onPress={() => setIsOpenEditModal(true)}>
+                                    <FontAwesomeIcon icon={faPen} className="mr-1" /> Edit metadata
                                 </Button>
                             )}
                         </div>
 
-                        <div className="d-flex flex-column tw:items-start tw:md:items-end gap-2 mt-2 tw:md:border-l tw:md:border-light tw:md:pl-4 tw:w-full tw:md:w-auto tw:shrink-0">
+                        <div className="flex flex-col items-start md:items-end gap-2 mt-2 md:border-l md:border-default md:pl-4 w-full md:w-auto shrink-0">
                             {!isAnonymized && comparison.created_by !== MISC.UNKNOWN_ID && (
-                                <div className="tw:md:-mr-6">
-                                    <Badge color="light">
-                                        <FontAwesomeIcon icon={faUser} /> Created by{' '}
-                                        <span className="ms-1 d-inline-block tw:md:-my-8">
-                                            <UserAvatar size={20} userId={comparison.created_by} showDisplayName />
-                                        </span>
-                                    </Badge>
-                                </div>
+                                <Chip color="default">
+                                    <FontAwesomeIcon icon={faUser} /> Created by{' '}
+                                    <span className="ml-1 inline-block md:-my-8">
+                                        <UserAvatar size={20} userId={comparison.created_by} showDisplayName />
+                                    </span>
+                                </Chip>
                             )}
 
                             <ObservatoryBox />
 
-                            <div className="tw:md:-mr-6">
-                                <SdgBox
-                                    sdgs={comparison.sdgs}
-                                    maxWidth="100%"
-                                    handleSave={(sdgs) => updateComparison({ sdgs })}
-                                    isEditable={isEditMode}
-                                />
-                            </div>
+                            <SdgBox
+                                sdgs={comparison.sdgs}
+                                maxWidth="100%"
+                                handleSave={(sdgs) => updateComparison({ sdgs })}
+                                isEditable={isEditMode}
+                            />
                         </div>
                     </div>
                 </div>

@@ -2,82 +2,237 @@
 
 Here we document some of the components used in the [ORKG Frontend](https://orkg.org). The scope of this component library includes:
 
--   components that are reusable (i.e., they are made to be used more than once in the codebase)
--   components that are usable in isolation (i.e., not relying on a global store)
+- components that are reusable (i.e., they are made to be used more than once in the codebase)
+- components that are usable in isolation (i.e., not relying on a global store)
 
 The API endpoints from [sandbox.orkg.org](sandbox.orkg.org) are used in the stories to ensure the components are functional and display actual data. API endpoints are not mocked.
 
-## Bootstrap components
+## HeroUI + Tailwind CSS v4
 
-The ORKG frontend relies mainly on [Bootstrap](https://getbootstrap.com/) using [Reactstrap](https://reactstrap.github.io/). We do not duplicate the documentation from Reactstrap, so please refer to their documentation to find the majority of components used in the ORKG. We always recommend to use their components instead of creating new ones yourself. Only if components are missing, or are not well suited, we create our own components.
+The ORKG frontend uses [Tailwind CSS v4](https://tailwindcss.com/) with [HeroUI v3](https://heroui.com/). We do not duplicate the HeroUI documentation here — refer to their docs for the component API. Always prefer HeroUI components over rolling your own; only build a custom component when the equivalent is missing or unsuitable.
+
+The legacy wrappers under `src/components/Ui/` (originally created during the reactstrap → HeroUI migration) are deprecated. Import directly from `@heroui/react` in new code.
+
+## Theming
+
+Theme tokens are declared as CSS custom properties in [`src/app/globals.css`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/master/src/app/globals.css), grouped into:
+
+- **HeroUI semantic tokens** (`--accent`, `--background`, `--surface`, `--foreground`, `--danger`, `--success`, `--warning`, `--muted`, `--border`, `--field-background`, etc.) under `:root` / `.light` and overridden under `.dark`. Reference these via the matching Tailwind utilities (`bg-surface`, `text-foreground`, `border-border`, …).
+- **ORKG custom colors** under `@theme` (`--color-secondary`, `--color-secondary-darker`, `--color-dark`, `--color-smart`, `--color-smart-darker`, `--color-accent-darker`). Reference these as `bg-secondary`, `text-dark`, `bg-smart`, etc.
+- **DataBrowser nesting levels** (`--db-level-0` … `--db-level-10`) for nested ComparisonTable / DataBrowser rows.
+- **Layout token** `--max-width-container: 1320px` used for the page container width.
+
+Both light and dark variants are defined; dark mode is activated via the `.dark` or `[data-theme='dark']` class.
 
 ## Color palette
 
+The colors below are the resolved values from `globals.css` (light mode). All are defined in `oklch()` — the hex/preview shown is approximate.
+
 <table className="table">
-  <thead>
-    <tr>
-      <th align="center">Name</th>
-      <th align="center">Variable name</th>
-      <th align="center">Color</th>
-      <th>Preview</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center">Primary color</td>
-      <td align="center"><code>$primary</code></td>
-      <td align="center">#e86161</td>
-      <td><div style={{background: '#e86161', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Primary color - darker</td>
-      <td align="center"><code>$primary-darker</code></td>
-      <td align="center">#c61d1d</td>
-      <td><div style={{background: '#c61d1d', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Secondary color</td>
-      <td align="center"><code>$secondary</code></td>
-      <td align="center">#80869b</td>
-      <td><div style={{background: '#80869b', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Secondary color - darker</td>
-      <td align="center"><code>$secondary-darker</code></td>
-      <td align="center">#505565</td>
-      <td><div style={{background: '#505565', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Light</td>
-      <td align="center"><code>$light</code></td>
-      <td align="center">#e9ebf2</td>
-      <td><div style={{background: '#e9ebf2', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Light lighter</td>
-      <td align="center"><code>$light-lighter</code></td>
-      <td align="center">#f8f9fb</td>
-      <td><div style={{background: '#f8f9fb', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Light darker</td>
-      <td align="center"><code>$light-darker</code></td>
-      <td align="center">#dbdde5</td>
-      <td><div style={{background: '#dbdde5', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-    <tr>
-      <td align="center">Dark</td>
-      <td align="center"><code>$dark</code></td>
-      <td align="center">#5b6176</td>
-      <td><div style={{background: '#5b6176', width: '90px', height: '25px', display: 'inline-block'}}/></td>
-    </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th align="center">Name</th>
+            <th align="center">CSS variable</th>
+            <th align="center">Tailwind utility</th>
+            <th>Preview</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center">Accent (primary)</td>
+            <td align="center">
+                <code>--accent</code>
+            </td>
+            <td align="center">
+                <code>bg-accent</code> / <code>text-accent</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(66.3% 0.1683 22.81)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Accent darker</td>
+            <td align="center">
+                <code>--color-accent-darker</code>
+            </td>
+            <td align="center">
+                <code>bg-accent-darker</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(53.05% 0.2014 27.65)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Secondary</td>
+            <td align="center">
+                <code>--color-secondary</code>
+            </td>
+            <td align="center">
+                <code>bg-secondary</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(62.23% 0.0325 272.8)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Secondary darker</td>
+            <td align="center">
+                <code>--color-secondary-darker</code>
+            </td>
+            <td align="center">
+                <code>bg-secondary-darker</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(45.11% 0.027 271.59)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Dark</td>
+            <td align="center">
+                <code>--color-dark</code>
+            </td>
+            <td align="center">
+                <code>text-dark</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(49.53% 0.0345 272.56)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Smart</td>
+            <td align="center">
+                <code>--color-smart</code>
+            </td>
+            <td align="center">
+                <code>bg-smart</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(65.52% 0.1105 212.21)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Smart darker</td>
+            <td align="center">
+                <code>--color-smart-darker</code>
+            </td>
+            <td align="center">
+                <code>bg-smart-darker</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(59.19% 0.0994 211.95)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Surface</td>
+            <td align="center">
+                <code>--surface</code>
+            </td>
+            <td align="center">
+                <code>bg-surface</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(100% 0.0008 22.81)', width: '90px', height: '25px', display: 'inline-block', border: '1px solid #ddd' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Background</td>
+            <td align="center">
+                <code>--background</code>
+            </td>
+            <td align="center">
+                <code>bg-background</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(97.02% 0.0015 22.81)', width: '90px', height: '25px', display: 'inline-block', border: '1px solid #ddd' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Foreground</td>
+            <td align="center">
+                <code>--foreground</code>
+            </td>
+            <td align="center">
+                <code>text-foreground</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(21.03% 0.0015 22.81)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Muted</td>
+            <td align="center">
+                <code>--muted</code>
+            </td>
+            <td align="center">
+                <code>text-muted</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(55.17% 0.003 22.81)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Border</td>
+            <td align="center">
+                <code>--border</code>
+            </td>
+            <td align="center">
+                <code>border-border</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(90% 0.0015 22.81)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Danger</td>
+            <td align="center">
+                <code>--danger</code>
+            </td>
+            <td align="center">
+                <code>bg-danger</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(65.32% 0.2335 358.02)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Success</td>
+            <td align="center">
+                <code>--success</code>
+            </td>
+            <td align="center">
+                <code>bg-success</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(73.29% 0.1941 123.09)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Warning</td>
+            <td align="center">
+                <code>--warning</code>
+            </td>
+            <td align="center">
+                <code>bg-warning</code>
+            </td>
+            <td>
+                <div style={{ background: 'oklch(78.19% 0.159 44.61)', width: '90px', height: '25px', display: 'inline-block' }} />
+            </td>
+        </tr>
+    </tbody>
 </table>
 
-In case you are using the colors in the frontend, you can access them via the theme variables file. For styled components, it works like this:
+The full token list (including dark-mode overrides and the `--db-level-*` ramp) lives in `src/app/globals.css`. Reference HeroUI tokens directly in JSX via Tailwind utilities — there is no `theme` object to consume.
 
-```javascript
-const ExampleStyled = styled.div`
-    color: ${(props) => props.theme.primary};
-`;
+```tsx
+<div className="bg-surface text-foreground border border-border">
+    <span className="text-muted">Hello</span>
+</div>
 ```
+
+Avoid hardcoded hex colors in components — always use the Tailwind utility tied to a token so light/dark theming continues to work.
+
+## Styling conventions
+
+- **Tailwind first.** Use Tailwind utilities for all new code.
+- **`styled-components` is legacy** — present in older code but being phased out. Do not introduce new styled-components.
+- **HeroUI compound components** (e.g. `Card.Header`, `Modal.Body`) — see the HeroUI v3 docs.

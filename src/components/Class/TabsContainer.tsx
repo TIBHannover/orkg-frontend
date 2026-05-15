@@ -1,17 +1,14 @@
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 
 import InformationTab from '@/components/Class/InformationTab';
 import TreeView from '@/components/Class/TreeView';
 import ClassInstances from '@/components/ClassInstances/ClassInstances';
-import { TabHeaderStyle } from '@/components/Tabs/styled';
 import Tabs from '@/components/Tabs/Tabs';
-import Col from '@/components/Ui/Structure/Col';
 import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Class } from '@/services/backend/types';
 
 type TabsContainerProps = {
@@ -21,7 +18,7 @@ type TabsContainerProps = {
     editMode: boolean;
 };
 
-const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMode }) => {
+const TabsContainer: FC<TabsContainerProps> = ({ id, classObject, editMode }) => {
     const { activeTab } = useParams();
     const [reloadTree, setReloadTree] = useState(false);
     const router = useRouter();
@@ -36,16 +33,15 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMod
     };
 
     return (
-        <Container className="mt-3 p-1">
-            <Row className="ps-2">
-                <Col md={6} className="box rounded" style={{ background: '#fff' }}>
-                    <TabHeaderStyle className="rc-tabs-nav-wrap">Tree view</TabHeaderStyle>
+        <Container className="mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="box rounded bg-surface">
+                    <div className="px-4 py-3 text-base font-medium border-b-2 border-separator">Tree view</div>
                     <TreeView id={id} reloadTree={reloadTree} />
-                </Col>
-                <Col md={6}>
+                </div>
+                <div>
                     <Tabs
-                        className="box rounded"
-                        style={{ position: 'sticky', top: '70px' }}
+                        className="box rounded bg-surface sticky top-[70px]"
                         destroyOnHidden
                         onChange={onTabChange}
                         activeKey={activeTab ?? 'information'}
@@ -69,8 +65,8 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, label, classObject, editMod
                             },
                         ]}
                     />
-                </Col>
-            </Row>
+                </div>
+            </div>
         </Container>
     );
 };

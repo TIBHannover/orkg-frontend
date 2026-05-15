@@ -15,21 +15,26 @@ type ConferenceMetadataBoxProps = {
 
 const ConferenceMetadataBox: FC<ConferenceMetadataBoxProps> = ({ url, metadata, isLoading }) => {
     return (
-        <div className="box rounded-3 p-3 flex-grow-1">
-            <h5>Conference information </h5>
-
+        <div className="box rounded-lg p-4 grow flex flex-col">
+            <h5>Conference information</h5>
             {!isLoading ? (
-                <div className="mb-4 mt-4">
-                    <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
-                        <FontAwesomeIcon size="sm" icon={faGlobe} /> {url} {url && <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />}
-                    </a>
-                    <br />
-                    <b>Conference date</b>: {metadata.start_date}
-                    <br />
-                    <b>Review process</b>: {CONFERENCE_REVIEW_TYPE.find((t) => t.id === metadata.review_process)?.label}
+                <div className="mt-3 flex flex-col gap-4 text-sm">
+                    {url && (
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="break-all hover:underline">
+                            <FontAwesomeIcon size="sm" icon={faGlobe} className="mr-2" />
+                            {url}
+                            <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} className="ml-1" />
+                        </a>
+                    )}
+                    <div>
+                        <b>Conference date</b>: {metadata.start_date}
+                    </div>
+                    <div>
+                        <b>Review process</b>: {CONFERENCE_REVIEW_TYPE.find((t) => t.id === metadata.review_process)?.label}
+                    </div>
                 </div>
             ) : (
-                <div className="text-center mt-4 mb-4">Loading conference information ...</div>
+                <div className="text-center my-6">Loading conference information ...</div>
             )}
         </div>
     );

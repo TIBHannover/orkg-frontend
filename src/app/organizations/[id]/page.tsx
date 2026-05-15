@@ -1,10 +1,9 @@
 'use client';
 
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Card, Spinner } from '@heroui/react';
 import { capitalize } from 'lodash';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -17,6 +16,7 @@ import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getAllOrganizations, getConferences, organizationsUrl } from '@/services/backend/organizations';
 
 const Organizations = () => {
@@ -34,8 +34,6 @@ const Organizations = () => {
         document.title = `${label}s - ORKG`;
     }, [label]);
 
-    const route = alternateLabel === ORGANIZATIONS_MISC.ORGANIZATION ? ROUTES.ORGANIZATION : ROUTES.EVENT;
-
     return (
         <>
             <TitleBar
@@ -43,10 +41,9 @@ const Organizations = () => {
                     !!user &&
                     user.isCurationAllowed && (
                         <RequireAuthentication
-                            component={Link}
-                            color="secondary"
+                            component={Button}
                             size="sm"
-                            className="btn btn-secondary btn-sm flex-shrink-0"
+                            className="button--orkg-secondary"
                             href={reverse(ROUTES.CREATE_ORGANIZATION, { type: params.id })}
                         >
                             <FontAwesomeIcon icon={faPlus} /> Create{' '}
@@ -57,20 +54,24 @@ const Organizations = () => {
             >
                 {capitalize(pluralize(label?.toLowerCase() === ORGANIZATIONS_MISC.GENERAL.toLowerCase() ? 'organization' : 'conference'))}
             </TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
-                {organizations && organizations.length > 0 && (
-                    <div className="mt-3 row justify-content-center">
-                        {organizations.map((organization) => (
-                            <OrganizationCard key={organization.display_id} organization={{ ...organization }} route={route} type={params.id} />
-                        ))}
-                    </div>
-                )}
-                {organizations && organizations.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No {label}s yet</div>}
-                {isLoading && (
-                    <div className="text-center mt-4 mb-4">
-                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
+            <Container>
+                <Card className="box rounded p-12">
+                    <Card.Content className="p-0">
+                        {organizations && organizations.length > 0 && (
+                            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                                {organizations.map((organization) => (
+                                    <OrganizationCard key={organization.display_id} organization={{ ...organization }} type={params.id} />
+                                ))}
+                            </div>
+                        )}
+                        {organizations && organizations.length === 0 && !isLoading && <div className="my-6 text-center">No {label}s yet</div>}
+                        {isLoading && (
+                            <div className="my-6 flex items-center justify-center gap-2">
+                                <Spinner size="sm" /> Loading
+                            </div>
+                        )}
+                    </Card.Content>
+                </Card>
             </Container>
         </>
     );

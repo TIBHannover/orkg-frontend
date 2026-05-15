@@ -2,8 +2,7 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 
@@ -15,6 +14,7 @@ import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getLiteratureLists, listsUrl } from '@/services/backend/literatureLists';
 import { LiteratureList, VisibilityOptions } from '@/services/backend/types';
 
@@ -35,17 +35,15 @@ const Lists = () => {
     const buttons = (
         <>
             <VisibilityFilter />
-            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.LIST_NEW}>
+            <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.LIST_NEW}>
                 <FontAwesomeIcon icon={faPlus} /> Create list
             </RequireAuthentication>
             {!!user && (
                 <RequireAuthentication
-                    component={Link}
-                    color="secondary"
+                    component={Button}
                     size="sm"
-                    className="btn btn-secondary btn-sm"
+                    className="button--orkg-secondary"
                     href={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-lists' })}
-                    style={{ marginLeft: 1 }}
                 >
                     Draft lists
                 </RequireAuthentication>

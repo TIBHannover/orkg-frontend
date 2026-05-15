@@ -1,12 +1,6 @@
+import { Alert, Button, Modal, TextArea } from '@heroui/react';
 import { Dispatch, FC, SetStateAction } from 'react';
 
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
 type EditAnnotationTextModalProps = {
@@ -18,18 +12,38 @@ type EditAnnotationTextModalProps = {
 };
 
 const EditAnnotationTextModal: FC<EditAnnotationTextModalProps> = ({ value, setValue, isOpen, toggle, handleDone }) => (
-    <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Edit text</ModalHeader>
-        <ModalBody>
-            <Alert color="info">Only edit the text to fix issues in the extracted sentence. Do not change the sentence itself</Alert>
-            <Input type="textarea" maxLength={MAX_LENGTH_INPUT} rows="5" value={value ?? ''} onChange={(e) => setValue(e.target.value)} />
-        </ModalBody>
-        <ModalFooter>
-            <Button color="primary" onClick={handleDone}>
-                Done
-            </Button>
-        </ModalFooter>
-    </Modal>
+    <Modal.Backdrop
+        isOpen={isOpen}
+        onOpenChange={(open) => {
+            if (!open) toggle();
+        }}
+        isDismissable
+    >
+        <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+            <Modal.Dialog>
+                <Modal.Header>
+                    <Modal.CloseTrigger />
+                    <Modal.Heading>Edit text</Modal.Heading>
+                </Modal.Header>
+                <Modal.Body className="p-6 space-y-4">
+                    <Alert>
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Description>
+                                Only edit the text to fix issues in the extracted sentence. Do not change the sentence itself
+                            </Alert.Description>
+                        </Alert.Content>
+                    </Alert>
+                    <TextArea fullWidth rows={5} maxLength={MAX_LENGTH_INPUT} value={value ?? ''} onChange={(e) => setValue(e.target.value)} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onPress={handleDone}>
+                        Done
+                    </Button>
+                </Modal.Footer>
+            </Modal.Dialog>
+        </Modal.Container>
+    </Modal.Backdrop>
 );
 
 export default EditAnnotationTextModal;

@@ -1,7 +1,7 @@
-import Link from 'next/link';
+import { linkVariants } from '@heroui/styles';
+import NextLink from 'next/link';
 import { FC } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 
 export type TitleData = {
@@ -15,21 +15,20 @@ type DiffTitleProps = {
     data: TitleData;
 };
 
-const DiffTitle: FC<DiffTitleProps> = ({ data }) =>
-    data ? (
-        <div className="d-flex justify-content-between align-items-center">
-            <span className="d-flex align-items-center">
-                {data.headerText}
-                {data.creator && (
-                    <span className="ms-2">
-                        <UserAvatar userId={data.creator} />
-                    </span>
-                )}
-            </span>{' '}
-            <Button color="light" size="sm" tag={Link} href={data.route ?? ''}>
+const DiffTitle: FC<DiffTitleProps> = ({ data }) => {
+    if (!data) return null;
+    const link = linkVariants();
+    return (
+        <div className="flex items-center justify-between gap-4 py-2 px-2">
+            <span className="flex items-center gap-2 min-w-0">
+                <span className="truncate">{data.headerText}</span>
+                {data.creator && <UserAvatar userId={data.creator} />}
+            </span>
+            <NextLink href={data.route ?? ''} className={`${link.base()} shrink-0 text-sm`}>
                 {data.buttonText}
-            </Button>
+            </NextLink>
         </div>
-    ) : null;
+    );
+};
 
 export default DiffTitle;

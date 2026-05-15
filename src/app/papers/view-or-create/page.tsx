@@ -1,7 +1,7 @@
-import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
 
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getPaperByDoi, getPaperByTitle } from '@/services/backend/papers';
 import { Paper } from '@/services/backend/types';
 

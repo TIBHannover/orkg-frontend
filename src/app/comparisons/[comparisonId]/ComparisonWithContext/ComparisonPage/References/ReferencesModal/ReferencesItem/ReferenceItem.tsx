@@ -2,6 +2,7 @@ import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input, TextField } from '@heroui/react';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import {
@@ -11,11 +12,7 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 
-// Create shared symbols and functions for reference drag and drop
 export const referenceKey = createDragDataKey('reference');
 export const createReferenceData = createDragDataFactory<{ id: string; text: string }>(referenceKey);
 export const isReferenceData = createDragDataValidator<{ id: string; text: string }>(referenceKey);
@@ -72,34 +69,32 @@ const ReferenceItem: FC<ReferenceItemProps> = ({ reference, index, instanceId, o
     }, [reference, index, instanceId, totalItems, dragHandleElement]);
 
     return (
-        <div ref={ref} style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }}>
-            <InputGroup className="mb-1">
+        <div ref={ref} className="relative" style={{ opacity: isDragging ? 0.4 : 1 }}>
+            <div className="flex items-stretch min-h-9 mb-1">
                 <Button
-                    color="light"
-                    innerRef={setDragHandleElement}
-                    className="ps-3 pe-3"
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, cursor: 'move' }}
-                    role="button"
-                    tabIndex={0}
+                    ref={setDragHandleElement as unknown as React.Ref<HTMLButtonElement>}
+                    variant="secondary"
+                    size="sm"
+                    isIconOnly
                     aria-label="Drag to reorder reference"
+                    className="!h-9 !rounded-e-none cursor-move"
                 >
                     <FontAwesomeIcon icon={faBars} />
                 </Button>
-                <Input
-                    type="text"
-                    value={reference.text}
-                    onChange={(e) => onChange({ id: reference.id, text: e.target.value })}
-                    placeholder='E.g. Vaswani, A. "Attention is all you need." (2017)'
-                />
+                <TextField fullWidth className="flex-1 min-w-0" value={reference.text} onChange={(text) => onChange({ id: reference.id, text })}>
+                    <Input type="text" className="!rounded-none" placeholder='E.g. Vaswani, A. "Attention is all you need." (2017)' />
+                </TextField>
                 <Button
-                    color="light"
-                    className="ps-3 pe-3"
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    onClick={() => onDelete(reference.id)}
+                    variant="secondary"
+                    size="sm"
+                    isIconOnly
+                    aria-label="Delete reference"
+                    onPress={() => onDelete(reference.id)}
+                    className="!h-9 !rounded-s-none -ms-px"
                 >
                     <FontAwesomeIcon icon={faTimes} />
                 </Button>
-            </InputGroup>
+            </div>
             {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
         </div>
     );

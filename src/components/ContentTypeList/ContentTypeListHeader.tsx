@@ -21,19 +21,20 @@ const ContentTypeListHeader = ({
     showSubFieldsFilter = false,
 }: ContentTypeListHeaderProps) => {
     return (
-        <div className="d-md-flex align-items-center mt-3 mb-3">
-            <div className="d-flex flex-md-grow-1 align-items-center">
-                <h1 className="h5 mb-0 me-2">{label}</h1>
+        <div className="flex flex-col gap-3 mt-4 mb-4 md:flex-row md:items-center md:gap-2">
+            <div className="flex grow items-center min-w-0">
+                <h1 className="text-lg md:text-xl mb-0 mr-2 truncate">{label}</h1>
                 <SubtitleSeparator />
                 <SubTitle>
-                    <small className="text-muted text-small mt-1">
+                    <small className="text-gray-500 text-small mt-1 whitespace-nowrap">
                         {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `${totalElements} items`}
                     </small>
                 </SubTitle>
             </div>
-
-            {showSubFieldsFilter && <ContentTypeSubFieldsFilter isLoading={isLoading} />}
-            {showVisibilityFilter && <ContentTypeVisibilityFilter isLoading={isLoading} />}
+            <div className="flex flex-wrap items-center gap-2 max-md:[&>*]:mr-0 max-md:[&>*>*]:w-full">
+                {showSubFieldsFilter && <ContentTypeSubFieldsFilter isLoading={isLoading} />}
+                {showVisibilityFilter && <ContentTypeVisibilityFilter isLoading={isLoading} />}
+            </div>
         </div>
     );
 };

@@ -1,16 +1,7 @@
+import { Button, Input, Label, Modal, TextField, toast } from '@heroui/react';
 import { FC, FormEvent, useEffect, useId, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import useRelatedResources from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonCarousel/RelatedResources/hooks/useRelatedResources';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
 type AddEditRelatedResourceModalProps = {
@@ -51,78 +42,85 @@ const AddEditRelatedResourceModal: FC<AddEditRelatedResourceModalProps> = ({ tog
         e.preventDefault();
 
         if (!label || !url) {
-            toast.error('The label and URL are required');
+            toast.danger('The label and URL are required');
             return;
         }
         if (relatedResourceId) {
-            updateRelatedResource(relatedResourceId, {
-                image,
-                label,
-                url,
-                description,
-            });
+            updateRelatedResource(relatedResourceId, { image, label, url, description });
         } else {
-            createRelatedResource({
-                image,
-                label,
-                url,
-                description,
-            });
+            createRelatedResource({ image, label, url, description });
         }
         toggle();
     };
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggle();
+        }
+    };
+
     return (
-        <Modal isOpen toggle={toggle}>
-            <ModalHeader toggle={toggle}>{isEdit ? 'Edit' : 'Add'} related resource</ModalHeader>
-            <Form onSubmit={handleSave}>
-                <ModalBody>
-                    <FormGroup>
-                        <Label for={`${formId}label`}>Label</Label>
-                        <Input
-                            type="text"
-                            value={label}
-                            onChange={(e) => setLabel(e.target.value)}
-                            maxLength={MAX_LENGTH_INPUT}
-                            id={`${formId}label`}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for={`${formId}url`}>URL</Label>
-                        <Input type="text" value={url} onChange={(e) => setUrl(e.target.value)} maxLength={MAX_LENGTH_INPUT} id={`${formId}url`} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for={`${formId}description`}>
-                            Description <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <Input
-                            type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            maxLength={MAX_LENGTH_INPUT}
-                            id={`${formId}description`}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for={`${formId}image`}>
-                            Thumbnail URL <span className="text-muted fst-italic">(optional)</span>
-                        </Label>
-                        <Input
-                            type="text"
-                            value={image}
-                            onChange={(e) => setImage(e.target.value)}
-                            maxLength={MAX_LENGTH_INPUT}
-                            id={`${formId}image`}
-                        />
-                    </FormGroup>
-                </ModalBody>
-                <ModalFooter>
-                    <Button type="submit" color="primary">
-                        Save
-                    </Button>
-                </ModalFooter>
-            </Form>
-        </Modal>
+        <Modal.Backdrop isOpen onOpenChange={handleOpenChange}>
+            <Modal.Container>
+                <Modal.Dialog>
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>{isEdit ? 'Edit' : 'Add'} related resource</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <form onSubmit={handleSave}>
+                        <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-4">
+                            <TextField fullWidth>
+                                <Label htmlFor={`${formId}label`}>Label</Label>
+                                <Input
+                                    id={`${formId}label`}
+                                    type="text"
+                                    value={label}
+                                    onChange={(e) => setLabel(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
+                                />
+                            </TextField>
+                            <TextField fullWidth>
+                                <Label htmlFor={`${formId}url`}>URL</Label>
+                                <Input
+                                    id={`${formId}url`}
+                                    type="text"
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
+                                />
+                            </TextField>
+                            <TextField fullWidth>
+                                <Label htmlFor={`${formId}description`}>
+                                    Description <span className="text-gray-500 italic">(optional)</span>
+                                </Label>
+                                <Input
+                                    id={`${formId}description`}
+                                    type="text"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
+                                />
+                            </TextField>
+                            <TextField fullWidth>
+                                <Label htmlFor={`${formId}image`}>
+                                    Thumbnail URL <span className="text-gray-500 italic">(optional)</span>
+                                </Label>
+                                <Input
+                                    id={`${formId}image`}
+                                    type="text"
+                                    value={image}
+                                    onChange={(e) => setImage(e.target.value)}
+                                    maxLength={MAX_LENGTH_INPUT}
+                                />
+                            </TextField>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button type="submit">Save</Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

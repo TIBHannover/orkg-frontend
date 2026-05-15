@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
@@ -27,7 +27,7 @@ function useDeleteResource({ resourceId, redirect = false }: { resourceId: strin
                 }
             } catch (err) {
                 console.error(err);
-                toast.error((err as Error).message);
+                toast.danger((err as Error).message);
             }
 
             setIsLoading(false);

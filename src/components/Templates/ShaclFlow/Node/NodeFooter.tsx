@@ -1,20 +1,10 @@
 import { faLock, faLockOpen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip, Tooltip } from '@heroui/react';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import useCountInstances from '@/components/Class/hooks/useCountInstances';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
 import { Node } from '@/services/backend/types';
-
-const NodeFooterStyled = styled.div`
-    background: ${(props) => props.theme.lightDarker};
-    color: ${(props) => props.theme.secondaryDarker};
-    border-bottom-left-radius: ${(props) => props.theme.borderRadius};
-    border-bottom-right-radius: ${(props) => props.theme.borderRadius};
-    font-size: 12px;
-`;
 
 type NodeFooterProps = {
     isClosed: boolean;
@@ -24,26 +14,30 @@ type NodeFooterProps = {
 const NodeFooter: FC<NodeFooterProps> = ({ isClosed, targetClass }) => {
     const { countInstances, isLoading: isLoadingCount } = useCountInstances(targetClass.id);
     return (
-        <NodeFooterStyled className="px-2 py-1 d-flex justify-content-between">
-            <div>
-                <Tooltip
-                    content={
-                        isClosed
-                            ? 'This templates is closed (users cannot add additional properties)'
-                            : 'This templates is open (users can add additional properties)'
-                    }
-                >
-                    {isClosed ? <FontAwesomeIcon icon={faLock} color="#505565" /> : <FontAwesomeIcon icon={faLockOpen} color="#505565" />}
-                </Tooltip>
-            </div>
-            <div>
-                <Tooltip content="Number of instances">
-                    <span>
-                        <Badge pill>{!isLoadingCount ? countInstances : <FontAwesomeIcon spin icon={faSpinner} />}</Badge>
-                    </span>
-                </Tooltip>
-            </div>
-        </NodeFooterStyled>
+        <div className="bg-border text-secondary-darker rounded-b-[4px] text-xs px-2 py-1 flex justify-between items-center">
+            <Tooltip>
+                <Tooltip.Trigger>
+                    <FontAwesomeIcon icon={isClosed ? faLock : faLockOpen} />
+                </Tooltip.Trigger>
+                <Tooltip.Content showArrow>
+                    <Tooltip.Arrow />
+                    {isClosed
+                        ? 'This template is closed (users cannot add additional properties)'
+                        : 'This template is open (users can add additional properties)'}
+                </Tooltip.Content>
+            </Tooltip>
+            <Tooltip>
+                <Tooltip.Trigger>
+                    <Chip size="sm" variant="soft">
+                        {!isLoadingCount ? countInstances : <FontAwesomeIcon spin icon={faSpinner} />}
+                    </Chip>
+                </Tooltip.Trigger>
+                <Tooltip.Content showArrow>
+                    <Tooltip.Arrow />
+                    Number of instances
+                </Tooltip.Content>
+            </Tooltip>
+        </div>
     );
 };
 

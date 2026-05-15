@@ -1,20 +1,19 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Tooltip } from '@heroui/react';
 import { uniqBy } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 import { GroupBase, OptionsOrGroups } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import useSWR from 'swr';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import Option from '@/components/AutocompleteContributor/CustomComponents/Option';
 import SingleValue from '@/components/AutocompleteContributor/CustomComponents/SingleValue';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { contributorsUrl, getContributorById, getContributors } from '@/services/backend/contributors';
 import { Contributor } from '@/services/backend/types';
 
@@ -70,8 +69,8 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
     };
 
     return (
-        <>
-            <InputGroup className="d-flex align-items-center w-100 flex-grow-1">
+        <div className="flex items-stretch w-full">
+            <div className={`flex-1 min-w-0 ${contributor && showLink ? '[&_.react-select\\_\\_control]:!rounded-e-none' : ''}`}>
                 <AsyncPaginate
                     value={contributor}
                     components={{ Option, SingleValue }}
@@ -86,27 +85,31 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
                     placeholder="Select a contributor"
                     isClearable
                     classNamePrefix="react-select"
-                    classNames={{
-                        container: () => 'form-control form-control-sm p-0',
-                        control: () => 'border-0 p-0 border-radius-0',
-                    }}
+                    classNames={customClassNames as any}
+                    styles={customStyles as any}
+                    menuPosition="fixed"
                     key={contributor?.id}
                 />
+            </div>
 
-                {contributor && showLink && (
-                    <Tooltip content="Open profile page">
+            {contributor && showLink && (
+                <Tooltip delay={0}>
+                    <Tooltip.Trigger className="flex items-stretch">
                         <Link
                             target="_blank"
-                            className=" px-2 btn btn-outline-secondary"
+                            className="shrink-0 inline-flex items-center h-full px-3 text-sm font-medium border border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 rounded-s-none rounded-e-md -ms-px"
                             href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}
                         >
                             <FontAwesomeIcon icon={faLink} />
                         </Link>
-                    </Tooltip>
-                )}
-            </InputGroup>
-            <SelectGlobalStyle />
-        </>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content showArrow>
+                        <Tooltip.Arrow />
+                        Open profile page
+                    </Tooltip.Content>
+                </Tooltip>
+            )}
+        </div>
     );
 };
 

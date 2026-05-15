@@ -27,23 +27,24 @@ const ResearchProblemCard = ({ problem, options }: ResearchProblemCardProps) => 
     });
 
     return (
-        <div className="d-flex">
-            <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
-                <div>
-                    <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                </div>
-                <div>
-                    <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                </div>
+        <div className="flex items-center gap-2">
+            <div className="flex flex-col shrink-0 w-[25px]">
+                <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
             </div>
-            <div className="flex-grow-1">
-                <Link href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id, slug: problem.label })}>{problem.label}</Link>{' '}
-                <small>
-                    {options?.map?.((option) => (
+            <Link
+                className="grow min-w-0 break-words"
+                href={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id, slug: problem.label })}
+            >
+                {problem.label}
+            </Link>
+            {options && options.length > 0 && (
+                <div className="shrink-0 flex items-center gap-1">
+                    {options.map((option) => (
                         <ActionButton
                             title={option.label}
                             icon={option.icon}
-                            key={`problem${problem.id}`}
+                            key={`problem${problem.id}-${option.label}`}
                             requireConfirmation={option.requireConfirmation}
                             confirmationMessage="Are you sure?"
                             confirmationButtons={[
@@ -61,8 +62,8 @@ const ResearchProblemCard = ({ problem, options }: ResearchProblemCardProps) => 
                             ]}
                         />
                     ))}
-                </small>
-            </div>
+                </div>
+            )}
         </div>
     );
 };

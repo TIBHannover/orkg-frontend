@@ -63,8 +63,7 @@ const ContributionComparisons = ({ contributionId }: { contributionId: string })
     return (
         <div>
             <Title>Comparisons</Title>
-
-            <Container className="mt-3 p-0">
+            <Container className="mt-4">
                 <ListPaginatedContent<Comparison>
                     renderListItem={renderListItem}
                     pageSize={pageSize}

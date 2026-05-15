@@ -1,30 +1,8 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { upperFirst } from 'lodash';
-import styled from 'styled-components';
 
 import useOntology, { CSVW_TABLE_IRI, SURVEY_TABLES_IRI } from '@/components/PdfAnnotation/hooks/useOntology';
-
-const Container = styled.div`
-    background: #333333;
-    padding: 10px 5px 10px 15px;
-    border-radius: 6px;
-    color: #fff;
-
-    /* Ensure the tooltip can receive hover events to maintain popup visibility */
-    pointer-events: auto;
-`;
-
-const IconWrapper = styled.span`
-    border-left: 1px solid #707070;
-    cursor: pointer;
-    display: inline-block;
-    padding: 0 10px;
-`;
-
-const DeleteIcon = styled(FontAwesomeIcon)`
-    color: #f87474;
-`;
 
 type AnnotationTooltipExistingProps = {
     type?: string;
@@ -39,26 +17,33 @@ const AnnotationTooltipExisting = ({ type, id, deleteAnnotation }: AnnotationToo
         return null;
     }
 
-    if (type === SURVEY_TABLES_IRI || type === CSVW_TABLE_IRI) {
-        return (
-            <Container onClick={(e) => e.stopPropagation()}>
-                <span className="pe-3">{type === SURVEY_TABLES_IRI ? 'Survey Table' : 'Regular Table'}</span>
-                <IconWrapper>
-                    <DeleteIcon icon={faTrash} onClick={() => deleteAnnotation(id ?? '')} />
-                </IconWrapper>
-            </Container>
-        );
+    let label: string;
+    if (type === SURVEY_TABLES_IRI) {
+        label = 'Survey Table';
+    } else if (type === CSVW_TABLE_IRI) {
+        label = 'Regular Table';
+    } else {
+        label = upperFirst(findByType(type)?.label ?? '');
     }
 
-    const label = upperFirst(findByType(type)?.label ?? '');
-
     return (
-        <Container onClick={(e) => e.stopPropagation()}>
-            <span className="pe-3">{label}</span>
-            <IconWrapper>
-                <DeleteIcon icon={faTrash} onClick={() => deleteAnnotation(id ?? '')} />
-            </IconWrapper>
-        </Container>
+        <div
+            className="flex items-center gap-3 bg-foreground text-background rounded-md px-3 py-2 shadow-md pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+            role="presentation"
+        >
+            <span>{label}</span>
+            <span className="border-l border-white/20 ps-3">
+                <button
+                    type="button"
+                    aria-label="Delete annotation"
+                    className="text-danger hover:opacity-80 cursor-pointer"
+                    onClick={() => deleteAnnotation(id ?? '')}
+                >
+                    <FontAwesomeIcon icon={faTrash} />
+                </button>
+            </span>
+        </div>
     );
 };
 

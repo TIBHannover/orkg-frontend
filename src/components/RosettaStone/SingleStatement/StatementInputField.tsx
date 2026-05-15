@@ -1,15 +1,13 @@
+import { Input, Tooltip } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import AutoComplete from '@/components/Autocomplete/Autocomplete';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import DateTimeInput from '@/components/InputField/DateTimeInput/DateTimeInput';
 import DurationInput from '@/components/InputField/DurationInput/DurationInput';
 import GregorianInput from '@/components/InputField/GregorianInput/GregorianInput';
 import InputFieldModal from '@/components/InputField/InputFieldModal';
 import TimeInput from '@/components/InputField/TimeInput/TimeInput';
 import ListInputField from '@/components/RosettaStone/SingleStatement/ListInputField';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { getConfigByClassId, InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import { EntityType, Node, RSPropertyShape } from '@/services/backend/types';
@@ -50,56 +48,56 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
         default: React.ReactNode;
     } = {
         boolean: (
-            <Input
-                onChange={(e) => updateValue([{ ...(value?.[0] ?? {}), label: e.target.value }])}
-                value={value?.[0]?.label ?? ''}
-                type="select"
-                name="literalValue"
-                className="w-25 form-control-sm d-inline-block"
-            >
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </Input>
+            <span className="w-1/4 inline-block align-middle leading-normal">
+                <select
+                    onChange={(e) => updateValue([{ ...(value?.[0] ?? {}), label: e.target.value }])}
+                    value={value?.[0]?.label ?? ''}
+                    name="literalValue"
+                    className="input input--full-width py-1 px-2 text-sm w-full"
+                >
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </span>
         ),
         autocomplete: (
-            <AutoComplete
-                entityType={config._class as EntityType}
-                baseClass={range?.id && range.id !== CLASSES.RESOURCE ? range.id : ''}
-                excludeClasses={[CLASSES.ROSETTA_STONE_STATEMENT]}
-                placeholder={propertyShape.placeholder}
-                onChange={(selected, { action }) => {
-                    if (action === 'clear') {
-                        updateValue([]);
-                    } else if (isMulti) {
-                        updateValue((selected as Node[]) ?? []);
-                    } else {
-                        updateValue(selected ? [selected as Node] : []);
-                    }
-                }}
-                value={value}
-                openMenuOnFocus
-                isClearable
-                allowCreate
-                isMulti={isMulti}
-                size="sm"
-                className="w-25 d-inline-block"
-                enableExternalSources={!(range?.id && range.id !== CLASSES.RESOURCE)}
-            />
+            <span className="w-1/4 inline-block align-middle leading-normal">
+                <AutoComplete
+                    entityType={config._class as EntityType}
+                    baseClass={range?.id && range.id !== CLASSES.RESOURCE ? range.id : ''}
+                    excludeClasses={[CLASSES.ROSETTA_STONE_STATEMENT]}
+                    placeholder={propertyShape.placeholder}
+                    onChange={(selected, { action }) => {
+                        if (action === 'clear') {
+                            updateValue([]);
+                        } else if (isMulti) {
+                            updateValue((selected as Node[]) ?? []);
+                        } else {
+                            updateValue(selected ? [selected as Node] : []);
+                        }
+                    }}
+                    value={value}
+                    openMenuOnFocus
+                    isClearable
+                    allowCreate
+                    isMulti={isMulti}
+                    size="sm"
+                    enableExternalSources={!(range?.id && range.id !== CLASSES.RESOURCE)}
+                />
+            </span>
         ),
         default: (
-            <div className="w-25 d-inline-block">
-                <InputGroup size="sm" className="d-flex">
-                    <Input
-                        placeholder={propertyShape.placeholder}
-                        name="literalValue"
-                        type={inputFormType as StandardInputType}
-                        bsSize="sm"
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(e) => updateValue([{ ...(value?.[0] ?? {}), label: e.target.value }])}
-                        className="flex-grow-1"
-                    />
-                </InputGroup>
-            </div>
+            <span className="w-1/4 inline-block align-middle leading-normal">
+                <Input
+                    fullWidth
+                    placeholder={propertyShape.placeholder}
+                    name="literalValue"
+                    type={inputFormType as StandardInputType}
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(e) => updateValue([{ ...(value?.[0] ?? {}), label: e.target.value }])}
+                    className="py-1 px-2 text-sm"
+                />
+            </span>
         ),
         duration: (
             <InputFieldModal
@@ -107,7 +105,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <DurationInput value={value?.[0]?.label ?? ''} onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])} />
             </InputFieldModal>
@@ -118,7 +116,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <DurationInput
                     value={value?.[0]?.label ?? ''}
@@ -133,7 +131,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <DurationInput
                     value={value?.[0]?.label ?? ''}
@@ -143,58 +141,48 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
             </InputFieldModal>
         ),
         gYearMonth: (
-            <div className="w-25 d-inline-block">
-                <div className="flex-grow-1 d-flex">
-                    <GregorianInput
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
-                        type="gYearMonth"
-                    />
-                </div>
+            <div className="w-1/4 inline-block align-middle leading-normal">
+                <GregorianInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="gYearMonth"
+                />
             </div>
         ),
         gYear: (
-            <div className="w-25 d-inline-block">
-                <div className="flex-grow-1 d-flex">
-                    <GregorianInput
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
-                        type="gYear"
-                    />
-                </div>
+            <div className="w-1/4 inline-block align-middle leading-normal">
+                <GregorianInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="gYear"
+                />
             </div>
         ),
         gMonthDay: (
-            <div className="w-25 d-inline-block">
-                <div className="flex-grow-1 d-flex">
-                    <GregorianInput
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
-                        type="gMonthDay"
-                    />
-                </div>
+            <div className="w-1/4 inline-block align-middle leading-normal">
+                <GregorianInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="gMonthDay"
+                />
             </div>
         ),
         gDay: (
-            <div className="w-25 d-inline-block">
-                <div className="flex-grow-1 d-flex">
-                    <GregorianInput
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
-                        type="gDay"
-                    />
-                </div>
+            <div className="w-1/4 inline-block align-middle leading-normal">
+                <GregorianInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="gDay"
+                />
             </div>
         ),
         gMonth: (
-            <div className="w-25 d-inline-block">
-                <div className="flex-grow-1 d-flex">
-                    <GregorianInput
-                        value={value?.[0]?.label ?? ''}
-                        onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
-                        type="gMonth"
-                    />
-                </div>
+            <div className="w-1/4 inline-block align-middle leading-normal">
+                <GregorianInput
+                    value={value?.[0]?.label ?? ''}
+                    onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])}
+                    type="gMonth"
+                />
             </div>
         ),
         dateTime: (
@@ -203,7 +191,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <DateTimeInput
                     value={value?.[0]?.label ?? ''}
@@ -218,7 +206,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <DateTimeInput
                     value={value?.[0]?.label ?? ''}
@@ -233,21 +221,28 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
                 setIsOpen={setIsInputFieldModalOpen}
                 dataType={config.type}
                 inputValue={value?.[0]?.label ?? ''}
-                className="w-25 d-inline-block"
+                className="w-1/4 inline-block align-middle leading-normal"
             >
                 <TimeInput value={value?.[0]?.label ?? ''} onChange={(val) => updateValue([{ ...(value?.[0] ?? {}), label: val }])} />
             </InputFieldModal>
         ),
     };
 
+    const field =
+        !isMulti || inputFormType === 'autocomplete' ? (
+            (Forms[inputFormType] ?? Forms.default)
+        ) : (
+            <ListInputField value={value} updateValue={updateValue} inputFormType={inputFormType} placeholder={propertyShape.placeholder} />
+        );
+
+    if (!propertyShape.description) {
+        return field as React.ReactElement;
+    }
+
     return (
-        <Tooltip disabled={!propertyShape.description} content={propertyShape.description}>
-            <span>
-                {(!isMulti || inputFormType === 'autocomplete') && (Forms[inputFormType] || Forms.default)}
-                {isMulti && inputFormType !== 'autocomplete' && (
-                    <ListInputField value={value} updateValue={updateValue} inputFormType={inputFormType} placeholder={propertyShape.placeholder} />
-                )}
-            </span>
+        <Tooltip>
+            {field}
+            <Tooltip.Content>{propertyShape.description}</Tooltip.Content>
         </Tooltip>
     );
 };

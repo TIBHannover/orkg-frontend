@@ -1,16 +1,11 @@
 'use client';
 
+import { Checkbox, cn, Form, Input, Label } from '@heroui/react';
 import { debounce } from 'lodash';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { FC } from 'react';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
-import Row from '@/components/Ui/Structure/Row';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
@@ -32,7 +27,6 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
         defaultValue: true,
         parse: (value) => value === 'true',
     });
-
     const [researchProblem, setResearchProblem] = useQueryState('researchProblem', {
         defaultValue: '',
     });
@@ -40,7 +34,7 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
         defaultValue: '',
     });
 
-    const handleSearch = debounce((term) => {
+    const handleSearch = debounce((term: string) => {
         setSearchTerm(term);
     }, 500);
 
@@ -52,92 +46,100 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
         size,
     };
 
+    const isSmall = size === 'sm';
+    const inputClass = cn('w-full', isSmall && 'py-1 px-2 text-sm');
+    const labelClass = cn(isSmall && 'text-sm');
+
     return (
         <Form>
-            <Row>
-                <Col md={6}>
-                    <FormGroup>
-                        <Label for="filter-research-field" className="d-flex">
-                            <div className="flex-grow-1">Filter by research field</div>
-                            <Label check className="mb-0 me-0">
-                                <Input
-                                    onChange={(e) => {
-                                        setIncludeSubFields(e.target.checked);
-                                        setPage(0);
-                                    }}
-                                    defaultValue={includeSubFields.toString()}
-                                    type="checkbox"
-                                    disabled={isLoading}
-                                />{' '}
-                                Include subfields
-                            </Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                        <Label htmlFor="filter-research-field" className={labelClass}>
+                            Filter by research field
                         </Label>
-                        <Autocomplete
-                            entityType={ENTITIES.RESOURCE}
-                            includeClasses={[CLASSES.RESEARCH_FIELD]}
-                            placeholder="Select or type to enter a research field"
-                            onChange={(v) => {
-                                setResearchField(v?.id ?? '');
+                        <Checkbox
+                            id="include-subfields"
+                            isSelected={includeSubFields}
+                            onChange={(selected) => {
+                                setIncludeSubFields(selected);
                                 setPage(0);
                             }}
-                            inputId="filter-research-field"
-                            defaultValueId={researchField}
-                            {...filterCommonProps}
-                        />
-                    </FormGroup>
-                </Col>
-                <Col md={6}>
-                    <FormGroup>
-                        <Label for="filter-research-problem">Filter by research problem</Label>
-                        <Autocomplete
-                            entityType={ENTITIES.RESOURCE}
-                            includeClasses={[CLASSES.PROBLEM]}
-                            placeholder="Select or type to enter a research problem"
-                            onChange={(v) => {
-                                setResearchProblem(v?.id ?? '');
-                                setPage(0);
-                            }}
-                            inputId="filter-research-problem"
-                            defaultValueId={researchProblem}
-                            {...filterCommonProps}
-                        />
-                    </FormGroup>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={6}>
-                    <FormGroup>
-                        <Label for="filter-label">Filter by label</Label>
-                        <Input
-                            type="text"
-                            id="filter-label"
-                            maxLength={MAX_LENGTH_INPUT}
-                            onChange={(e) => {
-                                handleSearch(e.target.value);
-                                setPage(0);
-                            }}
-                            defaultValue={searchTerm}
-                            bsSize={size}
-                        />
-                    </FormGroup>
-                </Col>
-                <Col md={6}>
-                    <FormGroup>
-                        <Label for="filter-class">Filter by class</Label>
-                        <Autocomplete
-                            entityType={ENTITIES.CLASS}
-                            placeholder="Select or type to enter a class"
-                            onChange={(v) => {
-                                setTargetClass(v?.id ?? '');
-                                setPage(0);
-                            }}
-                            inputId="filter-class"
-                            defaultValueId={targetClass}
-                            {...filterCommonProps}
-                        />
-                    </FormGroup>
-                </Col>
-            </Row>
+                            isDisabled={isLoading}
+                        >
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            <Checkbox.Content>
+                                <Label htmlFor="include-subfields" className={labelClass}>
+                                    Include subfields
+                                </Label>
+                            </Checkbox.Content>
+                        </Checkbox>
+                    </div>
+                    <Autocomplete
+                        entityType={ENTITIES.RESOURCE}
+                        includeClasses={[CLASSES.RESEARCH_FIELD]}
+                        placeholder="Select or type to enter a research field"
+                        onChange={(v) => {
+                            setResearchField(v?.id ?? '');
+                            setPage(0);
+                        }}
+                        inputId="filter-research-field"
+                        defaultValueId={researchField}
+                        {...filterCommonProps}
+                    />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="filter-research-problem" className={labelClass}>
+                        Filter by research problem
+                    </Label>
+                    <Autocomplete
+                        entityType={ENTITIES.RESOURCE}
+                        includeClasses={[CLASSES.PROBLEM]}
+                        placeholder="Select or type to enter a research problem"
+                        onChange={(v) => {
+                            setResearchProblem(v?.id ?? '');
+                            setPage(0);
+                        }}
+                        inputId="filter-research-problem"
+                        defaultValueId={researchProblem}
+                        {...filterCommonProps}
+                    />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="filter-label" className={labelClass}>
+                        Filter by label
+                    </Label>
+                    <Input
+                        type="text"
+                        id="filter-label"
+                        maxLength={MAX_LENGTH_INPUT}
+                        onChange={(e) => {
+                            handleSearch(e.target.value);
+                            setPage(0);
+                        }}
+                        defaultValue={searchTerm}
+                        className={inputClass}
+                    />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="filter-class" className={labelClass}>
+                        Filter by class
+                    </Label>
+                    <Autocomplete
+                        entityType={ENTITIES.CLASS}
+                        placeholder="Select or type to enter a class"
+                        onChange={(v) => {
+                            setTargetClass(v?.id ?? '');
+                            setPage(0);
+                        }}
+                        inputId="filter-class"
+                        defaultValueId={targetClass}
+                        {...filterCommonProps}
+                    />
+                </div>
+            </div>
         </Form>
     );
 };

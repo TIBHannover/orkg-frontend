@@ -1,9 +1,9 @@
-import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { usePrevious } from 'react-use';
 
 import useParams from '@/components/useParams/useParams';
+import { reverse } from '@/lib/namedRoute';
 import { slugify } from '@/utilsTyped';
 
 /**

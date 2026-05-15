@@ -1,13 +1,12 @@
+import { Alert, Button } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
 
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import { StyledActivity } from '@/components/ViewPaper/ProvenanceBox/styled';
+import ActivityItem from '@/components/ActivityItem/ActivityItem';
 import { MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Contributor, Paper, Resource } from '@/services/backend/types';
 
 type TimelineProps = {
@@ -28,97 +27,109 @@ const Timeline = ({
     handleLoadMoreContributors,
 }: TimelineProps) => (
     <div>
-        <small>
-            <Alert className="rounded-0 mb-1" color="info">
-                The timeline is built based on the creation time of each resource and statement linked to the paper.
-            </Alert>
-        </small>
-        <div className="pt-3 pb-3 ps-3 pe-3">
+        <Alert status="accent" className="rounded-none mb-1">
+            <Alert.Indicator />
+            <Alert.Content>
+                <Alert.Title>How the timeline is built</Alert.Title>
+                <Alert.Description>
+                    The timeline is built based on the creation time of each resource and statement linked to the paper.
+                </Alert.Description>
+            </Alert.Content>
+        </Alert>
+        <div className="p-4">
             {versions?.length > 0 &&
-                versions.map((version, index) => (
-                    <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                        <div className="time">{dayjs(version.created_at).format('DD MMM YYYY HH:mm')}</div>
-                        <div>
-                            {paperResource.created_by && (
-                                <>
-                                    {version.publishedResource && 'Published by '}
-                                    {!version.publishedResource &&
-                                    !isLoadingContributors &&
-                                    !hasNextPageContributors &&
-                                    dayjs(version.created_at).format('DD MMM YYYY HH:mm') ===
-                                        dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
-                                    version.created_by.id === (createdBy?.id ?? MISC.UNKNOWN_ID)
-                                        ? 'Added by '
-                                        : 'Updated by '}
-                                    {version.created_by?.id !== MISC.UNKNOWN_ID ? (
-                                        <>
-                                            <Link
-                                                href={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: version.created_by.id,
-                                                })}
-                                            >
-                                                <b>{version.created_by.displayName}</b>
-                                            </Link>
-                                            {version.publishedResource && (
-                                                <>
-                                                    <br />
-                                                    <small>
-                                                        DOI:{' '}
-                                                        <a
-                                                            href={`https://doi.org/${env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/${
-                                                                version.publishedResource.id
-                                                            }`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            https://doi.org/{env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/{version.publishedResource.id}
-                                                        </a>
-                                                    </small>
-                                                </>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <b>{version.created_by?.displayName}</b>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </StyledActivity>
-                ))}
+                versions.map((version, index) => {
+                    const isLast = index === versions.length - 1 && !isLoadingContributors && !hasNextPageContributors;
+
+                    return (
+                        <ActivityItem key={`prov-${index}`} isLast={isLast}>
+                            <div className="mb-1 text-muted text-[15px]">{dayjs(version.created_at).format('DD MMM YYYY HH:mm')}</div>
+                            <div className="text-sm text-foreground">
+                                {paperResource.created_by && (
+                                    <>
+                                        {version.publishedResource && 'Published by '}
+                                        {!version.publishedResource &&
+                                        !isLoadingContributors &&
+                                        !hasNextPageContributors &&
+                                        dayjs(version.created_at).format('DD MMM YYYY HH:mm') ===
+                                            dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
+                                        version.created_by.id === (createdBy?.id ?? MISC.UNKNOWN_ID)
+                                            ? 'Added by '
+                                            : 'Updated by '}
+                                        {version.created_by?.id !== MISC.UNKNOWN_ID ? (
+                                            <>
+                                                <Link
+                                                    href={reverse(ROUTES.USER_PROFILE, {
+                                                        userId: version.created_by.id,
+                                                    })}
+                                                    className="text-foreground"
+                                                >
+                                                    <b>{version.created_by.displayName}</b>
+                                                </Link>
+                                                {version.publishedResource && (
+                                                    <>
+                                                        <br />
+                                                        <small>
+                                                            DOI:{' '}
+                                                            <a
+                                                                href={`https://doi.org/${env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/${
+                                                                    version.publishedResource.id
+                                                                }`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-accent hover:text-accent-darker"
+                                                            >
+                                                                https://doi.org/{env('NEXT_PUBLIC_DATACITE_DOI_PREFIX')}/
+                                                                {version.publishedResource.id}
+                                                            </a>
+                                                        </small>
+                                                    </>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <b>{version.created_by?.displayName}</b>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </ActivityItem>
+                    );
+                })}
             {!isLoadingContributors && hasNextPageContributors && (
-                <StyledActivity className="ps-3 pb-3">
-                    <div className="time">
-                        <Button color="light-darker" size="sm" onClick={!isLoadingContributors ? handleLoadMoreContributors : undefined}>
+                <ActivityItem>
+                    <div className="mb-1">
+                        <Button variant="ghost" size="sm" onPress={handleLoadMoreContributors}>
                             Load more
                         </Button>
                     </div>
-                </StyledActivity>
+                </ActivityItem>
             )}
 
             {!isLoadingContributors && hasNextPageContributors && (
-                <StyledActivity className="ps-3 pb-3">
-                    <div className="time">{dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
-                    <>
+                <ActivityItem isLast>
+                    <div className="mb-1 text-muted text-[15px]">{dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
+                    <div className="text-sm text-foreground">
                         Added by{' '}
                         {createdBy ? (
                             <Link
                                 href={reverse(ROUTES.USER_PROFILE, {
                                     userId: createdBy.id,
                                 })}
+                                className="text-foreground"
                             >
                                 <b>{createdBy.displayName}</b>
                             </Link>
                         ) : (
                             'Unknown'
                         )}
-                    </>
-                </StyledActivity>
+                    </div>
+                </ActivityItem>
             )}
 
             {isLoadingContributors && (
-                <StyledActivity>
-                    <div className="time">Loading ...</div>
-                </StyledActivity>
+                <ActivityItem isLast>
+                    <div className="-mt-0.5 text-muted text-[15px]">Loading ...</div>
+                </ActivityItem>
             )}
         </div>
     </div>

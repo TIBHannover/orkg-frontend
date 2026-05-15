@@ -1,18 +1,13 @@
 import { faMagic, faSpinner, faThList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import toArray from 'lodash/toArray';
 import randomcolor from 'randomcolor';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
 import useSWR, { mutate } from 'swr';
 
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import AbstractAnnotatorView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotatorView';
 import AbstractInputView from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractInputView';
 import AbstractRangesList from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
@@ -55,6 +50,11 @@ const PREDICATE_OPTIONS = [
     },
 ];
 
+const PREDICATE_COLOR_BY_ID: Record<string, string> = PREDICATE_OPTIONS.reduce(
+    (acc, p) => ({ ...acc, [p.id]: p.color }),
+    {} as Record<string, string>,
+);
+
 type AbstractAnnotatorModalProps = {
     toggle: () => void;
     resourceId: string;
@@ -65,11 +65,6 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
     const dispatch = useDispatch();
 
     const [validation, setValidation] = useState(true);
-
-    const [predicateColors, setPredicateColors] = useState<Record<string, string>>(
-        PREDICATE_OPTIONS.reduce((acc, p) => ({ ...acc, [p.id]: p.color }), {}),
-    );
-
     const [abstract, setAbstract] = useState(abstractGlobal);
 
     const { isLoading: isAnnotationLoading, error: _annotationError } = useSWR(
@@ -108,7 +103,6 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                         return null;
                     });
                 }
-                // Clear annotations
                 dispatch(clearAnnotations());
                 nRanges.map((range) => dispatch(createAnnotation(range)));
                 return nRanges;
@@ -118,12 +112,8 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
     const isAnnotationFailedLoading = _annotationError !== undefined;
 
     let annotationError = '';
-    if (_annotationError) {
-        if (_annotationError.statusCode === 422) {
-            annotationError = 'Failed to annotate the abstract, please change the abstract and try again';
-        } else {
-            annotationError = '';
-        }
+    if (_annotationError && _annotationError.statusCode === 422) {
+        annotationError = 'Failed to annotate the abstract, please change the abstract and try again';
     }
 
     const handleChangeAbstract = () => {
@@ -142,12 +132,11 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
         if (!rangePredicateId) {
             return '#ffb7b7';
         }
-        if (predicateColors[rangePredicateId]) {
-            return predicateColors[rangePredicateId];
+        const known = PREDICATE_COLOR_BY_ID[rangePredicateId];
+        if (known) {
+            return known;
         }
-        const newColor = randomcolor({ luminosity: 'light', seed: rangePredicateId.toLowerCase() });
-        setPredicateColors({ ...predicateColors, [rangePredicateId]: newColor });
-        return newColor;
+        return randomcolor({ luminosity: 'light', seed: rangePredicateId.toLowerCase() });
     };
 
     const handleInsertData = async () => {
@@ -159,12 +148,10 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                         label: range.text,
                         classes: range.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : [],
                     });
-                    // Add the statements to the selected contribution
                     return createResourceStatement(resourceId, range.predicate.id, object);
                 }),
             );
         }
-        // revalidate the cache of the selected contribution
         mutate([
             {
                 subjectId: resourceId,
@@ -214,61 +201,60 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
     }
 
     return (
-        <Modal isOpen toggle={toggle} size="xl">
-            <ModalHeader toggle={toggle}>Abstract annotator</ModalHeader>
-            <ModalBody>
-                <div className="clearfix">
-                    {(isAbstractLoading || isAnnotationLoading) && (
-                        <div className="text-center text-primary">
-                            <span style={{ fontSize: 80 }}>
-                                <FontAwesomeIcon icon={faSpinner} spin />
-                            </span>
-                            <br />
-                            <h2 className="h5">{isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
-                        </div>
-                    )}
-
-                    <AnimatePresence mode="wait">{currentStepDetails}</AnimatePresence>
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                {abstractDialogView === 'input' && (
-                    <Button color="primary" className="float-end" onClick={handleChangeAbstract}>
-                        Annotate Abstract
-                    </Button>
-                )}
-                {abstractDialogView === 'list' && (
-                    <>
-                        <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('annotator')}>
-                            <FontAwesomeIcon icon={faMagic} /> Annotator
-                        </Button>
-
-                        <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>
-                            Change abstract
-                        </Button>
-
-                        <Button color="smart" className="float-right" onClick={handleInsertData}>
-                            Insert Data
-                        </Button>
-                    </>
-                )}
-                {abstractDialogView !== 'list' && (
-                    <>
-                        <Button color="secondary" outline className="float-start" onClick={() => handleChangeView('list')}>
-                            <FontAwesomeIcon icon={faThList} /> List of annotations
-                        </Button>
-                        {abstractDialogView !== 'input' && (
-                            <Button color="light" className="float-right mr-2" onClick={handleChangeAbstract}>
-                                Change abstract
-                            </Button>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-5xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Abstract annotator</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6">
+                        {(isAbstractLoading || isAnnotationLoading) && (
+                            <div className="text-center text-accent">
+                                <FontAwesomeIcon icon={faSpinner} spin className="text-6xl" />
+                                <h2 className="text-xl mt-3">{isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
+                            </div>
                         )}
-                        <Button color="smart" className="float-right" onClick={handleInsertData}>
-                            Insert Data
-                        </Button>
-                    </>
-                )}
-            </ModalFooter>
-        </Modal>
+                        <AnimatePresence mode="wait">{currentStepDetails}</AnimatePresence>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <div className="flex w-full items-center justify-between gap-2">
+                            {abstractDialogView === 'list' ? (
+                                <Button variant="outline" className="button--orkg-secondary" onPress={() => handleChangeView('annotator')}>
+                                    <FontAwesomeIcon icon={faMagic} className="mr-1 text-white" /> Annotator
+                                </Button>
+                            ) : (
+                                <Button variant="outline" className="button--orkg-secondary" onPress={() => handleChangeView('list')}>
+                                    <FontAwesomeIcon icon={faThList} className="mr-1 text-white" /> List of annotations
+                                </Button>
+                            )}
+                            <div className="flex gap-2">
+                                {abstractDialogView === 'input' ? (
+                                    <Button variant="primary" onPress={handleChangeAbstract}>
+                                        Annotate abstract
+                                    </Button>
+                                ) : (
+                                    <>
+                                        <Button variant="ghost" onPress={handleChangeAbstract}>
+                                            Change abstract
+                                        </Button>
+                                        <Button className="button--orkg-smart" onPress={handleInsertData}>
+                                            Insert data
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

@@ -1,9 +1,9 @@
-import { reverse } from 'named-urls';
 import { FC } from 'react';
 
 import HistoryModalComponent from '@/components/HistoryModal/HistoryModal';
 import useReview from '@/components/Review/hooks/useReview';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type HistoryModalProps = {
     id: string;

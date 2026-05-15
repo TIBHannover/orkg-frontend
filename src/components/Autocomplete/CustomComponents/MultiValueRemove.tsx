@@ -10,7 +10,7 @@ const MultiValueRemove = <OptionT extends OptionType, Group extends GroupBase<Op
     return (
         <components.MultiValueRemove
             {...props}
-            innerProps={{ ...props.innerProps, className: selectProps.isDisabled ? 'd-none' : props.innerProps?.className }}
+            innerProps={{ ...props.innerProps, className: selectProps.isDisabled ? 'hidden' : props.innerProps?.className }}
         />
     );
 };

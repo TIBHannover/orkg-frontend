@@ -1,11 +1,10 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Popover } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import Filters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/Filters';
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
-import Popover from '@/components/FloatingUI/Popover';
-import Button from '@/components/Ui/Button/Button';
 
 type FilterPopoverProps = {
     id: string;
@@ -19,21 +18,24 @@ const FilterPopover: FC<FilterPopoverProps> = ({ id, path }) => {
     const hasFilter = getFilter({ id, path });
 
     return (
-        <Popover
-            open={isOpenFilterPopover}
-            onOpenChange={setIsOpenFilterPopover}
-            placement="right"
-            content={<Filters predicateId={id} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />}
-        >
-            <span>
-                <Button
-                    color="link"
-                    className={`tw:!p-0 ${hasFilter ? 'text-primary' : 'text-secondary'} tw:opacity-70 tw:!border-0`}
-                    onClick={() => setIsOpenFilterPopover((v) => !v)}
-                >
-                    <FontAwesomeIcon icon={faFilter} />
-                </Button>
-            </span>
+        <Popover isOpen={isOpenFilterPopover} onOpenChange={setIsOpenFilterPopover}>
+            <Button
+                isIconOnly
+                variant="ghost"
+                size="sm"
+                aria-label="Filter column"
+                className={`min-w-0 h-auto w-auto p-0 bg-transparent hover:bg-transparent opacity-70 hover:opacity-100 ${
+                    hasFilter ? 'text-accent' : 'text-secondary'
+                }`}
+            >
+                <FontAwesomeIcon icon={faFilter} />
+            </Button>
+            <Popover.Content placement="right">
+                <Popover.Dialog>
+                    <Popover.Arrow />
+                    <Filters predicateId={id} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />
+                </Popover.Dialog>
+            </Popover.Content>
         </Popover>
     );
 };

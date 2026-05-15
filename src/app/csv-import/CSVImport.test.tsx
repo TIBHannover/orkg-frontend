@@ -16,7 +16,7 @@ describe('CSVImport', () => {
     it('should render the CSVImport page', async () => {
         await Setup();
         expect(screen.getByText(/CSV import/i)).toBeInTheDocument();
-        expect(screen.getByText(/With this tool, you can import a CSV file with papers to the ORKG/i)).toBeInTheDocument();
+        expect(screen.getByText(/Import papers from a CSV file/i)).toBeInTheDocument();
         const csvPath = path.resolve(__dirname, '__mocks__/test.csv');
         const mockCsvContent = fs.readFileSync(csvPath, 'utf-8');
         const file = createMockFile(mockCsvContent, 'test.csv', 'text/csv');

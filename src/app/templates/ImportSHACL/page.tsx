@@ -3,9 +3,9 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Accordion, Alert, Button, toast } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 import TemplateCard from '@/components/Cards/TemplateCard/TemplateCard';
@@ -13,10 +13,6 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
 import useImportSHACL, { ParsedTemplate } from '@/components/Templates/ImportSHACL/hooks/useImportSHACL';
 import ViewShapes from '@/components/Templates/ImportSHACL/ViewShapes';
-import Accordion from '@/components/Ui/Accordion/Accordion';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
 import requireAuthentication from '@/requireAuthentication';
 import { Template } from '@/services/backend/types';
 
@@ -29,7 +25,9 @@ const DragRDF = styled.div`
     border-radius: 15px;
     font-weight: 500;
     color: #a4a0a0;
-    transition: border-color 0.2s, color 0.2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
     outline: 0;
 
     &:not(.loading) {
@@ -55,6 +53,7 @@ const ImportSHACL = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [expandedKeys, setExpandedKeys] = useState<Set<string | number>>(new Set(['0']));
     const { parseTemplates, importTemplates } = useImportSHACL();
 
     const onDrop = async ([file]: File[]) => {
@@ -68,7 +67,7 @@ const ImportSHACL = () => {
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
-                toast.error(error instanceof Error ? error.message : 'Unknown error');
+                toast.danger(error instanceof Error ? error.message : 'Unknown error');
                 setIsLoading(false);
             }
         };
@@ -77,25 +76,15 @@ const ImportSHACL = () => {
     };
 
     const onDropRejected = () => {
-        toast.error('Error uploading your file, only N-Triples (.n3) files are accepted');
+        toast.danger('Error uploading your file, only N-Triples (.n3) files are accepted');
         setIsLoading(false);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'text/n3': ['.n3'] } });
 
-    const [open, setOpen] = useState<string>('0');
-
     useEffect(() => {
         document.title = 'Import SHACL - ORKG';
     });
-
-    const toggle = (id: string) => {
-        if (open === id) {
-            setOpen('');
-        } else {
-            setOpen(id);
-        }
-    };
 
     const activeImport = data?.some((nodesShape) => !nodesShape.targetClassHasAlreadyTemplate);
     return (
@@ -108,7 +97,7 @@ const ImportSHACL = () => {
                     <>
                         Import SHACL
                         <Tooltip content="Open help center">
-                            <span className="ms-3">
+                            <span className="ml-4">
                                 <a
                                     href="https://orkg.org/help-center/article/51/Import_SHACL_shapes_in_ORKG"
                                     target="_blank"
@@ -140,13 +129,13 @@ const ImportSHACL = () => {
                         </DragRDF>
                     )}
                     {!isLoading && data && uploadedFile && (
-                        <div className="d-flex">
-                            <div className="pt-1 flex-grow-1">
+                        <div className="flex">
+                            <div className="pt-1 grow">
                                 Filename: <b>{uploadedFile.name}</b>
                             </div>
                             <Button
                                 size="sm"
-                                onClick={() => {
+                                onPress={() => {
                                     setData(null);
                                     setUploadedFile(null);
                                     setImportedTemplates([]);
@@ -160,30 +149,33 @@ const ImportSHACL = () => {
             </StepContainer>
             <StepContainer bottomLine step="2" topLine title="View shapes" active={!!data}>
                 {data && data?.length === 0 && (
-                    <Alert color="info">
-                        No data to import
-                        <br />
-                        <b>Please upload a valid N-Triples file that contains SHACL shapes</b>
+                    <Alert status="accent">
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            No data to import
+                            <br />
+                            <b>Please upload a valid N-Triples file that contains SHACL shapes</b>
+                        </Alert.Content>
                     </Alert>
                 )}
                 {data && data?.length > 0 && (
-                    <Accordion open={open} toggle={toggle}>
+                    <Accordion expandedKeys={expandedKeys} onExpandedChange={setExpandedKeys}>
                         <ViewShapes data={data} />
                     </Accordion>
                 )}
 
                 <Button
-                    disabled={!activeImport || isImporting || importedTemplates?.length > 0}
-                    className="mt-3"
-                    color="primary"
-                    onClick={async () => {
+                    isDisabled={!activeImport || isImporting || importedTemplates?.length > 0}
+                    className="mt-4"
+                    variant="primary"
+                    onPress={async () => {
                         setIsImporting(true);
                         try {
                             const result = await importTemplates(data as ParsedTemplate[]);
                             setImportedTemplates(result);
                             setIsImporting(false);
                         } catch {
-                            toast.error('Error while importing templates');
+                            toast.danger('Error while importing templates');
                             setIsImporting(false);
                         }
                     }}
@@ -201,11 +193,11 @@ const ImportSHACL = () => {
                 {!isImporting && importedTemplates.length > 0 && (
                     <>
                         Imported templates:
-                        <ListGroup className="mt-2 rounded">
+                        <ul className="mt-2 flex flex-col bg-surface border border-border rounded overflow-hidden divide-y divide-border list-none p-0 m-0">
                             {importedTemplates.map((template) => (
                                 <TemplateCard key={template.id} template={template} />
                             ))}
-                        </ListGroup>
+                        </ul>
                     </>
                 )}
             </StepContainer>

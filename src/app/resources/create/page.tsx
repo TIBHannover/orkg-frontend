@@ -1,12 +1,11 @@
 'use client';
 
 import { Cite } from '@citation-js/core';
-import { reverse } from 'named-urls';
+import { Form, Input, Label, TextField, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { MouseEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
-import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
@@ -15,16 +14,13 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import Container from '@/components/Ui/Structure/Container';
 import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { classesUrl, getClassById } from '@/services/backend/classes';
 import { createLiteral } from '@/services/backend/literals';
@@ -54,11 +50,11 @@ const CreateResourcePage = () => {
         document.title = 'Create resource - ORKG';
     }, []);
 
-    const handleAdd = async (e: MouseEvent) => {
+    const handleAdd = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSaving(true);
         if (!isCurationAllowed && classes && classes.some((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x))) {
-            toast.error(
+            toast.danger(
                 `The selected option ${classes
                     .filter((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x))
                     .join(', ')} cannot be set manually; it is reserved for managing content types in the system`,
@@ -75,7 +71,7 @@ const CreateResourcePage = () => {
                 } catch (error: unknown) {
                     console.error(error);
                     setIsSaving(false);
-                    toast.error(`Error creating resource ${error instanceof Error ? error.message : 'Unknown error'}`);
+                    toast.danger(`Error creating resource ${error instanceof Error ? error.message : 'Unknown error'}`);
                 }
             } else {
                 const doi = label.trim();
@@ -93,17 +89,17 @@ const CreateResourcePage = () => {
                         router.push(`${reverse(ROUTES.RESOURCE, { id: newResourceId })}?noRedirect&isEditMode=true`);
                     } catch (error) {
                         console.error(error);
-                        toast.error(`Error finding DOI : ${error instanceof Error ? error.message : 'Unknown error'}`);
+                        toast.danger(`Error finding DOI : ${error instanceof Error ? error.message : 'Unknown error'}`);
                         setIsSaving(false);
                     }
                 } catch (error: unknown) {
                     console.error(error);
                     setIsSaving(false);
-                    toast.error(`Error creating resource : ${error instanceof Error ? error.message : 'Unknown error'}`);
+                    toast.danger(`Error creating resource : ${error instanceof Error ? error.message : 'Unknown error'}`);
                 }
             }
         } else {
-            toast.error('Please enter a resource label');
+            toast.danger('Please enter a resource label');
             setIsSaving(false);
         }
     };
@@ -123,7 +119,7 @@ const CreateResourcePage = () => {
             }
         } else {
             if (!isCurationAllowed && selected && selected.some((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x.id))) {
-                toast.error(
+                toast.danger(
                     `The selected option ${selected
                         .filter((x) => CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(x.id))
                         .map((x) => x.label)
@@ -139,23 +135,23 @@ const CreateResourcePage = () => {
     return (
         <>
             <TitleBar>Create resource</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <Form>
-                    <div className="pt-2">
-                        <FormGroup>
-                            <Label for="ResourceLabel">Resource label or DOI</Label>
+            <Container>
+                <div className="box rounded pt-6 pb-6 pl-12 pr-12">
+                    <Form className="flex flex-col gap-6 pt-2" onSubmit={handleAdd}>
+                        <TextField fullWidth isDisabled={isSaving} name="value">
+                            <Label htmlFor="ResourceLabel">Resource label or DOI</Label>
                             <Input
-                                onChange={(e) => setLabel(e.target.value)}
+                                id="ResourceLabel"
                                 type="text"
                                 maxLength={MAX_LENGTH_INPUT}
-                                name="value"
-                                id="ResourceLabel"
-                                disabled={isSaving}
+                                value={label}
+                                onChange={(e) => setLabel(e.target.value)}
                             />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="select-classes">
-                                Classes <span className="text-muted fst-italic">(optional)</span>
+                        </TextField>
+
+                        <div className="flex flex-col gap-1">
+                            <Label htmlFor="select-classes">
+                                Classes <span className="text-muted font-normal italic">(optional)</span>
                             </Label>
                             {!isLoadingDefaultClasses && (
                                 <Autocomplete
@@ -174,12 +170,13 @@ const CreateResourcePage = () => {
                                 />
                             )}
                             {isLoadingDefaultClasses && <div>Loading default classes</div>}
-                        </FormGroup>
-                        <ButtonWithLoading type="submit" color="primary" onClick={handleAdd} className="mt-3 mb-2" isLoading={isSaving}>
+                        </div>
+
+                        <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isSaving}>
                             Create resource
                         </ButtonWithLoading>
-                    </div>
-                </Form>
+                    </Form>
+                </div>
             </Container>
         </>
     );

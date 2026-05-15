@@ -1,80 +1,49 @@
-'use client';
+import { Skeleton } from '@heroui/react';
+import { times } from 'lodash';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-import NotFound from '@/app/not-found';
+import { loadHelpCategory } from '@/app/help-center/category/[id]/help-category-data';
+import HelpCenterCategoryContent from '@/app/help-center/category/[id]/HelpCenterCategoryContent';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Breadcrumb from '@/components/Ui/Breadcrumb/Breadcrumb';
-import BreadcrumbItem from '@/components/Ui/Breadcrumb/BreadcrumbItem';
-import Container from '@/components/Ui/Structure/Container';
-import useParams from '@/components/useParams/useParams';
-import ROUTES from '@/constants/routes';
-import { getHelpCategory } from '@/services/cms';
-import { HelpCategory } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utilsTyped';
 
-const HelpCenterCategory = () => {
-    const [category, setCategory] = useState<HelpCategory | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isNotFound, setIsNotFound] = useState(false);
-    const { id } = useParams();
+type PageProps = { params: Promise<{ id: string }> };
 
-    useEffect(() => {
-        if (!id) {
-            return;
-        }
-        const getData = async () => {
-            try {
-                setIsLoading(true);
-                setCategory((await getHelpCategory(id.toString())).data);
-            } catch (e) {
-                setIsNotFound(true);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        getData();
-    }, [id]);
-
-    if (isNotFound) {
-        return <NotFound />;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { id } = await params;
+    if (!id) {
+        return {};
     }
+    const category = await loadHelpCategory(id);
+    if (!category) {
+        return { title: 'Help category not found - ORKG' };
+    }
+    return { title: `${category.attributes?.title ?? 'Help category'} - Help center - ORKG` };
+}
 
-    return (
-        <div>
-            <TitleBar>Help center</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                {isLoading && 'Loading...'}
-
-                {!isLoading && category && (
-                    <>
-                        <Breadcrumb>
-                            <BreadcrumbItem>
-                                <Link href={ROUTES.HELP_CENTER}>Help center</Link>
-                            </BreadcrumbItem>
-                            <BreadcrumbItem active>{category.attributes?.title}</BreadcrumbItem>
-                        </Breadcrumb>
-                        <h1 className="h3 my-4">{category.attributes?.title}</h1>
-                        <ul>
-                            {category.attributes?.help_articles?.data?.map((article) => (
-                                <li key={article.id}>
-                                    <Link
-                                        href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                            id: article.id,
-                                            slug: article.attributes?.title,
-                                        })}
-                                    >
-                                        {article.attributes?.title}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </>
-                )}
-            </Container>
+const HelpCenterCategoryFallback = () => (
+    <div>
+        <TitleBar>Help center</TitleBar>
+        <div className="max-w-container mx-auto px-3">
+            <div className="box rounded p-8 md:p-12">
+                <div className="flex flex-col gap-4">
+                    <Skeleton className="w-1/3 h-4 rounded" />
+                    <Skeleton className="w-2/3 h-9 rounded" />
+                    <div className="flex flex-col gap-2 mt-4">
+                        {times(5, (i) => (
+                            <Skeleton key={i} className="w-1/2 h-5 rounded" />
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
-    );
-};
+    </div>
+);
 
-export default HelpCenterCategory;
+export default function HelpCenterCategoryPage({ params }: PageProps) {
+    return (
+        <Suspense fallback={<HelpCenterCategoryFallback />}>
+            <HelpCenterCategoryContent params={params} />
+        </Suspense>
+    );
+}

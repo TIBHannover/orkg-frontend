@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 
 import MainGrid from '@/app/grid-editor/components/MainGrid/MainGrid';
 import GridProvider from '@/app/grid-editor/context/GridContext';
+import SemantifyModalProvider from '@/app/grid-editor/context/SemantifyModalContext';
 import { createMSWLiteral, createMSWStatement } from '@/services/mocks/helpers';
 import { fireEvent, render, screen, waitFor, within } from '@/testUtils';
 
@@ -17,7 +18,9 @@ const setup = async ({ resourceIds }: { resourceIds?: string[] } = {}) => {
     });
     await render(
         <GridProvider>
-            <MainGrid />
+            <SemantifyModalProvider>
+                <MainGrid />
+            </SemantifyModalProvider>
         </GridProvider>,
         {
             nuqsOptions: { searchParams: `?entityIds=${resourceIds?.join(',')}`, onUrlUpdate },

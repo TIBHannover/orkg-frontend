@@ -1,87 +1,53 @@
-'use client';
+import { Skeleton } from '@heroui/react';
+import { times } from 'lodash';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
+import HelpCenterSearchContent from '@/app/help-center/search/[searchQuery]/HelpCenterSearchContent';
 import HelpCenterSearchInput from '@/components/HelpCenterSearchInput/HelpCenterSearchInput';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Breadcrumb from '@/components/Ui/Breadcrumb/Breadcrumb';
-import BreadcrumbItem from '@/components/Ui/Breadcrumb/BreadcrumbItem';
-import Container from '@/components/Ui/Structure/Container';
-import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
-import { getHelpArticles } from '@/services/cms';
-import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utilsTyped';
 
-const HelpCenterSearch = () => {
-    const [articles, setArticles] = useState<HelpArticle[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const { searchQuery } = useParams();
+type PageProps = { params: Promise<{ searchQuery: string }> };
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                setIsLoading(true);
-                const words = searchQuery?.toString().split(' ');
-                let whereCount = 0;
-                const whereString = words
-                    ?.map((word) => {
-                        const where = `filters[$or][${whereCount}][title][$containsi]=${word}&filters[$or][${
-                            whereCount + 1
-                        }][content][$containsi]=${word}`;
-                        whereCount += 2;
-                        return where;
-                    })
-                    .join('&');
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { searchQuery } = await params;
+    const query = decodeURIComponent(searchQuery ?? '');
+    return { title: `${query || 'Search'} - Help center - ORKG` };
+}
 
-                const _articles = await getHelpArticles({ where: whereString || '' });
-                setArticles(_articles.data);
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        getData();
-    }, [searchQuery]);
-
-    return (
-        <div>
-            <TitleBar>Help center</TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                {isLoading && 'Loading...'}
-                <HelpCenterSearchInput />
-
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <Link href={ROUTES.HELP_CENTER}>Help center</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem active>Search results</BreadcrumbItem>
-                </Breadcrumb>
-                <h1 className="h3 my-4">Search results ({articles.length})</h1>
-
-                {isLoading && 'Loading...'}
-                {!isLoading && articles.length > 0 && (
-                    <ul>
-                        {articles.map((article) => (
-                            <li key={article.id}>
-                                <Link
-                                    href={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
-                                        id: article.id.toString(),
-                                        slug: article.attributes?.title,
-                                    })}
-                                >
-                                    {article.attributes?.title}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-                {!isLoading && articles.length === 0 && <p>No articles are found, please try another search query</p>}
-            </Container>
+const HelpCenterSearchFallback = () => (
+    <div>
+        <TitleBar>Help center</TitleBar>
+        <div className="max-w-container mx-auto px-3">
+            <div className="box rounded p-8 md:p-12">
+                <div className="max-w-2xl mx-auto mb-8">
+                    <HelpCenterSearchInput />
+                </div>
+                <div className="text-sm text-muted mb-4">
+                    <a href={ROUTES.HELP_CENTER} className="hover:underline">
+                        Help center
+                    </a>{' '}
+                    / Search results
+                </div>
+                <Skeleton className="w-1/2 h-8 rounded mb-6" />
+                <ul className="flex flex-col gap-3">
+                    {times(5, (i) => (
+                        <li key={i}>
+                            <Skeleton className="w-2/3 h-5 rounded" />
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-    );
-};
+    </div>
+);
 
-export default HelpCenterSearch;
+export default async function HelpCenterSearchPage({ params }: PageProps) {
+    const { searchQuery } = await params;
+    return (
+        <Suspense key={searchQuery} fallback={<HelpCenterSearchFallback />}>
+            <HelpCenterSearchContent params={params} />
+        </Suspense>
+    );
+}

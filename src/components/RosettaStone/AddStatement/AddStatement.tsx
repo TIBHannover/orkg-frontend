@@ -1,5 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { FC, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
@@ -9,9 +10,6 @@ import StatementTypeAutocomplete from '@/components/RosettaStone/AddStatement/St
 import useUsedStatementTypes from '@/components/RosettaStone/hooks/useUsedStatementTypes';
 import NewStatementTypeModal from '@/components/RosettaStone/NewStatementTypeModal/NewStatementTypeModal';
 import RosettaTemplateEditorProvider from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { StyledButton } from '@/components/StatementBrowser/styled';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 
 type AddStatementProps = {
     context: string;
@@ -39,22 +37,26 @@ const AddStatement: FC<AddStatementProps> = ({ context, handleAddStatement }) =>
     return (
         <div>
             {!showAdd ? (
-                <ButtonGroup>
-                    <ButtonWithLoading color="secondary" onClick={() => setShowAdd(true)}>
-                        <FontAwesomeIcon className="icon" icon={faPlus} /> Add statement
-                    </ButtonWithLoading>
-                </ButtonGroup>
+                <ButtonWithLoading size="sm" className="button--orkg-secondary" onPress={() => setShowAdd(true)}>
+                    <FontAwesomeIcon icon={faPlus} /> Add statement
+                </ButtonWithLoading>
             ) : (
-                <InputGroup>
-                    <span className="input-group-text">
-                        <FontAwesomeIcon className="icon" icon={faPlus} />
+                <div className="flex items-stretch min-h-9">
+                    <span className="inline-flex items-center bg-default border border-border border-e-0 rounded-s-[var(--radius)] px-3 text-sm">
+                        <FontAwesomeIcon icon={faPlus} />
                     </span>
-
-                    <StatementTypeAutocomplete additionalOptions={usedStatementTypes} onChange={onChange} />
-                    <StyledButton className="w-auto" outline onClick={() => setShowAdd(false)}>
+                    <div className="flex-1 min-w-0">
+                        <StatementTypeAutocomplete additionalOptions={usedStatementTypes} onChange={onChange} />
+                    </div>
+                    <Button
+                        size="sm"
+                        variant="tertiary"
+                        className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                        onPress={() => setShowAdd(false)}
+                    >
                         Cancel
-                    </StyledButton>
-                </InputGroup>
+                    </Button>
+                </div>
             )}
             <RosettaTemplateEditorProvider>
                 <NewStatementTypeModal

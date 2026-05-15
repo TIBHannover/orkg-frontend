@@ -1,9 +1,6 @@
+import { Checkbox } from '@heroui/react';
 import { useQueryState } from 'nuqs';
-import { ChangeEvent, FC } from 'react';
-
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
+import { FC } from 'react';
 
 type ContentTypeSubFieldsFilterProps = {
     isLoading: boolean;
@@ -15,26 +12,24 @@ const ContentTypeSubFieldsFilter: FC<ContentTypeSubFieldsFilterProps> = ({ isLoa
         parse: (value) => value === 'true',
     });
 
-    const handleChangeIncludeSubFields = (e: ChangeEvent<HTMLInputElement>) => {
-        setIncludeSubFields(e.target.checked, { scroll: false, history: 'push' });
+    const handleChangeIncludeSubFields = (isSelected: boolean) => {
+        setIncludeSubFields(isSelected, { scroll: false, history: 'push' });
     };
 
     return (
-        <div className="d-flex justify-content-end align-items-center me-2">
-            <div className="d-flex me-2 rounded">
-                <FormGroup check className="mb-0">
-                    <Label check className="mb-0">
-                        <Input
-                            name="include_subfields"
-                            onChange={handleChangeIncludeSubFields}
-                            type="checkbox"
-                            disabled={isLoading}
-                            checked={includeSubFields}
-                        />
-                        Include subfields
-                    </Label>
-                </FormGroup>
-            </div>
+        <div className="flex justify-end items-center mr-2">
+            <Checkbox
+                name="include_subfields"
+                isSelected={includeSubFields}
+                onChange={handleChangeIncludeSubFields}
+                isDisabled={isLoading}
+                className="text-sm"
+            >
+                <Checkbox.Control>
+                    <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>Include subfields</Checkbox.Content>
+            </Checkbox>
         </div>
     );
 };

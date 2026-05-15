@@ -1,11 +1,11 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 
 import DiffView from '@/components/DiffView/DiffView';
 import useDiff from '@/components/DiffView/useDiff';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { Comparison } from '@/services/backend/types';
 

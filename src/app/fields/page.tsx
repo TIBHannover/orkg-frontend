@@ -2,33 +2,28 @@
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, Dropdown } from '@heroui/react';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import useSWR from 'swr';
 
 import CopyId from '@/components/CopyId/CopyId';
 import ResearchFieldTabsContainer from '@/components/ResearchField/ResearchFieldTabsContainer';
 import ResearchFieldSelector from '@/components/ResearchFieldSelector/ResearchFieldSelector';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import Col from '@/components/Ui/Structure/Col';
 import Container from '@/components/Ui/Structure/Container';
 import Row from '@/components/Ui/Structure/Row';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Node, VisibilityOptions } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utilsTyped';
 
 const ResearchFields = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
     const [selectedResearchFieldId, setSelectedResearchFieldId] = useQueryState('selectedResearchField', {
         defaultValue: RESOURCES.RESEARCH_FIELD_MAIN,
         parse: (value) => value as string,
@@ -67,33 +62,36 @@ const ResearchFields = () => {
         <>
             <TitleBar
                 buttonGroup={
-                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                        <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                    <Dropdown>
+                        <Button size="sm" className="button--orkg-secondary" isIconOnly aria-label="More options">
                             <FontAwesomeIcon icon={faEllipsisV} />
-                        </DropdownToggle>
-                        <DropdownMenu end="true">
-                            <DropdownItem
-                                tag={Link}
-                                end="true"
-                                href={`${reverse(ROUTES.RESOURCE, { id: selectedResearchFieldId ?? RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}
-                            >
-                                View resource
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </ButtonDropdown>
+                        </Button>
+                        <Dropdown.Popover placement="bottom end">
+                            <Dropdown.Menu aria-label="Options">
+                                <Dropdown.Item
+                                    href={`${reverse(ROUTES.RESOURCE, { id: selectedResearchFieldId ?? RESOURCES.RESEARCH_FIELD_MAIN })}?noRedirect`}
+                                    textValue="View resource"
+                                >
+                                    View resource
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown.Popover>
+                    </Dropdown>
                 }
             >
                 Research fields taxonomy
             </TitleBar>
-            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                The ORKG research fields taxonomy facilitates browsing and exploring the research knowledge graph.{' '}
-                <a href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy" target="_blank" rel="noreferrer">
-                    Learn more in the help center
-                </a>
-                .
-            </Container>
-            <Container className="p-0">
-                <div className="box rounded-3 p-4">
+            <div className="mx-auto mb-4 max-w-container px-3">
+                <div className="rounded bg-surface-tertiary p-4">
+                    The ORKG research fields taxonomy facilitates browsing and exploring the research knowledge graph.{' '}
+                    <a href="https://www.orkg.org/help-center/article/20/ORKG_Research_fields_taxonomy" target="_blank" rel="noreferrer">
+                        Learn more in the help center
+                    </a>
+                    .
+                </div>
+            </div>
+            <Container>
+                <div className="box rounded-lg p-6">
                     <Row>
                         <Col md="5">
                             <ResearchFieldSelector
@@ -107,25 +105,22 @@ const ResearchFields = () => {
                         <Col md="7">
                             {selectedResearchField && (
                                 <>
-                                    <div className="d-flex justify-content-between align-items-center mb-3">
-                                        <h2 className="h5">{selectedResearchField.label}</h2>
-                                        <div className="d-flex align-items-center justify-content-end flex-wrap">
-                                            <div className="flex-shrink-0 my-1">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h2 className="text-xl">{selectedResearchField.label}</h2>
+                                        <div className="flex items-center justify-end flex-wrap">
+                                            <div className="shrink-0 my-1">
                                                 <CopyId id={selectedResearchFieldId} />
                                             </div>
                                             {selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
-                                                <Button
-                                                    tag={Link}
+                                                <Link
                                                     href={`${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                                         researchFieldId: selectedResearchFieldId,
                                                         slug: selectedResearchField.label,
                                                     })}?sort=${sort}&include_subfields=${includeSubFields}&contentType=${contentType}`}
-                                                    color="light"
-                                                    size="sm"
-                                                    className="flex-shrink-0 ms-2 my-1"
+                                                    className="button button--ghost button--sm shrink-0 ml-2 my-1"
                                                 >
                                                     Visit field page
-                                                </Button>
+                                                </Link>
                                             )}
                                         </div>
                                     </div>

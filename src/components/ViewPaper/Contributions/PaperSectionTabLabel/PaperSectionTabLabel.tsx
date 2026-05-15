@@ -1,7 +1,6 @@
+import { Chip, Skeleton } from '@heroui/react';
 import { FC } from 'react';
-import Skeleton from 'react-loading-skeleton';
 
-import Badge from '@/components/Ui/Badge/Badge';
 import usePaperSectionStats from '@/components/ViewPaper/Contributions/hooks/usePaperSectionStats';
 import { PaperSections } from '@/services/backend/types';
 
@@ -18,10 +17,10 @@ const TabLabel: FC<TabLabelProps> = ({ label, paperId, paperSection }) => {
             <span className="cursor-pointer">
                 {label}
 
-                <Badge color="light" pill className="ms-1 px-2">
-                    {isLoading && <Skeleton width={10} />}
+                <Chip size="sm" color="accent" variant="soft" className="ml-1 px-2">
+                    {isLoading && <Skeleton className="w-2.5 h-4 rounded" />}
                     {!isLoading && count[paperSection]?.toLocaleString('en-US', { notation: 'compact' })}
-                </Badge>
+                </Chip>
             </span>
         </div>
     );

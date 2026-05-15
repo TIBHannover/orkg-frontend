@@ -1,4 +1,4 @@
-import { reverse } from 'named-urls';
+import { Alert, Label, ListBox, Select } from '@heroui/react';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { Dispatch, FC, SetStateAction } from 'react';
@@ -8,12 +8,10 @@ import { fromError } from 'zod-validation-error';
 import { isDefaultHeader, MappedColumn, parseCellString } from '@/app/csv-import/steps/helpers';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Alert from '@/components/Ui/Alert/Alert';
-import Input from '@/components/Ui/Input/Input';
-import Table from '@/components/Ui/Table/Table';
 import DATA_TYPES, { DataType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 const TYPE_DROPDOWN_OPTIONS = DATA_TYPES.filter(
     (dt) => dt.classId !== CLASSES.RESOURCE && dt.classId !== CLASSES.LIST && dt.classId !== CLASSES.CSVW_TABLE,
@@ -61,7 +59,6 @@ const TypeMapping: FC<TypeMappingProps> = ({
         return booleanCellValidation
             .map((row, i) => {
                 return row.map((cell, j) => {
-                    // Check if the current cell is invalid
                     return j === index && cell === false ? (
                         <div key={`error-${i}-${j}`}>
                             <strong>Row {i + 1}</strong> - <b>{mappedColumns[index].predicate?.label}</b>: {fromError(cellValidation[i][j]).message}
@@ -75,25 +72,33 @@ const TypeMapping: FC<TypeMappingProps> = ({
 
     return (
         <div>
-            {columnValidation && <Alert color="danger">{columnValidation}</Alert>}
-
-            <div className="tw:overflow-auto tw:bg-[var(--color-light-lighter)] tw:text-sm tw:max-h-[500px] tw:border-2 tw:border-[var(--color-secondary)] tw:rounded">
-                <Table bordered hover striped>
-                    <thead style={{ position: 'sticky', top: 0, zIndex: 8, backgroundColor: 'white' }}>
+            {columnValidation && (
+                <Alert status="danger" className="mb-4">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Description>{columnValidation}</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            )}
+            <div className="overflow-auto bg-surface text-sm max-h-[500px] border-2 border-secondary rounded">
+                <table className="w-full border-separate border-spacing-0 text-sm [&_th]:border-b [&_th]:border-separator [&_th]:px-3 [&_th]:py-2 [&_td]:border-b [&_td]:border-separator [&_td]:px-3 [&_td]:py-2 [&_tbody_tr:nth-child(odd)_td]:bg-surface-secondary/50">
+                    <thead className="sticky top-0 z-8 bg-white">
                         <tr>
-                            <th>#</th>
-                            <th>Mapped property</th>
-                            <th>Column type</th>
-                            <th>Data Validation</th>
+                            <th className="text-left">#</th>
+                            <th className="text-left">Mapped property</th>
+                            <th className="text-left">Column type</th>
+                            <th className="text-left">Data Validation</th>
                         </tr>
                     </thead>
                     <tbody>
                         {mappedColumns.map((column, index) => (
                             <tr key={index}>
-                                <th scope="row">{index + 1}</th>
+                                <th scope="row" className="text-left">
+                                    {index + 1}
+                                </th>
 
                                 <td>
-                                    <div className="d-flex justify-content-between">
+                                    <div className="flex justify-between">
                                         {column.predicate?.id ? (
                                             <DescriptionTooltip
                                                 id={column.predicate?.id}
@@ -118,33 +123,40 @@ const TypeMapping: FC<TypeMappingProps> = ({
 
                                 <td>
                                     {!isDefaultHeader(mappedColumns[index].predicate?.id || '') && (
-                                        <Input
-                                            onChange={(e) => {
-                                                const selectedType = TYPE_DROPDOWN_OPTIONS.find(
-                                                    (dt) =>
-                                                        dt.classId.toLowerCase() === e.target.value.toLowerCase() ||
-                                                        dt.name.toLowerCase() === e.target.value.toLowerCase(),
-                                                );
+                                        <Select
+                                            aria-label="Column type"
+                                            value={mappedColumns[index].type?.classId ?? ''}
+                                            onChange={(key) => {
+                                                const selectedType = TYPE_DROPDOWN_OPTIONS.find((dt) => dt.classId === key);
                                                 if (selectedType) {
                                                     handleChangeColumnType(index, selectedType);
                                                 }
                                             }}
-                                            value={mappedColumns[index].type?.classId ?? ''}
-                                            name="columnType"
-                                            type="select"
-                                            bsSize="sm"
+                                            className="w-full"
                                         >
-                                            {TYPE_DROPDOWN_OPTIONS.map((option) => (
-                                                <option key={option.classId} value={option.classId}>
-                                                    {option.name}
-                                                </option>
-                                            ))}
-                                        </Input>
+                                            <Label className="sr-only">Column type</Label>
+                                            <Select.Trigger className="h-8 w-full text-sm">
+                                                <Select.Value />
+                                                <Select.Indicator />
+                                            </Select.Trigger>
+                                            <Select.Popover>
+                                                <ListBox>
+                                                    {TYPE_DROPDOWN_OPTIONS.map((option) => (
+                                                        <ListBox.Item key={option.classId} id={option.classId} textValue={option.name}>
+                                                            {option.name}
+                                                            <ListBox.ItemIndicator />
+                                                        </ListBox.Item>
+                                                    ))}
+                                                </ListBox>
+                                            </Select.Popover>
+                                        </Select>
                                     )}
                                 </td>
                                 <td>
                                     {booleanCellValidation.map((row) => row[index])?.every((cell) => cell) ? (
-                                        <span className="badge bg-success">Valid</span>
+                                        <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-green-600 text-white">
+                                            Valid
+                                        </span>
                                     ) : (
                                         <Tooltip
                                             content={
@@ -153,12 +165,12 @@ const TypeMapping: FC<TypeMappingProps> = ({
                                                         ? generateInvalidationMessagesForColumn(index).slice(0, 5)
                                                         : ''}
                                                     {generateInvalidationMessagesForColumn(index).length > 5 && (
-                                                        <div className="mt-1 font-italic">And more errors not shown...</div>
+                                                        <div className="mt-1 italic">And more errors not shown...</div>
                                                     )}
                                                 </>
                                             }
                                         >
-                                            <span className="badge bg-danger">
+                                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-red-600 text-white">
                                                 {`${booleanCellValidation.map((row) => row[index]).filter((cell) => !cell).length} ${pluralize(
                                                     'Invalid value',
                                                     booleanCellValidation.map((row) => row[index]).filter((cell) => !cell).length,
@@ -170,7 +182,7 @@ const TypeMapping: FC<TypeMappingProps> = ({
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </table>
             </div>
         </div>
     );

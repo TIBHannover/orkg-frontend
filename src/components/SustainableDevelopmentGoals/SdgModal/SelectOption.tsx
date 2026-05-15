@@ -7,15 +7,17 @@ import { OptionType } from '@/components/SustainableDevelopmentGoals/SdgModal/Sd
 
 const SelectOption: FC<OptionProps<OptionType, false>> = ({ children, data, ...props }) => (
     <components.Option data={data} {...props}>
-        <Image
-            src={getImage(data.id)}
-            style={{ width: 45, height: 'auto' }}
-            className="rounded"
-            alt={`Sustainable Development Goals ${getSdgNumber(data.id)}`}
-        />
-        <span className="ms-2">
-            {data.id.replace('SDG_', '')}. {children}
-        </span>
+        <div className="flex items-center gap-2">
+            <Image
+                src={getImage(data.id)}
+                style={{ width: 45, height: 'auto' }}
+                className="rounded shrink-0"
+                alt={`Sustainable Development Goals ${getSdgNumber(data.id)}`}
+            />
+            <span>
+                {data.id.replace('SDG_', '')}. {children}
+            </span>
+        </div>
     </components.Option>
 );
 

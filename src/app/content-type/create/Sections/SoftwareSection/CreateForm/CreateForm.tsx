@@ -1,16 +1,10 @@
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, useState } from 'react';
+'use client';
+
+import { Button, Form, Input, Label, TextField } from '@heroui/react';
+import { FC, useId, useState } from 'react';
 
 import useCreateContentType from '@/app/content-type/create/hooks/useCreateContentType';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 
 type CreateFormProps = {
@@ -18,35 +12,31 @@ type CreateFormProps = {
 };
 
 const CreateForm: FC<CreateFormProps> = ({ classId }) => {
-    const { handleCreate, isLoading, resourceId } = useCreateContentType(classId);
+    const titleId = useId();
     const [title, setTitle] = useState('');
+    const { handleCreate, isLoading, resourceId } = useCreateContentType(classId);
 
     return (
-        <Form onSubmit={(e) => handleCreate(e, title)}>
-            <FormGroup>
-                <Tooltip content="Choose the title of your software. You can always update the title later.">
-                    <span>
-                        <Label for="softwareTitle">Title</Label> <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary" />
-                    </span>
-                </Tooltip>
-                <InputGroup>
-                    <Input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        type="text"
-                        maxLength={MAX_LENGTH_INPUT}
-                        name="value"
-                        id="softwareTitle"
-                        disabled={isLoading}
-                        required
-                    />
-                    {!resourceId && (
-                        <RequireAuthentication component={Button} type="submit" color="primary">
-                            Create
-                        </RequireAuthentication>
-                    )}
-                </InputGroup>
-            </FormGroup>
+        <Form onSubmit={(e) => handleCreate(e, title)} className="flex flex-col gap-2">
+            <Label htmlFor={titleId} className="block">
+                Title
+            </Label>
+            <div className="flex items-stretch w-full">
+                <TextField className="min-w-0 flex-1" value={title} onChange={setTitle} isDisabled={isLoading} isRequired aria-label="Title">
+                    <Input id={titleId} name="value" maxLength={MAX_LENGTH_INPUT} className="!rounded-e-none !h-11" />
+                </TextField>
+                {!resourceId && (
+                    <RequireAuthentication
+                        component={Button}
+                        type="submit"
+                        variant="primary"
+                        isDisabled={isLoading}
+                        className="!h-11 !rounded-s-none -ms-px px-4"
+                    >
+                        Create
+                    </RequireAuthentication>
+                )}
+            </div>
         </Form>
     );
 };

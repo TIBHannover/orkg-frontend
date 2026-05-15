@@ -1,25 +1,21 @@
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, toast, Tooltip } from '@heroui/react';
 import { FC } from 'react';
 import { SingleValue } from 'react-select';
-import { toast } from 'react-toastify';
 
 import { OptionType } from '@/components/Autocomplete/types';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Button from '@/components/Ui/Button/Button';
 
 type CopyIdButtonProps = {
     value: SingleValue<OptionType>;
+    className?: string;
 };
 
-const CopyIdButton: FC<CopyIdButtonProps> = ({ value }) => {
+const CopyIdButton: FC<CopyIdButtonProps> = ({ value, className }) => {
     if (!value) {
         return null;
     }
 
-    /**
-     * Handle click on copy to clipboard button
-     */
     const handleCopyClick = () => {
         if (navigator.clipboard && value && value.id) {
             navigator.clipboard.writeText(value.id);
@@ -28,13 +24,15 @@ const CopyIdButton: FC<CopyIdButtonProps> = ({ value }) => {
     };
 
     return (
-        <Button onClick={handleCopyClick} outline className="px-2">
-            <Tooltip content="Copy the id to clipboard">
-                <span>
-                    <FontAwesomeIcon icon={faClipboard} size="sm" />
-                </span>
-            </Tooltip>
-        </Button>
+        <Tooltip delay={0}>
+            <Button isIconOnly variant="secondary" onPress={handleCopyClick} aria-label="Copy the id to clipboard" className={className}>
+                <FontAwesomeIcon icon={faClipboard} size="sm" />
+            </Button>
+            <Tooltip.Content showArrow>
+                <Tooltip.Arrow />
+                Copy the id to clipboard
+            </Tooltip.Content>
+        </Tooltip>
     );
 };
 

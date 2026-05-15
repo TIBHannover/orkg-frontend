@@ -25,7 +25,7 @@ const PaperSection = () => (
         }
         helpfulResourcesSubtitle="Example papers within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:!m-0">
+            <ul className="py-2 m-0">
                 <li>
                     <Link href="https://orkg.org/papers/R8186" target="_blank">
                         Open Research Knowledge Graph: Next Generation Infrastructure for Semantic Scholarly Knowledge

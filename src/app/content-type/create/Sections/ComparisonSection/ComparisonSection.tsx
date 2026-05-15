@@ -26,7 +26,7 @@ const ComparisonSection = () => (
         }
         helpfulResourcesSubtitle="Example comparisons within the ORKG"
         helpfulResourcesExamples={
-            <ul className="tw:py-2 tw:!m-0">
+            <ul className="py-2 m-0">
                 <li>
                     <Link href="https://orkg.org/comparisons/R642234" target="_blank">
                         Comparison of SemTab@ISWC 2019 systems for tabular data annotation

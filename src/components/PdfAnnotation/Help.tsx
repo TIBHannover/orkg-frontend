@@ -1,3 +1,6 @@
+import '@/components/Home/introjs-dark.css';
+
+import { Kbd } from '@heroui/react';
 import { Steps } from 'intro.js-react';
 import { FC } from 'react';
 
@@ -93,8 +96,17 @@ const Help: FC<HelpProps> = ({ setIsOpen, isOpen }) => {
                         can be used to add papers to the ORKG.
                     </p>
                     <p>
-                        To select a table area, hold the <kbd>⌥ Option</kbd> (or <kbd>Alt</kbd>) key, then click and drag over the desired region in
-                        the document.
+                        To select a table area, hold the{' '}
+                        <Kbd>
+                            <Kbd.Abbr keyValue="option" />
+                            <Kbd.Content>Option</Kbd.Content>
+                        </Kbd>{' '}
+                        (or{' '}
+                        <Kbd>
+                            <Kbd.Abbr keyValue="alt" />
+                            <Kbd.Content>Alt</Kbd.Content>
+                        </Kbd>
+                        ) key, then click and drag over the desired region in the document.
                     </p>
                 </>
             ),

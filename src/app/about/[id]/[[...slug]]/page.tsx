@@ -1,108 +1,39 @@
-'use client';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-import NotFound from '@/app/not-found';
-import CheckSlug from '@/components/CheckSlug/CheckSlug';
+import { loadAboutPage } from '@/app/about/[id]/[[...slug]]/about-page-data';
+import AboutPageContent from '@/app/about/[id]/[[...slug]]/AboutPageContent';
 import PageContentLoader from '@/components/Page/PageContentLoader';
-import usePage from '@/components/Page/usePage';
-import { CmsPage } from '@/components/styled';
-import TitleBar from '@/components/TitleBar/TitleBar';
-import Alert from '@/components/Ui/Alert/Alert';
-import Nav from '@/components/Ui/Nav/Nav';
-import Navbar from '@/components/Ui/Nav/Navbar';
-import NavItem from '@/components/Ui/Nav/NavItem';
-import Container from '@/components/Ui/Structure/Container';
-import useParams from '@/components/useParams/useParams';
-import ROUTES from '@/constants/routes';
-import { getAboutPage, getAboutPages } from '@/services/cms';
-import { HelpArticle } from '@/services/cms/types';
-import { reverseWithSlug } from '@/utilsTyped';
+import { Container } from '@/components/Ui/Structure/Container';
 
-const About = () => {
-    const [isLoadingMenu, setIsLoadingMenu] = useState(false);
-    const [isFailedLoadingMenu, setIsFailedLoadingMenu] = useState(false);
-    const [menuItems, setMenuItems] = useState<HelpArticle[]>([]);
-    const { loadPage, page, isLoading, isNotFound } = usePage();
-    const params = useParams();
-    const id = parseInt(params.id.toString(), 10);
-
-    // load page content
-    useEffect(() => {
-        const load = async () => {
-            if (id === page?.id) {
-                return;
-            }
-            const pagePromise = getAboutPage(id);
-            loadPage({ pagePromise });
-        };
-        load();
-    }, [params, loadPage, menuItems, id, page]);
-
-    // load menu items
-    useEffect(() => {
-        if (!page?.attributes?.category?.data?.id) {
-            setMenuItems([]);
-            return;
-        }
-
-        const getMenu = async () => {
-            setIsLoadingMenu(true);
-            try {
-                setMenuItems((await getAboutPages(page?.attributes?.category?.data?.id))?.data ?? []);
-            } catch (e) {
-                console.error(e);
-                setIsFailedLoadingMenu(true);
-            } finally {
-                setIsLoadingMenu(false);
-            }
-        };
-
-        getMenu();
-    }, [page]);
-
-    useEffect(() => {
-        document.title = `${page?.attributes?.title ?? ''} - ORKG`;
-    }, [page]);
-
-    if (isNotFound) {
-        return <NotFound />;
+export async function generateMetadata({ params }: { params: Promise<{ id: string; slug?: string[] }> }): Promise<Metadata> {
+    const { id } = await params;
+    const numericId = parseInt(id, 10);
+    if (Number.isNaN(numericId)) {
+        return {};
     }
 
+    const pageData = await loadAboutPage(numericId);
+    if (!pageData) {
+        return { title: 'Page not found - ORKG' };
+    }
+
+    const title = `${pageData.attributes?.title ?? ''} - ORKG`;
+    return { title };
+}
+
+export default function AboutPage({ params }: { params: Promise<{ id: string; slug?: string[] }> }) {
     return (
-        <div>
-            {!isLoading && params?.id && page?.attributes?.title && <CheckSlug label={page.attributes.title} route={ROUTES.ABOUT} />}
-            {!isLoading && <TitleBar>{page?.category?.label ?? page?.attributes?.title}</TitleBar>}
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                {!isLoadingMenu && menuItems.length > 1 && (
-                    <>
-                        <Navbar color="white" expand="md" className="mb-3 p-0">
-                            <Nav>
-                                {menuItems.map((item) => (
-                                    <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
-                                        <Link
-                                            className="nav-link"
-                                            href={reverseWithSlug(ROUTES.ABOUT, { id: item.id.toString(), slug: item.attributes?.title })}
-                                        >
-                                            {item.attributes?.title}
-                                        </Link>
-                                    </NavItem>
-                                ))}
-                            </Nav>
-                        </Navbar>
-                        <hr />
-                    </>
-                )}
-
-                {!isLoadingMenu && isFailedLoadingMenu && <Alert color="danger">Failed loading menu</Alert>}
-
-                {isLoading && <PageContentLoader />}
-
-                <CmsPage>{!isLoading && page?.content}</CmsPage>
-            </Container>
-        </div>
+        <Suspense
+            fallback={
+                <Container className="mt-12">
+                    <div className="box rounded pt-6 pb-6 pl-12 pr-12">
+                        <PageContentLoader />
+                    </div>
+                </Container>
+            }
+        >
+            <AboutPageContent params={params} />
+        </Suspense>
     );
-};
-
-export default About;
+}

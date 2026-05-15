@@ -28,10 +28,8 @@ function StatementPlaceholder() {
     };
 
     return (
-        <div>
-            <div className="d-flex p-2 flex-wrap" style={{ background: 'white' }}>
-                {properties.map((property, i) => renderCard(property, i))}
-            </div>
+        <div className="flex flex-wrap items-center gap-2 rounded border border-separator bg-surface p-3">
+            {properties.map((property, i) => renderCard(property, i))}
         </div>
     );
 }

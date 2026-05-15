@@ -1,43 +1,12 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled from 'styled-components';
 
 import useList from '@/components/List/hooks/useList';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { LiteratureListSectionType } from '@/services/backend/types';
-
-const AddSectionStyled = styled(Button)`
-    color: ${(props) => props.theme.secondary}!important;
-    font-size: 140% !important;
-    margin: 5px 0 !important;
-    animation: 0.3s ease-out 0s 1 slideDown;
-    @keyframes slideDown {
-        0% {
-            max-height: 0;
-            margin: 0;
-            opacity: 0;
-        }
-        100% {
-            max-height: 50px;
-            margin: 5px 0 !important;
-            opacity: 1;
-        }
-    }
-`;
-
-const Toolbar = styled.div`
-    position: absolute !important;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    button {
-        margin-right: 2px;
-    }
-`;
 
 type AddSectionProps = {
     index: number;
@@ -46,7 +15,7 @@ type AddSectionProps = {
 const AddSection: FC<AddSectionProps> = ({ index }) => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const { list, createSection } = useList();
-    const refToolbar = useRef(null);
+    const refToolbar = useRef<HTMLDivElement>(null);
 
     useClickAway(refToolbar, () => {
         setIsToolbarVisible(false);
@@ -62,28 +31,34 @@ const AddSection: FC<AddSectionProps> = ({ index }) => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-center add position-relative">
-            <AddSectionStyled color="link" className="p-0" onClick={() => setIsToolbarVisible((v) => !v)} aria-label="Add section">
+        <div className="add relative flex items-center justify-center">
+            <Button
+                isIconOnly
+                variant="ghost"
+                aria-label="Add section"
+                onPress={() => setIsToolbarVisible((v) => !v)}
+                className="my-1 h-auto min-w-0 bg-transparent p-0 text-2xl text-secondary hover:bg-transparent hover:text-secondary-darker"
+            >
                 <FontAwesomeIcon icon={faPlusCircle} />
-            </AddSectionStyled>
+            </Button>
             <AnimatePresence>
                 {isToolbarVisible && (
                     <motion.div
+                        ref={refToolbar}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2, ease: 'easeOut' }}
+                        className="absolute -top-6 left-1/2 -translate-x-1/2"
                     >
-                        <Toolbar ref={refToolbar}>
-                            <ButtonGroup size="sm">
-                                <Button color="dark" onClick={() => handleAddSection('text')}>
-                                    Text
-                                </Button>
-                                <Button color="dark" onClick={() => handleAddSection('list')}>
-                                    List
-                                </Button>
-                            </ButtonGroup>
-                        </Toolbar>
+                        <ButtonGroup size="sm">
+                            <Button variant="secondary" onPress={() => handleAddSection('text')}>
+                                Text
+                            </Button>
+                            <Button variant="secondary" onPress={() => handleAddSection('list')}>
+                                List
+                            </Button>
+                        </ButtonGroup>
                     </motion.div>
                 )}
             </AnimatePresence>

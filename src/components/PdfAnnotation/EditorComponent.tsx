@@ -1,17 +1,15 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useHotEditor } from '@handsontable/react-wrapper';
+import { Button, Skeleton } from '@heroui/react';
 import Handsontable from 'handsontable/base';
-import { MouseEvent, useRef } from 'react';
-import Skeleton from 'react-loading-skeleton';
+import { MouseEvent, useEffect, useRef } from 'react';
 import useSWR from 'swr';
 
 import { parseCellString } from '@/app/csv-import/steps/helpers';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
 import InputField from '@/components/InputField/InputField';
-import Button from '@/components/Ui/Button/Button';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { getConfigByType } from '@/constants/DataTypes';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
 import errorHandler from '@/helpers/errorHandler';
@@ -26,6 +24,19 @@ interface ExtendedHandsontable extends Handsontable {
 const EditorComponent = () => {
     const mainElementRef = useRef<HTMLDivElement>(null);
     const hotInstanceRef = useRef<ExtendedHandsontable | null>(null);
+
+    useEffect(() => {
+        // The React wrapper portals this editor into a body-level
+        // <div class="hot-wrapper-editor-container">. When this HotTable is inside a
+        // HeroUI Modal, React Aria's ariaHideOutside applies `inert` to it; opt it out
+        // so the Autocomplete dropdown and DataType selector stay interactive.
+        const wrapper = mainElementRef.current?.closest('.hot-wrapper-editor-container');
+        if (wrapper instanceof HTMLElement) {
+            wrapper.setAttribute('data-react-aria-top-layer', 'true');
+            wrapper.removeAttribute('aria-hidden');
+            wrapper.inert = false;
+        }
+    }, []);
 
     const { value, setValue, finishEditing, row, col } = useHotEditor<string>({
         onOpen: () => {
@@ -84,14 +95,14 @@ const EditorComponent = () => {
 
     const { inputFormType } = config;
 
-    if (isLoading) return <Skeleton />;
+    if (isLoading) return <Skeleton className="w-full h-4 rounded" />;
 
     // eslint-disable-next-line react-hooks/refs
     if (row === 0 && hotInstanceRef?.current?.isSurveyTable === true) {
         return (
             <div
                 ref={mainElementRef}
-                className="tw:hidden tw:absolute tw:left-0 tw:top-0 tw:bg-white tw:border tw:border-black tw:p-4 tw:z-[9999] tw:w-[500px] tw:min-w-[500px]"
+                className="hidden absolute left-0 top-0 bg-surface border border-border p-4 z-[9999] w-[500px] min-w-[500px]"
                 onMouseDown={stopMousedownPropagation}
             >
                 <Autocomplete
@@ -130,53 +141,59 @@ const EditorComponent = () => {
     return (
         <div
             ref={mainElementRef}
-            className="tw:hidden tw:absolute tw:left-0 tw:top-0 tw:bg-white tw:border tw:border-black tw:p-4 tw:z-[9999] tw:w-[500px] tw:min-w-[500px]"
+            className="hidden absolute left-0 top-0 bg-surface border border-border p-4 z-[9999] w-[500px] min-w-[500px]"
             onMouseDown={stopMousedownPropagation}
         >
-            <div className="tw:flex tw:items-center tw:w-full">
-                <InputGroup size="sm" className="tw:flex-grow-1 tw:flex-nowrap">
-                    {(!headerEntityId ||
-                        headerEntityId !== PREDICATES.HAS_RESEARCH_FIELD ||
-                        // eslint-disable-next-line react-hooks/refs
-                        (hotInstanceRef.current as ExtendedHandsontable)?.isSurveyTable === false) && (
-                        <DatatypeSelector
-                            _class={entity && '_class' in entity ? entity._class : undefined}
-                            range={undefined}
-                            isDisabled={false}
-                            dataType={dataType}
-                            setDataType={setDataType}
-                        />
-                    )}
-                    <InputField
+            <div className="flex items-stretch min-h-9 grow min-w-0">
+                {(!headerEntityId ||
+                    headerEntityId !== PREDICATES.HAS_RESEARCH_FIELD ||
+                    // eslint-disable-next-line react-hooks/refs
+                    (hotInstanceRef.current as ExtendedHandsontable)?.isSurveyTable === false) && (
+                    <DatatypeSelector
+                        _class={entity && '_class' in entity ? entity._class : undefined}
                         range={undefined}
-                        inputValue={label || ''}
-                        setInputValue={(v) => {
-                            if (hasTypeInfo) {
-                                setValue(`${v}<${typeStr}>`);
-                            } else {
-                                setValue(v);
-                            }
-                        }}
-                        inputFormType={inputFormType}
+                        isDisabled={false}
                         dataType={dataType}
-                        isValid
-                        placeholder="Enter a value"
-                        includeClasses={headerEntityId && headerEntityId === PREDICATES.HAS_RESEARCH_FIELD ? [CLASSES.RESEARCH_FIELD] : []}
-                        onChange={(selectedValue: Node | undefined) => {
-                            if (selectedValue) {
-                                setValue(`orkg:${selectedValue.id.toString()}`);
-                                finishEditing();
-                            }
-                        }}
-                        onFailure={(e) => {
-                            errorHandler({ error: e, shouldShowToast: true });
-                            finishEditing();
-                        }}
+                        setDataType={setDataType}
                     />
-                    <Button className="tw:px-2" size="sm" type="submit" title="Save" color="primary" onClick={finishEditing}>
-                        <FontAwesomeIcon icon={faCheck} />
-                    </Button>
-                </InputGroup>
+                )}
+                <InputField
+                    range={undefined}
+                    inputValue={label || ''}
+                    setInputValue={(v) => {
+                        if (hasTypeInfo) {
+                            setValue(`${v}<${typeStr}>`);
+                        } else {
+                            setValue(v);
+                        }
+                    }}
+                    inputFormType={inputFormType}
+                    dataType={dataType}
+                    isValid
+                    placeholder="Enter a value"
+                    includeClasses={headerEntityId && headerEntityId === PREDICATES.HAS_RESEARCH_FIELD ? [CLASSES.RESEARCH_FIELD] : []}
+                    onChange={(selectedValue: Node | undefined) => {
+                        if (selectedValue) {
+                            setValue(`orkg:${selectedValue.id.toString()}`);
+                            finishEditing();
+                        }
+                    }}
+                    onFailure={(e) => {
+                        errorHandler({ error: e, shouldShowToast: true });
+                        finishEditing();
+                    }}
+                />
+                <Button
+                    size="sm"
+                    variant="primary"
+                    isIconOnly
+                    className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px px-2"
+                    type="submit"
+                    aria-label="Save"
+                    onPress={finishEditing}
+                >
+                    <FontAwesomeIcon icon={faCheck} />
+                </Button>
             </div>
         </div>
     );

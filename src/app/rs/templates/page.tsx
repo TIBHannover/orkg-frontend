@@ -2,9 +2,8 @@
 
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Form, Input, Label } from '@heroui/react';
 import { debounce } from 'lodash';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 
@@ -13,14 +12,10 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import Container from '@/components/Ui/Structure/Container';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getRSTemplates, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { RosettaStoneTemplate } from '@/services/backend/types';
 
@@ -63,18 +58,12 @@ const Templates = () => {
         </>
     );
 
-    const handleSearch = debounce((term) => {
+    const handleSearch = debounce((term: string) => {
         setSearchTerm(term);
     }, 500);
 
     const buttons = (
-        <RequireAuthentication
-            component={Link}
-            color="secondary"
-            size="sm"
-            className="btn btn-secondary btn-sm flex-shrink-0"
-            href={reverse(ROUTES.RS_ADD_TEMPLATE)}
-        >
+        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={reverse(ROUTES.RS_ADD_TEMPLATE)}>
             <FontAwesomeIcon icon={faPlus} /> Create statement template
         </RequireAuthentication>
     );
@@ -87,11 +76,11 @@ const Templates = () => {
         <>
             <TitleBar
                 titleAddition={
-                    <div className="text-muted mt-1">
+                    <div className="text-gray-500 mt-1">
                         {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
                         {searchTerm !== '' ? 'items found by applying the filter' : 'items'}
                         {isFilterApplied && (
-                            <Button onClick={() => setSearchTerm('')} className="ms-1 ps-2 pe-2" size="sm">
+                            <Button onPress={() => setSearchTerm('')} className="ml-1 pl-2 pr-2" size="sm" variant="ghost">
                                 Reset
                             </Button>
                         )}
@@ -101,26 +90,26 @@ const Templates = () => {
             >
                 Statement templates
             </TitleBar>
-
-            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                {infoContainerText}
+            <Container className="mb-4">
+                <div className="rounded p-4 bg-surface-tertiary">{infoContainerText}</div>
             </Container>
-
-            <Container className="box rounded pt-4 pb-2 ps-4 pe-4 clearfix mb-3">
-                <Form className="mb-3">
-                    <FormGroup>
-                        <Label for="filter-label">Filter by label</Label>
-                        <Input
-                            type="text"
-                            id="filter-label"
-                            maxLength={MAX_LENGTH_INPUT}
-                            onChange={(e) => handleSearch(e.target.value)}
-                            defaultValue={searchTerm}
-                        />
-                    </FormGroup>
-                </Form>
+            <Container className="mb-4">
+                <div className="box rounded pt-6 pb-2 pl-6 pr-6 flow-root">
+                    <Form className="mb-4">
+                        <div className="flex flex-col gap-1.5 w-full">
+                            <Label htmlFor="filter-label">Filter by label</Label>
+                            <Input
+                                type="text"
+                                id="filter-label"
+                                maxLength={MAX_LENGTH_INPUT}
+                                onChange={(e) => handleSearch(e.target.value)}
+                                defaultValue={searchTerm}
+                                className="w-full"
+                            />
+                        </div>
+                    </Form>
+                </div>
             </Container>
-
             <ListPaginatedContent<RosettaStoneTemplate>
                 renderListItem={renderListItem}
                 pageSize={pageSize}

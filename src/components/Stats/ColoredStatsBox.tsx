@@ -51,19 +51,19 @@ export type ColoredStatsBoxProps = {
     link?: string;
 };
 const ColoredStatsBox: FC<ColoredStatsBoxProps> = ({ link, isLoading, label, className = null, number = 0 }) => (
-    <StatsBoxStyled className={`d-flex flex-grow-1 ${className} text-center box rounded mb-3 mx-2`}>
+    <StatsBoxStyled className={`flex grow ${className} text-center box rounded mb-4 mx-2`}>
         <ConditionalWrapper
             condition={link}
             // @ts-expect-error
             wrapper={(children) => (
                 // @ts-expect-error
-                <Link className="flex-grow-1" href={link}>
+                <Link className="grow" href={link}>
                     {children}
                 </Link>
             )}
         >
-            <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
-                <LabelWrapper className="flex-grow-1">
+            <div className="flex grow mt-2 mb-2" style={{ minHeight: '74px' }}>
+                <LabelWrapper className="grow">
                     {!isLoading ? (
                         <div className="number">
                             <CountUp duration={1.1} end={number} separator=" " />

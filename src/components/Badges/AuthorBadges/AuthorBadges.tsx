@@ -1,12 +1,11 @@
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, Chip } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Author } from '@/services/backend/types';
 
 const AUTHOR_LIMIT = 15;
@@ -28,30 +27,28 @@ const AuthorBadges: FC<AuthorBadgesProps> = ({ authors }) => {
                         href={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                         target="_blank"
                         rel="author"
-                        typeof="foaf:Person"
                         aria-label={`Visit the author page of ${author.name}`}
                     >
-                        <Badge color="light" className="me-2 mb-2" key={index}>
-                            <FontAwesomeIcon icon={faUser} className="text-primary" /> {author.name}
-                        </Badge>
+                        <Chip color="default" className="mr-2 mb-2">
+                            <FontAwesomeIcon icon={faUser} className="text-accent" /> {author.name}
+                        </Chip>
                     </Link>
                 ) : (
                     <Link
                         key={index}
-                        href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(author.name) })}
+                        href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: author.name })}
                         target="_blank"
                         rel="author"
-                        typeof="foaf:Person"
                         aria-label={`Visit the author page of ${author.name}`}
                     >
-                        <Badge color="light" className="me-2 mb-2">
+                        <Chip color="default" className="mr-2 mb-2">
                             <FontAwesomeIcon icon={faUser} aria-label="Author name" /> {author.name}
-                        </Badge>
+                        </Chip>
                     </Link>
                 ),
             )}
             {authors.length > AUTHOR_LIMIT && (
-                <Button color="light" size="sm" className="py-0" onClick={() => setIsExpanded((v) => !v)}>
+                <Button size="sm" variant="secondary" className="py-0" onPress={() => setIsExpanded((v) => !v)}>
                     {isExpanded ? 'Show less' : `Show ${authors.length - AUTHOR_LIMIT} more`}
                 </Button>
             )}

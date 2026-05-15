@@ -2,17 +2,20 @@
 
 import { faTable } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert } from '@heroui/react';
 
 const NoRowsOverlay = () => {
     return (
-        <div className="tw:flex tw:items-center tw:justify-center tw:h-full tw:w-full">
-            <div className="tw:text-center tw:py-8 tw:px-12">
-                <div className="tw:mb-4">
-                    <FontAwesomeIcon icon={faTable} className="tw:text-4xl tw:text-gray-400 tw:mb-3" />
-                </div>
-                <h5 className="tw:text-gray-600 tw:font-semibold tw:mb-3">No rows to show</h5>
-                <p className="tw:text-gray-500 tw:mb-4 tw:leading-relaxed">Start adding properties or use templates by using the buttons below</p>
-            </div>
+        <div className="flex items-center justify-center h-full w-full p-6">
+            <Alert status="default" className="max-w-md">
+                <Alert.Indicator>
+                    <FontAwesomeIcon icon={faTable} />
+                </Alert.Indicator>
+                <Alert.Content>
+                    <Alert.Title>No rows to show</Alert.Title>
+                    <Alert.Description>Start adding properties or use templates by using the buttons below.</Alert.Description>
+                </Alert.Content>
+            </Alert>
         </div>
     );
 };

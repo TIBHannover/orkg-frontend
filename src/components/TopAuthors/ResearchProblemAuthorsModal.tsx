@@ -1,15 +1,12 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Modal } from '@heroui/react';
 import { AuthorRecordRepresentation } from '@orkg/orkg-client';
 import { Dispatch, SetStateAction } from 'react';
 
 import AuthorCard from '@/components/Cards/AuthorCard/AuthorCard';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
-import Alert from '@/components/Ui/Alert/Alert';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { getAuthorStatisticsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
 type ResearchProblemAuthorsModalProps = {
@@ -43,58 +40,70 @@ const ResearchProblemAuthorsModal = ({ researchProblemId, openModal, setOpenModa
     });
 
     const renderListItem = (author: AuthorRecordRepresentation, lastItem?: boolean, index: number = 0) => (
-        <div className="px-2" key={`rpAuthor${index}`}>
-            <div className="d-flex align-items-center py-2">
-                <div className="pe-2 text-muted h5 mb-0 ms-2" style={{ flexBasis: '2em' }}>
-                    {index + 1}.
-                </div>{' '}
-                <div className="flex-grow-1">
-                    <AuthorCard author={author.authorName} paperAmount={author.paperCount} isVisibleGoogleScholar isVisibleShowCitations />{' '}
+        <div className="px-3" key={`rpAuthor${index}`}>
+            <div className="flex items-center py-2">
+                <div className="shrink-0 basis-8 pr-2 text-gray-500 text-xl ml-2">{index + 1}.</div>
+                <div className="grow">
+                    <AuthorCard author={author.authorName} paperAmount={author.paperCount} isVisibleGoogleScholar isVisibleShowCitations />
                 </div>
             </div>
-            {!lastItem && <hr className="mb-0 mt-1" />}
         </div>
     );
 
     return (
-        <Modal
+        <Modal.Backdrop
             isOpen={openModal}
-            toggle={() => setOpenModal((v) => !v)}
-            size="lg"
-            onExit={() => {
-                setPage(0);
-                setPageSize(10);
+            onOpenChange={(open) => {
+                if (!open) {
+                    setOpenModal(false);
+                    setPage(0);
+                    setPageSize(10);
+                }
             }}
+            isDismissable
         >
-            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <FontAwesomeIcon icon={faAward} className="text-primary ms-2" /> Top authors
-            </ModalHeader>
-            <ModalBody className="p-0 px-2">
-                <Alert color="info" className="m-3">
-                    The authors listed below are engaged researchers. They are sorted by the number of papers per author. The list can be used to find
-                    suitable peer-reviewers.
-                </Alert>
-                <ListPaginatedContent<AuthorRecordRepresentation>
-                    renderListItem={renderListItem}
-                    pageSize={pageSize}
-                    label="top authors"
-                    isLoading={isLoading}
-                    items={authors ?? []}
-                    hasNextPage={hasNextPage}
-                    page={page}
-                    setPage={setPage}
-                    setPageSize={setPageSize}
-                    totalElements={totalElements}
-                    error={error}
-                    totalPages={totalPages}
-                    boxShadow={false}
-                    flush={false}
-                    listGroupProps={{ className: 'pt-2 pb-2' }}
-                    prefixParams="authorStatistics_"
-                    noDataComponent={<div className="mt-4 mb-4">No authors yet</div>}
-                />
-            </ModalBody>
-        </Modal>
+            <Modal.Container>
+                <Modal.Dialog className="mt-20 max-w-4xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>
+                            <FontAwesomeIcon icon={faAward} className="text-accent mr-2" /> Top authors
+                        </Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="overflow-y-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <Alert status="accent" className="mt-2 mb-4 rounded-2xl">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>Engaged researchers</Alert.Title>
+                                <Alert.Description>
+                                    The authors listed below are sorted by the number of papers per author. The list can be used to find suitable
+                                    peer-reviewers.
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
+                        <ListPaginatedContent<AuthorRecordRepresentation>
+                            renderListItem={renderListItem}
+                            pageSize={pageSize}
+                            label="top authors"
+                            isLoading={isLoading}
+                            items={authors ?? []}
+                            hasNextPage={hasNextPage}
+                            page={page}
+                            setPage={setPage}
+                            setPageSize={setPageSize}
+                            totalElements={totalElements}
+                            error={error}
+                            totalPages={totalPages}
+                            boxShadow={false}
+                            flush={false}
+                            listGroupProps={{ className: 'py-2' }}
+                            prefixParams="authorStatistics_"
+                            noDataComponent={<div className="my-6">No authors yet</div>}
+                        />
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

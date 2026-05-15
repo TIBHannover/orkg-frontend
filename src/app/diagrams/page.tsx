@@ -2,7 +2,7 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import { useEffect } from 'react';
 
 import DiagramCard from '@/components/Cards/DiagramCard/DiagramCard';
@@ -21,7 +21,7 @@ const Diagrams = () => {
     const renderListItem = (diagram: Resource) => <DiagramCard key={diagram?.id} diagram={diagram} />;
 
     const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.NEW_DIAGRAM}>
+        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.NEW_DIAGRAM}>
             <Icon icon={faPlus} /> Create diagram
         </RequireAuthentication>
     );

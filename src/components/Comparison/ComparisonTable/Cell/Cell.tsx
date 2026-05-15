@@ -20,11 +20,11 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
     return (
         <>
             <div
-                className="tw:flex tw:h-full tw:!border-b-[#e7eaf1] tw:!border-b tw:bg-inherit tw:!border-r tw:!border-r-[#e7eaf1] tw:break-all"
+                className="flex h-full border-b-[#e7eaf1] border-b bg-inherit border-r border-r-[#e7eaf1] break-words"
                 style={{ background: getBackgroundColor(path?.length ? path.length - 1 : 0) }}
             >
                 {value ? (
-                    <div className="tw:py-1 tw:px-2">
+                    <div className="py-1 px-2">
                         {value._class !== 'literal_ref' && (
                             <span>
                                 <DescriptionTooltip
@@ -33,7 +33,7 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
                                     classes={'classes' in value ? value.classes : undefined}
                                 >
                                     <div
-                                        className="btn-link tw:!text-primary"
+                                        className="bg-transparent p-0 text-accent focus:ring-0 hover:underline"
                                         onClick={() => setIsOpenDataBrowserModal(true)}
                                         style={{ cursor: 'pointer' }}
                                         onKeyDown={(e) => (e.key === 'Enter' ? setIsOpenDataBrowserModal(true) : undefined)}
@@ -49,7 +49,6 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
                     </div>
                 ) : null}
             </div>
-
             {isOpenDataBrowserModal && value && (
                 <CellDataBrowserDialog value={value} dataBrowserHistory={dataBrowserHistory} onClose={() => setIsOpenDataBrowserModal(false)} />
             )}

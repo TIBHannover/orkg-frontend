@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Alert from '@/components/Ui/Alert/Alert';
 import THING_TYPES from '@/constants/thingTypes';
@@ -25,7 +25,7 @@ function VisualizationPreview({ id, height = '500px', width = '100%', className 
                 setIsLoading(false);
                 setIsLoadingFailed(true);
                 setVisualizationModelForGDC(undefined);
-                toast.error('Error loading visualization preview');
+                toast.danger('Error loading visualization preview');
             });
     }, [id]);
 

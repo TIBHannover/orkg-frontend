@@ -1,8 +1,16 @@
-import React, { FC } from 'react';
-import { ModalBody as ReactstrapModalBody, ModalBodyProps } from 'reactstrap';
+import { Modal } from '@heroui/react';
+import { CSSProperties, FC, ReactNode } from 'react';
 
-const ModalBody: FC<ModalBodyProps> = ({ children, ...rest }) => {
-    return <ReactstrapModalBody {...rest}>{children}</ReactstrapModalBody>;
+type ModalBodyProps = {
+    className?: string;
+    style?: CSSProperties;
+    children?: ReactNode;
 };
+
+const ModalBody: FC<ModalBodyProps> = ({ className, style, children }) => (
+    <Modal.Body className={className} style={style}>
+        {children}
+    </Modal.Body>
+);
 
 export default ModalBody;

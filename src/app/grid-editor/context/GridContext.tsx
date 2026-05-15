@@ -1,6 +1,5 @@
 import { createContext, Dispatch, FC, ReactNode, useContext, useReducer } from 'react';
 
-import { getPreferenceFromCookies } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import { Predicate, Statement } from '@/services/backend/types';
 
 // Type definition for grid row data
@@ -13,21 +12,17 @@ export type TData = {
 type GridState = {
     newProperties: Predicate[];
     newRows: TData[];
-    isHelpModalOpen: boolean;
-    helpCenterArticleId?: string;
 };
 
 type GridAction =
     | { type: 'ADD_PROPERTY'; payload: { predicate: Predicate } }
     | { type: 'DELETE_PROPERTY'; payload: { predicateId: string } }
     | { type: 'ADD_ROW'; payload: { row: TData } }
-    | { type: 'DELETE_ROW'; payload: { rowId: string } }
-    | { type: 'SET_IS_HELP_MODAL_OPEN'; payload: { isOpen: boolean; articleId?: string } };
+    | { type: 'DELETE_ROW'; payload: { rowId: string } };
 
 const initialState = {
     newProperties: [],
     newRows: [],
-    isHelpModalOpen: getPreferenceFromCookies('showInlineDataTypes') ?? false,
 };
 
 export const GridContext = createContext<GridState>(initialState);
@@ -53,9 +48,6 @@ export const gridReducer = (state: GridState, action: GridAction) => {
         case 'DELETE_ROW': {
             return { ...state, newRows: state.newRows.filter((r) => r.id !== action.payload.rowId) };
         }
-        case 'SET_IS_HELP_MODAL_OPEN': {
-            return { ...state, isHelpModalOpen: action.payload.isOpen, helpCenterArticleId: action.payload.articleId };
-        }
 
         default: {
             throw Error('Unknown action');
@@ -79,8 +71,6 @@ const GridProvider: FC<GridProviderProps> = ({ children }) => {
     const [gridState, dispatch] = useReducer(gridReducer, {
         newProperties: [],
         newRows: [],
-        helpCenterArticleId: '',
-        isHelpModalOpen: false,
     });
 
     return (

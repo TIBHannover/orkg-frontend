@@ -1,13 +1,10 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { Button, Input, Spinner, TextField, toast } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import CuratorModal from '@/components/CuratorModal/CuratorModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import { StyledButton } from '@/components/StatementBrowser/styled';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateClass } from '@/services/backend/classes';
@@ -21,6 +18,7 @@ type EditableHeaderProp = {
     entityType: (typeof ENTITIES)[keyof typeof ENTITIES];
     curatorsOnly?: boolean;
 };
+
 const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
     const [label, setLabel] = useState<string>(value);
     const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +43,7 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
             setIsEditMode(false);
         } catch (error) {
             if (error instanceof Error) {
-                toast.error(`Error updating resource : ${error.message}`);
+                toast.danger(`Error updating resource : ${error.message}`);
             }
         } finally {
             setIsLoading(false);
@@ -69,34 +67,62 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
         setIsEditMode(true);
     };
 
+    const headingTypography = 'text-[1.3rem] font-bold leading-tight';
+
     return (
-        <div className="pb-3">
+        <div className="min-h-11 flex items-center">
             {!isEditMode && (
-                <h3 className="mb-0">
-                    {label || <small className="fst-italic">No label</small>}
+                <h3 className={`${headingTypography} m-0 px-3 w-full flex flex-wrap items-center gap-2`}>
+                    <span className="break-words">{label || <small className="italic">No label</small>}</span>
                     {id.split(':')[0] === 'wikidata' ? (
                         <ActionButton title="Wikidata cannot be edit" isDisabled icon={faPen} action={handleEditClick} />
                     ) : (
-                        <span className="ms-2">
+                        <span className="inline-flex">
                             <ActionButton title="Edit label" icon={faPen} action={handleEditClick} />
                         </span>
                     )}
                 </h3>
             )}
             {isEditMode && (
-                <div className="clearfix">
-                    <InputGroup>
-                        <Input type="text" maxLength={MAX_LENGTH_INPUT} value={label} onChange={(e) => setLabel(e.target.value)} />
-                        <StyledButton className="px-3" outline onClick={handleCancelClick}>
-                            Cancel
-                        </StyledButton>
-                        <StyledButton className="px-3" outline onClick={handleSubmitClick}>
-                            Done
-                        </StyledButton>
-                    </InputGroup>
+                <div className="flex items-stretch w-full">
+                    <TextField
+                        fullWidth
+                        value={label}
+                        onChange={setLabel}
+                        aria-label="Edit label"
+                        isDisabled={isLoading}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !isLoading) void handleSubmitClick();
+                            if (e.key === 'Escape') handleCancelClick();
+                        }}
+                        className="flex-1 min-w-0"
+                    >
+                        <Input
+                            autoFocus
+                            maxLength={MAX_LENGTH_INPUT}
+                            className={`!rounded-e-none !h-11 ${headingTypography.replace(/(^|\s)/g, '$1!')}`}
+                        />
+                    </TextField>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        isDisabled={isLoading}
+                        className="!h-11 !rounded-none -ms-px px-4"
+                        onPress={handleCancelClick}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        isDisabled={isLoading}
+                        className="!h-11 !rounded-s-none !rounded-e-[var(--radius)] -ms-px px-4"
+                        onPress={handleSubmitClick}
+                    >
+                        {isLoading ? <Spinner size="sm" /> : 'Done'}
+                    </Button>
                 </div>
             )}
-            {isLoading && <span className="fa fa-spinner fa-spin" />}
             {isOpenCuratorModal && <CuratorModal toggle={() => setIsOpenCuratorModal((v) => !v)} />}
         </div>
     );

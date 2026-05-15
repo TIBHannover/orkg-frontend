@@ -79,7 +79,7 @@ const StepContainer: FC<StepContainerProps> = ({
 
     return (
         <>
-            <Container className="position-relative">
+            <Container className="relative">
                 {topLine && <LineStyled className={topClasses} />}
 
                 <StepStyled className={activeClasses}>{step}</StepStyled>
@@ -89,7 +89,7 @@ const StepContainer: FC<StepContainerProps> = ({
                 <TitleStyled className={titleClasses}>{title}</TitleStyled>
             </Container>
             {active && (
-                <Container className={classNames('box rounded pt-4 pb-4 ps-5 pe-5 position-relative', { border: hasBorder })} style={{ zIndex: 1 }}>
+                <Container className={classNames('box rounded pt-6 pb-6 pl-12 pr-12 relative', { border: hasBorder })} style={{ zIndex: 1 }}>
                     {children}
                 </Container>
             )}

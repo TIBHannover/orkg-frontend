@@ -1,7 +1,7 @@
+import { Alert, Button, Checkbox, Input, Label, Modal, Radio, RadioGroup, TextField, toast } from '@heroui/react';
 import { motion } from 'motion/react';
-import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
-import { toast } from 'react-toastify';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
@@ -9,16 +9,6 @@ import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import FormText from '@/components/Ui/Form/FormText';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import DATA_TYPES from '@/constants/DataTypes';
 import { FILTER_SOURCE } from '@/constants/filters';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
@@ -91,33 +81,33 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
         resetValues();
     }, [filter, resetValues]);
 
-    const handleExactOptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setExact(e.target.value === 'exact');
-    };
-
     return (
-        <div>
-            <ModalWithLoading onClosed={resetValues} isLoading={isSaving} isOpen={isOpen} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{filter ? 'Edit' : 'Add'} Filter</ModalHeader>
-                <ModalBody>
+        <ModalWithLoading onClosed={resetValues} isLoading={isSaving} isOpen={isOpen} toggle={toggle} backdropClassName="z-[1060]">
+            <Modal.Header>
+                <Modal.CloseTrigger />
+                <Modal.Heading>{filter ? 'Edit' : 'Add'} Filter</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="p-6">
+                <div className="flex flex-col gap-4">
                     {!isCurationAllowed && !filter && (
-                        <Alert color="secondary">Please note that any added filters will only be stored locally in your browser.</Alert>
+                        <Alert status="accent">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Description>Please note that any added filters will only be stored locally in your browser.</Alert.Description>
+                            </Alert.Content>
+                        </Alert>
                     )}
-                    <FormGroup>
-                        <Label for="label">Filter label</Label>
-                        <Input
-                            id="label"
-                            name="label"
-                            type="text"
-                            placeholder="Enter label for the filter"
-                            value={label}
-                            onChange={(e) => setLabel(e.target.value)}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="path">Path</Label>
+
+                    <TextField fullWidth name="label" value={label} onChange={setLabel}>
+                        <Label>Filter label</Label>
+                        <Input placeholder="Enter label for the filter" />
+                    </TextField>
+
+                    <div className="flex flex-col gap-1">
+                        <Label htmlFor="path">Path</Label>
                         {!isLoadingEntities ? (
                             <Autocomplete
+                                inputId="path"
                                 entityType={ENTITIES.PREDICATE}
                                 placeholder="Select or type to enter a property"
                                 onChange={(selected) => {
@@ -131,131 +121,126 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                                 isMulti
                             />
                         ) : (
-                            'Loading...'
+                            <div className="text-sm text-muted">Loading...</div>
                         )}
+                        <small className="text-muted text-xs">Select the path of properties to the value, they should be in the correct order</small>
+                    </div>
 
-                        <FormText>Select the path of properties to the value, they should be in the correct order</FormText>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="range">Range</Label>
+                    <div className="flex flex-col gap-1">
+                        <Label htmlFor="range">Range</Label>
                         {!isLoadingEntities ? (
-                            <InputGroup>
-                                <Autocomplete
-                                    entityType={ENTITIES.CLASS}
-                                    placeholder="Select or type to enter a class"
-                                    onChange={(selected) => {
-                                        setRange(selected as SingleValue<OptionType>);
-                                    }}
-                                    value={range}
-                                    openMenuOnFocus
-                                    allowCreate={false}
-                                    isClearable
-                                    additionalOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({
-                                        label: dt.name,
-                                        id: dt.classId,
-                                    }))}
-                                    enableExternalSources={false}
-                                />
+                            <div className="flex items-stretch">
+                                <div className="grow">
+                                    <Autocomplete
+                                        inputId="range"
+                                        entityType={ENTITIES.CLASS}
+                                        placeholder="Select or type to enter a class"
+                                        onChange={(selected) => {
+                                            setRange(selected as SingleValue<OptionType>);
+                                        }}
+                                        value={range}
+                                        openMenuOnFocus
+                                        allowCreate={false}
+                                        isClearable
+                                        additionalOptions={DATA_TYPES.filter((dt) => dt.classId !== CLASSES.RESOURCE).map((dt) => ({
+                                            label: dt.name,
+                                            id: dt.classId,
+                                        }))}
+                                        enableExternalSources={false}
+                                    />
+                                </div>
                                 <LinkButton value={range as OptionType} />
-                            </InputGroup>
+                            </div>
                         ) : (
-                            'Loading...'
+                            <div className="text-sm text-muted">Loading...</div>
                         )}
-                        <FormText>Select the class of the value</FormText>
-                    </FormGroup>
-                    <FormGroup check>
-                        <Input name="exact" type="radio" id="exactTrue" value="exact" checked={exact} onChange={handleExactOptionChange} />{' '}
-                        <Label for="exactTrue">
-                            Exact match
-                            <FormText className="ms-1">
-                                Selecting this option will search for paths that exactly match the provided path, starting from the contribution node.
-                                This means that only paths that match the entire provided path, without any additional elements, will be considered.
-                            </FormText>
-                        </Label>
-                    </FormGroup>
-                    <FormGroup check className="mb-1">
-                        <Input name="exact" type="radio" id="exactFalse" value="anywhere" checked={!exact} onChange={handleExactOptionChange} />{' '}
-                        <Label for="exactFalse">
-                            Match anywhere{' '}
-                            <FormText className="ms-1">
-                                Selecting this option will search for paths that contain the provided path anywhere within the subgraph of the
-                                contribution node. This means that even if the provided path is a part of a longer path, it will still be considered a
-                                match.
+                        <small className="text-muted text-xs">Select the class of the value</small>
+                    </div>
+
+                    <RadioGroup value={exact ? 'exact' : 'anywhere'} onChange={(value) => setExact(value === 'exact')}>
+                        <Radio value="exact">
+                            <Radio.Control>
+                                <Radio.Indicator />
+                            </Radio.Control>
+                            <Radio.Content>
+                                Exact match
+                                <div className="text-muted text-xs mt-1">
+                                    Selecting this option will search for paths that exactly match the provided path, starting from the contribution
+                                    node. This means that only paths that match the entire provided path, without any additional elements, will be
+                                    considered.
+                                </div>
+                            </Radio.Content>
+                        </Radio>
+                        <Radio value="anywhere">
+                            <Radio.Control>
+                                <Radio.Indicator />
+                            </Radio.Control>
+                            <Radio.Content>
+                                Match anywhere
+                                <div className="text-muted text-xs mt-1">
+                                    Selecting this option will search for paths that contain the provided path anywhere within the subgraph of the
+                                    contribution node. This means that even if the provided path is a part of a longer path, it will still be
+                                    considered a match.
+                                </div>
                                 {!exact && (
-                                    <div className="mt-2">
-                                        <motion.div
-                                            style={{ originX: 1, originY: 0 }}
-                                            initial="initial"
-                                            exit="initial"
-                                            animate="animate"
-                                            variants={{
-                                                initial: { scale: 0, opacity: 0, y: -10 },
-                                                animate: {
-                                                    scale: 1,
-                                                    opacity: 1,
-                                                    y: 0,
-                                                    transition: {
-                                                        type: 'spring',
-                                                        duration: 0.4,
-                                                        delayChildren: 0.2,
-                                                        staggerChildren: 0.05,
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            <Alert color="warning" className="mb-0">
-                                                Note that this option might lead to slower execution. Additionally, it can only search within a path
-                                                of length 10
-                                            </Alert>
-                                        </motion.div>
-                                    </div>
+                                    <motion.div
+                                        className="mt-2"
+                                        style={{ originX: 1, originY: 0 }}
+                                        initial="initial"
+                                        exit="initial"
+                                        animate="animate"
+                                        variants={{
+                                            initial: { scale: 0, opacity: 0, y: -10 },
+                                            animate: {
+                                                scale: 1,
+                                                opacity: 1,
+                                                y: 0,
+                                                transition: { type: 'spring', duration: 0.4 },
+                                            },
+                                        }}
+                                    >
+                                        <Alert status="warning">
+                                            <Alert.Indicator />
+                                            <Alert.Content>
+                                                <Alert.Description>
+                                                    Note that this option might lead to slower execution. Additionally, it can only search within a
+                                                    path of length 10
+                                                </Alert.Description>
+                                            </Alert.Content>
+                                        </Alert>
+                                    </motion.div>
                                 )}
-                            </FormText>
-                        </Label>
-                    </FormGroup>
+                            </Radio.Content>
+                        </Radio>
+                    </RadioGroup>
 
                     {filter?.source !== FILTER_SOURCE.LOCAL_STORAGE && isCurationAllowed && (
-                        <>
-                            <FormGroup check>
-                                <Input
-                                    id="persisted"
-                                    type="checkbox"
-                                    checked={persisted}
-                                    onChange={() => {
-                                        setPersisted(!persisted);
-                                    }}
-                                />
-                                <Label check for="persisted">
-                                    Persist this filter on the observatory page
-                                </Label>
-                            </FormGroup>
-                            <FormGroup check>
-                                <Input
-                                    id="featured"
-                                    type="checkbox"
-                                    checked={persisted && featured}
-                                    onChange={() => {
-                                        setFeatured(!featured);
-                                    }}
-                                    disabled={!persisted}
-                                />
-                                <Label check for="featured">
-                                    Show this filter by default on the observatory page
-                                </Label>
-                            </FormGroup>
-                        </>
+                        <div className="flex flex-col gap-2">
+                            <Checkbox isSelected={persisted} onChange={(checked) => setPersisted(checked)}>
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Checkbox.Content>Persist this filter on the observatory page</Checkbox.Content>
+                            </Checkbox>
+                            <Checkbox isSelected={persisted && featured} onChange={(checked) => setFeatured(checked)} isDisabled={!persisted}>
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Checkbox.Content>Show this filter by default on the observatory page</Checkbox.Content>
+                            </Checkbox>
+                        </div>
                     )}
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="light" onClick={toggle}>
-                        Cancel
-                    </Button>
-                    <ButtonWithLoading isLoading={isSaving} color="primary" onClick={handleSaveClick}>
-                        {!filter ? 'Add filter' : 'Save'}
-                    </ButtonWithLoading>
-                </ModalFooter>
-            </ModalWithLoading>
-        </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onPress={toggle}>
+                    Cancel
+                </Button>
+                <ButtonWithLoading isLoading={isSaving} variant="primary" onPress={handleSaveClick}>
+                    {!filter ? 'Add filter' : 'Save'}
+                </ButtonWithLoading>
+            </Modal.Footer>
+        </ModalWithLoading>
     );
 };
 

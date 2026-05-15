@@ -16,7 +16,7 @@ import { importExternalSelectedOption } from '@/components/Autocomplete/hooks/he
 import useBaseClass from '@/components/Autocomplete/hooks/useBaseClass';
 import useLoadOptions from '@/components/Autocomplete/hooks/useLoadOptions';
 import OntologiesModal from '@/components/Autocomplete/OntologiesModal/OntologiesModal';
-import { customClassNames, customStyles, SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { AdditionalType, AutocompleteProps, OptionType } from '@/components/Autocomplete/types';
 import errorHandler from '@/helpers/errorHandler';
 import { getThing } from '@/services/backend/things';
@@ -30,6 +30,7 @@ declare module 'react-select/base' {
         enableExternalSources?: boolean;
         size?: 'sm';
         rightAligned?: boolean;
+        noFormControl?: boolean;
         onFailure?: (e: Error) => void;
         baseClass?: string;
         rootBaseClass?: string;
@@ -161,8 +162,8 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
 
     return (
         <>
-            <SelectGlobalStyle />
             <Select<OptionType, GroupBase<OptionType>, AdditionalType, IsMulti>
+                menuPosition="fixed"
                 {...restProps}
                 // to clear the cached options if the selected ontologies changes
                 key={JSON.stringify(selectedOntologies.map((o) => o.id)) + JSON.stringify(defaultAdditional) + (effectiveBaseClass ?? '')}

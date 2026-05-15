@@ -1,21 +1,21 @@
+import { Key, ListBox, Select } from '@heroui/react';
 import { sortBy, upperFirst } from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import Select, { components, OptionProps, SingleValue } from 'react-select';
 
-import { SectionTypeContainerStyled, SectionTypeStyled } from '@/components/ArticleBuilder/styled';
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { SectionTypeStyled } from '@/components/ArticleBuilder/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useOntology from '@/components/PdfAnnotation/hooks/useOntology';
 import useReview from '@/components/Review/hooks/useReview';
 import { ReviewSection } from '@/services/backend/types';
 
-type OptionType = {
-    label: string | null;
-    value: string | null;
+// Sentinel key used in place of `null` for the generic "Section" option (HeroUI Select keys must be strings)
+const SECTION_KEY = '__section__';
+
+type Option = {
+    label: string;
+    value: string;
     disabled?: boolean;
 };
-
-const Option: FC<OptionProps<OptionType, false>> = ({ children, ...props }) => <components.Option {...props}>{children}</components.Option>;
 
 type SectionTypeProps = {
     type: string;
@@ -25,120 +25,75 @@ type SectionTypeProps = {
 };
 
 const SectionType: FC<SectionTypeProps> = ({ section, type, isDisabled = false, disabledTooltip = 'The type of this section cannot be changed' }) => {
-    const [editMode, setEditMode] = useState(false);
-    const [options, setOptions] = useState<OptionType[]>([]);
-    const [typeValue, setTypeValue] = useState<OptionType>({
-        label: null,
-        value: null,
-    });
+    const [options, setOptions] = useState<Option[]>([]);
     const { classes } = useOntology();
     const { updateSection } = useReview();
 
     useEffect(() => {
         if (options.length === 0) {
-            const ontologyClasses = classes.map((_class) => ({
+            const ontologyClasses: Option[] = classes.map((_class) => ({
                 label: upperFirst(_class.label),
                 value: _class.iri,
             }));
-            const additionalClasses = [
-                {
-                    label: 'Section',
-                    value: null,
-                },
-                {
-                    label: 'Resource',
-                    value: 'resource',
-                    disabled: true,
-                },
-                {
-                    label: 'Property',
-                    value: 'property',
-                    disabled: true,
-                },
-                {
-                    label: 'Comparison',
-                    value: 'comparison',
-                    disabled: true,
-                },
-                {
-                    label: 'Visualization',
-                    value: 'visualization',
-                    disabled: true,
-                },
-                {
-                    label: 'Ontology',
-                    value: 'ontology',
-                    disabled: true,
-                },
+            const additionalClasses: Option[] = [
+                { label: 'Section', value: SECTION_KEY },
+                { label: 'Resource', value: 'resource', disabled: true },
+                { label: 'Property', value: 'property', disabled: true },
+                { label: 'Comparison', value: 'comparison', disabled: true },
+                { label: 'Visualization', value: 'visualization', disabled: true },
+                { label: 'Ontology', value: 'ontology', disabled: true },
             ];
-            const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setOptions(_options);
+            setOptions(sortBy([...ontologyClasses, ...additionalClasses], 'label'));
         }
     }, [classes, options]);
 
-    useEffect(() => {
-        if (type && options.length) {
-            const selected = options.find((option) => option.value === type);
-            if (!selected) {
-                return;
-            }
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setTypeValue(selected);
+    const currentKey = type || SECTION_KEY;
+    const currentLabel = options.find((o) => o.value === currentKey)?.label ?? 'Section';
+    const disabledKeys = options.filter((o) => o.disabled).map((o) => o.value);
+
+    const handleChange = (key: Key | Key[] | null) => {
+        const selectedKey = Array.isArray(key) ? key[0] : key;
+        if (selectedKey == null) {
+            return;
         }
-    }, [type, options]);
-
-    const handleBlur = () => {
-        setEditMode(false);
-    };
-
-    const handleChange = (selected: SingleValue<OptionType>) => {
-        setTypeValue({
-            label: selected?.label ?? '',
-            value: selected?.value ?? '',
-        });
-
+        const nextClass = selectedKey === SECTION_KEY ? null : (selectedKey as string);
         updateSection(section.id, {
             heading: section.heading,
             text: section.text,
-            class: selected?.value,
+            class: nextClass,
         });
     };
 
-    return (
-        <>
-            {isDisabled && (
-                <SectionTypeStyled disabled>
-                    <Tooltip content={disabledTooltip}>
-                        <span>{typeValue.label}</span>
-                    </Tooltip>
-                </SectionTypeStyled>
-            )}
+    if (isDisabled) {
+        return (
+            <SectionTypeStyled disabled>
+                <Tooltip content={disabledTooltip}>
+                    <span>{currentLabel}</span>
+                </Tooltip>
+            </SectionTypeStyled>
+        );
+    }
 
-            {!isDisabled && !editMode && (
-                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)} aria-label={`Section type: ${typeValue.label}`}>
-                    {typeValue.label ?? 'Section'}
-                </SectionTypeStyled>
-            )}
-            {editMode && (
-                <SectionTypeContainerStyled>
-                    <SelectGlobalStyle />
-                    <Select<OptionType>
-                        value={typeValue}
-                        onChange={handleChange}
-                        options={options}
-                        components={{ Option }}
-                        onBlur={handleBlur}
-                        isOptionDisabled={(option) => option.disabled ?? false}
-                        classNamePrefix="react-select"
-                        blurInputOnSelect
-                        autoFocus
-                        openMenuOnFocus
-                        aria-label="Select the section type"
-                    />
-                </SectionTypeContainerStyled>
-            )}
-        </>
+    return (
+        <div className="absolute right-[-6px] top-[-6px] z-10 min-w-[180px]">
+            <Select fullWidth value={currentKey} onChange={handleChange} disabledKeys={disabledKeys} aria-label="Select the section type">
+                <Select.Trigger className="!h-auto !min-h-0 !rounded-[3px] !border !border-[#c5cadb] !bg-[var(--background)] !px-[15px] !py-[1px] !text-[90%] !font-bold !uppercase !text-secondary !shadow-[0px_0px_8px_0px_rgba(0,0,0,0.13)]">
+                    <Select.Value />
+                    <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                    <ListBox>
+                        {options.map((option) => (
+                            <ListBox.Item key={option.value} id={option.value} textValue={option.label}>
+                                {option.label}
+                                <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                        ))}
+                    </ListBox>
+                </Select.Popover>
+            </Select>
+        </div>
     );
 };
 

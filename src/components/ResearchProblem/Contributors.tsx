@@ -1,14 +1,13 @@
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Skeleton } from '@heroui/react';
 import pluralize from 'pluralize';
 import { useState } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ContributorsModal from '@/components/ResearchProblem/ContributorsModal';
 import { ContributorsAvatars, StyledDotGravatar } from '@/components/styled';
-import CardTitle from '@/components/Ui/Card/CardTitle';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { getContributorsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
@@ -38,10 +37,8 @@ const Contributors = ({ researchProblemId }: ContributorsProps) => {
 
     return (
         <div>
-            <div className="d-flex mb-2">
-                <CardTitle tag="h5" className="flex-grow-1">
-                    Contributors
-                </CardTitle>
+            <div className="flex mb-2">
+                <h5 className="grow text-sm leading-6 font-medium text-foreground">Contributors</h5>
             </div>
             {!isLoading && !error && contributors && contributors.length > 0 && (
                 <ContributorsAvatars>
@@ -53,7 +50,7 @@ const Contributors = ({ researchProblemId }: ContributorsProps) => {
                                 showDisplayName={false}
                                 appendToTooltip={
                                     <div className="p-2">
-                                        <ul className="p-0 ps-3 mb-0 mt-2">
+                                        <ul className="pl-4 mb-0 mt-2">
                                             <li>{pluralize('paper', contributor.paperCount, true)}</li>
                                             <li>{pluralize('contribution', contributor.contributionCount, true)}</li>
                                             <li>{pluralize('comparison', contributor.comparisonCount, true)}</li>
@@ -67,7 +64,7 @@ const Contributors = ({ researchProblemId }: ContributorsProps) => {
                     ))}
                     {contributors.length > 18 && (
                         <Tooltip key="contributor" content="View More">
-                            <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-circle">
+                            <StyledDotGravatar onClick={() => setOpenModal((v) => !v)} className="rounded-full">
                                 <FontAwesomeIcon icon={faEllipsisH} />
                             </StyledDotGravatar>
                         </Tooltip>
@@ -81,20 +78,18 @@ const Contributors = ({ researchProblemId }: ContributorsProps) => {
                 </div>
             )}
             {!isLoading && error && (
-                <div className="mt-2 mb-2 text-danger">Something went wrong while loading contributors of this research field.</div>
+                <div className="mt-2 mb-2 text-red-600">Something went wrong while loading contributors of this research field.</div>
             )}
             {!isLoading && !error && contributors && contributors.length > 18 && openModal && (
                 <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />
             )}
             {isLoading && (
-                <div className="mt-4 mb-4" style={{ width: '100% !important' }}>
-                    <ContentLoader height="100%" width="100%" viewBox="0 0 100 4" style={{ width: '100% !important' }}>
-                        <circle cx="2" cy="2" r="2" />
-                        <circle cx="7" cy="2" r="2" />
-                        <circle cx="12" cy="2" r="2" />
-                        <circle cx="17" cy="2" r="2" />
-                        <circle cx="22" cy="2" r="2" />
-                    </ContentLoader>
+                <div className="mt-6 mb-6 flex gap-2">
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
                 </div>
             )}
         </div>

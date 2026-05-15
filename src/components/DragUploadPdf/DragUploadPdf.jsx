@@ -1,10 +1,10 @@
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from '@heroui/react';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 const DragPdf = styled.div`
@@ -15,7 +15,9 @@ const DragPdf = styled.div`
     border-radius: 15px;
     font-weight: 500;
     color: #a4a0a0;
-    transition: border-color 0.2s, color 0.2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
     outline: 0;
 
     &:not(.loading) {
@@ -44,7 +46,7 @@ const DragUploadPdf = ({ pdf = null, onDrop: _onDrop }) => {
     };
 
     const onDropRejected = () => {
-        toast.error('Error uploading your file, only PDF files are accepted');
+        toast.danger('Error uploading your file, only PDF files are accepted');
         setIsLoading(false);
     };
 

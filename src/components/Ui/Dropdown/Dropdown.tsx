@@ -1,7 +1,22 @@
-import React, { FC } from 'react';
-import { Dropdown as DropdownReactstrap, DropdownProps } from 'reactstrap';
+import { Dropdown as HeroUIDropdown } from '@heroui/react';
+import { type FC, type ReactNode } from 'react';
 
-const Dropdown: FC<DropdownProps> = ({ children, ...rest }) => {
-    return <DropdownReactstrap {...rest}>{children}</DropdownReactstrap>;
+type DropdownProps = {
+    isOpen?: boolean;
+    toggle?: () => void;
+    children?: ReactNode;
+    className?: string;
+    direction?: string;
+    group?: boolean;
+    tag?: string;
 };
+
+const Dropdown: FC<DropdownProps> = ({ isOpen, toggle, children, direction: _direction, group: _group, tag: _tag, ...rest }) => {
+    return (
+        <HeroUIDropdown isOpen={isOpen} onOpenChange={() => toggle?.()} {...rest}>
+            {children}
+        </HeroUIDropdown>
+    );
+};
+
 export default Dropdown;

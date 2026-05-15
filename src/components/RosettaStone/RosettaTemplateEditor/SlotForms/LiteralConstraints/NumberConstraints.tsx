@@ -1,12 +1,10 @@
+import { Input, Label, TextField } from '@heroui/react';
 import { FC } from 'react';
 
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { PropertyShapeNumberType } from '@/services/backend/types';
 
@@ -21,37 +19,37 @@ const NumberConstraints: FC<ValidationRulesNumberProps> = ({ index, isLocked }) 
     const dispatch = useRosettaTemplateEditorDispatch();
 
     return (
-        <div className="mt-2">
-            <FormGroup className="mt-2">
-                <Label for={`minInclusiveInput${index}`}>Minimum value</Label>
+        <div className="flex flex-col gap-4">
+            <TextField
+                fullWidth
+                isDisabled={isLocked}
+                value={slot.min_inclusive?.toString() ?? ''}
+                onChange={(value) => dispatch({ type: 'setProperty', payload: { index, data: { ...slot, min_inclusive: parseFloat(value) } } })}
+            >
+                <Label>Minimum value</Label>
                 <Input
-                    disabled={isLocked}
-                    onChange={(e) =>
-                        dispatch({ type: 'setProperty', payload: { index, data: { ...slot, min_inclusive: parseFloat(e.target.value) } } })
-                    }
                     type="number"
-                    value={slot.min_inclusive}
                     name="min_inclusive"
                     id={`minInclusiveInput${index}`}
                     placeholder="Specify the minimum value"
                     maxLength={MAX_LENGTH_INPUT}
                 />
-            </FormGroup>
-            <FormGroup className="mt-2">
-                <Label for={`maxInclusiveInput${index}`}>Maximum value</Label>
+            </TextField>
+            <TextField
+                fullWidth
+                isDisabled={isLocked}
+                value={slot.max_inclusive?.toString() ?? ''}
+                onChange={(value) => dispatch({ type: 'setProperty', payload: { index, data: { ...slot, max_inclusive: parseFloat(value) } } })}
+            >
+                <Label>Maximum value</Label>
                 <Input
-                    disabled={isLocked}
-                    onChange={(e) =>
-                        dispatch({ type: 'setProperty', payload: { index, data: { ...slot, max_inclusive: parseFloat(e.target.value) } } })
-                    }
                     type="number"
-                    value={slot.max_inclusive}
                     name="max_inclusive"
                     id={`maxInclusiveInput${index}`}
                     placeholder="Specify the maximum value"
                     maxLength={MAX_LENGTH_INPUT}
                 />
-            </FormGroup>
+            </TextField>
         </div>
     );
 };

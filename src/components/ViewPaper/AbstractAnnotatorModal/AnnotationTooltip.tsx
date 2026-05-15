@@ -1,10 +1,10 @@
+import { Popover } from '@heroui/react';
 import { FC, ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
-import Popover from '@/components/FloatingUI/Popover';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createPredicate, getPredicate } from '@/services/backend/predicates';
 import { Range } from '@/slices/types';
@@ -30,7 +30,7 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
         if (action === 'select-option' && selectedOption) {
             dispatch(updateAnnotationPredicate({ range, selectedOption }));
         } else if (action === 'create-option' && selectedOption) {
-            const predicateId = await createPredicate(selectedOption.label);
+            const predicateId: string = await createPredicate(selectedOption.label);
             const predicate = await getPredicate(predicateId);
             dispatch(updateAnnotationPredicate({ range, selectedOption: predicate }));
             setDefaultOptions([...defaultOptions, predicate]);
@@ -38,50 +38,36 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
             dispatch(removeAnnotation(range));
         }
     };
+
     return (
-        <span>
-            <Popover
-                open={isOpen}
-                onOpenChange={setIsOpen}
-                placement="top"
-                content={
-                    <div style={{ width: '300px' }}>
-                        <Autocomplete
-                            entityType={ENTITIES.PREDICATE}
-                            additionalOptions={defaultOptions}
-                            placeholder="Select or type to enter a property"
-                            onChange={(e, a) => {
-                                handleChangeAnnotationClass(e, a);
-                                setIsOpen(false);
-                            }}
-                            value={{
-                                label: range.predicate.label ? range.predicate.label : '',
-                                id: range.predicate.id,
-                            }}
-                            key={range.id}
-                            isClearable
-                            openMenuOnFocus
-                            allowCreate
-                        />
-                    </div>
-                }
+        <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+            <Popover.Trigger
+                id={`CR${range.id}`}
+                className="inline-block align-baseline cursor-pointer rounded-sm"
+                style={{ backgroundColor: getPredicateColor(range.predicate.id), color: 'black' }}
             >
-                <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setIsOpen(!isOpen)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            setIsOpen(!isOpen);
-                        }
-                    }}
-                    style={{ backgroundColor: getPredicateColor(range.predicate.id), color: 'black' }}
-                    id={`CR${range.id}`}
-                >
-                    {lettersNode}
-                </span>
-            </Popover>
-        </span>
+                {lettersNode}
+            </Popover.Trigger>
+            <Popover.Content placement="top" className="w-[300px]">
+                <Popover.Dialog className="p-3">
+                    <Popover.Arrow />
+                    <Autocomplete
+                        entityType={ENTITIES.PREDICATE}
+                        additionalOptions={defaultOptions}
+                        placeholder="Select or type to enter a property"
+                        onChange={(e, a) => {
+                            handleChangeAnnotationClass(e, a);
+                            setIsOpen(false);
+                        }}
+                        value={range.predicate?.id ? { label: range.predicate.label ?? '', id: range.predicate.id } : null}
+                        key={range.id}
+                        isClearable
+                        openMenuOnFocus
+                        allowCreate
+                    />
+                </Popover.Dialog>
+            </Popover.Content>
+        </Popover>
     );
 };
 

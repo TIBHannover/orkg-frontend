@@ -1,5 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
+import { Alert } from '@heroui/react';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
@@ -11,10 +11,9 @@ import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Alert from '@/components/Ui/Alert/Alert';
-import Table from '@/components/Ui/Table/Table';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type PropertyMappingProps = {
     data: string[][];
@@ -53,7 +52,6 @@ const PropertyMapping: FC<PropertyMappingProps> = ({
         if (value && !DEFAULT_HEADERS.map((option) => option.id).includes(id)) {
             updatedData[0][colIndex] = `orkg:${value?.id}${_mappedColumns[colIndex].type ? `<${_mappedColumns[colIndex].type?.classId}>` : ''}`;
         } else {
-            // If the header is a default predicate, just set the id without appending the type
             updatedData[0][colIndex] = value?.id || updatedData[0][colIndex];
         }
         setIsEditingColumn((prev) => [...prev.slice(0, colIndex), false, ...prev.slice(colIndex + 1)]);
@@ -93,21 +91,30 @@ const PropertyMapping: FC<PropertyMappingProps> = ({
                     toggle={() => setIsOpenConfirmPropertyModal((v) => !v)}
                 />
             )}
-            {columnValidation && <Alert color="danger">{columnValidation}</Alert>}
-            <div className="tw:overflow-auto tw:bg-[var(--color-light-lighter)] tw:text-sm tw:max-h-[500px] tw:border-2 tw:border-[var(--color-secondary)] tw:rounded">
-                <Table bordered hover striped>
-                    <thead className="tw:sticky tw:top-0 tw:z-8 tw:!bg-white">
+            {columnValidation && (
+                <Alert status="danger" className="mb-4">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Description>{columnValidation}</Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            )}
+            <div className="overflow-auto bg-surface text-sm max-h-[500px] border-2 border-secondary rounded">
+                <table className="w-full border-separate border-spacing-0 text-sm [&_th]:border-b [&_th]:border-separator [&_th]:px-3 [&_th]:py-2 [&_td]:border-b [&_td]:border-separator [&_td]:px-3 [&_td]:py-2 [&_tbody_tr:nth-child(odd)_td]:bg-surface-secondary/50">
+                    <thead className="sticky top-0 z-8 bg-white">
                         <tr>
-                            <th>#</th>
-                            <th>Initial column name</th>
-                            <th>Mapped property</th>
-                            <th>Property Validation</th>
+                            <th className="text-left">#</th>
+                            <th className="text-left">Initial column name</th>
+                            <th className="text-left">Mapped property</th>
+                            <th className="text-left">Property Validation</th>
                         </tr>
                     </thead>
                     <tbody>
                         {mappedColumns.map((column, index) => (
                             <tr key={index}>
-                                <th scope="row">{index + 1}</th>
+                                <th scope="row" className="text-left">
+                                    {index + 1}
+                                </th>
                                 <td>{initialHeaders[index]}</td>
                                 {isEditingColumn[index] ? (
                                     <td>
@@ -140,7 +147,7 @@ const PropertyMapping: FC<PropertyMappingProps> = ({
                                     </td>
                                 ) : (
                                     <td>
-                                        <div className="d-flex justify-content-between">
+                                        <div className="flex justify-between">
                                             {column.predicate?.id ? (
                                                 <DescriptionTooltip
                                                     id={column.predicate?.id}
@@ -172,17 +179,21 @@ const PropertyMapping: FC<PropertyMappingProps> = ({
 
                                 <td>
                                     {column?.predicate ? (
-                                        <span className="badge bg-success">Mapped property</span>
+                                        <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-green-600 text-white">
+                                            Mapped property
+                                        </span>
                                     ) : (
                                         <Tooltip content="Please select a property, otherwise a new property will be created.">
-                                            <span className="badge bg-danger">Unmapped property</span>
+                                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-red-600 text-white">
+                                                Unmapped property
+                                            </span>
                                         </Tooltip>
                                     )}
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-                </Table>
+                </table>
             </div>
         </div>
     );

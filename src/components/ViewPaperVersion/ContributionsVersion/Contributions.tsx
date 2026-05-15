@@ -1,21 +1,20 @@
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Skeleton } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import ContributionTab from '@/components/ContributionTabs/ContributionTab';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import Tabs from '@/components/Tabs/Tabs';
 import Alert from '@/components/Ui/Alert/Alert';
-import FormGroup from '@/components/Ui/Form/FormGroup';
 import Col from '@/components/Ui/Structure/Col';
 import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import ProvenanceBox from '@/components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import useContributions from '@/components/ViewPaperVersion/ContributionsVersion/hooks/useContributions';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Resource, Statement } from '@/services/backend/types';
 
 type ContributionsProps = {
@@ -49,12 +48,10 @@ const Contributions: FC<ContributionsProps> = ({ contributions, paperStatements,
             <Row>
                 <Col md="9">
                     {isLoading && (
-                        <div>
-                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 6" style={{ width: '100% !important' }} speed={2}>
-                                <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
-                                <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
-                                <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
-                            </ContentLoader>
+                        <div className="flex gap-2">
+                            <Skeleton className="w-1/5 h-5 rounded" />
+                            <Skeleton className="w-1/5 h-5 rounded" />
+                            <Skeleton className="w-1/5 h-5 rounded" />
                         </div>
                     )}
 
@@ -77,21 +74,21 @@ const Contributions: FC<ContributionsProps> = ({ contributions, paperStatements,
                             ),
                             key: contribution.id,
                             children: (
-                                <div className="p-4">
+                                <div className="p-6">
                                     {!isLoadingContributionFailed && (
                                         <div>
-                                            <FormGroup>
+                                            <div className="mb-3">
                                                 <DataBrowser
                                                     isEditMode={false}
                                                     id={contribution.id}
                                                     statementsSnapshot={paperStatements}
                                                     snapshotCreatedAt={snapshotCreatedAt}
                                                 />
-                                            </FormGroup>
+                                            </div>
                                         </div>
                                     )}
                                     {isLoadingContributionFailed && (
-                                        <Alert className="mt-4 mb-5" color="danger">
+                                        <Alert className="mt-6 mb-12" color="danger">
                                             {contributions.length === 0 && 'This paper has no contributions yet!'}
                                             {contributions.length !== 0 && "Contribution doesn't exist."}
                                         </Alert>
@@ -102,7 +99,7 @@ const Contributions: FC<ContributionsProps> = ({ contributions, paperStatements,
                     />
                 </Col>
 
-                <div className="col-md-3">
+                <div className="w-full md:shrink-0 md:grow-0 md:w-3/12 md:basis-3/12 md:max-w-3/12">
                     <ProvenanceBox />
                 </div>
             </Row>

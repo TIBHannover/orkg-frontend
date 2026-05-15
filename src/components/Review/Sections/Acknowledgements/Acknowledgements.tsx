@@ -1,6 +1,7 @@
+import { Alert } from '@heroui/react';
+
 import Contributors from '@/components/Contributors/Contributors';
 import useReview from '@/components/Review/hooks/useReview';
-import Alert from '@/components/Ui/Alert/Alert';
 
 const Acknowledgements = () => {
     const { review } = useReview();
@@ -15,16 +16,22 @@ const Acknowledgements = () => {
         <>
             <Contributors contributors={contributors} />
 
-            <Alert color="light-darker">
-                This review article was created using{' '}
-                <a href="https://doi.org/10.1145/3360901.3364435" target="_blank" rel="noopener noreferrer">
-                    The Open Research Knowledge Graph
-                </a>{' '}
-                and the{' '}
-                <a href="https://arxiv.org/abs/2111.15342" target="_blank" rel="noreferrer">
-                    SmartReview methodology
-                </a>
-                .
+            <Alert className="!bg-secondary-200 dark:!bg-secondary-700/50" status="accent">
+                <Alert.Indicator />
+                <Alert.Content>
+                    <Alert.Title>About this review</Alert.Title>
+                    <Alert.Description>
+                        This review article was created using{' '}
+                        <a href="https://doi.org/10.1145/3360901.3364435" target="_blank" rel="noopener noreferrer">
+                            The Open Research Knowledge Graph
+                        </a>{' '}
+                        and the{' '}
+                        <a href="https://arxiv.org/abs/2111.15342" target="_blank" rel="noreferrer">
+                            SmartReview methodology
+                        </a>
+                        .
+                    </Alert.Description>
+                </Alert.Content>
             </Alert>
         </>
     );

@@ -2,10 +2,10 @@
 
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button, ButtonGroup, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
-import { ReactElement, useEffect, useState } from 'react';
+import { AnchorHTMLAttributes, useEffect, useState } from 'react';
 
 import KeyboardBanner from '@/app/grid-editor/components/KeyboardBanner';
 import MainGrid from '@/app/grid-editor/components/MainGrid/MainGrid';
@@ -15,15 +15,13 @@ import RelatedPapersCarousel from '@/app/grid-editor/components/RelatedPapers/Re
 import SelectEntities from '@/app/grid-editor/components/SelectEntities/SelectEntities';
 import UpdateComparison from '@/app/grid-editor/components/UpdateComparison/UpdateComparison';
 import GridProvider from '@/app/grid-editor/context/GridContext';
+import SemantifyModalProvider from '@/app/grid-editor/context/SemantifyModalContext';
 import useEntities from '@/app/grid-editor/hooks/useEntities';
 import usePaperContributionCheck from '@/app/grid-editor/hooks/usePaperContributionCheck';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import AddPaperModal from '@/components/PaperForm/AddPaperModal';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 
 const GridEditorPage = () => {
@@ -50,39 +48,40 @@ const GridEditorPage = () => {
     const isViewComparisonButtonDisabled =
         !!(entityIds && entityIds?.length === 0) || !!(entityIds && entityIds?.length < 2) || (!paper && !comparisonId);
 
+    const viewComparisonHref = comparisonId
+        ? reverse(ROUTES.COMPARISON, { comparisonId })
+        : `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${entityIds?.join(',') ?? ''}`;
+
     return (
         <div>
             <TitleBar
                 buttonGroup={
-                    <>
-                        <ConditionalWrapper
-                            condition={entityIds && entityIds?.length > 0 && isViewComparisonButtonDisabled}
-                            // eslint-disable-next-line react/no-unstable-nested-components
-                            wrapper={(children: ReactElement) => (
-                                <Tooltip content="The selected entities are not part of a paper. You need to add at least 2 contributions to a paper to view the comparison">
-                                    <ButtonGroup>{children}</ButtonGroup>
-                                </Tooltip>
-                            )}
-                        >
+                    <ButtonGroup size="sm">
+                        {isViewComparisonButtonDisabled ? (
+                            <Tooltip delay={150}>
+                                <Button size="sm" isDisabled className="button--orkg-secondary">
+                                    View comparison
+                                </Button>
+                                <Tooltip.Content className="max-w-xs">
+                                    <Tooltip.Arrow />
+                                    The selected entities are not part of a paper. You need to add at least 2 contributions to a paper to view the
+                                    comparison.
+                                </Tooltip.Content>
+                            </Tooltip>
+                        ) : (
                             <Button
-                                tag={Link}
-                                href={`${
-                                    comparisonId
-                                        ? reverse(ROUTES.COMPARISON, { comparisonId })
-                                        : `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${entityIds.join(',')}`
-                                }`}
-                                color="secondary"
                                 size="sm"
-                                style={{ marginRight: 2 }}
-                                disabled={isViewComparisonButtonDisabled}
+                                className="button--orkg-secondary"
+                                render={(props) => <Link {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)} href={viewComparisonHref} />}
                             >
                                 View comparison
                             </Button>
-                        </ConditionalWrapper>
-                        <Button color="secondary" size="sm" onClick={() => setIsOpenSelectEntities(true)}>
+                        )}
+                        <Button size="sm" className="button--orkg-secondary" onPress={() => setIsOpenSelectEntities(true)}>
+                            <ButtonGroup.Separator />
                             <FontAwesomeIcon icon={faPlusCircle} /> Select entities
                         </Button>
-                    </>
+                    </ButtonGroup>
                 }
             >
                 Grid editor
@@ -93,18 +92,20 @@ const GridEditorPage = () => {
             {prevent.length === 0 && entityIds && entityIds.length > 0 && <KeyboardBanner />}
             {prevent.length === 0 && (
                 <GridProvider>
-                    <MainGrid />
-                    {entityIds && entityIds.length > 0 && (
-                        <div className="tw:my-2 tw:px-4">
-                            <RelatedPapersCarousel
-                                handleAddContributions={(title: string) => {
-                                    setSearchTerm(title);
-                                    setIsOpenSelectEntities(true);
-                                }}
-                                contributionIds={entityIds}
-                            />
-                        </div>
-                    )}
+                    <SemantifyModalProvider>
+                        <MainGrid />
+                        {entityIds && entityIds.length > 0 && (
+                            <div className="my-2 px-4">
+                                <RelatedPapersCarousel
+                                    handleAddContributions={(title: string) => {
+                                        setSearchTerm(title);
+                                        setIsOpenSelectEntities(true);
+                                    }}
+                                    contributionIds={entityIds}
+                                />
+                            </div>
+                        )}
+                    </SemantifyModalProvider>
                 </GridProvider>
             )}
             <SelectEntities

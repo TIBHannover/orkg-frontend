@@ -19,8 +19,8 @@ const SoftwareSection = ({ classId }: SoftwareSectionProps) => {
             }
             helpfulResourcesSubtitle="Example software within the ORKG"
             helpfulResourcesExamples={
-                <ul className="tw:py-2 tw:m-0!">
-                    <li className="tw:italic">Examples coming soon</li>
+                <ul className="py-2 m-0">
+                    <li className="italic">Examples coming soon</li>
                 </ul>
             }
         >

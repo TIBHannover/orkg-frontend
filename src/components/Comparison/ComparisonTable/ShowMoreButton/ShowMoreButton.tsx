@@ -31,7 +31,7 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({ hiddenCount, isExpanded, path
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             onClick={() => onToggle()}
-            className="tw:p-0 tw:flex tw:items-stretch tw:flex-grow tw:min-w-fit tw:cursor-pointer tw:group"
+            className="p-0 flex items-stretch flex-grow min-w-fit cursor-pointer group"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -43,19 +43,19 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({ hiddenCount, isExpanded, path
             aria-label={showMoreText}
         >
             <th
-                className="tw:!sticky tw:left-0 tw:!border-[#e7eaf1] tw:!border-b tw:!border-r tw:!border-l tw:flex tw:z-10 tw:min-w-[250px] tw:w-[2px] tw:grow-[2] tw:shrink-0 tw:basis-auto tw:group-hover:!bg-[#e9ebf2] tw:transition-colors tw:duration-150"
+                className="sticky left-0 border-border border-b border-r border-l flex z-10 min-w-[250px] w-[2px] grow-[2] shrink-0 basis-auto group-hover:bg-background transition-colors duration-150"
                 scope="row"
                 style={{ background: bgColor }}
             >
                 <HierarchyIndicator path={path?.slice(1) ?? []} side="left" showHorizontalLine={false} />
-                <div className="tw:flex tw:flex-row tw:items-start tw:py-1 tw:px-2 tw:w-full">
-                    <div className="tw:flex tw:items-start tw:gap-1.5 tw:text-xs tw:font-medium tw:text-gray-600 tw:group-hover:text-primary tw:transition-colors tw:duration-150">
+                <div className="flex flex-row items-start py-1 px-2 w-full">
+                    <div className="flex items-start gap-1.5 text-xs font-medium text-gray-600 group-hover:text-accent transition-colors duration-150">
                         <motion.div
                             animate={{ rotate: isExpanded ? 180 : 0 }}
                             transition={{ duration: 0.4, ease: 'easeInOut' }}
-                            className="tw:shrink-0 tw:mt-0.5"
+                            className="shrink-0 mt-0.5"
                         >
-                            <FontAwesomeIcon icon={faChevronDown} className="tw:w-3 tw:h-3" />
+                            <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                         </motion.div>
                         <span>{showMoreText}</span>
                     </div>
@@ -67,7 +67,7 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({ hiddenCount, isExpanded, path
                     <td
                         key={`show-more-${path.join('-')}-${columnId}`}
                         style={{ minWidth: `${columnWidth}px`, background: bgColor }}
-                        className="tw:p-0 tw:w-[2px] tw:grow-[2] tw:shrink-0 tw:basis-auto tw:!border-[#e7eaf1] tw:!border-b tw:group-hover:!bg-[#e9ebf2] tw:transition-colors tw:duration-150"
+                        className="p-0 w-[2px] grow-[2] shrink-0 basis-auto border-border border-b group-hover:bg-background transition-colors duration-150"
                         aria-hidden="true"
                     />
                 );

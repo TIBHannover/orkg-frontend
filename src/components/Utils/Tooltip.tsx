@@ -12,7 +12,7 @@ interface TooltipQuestionProps {
 const TooltipQuestion = ({ children, message }: TooltipQuestionProps) => (
     <Tooltip contentStyle={{ maxWidth: '300px' }} content={message}>
         <span>
-            {children ?? ''} <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
+            {children ?? ''} <FontAwesomeIcon icon={faQuestionCircle} className="text-accent" />
         </span>
     </Tooltip>
 );

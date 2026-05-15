@@ -1,35 +1,38 @@
-import PropTypes from 'prop-types';
-import { ChangeEvent, FC, useRef, useState } from 'react';
+import { faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup, Input, Label, ListBox, Select, TextArea, TextField, toast, Tooltip } from '@heroui/react';
+import Link from 'next/link';
+import { FC, Key, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActionMeta, SelectInstance, SingleValue } from 'react-select';
+import { ActionMeta, SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
-import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
-import LinkButton from '@/components/Autocomplete/ValueButtons/LinkButton';
-import { ValuesStyle } from '@/components/StatementBrowser/styled';
 import ValidationRulesNumber from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
 import ValidationRulesString from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import FormText from '@/components/Ui/Form/FormText';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import DATA_TYPES from '@/constants/DataTypes';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
-import { Class, PropertyShape } from '@/services/backend/types';
+import { PropertyShape } from '@/services/backend/types';
 import { updatePropertyShapes } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
+import { getLinkByEntityType } from '@/utils';
 
 type TemplateComponentValueProps = {
     id: number;
     handleClassOfPropertySelect: (selected: SingleValue<OptionType>, action: ActionMeta<OptionType>, index: number) => void;
 };
 
+const CARDINALITY_OPTIONS: { id: string; label: string }[] = [
+    { id: '0,*', label: 'Zero or more [0,*]' },
+    { id: '0,1', label: 'Optional [0,1]' },
+    { id: '1,1', label: 'Exactly one [1,1]' },
+    { id: '1,*', label: 'One or more [1,*]' },
+    { id: 'range', label: 'Custom...' },
+];
+
 const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleClassOfPropertySelect }) => {
-    // @ts-expect-error
-    const propertyShape: PropertyShape = useSelector((state) => state.templateEditor.properties[id]);
+    const propertyShape = useSelector((state: RootStore) => state.templateEditor.properties[id]);
     const strCardinality = `${propertyShape.min_count || '*'},${propertyShape.max_count || '*'}`;
     const mapOptions: { [key: string]: string } = {
         '*,*': '0,*',
@@ -38,30 +41,30 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
         '1,1': '1,1',
         '1,*': '1,*',
     };
-    const [cardinality, setCardinality] = useState(mapOptions[strCardinality] || 'range');
+    const [cardinality, setCardinality] = useState<string>(mapOptions[strCardinality] || 'range');
     const { isEditMode } = useIsEditMode();
 
     const dispatch = useDispatch();
-    // @ts-expect-error
-    const propertyShapes: PropertyShape[] = useSelector((state) => state.templateEditor.properties);
+    const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const updateField = (name: string, value: string) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
-            const _item = { ...item };
+            const _item = { ...item } as PropertyShape & Record<string, unknown>;
             if (j === id) {
-                // @ts-expect-error
-                _item[e.target.name] = e.target.value.toString();
+                _item[name] = value;
             }
             return _item;
         });
         dispatch(updatePropertyShapes(templatePropertyShapes));
     };
 
-    const onChangeCardinality = (e: ChangeEvent<HTMLInputElement>) => {
-        setCardinality(e.target.value);
+    const onChangeCardinality = (key: Key | null) => {
+        if (!key) return;
+        const value = key.toString();
+        setCardinality(value);
 
-        if (e.target.value !== 'range') {
-            const [minCount, maxCount] = e.target.value.split(',');
+        if (value !== 'range') {
+            const [minCount, maxCount] = value.split(',');
             const templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
                 if (j === id) {
@@ -74,18 +77,28 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
         }
     };
 
-    let range = null;
+    let range: OptionType | null | undefined = null;
 
     if ('class' in propertyShape && propertyShape.class !== undefined) {
-        range = propertyShape.class;
+        range = propertyShape.class as OptionType;
     } else if ('datatype' in propertyShape && propertyShape.datatype !== undefined) {
-        range = propertyShape.datatype;
+        range = propertyShape.datatype as OptionType;
     }
 
+    const hasRange = !!range?.id;
+    const rangeLink = hasRange ? getLinkByEntityType(range?._class || 'class', range!.id) : '#';
+
+    const handleCopyRangeId = () => {
+        if (range?.id && navigator.clipboard) {
+            navigator.clipboard.writeText(range.id);
+            toast.success('ID copied to clipboard');
+        }
+    };
+
     return (
-        <ValuesStyle className="col-8 valuesList">
-            <div>
-                <InputGroup size="sm">
+        <div className="basis-full md:basis-7/12 bg-surface p-4 flex flex-col gap-3">
+            <div className="flex items-stretch">
+                <div className="min-w-0 flex-1">
                     <Autocomplete
                         entityType={ENTITIES.CLASS}
                         placeholder={isEditMode ? 'Select or type to enter a class' : 'No Class'}
@@ -103,122 +116,172 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         ]}
                         size="sm"
                         enableExternalSources
+                        noFormControl={hasRange}
                     />
-                    <CopyIdButton value={range} />
-                    <LinkButton value={range} />
-                </InputGroup>
-                <div className="mt-2">
-                    <FormGroup row>
-                        <Label className="text-end text-muted" for={`cardinalityValueInput-${id}`} sm={3}>
-                            <small>Cardinality</small>
-                        </Label>
-                        <Col sm={9}>
-                            <Input
-                                disabled={!isEditMode}
-                                onChange={onChangeCardinality}
-                                value={cardinality}
-                                type="select"
-                                bsSize="sm"
-                                id={`cardinalityValueInput-${id}`}
-                            >
-                                <option value="0,*">Zero or more [0,*]</option>
-                                <option value="0,1">Optional [0,1]</option>
-                                <option value="1,1">Exactly one [1,1]</option>
-                                <option value="1,*">One or more [1,*]</option>
-                                <option value="range">Custom...</option>
-                            </Input>
-                        </Col>
-                    </FormGroup>
                 </div>
-                {cardinality === 'range' && (
-                    <div className="mt-2">
-                        <FormGroup row>
-                            <Label className="text-end text-muted" for={`minCountValueInput-${id}`} sm={3}>
-                                <small>Minimum Occurrence</small>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                    disabled={!isEditMode}
-                                    onChange={onChange}
-                                    bsSize="sm"
-                                    value={propertyShape.min_count || ''}
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    name="min_count"
-                                    id={`minCountValueInput-${id}`}
-                                    placeholder="Minimum number of occurrences in the resource"
-                                />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label className="text-end text-muted" for={`maxCountValueInput-${id}`} sm={3}>
-                                <small>Maximum Occurrence</small>
-                            </Label>
-                            <Col sm={9}>
-                                <Input
-                                    disabled={!isEditMode}
-                                    onChange={onChange}
-                                    bsSize="sm"
-                                    value={propertyShape.max_count !== null ? propertyShape.max_count : ''}
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    name="max_count"
-                                    id="maxCountValueInput"
-                                    placeholder="Maximum number of occurrences in the resource"
-                                />
-                                {isEditMode && <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>}
-                            </Col>
-                        </FormGroup>
-                    </div>
+                {hasRange && (
+                    <ButtonGroup
+                        variant="tertiary"
+                        size="sm"
+                        aria-label="Range actions"
+                        className="shrink-0 [&>[data-slot='button']:first-child]:rounded-l-none"
+                    >
+                        <Tooltip delay={0}>
+                            <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyRangeId} variant="tertiary">
+                                <FontAwesomeIcon icon={faClipboard} className="size-3.5 text-muted" />
+                            </Button>
+                            <Tooltip.Content>Copy ID to clipboard</Tooltip.Content>
+                        </Tooltip>
+                        <Tooltip delay={0}>
+                            <Button
+                                variant="tertiary"
+                                isIconOnly
+                                aria-label="Open class page"
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                render={(props: any) => <Link {...props} href={rangeLink} target="_blank" rel="noreferrer" />}
+                            >
+                                <ButtonGroup.Separator />
+                                <FontAwesomeIcon icon={faExternalLinkAlt} className="size-3.5 text-muted" />
+                            </Button>
+                            <Tooltip.Content>Open class page</Tooltip.Content>
+                        </Tooltip>
+                    </ButtonGroup>
                 )}
-                <FormGroup row>
-                    <Label className="text-end text-muted" for={`placeholderInput-${id}`} sm={3}>
-                        <small>Placeholder</small>
-                    </Label>
-                    <Col sm={9}>
+            </div>
+
+            <div className="grid grid-cols-12 items-center gap-2">
+                <Label htmlFor={`cardinalityValueInput-${id}`} className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                    Cardinality
+                </Label>
+                <div className="col-span-12 md:col-span-9">
+                    <Select
+                        aria-label="Cardinality"
+                        selectedKey={cardinality}
+                        onSelectionChange={onChangeCardinality}
+                        isDisabled={!isEditMode}
+                        className="w-full"
+                    >
+                        <Select.Trigger id={`cardinalityValueInput-${id}`} className="w-full">
+                            <Select.Value />
+                            <Select.Indicator />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox>
+                                {CARDINALITY_OPTIONS.map((option) => (
+                                    <ListBox.Item key={option.id} id={option.id} textValue={option.label}>
+                                        {option.label}
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
+                    </Select>
+                </div>
+            </div>
+
+            {cardinality === 'range' && (
+                <>
+                    <div className="grid grid-cols-12 items-center gap-2">
+                        <Label htmlFor={`minCountValueInput-${id}`} className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                            Minimum occurrence
+                        </Label>
+                        <div className="col-span-12 md:col-span-9">
+                            <TextField
+                                fullWidth
+                                value={
+                                    propertyShape.min_count !== undefined && propertyShape.min_count !== null ? String(propertyShape.min_count) : ''
+                                }
+                                onChange={(value) => updateField('min_count', value)}
+                                isDisabled={!isEditMode}
+                                aria-label="Minimum occurrence"
+                            >
+                                <Input
+                                    id={`minCountValueInput-${id}`}
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    placeholder="Minimum number of occurrences in the resource"
+                                    className="!border !border-border focus:!border-accent"
+                                />
+                            </TextField>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-12 items-center gap-2">
+                        <Label htmlFor="maxCountValueInput" className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                            Maximum occurrence
+                        </Label>
+                        <div className="col-span-12 md:col-span-9">
+                            <TextField
+                                fullWidth
+                                value={
+                                    propertyShape.max_count !== undefined && propertyShape.max_count !== null ? String(propertyShape.max_count) : ''
+                                }
+                                onChange={(value) => updateField('max_count', value)}
+                                isDisabled={!isEditMode}
+                                aria-label="Maximum occurrence"
+                            >
+                                <Input
+                                    id="maxCountValueInput"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    placeholder="Maximum number of occurrences in the resource"
+                                    className="!border !border-border focus:!border-accent"
+                                />
+                            </TextField>
+                            {isEditMode && <p className="text-muted text-xs mt-1">Clear the input field if there is no restriction (unbounded)</p>}
+                        </div>
+                    </div>
+                </>
+            )}
+
+            <div className="grid grid-cols-12 items-center gap-2">
+                <Label htmlFor={`placeholderInput-${id}`} className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                    Placeholder
+                </Label>
+                <div className="col-span-12 md:col-span-9">
+                    <TextField
+                        fullWidth
+                        value={propertyShape.placeholder || ''}
+                        onChange={(value) => updateField('placeholder', value)}
+                        isDisabled={!isEditMode}
+                        aria-label="Placeholder"
+                    >
                         <Input
-                            disabled={!isEditMode}
-                            onChange={onChange}
-                            bsSize="sm"
-                            value={propertyShape.placeholder || ''}
-                            type="text"
-                            name="placeholder"
                             id={`placeholderInput-${id}`}
                             placeholder="Enter a placeholder for the input form"
+                            className="!border !border-border focus:!border-accent"
                         />
-                    </Col>
-                </FormGroup>
+                    </TextField>
+                </div>
+            </div>
 
-                <FormGroup row>
-                    <Label className="text-end text-muted" for={`descriptionInput-${id}`} sm={3}>
-                        <small>Description</small>
-                    </Label>
-                    <Col sm={9}>
-                        <Input
-                            disabled={!isEditMode}
-                            onChange={onChange}
-                            bsSize="sm"
-                            value={propertyShape.description || ''}
-                            type="textarea"
-                            name="description"
+            <div className="grid grid-cols-12 items-start gap-2">
+                <Label htmlFor={`descriptionInput-${id}`} className="col-span-12 md:col-span-3 text-muted text-sm md:text-right md:pt-2">
+                    Description
+                </Label>
+                <div className="col-span-12 md:col-span-9">
+                    <TextField
+                        fullWidth
+                        value={propertyShape.description || ''}
+                        onChange={(value) => updateField('description', value)}
+                        isDisabled={!isEditMode}
+                        aria-label="Description"
+                    >
+                        <TextArea
                             id={`descriptionInput-${id}`}
                             placeholder="Enter a description for the input form"
+                            rows={2}
+                            className="!border !border-border focus:!border-accent"
                         />
-                    </Col>
-                </FormGroup>
-
-                {range && [CLASSES.INTEGER, CLASSES.DECIMAL].includes(range.id) && <ValidationRulesNumber id={id} />}
-                {range && [CLASSES.STRING].includes(range.id) && <ValidationRulesString id={id} />}
+                    </TextField>
+                </div>
             </div>
-        </ValuesStyle>
-    );
-};
 
-TemplateComponentValue.propTypes = {
-    id: PropTypes.number.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired,
+            {range && [CLASSES.INTEGER, CLASSES.DECIMAL].includes(range.id) && <ValidationRulesNumber id={id} />}
+            {range && [CLASSES.STRING].includes(range.id) && <ValidationRulesString id={id} />}
+        </div>
+    );
 };
 
 export default TemplateComponentValue;

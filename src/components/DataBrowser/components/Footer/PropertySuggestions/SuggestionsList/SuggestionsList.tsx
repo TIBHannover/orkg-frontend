@@ -7,7 +7,6 @@ import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBr
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Predicate, Template } from '@/services/backend/types';
 
@@ -43,21 +42,16 @@ const SuggestionsList: FC<SuggestionsListProps> = ({ template, search }) => {
 
     return (
         <>
-            <ListGroupItem className="tw:rounded-none! tw:-mt-px! tw:bg-light-lighter! tw:text-primary!">{template.label}</ListGroupItem>
-
-            <div className="tw:grid tw:grid-cols-1 tw:gap-0 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:border-l tw:border-black/12.5">
+            <div className="bg-surface text-accent px-4 py-2 border-b border-border font-medium">{template.label}</div>
+            <div className="grid grid-cols-1 gap-0 md:grid-cols-2 lg:grid-cols-3 border-l border-border">
                 {filteredProperties.map((p) => (
                     <DescriptionTooltip key={p.id} id={p.id} _class={ENTITIES.PREDICATE}>
                         <button
                             type="button"
-                            className="tw:block tw:w-full tw:px-4 tw:py-2 tw:text-left tw:bg-transparent tw:border-0 tw:border-r tw:border-b tw:border-black/12.5 tw:rounded-none tw:text-inherit tw:hover:bg-gray-100"
+                            className="block w-full px-4 py-2 text-left bg-transparent border-0 border-r border-b border-border rounded-none text-inherit hover:bg-default/40"
                             onClick={() => dispatch({ type: 'ADD_PROPERTY', payload: { predicate: p as Predicate, id: entity.id } })}
                         >
-                            <div className="tw:flex">
-                                <div className="tw:grow">
-                                    <FontAwesomeIcon icon={faPlus} className="me-1 text-muted" /> {p.label}
-                                </div>
-                            </div>
+                            <FontAwesomeIcon icon={faPlus} className="mr-1 text-muted" /> {p.label}
                         </button>
                     </DescriptionTooltip>
                 ))}

@@ -1,85 +1,82 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Switch } from '@heroui/react';
+import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
-import { FC, useId } from 'react';
-import { useCookies } from 'react-cookie';
-import styled from 'styled-components';
+import { FC } from 'react';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import HELP_CENTER_ARTICLES from '@/constants/helpCenterArticles';
-
-export const PreferencesStyle = styled.div`
-    overflow-wrap: break-word;
-    padding: 8px;
-    .header {
-        border-bottom: 1px solid #fff;
-    }
-`;
 
 type PreferencesProps = {
     closeTippy: () => void;
 };
 
+type PreferenceKey = 'showInlineDataTypes' | 'expandValuesByDefault';
+
+type PreferenceItem = {
+    key: PreferenceKey;
+    label: string;
+    description: string;
+};
+
+const PREFERENCE_ITEMS: PreferenceItem[] = [
+    {
+        key: 'showInlineDataTypes',
+        label: 'Show inline data types',
+        description: 'Display the data type next to each value.',
+    },
+    {
+        key: 'expandValuesByDefault',
+        label: 'Expand values by default',
+        description: 'Automatically expand all values when loading.',
+    },
+];
+
 const Preferences: FC<PreferencesProps> = ({ closeTippy }) => {
-    const [, setCookie] = useCookies(['preferences.showInlineDataTypes', 'preferences.expandValuesByDefault']);
+    const cookies = useCookies();
 
     const { preferences } = useDataBrowserState();
     const dispatch = useDataBrowserDispatch();
 
-    const settingsInputSwitched = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCookie(`preferences.${e.target.name as 'showInlineDataTypes' | 'expandValuesByDefault'}`, e.target.checked, {
+    const handleToggle = (name: PreferenceKey) => (isSelected: boolean) => {
+        cookies.set(`preferences.${name}`, String(isSelected), {
             path: env('NEXT_PUBLIC_PUBLIC_URL'),
-            maxAge: 315360000,
-        }); // << TEN YEARS
-        dispatch({ type: 'UPDATE_PREFERENCES', payload: { [e.target.name]: e.target.checked } });
+            expires: 3650,
+        });
+        dispatch({ type: 'UPDATE_PREFERENCES', payload: { [name]: isSelected } });
     };
 
-    const id = useId();
-
     return (
-        <PreferencesStyle className="p-3">
-            <h5 className="text-white pb-2 mb-3 header">
-                Preferences
+        <div className="w-72 p-1">
+            <div className="flex items-center justify-between border-b border-default/60 pb-2 mb-3">
+                <h5 className="m-0 text-sm font-semibold">Preferences</h5>
                 <Button
-                    color="link"
-                    className="p-0 float-end"
-                    onClick={() => {
+                    variant="ghost"
+                    size="sm"
+                    isIconOnly
+                    aria-label="Open help center"
+                    onPress={() => {
+                        window.open('https://orkg.org/help-center/article/28/Statement_browser_preferences', '_blank', 'noopener,noreferrer');
                         closeTippy();
-                        dispatch({ type: 'SET_IS_HELP_MODAL_OPEN', payload: { isOpen: true, articleId: HELP_CENTER_ARTICLES.PREFERENCES } });
                     }}
                 >
-                    <FontAwesomeIcon size="sm" icon={faQuestionCircle} />
+                    <FontAwesomeIcon icon={faQuestionCircle} />
                 </Button>
-            </h5>
-
-            <div className="mb-2">
-                <Input
-                    type="checkbox"
-                    id={`${id}-showInlineDataTypes`}
-                    name="showInlineDataTypes"
-                    onChange={settingsInputSwitched}
-                    checked={preferences.showInlineDataTypes ?? false}
-                />{' '}
-                <Label for={`${id}-showInlineDataTypes`} className="mb-0">
-                    Show inline data types of values
-                </Label>
             </div>
-            <div className="mb-2">
-                <Input
-                    type="checkbox"
-                    id={`${id}-expandValuesByDefault`}
-                    name="expandValuesByDefault"
-                    onChange={settingsInputSwitched}
-                    checked={preferences.expandValuesByDefault ?? false}
-                />{' '}
-                <Label for={`${id}-expandValuesByDefault`} className="mb-0">
-                    Expand all values by default
-                </Label>
+            <div className="flex flex-col gap-3">
+                {PREFERENCE_ITEMS.map(({ key, label, description }) => (
+                    <Switch key={key} isSelected={preferences[key] ?? false} onChange={handleToggle(key)} className="flex items-center gap-3">
+                        <Switch.Control>
+                            <Switch.Thumb />
+                        </Switch.Control>
+                        <Switch.Content className="flex flex-col">
+                            <span className="text-sm font-medium leading-tight">{label}</span>
+                            <span className="text-xs text-foreground-500 leading-tight">{description}</span>
+                        </Switch.Content>
+                    </Switch>
+                ))}
             </div>
-        </PreferencesStyle>
+        </div>
     );
 };
 

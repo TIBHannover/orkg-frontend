@@ -11,7 +11,6 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import { StatementsGroupStyle } from '@/components/StatementBrowser/styled';
 import TemplateComponentProperty from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Property/TemplateComponentProperty';
 import TemplateComponentValue from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/Value/TemplateComponentValue';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
@@ -75,12 +74,19 @@ const PropertyShape: FC<PropertyShapeProps> = ({
             onEdgeChange,
             onDragEnter: onEdgeChange,
             onDragLeave: () => setClosestEdge(null),
+            renderDragPreview: ({ container }) => {
+                const preview = document.createElement('div');
+                preview.className =
+                    'inline-flex items-center gap-2 rounded border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
+                preview.textContent = propertyShape.path?.label ?? 'Property';
+                container.appendChild(preview);
+            },
         });
     }, [propertyShape, id, instanceId, dragHandleElement, isEditMode]);
 
     return (
-        <StatementsGroupStyle ref={ref} style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }} className="noTemplate list-group-item">
-            <div className="row gx-0">
+        <div ref={ref} style={{ opacity: isDragging ? 0.4 : 1 }} className="relative border border-border rounded-sm mb-2 bg-surface overflow-hidden">
+            <div className="flex flex-wrap items-stretch">
                 <TemplateComponentProperty
                     id={id}
                     handleDeletePropertyShape={handleDeletePropertyShape}
@@ -90,7 +96,7 @@ const PropertyShape: FC<PropertyShapeProps> = ({
                 <TemplateComponentValue id={id} handleClassOfPropertySelect={handleClassOfPropertySelect} />
             </div>
             {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
-        </StatementsGroupStyle>
+        </div>
     );
 };
 

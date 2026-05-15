@@ -1,12 +1,7 @@
+import { Button, Modal, toast } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import AutoCompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MISC } from '@/constants/graphSettings';
 import { updateResource } from '@/services/backend/resources';
 import { Observatory, Organization } from '@/services/backend/types';
@@ -59,23 +54,34 @@ const ObservatoryModal: FC<ObservatoryModalProps> = ({
         toggle();
     };
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggle();
+        }
+    };
+
     return (
-        <Modal isOpen={showDialog} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Assign resource to an observatory</ModalHeader>
-            <ModalBody>
-                <AutoCompleteObservatory
-                    onChangeObservatory={handleChangeObservatory}
-                    onChangeOrganization={handleChangeOrganization}
-                    observatory={observatory}
-                    organization={organization}
-                />
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={handleSubmit}>
-                    Save
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop isOpen={showDialog} onOpenChange={handleOpenChange}>
+            <Modal.Container>
+                <Modal.Dialog>
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Assign resource to an observatory</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1">
+                        <AutoCompleteObservatory
+                            onChangeObservatory={handleChangeObservatory}
+                            onChangeOrganization={handleChangeOrganization}
+                            observatory={observatory}
+                            organization={organization}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onPress={handleSubmit}>Save</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

@@ -1,5 +1,4 @@
 import { orderBy } from 'lodash';
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +6,7 @@ import AnimatedTree, { motion } from '@/components/Class/styled';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getChildrenByID, getHierarchyByID } from '@/services/backend/classes';
 
 export type TreeNode = {
@@ -194,7 +194,7 @@ const TreeView = ({ id, rootNodeId, reloadTree, ...props }: TreeViewProps) => {
     );
 
     return (
-        <div className="py-4 px-4">
+        <div className="py-6 px-6">
             {isLoading ? (
                 'Loading...'
             ) : (

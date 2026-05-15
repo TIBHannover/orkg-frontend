@@ -1,19 +1,14 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 import Select, { OnChangeValue } from 'react-select';
-import styled from 'styled-components';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
-import { GlobalStyle } from '@/components/Input/AuthorsInput/styled';
-import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
+import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 import { sortSdgs } from '@/components/SustainableDevelopmentGoals/helpers';
 import Goal from '@/components/SustainableDevelopmentGoals/SdgModal/Sdg';
 import SelectOption from '@/components/SustainableDevelopmentGoals/SdgModal/SelectOption';
-import Button from '@/components/Ui/Button/Button';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
 import { getResource } from '@/services/backend/resources';
 import { Node } from '@/services/backend/types';
@@ -29,15 +24,6 @@ export type OptionType = {
     id: string;
     label: string;
 };
-
-export const List = styled.div`
-    display: flex;
-    flex: 1;
-    flex-wrap: wrap;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-`;
 
 const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing = false }) => {
     const [sdgsLocal, setSdgsLocal] = useState(sortSdgs(sdgs));
@@ -55,6 +41,12 @@ const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing 
         getOptions();
     }, []);
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open && !isLoading) {
+            toggle();
+        }
+    };
+
     const handleDelete = (id: string) => setSdgsLocal((_sdgs) => _sdgs.filter((_sdg) => id !== _sdg.id));
 
     const handleSelect = (sdg: OnChangeValue<OptionType, false>) => {
@@ -71,55 +63,60 @@ const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing 
     };
 
     return (
-        <ModalWithLoading isOpen toggle={toggle} isLoading={isLoading}>
-            <GlobalStyle />
-            <ModalHeader toggle={toggle}>Sustainable Development Goals (SDGs)</ModalHeader>
-            <ModalBody>
-                <List>
-                    {sdgsLocal.map((sdg) => (
-                        <Goal
-                            sdg={sdg}
-                            label={options.find((option) => option.id === sdg.id)?.label || ''}
-                            key={sdg.id}
-                            onDelete={handleDelete}
-                            isEditing={isEditing}
-                        />
-                    ))}
-                </List>
+        <Modal.Backdrop isOpen onOpenChange={handleOpenChange} isDismissable={!isLoading} isKeyboardDismissDisabled={isLoading}>
+            <Modal.Container className="max-h-[calc(100vh-73px)] mt-[73px]">
+                <Modal.Dialog>
+                    <LoadingOverlay isLoading={isLoading} className="rounded" />
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Sustainable Development Goals (SDGs)</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-3">
+                        <div className="flex flex-col">
+                            {sdgsLocal.map((sdg) => (
+                                <Goal
+                                    sdg={sdg}
+                                    label={options.find((option) => option.id === sdg.id)?.label || ''}
+                                    key={sdg.id}
+                                    onDelete={handleDelete}
+                                    isEditing={isEditing}
+                                />
+                            ))}
+                        </div>
 
-                {isEditing && !isAdding && (
-                    <Button color="light" onClick={() => setIsAdding(true)} className="w-100">
-                        <FontAwesomeIcon icon={faPlus} /> Add goal
-                    </Button>
-                )}
-                {isAdding && (
-                    <>
-                        <SelectGlobalStyle />
-                        <Select
-                            onChange={handleSelect}
-                            options={options.filter(({ id }) => !sdgsLocal.find((sdg) => sdg.id === id))}
-                            components={{ Option: SelectOption }}
-                            onBlur={() => setIsAdding(false)}
-                            classNamePrefix="react-select"
-                            blurInputOnSelect
-                            autoFocus
-                            aria-label="Select an SDG"
-                            defaultMenuIsOpen
-                        />
-                    </>
-                )}
-            </ModalBody>
-            {isEditing && (
-                <ModalFooter>
-                    <Button color="light" onClick={toggle}>
-                        Cancel
-                    </Button>
-                    <Button color="primary" onClick={handleSaveClick}>
-                        Save
-                    </Button>
-                </ModalFooter>
-            )}
-        </ModalWithLoading>
+                        {isEditing && !isAdding && (
+                            <Button variant="secondary" onPress={() => setIsAdding(true)} fullWidth>
+                                <FontAwesomeIcon icon={faPlus} /> Add goal
+                            </Button>
+                        )}
+                        {isAdding && (
+                            <Select
+                                onChange={handleSelect}
+                                options={options.filter(({ id }) => !sdgsLocal.find((sdg) => sdg.id === id))}
+                                components={{ Option: SelectOption }}
+                                onBlur={() => setIsAdding(false)}
+                                classNamePrefix="react-select"
+                                classNames={customClassNames as any}
+                                styles={customStyles as any}
+                                menuPosition="fixed"
+                                blurInputOnSelect
+                                autoFocus
+                                aria-label="Select an SDG"
+                                defaultMenuIsOpen
+                            />
+                        )}
+                    </Modal.Body>
+                    {isEditing && (
+                        <Modal.Footer>
+                            <Button variant="secondary" onPress={toggle}>
+                                Cancel
+                            </Button>
+                            <Button onPress={handleSaveClick}>Save</Button>
+                        </Modal.Footer>
+                    )}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

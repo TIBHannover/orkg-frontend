@@ -2,8 +2,7 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 
@@ -16,6 +15,7 @@ import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getReviews, reviewUrl } from '@/services/backend/reviews';
 import { Review, VisibilityOptions } from '@/services/backend/types';
 
@@ -36,17 +36,15 @@ const Reviews = () => {
     const buttons = (
         <>
             <VisibilityFilter />
-            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" href={ROUTES.REVIEW_NEW}>
+            <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" href={ROUTES.REVIEW_NEW}>
                 <FontAwesomeIcon icon={faPlus} /> Create review
             </RequireAuthentication>
             {!!user && (
                 <RequireAuthentication
-                    component={Link}
-                    color="secondary"
+                    component={Button}
                     size="sm"
-                    className="btn btn-secondary btn-sm"
+                    className="button--orkg-secondary"
                     href={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' })}
-                    style={{ marginLeft: 1 }}
                 >
                     Draft reviews
                 </RequireAuthentication>
@@ -55,7 +53,7 @@ const Reviews = () => {
     );
 
     const infoContainerText = (
-        <div className="d-flex">
+        <div className="flex">
             <ReviewVideo />
             <span>
                 ORKG reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.{' '}

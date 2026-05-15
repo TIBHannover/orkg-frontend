@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
@@ -26,7 +26,7 @@ function useDeleteProperty({ propertyId, redirect = false }) {
                     router.push(ROUTES.PROPERTIES);
                 }
             } catch (err) {
-                toast.error(err.message);
+                toast.danger(err.message);
             }
 
             setIsLoading(false);

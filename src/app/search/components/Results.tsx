@@ -1,13 +1,12 @@
-import { reverse } from 'named-urls';
+import { Separator } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import Item from '@/app/search/components/Item/Item';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import { CardBadge } from '@/components/styled';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Thing } from '@/services/backend/things';
 
 interface ResultsProps {
@@ -39,27 +38,26 @@ const Results: FC<ResultsProps> = ({
 }) => (
     <div>
         {items.length > 0 && (
-            <ListGroup flush className="rounded pt-2">
+            <ul className="divide-y divide-border rounded pt-2 list-none m-0 p-0">
                 {items.map((item) => (
-                    <Item key={item.id} item={item} />
+                    <li key={item.id} className="py-6 px-4">
+                        <Item item={item} />
+                    </li>
                 ))}
                 {page === 0 && isAuthorExists && (
-                    <ListGroupItem key="result-searchTerm" className="py-2" style={{ overflowWrap: 'anywhere' }}>
-                        <div className="d-flex align-items-center my-3">
-                            <Link href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: encodeURIComponent(query) })}>{query}</Link>
-                            <div className="d-inline-block ms-2 flex-shrink-0">
-                                <CardBadge color="primary">Author</CardBadge>
-                            </div>
+                    <li key="result-searchTerm" className="py-6 px-4" style={{ overflowWrap: 'anywhere' }}>
+                        <div className="flex items-center gap-2">
+                            <Link href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: query })}>{query}</Link>
+                            <CardBadge color="primary">Author</CardBadge>
                         </div>
-                    </ListGroupItem>
+                    </li>
                 )}
-            </ListGroup>
+            </ul>
         )}
         {!!totalElements && !!totalPages && totalPages > 1 && totalElements > 0 && (
-            <div className="mt-3">
-                <hr />
-                <div className="mt-2" />
-                <div className="ms-2 me-2">
+            <div className="mt-4">
+                <Separator className="mb-4" />
+                <div className="mx-2">
                     <PaginationControl
                         page={page}
                         setPage={setPage}

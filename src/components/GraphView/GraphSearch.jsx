@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Select from 'react-select';
 import { getVisibleEntities, useCollapse } from 'reagraph';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 
 const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, graphRef }) => {
     const [foundNodeId, setFoundNodeId] = useState(null);
@@ -42,7 +42,7 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
         if (foundNodeId && visibleNodes.find((node) => node.id === foundNodeId)) {
             // dirty hack: the timeout is required to ensure that the node is rendered before centering
             setTimeout(() => {
-                if (graphRef?.current?.getGraph()?._nodes.get(foundNodeId)) {
+                if (graphRef?.current?.getGraph()?.hasNode(foundNodeId)) {
                     setSelections(foundNodeId);
                     graphRef.current?.centerGraph([foundNodeId]);
                     setFoundNodeId(false);
@@ -52,21 +52,21 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
     }, [graphRef, hiddenNodeIds, setSelections, foundNodeId, visibleNodes]);
 
     return (
-        <>
-            <Select
-                onChange={handleSearch}
-                options={nodes.map((node) => ({ label: node.data.label, id: node.id }))}
-                placeholder="Search in graph..."
-                classNamePrefix="react-select"
-                isClearable
-                getOptionValue={({ id }) => id}
-                getOptionLabel={({ label }) => label}
-                styles={{
-                    menu: (provided) => ({ ...provided, zIndex: 2 }),
-                }}
-            />
-            <SelectGlobalStyle />
-        </>
+        <Select
+            onChange={handleSearch}
+            options={nodes.map((node) => ({ label: node.data.label, id: node.id }))}
+            placeholder="Search in graph..."
+            classNamePrefix="react-select"
+            classNames={customClassNames}
+            styles={{
+                ...customStyles,
+                menu: (provided) => ({ ...provided, zIndex: 2 }),
+            }}
+            menuPosition="fixed"
+            isClearable
+            getOptionValue={({ id }) => id}
+            getOptionLabel={({ label }) => label}
+        />
     );
 };
 

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import Button from '@/components/Ui/Button/Button';
 import Input from '@/components/Ui/Input/Input';
 
 export const EditableTitle = styled(Input)`
@@ -14,51 +13,6 @@ export const EditableTitle = styled(Input)`
     resize: none;
 `;
 
-export const MoveButton = styled.div`
-    position: absolute;
-    left: 0;
-    width: 25px;
-    top: 25px;
-    display: none;
-    &.hover {
-        display: block;
-    }
-    &.down {
-        top: calc(100% - 30px);
-    }
-`;
-
-export const MoveHandle = styled.div`
-    width: 25px;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: move;
-    color: grey;
-    border-radius: 6px 0 0 6px;
-    top: 0;
-    z-index: 0;
-    &.hover {
-        background: ${(props) => props.theme.secondary};
-        color: #fff;
-    }
-`;
-
-export const DeleteButton = styled(Button)`
-    position: absolute;
-    top: -8px;
-    left: -3px;
-    z-index: 1;
-    padding: 2px 8px !important;
-    display: none !important;
-    &.hover {
-        display: block !important;
-    }
-`;
-
 export const SectionStyled = styled.div`
     position: relative;
     padding: 10px 40px 10px 40px !important;
@@ -69,7 +23,7 @@ export const SectionStyled = styled.div`
 `;
 
 export const SectionTypeStyled = styled.button`
-    background: #e9ebf2;
+    background: var(--background);
     border: 1px solid #c5cadb;
     border-radius: 3px;
     position: absolute;

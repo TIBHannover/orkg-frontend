@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import Gravatar from '@/components/Gravatar/Gravatar';
 import Button from '@/components/Ui/Button/Button';
 
 export const SubtitleSeparator = styled.div`
@@ -27,14 +26,6 @@ export const SubTitle = styled.div`
     margin-top: 3px;
     min-width: 0;
     margin-bottom: 0;
-`;
-
-export const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${(props) => props.theme.lightDarker};
-    cursor: pointer;
-    &:hover {
-        border: 2px solid ${(props) => props.theme.primary};
-    }
 `;
 
 type StyledDotGravatarProps = {
@@ -123,7 +114,7 @@ export const SearchButtonStyled = styled(Button)`
 `;
 
 export const CardBadge = styled.div`
-    background: #fff;
+    background: var(--surface);
     display: inline-block;
     color: ${(props) => props.theme.bodyColor};
     padding: 1px 5px;
@@ -135,7 +126,7 @@ export const CardBadge = styled.div`
 `;
 
 export const CardBadgeFilter = styled.div`
-    background: #fff;
+    background: var(--surface);
     display: inline-block;
     border: 1px ${(props) => props.theme.lightDarker} solid;
     color: ${(props) => props.theme.lightDarker};
@@ -154,12 +145,5 @@ export const CardBadgeFilter = styled.div`
     &:hover {
         color: ${(props) => props.theme.secondary};
         border: 1px ${(props) => props.theme.secondaryDarker} solid;
-    }
-`;
-
-export const CmsPage = styled.div`
-    img {
-        max-width: 100%;
-        height: auto;
     }
 `;

@@ -14,12 +14,12 @@ export const CoordinatesDisplay: FC<CoordinateDisplayProps> = ({ coordinates }) 
     const location = coordinates?.long && coordinates?.lat ? `Point(${coordinates?.long} ${coordinates?.lat})` : null;
 
     return (
-        <StatementsGroupStyle className="row gx-0 p-3 border rounded">
-            <Row className="row gx-0">
-                <PropertyStyle className="col-4">
+        <StatementsGroupStyle className="flex flex-wrap items-stretch gap-x-0 p-4 border rounded">
+            <Row className="flex flex-wrap items-stretch gap-x-0">
+                <PropertyStyle className="shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12">
                     <div>Coordinate location</div>
                 </PropertyStyle>
-                <ValuesStyle className="col-8 valuesList">
+                <ValuesStyle className="shrink-0 grow-0 w-8/12 basis-8/12 max-w-8/12 valuesList">
                     {location && <ValuePlugins type={ENTITIES.LITERAL}>{location}</ValuePlugins>}
                     {!location && <i>Failed to load coordinates</i>}
                 </ValuesStyle>

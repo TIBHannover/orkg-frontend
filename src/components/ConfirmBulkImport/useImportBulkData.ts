@@ -1,8 +1,8 @@
 import { Cite } from '@citation-js/core';
+import { toast } from '@heroui/react';
 import { isUri } from '@hyperjump/uri';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import { DEFAULT_HEADERS } from '@/app/csv-import/steps/helpers';
 import {
@@ -232,7 +232,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                         const { error: _error, data: parsedValue } = getConfigByType(datatype).schema?.safeParse(text) || { error: true, data: text };
                         error = !!_error;
                         valueObject = {
-                            text: parsedValue.toString(),
+                            text: String(parsedValue),
                             datatype,
                         };
                     }
@@ -291,7 +291,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
 
     const handleImport = async () => {
         if (createdContributions.length > 0) {
-            toast.error('The papers are imported already');
+            toast.danger('The papers are imported already');
             return;
         }
 

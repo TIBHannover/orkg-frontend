@@ -1,9 +1,9 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 
-import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
 import { Node } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utilsTyped';
@@ -19,9 +19,9 @@ const ResearchFieldBadge: FC<ResearchFieldBadgeProps> = ({ researchField = null 
             target="_blank"
             aria-label={`Visit research field page of ${researchField.label}`}
         >
-            <Badge color="light" className="me-2 mb-2">
-                <FontAwesomeIcon icon={faBars} className="text-primary" /> {researchField.label}
-            </Badge>
+            <Chip className="mr-2 mb-2">
+                <FontAwesomeIcon icon={faBars} className="text-accent" /> {researchField.label}
+            </Chip>
         </Link>
     ) : null;
 

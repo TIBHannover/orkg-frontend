@@ -5,8 +5,8 @@ import useParams from '@/components/useParams/useParams';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { MISC, PREDICATES } from '@/constants/graphSettings';
 import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
-import { observatoriesUrl } from '@/services/backend/observatories';
-import { organizationsUrl } from '@/services/backend/organizations';
+import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
+import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
 import { getStatements } from '@/services/backend/statements';
 import { Contributor, Resource } from '@/services/backend/types';
 
@@ -17,17 +17,24 @@ function useProvenance() {
     const [versions, setVersions] = useState<{ created_at: string; created_by: Contributor; publishedResource: Resource }[]>([]);
 
     const { data: observatoryInfo, isLoading: isLoadingObservatory } = useSWR(
-        paper?.observatories?.[0] !== MISC.UNKNOWN_ID ? [paper?.observatories?.[0], observatoriesUrl, 'getObservatoryById'] : null,
+        paper?.observatories?.[0] !== MISC.UNKNOWN_ID && paper?.observatories?.[0]
+            ? [paper?.observatories?.[0], observatoriesUrl, 'getObservatoryById']
+            : null,
+        ([params]) => getObservatoryById(params),
     );
 
     const { data: organizationInfo, isLoading: isLoadingOrganization } = useSWR(
-        paper?.organizations?.[0] !== MISC.UNKNOWN_ID ? [paper?.organizations?.[0], organizationsUrl, 'getOrganization'] : null,
+        paper?.organizations?.[0] !== MISC.UNKNOWN_ID && paper?.organizations?.[0]
+            ? [paper?.organizations?.[0], organizationsUrl, 'getOrganization']
+            : null,
+        ([params]) => getOrganization(params),
     );
 
     const isLoadingProvenance = isLoadingObservatory || isLoadingOrganization;
 
     const { data: createdBy, isLoading: isLoadingCreatedBy } = useSWR(
-        paper?.created_by !== MISC.UNKNOWN_ID ? [paper?.created_by, contributorsUrl, 'getContributorById'] : null,
+        paper?.created_by !== MISC.UNKNOWN_ID && paper?.created_by ? [paper?.created_by, contributorsUrl, 'getContributorById'] : null,
+        ([params]) => getContributorById(params),
     );
 
     useEffect(() => {

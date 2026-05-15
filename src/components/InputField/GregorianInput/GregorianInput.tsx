@@ -1,3 +1,4 @@
+import { Input, ListBox, Select, TextField } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 
 import {
@@ -7,8 +8,6 @@ import {
     monthsOptions,
     parseGregorianString,
 } from '@/components/InputField/GregorianInput/helpers';
-import Input from '@/components/Ui/Input/Input';
-import InputGroupText from '@/components/Ui/Input/InputGroupText';
 import { GregorianType } from '@/constants/DataTypes';
 
 type GregorianInputProps = {
@@ -24,7 +23,6 @@ const GregorianInput: FC<GregorianInputProps> = ({ value, onChange, type }) => {
         day: '',
     });
 
-    // Parse input string to object
     useEffect(() => {
         if (!value) return;
         const parsedDate = parseGregorianString(value, type);
@@ -41,46 +39,69 @@ const GregorianInput: FC<GregorianInputProps> = ({ value, onChange, type }) => {
     };
 
     return (
-        <>
+        <div className="flex flex-1 min-w-0 items-center gap-1">
             {(type === 'gYear' || type === 'gYearMonth') && (
                 <>
-                    <Input
-                        placeholder="YYYY"
-                        type="number"
-                        min="-9999"
-                        max="9999"
-                        value={date.year}
-                        onChange={(e) => handleChange('year', e.target.value)}
-                    />
-                    {type === 'gYearMonth' && <InputGroupText>-</InputGroupText>}
+                    <TextField fullWidth value={date.year} onChange={(v) => handleChange('year', v)} className="flex-1 min-w-0">
+                        <Input placeholder="YYYY" type="number" min="-9999" max="9999" />
+                    </TextField>
+                    {type === 'gYearMonth' && <span className="px-1 text-muted">-</span>}
                 </>
             )}
 
             {(type === 'gMonth' || type === 'gYearMonth' || type === 'gMonthDay') && (
                 <>
-                    <Input type="select" value={date.month} onChange={(e) => handleChange('month', e.target.value)}>
-                        <option value="">MM</option>
-                        {monthsOptions.map((month) => (
-                            <option key={month.value} value={month.value}>
-                                {month.label}
-                            </option>
-                        ))}
-                    </Input>
-                    {type === 'gMonthDay' && <InputGroupText>-</InputGroupText>}
+                    <Select
+                        aria-label="Month"
+                        placeholder="MM"
+                        value={date.month || null}
+                        onChange={(key) => handleChange('month', key ? String(key) : '')}
+                        className="flex-1 min-w-0"
+                    >
+                        <Select.Trigger className="h-9 w-full">
+                            <Select.Value />
+                            <Select.Indicator />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox>
+                                {monthsOptions.map((month) => (
+                                    <ListBox.Item key={month.value} id={month.value} textValue={month.label}>
+                                        {month.label}
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
+                    </Select>
+                    {type === 'gMonthDay' && <span className="px-1 text-muted">-</span>}
                 </>
             )}
 
             {(type === 'gDay' || type === 'gMonthDay') && (
-                <Input type="select" value={date.day} onChange={(e) => handleChange('day', e.target.value)}>
-                    <option value="">DD</option>
-                    {daysOptions.map((day) => (
-                        <option key={day.value} value={day.value}>
-                            {day.label}
-                        </option>
-                    ))}
-                </Input>
+                <Select
+                    aria-label="Day"
+                    placeholder="DD"
+                    value={date.day || null}
+                    onChange={(key) => handleChange('day', key ? String(key) : '')}
+                    className="flex-1 min-w-0"
+                >
+                    <Select.Trigger className="h-9 w-full">
+                        <Select.Value />
+                        <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                        <ListBox>
+                            {daysOptions.map((day) => (
+                                <ListBox.Item key={day.value} id={day.value} textValue={day.label}>
+                                    {day.label}
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </Select.Popover>
+                </Select>
             )}
-        </>
+        </div>
     );
 };
 

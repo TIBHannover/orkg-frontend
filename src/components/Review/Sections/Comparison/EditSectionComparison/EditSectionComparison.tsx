@@ -1,16 +1,13 @@
 import { Cite } from '@citation-js/core';
+import { Alert, Button, CloseButton, toast } from '@heroui/react';
 import { uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { toast } from 'react-toastify';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import useReview from '@/components/Review/hooks/useReview';
 import SectionComparison from '@/components/Review/Sections/Comparison/SectionComparison';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getComparison } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';
@@ -118,7 +115,6 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
 
     return (
         <div>
-            <SelectGlobalStyle />
             <Autocomplete
                 entityType={ENTITIES.RESOURCE}
                 includeClasses={[CLASSES.COMPARISON_PUBLISHED]}
@@ -127,17 +123,28 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
                 value={selectedResource}
                 openMenuOnFocus={false}
                 allowCreate={false}
-                className="tw:!z-[50]"
+                className="z-[50]"
             />
-
             {hasValue && (
                 <div className="mt-2">
-                    <Alert color="info" className="my-3" isOpen={shouldShowOntologyAlert} toggle={() => setShouldShowOntologyAlert(false)}>
-                        Do you want to add an ontology section for this comparison?{' '}
-                        <Button color="link" className="p-0" onClick={handleAddOntologySection}>
-                            Add section
-                        </Button>
-                    </Alert>
+                    {shouldShowOntologyAlert && (
+                        <Alert status="accent" className="my-4">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>Add an ontology section?</Alert.Title>
+                                <Alert.Description>
+                                    Defining the ontology used in this comparison helps readers interpret the data consistently.
+                                </Alert.Description>
+                                <Button className="mt-2 sm:hidden" size="sm" variant="primary" onPress={handleAddOntologySection}>
+                                    Add section
+                                </Button>
+                            </Alert.Content>
+                            <Button className="hidden sm:block" size="sm" variant="primary" onPress={handleAddOntologySection}>
+                                Add section
+                            </Button>
+                            <CloseButton aria-label="Dismiss" onPress={() => setShouldShowOntologyAlert(false)} />
+                        </Alert>
+                    )}
                     <SectionComparison section={section} />
                 </div>
             )}

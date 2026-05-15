@@ -2,7 +2,7 @@ import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faFile, faTags, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -20,8 +20,8 @@ import {
     createEdgeChangeHandler,
     createInstanceId,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { ComparisonTableColumn } from '@/services/backend/types';
 
 export const columnHeaderKey = createDragDataKey('columnHeader');
@@ -40,14 +40,14 @@ type HeaderTextProps = {
 
 const HeaderText = ({ link, column }: HeaderTextProps) => (
     <div>
-        <Link href={link} className="tw:!text-white">
+        <Link href={link} className="text-inherit">
             <PaperTitle title={column.title.label} />
         </Link>
         <br />
         {column.subtitle ? (
-            <small className="tw:italic tw:border-t tw:border-[rgb(215,80,80)] tw:mt-0.5 tw:pt-0.5 tw:block">{column.subtitle?.label}</small>
+            <small className="italic border-t border-[rgb(215,80,80)] mt-0.5 pt-0.5 block">{column.subtitle?.label}</small>
         ) : (
-            <small className="tw:italic tw:border-t tw:border-[rgb(215,80,80)] tw:mt-0.5 tw:pt-0.5 tw:block">
+            <small className="italic border-t border-[rgb(215,80,80)] mt-0.5 pt-0.5 block">
                 <FontAwesomeIcon icon={faTags} /> Instance of: {column.title.classes.join(', ')}
             </small>
         )}
@@ -133,13 +133,13 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                 minWidth: `${columnWidth}px`,
             }}
             ref={ref}
-            className={`tw:font-medium tw:p-0 th p-0 tw:w-[2px] tw:grow-[2] tw:shrink-0 tw:basis-auto tw:relative ${isDragging ? 'shadow' : ''}`}
+            className={`font-medium th p-0 w-[2px] grow-[2] shrink-0 basis-auto relative text-left ${isDragging ? 'shadow' : ''}`}
         >
-            <div className={`tw:h-full tw:bg-primary tw:px-2 tw:pt-1 tw:pb-2 tw:!text-white tw:relative ${isLast ? 'tw:rounded-tr-md' : ''}`}>
-                <div className="tw:flex tw:flex-col tw:items-start tw:justify-between tw:h-full">
+            <div className={`h-full bg-accent px-2 pt-1 pb-2 text-white relative ${isLast ? 'rounded-tr-md' : ''}`}>
+                <div className="flex flex-col items-start justify-between h-full">
                     {columnWidth < 200 ? (
                         <Tooltip content={<HeaderText link={link} column={column} />}>
-                            <Link href={link} className="tw:!text-white tw:flex tw:justify-center tw:items-center tw:h-full tw:w-full">
+                            <Link href={link} className="text-white flex justify-center items-center h-full w-full">
                                 <FontAwesomeIcon icon={faFile} />
                             </Link>
                         </Tooltip>
@@ -147,21 +147,26 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                         <HeaderText link={link} column={column} />
                     )}
                     {isEditMode && (
-                        <Button color="primary-darker" size="sm" onClick={() => setIsOpenDataBrowserModal(true)}>
+                        <Button
+                            size="sm"
+                            onPress={() => setIsOpenDataBrowserModal(true)}
+                            className="bg-accent-darker text-white hover:bg-accent-darker/90"
+                        >
                             Edit data
                         </Button>
                     )}
                 </div>
                 {isEditMode && !isEmbeddedMode && (
                     <Button
-                        onClick={handleDelete}
-                        className="tw:absolute tw:top-[1px] tw:right-0 tw:!bg-[#ffa3a3] tw:hover:!bg-white tw:!border-0 tw:!text-primary tw:!w-[24px] tw:!h-[24px] tw:!p-0 tw:!rounded-full"
+                        isIconOnly
+                        size="sm"
+                        onPress={handleDelete}
+                        className="absolute top-[1px] right-0 bg-[#ffa3a3] hover:bg-white text-accent w-[24px] h-[24px] min-w-0 p-0 rounded-full"
                     >
-                        <FontAwesomeIcon icon={faTimes} className="" />
+                        <FontAwesomeIcon icon={faTimes} />
                     </Button>
                 )}
             </div>
-
             <DataBrowserDialog
                 show={isOpenDataBrowserModal}
                 toggleModal={() => setIsOpenDataBrowserModal((v) => !v)}
@@ -173,7 +178,6 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                 defaultHistory={[mainSource?.id]}
                 onCloseModal={() => isEditMode && mutateComparisonContents(comparisonContents, { revalidate: true })}
             />
-
             {closestEdge && isEditMode && <DropIndicator edge={closestEdge} />}
         </th>
     );

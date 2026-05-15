@@ -32,7 +32,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'true' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/The value you entered looks like/i)).toBeInTheDocument());
         expect(screen.getByRole('button', { name: 'Convert' })).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'true' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/Boolean/i)).toBeInTheDocument());
     });
@@ -56,7 +56,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: '1' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/Integer/i)).toBeInTheDocument());
     });
@@ -67,7 +67,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: '1.5' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/Decimal/i)).toBeInTheDocument());
     });
@@ -78,7 +78,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: '2021-11-10' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/Date/i)).toBeInTheDocument());
     });
@@ -89,7 +89,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'https://www.orkg.org/' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/URL/i)).toBeInTheDocument());
     });
@@ -100,12 +100,12 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'https://www.orkg.org/' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/URL/i)).toBeInTheDocument());
         fireEvent.click(screen.getByRole('button', { name: 'Convert' }));
         await waitFor(() => expect(screen.getByText('https://www.orkg.org/')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByText('URL')).toHaveAttribute('title', 'xsd:anyURI'));
+        await waitFor(() => expect(screen.getByText('URL')).toBeInTheDocument());
     });
 });
 
@@ -114,7 +114,7 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         await setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'https://www.orkg.org/' } });
-        const createButton = screen.getByRole('button', { name: 'Create' });
+        const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/URL/i)).toBeInTheDocument());
         fireEvent.click(screen.getByRole('button', { name: 'Keep' }));

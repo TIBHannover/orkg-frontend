@@ -1,14 +1,13 @@
 'use client';
 
+import { Separator, Skeleton } from '@heroui/react';
 import { env } from 'next-runtime-env';
 import { InView } from 'react-intersection-observer';
 
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import GraphViewModal from '@/components/GraphView/GraphViewModal';
-import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
@@ -48,7 +47,7 @@ const ViewPaper = () => {
                         }
                     />
 
-                    <InView as="div" onChange={(inView, entry) => handleShowHeaderBar(inView)}>
+                    <InView as="div" initialInView={false} onChange={(inView) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={
                                 <PaperMenuBar
@@ -64,32 +63,30 @@ const ViewPaper = () => {
 
                     <EditModeHeader isVisible={isEditMode} />
 
-                    <Container
-                        className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
-                                ${isEditMode ? 'rounded-bottom' : 'rounded'}`}
-                    >
-                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.title} />}
-
-                        {isLoading && (
-                            <ContentLoader height="100%" width="100%" viewBox="0 0 100 10" style={{ width: '100% !important' }} speed={2}>
-                                <rect x="0" y="0" width="80" height="4" />
-                                <rect x="0" y="6" rx="1" ry="1" width="10" height="2" />
-                                <rect x="12" y="6" rx="1" ry="1" width="10" height="2" />
-                                <rect x="24" y="6" rx="1" ry="1" width="10" height="2" />
-                                <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
-                            </ContentLoader>
-                        )}
-                        {!isLoading && !isLoadingFailed && <PaperHeader editMode={isEditMode} isPublishedVersionView={false} />}
-                        {!isLoading && (
-                            <>
-                                <hr className="mt-3" />
-                                <Contributions enableEdit={isEditMode} />
-                            </>
-                        )}
+                    <Container>
+                        <div className={`box flow-root relative p-4 md:p-12 ${isEditMode ? 'rounded-b' : 'rounded'}`}>
+                            {isLoading && (
+                                <div className="flex flex-col gap-3">
+                                    <Skeleton className="w-4/5 h-4 rounded" />
+                                    <div className="flex gap-2">
+                                        <Skeleton className="w-20 h-2 rounded" />
+                                        <Skeleton className="w-20 h-2 rounded" />
+                                        <Skeleton className="w-20 h-2 rounded" />
+                                        <Skeleton className="w-20 h-2 rounded" />
+                                    </div>
+                                </div>
+                            )}
+                            {!isLoading && !isLoadingFailed && <PaperHeader editMode={isEditMode} isPublishedVersionView={false} />}
+                            {!isLoading && (
+                                <>
+                                    <Separator className="my-3" />
+                                    <Contributions enableEdit={isEditMode} />
+                                </>
+                            )}
+                        </div>
                     </Container>
                 </>
             )}
-
             {showGraphModal && <GraphViewModal toggle={() => setShowGraphModal((v) => !v)} resourceId={resourceId} />}
         </div>
     );

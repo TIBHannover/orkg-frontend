@@ -7,7 +7,6 @@ import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButt
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Container from '@/components/Ui/Structure/Container';
 import { PaginatedResponse, Pagination } from '@/services/backend/types';
 
 type ListPageProps<ItemType, FetchFunctionParams> = {
@@ -70,11 +69,12 @@ const ListPage = <ItemType, FetchFunctionParams>({
             {!error && !hideTitleBar && (
                 <TitleBar
                     titleAddition={
-                        <div className="text-muted mt-1">{isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items</div>
+                        <div className="text-gray-500 mt-1">{isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements} items</div>
                     }
                     buttonGroup={
                         <>
-                            {buttons} {!disableSearch && <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />}
+                            {buttons}
+                            {!disableSearch && <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />}
                         </>
                     }
                 >
@@ -82,9 +82,9 @@ const ListPage = <ItemType, FetchFunctionParams>({
                 </TitleBar>
             )}
             {!error && infoContainerText && (
-                <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
-                    {infoContainerText}
-                </Container>
+                <div className="mx-auto mb-4 max-w-container px-3">
+                    <div className="rounded bg-surface-tertiary p-4">{infoContainerText}</div>
+                </div>
             )}
             <ListPaginatedContent<ItemType>
                 renderListItem={renderListItem}

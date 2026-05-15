@@ -1,8 +1,8 @@
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 
 import useList from '@/components/List/hooks/useList';
-import Badge from '@/components/Ui/Badge/Badge';
 import { LiteratureListSectionList } from '@/services/backend/types';
 
 export default function ListEntryAmount() {
@@ -14,8 +14,8 @@ export default function ListEntryAmount() {
         .reduce((a, b) => a + b, 0);
 
     return (
-        <Badge color="light" className="me-2 mb-2">
-            <FontAwesomeIcon icon={faHashtag} /> {entryAmount} list entries
-        </Badge>
+        <Chip variant="soft" size="sm" className="mr-2 mb-2">
+            <FontAwesomeIcon icon={faHashtag} className="text-muted" /> {entryAmount} list entries
+        </Chip>
     );
 }

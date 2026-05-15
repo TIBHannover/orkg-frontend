@@ -1,7 +1,7 @@
+import { Skeleton } from '@heroui/react';
 import { isEqual } from 'lodash';
 import { AnimatePresence, motion } from 'motion/react';
 import { FC, Fragment, ReactElement, useEffect } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import styled from 'styled-components';
 
 import TripleObject from '@/components/DataBrowser/components/Body/Statement/Object/TripleObject';
@@ -57,15 +57,15 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0,
     return (
         <>
             <motion.div layout>
-                <StatementStyled className="tw:border-b tw:border-gray-200">
+                <StatementStyled className="border-b border-gray-200">
                     <div
-                        className={`tw:flex ${isHidden ? 'tw:transition-opacity tw:opacity-50 tw:hover:opacity-100' : ''}`}
+                        className={`flex ${isHidden ? 'transition-opacity opacity-50 hover:opacity-100' : ''}`}
                         style={{ background: getBackgroundColor(level) }}
                     >
-                        <div className="tw:flex tw:basis-1/3 tw:shrink-0 tw:border-r tw:border-gray-200">
+                        <div className="flex basis-1/3 shrink-0 border-r border-gray-200">
                             <TriplePredicate level={level} statement={statement} deleteStatement={deleteStatement} isHidden={isHidden} />
                         </div>
-                        <div className="tw:flex tw:flex-1 tw:min-w-0">
+                        <div className="flex flex-1 min-w-0">
                             <TripleObject
                                 level={level}
                                 path={path}
@@ -81,7 +81,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0,
                     </div>
                 </StatementStyled>
             </motion.div>
-            {isLoadingObjectStatements && <Skeleton />}
+            {isLoadingObjectStatements && <Skeleton className="w-full h-4 rounded" />}
             <AnimatePresence initial={false}>
                 {showSubLevel &&
                     statement.object._class !== ENTITIES.LITERAL &&

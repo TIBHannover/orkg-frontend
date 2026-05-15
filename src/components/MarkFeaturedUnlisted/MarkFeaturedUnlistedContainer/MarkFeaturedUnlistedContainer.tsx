@@ -20,7 +20,7 @@ const MarkFeaturedUnlistedContainer: FC<MarkFeaturedUnlistedContainerProps> = ({
     return (
         <>
             <MarkFeatured size={size} featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-            <div className="d-inline-block ms-1">
+            <div className="inline-block ml-1">
                 <MarkUnlisted size={size} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
             </div>
         </>

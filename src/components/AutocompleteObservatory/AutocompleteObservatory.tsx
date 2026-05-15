@@ -1,12 +1,11 @@
+import { Label } from '@heroui/react';
 import { truncate } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select, { components, GroupBase, OptionProps, OptionsOrGroups, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Label from '@/components/Ui/Label/Label';
 import { getObservatories } from '@/services/backend/observatories';
 import { getConferences, getOrganization } from '@/services/backend/organizations';
 import { Observatory, Organization } from '@/services/backend/types';
@@ -17,7 +16,7 @@ const MAXIMUM_DESCRIPTION_LENGTH = 120;
 const CustomOptionObservatory = ({ data, isSelected, ...innerProps }: OptionProps<Observatory, false, GroupBase<Observatory>>) => (
     <components.Option data={data} isSelected={isSelected} {...innerProps}>
         <div>{data.name}</div>
-        <small className={!isSelected ? 'text-muted' : ''}>{truncate(data.description ?? '', { length: MAXIMUM_DESCRIPTION_LENGTH })}</small>
+        <small className={!isSelected ? 'text-gray-500' : ''}>{truncate(data.description ?? '', { length: MAXIMUM_DESCRIPTION_LENGTH })}</small>
     </components.Option>
 );
 
@@ -92,8 +91,8 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
             <p>
                 <small>Clear the observatory field to select a conference in the organization field.</small>
             </p>
-            <FormGroup>
-                <Label for="select-observatory">Select an observatory</Label>
+            <div className="mb-3">
+                <Label htmlFor="select-observatory">Select an observatory</Label>
                 <AsyncPaginate
                     value={observatory}
                     components={{ Option: CustomOptionObservatory }}
@@ -107,10 +106,13 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
                     inputId="select-observatory"
                     isClearable
                     classNamePrefix="react-select"
+                    classNames={customClassNames as any}
+                    styles={customStyles as any}
+                    menuPosition="fixed"
                 />
-            </FormGroup>
-            <FormGroup>
-                <Label for="select-organization">Select an organization</Label>
+            </div>
+            <div className="mb-3">
+                <Label htmlFor="select-organization">Select an organization</Label>
                 <Select
                     value={organization}
                     components={{ Option }}
@@ -121,10 +123,12 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
                     inputId="select-organization"
                     isClearable
                     classNamePrefix="react-select"
+                    classNames={customClassNames as any}
+                    styles={customStyles as any}
+                    menuPosition="fixed"
                     isMulti={false}
                 />
-            </FormGroup>
-            <SelectGlobalStyle />
+            </div>
         </>
     );
 };

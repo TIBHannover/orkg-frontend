@@ -1,68 +1,40 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode } from 'react';
-import styled from 'styled-components';
 
 import Container from '@/components/Ui/Structure/Container';
-
-const AnimationContainer = styled(motion.div)`
-    overflow: hidden;
-`;
-
-export const EditModeContainer = styled(Container)`
-    background-color: ${(props) => props.theme.secondary}!important;
-    color: #fff;
-    padding: 8px 25px !important;
-    display: flex;
-    align-items: center;
-    box-shadow: 0px -2px 4px 0px rgb(0 0 0 / 13%);
-    position: relative;
-    z-index: 1;
-`;
-
-export const Title = styled.div`
-    font-size: 1.1rem;
-    flex-grow: 1;
-    & span {
-        font-size: small;
-        color: ${(props) => props.theme.lightDarker};
-    }
-`;
 
 type EditModeHeaderProps = {
     isVisible: boolean;
     message?: string | ReactNode;
 };
 
-function EditModeHeader({ isVisible, message = null }: EditModeHeaderProps) {
-    return (
-        <AnimatePresence>
-            {isVisible && (
-                <AnimationContainer
-                    initial={{ maxHeight: 0 }}
-                    animate={{ maxHeight: 50 }}
-                    exit={{ maxHeight: 0 }}
-                    transition={{
-                        duration: 0.8,
-                        ease: 'easeOut',
-                    }}
-                >
-                    <div>
-                        <EditModeContainer className="rounded-top">
-                            <Title>
-                                {!message ? (
-                                    <>
-                                        Edit mode <span className="ps-2">Every change you make is automatically saved</span>
-                                    </>
-                                ) : (
-                                    message
-                                )}
-                            </Title>
-                        </EditModeContainer>
+const EditModeHeader = ({ isVisible, message = null }: EditModeHeaderProps) => (
+    <AnimatePresence>
+        {isVisible && (
+            <motion.div
+                className="overflow-hidden"
+                initial={{ maxHeight: 0 }}
+                animate={{ maxHeight: 50 }}
+                exit={{ maxHeight: 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+                <Container>
+                    <div className="rounded-t bg-secondary text-white flex items-center py-2 px-4 md:px-12 shadow-[0_-2px_4px_0_rgb(0_0_0/13%)] relative z-[1]">
+                        <div className="text-base sm:text-[1.1rem] grow truncate">
+                            {!message ? (
+                                <>
+                                    Edit mode{' '}
+                                    <span className="text-sm text-white/70 pl-2 hidden sm:inline">Every change you make is automatically saved</span>
+                                </>
+                            ) : (
+                                message
+                            )}
+                        </div>
                     </div>
-                </AnimationContainer>
-            )}
-        </AnimatePresence>
-    );
-}
+                </Container>
+            </motion.div>
+        )}
+    </AnimatePresence>
+);
 
 export default EditModeHeader;

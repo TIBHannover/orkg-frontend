@@ -1,11 +1,7 @@
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal } from '@heroui/react';
 import { type CSSProperties, ReactNode, useState } from 'react';
-
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type VideoExplainerProps = {
     previewStyle?: CSSProperties;
@@ -18,25 +14,26 @@ const VideoExplainer = ({ previewStyle = {}, video }: VideoExplainerProps) => {
     return (
         <>
             <Button
-                color="link"
-                className="p-0 d-flex align-items-center text-secondary"
+                variant="ghost"
+                className="p-0 flex items-center text-secondary"
                 style={{ marginTop: -6, marginBottom: -6 }}
-                onClick={() => setIsOpen(true)}
+                onPress={() => setIsOpen(true)}
             >
-                <span
-                    className="border border-secondary d-flex justify-content-center align-items-center flex-column me-2 rounded"
-                    style={previewStyle}
-                >
+                <span className="border border-secondary flex justify-center items-center flex-col mr-2 rounded" style={previewStyle}>
                     <FontAwesomeIcon icon={faPlayCircle} className="shadow" style={{ fontSize: '120%' }} />
                 </span>
             </Button>
-
-            <Modal isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} size="lg">
-                <ModalHeader toggle={() => setIsOpen((v) => !v)}>Video explainer</ModalHeader>
-                <ModalBody>
-                    <div className="ratio ratio-16x9">{video}</div>
-                </ModalBody>
-            </Modal>
+            <Modal.Backdrop isOpen={isOpen} onOpenChange={(open) => !open && setIsOpen(false)} isDismissable>
+                <Modal.Container size="lg">
+                    <Modal.Dialog className="max-w-3xl">
+                        <Modal.Header>
+                            <Modal.CloseTrigger />
+                            <Modal.Heading>Video explainer</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body className="flex items-center justify-center">{video}</Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </>
     );
 };

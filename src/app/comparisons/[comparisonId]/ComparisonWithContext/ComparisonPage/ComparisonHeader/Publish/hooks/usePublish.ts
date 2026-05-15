@@ -1,11 +1,11 @@
+import { toast } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { publishComparison } from '@/services/backend/comparisons';
 import { getErrorMessage } from '@/utils';
 
@@ -54,7 +54,7 @@ function usePublish() {
             }
         } catch (error: unknown) {
             console.error(error);
-            toast.error(`Error publishing a comparison : ${error instanceof Error ? getErrorMessage(error) : 'Unknown error'}`);
+            toast.danger(`Error publishing a comparison : ${error instanceof Error ? getErrorMessage(error) : 'Unknown error'}`);
             setIsLoading(false);
         }
     };

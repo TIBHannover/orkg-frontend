@@ -1,16 +1,14 @@
 import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Chip, Label, Skeleton, Switch, Tooltip } from '@heroui/react';
 import { toInteger } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import ReactStringReplace from 'react-string-replace';
 import useSWR from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import { normalizeSpacing, removeEmptySegments } from '@/components/RosettaStone/SingleStatement/hooks/helpers';
 import useEditStatement from '@/components/RosettaStone/SingleStatement/hooks/useEditStatement';
@@ -18,13 +16,9 @@ import useRosettaTemplate from '@/components/RosettaStone/SingleStatement/hooks/
 import InfoBox from '@/components/RosettaStone/SingleStatement/InfoBox';
 import StatementInputField from '@/components/RosettaStone/SingleStatement/StatementInputField';
 import StatementValue from '@/components/RosettaStone/SingleStatement/StatementValue';
-import Badge from '@/components/Ui/Badge/Badge';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getPaper, papersUrl } from '@/services/backend/papers';
 import { RosettaStoneStatement } from '@/services/backend/types';
 
@@ -63,7 +57,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
     const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement.template_id ?? '' });
 
     if (isLoadingTemplate) {
-        return <Skeleton />;
+        return <Skeleton className="w-full h-4 rounded" />;
     }
 
     if (!template) {
@@ -114,92 +108,80 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
     }
 
     return (
-        <ListGroupItem className="py-3">
-            <div className="position-absolute tw:top-0 tw:right-0 mt-2 z-3">
-                {isEditMode && (
-                    <span className="ms-2">
-                        {statement.latest_version_id && (
-                            <ActionButton
-                                title={editButtonTitle}
-                                icon={isEditing ? faClose : faPen}
-                                action={() => setIsEditing((v) => !v)}
-                                isDisabled={!statement.modifiable}
-                            />
-                        )}
-                        <ActionButton
-                            title={statement.modifiable ? 'Delete statement' : 'Not modifiable statement'}
-                            icon={faTrash}
-                            requireConfirmation
-                            isDisabled={!statement.modifiable}
-                            confirmationMessage="Are you sure to delete?"
-                            confirmationButtons={[
-                                ...(statement.latest_version_id && isCurationAllowed
-                                    ? [{ title: 'Delete permanently', color: 'danger', icon: faCheck, action: handleDeleteStatementPermanently }]
-                                    : []),
-                                {
-                                    title: 'Delete',
-                                    color: statement.latest_version_id && isCurationAllowed ? 'warning' : 'danger',
-                                    icon: faCheck,
-                                    action: handleDeleteStatement,
-                                },
-                                {
-                                    title: 'Cancel',
-                                    color: 'secondary',
-                                    icon: faTimes,
-                                },
-                            ]}
-                        />
-                    </span>
+        <div className="py-4 px-4 relative border-b border-divider last:border-b-0">
+            <div className="absolute top-2 right-2 z-30 flex items-center gap-1">
+                {isEditMode && statement.latest_version_id && (
+                    <ActionButton
+                        title={editButtonTitle}
+                        icon={isEditing ? faClose : faPen}
+                        action={() => setIsEditing((v) => !v)}
+                        isDisabled={!statement.modifiable}
+                    />
                 )}
-
+                {isEditMode && (
+                    <ActionButton
+                        title={statement.modifiable ? 'Delete statement' : 'Not modifiable statement'}
+                        icon={faTrash}
+                        requireConfirmation
+                        isDisabled={!statement.modifiable}
+                        confirmationMessage="Are you sure to delete?"
+                        confirmationButtons={[
+                            ...(statement.latest_version_id && isCurationAllowed
+                                ? [{ title: 'Delete permanently', color: 'danger', icon: faCheck, action: handleDeleteStatementPermanently }]
+                                : []),
+                            {
+                                title: 'Delete',
+                                color: statement.latest_version_id && isCurationAllowed ? 'warning' : 'danger',
+                                icon: faCheck,
+                                action: handleDeleteStatement,
+                            },
+                            {
+                                title: 'Cancel',
+                                color: 'secondary',
+                                icon: faTimes,
+                            },
+                        ]}
+                    />
+                )}
                 <InfoBox statement={statement} template={template} certainty={certainty} setCertainty={setCertainty} isEditing={isEditing} />
             </div>
-            <div className="p-2 pt-3">
-                <div style={{ lineHeight: isEditing ? 3 : 2 }}>
+            <div className="pt-4 pr-20">
+                <div className="leading-loose" style={{ lineHeight: isEditing ? 3 : 2 }}>
                     {!isEditing && statement.negated && (
-                        <div className="d-inline-block me-2">
-                            <Badge color="danger">NOT</Badge>
-                        </div>
+                        <Chip color="danger" size="sm" className="mr-2 align-middle">
+                            NOT
+                        </Chip>
                     )}
                     {normalizeSpacing(formattedLabelWithInputs)}.
                 </div>
-                {showContext && isLoadingContext && <div className="d-inline-block">Loading...</div>}
+                {showContext && isLoadingContext && <div className="inline-block">Loading...</div>}
                 {showContext && !isLoadingContext && context && (
                     <Link href={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: context.id, contributionId: 'statements' })}>
-                        <Badge color="light" className="d-inline-block text-truncate" style={{ maxWidth: '50%' }} title={context.title}>
+                        <Chip size="sm" className="inline-block truncate" style={{ maxWidth: '50%' }} title={context.title}>
                             Context: {context.title}
-                        </Badge>
+                        </Chip>
                     </Link>
                 )}
             </div>
-            <div className="d-flex justify-content-between">
-                {isEditing && isEditMode && (
-                    <div className="clearfix">
-                        <FormGroup switch className="float-right me-2">
-                            <Tooltip content="By activating this option the statement would be negated.">
-                                <span>
-                                    <Input
-                                        checked={isNegate}
-                                        type="switch"
-                                        role="switch"
-                                        id={`negate${statement.id}`}
-                                        onChange={() => setIsNegate((v) => !v)}
-                                    />
-                                    <Label check for={`negate${statement.id}`}>
-                                        Negate statement
-                                    </Label>
-                                </span>
-                            </Tooltip>
-                        </FormGroup>
-                    </div>
-                )}
-                {isEditing && isEditMode && (
-                    <ButtonWithLoading color="primary" size="sm" onClick={onSave} isLoading={isSaving}>
+            {isEditing && isEditMode && (
+                <div className="mt-4 flex items-center justify-between gap-3">
+                    <Tooltip>
+                        <Switch isSelected={isNegate} onChange={setIsNegate} size="sm">
+                            <Switch.Control>
+                                <Switch.Thumb />
+                            </Switch.Control>
+                            <Switch.Content>
+                                <Label className="text-sm">Negate statement</Label>
+                            </Switch.Content>
+                        </Switch>
+                        <Tooltip.Content>By activating this option the statement would be negated.</Tooltip.Content>
+                    </Tooltip>
+                    <ButtonWithLoading variant="primary" size="sm" onPress={onSave} isLoading={isSaving}>
                         {!statement.latest_version_id ? 'Create' : 'Update'}
                     </ButtonWithLoading>
-                )}
-            </div>
-        </ListGroupItem>
+                </div>
+            )}
+        </div>
     );
 };
 

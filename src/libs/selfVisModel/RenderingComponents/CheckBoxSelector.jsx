@@ -1,7 +1,6 @@
+import { Checkbox } from '@heroui/react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
-import Input from '@/components/Ui/Input/Input';
+import { Component } from 'react';
 
 class CheckboxSelector extends Component {
     constructor(props) {
@@ -15,18 +14,23 @@ class CheckboxSelector extends Component {
         };
     }
 
-    toggleCheckboxChange = () => {
+    toggleCheckboxChange = (selected) => {
         const { handleCheckboxChange } = this.props;
-        handleCheckboxChange(!this.state.isChecked);
-        this.setState(({ isChecked }) => ({
-            isChecked: !isChecked,
-        }));
+        handleCheckboxChange(selected);
+        this.setState({ isChecked: selected });
     };
 
     render() {
         const { isChecked } = this.state;
+        const { cbx_id } = this.props;
 
-        return <Input bsSize="xs" type="checkbox" id={this.props.cbx_id} onChange={this.toggleCheckboxChange} checked={isChecked} label="" />;
+        return (
+            <Checkbox id={cbx_id} isSelected={isChecked} onChange={this.toggleCheckboxChange} aria-label="Toggle column selection">
+                <Checkbox.Control>
+                    <Checkbox.Indicator />
+                </Checkbox.Control>
+            </Checkbox>
+        );
     }
 }
 

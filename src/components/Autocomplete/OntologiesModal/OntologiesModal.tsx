@@ -1,20 +1,15 @@
 import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Label, Modal, toast } from '@heroui/react';
 import { isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 import { MultiValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import { toast } from 'react-toastify';
 
 import { useAutocompleteDispatch, useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
 import { CustomOption } from '@/components/Autocomplete/OntologiesModal/CustomOption';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { AdditionalType, Ontology } from '@/components/Autocomplete/types';
-import Button from '@/components/Ui/Button/Button';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { AUTOCOMPLETE_SOURCE, DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
 import { loadOntologiesOptions } from '@/services/ols';
 import { asyncLocalStorage } from '@/utils';
@@ -36,7 +31,7 @@ const OntologiesModal = () => {
 
     const handleSelect = () => {
         if (value.length === 0) {
-            toast.error('Select at least one source');
+            toast.danger('Select at least one source');
             return;
         }
         asyncLocalStorage.setItem(STORAGE_NAME, JSON.stringify(value));
@@ -53,48 +48,62 @@ const OntologiesModal = () => {
     }, [selectedOntologies]);
 
     return (
-        <Modal isOpen={isOntologySelectorIsOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Select sources</ModalHeader>
-            <ModalBody>
-                <div className="d-flex justify-content-between align-items-end">
-                    <Label for="source-selector" className="mb-0">
-                        Select search sources from below
-                    </Label>
-                    <Button color="light" onClick={handleReset} size="sm" className="mt-2" disabled={isEqual(value, defaultSelection)}>
-                        <FontAwesomeIcon icon={faArrowRotateLeft} /> Reset
-                    </Button>
-                </div>
-                <div className="mb-3 mt-1">
-                    <AsyncPaginate
-                        additional={defaultAdditional}
-                        onChange={(selected) => {
-                            setValue(selected || []);
-                        }}
-                        loadOptions={loadOntologiesOptions}
-                        placeholder="Select or type to enter an ontology"
-                        value={value}
-                        defaultOptions={DEFAULT_SOURCES}
-                        openMenuOnFocus
-                        isClearable
-                        isMulti
-                        classNamePrefix="react-select"
-                        debounceTimeout={300}
-                        getOptionValue={({ id }) => id}
-                        components={{
-                            Option: CustomOption,
-                        }}
-                    />
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="light" onClick={toggle}>
-                    Cancel
-                </Button>
-                <Button color="primary" onClick={handleSelect}>
-                    Select
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop isOpen={isOntologySelectorIsOpen} onOpenChange={(open) => !open && toggle()} isDismissable>
+            <Modal.Container>
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Select sources</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="flex justify-between items-end">
+                            <Label className="mb-0">Select search sources from below</Label>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                className="mt-2"
+                                isDisabled={isEqual(value, defaultSelection)}
+                                onPress={handleReset}
+                            >
+                                <FontAwesomeIcon icon={faArrowRotateLeft} /> Reset
+                            </Button>
+                        </div>
+                        <div className="mb-4 mt-1">
+                            <AsyncPaginate
+                                additional={defaultAdditional}
+                                onChange={(selected) => {
+                                    setValue(selected || []);
+                                }}
+                                loadOptions={loadOntologiesOptions}
+                                placeholder="Select or type to enter an ontology"
+                                value={value}
+                                defaultOptions={DEFAULT_SOURCES}
+                                openMenuOnFocus
+                                isClearable
+                                isMulti
+                                classNamePrefix="react-select"
+                                classNames={customClassNames as any}
+                                styles={customStyles as any}
+                                menuPosition="fixed"
+                                debounceTimeout={300}
+                                getOptionValue={({ id }) => id}
+                                components={{
+                                    Option: CustomOption,
+                                }}
+                            />
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onPress={toggle}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" onPress={handleSelect}>
+                            Select
+                        </Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

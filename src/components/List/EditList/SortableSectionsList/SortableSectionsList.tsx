@@ -116,7 +116,7 @@ const SortableSectionsList = () => {
     }
 
     return (
-        <Container className="position-relative p-0">
+        <Container className="relative">
             {list.sections.map((section, index) => (
                 <EditSection
                     key={section.id}

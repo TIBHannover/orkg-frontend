@@ -1,6 +1,6 @@
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Skeleton from 'react-loading-skeleton';
+import { Skeleton } from '@heroui/react';
 import styled from 'styled-components';
 
 import useBreadcrumbs from '@/components/DataBrowser/hooks/useBreadcrumbs';
@@ -39,24 +39,24 @@ const Breadcrumbs = () => {
     const { historyEntities, isLoading, handleBackClick, selectResource } = useBreadcrumbs();
 
     if (!history || history?.length === 0 || history.length === 1) {
-        return <h3 className="flex-grow-1 mb-0 h6">Data browser</h3>;
+        return <h3 className="grow mb-0 text-lg">Data browser</h3>;
     }
 
     if (isLoading) {
         return (
-            <div className="flex-grow-1">
-                <Skeleton width={100} />
+            <div className="grow">
+                <Skeleton className="w-[100px] h-4 rounded" />
             </div>
         );
     }
 
     return (
-        <div className="flex-grow-1 d-flex flex-shrink-0 col-md-10">
-            <Button title="Back" color="primary" size="sm" outline className="px-2 me-2" onClick={handleBackClick}>
+        <div className="grow flex shrink-0 w-full md:shrink-0 md:grow-0 md:w-10/12 md:basis-10/12 md:max-w-10/12">
+            <Button title="Back" color="primary" size="sm" outline className="px-2 mr-2" onClick={handleBackClick}>
                 <FontAwesomeIcon icon={faArrowLeft} />
             </Button>
-            <ul className="list-unstyled p-0 d-flex w-75 m-0">
-                <BreadcrumbItem className="text-nowrap overflow-hidden d-flex px-3 py-1" onClick={() => selectResource(history[0])}>
+            <ul className="list-unstyled p-0 flex w-3/4 m-0">
+                <BreadcrumbItem className="text-nowrap overflow-hidden flex px-4 py-1" onClick={() => selectResource(history[0])}>
                     <div title={historyEntities?.[0]?.label}>{historyEntities?.[0]?.label}</div>
                 </BreadcrumbItem>
                 {history
@@ -68,7 +68,7 @@ const Breadcrumbs = () => {
                         const resourceLabel = historyEntities?.[propertyIndex + 1]?.label;
                         return (
                             <BreadcrumbItem
-                                className="text-nowrap overflow-hidden d-flex px-3 py-1"
+                                className="text-nowrap overflow-hidden flex px-4 py-1"
                                 key={historyEntities?.[propertyIndex + 1]?.id ?? index}
                                 onClick={() => selectResource(historyEntities?.[propertyIndex + 1]?.id ?? '')}
                             >

@@ -1,14 +1,11 @@
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Modal, Skeleton } from '@heroui/react';
 import pluralize from 'pluralize';
 import { Dispatch, FC, SetStateAction } from 'react';
 
 import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { getContributorsByResearchProblemId, researchProblemsUrl } from '@/services/backend/research-problems';
 
 type ContributorsModalProps = {
@@ -35,52 +32,71 @@ const ContributorsModal: FC<ContributorsModalProps> = ({ researchProblemId, open
     });
 
     return (
-        <Modal isOpen={openModal} toggle={() => setOpenModal((v) => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal((v) => !v)}>
-                <FontAwesomeIcon icon={faAward} className="text-primary me-2" />
-                Top 30 Contributors
-            </ModalHeader>
-            <ModalBody>
-                <div className="ps-3 pe-3">
-                    {!isLoading &&
-                        contributors &&
-                        contributors.map((contributor, index) => (
-                            <div className="pt-2 pb-2" key={`rp${index}`}>
-                                <div className="d-flex">
-                                    <div className="ps-4 pe-4 pt-2">{index + 1}.</div>
-                                    <div>
-                                        <ContributorCard
-                                            id={contributor.contributorId}
-                                            subTitle={`${pluralize('contribution', contributor.totalCount, true)}`}
-                                        />
+        <Modal.Backdrop
+            isOpen={openModal}
+            onOpenChange={(open) => {
+                if (!open) setOpenModal(false);
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-4xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>
+                            <FontAwesomeIcon icon={faAward} className="text-accent mr-2" />
+                            Top 30 Contributors
+                        </Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="pl-4 pr-4">
+                            {!isLoading &&
+                                contributors &&
+                                contributors.map((contributor, index) => (
+                                    <div className="pt-2 pb-2" key={`rp${index}`}>
+                                        <div className="flex">
+                                            <div className="pl-6 pr-6 pt-2">{index + 1}.</div>
+                                            <div>
+                                                <ContributorCard
+                                                    id={contributor.contributorId}
+                                                    subTitle={`${pluralize('contribution', contributor.totalCount, true)}`}
+                                                />
+                                            </div>
+                                        </div>
+                                        {contributors.length - 1 !== index && <hr className="mb-0 mt-4" />}
+                                    </div>
+                                ))}
+                            {!isLoading && !error && contributors?.length === 0 && (
+                                <div className="mt-6 mb-6">
+                                    No contributors yet.
+                                    <i> Be the first contributor!</i>
+                                </div>
+                            )}
+                            {!isLoading && error && <div className="mt-6 mb-6 text-red-600">Something went wrong while loading contributors.</div>}
+                            {isLoading && (
+                                <div className="mt-6 mb-6 flex">
+                                    <div className="w-0.5 bg-gray-200 mr-4 shrink-0" />
+                                    <div className="flex flex-col gap-4 grow">
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-3/4 h-2 rounded" />
+                                            <Skeleton className="w-1/2 h-1.5 rounded" />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-3/4 h-2 rounded" />
+                                            <Skeleton className="w-3/4 h-1.5 rounded" />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="w-1/2 h-2 rounded" />
+                                            <Skeleton className="w-3/4 h-1.5 rounded" />
+                                        </div>
                                     </div>
                                 </div>
-                                {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
-                            </div>
-                        ))}
-                    {!isLoading && !error && contributors?.length === 0 && (
-                        <div className="mt-4 mb-4">
-                            No contributors yet.
-                            <i> Be the first contributor!</i>
+                            )}
                         </div>
-                    )}
-                    {!isLoading && error && <div className="mt-4 mb-4 text-danger">Something went wrong while loading contributors.</div>}
-                    {isLoading && (
-                        <div className="mt-4 mb-4">
-                            <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
-                                <rect x="30" y="5" rx="3" ry="3" width="150" height="6" />
-                                <rect x="30" y="15" rx="3" ry="3" width="100" height="5" />
-                                <rect x="30" y="35" rx="3" ry="3" width="150" height="6" />
-                                <rect x="30" y="45" rx="3" ry="3" width="150" height="5" />
-                                <rect x="30" y="65" rx="3" ry="3" width="100" height="6" />
-                                <rect x="30" y="75" rx="3" ry="3" width="150" height="5" />
-                                <rect x="14" y="0" rx="3" ry="3" width="3" height="100" />
-                            </ContentLoader>
-                        </div>
-                    )}
-                </div>
-            </ModalBody>
-        </Modal>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

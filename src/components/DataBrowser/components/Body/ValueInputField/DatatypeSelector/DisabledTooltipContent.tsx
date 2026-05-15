@@ -1,9 +1,9 @@
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Node } from '@/services/backend/types';
 
 type DisabledTooltipContentProps = {

@@ -1,8 +1,7 @@
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { truncate } from 'lodash';
-import { FC, useContext, useState } from 'react';
-import { ThemeContext } from 'styled-components';
+import { FC, useState } from 'react';
 import useSWR from 'swr';
 
 import { OptionType } from '@/components/Autocomplete/types';
@@ -17,15 +16,13 @@ type InfoBoxProps = {
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
 
 const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
-    const theme = useContext(ThemeContext);
-
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: statements, isLoading } = useSWR(data.id && isOpen ? [{ subjectId: data.id }, statementsUrl, 'getStatements'] : null, ([params]) =>
         getStatements(params),
     );
 
-    const iconColor = !isFocused ? theme?.lightDarker : theme?.secondary;
+    const iconClassName = !isFocused ? 'text-muted' : 'text-secondary';
 
     return (
         <Tooltip
@@ -33,13 +30,13 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
             key="c"
             contentStyle={{ zIndex: 99999, position: 'absolute' }}
             content={
-                <div className="text-start">
+                <div className="text-left">
                     {!isLoading ? (
                         <>
                             {!data.external && statements && statements.length > 0 && (
                                 <>
                                     Statements:
-                                    <ul className="px-3 mb-0">
+                                    <ul className="px-4 mb-0">
                                         {statements.slice(0, 5).map((s) => (
                                             <li key={s.id}>
                                                 {s.predicate.label}:{' '}
@@ -74,7 +71,7 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
             }
         >
             <span>
-                <FontAwesomeIcon icon={faInfoCircle} color={iconColor} />
+                <FontAwesomeIcon icon={faInfoCircle} className={iconClassName} />
             </span>
         </Tooltip>
     );

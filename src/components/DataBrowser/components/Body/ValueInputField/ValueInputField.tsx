@@ -1,20 +1,16 @@
 import { faCheck, faClose, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Popover } from '@heroui/react';
 import a from 'indefinite';
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 
 import DatatypeSelector from '@/components/DataBrowser/components/Body/ValueInputField/DatatypeSelector/DatatypeSelector';
 import useSaveValue from '@/components/DataBrowser/hooks/useSaveValue';
 import ConfirmationTooltip from '@/components/FloatingUI/ConfirmationTooltip/ConfirmationTooltip';
-import Popover from '@/components/FloatingUI/Popover';
 import InputField from '@/components/InputField/InputField';
 import SmartLiteralTypeCheck from '@/components/SmartSuggestions/SmartLiteralTypeCheck';
 import SmartResourceLabelCheck from '@/components/SmartSuggestions/SmartResourceLabelCheck';
-import Button from '@/components/Ui/Button/Button';
-import FormFeedback from '@/components/Ui/Form/FormFeedback';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
-import errorHandler from '@/helpers/errorHandler';
 import { Literal, Node, Predicate } from '@/services/backend/types';
 
 type ValueInputFieldProps = {
@@ -56,9 +52,12 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
         optionsClasses = [CLASSES.CSVW_TABLE];
     }
 
+    const isSaveDisabled = dataType !== 'empty' && !inputValue?.toString();
+    const saveButtonRef = useRef<HTMLButtonElement>(null);
+
     return (
-        <div className="d-flex flex-column flex-grow-1">
-            <InputGroup size="sm" className="flex-grow-1 flex-nowrap">
+        <div className="flex flex-col grow min-w-0">
+            <div className="flex items-stretch min-h-9 grow min-w-0">
                 <DatatypeSelector
                     _class={editMode && value && '_class' in value ? value._class : undefined}
                     range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
@@ -86,36 +85,38 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                         toggleShowInput();
                     }}
                 />
-                {_class === ENTITIES.RESOURCE && <SmartResourceLabelCheck label={inputValue} />}
-                {_class === ENTITIES.LITERAL && <SmartLiteralTypeCheck label={inputValue} />}
+                {_class === ENTITIES.RESOURCE && <SmartResourceLabelCheck label={inputValue} className="!h-9 !rounded-none -ms-px" />}
+                {_class === ENTITIES.LITERAL && <SmartLiteralTypeCheck label={inputValue} className="!h-9 !rounded-none -ms-px" />}
                 <Button
                     size="sm"
-                    type="submit"
-                    color="secondary"
-                    className="px-2"
-                    onClick={() => {
+                    variant="secondary"
+                    isIconOnly
+                    className="!h-9 !rounded-none -ms-px"
+                    onPress={() => {
                         setFormFeedback(null);
                         toggleShowInput();
                     }}
-                    title="Cancel"
+                    aria-label="Cancel"
                 >
                     <FontAwesomeIcon icon={faClose} />
                 </Button>
-                <Button
-                    className="px-2"
-                    size="sm"
-                    disabled={dataType !== 'empty' && !inputValue?.toString()}
-                    type="submit"
-                    color="primary"
-                    onClick={onSubmit}
-                    title="Save"
-                >
-                    <Popover
-                        modal
-                        open={isConversionTippyOpen}
-                        onOpenChange={setIsConversionTippyOpen}
-                        content={
+                <Popover>
+                    <Button
+                        ref={saveButtonRef}
+                        size="sm"
+                        variant="primary"
+                        isDisabled={isSaveDisabled}
+                        className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px px-2"
+                        onPress={onSubmit}
+                        aria-label="Save"
+                    >
+                        {editMode ? <FontAwesomeIcon icon={faCheck} /> : 'Create'}
+                    </Button>
+                    <Popover.Content triggerRef={saveButtonRef} isOpen={isConversionTippyOpen} onOpenChange={setIsConversionTippyOpen}>
+                        <Popover.Dialog>
+                            <Popover.Arrow />
                             <ConfirmationTooltip
+                                onClose={() => setIsConversionTippyOpen(false)}
                                 message={
                                     <p className="mb-2">
                                         The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
@@ -137,13 +138,11 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                                     },
                                 ]}
                             />
-                        }
-                    >
-                        <span>{editMode ? <FontAwesomeIcon icon={faCheck} /> : 'Create'}</span>
-                    </Popover>
-                </Button>
-            </InputGroup>
-            {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
+                        </Popover.Dialog>
+                    </Popover.Content>
+                </Popover>
+            </div>
+            {!isValid && <div className="text-sm text-danger mt-1">{formFeedback}</div>}
         </div>
     );
 };

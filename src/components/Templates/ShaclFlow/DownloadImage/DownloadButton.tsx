@@ -34,6 +34,9 @@ function DownloadButton() {
             backgroundColor: 'transparent',
             width: imageWidth,
             height: nodesBounds.height,
+            // Cross-origin stylesheets (e.g. Next.js fonts) throw SecurityError when
+            // html-to-image walks cssRules to inline fonts — skip that step.
+            skipFonts: true,
             style: {
                 width: imageWidth.toString(),
                 height: imageHeight.toString(),
@@ -41,7 +44,7 @@ function DownloadButton() {
             },
         });
     };
-    const onClick = async () => {
+    const onPress = async () => {
         setIsConvertingToImage(true);
         const dataUrl = await convertFlowToImage();
         setIsConvertingToImage(false);
@@ -49,7 +52,7 @@ function DownloadButton() {
     };
 
     return (
-        <ButtonWithLoading className="me-1" color="light" isLoading={isConvertingToImage} onClick={onClick}>
+        <ButtonWithLoading variant="tertiary" size="sm" isLoading={isConvertingToImage} onPress={onPress}>
             Download image
         </ButtonWithLoading>
     );

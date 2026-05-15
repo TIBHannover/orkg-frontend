@@ -1,15 +1,15 @@
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Skeleton, toast } from '@heroui/react';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 
-import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import AddMember from '@/components/Observatory/AddMember';
+import MemberRow from '@/components/Observatory/MemberRow';
 import MembersModal from '@/components/Observatory/MembersModal';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
-import Button from '@/components/Ui/Button/Button';
 import { getUsersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
 import { Contributor, Organization } from '@/services/backend/types';
 import { deleteUserFromObservatoryById } from '@/services/backend/users';
@@ -40,80 +40,112 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }: MembersBox
     });
 
     const deleteObservatoryMember = async (member: Contributor) => {
-        await deleteUserFromObservatoryById(member.id)
-            .then(() => {
-                mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
-                toast.success('Member deleted successfully');
-            })
-            .catch(() => {
-                toast.error('error deleting a member');
-            });
+        try {
+            await deleteUserFromObservatoryById(member.id);
+            mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
+            toast.success('Member deleted successfully');
+        } catch {
+            toast.danger('error deleting a member');
+        }
     };
 
+    const canEdit = isEditMode && !!user && user.isCurationAllowed;
+    const canDelete = !!user && user.isCurationAllowed;
+    const visibleItems = items?.slice(0, 4) ?? [];
+
     return (
-        <div className="box rounded-3 p-3 flex-grow-1">
-            <h5>Members</h5>
-            {isEditMode && !!user && user.isCurationAllowed && (
-                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog((v) => !v)}>
-                    <FontAwesomeIcon icon={faPlus} /> Add
-                </Button>
-            )}
-            <div className="flex-grow-1">
-                <div className="mt-3">
-                    {items && items.length > 0 && (
-                        <div>
-                            {items.slice(0, 3).map((member, index) => (
-                                <div key={member.id}>
-                                    <ContributorCard
-                                        id={member.id}
-                                        subTitle={organizationsList.find((o) => o.id.includes(member.organizationId))?.name}
-                                        options={
-                                            !!user && user.isCurationAllowed
-                                                ? [
-                                                      {
-                                                          title: 'Delete this member from the observatory',
-                                                          action: () => deleteObservatoryMember(member),
-                                                          icon: faTrash,
-                                                          requireConfirmation: true,
-                                                      },
-                                                  ]
-                                                : []
-                                        }
-                                    />
-                                    {items.slice(0, 3).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
-                                </div>
-                            ))}
-                            {totalElements && totalElements > 3 && (
-                                <div className="text-center mt-3">
-                                    <Button size="sm" onClick={() => setOpenModal((v) => !v)} color="light">
-                                        View more
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                    {items && items.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No members in this observatory yet</div>}
-                </div>
-                {isLoading && page === 0 && <div className="text-center mt-4 mb-4">Loading members ...</div>}
-
-                {openModal && (
-                    <MembersModal
-                        observatoryId={observatoryId}
-                        organizationsList={organizationsList}
-                        isEditMode={isEditMode}
-                        openModal={openModal}
-                        setOpenModal={setOpenModal}
-                        deleteObservatoryMember={deleteObservatoryMember}
-                    />
+        <div className="box rounded-lg p-4 grow flex flex-col">
+            <div className="flex items-center gap-2">
+                <h2 className="text-xl mb-0 grow">Members</h2>
+                {canEdit && (
+                    <>
+                        <Button variant="outline" size="sm" onPress={() => setShowAddMemberDialog((v) => !v)}>
+                            <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                            Add
+                        </Button>
+                        <AddMember
+                            showDialog={showAddMemberDialog}
+                            toggle={() => setShowAddMemberDialog((v) => !v)}
+                            observatoryId={observatoryId}
+                            organizationsList={organizationsList}
+                        />
+                    </>
                 )}
+            </div>
+            <hr className="mt-2" />
 
-                <AddMember
-                    showDialog={showAddMemberDialog}
-                    toggle={() => setShowAddMemberDialog((v) => !v)}
+            <div className="grow mt-3">
+                {!isLoading && visibleItems.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                        {visibleItems.map((member) => (
+                            <MemberRow
+                                key={member.id}
+                                member={member}
+                                organizationsList={organizationsList}
+                                className="py-1.5 border-b border-border/50 last:border-b-0 sm:[&:nth-last-child(2):nth-child(odd)]:border-b-0"
+                                actions={
+                                    canDelete ? (
+                                        <ActionButton
+                                            title="Delete this member from the observatory"
+                                            icon={faTrash}
+                                            requireConfirmation
+                                            confirmationMessage="Are you sure?"
+                                            confirmationButtons={[
+                                                {
+                                                    title: 'Delete',
+                                                    color: 'danger',
+                                                    icon: faCheck,
+                                                    action: () => deleteObservatoryMember(member),
+                                                },
+                                                {
+                                                    title: 'Cancel',
+                                                    color: 'secondary',
+                                                    icon: faTimes,
+                                                },
+                                            ]}
+                                        />
+                                    ) : null
+                                }
+                            />
+                        ))}
+                    </div>
+                )}
+                {!isLoading && items && items.length === 0 && (
+                    <div className="text-center my-6 text-muted text-sm">No members in this observatory yet</div>
+                )}
+                {isLoading && page === 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <div key={i} className="flex items-center gap-3">
+                                <Skeleton className="w-10 h-10 rounded-full" />
+                                <div className="flex flex-col gap-1 grow">
+                                    <Skeleton className="w-1/2 h-2 rounded" />
+                                    <Skeleton className="w-1/3 h-1.5 rounded" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {!isLoading && !!totalElements && totalElements > 4 && (
+                <div className="text-center mt-3">
+                    <Button size="sm" variant="tertiary" onPress={() => setOpenModal((v) => !v)}>
+                        View more
+                    </Button>
+                </div>
+            )}
+
+            {openModal && (
+                <MembersModal
                     observatoryId={observatoryId}
                     organizationsList={organizationsList}
+                    isEditMode={isEditMode}
+                    openModal={openModal}
+                    setOpenModal={setOpenModal}
+                    deleteObservatoryMember={deleteObservatoryMember}
                 />
-            </div>
+            )}
         </div>
     );
 };

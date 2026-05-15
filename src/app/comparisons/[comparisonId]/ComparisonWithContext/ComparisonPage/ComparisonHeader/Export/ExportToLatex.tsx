@@ -1,46 +1,30 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Checkbox, cn, Label, Modal, toast, Tooltip } from '@heroui/react';
 import dayjs from 'dayjs';
 import { clone } from 'lodash';
 // @ts-expect-error package doesn't support typescript
 import MakeLatex from 'make-latex';
-import { reverse } from 'named-urls';
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useCopyToClipboard } from 'react-use';
-import styled from 'styled-components';
 
 import generateMatrix from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generateMatrix';
 import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Nav from '@/components/Ui/Nav/Nav';
-import NavItem from '@/components/Ui/Nav/NavItem';
-import NavLink from '@/components/Ui/Nav/NavLink';
-import Tooltip from '@/components/Utils/Tooltip';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getStatements } from '@/services/backend/statements';
 import { ComparisonTableColumn, Statement } from '@/services/backend/types';
 import { addAuthorsToStatements, getPublicUrl } from '@/utils';
 
-const Textarea = styled(Input)`
-    font-family: 'Courier New';
-    font-size: 85% !important;
-`;
-
 type ExportToLatexProps = {
     toggle: () => void;
 };
+
 const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
-    const [selectedTab, setSelectedTab] = useState('table');
+    const [selectedTab, setSelectedTab] = useState<'table' | 'references'>('table');
     const [latexTableLoading, setLatexTableLoading] = useState(true);
     const [bibtexReferencesLoading, setBibtexReferencesLoading] = useState(true);
     const [replaceTitles, setReplaceTitles] = useState(true);
@@ -51,15 +35,13 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
 
     useEffect(() => {
         if (state.value) {
-            toast.dismiss();
+            toast.clear();
             toast.success('Latex copied to clipboard');
         }
     }, [state.value]);
 
     const { comparison, selectedPathsFlattened } = useComparison();
-
     const { table, columns } = useComparisonExport();
-
     const matrixData = generateMatrix({ table, columns, predicates: selectedPathsFlattened });
 
     const generateLatex = async () => {
@@ -68,9 +50,7 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
             return '';
         }
 
-        const res: {
-            [key: string]: string;
-        }[] = [];
+        const res: { [key: string]: string }[] = [];
         let transposedData: string[][] = [];
         let newTitles = null;
         let nbColumns = 0;
@@ -139,41 +119,33 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
 
             _latexTable = MakeLatex(res, makeLatexOptions);
 
-            // Add a persistent link to this page as a footnote
             if (includeFootnote) {
                 const link = `${getPublicUrl()}${reverse(ROUTES.COMPARISON, { comparisonId: comparison?.id ?? '' })}`;
                 _latexTable += `\n\\footnotetext{${link} [accessed ${dayjs().format('YYYY MMM DD')}]}`;
-                setLatexTable(_latexTable);
-                setLatexTableLoading(false);
-            } else {
-                setLatexTable(_latexTable);
-                setLatexTableLoading(false);
             }
-        } else {
-            _latexTable = "The current comparison table doesn't contain any pieces of information to export. Please re-try with different options.";
+
             setLatexTable(_latexTable);
+            setLatexTableLoading(false);
+        } else {
+            setLatexTable("The current comparison table doesn't contain any pieces of information to export. Please re-try with different options.");
             setLatexTableLoading(false);
         }
     };
 
     const parsePaperStatements = (paperStatements: Statement[]) => {
-        // publication year
         const publicationYearStatements = paperStatements.filter((statement) => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR);
         let publicationYear: string | null = null;
         if (publicationYearStatements.length > 0) {
             publicationYear = publicationYearStatements[0].object.label;
         }
 
-        // authors
         const authorsList = paperStatements.find((statement) => statement.predicate.id === PREDICATES.HAS_AUTHORS);
         const authors = paperStatements.filter((statement) => statement.subject.id === authorsList?.object.id);
-
         const authorNamesArray = [];
 
         if (authors.length > 0) {
             for (const author of authors) {
-                const authorName = author.object.label;
-                authorNamesArray.push(authorName);
+                authorNamesArray.push(author.object.label);
             }
         }
 
@@ -181,28 +153,24 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
     };
 
     const createCiteBibtex = (column: ComparisonTableColumn, paperStatements: Statement[] | null) => {
-        let ref;
         if (paperStatements) {
             const contributionData = parsePaperStatements(paperStatements);
             const authors = contributionData.authors.map((a) => ({ literal: a }));
-            ref = new Cite({
+            return new Cite({
                 id: column.title?.id || '',
                 title: column.title?.label || '',
                 author: authors.length > 0 ? authors : null,
                 issued: { 'date-parts': [[contributionData.publicationYear]] },
             });
-        } else {
-            ref = new Cite({
-                id: column.title?.id || '',
-                title: column.title?.label || '',
-            });
         }
-        return ref;
+        return new Cite({
+            id: column.title?.id || '',
+            title: column.title?.label || '',
+        });
     };
 
     const generateBibTex = () => {
         setBibtexReferencesLoading(true);
-        // only generate a bibtex for paper sources
         const papers = columns.filter((column) => column.title.classes.includes(CLASSES.PAPER));
         if (papers.length === 0) {
             setBibTexReferences('');
@@ -211,7 +179,6 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
         }
 
         const contributionsCalls: Promise<ComparisonTableColumn>[] = papers.map((column) =>
-            // Fetch the data of each contribution
             getStatements({ subjectId: column.title?.id || '' })
                 .then((_statements): Promise<Statement[]> => addAuthorsToStatements(_statements))
                 .then((paperStatements) => {
@@ -244,13 +211,8 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
         return Promise.all([...contributionsCalls, orkgCitation]).then((_contributions) => {
             const res: string[] = [];
             const paperIds: string[] = [];
-            const bibtexOptions = {
-                output: {
-                    type: 'string',
-                    style: 'bibtex',
-                },
-            };
-            _contributions.forEach((contribution, i) => {
+            const bibtexOptions = { output: { type: 'string', style: 'bibtex' } };
+            _contributions.forEach((contribution) => {
                 const _contribution = clone(contribution);
                 if (_contribution.title?.id) {
                     if (!paperIds.includes(_contribution.title?.id)) {
@@ -272,93 +234,121 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
         });
     };
 
-    /**
-     * Update latex
-     */
+    useEffect(() => {
+        generateLatex();
+        generateBibTex();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     useEffect(() => {
         generateLatex();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [replaceTitles, includeFootnote]);
 
+    const textareaClass =
+        'w-full font-mono text-[85%] rounded border border-default bg-field-background text-field-foreground px-3 py-2 focus:outline-none focus:border-accent';
+
     return (
-        <Modal
+        <Modal.Backdrop
             isOpen
-            toggle={toggle}
-            size="lg"
-            onOpened={() => {
-                generateLatex();
-                generateBibTex();
+            onOpenChange={(open) => {
+                if (!open) toggle();
             }}
         >
-            <ModalHeader toggle={toggle}>LaTeX export</ModalHeader>
-            <ModalBody>
-                <Nav tabs className="mb-4">
-                    <NavItem>
-                        <NavLink href="#" active={selectedTab === 'table'} onClick={() => setSelectedTab('table')}>
-                            LaTeX table
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="#" active={selectedTab === 'references'} onClick={() => setSelectedTab('references')}>
-                            BibTeX references
-                        </NavLink>
-                    </NavItem>
-                </Nav>
-
-                {selectedTab === 'table' && (
-                    <>
-                        <p>
-                            <Textarea type="textarea" value={!latexTableLoading ? latexTable : 'Loading...'} disabled rows="15" />
-                        </p>
-                        <div className="d-flex mt-1">
-                            <div className="flex-grow-1">
-                                <FormGroup check>
-                                    <Tooltip message="Since contribution titles can be long, it is sometimes better to replace the title by a reference like: Paper [1], Paper [2]...">
-                                        <Input
-                                            className="float-start"
-                                            type="checkbox"
-                                            id="replaceTitles"
-                                            onChange={() => setReplaceTitles((v) => !v)}
-                                            checked={replaceTitles}
-                                        />{' '}
-                                        <Label check for="replaceTitles" className="mb-0">
-                                            Replace contribution titles by reference.
-                                        </Label>
-                                    </Tooltip>
-                                </FormGroup>
-                                <FormGroup check>
-                                    <Input
-                                        className="float-start"
-                                        type="checkbox"
-                                        id="includeFootnote"
-                                        onChange={() => setIncludeFootnote((v) => !v)}
-                                        checked={includeFootnote}
-                                    />{' '}
-                                    <Label check for="includeFootnote" className="mb-0">
-                                        Include a persistent link to this page as a footnote.
-                                    </Label>
-                                </FormGroup>
-                            </div>
-
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(latexTable)}>
-                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                            </Button>
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-3xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>LaTeX export</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div role="tablist" className="mb-6 flex flex-wrap gap-1 border-b border-default" aria-label="LaTeX export">
+                            <button
+                                type="button"
+                                role="tab"
+                                aria-selected={selectedTab === 'table'}
+                                className={cn(
+                                    'inline-flex items-center rounded-t px-4 py-2 -mb-px border-b-2 transition-colors',
+                                    selectedTab === 'table'
+                                        ? 'border-accent text-accent font-semibold'
+                                        : 'border-transparent text-default-600 hover:text-foreground',
+                                )}
+                                onClick={() => setSelectedTab('table')}
+                            >
+                                LaTeX table
+                            </button>
+                            <button
+                                type="button"
+                                role="tab"
+                                aria-selected={selectedTab === 'references'}
+                                className={cn(
+                                    'inline-flex items-center rounded-t px-4 py-2 -mb-px border-b-2 transition-colors',
+                                    selectedTab === 'references'
+                                        ? 'border-accent text-accent font-semibold'
+                                        : 'border-transparent text-default-600 hover:text-foreground',
+                                )}
+                                onClick={() => setSelectedTab('references')}
+                            >
+                                BibTeX references
+                            </button>
                         </div>
-                    </>
-                )}
-                {selectedTab === 'references' && (
-                    <>
-                        <p>
-                            <Textarea type="textarea" value={!bibtexReferencesLoading ? bibTexReferences : 'Loading...'} disabled rows="15" />
-                        </p>
 
-                        <Button color="primary" className="pl-3 pr-3 float-right" size="sm" onClick={() => copyToClipboard(bibTexReferences)}>
-                            <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
-                        </Button>
-                    </>
-                )}
-            </ModalBody>
-        </Modal>
+                        {selectedTab === 'table' && (
+                            <>
+                                <textarea
+                                    aria-label="LaTeX table output"
+                                    className={textareaClass}
+                                    value={!latexTableLoading ? latexTable : 'Loading...'}
+                                    readOnly
+                                    rows={15}
+                                />
+                                <div className="flex flex-wrap items-start gap-3 mt-3">
+                                    <div className="grow flex flex-col gap-2">
+                                        <Tooltip>
+                                            <Checkbox isSelected={replaceTitles} onChange={setReplaceTitles}>
+                                                <Checkbox.Control>
+                                                    <Checkbox.Indicator />
+                                                </Checkbox.Control>
+                                                <Label>Replace contribution titles by reference</Label>
+                                            </Checkbox>
+                                            <Tooltip.Content>
+                                                Since contribution titles can be long, it is sometimes better to replace the title by a reference
+                                                like: Paper [1], Paper [2]…
+                                            </Tooltip.Content>
+                                        </Tooltip>
+                                        <Checkbox isSelected={includeFootnote} onChange={setIncludeFootnote}>
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
+                                            <Label>Include a persistent link to this page as a footnote</Label>
+                                        </Checkbox>
+                                    </div>
+                                    <Button variant="primary" size="sm" onPress={() => copyToClipboard(latexTable)}>
+                                        <FontAwesomeIcon icon={faClipboard} className="mr-1" /> Copy to clipboard
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                        {selectedTab === 'references' && (
+                            <>
+                                <textarea
+                                    aria-label="BibTeX references output"
+                                    className={textareaClass}
+                                    value={!bibtexReferencesLoading ? bibTexReferences : 'Loading...'}
+                                    readOnly
+                                    rows={15}
+                                />
+                                <div className="flex justify-end mt-3">
+                                    <Button variant="primary" size="sm" onPress={() => copyToClipboard(bibTexReferences)}>
+                                        <FontAwesomeIcon icon={faClipboard} className="mr-1" /> Copy to clipboard
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

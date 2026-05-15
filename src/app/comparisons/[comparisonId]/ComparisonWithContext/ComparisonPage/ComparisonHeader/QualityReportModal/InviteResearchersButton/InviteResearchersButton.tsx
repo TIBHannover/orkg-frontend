@@ -1,11 +1,11 @@
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Button } from '@heroui/react';
 import { env } from 'next-runtime-env';
-import { FC } from 'react';
+import { AnchorHTMLAttributes, FC } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type InviteResearchersButtonProps = {
     comparisonId: string;
@@ -17,8 +17,13 @@ const InviteResearchersButton: FC<InviteResearchersButtonProps> = ({ comparisonI
     )}${reverse(ROUTES.COMPARISON, { comparisonId })}`}?requestFeedback=true %0D%0A%0D%0ABest regards,`;
 
     return (
-        <Button tag="a" href={emailLink} color="secondary" size="sm">
-            <FontAwesomeIcon icon={faEnvelope} className="me-2" />
+        <Button
+            variant="secondary"
+            size="sm"
+            aria-label="Invite researchers"
+            render={(props) => <a {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)} href={emailLink} />}
+        >
+            <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
             Invite researchers
         </Button>
     );

@@ -1,24 +1,25 @@
-import { ChangeEvent, FC, useState } from 'react';
-import { toast } from 'react-toastify';
+import { Alert, cn, Modal, toast } from '@heroui/react';
+import { FC, useState } from 'react';
 
 import feedbackQuestions from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/hooks/feedbackQuestions';
 import InviteResearchersButton from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/InviteResearchersButton/InviteResearchersButton';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import Alert from '@/components/Ui/Alert/Alert';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
-import Table from '@/components/Ui/Table/Table';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement } from '@/services/backend/statements';
 import { createThing } from '@/services/simcomp';
+
+const LIKERT_SCALE = [
+    { value: '-2', label: 'Strongly disagree' },
+    { value: '-1', label: 'Disagree' },
+    { value: '0', label: 'Neutral' },
+    { value: '1', label: 'Agree' },
+    { value: '2', label: 'Strongly agree' },
+];
 
 type WriteFeedbackModalProps = {
     toggle: () => void;
@@ -36,23 +37,20 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
         return null;
     }
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setAnswers({
-            ...answers,
-            [e.target.name]: e.target.value,
-        });
+    const isOwnComparison = comparison.created_by === userId;
+    const isDisabled = isOwnComparison;
+
+    const handleChange = (name: string, value: string) => {
+        setAnswers((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async () => {
         if (Object.keys(answers).length < feedbackQuestions.length) {
-            toast.error('Please answer all questions');
+            toast.danger('Please answer all questions');
             return;
         }
         setIsLoading(true);
-        const data = {
-            comparisonId: comparison.id,
-            answers,
-        };
+        const data = { comparisonId: comparison.id, answers };
         try {
             const feedbackResourceId = await createResource({ label: 'feedback', classes: [CLASSES.QUALITY_FEEDBACK] });
             createResourceStatement(comparison.id, PREDICATES.QUALITY_FEEDBACK, feedbackResourceId);
@@ -60,7 +58,7 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
             createThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackResourceId, data });
             setIsSubmitted(true);
         } catch (e) {
-            toast.error('Something went wrong');
+            toast.danger('Something went wrong');
             console.log(e);
         } finally {
             setIsLoading(false);
@@ -68,135 +66,103 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
     };
 
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Write feedback</ModalHeader>
-            <ModalBody>
-                {!isPublished && (
-                    <Alert color="danger" className="d-flex align-items-center">
-                        You cannot provide feedback for an unpublished comparison
-                    </Alert>
-                )}
-                {isPublished && comparison.created_by === userId && (
-                    <Alert color="danger" className="d-flex align-items-center">
-                        <div className="me-2">You cannot provide feedback for your own comparison.</div>
-
-                        <InviteResearchersButton comparisonId={comparison.id} />
-                    </Alert>
-                )}
-                {isPublished && !isSubmitted && (
-                    <Table responsive className={comparison.created_by === userId ? 'text-muted' : ''}>
-                        <thead>
-                            <tr>
-                                <th scope="col" />
-                                <th scope="col" className="text-center" style={{ width: '10%' }}>
-                                    Strongly disagree
-                                </th>
-                                <th scope="col" className="text-center" style={{ width: '10%' }}>
-                                    Disagree
-                                </th>
-                                <th scope="col" className="text-center" style={{ width: '10%' }}>
-                                    Neutral
-                                </th>
-                                <th scope="col" className="text-center" style={{ width: '10%' }}>
-                                    Agree
-                                </th>
-                                <th scope="col" className="text-center" style={{ width: '10%' }}>
-                                    Strongly agree
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {feedbackQuestions.map(({ id, question, input }) => (
-                                <tr key={id}>
-                                    <th scope="row" className="fw-normal">
-                                        {question}
-                                    </th>
-                                    {input === 'likert' && (
-                                        <>
-                                            <td className="text-center">
-                                                <Input
-                                                    name={id.toString()}
-                                                    type="radio"
-                                                    value="-2"
-                                                    disabled={comparison.created_by === userId}
-                                                    onChange={handleChange}
-                                                    checked={answers[id] === '-2'}
-                                                />
-                                            </td>
-                                            <td className="text-center">
-                                                <Input
-                                                    name={id.toString()}
-                                                    type="radio"
-                                                    value="-1"
-                                                    disabled={comparison.created_by === userId}
-                                                    onChange={handleChange}
-                                                    checked={answers[id] === '-1'}
-                                                />
-                                            </td>
-                                            <td className="text-center">
-                                                <Input
-                                                    name={id.toString()}
-                                                    type="radio"
-                                                    value="0"
-                                                    disabled={comparison.created_by === userId}
-                                                    onChange={handleChange}
-                                                    checked={answers[id] === '0'}
-                                                />
-                                            </td>
-                                            <td className="text-center">
-                                                <Input
-                                                    name={id.toString()}
-                                                    type="radio"
-                                                    value="1"
-                                                    disabled={comparison.created_by === userId}
-                                                    onChange={handleChange}
-                                                    checked={answers[id] === '1'}
-                                                />
-                                            </td>
-                                            <td className="text-center">
-                                                <Input
-                                                    name={id.toString()}
-                                                    type="radio"
-                                                    value="2"
-                                                    disabled={comparison.created_by === userId}
-                                                    onChange={handleChange}
-                                                    checked={answers[id] === '2'}
-                                                />
-                                            </td>
-                                        </>
-                                    )}
-                                    {input === 'textarea' && (
-                                        <td className="text-center" colSpan={5}>
-                                            <Input
+        <Modal.Backdrop isOpen onOpenChange={(open) => !open && toggle()}>
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-3xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>Write feedback</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {!isPublished && (
+                            <Alert status="danger">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>You cannot provide feedback for an unpublished comparison.</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                        {isPublished && isOwnComparison && (
+                            <Alert status="danger">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>You cannot provide feedback for your own comparison.</Alert.Description>
+                                </Alert.Content>
+                                <InviteResearchersButton comparisonId={comparison.id} />
+                            </Alert>
+                        )}
+                        {isPublished && !isSubmitted && (
+                            <div className={isDisabled ? 'opacity-60' : ''}>
+                                {feedbackQuestions.map(({ id, question, input }) => (
+                                    <div key={id} className="border-t border-default py-4 first:border-t-0 first:pt-0">
+                                        <div className="font-medium text-sm mb-3">{question}</div>
+                                        {input === 'likert' && (
+                                            <div className="grid grid-cols-5 gap-2">
+                                                {LIKERT_SCALE.map((opt) => {
+                                                    const isSelected = answers[id] === opt.value;
+                                                    return (
+                                                        <label
+                                                            key={opt.value}
+                                                            className={cn(
+                                                                'flex flex-col items-center gap-1 text-xs text-center rounded p-2 border transition-colors',
+                                                                isDisabled ? 'cursor-not-allowed' : 'cursor-pointer hover:bg-default/40',
+                                                                isSelected
+                                                                    ? 'border-accent bg-accent/10 font-semibold text-accent'
+                                                                    : 'border-default',
+                                                            )}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={id.toString()}
+                                                                value={opt.value}
+                                                                disabled={isDisabled}
+                                                                onChange={(e) => handleChange(id.toString(), e.target.value)}
+                                                                checked={isSelected}
+                                                                aria-label={opt.label}
+                                                                className="accent-accent"
+                                                            />
+                                                            <span>{opt.label}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                        {input === 'textarea' && (
+                                            <textarea
                                                 name={id.toString()}
-                                                type="textarea"
-                                                disabled={comparison.created_by === userId}
-                                                onChange={handleChange}
-                                                value={answers[id]}
+                                                aria-label={question}
+                                                disabled={isDisabled}
+                                                onChange={(e) => handleChange(id.toString(), e.target.value)}
+                                                value={answers[id] ?? ''}
                                                 maxLength={MAX_LENGTH_INPUT}
+                                                rows={3}
+                                                className="w-full rounded border border-default bg-field-background text-field-foreground px-3 py-2 text-sm focus:outline-none focus:border-accent disabled:opacity-60"
                                             />
-                                        </td>
-                                    )}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                )}
-                {isSubmitted && <Alert color="success">The feedback has been saved successfully. Thank you for your feedback!</Alert>}
-            </ModalBody>
-            {isPublished && !isSubmitted && (
-                <ModalFooter className="d-flex">
-                    <ButtonWithLoading
-                        color="primary"
-                        onClick={handleSubmit}
-                        isLoading={isLoading}
-                        disabled={isLoading || comparison.created_by === userId}
-                    >
-                        Submit
-                    </ButtonWithLoading>
-                </ModalFooter>
-            )}
-        </Modal>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {isSubmitted && (
+                            <Alert status="success">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Title>Feedback submitted</Alert.Title>
+                                    <Alert.Description>The feedback has been saved successfully. Thank you for your feedback!</Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                        )}
+                    </Modal.Body>
+                    {isPublished && !isSubmitted && (
+                        <Modal.Footer>
+                            <ButtonWithLoading variant="primary" onClick={handleSubmit} isLoading={isLoading} isDisabled={isLoading || isDisabled}>
+                                Submit
+                            </ButtonWithLoading>
+                        </Modal.Footer>
+                    )}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

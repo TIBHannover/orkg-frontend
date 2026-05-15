@@ -179,7 +179,7 @@ export const createLabelSelectors = (ref) => {
                 >
                     <Tooltip content={item.label} placement="right" disabled={item.label.length < 30}>
                         <span
-                            className="d-inline-block"
+                            className="inline-block"
                             style={{
                                 maxWidth: '150px',
                                 overflow: 'hidden',
@@ -205,10 +205,10 @@ export const createLabelSelectors = (ref) => {
                         });
                     }}
                 >
-                    <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
+                    <TippyDropdownToggle caret color="secondary" className="truncate max-w-full">
                         <Tooltip content={ref.state.xAxisSelector.label} placement="right" disabled={ref.state.xAxisSelector.label.length < 30}>
                             <span
-                                className="d-inline-block"
+                                className="inline-block"
                                 style={{
                                     maxWidth: '150px',
                                     overflow: 'hidden',
@@ -264,7 +264,7 @@ export const createValueSelectors = (ref) => {
                     >
                         <Tooltip content={item.axis.label} placement="right" disabled={item.axis.label.length < 30}>
                             <span
-                                className="d-inline-block"
+                                className="inline-block"
                                 style={{
                                     maxWidth: '220px',
                                     overflow: 'hidden',
@@ -304,14 +304,14 @@ export const createValueSelectors = (ref) => {
                                 });
                             }}
                         >
-                            <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100 ">
+                            <TippyDropdownToggle caret color="secondary" className="truncate max-w-full ">
                                 <Tooltip
                                     content={ref.state.yAxisSelector[id].axis.label}
                                     placement="right"
                                     disabled={ref.state.yAxisSelector[id].axis.label < 30}
                                 >
                                     <span
-                                        className="d-inline-block"
+                                        className="inline-block"
                                         style={{
                                             maxWidth: '150px',
                                             overflow: 'hidden',
@@ -335,7 +335,7 @@ export const createValueSelectors = (ref) => {
                                         <Button
                                             size="sm"
                                             color="primary"
-                                            className="px-2 ms-2"
+                                            className="px-2 ml-2"
                                             // style={{ marginLeft: '5px', padding: '3px', height: ' 32px', minWidth: '82px' }}
                                             onClick={() => {
                                                 addYAxisInterval(ref, id);
@@ -389,7 +389,7 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
     const yAxisIntervals = ref.state.yAxisSelector[id].intervals;
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => (
-            <div key={`IntervalKey_${interval_id}`} className="ms-4 mt-1">
+            <div key={`IntervalKey_${interval_id}`} className="ml-6 mt-1">
                 <DeleteButton
                     color="link"
                     onClick={() => {
@@ -422,7 +422,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
     extended.unshift({ axis: { label: 'Select interval' } });
     const itemsArray = extended.map((pvc, pvc_id) => (
         <DropdownItem
-            className="text-truncate mw-100"
+            className="truncate max-w-full"
             key={`N_XSelectionDropdownItemIndexKey_${id}_${interval_id}_${pvc_id}`}
             onClick={() => {
                 const intervalSelectors = ref.state.yAxisSelector[id].intervals;
@@ -434,7 +434,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
 
             <Tooltip content={pvc.axis.label} placement="right" disabled={pvc.axis.label.length < 30}>
                 <span
-                    className="d-inline-block"
+                    className="inline-block"
                     style={{
                         maxWidth: '220px',
                         overflow: 'hidden',
@@ -463,14 +463,14 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
+            <TippyDropdownToggle caret color="secondary" className="truncate max-w-full">
                 <Tooltip
                     content={ref.state.yAxisSelector[id].intervals[interval_id].item.label}
                     placement="right"
                     disabled={ref.state.yAxisSelector[id].intervals[interval_id].item.label.length < 30}
                 >
                     <span
-                        className="d-inline-block"
+                        className="inline-block"
                         style={{
                             maxWidth: '150px',
                             overflow: 'hidden',

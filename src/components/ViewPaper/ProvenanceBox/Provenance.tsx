@@ -1,29 +1,36 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import capitalize from 'capitalize';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
-import Button from '@/components/Ui/Button/Button';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
-import { StyledItemProvenanceBox } from '@/components/ViewPaper/ProvenanceBox/styled';
 import { MISC } from '@/constants/graphSettings';
 import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 import { Contributor, Observatory, Organization, Paper } from '@/services/backend/types';
 
+type ProvenanceItemProps = {
+    children: ReactNode;
+};
+
+const ProvenanceItem: FC<ProvenanceItemProps> = ({ children }) => (
+    <li className="bg-surface px-4 pt-2.5 pb-4 text-xs border-b border-border last:border-b-0">{children}</li>
+);
+
 type ProvenanceProps = {
-    observatoryInfo: Observatory;
-    organizationInfo: Organization;
+    observatoryInfo?: Observatory;
+    organizationInfo?: Organization;
     paperResource: Paper;
     contributors: { created_at: string; created_by: Contributor }[];
-    createdBy: Contributor;
+    createdBy?: Contributor;
     isLoadingProvenance: boolean;
     isLoadingContributors: boolean;
 };
@@ -43,9 +50,9 @@ const Provenance: FC<ProvenanceProps> = ({
 
     return (
         <div>
-            <ul className="list-group pt-2">
+            <ul className="list-none p-0 m-0 pt-2">
                 {!isLoadingProvenance && (observatoryInfo || organizationInfo) && (
-                    <StyledItemProvenanceBox>
+                    <ProvenanceItem>
                         {observatoryInfo && (
                             <>
                                 <div className="mb-1">
@@ -76,48 +83,30 @@ const Provenance: FC<ProvenanceProps> = ({
                                         id: organizationInfo.display_id,
                                     })}
                                 >
-                                    <img
-                                        style={{
-                                            marginTop: 8,
-                                            marginBottom: 8,
-                                            maxWidth: '80%',
-                                            height: 'auto',
-                                        }}
-                                        className="mx-auto d-block"
-                                        src={getOrganizationLogoUrl(organizationInfo.id)}
-                                        alt=""
-                                    />
+                                    <img className="mx-auto block my-2 max-w-[80%] h-auto" src={getOrganizationLogoUrl(organizationInfo.id)} alt="" />
                                 </Link>
                             </>
                         )}
-                    </StyledItemProvenanceBox>
+                    </ProvenanceItem>
                 )}
                 {isLoadingProvenance && 'Loading ...'}
 
-                <StyledItemProvenanceBox>
+                <ProvenanceItem>
                     <div className="mb-1">
                         <b>Added on</b>
                     </div>
                     {paperResource.created_at && dayjs(paperResource.created_at).format('DD MMM YYYY')}
-                </StyledItemProvenanceBox>
+                </ProvenanceItem>
                 {createdBy && createdBy.id && (
-                    <StyledItemProvenanceBox>
+                    <ProvenanceItem>
                         <div className="mb-1">
                             <b>Added by</b>
                         </div>
-                        <UserAvatar userId={createdBy.id} />
-                        <Link
-                            href={reverse(ROUTES.USER_PROFILE, {
-                                userId: createdBy.id,
-                            })}
-                            className="ms-2"
-                        >
-                            {createdBy.displayName}
-                        </Link>
-                    </StyledItemProvenanceBox>
+                        <UserAvatar userId={createdBy.id} showDisplayName={true} />
+                    </ProvenanceItem>
                 )}
 
-                <StyledItemProvenanceBox>
+                <ProvenanceItem>
                     <div className="mb-1">
                         <b>Contributors</b>
                     </div>
@@ -138,21 +127,21 @@ const Provenance: FC<ProvenanceProps> = ({
                             ))}
                     {!isLoadingContributors && contributors?.length === 0 && 'No contributors'}
                     {isLoadingContributors && 'Loading ...'}
-                </StyledItemProvenanceBox>
+                </ProvenanceItem>
                 {dataCiteDoi && (
-                    <StyledItemProvenanceBox>
+                    <ProvenanceItem>
                         <div className="mb-1">
                             <b>DOI</b>
                         </div>
                         <a href={`https://doi.org/${dataCiteDoi}`} target="_blank" rel="noopener noreferrer">
                             https://doi.org/{dataCiteDoi}
                         </a>
-                    </StyledItemProvenanceBox>
+                    </ProvenanceItem>
                 )}
             </ul>
             {!!user && user.isCurationAllowed && (
                 <div className="text-center">
-                    <Button size="sm" className="mt-2 mb-2" onClick={() => setShowAssignObservatory(true)}>
+                    <Button size="sm" className="button--orkg-secondary my-2" onPress={() => setShowAssignObservatory(true)}>
                         <FontAwesomeIcon icon={faPen} /> {observatoryInfo ? 'Edit' : 'Assign to observatory'}
                     </Button>
                 </div>

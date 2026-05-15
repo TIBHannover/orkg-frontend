@@ -1,171 +1,127 @@
 'use client';
 
-import '@/assets/scss/DefaultLayout.scss';
-import '@/assets/scss/global.css';
-
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, cn, Toast } from '@heroui/react';
 import { detect } from 'detect-browser';
 import { usePathname } from 'next/navigation';
+import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
-import PropTypes from 'prop-types';
 import { Suspense, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { Slide, ToastContainer } from 'react-toastify';
-import styled from 'styled-components';
 
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';
 import Footer from '@/components/Layout/Footer';
 import Header from '@/components/Layout/Header/Header';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
 import ROUTES from '@/constants/routes';
+import { isCookieInfoDismissed } from '@/lib/cookieHelpers';
 
-const StyledBody = styled.div`
-    display: flex;
-    min-height: calc(100vh);
-    flex-direction: column;
-`;
+const COOKIE_INFO_DISMISSED = 'cookieInfoDismissed';
 
-const StyledAppContent = styled.div`
-    flex: 1 0 auto;
-    padding-top: 30px;
-`;
+const CookieConsentBanner = ({ onDismiss }: { onDismiss: () => void }) => {
+    const [entered, setEntered] = useState(false);
 
-const StyledFooter = styled.div`
-    flex-shrink: 0;
-`;
+    useEffect(() => {
+        const id = window.setTimeout(() => setEntered(true), 1000);
+        return () => window.clearTimeout(id);
+    }, []);
 
-const ToastContainerStyled = styled.div`
-    // REACT-TOASTIFY
-    .toast-container {
-        pointer-events: auto;
-        .Toastify__toast {
-            border-radius: 11px;
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-    }
-`;
-
-const StyledAlertCookie = styled(Alert)`
-    &&& {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        margin: 0 !important;
-        z-index: 2147483647;
-        opacity: 0;
-        visibility: hidden;
-        border-radius: 0;
-        transform: translateY(100%);
-        transition: all 300ms ease-out;
-        background: #202226;
-        border: 0;
-        color: #fff;
-
-        &.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0%);
-            transition-delay: 1000ms;
-        }
-
-        & a {
-            text-decoration: underline;
-        }
-    }
-`;
-
-const CloseToastButton = ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => void }) => (
-    <span
-        onClick={(e: React.MouseEvent<HTMLSpanElement>) => {
-            e.stopPropagation();
-            closeToast?.(e);
-        }}
-        onKeyDown={(e: React.KeyboardEvent<HTMLSpanElement>) => {
-            if (e.keyCode === 13) {
-                e.stopPropagation();
-                closeToast?.(e);
-            }
-        }}
-        role="button"
-        tabIndex={0}
-    >
-        <FontAwesomeIcon icon={faTimes} />
-    </span>
-);
-
-CloseToastButton.propTypes = {
-    closeToast: PropTypes.func,
+    return (
+        <Alert
+            id="alertCookie"
+            status="accent"
+            role="alert"
+            className={cn(
+                'fixed bottom-0 left-0 z-[2147483647] m-0 w-full rounded-none border-0',
+                'bg-[#202226] text-white [&_a]:underline',
+                'flex flex-nowrap items-center justify-center gap-2 px-3 py-3',
+                'transition-all duration-300 ease-out',
+                entered ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0',
+            )}
+        >
+            <Alert.Indicator className="shrink-0 text-white" />
+            <Alert.Content className="flex min-w-0 flex-1 items-center justify-center">
+                <div className="flex max-w-full min-w-0 flex-nowrap items-center justify-center gap-2 text-center">
+                    <span className="min-w-0 shrink text-pretty">
+                        This website uses cookies to ensure you get the best experience on our website. By using this site, you agree to this use.
+                    </span>
+                    <a
+                        href="https://projects.tib.eu/orkg/data-protection/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 whitespace-nowrap"
+                    >
+                        More Info
+                    </a>
+                    <Button variant="primary" size="sm" className="shrink-0 px-3 py-1.5 text-xs" onPress={onDismiss}>
+                        OK
+                    </Button>
+                </div>
+            </Alert.Content>
+        </Alert>
+    );
 };
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const showFooter = pathname !== ROUTES.PDF_ANNOTATION;
-    const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
+    const cookies = useCookies();
+    const cookieDismissed = isCookieInfoDismissed(cookies.get(COOKIE_INFO_DISMISSED));
     const [visible, setVisible] = useState(false);
     const browser = detect();
     const showBrowserWarning = browser && browser.name === 'ie';
 
-    const alertStyle = { borderRadius: 0, zIndex: 1000, marginBottom: 0 };
-
     const onDismissCookieInfo = () => {
-        setCookie('cookieInfoDismissed', true, { path: env('NEXT_PUBLIC_PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
+        cookies.set(COOKIE_INFO_DISMISSED, 'true', { path: env('NEXT_PUBLIC_PUBLIC_URL'), expires: 365 });
         setVisible(false);
     };
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setVisible(!cookies.cookieInfoDismissed);
-    }, [cookies.cookieInfoDismissed]);
+        setVisible(!cookieDismissed);
+    }, [cookieDismissed]);
+
+    const topBannerClass = 'm-0';
+    const hasTopBanner = showBrowserWarning || env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true';
 
     return (
-        <StyledBody className="body">
-            <ToastContainerStyled>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar
-                    transition={Slide}
-                    className="toast-container"
-                    icon={false}
-                    theme="colored"
-                    closeButton={<CloseToastButton />}
-                />
-            </ToastContainerStyled>
+        <div className="flex min-h-screen flex-col gap-y-2">
+            <Toast.Provider placement="top end" className="top-[88px]" />
             <Header />
-            {showBrowserWarning && (
-                <Alert color="danger" style={alertStyle} className="text-center">
-                    <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser for the best
-                    experience
-                </Alert>
+            {hasTopBanner && (
+                <div className="flex flex-col gap-2 w-full max-w-container mx-auto px-3">
+                    {showBrowserWarning && (
+                        <Alert status="danger" role="alert" className={topBannerClass}>
+                            <Alert.Indicator />
+                            <Alert.Content className="text-center">
+                                <Alert.Title>Outdated browser</Alert.Title>
+                                <Alert.Description>
+                                    You are using Internet Explorer which is not supported. Please upgrade your browser for the best experience.
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
+                    )}
+                    {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && (
+                        <Alert status="warning" role="alert" className={topBannerClass}>
+                            <Alert.Indicator />
+                            <Alert.Content className="text-center">
+                                <Alert.Title>Testing environment</Alert.Title>
+                                <Alert.Description>
+                                    You are using a testing environment. Data you enter in the system can be deleted without any notice.
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
+                    )}
+                </div>
             )}
-            {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && (
-                <Alert color="warning" style={alertStyle} className="text-center" fade={false}>
-                    <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any notice.
-                </Alert>
-            )}
-            <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
-                <StyledAppContent>{children}</StyledAppContent>
+            <Suspense fallback={<div className="mt-12 mb-2 text-center">Loading...</div>}>
+                <main className={`flex-[1_0_auto] ${hasTopBanner ? '' : 'pt-[30px]'}`}>{children}</main>
             </Suspense>
             {showFooter && (
-                <StyledFooter>
+                <div className="shrink-0">
                     <Footer />
-                </StyledFooter>
+                </div>
             )}
-            <StyledAlertCookie id="alertCookie" color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
-                This website uses cookies to ensure you get the best experience on our website. By using this site, you agree to this use.
-                <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer" className="mx-2">
-                    More Info
-                </a>
-                <Button onClick={onDismissCookieInfo} color="primary" className="btn-sm mx-2">
-                    OK
-                </Button>
-            </StyledAlertCookie>
+            {visible && <CookieConsentBanner onDismiss={onDismissCookieInfo} />}
             <ComparisonPopup />
-        </StyledBody>
+        </div>
     );
 };
 export default DefaultLayout;

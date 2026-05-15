@@ -1,23 +1,14 @@
+import { Alert, Input, Label, Modal, TextField, toast } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { FC, FormEvent, useId, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useList from '@/components/List/hooks/useList';
-import Alert from '@/components/Ui/Alert/Alert';
-import Form from '@/components/Ui/Form/Form';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
+import { reverse } from '@/lib/namedRoute';
 import { publishList } from '@/services/backend/literatureLists';
 
 type PublishModalProps = {
@@ -54,42 +45,52 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
     };
 
     return (
-        <Modal isOpen={show} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Publish list</ModalHeader>
-            <Form onSubmit={handlePublish}>
-                <ModalBody>
-                    <Alert color="info">
-                        Once a list is published, the current state is saved and will be persistent over time. The update message is used to identify
-                        why a version is published
-                    </Alert>
-                    {!publishedId ? (
-                        <FormGroup>
-                            <Label for={`${formId}-changelog`}>Update message</Label>
-                            <Input
-                                type="text"
-                                id={`${formId}-changelog`}
-                                placeholder="Example: updated section order"
-                                value={changelog}
-                                onChange={(e) => setChangelog(e.target.value)}
-                                maxLength={MAX_LENGTH_INPUT}
-                                required
-                            />
-                        </FormGroup>
-                    ) : (
-                        <Link href={reverse(ROUTES.LIST, { id: publishedId })} onClick={toggle}>
-                            View the published list
-                        </Link>
-                    )}
-                </ModalBody>
-                {!publishedId && (
-                    <ModalFooter>
-                        <ButtonWithLoading isLoading={isLoading} color="primary" type="submit">
-                            Publish
-                        </ButtonWithLoading>
-                    </ModalFooter>
-                )}
-            </Form>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={show}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-lg">
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <Modal.Heading>Publish list</Modal.Heading>
+                    </Modal.Header>
+                    <form onSubmit={handlePublish}>
+                        <Modal.Body className="p-6">
+                            <Alert status="accent" className="mb-4">
+                                <Alert.Indicator />
+                                <Alert.Content>
+                                    <Alert.Description>
+                                        Once a list is published, the current state is saved and will be persistent over time. The update message is
+                                        used to identify why a version is published
+                                    </Alert.Description>
+                                </Alert.Content>
+                            </Alert>
+                            {!publishedId ? (
+                                <TextField className="w-full" value={changelog} onChange={setChangelog} isRequired>
+                                    <Label htmlFor={`${formId}-changelog`}>Update message</Label>
+                                    <Input id={`${formId}-changelog`} placeholder="Example: updated section order" maxLength={MAX_LENGTH_INPUT} />
+                                </TextField>
+                            ) : (
+                                <Link href={reverse(ROUTES.LIST, { id: publishedId })} onClick={toggle}>
+                                    View the published list
+                                </Link>
+                            )}
+                        </Modal.Body>
+                        {!publishedId && (
+                            <Modal.Footer>
+                                <ButtonWithLoading isLoading={isLoading} variant="primary" type="submit">
+                                    Publish
+                                </ButtonWithLoading>
+                            </Modal.Footer>
+                        )}
+                    </form>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

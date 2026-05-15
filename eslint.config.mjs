@@ -5,12 +5,10 @@ import storybook from 'eslint-plugin-storybook';
 import prettierConfig from 'eslint-config-prettier';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
-import replaceReactstrapImportsPlugin from './eslint-rules/index.js';
-
 /** @type {import('eslint').Linter.Config[]} */
 export default [
     {
-        ignores: ['next.config.js', '*.mjs', 'widget/**', 'public/widget.js', 'public/storybook',  'eslint-rules/**', 'codemods/**', '.next/**'],
+        ignores: ['next.config.js', '*.mjs', 'widget/**', 'public/widget.js', 'public/storybook', '.next/**'],
     },
 
     js.configs.recommended,
@@ -22,7 +20,6 @@ export default [
         plugins: {
             'simple-import-sort': simpleImportSort,
             'no-relative-import-paths': noRelativeImportPaths,
-            'replace-reactstrap-imports': replaceReactstrapImportsPlugin,
         },
         languageOptions: {
             parserOptions: {
@@ -39,8 +36,6 @@ export default [
 
             'no-relative-import-paths/no-relative-import-paths': ['warn', { rootDir: 'src' }],
 
-            'replace-reactstrap-imports/replace-reactstrap-imports': 'error',
-
             'no-restricted-imports': [
                 'error',
                 {
@@ -54,74 +49,6 @@ export default [
                             group: ['next/navigation'],
                             importNames: ['useParams'],
                             message: 'Please import from `components/useParams/useParams` instead.',
-                        },
-                        {
-                            group: ['reactstrap'],
-                            importNames: [
-                                'Row',
-                                'Col',
-                                'Container',
-                                'Table',
-                                'Button',
-                                'ButtonDropdown',
-                                'ButtonGroup',
-                                'UncontrolledButtonDropdown',
-                                'Nav',
-                                'NavLink',
-                                'Navbar',
-                                'NavbarToggler',
-                                'Collapse',
-                                'NavItem',
-                                'Breadcrumb',
-                                'BreadcrumbItem',
-                                'Dropdown',
-                                'DropdownItem',
-                                'DropdownMenu',
-                                'DropdownToggle',
-                                'Form',
-                                'FormGroup',
-                                'FormFeedback',
-                                'FormText',
-                                'Input',
-                                'InputGroup',
-                                'InputGroupText',
-                                'Label',
-                                'Modal',
-                                'ModalHeader',
-                                'ModalBody',
-                                'ModalFooter',
-                                'Popover',
-                                'PopoverHeader',
-                                'PopoverBody',
-                                'UncontrolledPopover',
-                                'Card',
-                                'CardBody',
-                                'CardFooter',
-                                'CardImg',
-                                'CardTitle',
-                                'CardSubtitle',
-                                'CardText',
-                                'Badge',
-                                'Alert',
-                                'UncontrolledAlert',
-                                'ListGroup',
-                                'ListGroupItem',
-                                'Accordion',
-                                'AccordionItem',
-                                'AccordionHeader',
-                                'AccordionBody',
-                                'Progress',
-                                'TabContent',
-                                'TabPane',
-                                'Pagination',
-                                'PaginationItem',
-                                'PaginationLink',
-                                'Offcanvas',
-                                'OffcanvasBody',
-                                'OffcanvasHeader',
-                            ],
-                            message:
-                                'Please import from `components/Ui` instead of reactstrap. For example: Button -> @/components/Ui/Button/Button.',
                         },
                     ],
                 },
@@ -206,7 +133,6 @@ export default [
         files: ['src/components/Ui/**/*'],
         rules: {
             'no-restricted-imports': 'off',
-            'replace-reactstrap-imports/replace-reactstrap-imports': 'off',
         },
     },
 

@@ -1,10 +1,10 @@
 import { faCheck, faClose, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input, Skeleton, TextField } from '@heroui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { match } from 'path-to-regexp';
 import { useRef, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import { mutate } from 'swr';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -12,9 +12,6 @@ import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowse
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useHistory from '@/components/DataBrowser/hooks/useHistory';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { updateResource } from '@/services/backend/resources';
@@ -36,15 +33,10 @@ const Label = () => {
     const pathname = usePathname();
     const { canEdit } = useCanEdit();
 
-    const handleEditClick = () => {
-        setIsEditing(true);
-    };
-
     const handleUpdateLabel = async () => {
         if (entity) {
-            await updateResource(entity?.id, { label: value });
+            await updateResource(entity.id, { label: value });
             mutateEntity();
-            // reload contributions if we are in paper view
             const paperMatch = match(ROUTES.VIEW_PAPER_CONTRIBUTION)(pathname);
             const isPaperView = !!match(ROUTES.VIEW_PAPER)(pathname) || !!paperMatch;
             if (isPaperView && history.length === 0) {
@@ -58,28 +50,53 @@ const Label = () => {
         }
     };
 
+    if (isEditing) {
+        return (
+            <div className="mb-2 flex items-stretch min-h-9">
+                <TextField
+                    fullWidth
+                    value={value}
+                    onChange={setValue}
+                    aria-label="Edit label"
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') void handleUpdateLabel();
+                        if (e.key === 'Escape') setIsEditing(false);
+                    }}
+                    className="flex-1 min-w-0"
+                >
+                    <Input autoFocus className="!rounded-e-none" />
+                </TextField>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    isIconOnly
+                    aria-label="Cancel"
+                    className="!h-9 !rounded-none -ms-px"
+                    onPress={() => setIsEditing(false)}
+                >
+                    <FontAwesomeIcon icon={faClose} />
+                </Button>
+                <Button
+                    variant="primary"
+                    size="sm"
+                    isIconOnly
+                    aria-label="Save"
+                    className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                    onPress={handleUpdateLabel}
+                >
+                    <FontAwesomeIcon icon={faCheck} />
+                </Button>
+            </div>
+        );
+    }
+
     return (
-        <div className="mb-2 d-flex align-items-center">
-            {!isEditing && (
-                <>
-                    <Link className="h6 text-primary me-1 mb-0" href={getLinkByEntityType(entity?._class ?? ENTITIES.RESOURCE, entity?.id ?? '')}>
-                        {entity?.label || (!entity ? <Skeleton width={100} /> : <i>No label</i>)}
-                    </Link>
-                    {canEdit && isEditMode && <ActionButton title="Edit" icon={faPen} action={handleEditClick} />}
-                    {isValidating && <FontAwesomeIcon spin className="ms-2 text-primary" icon={faSpinner} />}
-                </>
-            )}
-            {isEditing && (
-                <InputGroup size="sm">
-                    <Input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
-                    <Button type="submit" color="secondary" onClick={() => setIsEditing(false)}>
-                        <FontAwesomeIcon icon={faClose} />
-                    </Button>
-                    <Button type="submit" color="primary" onClick={handleUpdateLabel}>
-                        <FontAwesomeIcon icon={faCheck} />
-                    </Button>
-                </InputGroup>
-            )}
+        <div className="mb-2 flex items-center min-h-9">
+            <Link className="text-lg text-accent mr-1 mb-0" href={getLinkByEntityType(entity?._class ?? ENTITIES.RESOURCE, entity?.id ?? '')}>
+                {entity?.label || (!entity ? <Skeleton className="w-[100px] h-4 rounded" /> : <i>No label</i>)}
+            </Link>
+            {canEdit && isEditMode && <ActionButton title="Edit" icon={faPen} action={() => setIsEditing(true)} />}
+            {isValidating && <FontAwesomeIcon spin className="ml-2 text-accent" icon={faSpinner} />}
         </div>
     );
 };

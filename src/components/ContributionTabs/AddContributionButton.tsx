@@ -1,8 +1,8 @@
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { FC } from 'react';
 
-import { AddContribution } from '@/components/ContributionTabs/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 
 type AddContributionButtonProps = {
@@ -11,13 +11,19 @@ type AddContributionButtonProps = {
 };
 
 const AddContributionButton: FC<AddContributionButtonProps> = ({ onClick, disabled = false }) => (
-    <AddContribution className="my-1" disabled={disabled} color="link" onClick={onClick}>
-        <Tooltip content="Add contribution">
-            <span>
-                <FontAwesomeIcon size="xs" icon={!disabled ? faPlus : faSpinner} spin={disabled} />
-            </span>
-        </Tooltip>
-    </AddContribution>
+    <Tooltip content="Add contribution">
+        <Button
+            isIconOnly
+            size="sm"
+            variant="secondary"
+            isDisabled={disabled}
+            onPress={onClick}
+            aria-label="Add contribution"
+            className="rounded-full !min-w-[25px] !w-[25px] !h-[25px] border border-border bg-surface-secondary text-foreground hover:!bg-accent hover:!text-accent-foreground mx-2 my-1"
+        >
+            <FontAwesomeIcon size="xs" icon={!disabled ? faPlus : faSpinner} spin={disabled} />
+        </Button>
+    </Tooltip>
 );
 
 export default AddContributionButton;

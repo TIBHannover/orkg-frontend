@@ -1,5 +1,6 @@
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { draggable, dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { attachClosestEdge, type Edge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
@@ -71,6 +72,8 @@ export const defaultDragHandleProps: DragHandleProps = {
 // Drag and Drop Hooks
 // ====================
 
+export type DragPreviewRenderer = (args: { container: HTMLElement }) => void | (() => void);
+
 export type UseDraggableItemConfig<T> = {
     element: HTMLElement | null;
     dragHandle?: HTMLElement | null;
@@ -86,6 +89,7 @@ export type UseDraggableItemConfig<T> = {
     onDragEnter?: EdgeChangeHandler;
     onDragLeave?: () => void;
     canDrop?: (params: { source: DragData<T>; target: DragData<T> }) => boolean;
+    renderDragPreview?: DragPreviewRenderer;
 };
 
 export function createDraggableItem<T>({
@@ -103,6 +107,7 @@ export function createDraggableItem<T>({
     onDragEnter,
     onDragLeave,
     canDrop,
+    renderDragPreview,
 }: UseDraggableItemConfig<T>) {
     if (!element) {
         return undefined;
@@ -115,6 +120,14 @@ export function createDraggableItem<T>({
             element,
             dragHandle: dragHandle || undefined,
             getInitialData: () => data,
+            ...(renderDragPreview && {
+                onGenerateDragPreview({ nativeSetDragImage }) {
+                    setCustomNativeDragPreview({
+                        nativeSetDragImage,
+                        render: renderDragPreview,
+                    });
+                },
+            }),
             onDragStart() {
                 onDragStart?.();
             },

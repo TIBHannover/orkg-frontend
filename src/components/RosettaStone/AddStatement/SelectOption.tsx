@@ -1,11 +1,11 @@
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Tooltip } from '@heroui/react';
 import { toInteger } from 'lodash';
 import { FC } from 'react';
 import { components, OptionProps } from 'react-select';
 import ReactStringReplace from 'react-string-replace';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import { RosettaStoneTemplate } from '@/services/backend/types';
 
 export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used?: boolean };
@@ -24,21 +24,22 @@ const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ chil
 
     return (
         <components.Option data={data} {...props}>
-            <div className="d-flex align-items-center">
-                <div className="flex-grow-1">
+            <div className="flex items-center">
+                <div className="grow">
                     <span>{children}</span>
-                    <div className="small text-muted">{formattedLabelWithPlaceholders}</div>
+                    <div className="text-sm text-gray-500">{formattedLabelWithPlaceholders}</div>
                 </div>
                 {data.used && (
                     <small>
-                        <div className="me-2 badge bg-secondary badge-sm p-1">Used</div>
+                        <div className="mr-2 inline-flex items-center text-xs font-medium rounded bg-secondary badge-sm p-1">Used</div>
                     </small>
                 )}
-                {!data.__isNew__ && (
-                    <Tooltip content={<div className="text-start">{data.description}</div>}>
-                        <span>
+                {!data.__isNew__ && data.description && (
+                    <Tooltip>
+                        <span className="text-muted">
                             <FontAwesomeIcon icon={faInfoCircle} />
                         </span>
+                        <Tooltip.Content className="text-left max-w-xs">{data.description}</Tooltip.Content>
                     </Tooltip>
                 )}
             </div>

@@ -1,31 +1,28 @@
-import { times } from 'lodash';
-import { Fragment } from 'react';
+import { Skeleton } from '@heroui/react';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import Container from '@/components/Ui/Structure/Container';
 
 const LoadingArticle = () => (
-    <Container className="p-0">
-        <div className="box rounded px-5 pt-5 pb-5">
-            <ContentLoader width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 100 40">
-                {/* title */}
-                <rect x="0" y="0" rx="0" ry="0" width="100" height="5" />
-                {/* authors */}
-                <rect x="0" y="6" rx="0" ry="0" width="15" height="3" />
-                <rect x="16" y="6" rx="0" ry="0" width="15" height="3" />
-                <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
-                <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
-                {/* 2 sections */}
-                {times(2, (i) => (
-                    <Fragment key={i}>
-                        <rect x="0" y={13 + i * 17} rx="0" ry="0" width="100" height="4" />
-                        <rect x="0" y={18 + i * 17} rx="0" ry="0" width="30" height="1" />
-                        <rect x="0" y={20 + i * 17} rx="0" ry="0" width="45" height="1" />
-                        <rect x="0" y={22 + i * 17} rx="0" ry="0" width="35" height="1" />
-                        <rect x="0" y={24 + i * 17} rx="0" ry="0" width="45" height="1" />
-                    </Fragment>
-                ))}
-            </ContentLoader>
+    <Container>
+        <div className="box rounded px-12 pt-12 pb-12 flex flex-col gap-6">
+            {/* title */}
+            <Skeleton className="w-full h-5 rounded" />
+            {/* authors */}
+            <div className="flex gap-2">
+                <Skeleton className="w-[15%] h-3 rounded" />
+                <Skeleton className="w-[15%] h-3 rounded" />
+                <Skeleton className="w-[15%] h-3 rounded" />
+            </div>
+            {/* sections */}
+            {[0, 1].map((i) => (
+                <div key={i} className="flex flex-col gap-2">
+                    <Skeleton className="w-full h-4 rounded" />
+                    <Skeleton className="w-[30%] h-1 rounded" />
+                    <Skeleton className="w-[45%] h-1 rounded" />
+                    <Skeleton className="w-[35%] h-1 rounded" />
+                    <Skeleton className="w-[45%] h-1 rounded" />
+                </div>
+            ))}
         </div>
     </Container>
 );

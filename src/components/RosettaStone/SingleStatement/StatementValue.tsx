@@ -61,7 +61,7 @@ const StatementValue: FC<StatementValueProps> = ({
                                 </Link>
                             </DescriptionTooltip>
                             {showQuickActionButtons && isEditMode && (
-                                <div className="ms-1 d-inline-block">
+                                <div className="ml-1 inline-block">
                                     <ActionButton
                                         title="Reuse as subject"
                                         icon={faRotateLeft}

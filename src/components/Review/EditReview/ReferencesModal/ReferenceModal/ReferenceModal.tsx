@@ -1,14 +1,8 @@
 import { Cite } from '@citation-js/core';
+import { Button, Modal, TextArea, TextField, toast } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
-import Textarea from 'react-textarea-autosize';
-import { toast } from 'react-toastify';
 
 import useReview from '@/components/Review/hooks/useReview';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type ReferenceModalProps = {
     toggle: () => void;
@@ -41,7 +35,7 @@ const ReferenceModal: FC<ReferenceModalProps> = ({ toggle, editReferenceIndex = 
             const referenceToImport = parsedReference.data[0];
             const numberOfIdenticalKeys = parsedReferences.filter((reference) => reference.parsedReference.id === referenceToImport.id).length;
             if ((editReferenceIndex && numberOfIdenticalKeys > 1) || (!editReferenceIndex && numberOfIdenticalKeys > 0)) {
-                toast.error('Duplicate citation key');
+                toast.danger('Duplicate citation key');
                 return;
             }
 
@@ -61,32 +55,38 @@ const ReferenceModal: FC<ReferenceModalProps> = ({ toggle, editReferenceIndex = 
             toggle();
         } catch (e: unknown) {
             console.error(e);
-            toast.error('An error occurred while parsing the BibTeX');
+            toast.danger('An error occurred while parsing the BibTeX');
         }
     };
 
     return (
-        <Modal isOpen toggle={toggle}>
-            <ModalHeader toggle={toggle}>Reference</ModalHeader>
-            <form action={() => handleSaveReference({ editReferenceIndex, _bibtex: bibtex })}>
-                <ModalBody>
-                    <Textarea
-                        value={bibtex}
-                        className="form-control"
-                        onChange={(e) => setBibtex(e.target.value)}
-                        placeholder="Paste your BibTeX here..."
-                        aria-label="Enter a valid bibtex entry in this field"
-                        style={{ fontFamily: 'monospace', fontSize: '90%' }}
-                        minRows={6}
-                    />
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" type="submit">
-                        Save
-                    </Button>
-                </ModalFooter>
-            </form>
-        </Modal>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-2xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Reference</Modal.Heading>
+                    </Modal.Header>
+                    <form action={() => handleSaveReference({ editReferenceIndex, _bibtex: bibtex })}>
+                        <Modal.Body className="p-6">
+                            <TextField value={bibtex} onChange={setBibtex} className="w-full" aria-label="Enter a valid bibtex entry in this field">
+                                <TextArea rows={10} placeholder="Paste your BibTeX here..." className="font-mono text-[90%]" />
+                            </TextField>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" type="submit">
+                                Save
+                            </Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

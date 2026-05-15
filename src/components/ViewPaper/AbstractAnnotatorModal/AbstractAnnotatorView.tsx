@@ -1,13 +1,12 @@
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Chip, Tooltip } from '@heroui/react';
 import capitalize from 'capitalize';
 import toArray from 'lodash/toArray';
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import { OptionType } from '@/components/Autocomplete/types';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Alert from '@/components/Ui/Alert/Alert';
-import Badge from '@/components/Ui/Badge/Badge';
-import TooltipQuestion from '@/components/Utils/Tooltip';
 import AbstractAnnotator from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractAnnotator';
 import TitleWarningAlert from '@/components/ViewPaper/AbstractModal/TitleWarningAlert';
 import { RootStore } from '@/slices/types';
@@ -33,76 +32,93 @@ const AbstractAnnotatorView: FC<AbstractAnnotatorViewProps> = ({
     const rangeArray = toArray(ranges);
 
     const rangesPredicates = [...new Set(rangeArray.map((r) => r.predicate.id))];
-    const rangesPredicatesLabels = [...new Set(rangeArray.map((r) => r.predicate.label))];
 
     return (
-        <div className="ps-2 pe-2">
+        <div className="flex flex-col gap-3">
             {abstract && !isAnnotationLoading && !isAnnotationFailedLoading && (
-                <div>
+                <>
                     <TitleWarningAlert />
-
-                    {rangesPredicates.length > 0 && (
-                        <Alert color="info">
-                            <strong>Info:</strong> we automatically annotated the abstract for you. Please remove any incorrect annotations
+                    {rangesPredicates.length > 0 ? (
+                        <Alert status="accent">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>Annotations ready for review</Alert.Title>
+                                <Alert.Description>
+                                    We automatically annotated the abstract for you. Please remove any incorrect annotations.
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
+                    ) : (
+                        <Alert status="accent">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>No concepts found</Alert.Title>
+                                <Alert.Description>
+                                    We could not find any concepts on the abstract. Please insert more text in the abstract.
+                                </Alert.Description>
+                            </Alert.Content>
                         </Alert>
                     )}
-                    {rangesPredicates.length === 0 && (
-                        <Alert color="info">
-                            <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
-                        </Alert>
-                    )}
-                </div>
+                </>
             )}
-
             {!isAnnotationLoading && isAnnotationFailedLoading && (
-                <Alert color="light">{annotationError || 'Failed to connect to the annotation service, please try again later'}</Alert>
+                <Alert status="default">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Annotation service unavailable</Alert.Title>
+                        <Alert.Description>
+                            {annotationError || 'Failed to connect to the annotation service, please try again later.'}
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert>
             )}
             {!isAbstractLoading && !isAnnotationLoading && (
                 <div>
-                    <div id="annotationBadges">
-                        <TooltipQuestion message="Annotation labels are the properties that will be used in the contribution data.">
+                    <div id="annotationBadges" className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-medium inline-flex items-center gap-1">
                             Annotation labels
-                        </TooltipQuestion>
-                        <span className="me-1 ms-1" />
+                            <Tooltip delay={0}>
+                                <Tooltip.Trigger>
+                                    <FontAwesomeIcon icon={faQuestionCircle} className="text-muted cursor-help" />
+                                </Tooltip.Trigger>
+                                <Tooltip.Content showArrow>
+                                    <Tooltip.Arrow />
+                                    Annotation labels are the properties that will be used in the contribution data.
+                                </Tooltip.Content>
+                            </Tooltip>
+                        </span>
                         {rangesPredicates.length > 0 &&
-                            rangesPredicates.map((p, index) => {
-                                const aconcept = p ? predicateOptions.filter((e) => e.id === p) : [];
-                                if (p && aconcept.length > 0) {
+                            rangesPredicates.map((p) => {
+                                const aconcept = p ? predicateOptions.find((e) => e.id === p) : undefined;
+                                const sample = rangeArray.find((r) => r.predicate.id === p);
+                                const labelText = aconcept?.label ?? sample?.predicate?.label ?? p;
+                                const label = labelText ? capitalize(labelText) : 'Unlabeled';
+                                const count = rangeArray.filter((rc) => rc.predicate.id === p).length;
+                                const chip = (
+                                    <span
+                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs"
+                                        style={{ color: '#333', background: getPredicateColor(p) }}
+                                    >
+                                        {label}
+                                        <Chip color="default" className="rounded-full">
+                                            {count}
+                                        </Chip>
+                                    </span>
+                                );
+                                if (aconcept) {
                                     return (
-                                        <Tooltip key={`p${p}`} content={aconcept[0].description}>
-                                            <span>
-                                                <Badge
-                                                    className="me-2"
-                                                    color=""
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        marginBottom: '4px',
-                                                        color: '#333',
-                                                        background: getPredicateColor(p),
-                                                    }}
-                                                >
-                                                    {rangesPredicatesLabels[index] ? capitalize(aconcept[0].label) : 'Unlabeled'}{' '}
-                                                    <Badge pill color="secondary">
-                                                        {rangeArray.filter((rc) => rc.predicate.id === p).length}
-                                                    </Badge>
-                                                </Badge>
-                                            </span>
+                                        <Tooltip key={`p${p}`} delay={0}>
+                                            <Tooltip.Trigger>
+                                                <span className="cursor-pointer">{chip}</span>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Content showArrow>
+                                                <Tooltip.Arrow />
+                                                {aconcept.description}
+                                            </Tooltip.Content>
                                         </Tooltip>
                                     );
                                 }
-                                return (
-                                    <Badge
-                                        color=""
-                                        className="me-2"
-                                        key={`p${p}`}
-                                        style={{ marginBottom: '4px', color: '#333', background: getPredicateColor(p) }}
-                                    >
-                                        {rangesPredicatesLabels[index] ? capitalize(p) : 'Unlabeled'}{' '}
-                                        <Badge pill color="secondary">
-                                            {rangeArray.filter((rc) => rc.predicate?.id?.toLowerCase() === p?.toLowerCase()).length}
-                                        </Badge>
-                                    </Badge>
-                                );
+                                return <span key={`p${p}`}>{chip}</span>;
                             })}
                     </div>
                     <AbstractAnnotator predicateOptions={predicateOptions} getPredicateColor={getPredicateColor} />

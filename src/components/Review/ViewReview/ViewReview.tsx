@@ -1,6 +1,6 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Alert, Button } from '@heroui/react';
 import Link from 'next/link';
 import { env } from 'next-runtime-env';
 import { FC } from 'react';
@@ -23,13 +23,11 @@ import SectionResourceProperty from '@/components/Review/Sections/ResourceProper
 import TextSection from '@/components/Review/Sections/Text/TextSection';
 import SectionVisualization from '@/components/Review/Sections/Visualization/SectionVisualization';
 import SustainableDevelopmentGoals from '@/components/Review/SustainableDevelopmentGoals/SustainableDevelopmentGoals';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY } from '@/constants/contentTypes';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getLinkByEntityType } from '@/utils';
 
 type ViewReviewProps = {
@@ -54,37 +52,49 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
     }
 
     return (
-        <Container className="print-only p-0" style={{ position: 'relative' }}>
+        <div className="print-only relative mx-auto flex max-w-container flex-col gap-y-4 px-3">
             <Outline />
             {!review.published && (
-                <Alert color="warning" fade={false} className="box-shadow">
-                    Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
-                    <Button color="link" className="p-0" onClick={() => setIsOpenHistoryModal(true)}>
-                        View publish history
-                    </Button>
+                <Alert status="warning" className="shadow-sm">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Unpublished version</Alert.Title>
+                        <Alert.Description>
+                            You are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                            <Button variant="primary" size="sm" onPress={() => setIsOpenHistoryModal(true)}>
+                                View publish history
+                            </Button>
+                        </Alert.Description>
+                    </Alert.Content>
                 </Alert>
             )}
             {newVersionAvailable && (
-                <Alert color="warning" fade={false} className="box-shadow">
-                    Warning: a newer version of this article is available.{' '}
-                    <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link> or{' '}
-                    <Link href={reverse(ROUTES.REVIEW_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
+                <Alert status="warning" className="shadow-sm">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Newer version available</Alert.Title>
+                        <Alert.Description>
+                            A newer version of this article is available.{' '}
+                            <Link href={reverse(ROUTES.REVIEW, { id: latestVersionId })}>View latest version</Link> or{' '}
+                            <Link href={reverse(ROUTES.REVIEW_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
+                        </Alert.Description>
+                    </Alert.Content>
                 </Alert>
             )}
-            <main>
+            <div>
                 <article>
                     <SectionStyled className="box rounded">
                         <header>
-                            <div className="d-flex justify-content-between align-items-center">
+                            <div className="flex justify-between items-center">
                                 <div>
-                                    <div className="d-flex mb-2 mt-4">
-                                        <h1 style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
+                                    <div className="flex mb-2 mt-6">
+                                        <h1 className="whitespace-pre-line" typeof="doco:Title" property="c4o:hasContent">
                                             {review.title}{' '}
                                         </h1>
                                         {review.published && (
-                                            <h2 className="h4 ms-2 mt-2 d-print-none">
+                                            <h2 className="text-2xl ml-2 mt-2 d-print-none">
                                                 <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                                <div className="d-inline-block ms-1">
+                                                <div className="inline-block ml-1">
                                                     <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                                 </div>
                                             </h2>
@@ -93,9 +103,15 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                 </div>
                                 <SustainableDevelopmentGoals />
                             </div>
-                            <div className="my-3">
-                                <Alert color="info" fade={false} className="d-none d-print-block">
-                                    Read the full and interactive version of this article on the ORKG website: <Link href={url}>{url}</Link>
+                            <div className="my-4">
+                                <Alert status="accent" className="hidden d-print-block">
+                                    <Alert.Indicator />
+                                    <Alert.Content>
+                                        <Alert.Title>Read on ORKG</Alert.Title>
+                                        <Alert.Description>
+                                            Read the full and interactive version of this article on the ORKG website: <Link href={url}>{url}</Link>
+                                        </Alert.Description>
+                                    </Alert.Content>
                                 </Alert>
                                 {review.published && <PublishedBadge />}
                                 <ResearchFieldBadge researchField={review.research_fields?.[0]} />
@@ -120,17 +136,16 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                             >
                                 <h2
                                     id={`section-${section.id}`}
-                                    className="h4 border-bottom mt-5"
+                                    className="text-2xl border-b mt-12 whitespace-pre-line"
                                     typeof="doco:SectionTitle"
                                     property="c4o:hasContent"
-                                    style={{ whiteSpace: 'pre-line' }}
                                 >
                                     {section.heading}{' '}
                                     {section.type === 'comparison' && (
                                         <Tooltip content="Go to comparison page">
                                             <Link
                                                 target="_blank"
-                                                className="ms-2"
+                                                className="ml-2"
                                                 href={reverse(ROUTES.COMPARISON, {
                                                     comparisonId: section.comparison?.id,
                                                 })}
@@ -143,7 +158,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                         <Tooltip content={`Go to ${section.type} page`}>
                                             <Link
                                                 target="_blank"
-                                                className="ms-2"
+                                                className="ml-2"
                                                 href={getLinkByEntityType(
                                                     section.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE,
                                                     (section.type === 'property' ? section.predicate?.id : section.resource?.id) || '',
@@ -171,8 +186,8 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                         <SectionReferences />
                     </SectionStyled>
                 </article>
-            </main>
-        </Container>
+            </div>
+        </div>
     );
 };
 

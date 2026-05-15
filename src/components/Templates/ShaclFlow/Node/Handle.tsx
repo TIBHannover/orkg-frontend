@@ -28,8 +28,8 @@ const CustomHandle: FC<CustomHandleProps> = ({ id, position, type }) => {
                 style={{
                     width: '10px',
                     height: '10px',
-                    border: '1px solid #c61d1d',
-                    background: '#e86161',
+                    border: '1px solid var(--color-accent-darker)',
+                    background: 'var(--accent)',
                 }}
             />
             <Handle

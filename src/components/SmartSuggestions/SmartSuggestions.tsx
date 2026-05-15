@@ -2,30 +2,22 @@
 
 import { faQuestionCircle, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
 import { forwardRef, useEffect } from 'react';
-import styled, { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components';
 
 import Popover from '@/components/FloatingUI/Popover';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Feedback from '@/components/SmartSuggestions/Feedback';
-import Button from '@/components/Ui/Button/Button';
-
-const TippyContentStyle = styled.div`
-    border-radius: 0.25rem;
-    background: ${(props) => props.theme.smart} !important;
-    > .tippy-arrow {
-        color: ${(props) => props.theme.smart} !important;
-    }
-`;
 
 type SmartSuggestionsProps = {
     children: React.ReactNode;
     tooltipContent: React.ReactNode;
     isOpenSmartTooltip: boolean;
     setIsOpenSmartTooltip: (isOpen: boolean) => void;
-    inputData: any;
-    outputData: any;
+    inputData: object;
+    outputData: object;
     llmTask: string;
     handleReload: () => void;
 };
@@ -44,39 +36,40 @@ const SmartSuggestions = forwardRef<HTMLDivElement, SmartSuggestionsProps>(
             <Popover
                 ref={ref}
                 content={
-                    isOpenSmartTooltip ? ( // ensure content is unmounted when tooltip is not open
-                        <TippyContentStyle>
+                    isOpenSmartTooltip ? (
+                        <div className="rounded bg-smart">
                             <div
-                                className="px-3 rounded-top d-flex justify-content-between bg-smart-darker align-items-center"
+                                className="px-4 rounded-t flex justify-between bg-smart-darker items-center"
                                 style={{ paddingTop: 10, paddingBottom: 10 }}
                             >
-                                <h2 className="h6 text-white m-0">
+                                <div className="font-semibold text-white flex items-center">
                                     Smart suggestions{' '}
                                     <Tooltip content="More information">
                                         <a href="https://orkg.org/help-center/article/53/Smart_suggestions" target="_blank" rel="noopener noreferrer">
-                                            <FontAwesomeIcon icon={faQuestionCircle} className="text-white ms-2 opacity-75" />
+                                            <FontAwesomeIcon icon={faQuestionCircle} className="text-white ml-2 opacity-75" />
                                         </a>
                                     </Tooltip>
                                     <Tooltip content="Reload suggestions">
-                                        <span>
-                                            <Button
-                                                onClick={handleReload}
-                                                color="link"
-                                                className="ms-1 text-white opacity-75 py-0 px-1 border-0 align-baseline"
-                                            >
-                                                <FontAwesomeIcon icon={faRotateRight} />
-                                            </Button>
-                                        </span>
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            variant="ghost"
+                                            aria-label="Reload suggestions"
+                                            onPress={handleReload}
+                                            className="ml-1 text-white opacity-75 py-0 px-1 border-0 align-baseline bg-transparent hover:bg-white/10"
+                                        >
+                                            <FontAwesomeIcon icon={faRotateRight} />
+                                        </Button>
                                     </Tooltip>
-                                </h2>
-                                <span className="d-flex align-items-center">
+                                </div>
+                                <span className="flex items-center">
                                     Feedback <Feedback type="positive" inputData={inputData} outputData={outputData} llmTask={llmTask} />
                                     <Feedback type="neutral" inputData={inputData} outputData={outputData} llmTask={llmTask} />
                                     <Feedback type="negative" inputData={inputData} outputData={outputData} llmTask={llmTask} />
                                 </span>
                             </div>
-                            <div className="pt-2 px-3 pb-3">{tooltipContent}</div>
-                        </TippyContentStyle>
+                            <div className="pt-2 px-4 pb-4">{tooltipContent}</div>
+                        </div>
                     ) : null
                 }
                 open={isOpenSmartTooltip}

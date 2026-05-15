@@ -9,7 +9,7 @@ import Container from '@/components/Ui/Structure/Container';
 
 const EditReview = () => {
     return (
-        <main
+        <div
             prefix="doco: http://purl.org/spar/doco/ fabio: http://purl.org/spar/fabio/ deo: http://purl.org/spar/deo/ c4o: http://purl.org/spar/c4o foaf: http://xmlns.com/foaf/0.1/"
             typeof="fabio:ScholarlyWork"
         >
@@ -26,7 +26,7 @@ const EditReview = () => {
             <Container>
                 <EditSectionReferences />
             </Container>
-        </main>
+        </div>
     );
 };
 

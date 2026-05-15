@@ -1,39 +1,11 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, ButtonGroup } from '@heroui/react';
 import { FC, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled from 'styled-components';
 
 import useReview from '@/components/Review/hooks/useReview';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { ReviewSectionType } from '@/services/backend/types';
-
-const InvisibleByDefault = styled.div`
-    button {
-        visibility: visible;
-    }
-
-    &:hover button {
-        visibility: visible;
-    }
-`;
-
-const AddSectionStyled = styled(Button)`
-    color: ${(props) => props.theme.secondary}!important;
-    font-size: 140% !important;
-    margin: 5px 0 !important;
-`;
-
-const Toolbar = styled.div`
-    position: absolute !important;
-    top: -25px;
-    z-index: 99;
-
-    button {
-        margin-right: 2px;
-    }
-`;
 
 type AddSectionProps = {
     index: number;
@@ -41,7 +13,7 @@ type AddSectionProps = {
 
 const AddSection: FC<AddSectionProps> = ({ index }) => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
-    const refToolbar = useRef(null);
+    const refToolbar = useRef<HTMLDivElement>(null);
     const { createSection } = useReview();
 
     const handleShowToolbar = () => {
@@ -61,35 +33,44 @@ const AddSection: FC<AddSectionProps> = ({ index }) => {
     });
 
     return (
-        <InvisibleByDefault className="d-flex align-items-center justify-content-center add position-relative">
-            <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar} aria-label="Add section">
+        <div className="add relative flex items-center justify-center [&_button]:visible">
+            <Button
+                variant="ghost"
+                isIconOnly
+                onPress={handleShowToolbar}
+                aria-label="Add section"
+                className="!my-[5px] !h-auto !min-w-0 !bg-transparent !p-0 text-[140%] text-secondary hover:!bg-transparent"
+            >
                 <FontAwesomeIcon icon={faPlusCircle} />
-            </AddSectionStyled>
+            </Button>
             {isToolbarVisible && (
-                <Toolbar ref={refToolbar}>
-                    <ButtonGroup size="sm">
-                        <Button color="dark" onClick={() => handleAddSection('text')}>
-                            Text
-                        </Button>
-                        <Button color="dark" onClick={() => handleAddSection('comparison')}>
+                <div ref={refToolbar} className="absolute top-[-25px] z-[99]">
+                    <ButtonGroup size="sm" variant="secondary">
+                        <Button onPress={() => handleAddSection('text')}>Text</Button>
+                        <Button onPress={() => handleAddSection('comparison')}>
+                            <ButtonGroup.Separator />
                             Comparison
                         </Button>
-                        <Button color="dark" onClick={() => handleAddSection('visualization')}>
+                        <Button onPress={() => handleAddSection('visualization')}>
+                            <ButtonGroup.Separator />
                             Visualization
                         </Button>
-                        <Button color="dark" onClick={() => handleAddSection('resource')}>
+                        <Button onPress={() => handleAddSection('resource')}>
+                            <ButtonGroup.Separator />
                             Resource
                         </Button>
-                        <Button color="dark" onClick={() => handleAddSection('property')}>
+                        <Button onPress={() => handleAddSection('property')}>
+                            <ButtonGroup.Separator />
                             Property
                         </Button>
-                        <Button color="dark" onClick={() => handleAddSection('ontology')}>
+                        <Button onPress={() => handleAddSection('ontology')}>
+                            <ButtonGroup.Separator />
                             Ontology
                         </Button>
                     </ButtonGroup>
-                </Toolbar>
+                </div>
             )}
-        </InvisibleByDefault>
+        </div>
     );
 };
 

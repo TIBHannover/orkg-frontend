@@ -1,5 +1,4 @@
 import { flatten } from 'lodash';
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
@@ -16,6 +15,7 @@ import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import { ALL_CONTENT_TYPES_ID } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { contentTypesUrl, getContentTypes } from '@/services/backend/contentTypes';
 import { Item, Paper, VisibilityOptions } from '@/services/backend/types';
 
@@ -114,7 +114,6 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
     return (
         <>
             <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
-
             <Tabs
                 className="box rounded mt-2"
                 destroyOnHidden
@@ -154,7 +153,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                             />
                             {contentType === CLASSES.PAPER && selectedItems.length > 0 && (
                                 <div className="mx-2 my-2">
-                                    <Button size="sm" color="secondary" className="mt-2 me-2" onClick={comparePapers}>
+                                    <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
                                         Compare selected papers({selectedItems.length})
                                     </Button>
 

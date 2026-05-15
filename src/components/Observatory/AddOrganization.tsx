@@ -1,14 +1,10 @@
+import { Modal, toast } from '@heroui/react';
 import { differenceBy } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { toast } from 'react-toastify';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { updateObservatory } from '@/services/backend/observatories';
 import { getAllOrganizations } from '@/services/backend/organizations';
 import { Organization } from '@/services/backend/types';
@@ -18,71 +14,83 @@ type AddOrganizationProps = {
     toggle: () => void;
     id: string;
     organizations: Organization[];
-    toggleOrganizationItem: (organization: Organization) => void;
+    mutateObservatory: () => void;
 };
 
-const AddOrganization: FC<AddOrganizationProps> = ({ showDialog, toggle, id, organizations, toggleOrganizationItem }) => {
+const AddOrganization: FC<AddOrganizationProps> = ({ showDialog, toggle, id, organizations, mutateObservatory }) => {
     const [localOrganizations, setLocalOrganizations] = useState<Organization[]>([]);
     const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (!showDialog) return;
         const loadOrganizations = async () => {
-            await getAllOrganizations()
-                .then((orgs) => {
-                    setLocalOrganizations(differenceBy(orgs, organizations, 'id'));
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            try {
+                const orgs = await getAllOrganizations();
+                setLocalOrganizations(differenceBy(orgs, organizations, 'id'));
+            } catch (error) {
+                console.error(error);
+            }
         };
         loadOrganizations();
-    }, [organizations]);
+    }, [organizations, showDialog]);
 
     const handleSubmit = async () => {
+        if (!selectedOrganization) {
+            toast.danger('Please select an organization');
+            return;
+        }
         setIsLoading(true);
-        if (selectedOrganization) {
-            await updateObservatory(id, { organizations: [...organizations.map((o) => o.id), selectedOrganization?.id] })
-                .then(() => {
-                    toast.success('Organization added successfully');
-                    setIsLoading(false);
-                    toggleOrganizationItem(selectedOrganization);
-                    setSelectedOrganization(null);
-                    toggle();
-                })
-                .catch(() => {
-                    toast.error('Organization cannot be added');
-                    setIsLoading(false);
-                });
-        } else {
-            toast.error('Please select an organization');
+        try {
+            await updateObservatory(id, {
+                organizations: [...organizations.map((o) => o.id), selectedOrganization.id],
+            });
+            toast.success('Organization added successfully');
+            mutateObservatory();
+            setSelectedOrganization(null);
+            toggle();
+        } catch {
+            toast.danger('Organization cannot be added');
+        } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <Modal isOpen={showDialog} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Add an organization</ModalHeader>
-            <ModalBody>
-                <>
-                    <Select
-                        options={localOrganizations}
-                        onChange={(selected) => setSelectedOrganization(selected)}
-                        getOptionValue={({ id: _id }) => _id}
-                        getOptionLabel={({ name }) => name}
-                        classNamePrefix="react-select"
-                    />
-                    <SelectGlobalStyle />
-                </>
-            </ModalBody>
-            <ModalFooter>
-                <div className="text-align-center mt-2">
-                    <ButtonWithLoading color="primary" isLoading={isLoading} onClick={() => handleSubmit()}>
-                        Save
-                    </ButtonWithLoading>
-                </div>
-            </ModalFooter>
-        </Modal>
+        <Modal.Backdrop
+            isOpen={showDialog}
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+            isDismissable
+        >
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="sm:max-w-md">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Add an organization</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6">
+                        <Select
+                            options={localOrganizations}
+                            value={selectedOrganization}
+                            onChange={(selected) => setSelectedOrganization(selected)}
+                            getOptionValue={({ id: _id }) => _id}
+                            getOptionLabel={({ name }) => name}
+                            classNamePrefix="react-select"
+                            classNames={customClassNames as any}
+                            styles={customStyles as any}
+                            menuPosition="fixed"
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <ButtonWithLoading variant="primary" isLoading={isLoading} onPress={handleSubmit}>
+                            Save
+                        </ButtonWithLoading>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

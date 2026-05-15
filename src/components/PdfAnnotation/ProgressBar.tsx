@@ -1,9 +1,8 @@
+import { ProgressBar as HeroProgressBar, Tooltip } from '@heroui/react';
 import { filter, meanBy, upperFirst } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useOntology from '@/components/PdfAnnotation/hooks/useOntology';
-import Progress from '@/components/Ui/Progress/Progress';
 import { RootStore } from '@/slices/types';
 
 const RECOMMENDED_ANNOTATION_AMOUNT = 2;
@@ -27,24 +26,22 @@ const ProgressBar = () => {
     const percentageTotal = Math.round(meanBy(classesWithCompletion, (_class) => _class.percentage));
 
     const completionTooltip = (
-        <div style={{ fontSize: '110%' }}>
+        <div className="text-[110%]">
             The completion indicates if you did sufficiently describe the most important types. Completion is only an indication and can be ignored.
-            <hr style={{ background: 'grey' }} />
-            <table className="mb-2" width="100%">
+            <hr className="my-2 border-border" />
+            <table className="mb-2 w-full">
                 <tbody>
                     {classesWithCompletion.map((_class) => (
                         <tr key={_class.label}>
                             <td>
                                 {upperFirst(_class.label)} ({_class.amount}/{RECOMMENDED_ANNOTATION_AMOUNT})
                             </td>
-                            <td className="text-end">{_class.percentage}%</td>
+                            <td className="text-right">{_class.percentage}%</td>
                         </tr>
                     ))}
                     <tr>
-                        <td />
-                        <td className="text-end pt-2" style={{ borderTop: '2px solid #fff' }}>
-                            Total: {percentageTotal}%
-                        </td>
+                        <td aria-hidden />
+                        <td className="text-right pt-2 border-t-2 border-border">Total: {percentageTotal}%</td>
                     </tr>
                 </tbody>
             </table>
@@ -52,11 +49,20 @@ const ProgressBar = () => {
     );
 
     return (
-        <Tooltip content={completionTooltip} placement="bottom" contentStyle={{ maxWidth: '300px' }}>
-            <div className="mb-4" id="completion-bar">
-                Completion {percentageTotal}%
-                <Progress color="success" value={percentageTotal} />
-            </div>
+        <Tooltip>
+            <Tooltip.Trigger className="block w-full">
+                <div className="mb-6 text-left" id="completion-bar">
+                    Completion {percentageTotal}%
+                    <HeroProgressBar value={percentageTotal} color="success">
+                        <HeroProgressBar.Track className="bg-foreground/15">
+                            <HeroProgressBar.Fill />
+                        </HeroProgressBar.Track>
+                    </HeroProgressBar>
+                </div>
+            </Tooltip.Trigger>
+            <Tooltip.Content className="max-w-[300px]" placement="bottom">
+                {completionTooltip}
+            </Tooltip.Content>
         </Tooltip>
     );
 };

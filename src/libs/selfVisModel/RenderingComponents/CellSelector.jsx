@@ -45,7 +45,7 @@ const CellSelector = (props) => {
                             <CellRenderer key={keyVal} type="metaNodeSelector" data={null}>
                                 <ButtonGroup
                                     style={{ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' }}
-                                    className="p-0 flex-grow-1"
+                                    className="p-0 grow mb-1"
                                     size="sm"
                                 >
                                     <Button
@@ -60,7 +60,7 @@ const CellSelector = (props) => {
                                         <div
                                             style={{
                                                 marginLeft: '4px',
-                                                marginRight: '-4px',
+                                                marginRight: '2px',
                                             }}
                                         >
                                             <CheckboxSelector

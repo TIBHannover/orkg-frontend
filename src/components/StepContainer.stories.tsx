@@ -1,4 +1,4 @@
-import { StoryFn } from '@storybook/nextjs';
+import { StoryFn } from '@storybook/nextjs-vite';
 
 import StepContainer from '@/components/StepContainer';
 

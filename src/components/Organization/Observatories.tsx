@@ -1,14 +1,16 @@
-import { reverse } from 'named-urls';
+import { Skeleton } from '@heroui/react';
 import Link from 'next/link';
 import useSWR from 'swr';
 
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getAllObservatoriesByOrganizationId, organizationsUrl } from '@/services/backend/organizations';
 
-const Observatories = ({ organizationsId }: { organizationsId: string }) => {
+type ObservatoriesProps = {
+    organizationsId: string;
+};
+
+const Observatories = ({ organizationsId }: ObservatoriesProps) => {
     const { data: observatories, isLoading: isLoadingObservatories } = useSWR(
         organizationsId ? [organizationsId, organizationsUrl, 'getAllObservatoriesByOrganizationId'] : null,
         ([params]) => getAllObservatoriesByOrganizationId(params),
@@ -16,42 +18,40 @@ const Observatories = ({ organizationsId }: { organizationsId: string }) => {
 
     return (
         <>
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Observatories</h1>
+            <div className="mx-auto px-3 max-w-container flex items-center my-6">
+                <div className="flex grow">
+                    <h1 className="text-xl shrink-0 mb-0">Observatories</h1>
                 </div>
-            </Container>
-            <Container className="p-0">
+            </div>
+            <div className="mx-auto px-3 max-w-container">
                 {observatories && observatories.length > 0 && (
-                    <ListGroup className="box">
+                    <ul className="m-0 flex w-full flex-col list-none divide-y divide-border bg-surface overflow-hidden rounded-[var(--radius)] border border-border box">
                         {observatories.map((observatory) => (
-                            <div key={`c${observatory.display_id}`} className="list-group-item pe-2 p-3">
+                            <li key={`c${observatory.display_id}`} className="block p-4">
                                 <div>
                                     <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                 </div>
-                                <div className="tw:line-clamp-3">
+                                <div className="line-clamp-3">
                                     <small className="text-muted">{observatory.description}</small>
                                 </div>
-                            </div>
+                            </li>
                         ))}
-                    </ListGroup>
+                    </ul>
                 )}
                 {observatories?.length === 0 && !isLoadingObservatories && (
-                    <div className="container box rounded">
-                        <div className="p-5 text-center mt-4 mb-4">No Observatories</div>
+                    <div className="box rounded">
+                        <div className="p-12 text-center my-6">No Observatories</div>
                     </div>
                 )}
                 {isLoadingObservatories && (
-                    <div className="text-center mt-4 mb-4 p-5 container box rounded'">
-                        <div className="text-start">
-                            <ContentLoader speed={2} width={400} height={50} viewBox="0 0 400 50" style={{ width: '100% !important' }}>
-                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
-                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
-                            </ContentLoader>
+                    <div className="my-6 box rounded p-4">
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-3/4 h-5 rounded" />
                         </div>
                     </div>
                 )}
-            </Container>
+            </div>
         </>
     );
 };

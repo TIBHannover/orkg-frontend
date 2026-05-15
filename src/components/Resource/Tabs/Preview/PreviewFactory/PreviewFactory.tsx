@@ -21,7 +21,7 @@ const PreviewFactory: FC<PreviewFactoryProps> = ({ id, classes }) => {
 
     if (findClass(CLASSES.CSVW_TABLE)) {
         return (
-            <div className="p-4">
+            <div className="p-6">
                 <DataBrowser id={id} showHeader={false} isEditMode={isEditMode} showFooter={false} />
             </div>
         );

@@ -1,98 +1,70 @@
 'use client';
 
-import { reverse } from 'named-urls';
+import { Card, cn } from '@heroui/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import useParams from '@/components/useParams/useParams';
 import DraftComparisons from '@/components/UserSettings/DraftComparisons/DraftComparisons';
 import DraftLists from '@/components/UserSettings/DraftLists/DraftLists';
 import DraftReviews from '@/components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
-
-const StyledSettingsMenu = styled.div`
-    padding: 0;
-    padding-top: 15px;
-
-    > a {
-        display: block;
-        padding: 9px 10px 9px 15px;
-        margin-bottom: 5px;
-        transition: 0.3s background;
-        border-radius: ${(props) => props.theme.borderRadius};
-        cursor: pointer;
-        width: 100%;
-        text-decoration: none !important;
-        color: inherit;
-
-        &.active,
-        &:hover {
-            background: ${(props) => props.theme.primary};
-            color: #fff;
-        }
-        &.active a {
-            color: #fff;
-        }
-    }
-`;
 
 const TABS = {
     DRAFT_COMPARISONS: 'draft-comparisons',
     DRAFT_REVIEWS: 'draft-reviews',
     DRAFT_LISTS: 'draft-lists',
-};
+} as const;
+
+const NAV_ITEMS = [
+    { id: TABS.DRAFT_COMPARISONS, label: 'Draft comparisons' },
+    { id: TABS.DRAFT_REVIEWS, label: 'Draft reviews' },
+    { id: TABS.DRAFT_LISTS, label: 'Draft lists' },
+];
+
+const TAB_KEYS = NAV_ITEMS.map((i) => i.id) as string[];
 
 const UserSettings = () => {
-    const [activeTab, setActiveTab] = useState('draft-comparisons');
     const { tab } = useParams();
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setActiveTab(tab || 'draft-comparisons');
-    }, [tab]);
+    const activeTab = TAB_KEYS.includes(tab) ? tab : TABS.DRAFT_COMPARISONS;
 
     return (
         <>
             <TitleBar>My drafts</TitleBar>
-            <Container className="p-0">
-                <Row>
-                    <div className="col-md-3 mb-sm-2 justify-content-center">
-                        <Container className="box rounded p-3">
-                            <StyledSettingsMenu>
-                                <Link
-                                    href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_COMPARISONS })}
-                                    className={activeTab === TABS.DRAFT_COMPARISONS ? 'active' : ''}
-                                >
-                                    Draft comparisons
-                                </Link>
-                                <Link
-                                    href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_REVIEWS })}
-                                    className={activeTab === TABS.DRAFT_REVIEWS ? 'active' : ''}
-                                >
-                                    Draft reviews
-                                </Link>
-                                <Link
-                                    href={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_LISTS })}
-                                    className={activeTab === TABS.DRAFT_LISTS ? 'active' : ''}
-                                >
-                                    Draft lists
-                                </Link>
-                            </StyledSettingsMenu>
-                        </Container>
-                    </div>
-                    <div className="col-md-9 justify-content-center">
+            <Container>
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
+                    <Card variant="default" className="md:w-3/12 md:shrink-0 md:sticky md:top-4">
+                        <Card.Content className="p-2">
+                            <nav aria-label="Draft sections" className="flex flex-col gap-1">
+                                {NAV_ITEMS.map((item) => {
+                                    const isActive = activeTab === item.id;
+                                    return (
+                                        <Link
+                                            key={item.id}
+                                            href={reverse(ROUTES.USER_SETTINGS, { tab: item.id })}
+                                            aria-current={isActive ? 'page' : undefined}
+                                            className={cn(
+                                                'block rounded-md px-3 py-2 text-sm font-medium no-underline hover:no-underline transition-colors',
+                                                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1',
+                                                isActive ? 'bg-accent text-accent-foreground shadow-sm' : 'text-foreground hover:bg-default-100',
+                                            )}
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
+                        </Card.Content>
+                    </Card>
+                    <div className="flex-1 min-w-0">
                         {activeTab === TABS.DRAFT_COMPARISONS && <DraftComparisons />}
-
                         {activeTab === TABS.DRAFT_REVIEWS && <DraftReviews />}
-
                         {activeTab === TABS.DRAFT_LISTS && <DraftLists />}
                     </div>
-                </Row>
+                </div>
             </Container>
         </>
     );

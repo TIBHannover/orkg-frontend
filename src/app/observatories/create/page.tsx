@@ -1,23 +1,19 @@
 'use client';
 
-import { reverse } from 'named-urls';
+import { Input, InputGroup, Label, TextArea, TextField, toast } from '@heroui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { toast } from 'react-toastify';
 import slugify from 'slugify';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { OptionType } from '@/components/Autocomplete/types';
 import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
-import Label from '@/components/Ui/Label/Label';
 import Container from '@/components/Ui/Structure/Container';
 import Unauthorized from '@/components/Unauthorized/Unauthorized';
 import Tooltip from '@/components/Utils/Tooltip';
@@ -25,6 +21,7 @@ import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { createObservatory, getObservatoryById } from '@/services/backend/observatories';
 import { getAllOrganizations, getOrganization, organizationsUrl } from '@/services/backend/organizations';
@@ -32,17 +29,19 @@ import { Organization } from '@/services/backend/types';
 import { getPublicUrl } from '@/utils';
 
 const observatorySchema = z.object({
-    name: z.string().min(1, 'Please enter an observatory name').max(MAX_LENGTH_INPUT),
-    permalink: z.string().regex(new RegExp(REGEX.PERMALINK), 'Only underscores ( _ ), numbers, and letters are allowed in the permalink field'),
-    description: z.string().min(1, 'Please enter an observatory description').max(MAX_LENGTH_INPUT),
+    name: z.string().min(1, { error: 'Please enter an observatory name' }).max(MAX_LENGTH_INPUT),
+    permalink: z.string().regex(new RegExp(REGEX.PERMALINK), {
+        error: 'Only underscores ( _ ), numbers, and letters are allowed in the permalink field',
+    }),
+    description: z.string().min(1, { error: 'Please enter an observatory description' }).max(MAX_LENGTH_INPUT),
     researchField: z
         .object({ id: z.string() })
         .nullable()
-        .refine((val) => val !== null, 'Please enter an observatory research field'),
+        .refine((val) => val !== null, { error: 'Please enter an observatory research field' }),
     organization: z
         .object({ id: z.string() })
         .nullable()
-        .refine((val) => val !== null, 'Please select an organization'),
+        .refine((val) => val !== null, { error: 'Please select an organization' }),
 });
 
 const CreateObservatory = () => {
@@ -61,7 +60,7 @@ const CreateObservatory = () => {
     const [permalink, setPermalink] = useState('');
     const { isCurationAllowed } = useAuthentication();
 
-    const publicObservatoryRoute = `${getPublicUrl()}${reverse(ROUTES.OBSERVATORY, { id: ' ' })}`;
+    const publicObservatoryRoute = `${getPublicUrl()}${reverse(ROUTES.OBSERVATORY, { id: '' })}`;
 
     const router = useRouter();
 
@@ -94,12 +93,12 @@ const CreateObservatory = () => {
         } catch (error) {
             setEditorState('edit');
             if (error instanceof z.ZodError) {
-                error.errors.forEach((err) => {
-                    toast.error(err.message);
+                error.issues.forEach((err) => {
+                    toast.danger(err.message);
                 });
             } else {
                 console.error(error);
-                toast.error(`Error creating an observatory: ${(error as Error).message}`);
+                toast.danger(`Error creating an observatory: ${(error as Error).message}`);
             }
         }
     };
@@ -119,100 +118,104 @@ const CreateObservatory = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <h3 className="h4 my-4 flex-grow-1">Create observatory</h3>
+            <Container className="flex items-center">
+                <h3 className="text-2xl my-6 grow">Create observatory</h3>
             </Container>
+            <Container>
+                <div className="box rounded py-6 px-12">
+                    <div className="px-4 pt-2 flex flex-col gap-5">
+                        <TextField fullWidth isDisabled={loading}>
+                            <Label htmlFor="ObservatoryName">Name</Label>
+                            <Input
+                                id="ObservatoryName"
+                                type="text"
+                                name="name"
+                                value={name}
+                                maxLength={MAX_LENGTH_INPUT}
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                    setPermalink(
+                                        slugify(e.target.value.trim(), {
+                                            replacement: '_',
+                                            remove: /[*+~%\\<>/;.(){}?,'"!:@\\#\-^|]/g,
+                                            lower: false,
+                                        }),
+                                    );
+                                }}
+                            />
+                        </TextField>
 
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <div className="ps-3 pe-3 pt-2">
-                    <FormGroup>
-                        <Label for="ObservatoryName">Name</Label>
-                        <Input
-                            onChange={(e) => {
-                                setName(e.target.value);
-                                setPermalink(
-                                    slugify(e.target.value.trim(), {
-                                        replacement: '_',
-                                        remove: /[*+~%\\<>/;.(){}?,'"!:@\\#\-^|]/g,
-                                        lower: false,
-                                    }),
-                                );
-                            }}
-                            type="text"
-                            name="name"
-                            id="ObservatoryName"
-                            disabled={loading}
-                            value={name}
-                            maxLength={MAX_LENGTH_INPUT}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <div>
-                            <Label for="observatoryPermalink">
+                        <TextField fullWidth isDisabled={loading}>
+                            <Label htmlFor="observatoryPermalink">
                                 Permalink
                                 <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                             </Label>
-                            <InputGroup>
-                                <span className="input-group-text">{publicObservatoryRoute}</span>
-                                <Input
-                                    onChange={(e) => setPermalink(e.target.value)}
-                                    type="text"
-                                    name="permalink"
+                            <InputGroup fullWidth className="flex-col items-stretch sm:flex-row sm:items-center">
+                                <InputGroup.Prefix className="min-w-0 justify-start break-all border-b sm:border-b-0 sm:break-normal">
+                                    {publicObservatoryRoute}
+                                </InputGroup.Prefix>
+                                <InputGroup.Input
                                     id="observatoryPermalink"
-                                    disabled={loading}
+                                    name="permalink"
                                     placeholder="name"
                                     value={permalink}
                                     maxLength={MAX_LENGTH_INPUT}
+                                    onChange={(e) => setPermalink(e.target.value)}
                                 />
                             </InputGroup>
+                        </TextField>
+
+                        <div>
+                            <Label htmlFor="select-organization">Organization</Label>
+                            <Select
+                                isDisabled={!!prefilledOrganization}
+                                value={organization}
+                                components={{ Option }}
+                                options={isLoading ? [] : organizations}
+                                onChange={(value) => setOrganization(value as Organization)}
+                                getOptionValue={({ id }) => id}
+                                getOptionLabel={({ name }) => name}
+                                inputId="select-organization"
+                                isClearable
+                                classNamePrefix="react-select"
+                                classNames={customClassNames as any}
+                                styles={customStyles as any}
+                                menuPosition="fixed"
+                            />
                         </div>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="select-organization">Organization</Label>
-                        <Select
-                            isDisabled={!!prefilledOrganization}
-                            value={organization}
-                            components={{ Option }}
-                            options={isLoading ? [] : organizations}
-                            onChange={(value) => setOrganization(value as Organization)}
-                            getOptionValue={({ id }) => id}
-                            getOptionLabel={({ name }) => name}
-                            inputId="select-organization"
-                            isClearable
-                            classNamePrefix="react-select"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="ObservatoryResearchField">Research field</Label>
-                        <Autocomplete
-                            entityType={ENTITIES.RESOURCE}
-                            includeClasses={[CLASSES.RESEARCH_FIELD]}
-                            onChange={(rf) => setResearchField(rf)}
-                            value={researchField}
-                            enableExternalSources={false}
-                            isDisabled={loading}
-                            inputId="ObservatoryResearchField"
-                            allowCreate={false}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="ObservatoryDescription">Observatory description</Label>
-                        <Input
-                            onChange={(e) => setDescription(e.target.value)}
-                            type="textarea"
-                            name="description"
-                            value={description}
-                            id="ObservatoryDescription"
-                            disabled={loading}
-                            maxLength={MAX_LENGTH_INPUT}
-                        />
-                        <div className="text-muted text-end">
-                            {description?.length}/{MAX_LENGTH_INPUT}
+
+                        <div>
+                            <Label htmlFor="ObservatoryResearchField">Research field</Label>
+                            <Autocomplete
+                                entityType={ENTITIES.RESOURCE}
+                                includeClasses={[CLASSES.RESEARCH_FIELD]}
+                                onChange={(rf) => setResearchField(rf)}
+                                value={researchField}
+                                enableExternalSources={false}
+                                isDisabled={loading}
+                                inputId="ObservatoryResearchField"
+                                allowCreate={false}
+                            />
                         </div>
-                    </FormGroup>
-                    <ButtonWithLoading color="primary" onClick={createNewObservatory} className="mt-2 mb-2" isLoading={loading}>
-                        Create observatory
-                    </ButtonWithLoading>
+
+                        <TextField fullWidth isDisabled={loading}>
+                            <Label htmlFor="ObservatoryDescription">Observatory description</Label>
+                            <TextArea
+                                id="ObservatoryDescription"
+                                name="description"
+                                value={description}
+                                maxLength={MAX_LENGTH_INPUT}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                            <div className="text-gray-500 text-right text-sm">
+                                {description?.length}/{MAX_LENGTH_INPUT}
+                            </div>
+                        </TextField>
+
+                        <ButtonWithLoading variant="primary" onClick={createNewObservatory} className="mt-1 mb-1" isLoading={loading}>
+                            Create observatory
+                        </ButtonWithLoading>
+                    </div>
                 </div>
             </Container>
         </>

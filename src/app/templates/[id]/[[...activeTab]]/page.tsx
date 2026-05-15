@@ -2,8 +2,7 @@
 
 import { faClose, faDiagramProject, faEllipsisV, faPen, faQuestionCircle, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
+import { Button, Dropdown, Modal, Tooltip } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { InView } from 'react-intersection-observer';
@@ -13,9 +12,8 @@ import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import EditableHeader from '@/components/EditableHeader';
-import { EditModeContainer, Title } from '@/components/EditModeHeader/EditModeHeader';
+import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import ExportCitation from '@/components/ExportCitation/ExportCitation';
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import useContributor from '@/components/hooks/useContributor';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
@@ -24,20 +22,12 @@ import ShaclFlowModal from '@/components/Templates/ShaclFlow/ShaclFlowModal';
 import TabsContainer from '@/components/Templates/TabsContainer';
 import TemplateEditorHeaderBar from '@/components/Templates/TemplateEditorHeaderBar';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Thing } from '@/services/backend/things';
 import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from '@/slices/templateEditorSlice';
 import { RootStore } from '@/slices/types';
@@ -62,7 +52,6 @@ const Template = () => {
         extraction_method: extractionMethod,
     } = useSelector((state: RootStore) => state.templateEditor);
     const router = useRouter();
-    const [menuOpen, setMenuOpen] = useState(false);
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const [showExportCitation, setShowExportCitation] = useState(false);
 
@@ -72,7 +61,7 @@ const Template = () => {
 
     const { exportSHACL, isConvertingToSHACL } = useExportSHACL();
 
-    const { contributor } = useContributor({ userId: createdBy });
+    const { contributor } = useContributor({ userId: createdBy ?? undefined });
 
     useEffect(() => {
         if (id && loadedId !== id) {
@@ -101,45 +90,42 @@ const Template = () => {
         <>
             <TitleBar
                 titleAddition={
-                    <Tooltip content="Open help center">
-                        <span>
-                            <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer">
-                                <FontAwesomeIcon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
+                    <Tooltip>
+                        <Tooltip.Trigger>
+                            <a href="https://orkg.org/about/19/Templates" target="_blank" rel="noopener noreferrer" className="inline-flex">
+                                <FontAwesomeIcon icon={faQuestionCircle} className="text-secondary text-[22px] leading-none" />
                             </a>
-                        </span>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content showArrow>
+                            <Tooltip.Arrow />
+                            Open help center
+                        </Tooltip.Content>
                     </Tooltip>
                 }
                 buttonGroup={
                     <>
                         {!editMode && !isSaving ? (
-                            <ButtonGroup size="sm">
+                            <>
                                 <RequireAuthentication
-                                    disabled={isLoading}
+                                    isDisabled={isLoading}
                                     component={Button}
-                                    color="secondary"
+                                    className="button--orkg-secondary !h-8"
                                     size="sm"
-                                    onClick={() => toggleIsEditMode(true)}
+                                    onPress={() => toggleIsEditMode(true)}
                                 >
                                     <FontAwesomeIcon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <Button
-                                    style={{ marginLeft: 1 }}
-                                    className="float-end"
-                                    color="secondary"
-                                    size="sm"
-                                    onClick={() => dispatch(setDiagramMode(true))}
-                                >
+                                <Button className="button--orkg-secondary !h-8" size="sm" onPress={() => dispatch(setDiagramMode(true))}>
                                     <FontAwesomeIcon icon={faDiagramProject} /> View diagram
                                 </Button>
-                            </ButtonGroup>
+                            </>
                         ) : (
-                            <ButtonGroup size="sm">
+                            <>
                                 <ButtonWithLoading
-                                    disabled={isSaving}
-                                    style={{ marginLeft: 1 }}
-                                    color="secondary-darker"
+                                    isDisabled={isSaving}
+                                    className="button--orkg-secondary-darker !h-8"
                                     size="sm"
-                                    onClick={async () => {
+                                    onPress={async () => {
                                         window.scrollTo({
                                             behavior: 'smooth',
                                             top: 0,
@@ -153,83 +139,89 @@ const Template = () => {
                                     isLoading={isSaving}
                                     loadingMessage="Saving"
                                 >
-                                    <FontAwesomeIcon icon={faSave} className="ms-1" /> Save
+                                    <FontAwesomeIcon icon={faSave} /> Save
                                 </ButtonWithLoading>
                                 <Button
-                                    style={{ marginLeft: 1 }}
-                                    color="secondary"
+                                    className="button--orkg-secondary !h-8"
                                     size="sm"
-                                    onClick={() => {
+                                    onPress={() => {
                                         // @ts-expect-error - TODO: not typed yet!
                                         dispatch(loadTemplate(id));
                                         toggleIsEditMode(false);
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faClose} className="ms-1" /> Cancel
+                                    <FontAwesomeIcon icon={faClose} /> Cancel
                                 </Button>
-                            </ButtonGroup>
+                            </>
                         )}
-                        <ButtonDropdown className="flex-shrink-0" isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                        <Dropdown>
+                            <Button size="sm" className="button--orkg-secondary !h-8" isIconOnly aria-label="More options">
                                 <FontAwesomeIcon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu end="true">
-                                <DropdownItem onClick={() => setShowExportCitation((v) => !v)}>Export citation</DropdownItem>
-                                <DropdownItem onClick={exportSHACL}>{!isConvertingToSHACL ? 'Export as SHACL' : 'Exporting...'}</DropdownItem>
-                                <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`}>
-                                    View resource
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
-                        <Modal isOpen={isConvertingToSHACL} backdrop="static">
-                            <ModalHeader>Export as SHACL</ModalHeader>
-                            <ModalBody>
-                                <div className="text-center mt-4 mb-4">
-                                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                                </div>
-                            </ModalBody>
-                        </Modal>
+                            </Button>
+                            <Dropdown.Popover placement="bottom end">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onAction={() => setShowExportCitation((v) => !v)} textValue="Export citation">
+                                        Export citation
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onAction={exportSHACL} textValue="Export as SHACL">
+                                        {!isConvertingToSHACL ? 'Export as SHACL' : 'Exporting...'}
+                                    </Dropdown.Item>
+                                    <Dropdown.Item href={`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`} textValue="View resource">
+                                        View resource
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
+                        <Modal.Backdrop isOpen={isConvertingToSHACL}>
+                            <Modal.Container>
+                                <Modal.Dialog>
+                                    <Modal.Header>
+                                        <Modal.Heading>Export as SHACL</Modal.Heading>
+                                    </Modal.Header>
+                                    <Modal.Body className="p-6">
+                                        <div className="text-center">
+                                            <FontAwesomeIcon icon={faSpinner} spin className="text-muted" /> Loading
+                                        </div>
+                                    </Modal.Body>
+                                </Modal.Dialog>
+                            </Modal.Container>
+                        </Modal.Backdrop>
                     </>
                 }
             >
                 Template
             </TitleBar>
-            <InView as="div" onChange={(inView) => handleShowHeaderBar(inView)}>
-                <Container className="p-0">
-                    {(editMode || isSaving) && (
-                        <EditModeContainer className="box rounded-top">
-                            <Title>Edit mode</Title>
-                        </EditModeContainer>
-                    )}
-
-                    <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <div className="mb-2">
+            <InView as="div" initialInView={false} onChange={(inView) => handleShowHeaderBar(inView)}>
+                <EditModeHeader isVisible={editMode || isSaving} />
+                <Container>
+                    <div className={`box flow-root pt-6 pb-6 pl-6 pr-6 ${editMode || isSaving ? 'rounded-b' : 'rounded'}`}>
+                        <div className="mb-6">
                             {!editMode ? (
-                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    {label}
+                                <h3 className="text-[1.3rem] font-bold leading-tight m-0 flex flex-wrap items-center gap-2 break-words">
+                                    <span className="break-words">{label}</span>
                                 </h3>
                             ) : (
                                 <EditableHeader id={id} value={label} onChange={handleChangeLabel} entityType={ENTITIES.RESOURCE} />
                             )}
-                            <ItemMetadata
-                                item={
-                                    {
-                                        id,
-                                        label,
-                                        created_by: createdBy,
-                                        created_at: createdAt,
-                                        organization_id: organizationId,
-                                        observatory_id: observatoryId,
-                                        extraction_method: extractionMethod,
-                                    } as unknown as Thing
-                                }
-                                showCreatedAt
-                                showCreatedBy
-                                showProvenance
-                                showExtractionMethod
-                                editMode={editMode}
-                            />
                         </div>
+                        <ItemMetadata
+                            item={
+                                {
+                                    id,
+                                    label,
+                                    created_by: createdBy,
+                                    created_at: createdAt,
+                                    organization_id: organizationId,
+                                    observatory_id: observatoryId,
+                                    extraction_method: extractionMethod,
+                                } as unknown as Thing
+                            }
+                            showCreatedAt
+                            showCreatedBy
+                            showProvenance
+                            showExtractionMethod
+                            editMode={editMode}
+                        />
                     </div>
                 </Container>
             </InView>

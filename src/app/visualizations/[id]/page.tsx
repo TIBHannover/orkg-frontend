@@ -1,39 +1,24 @@
-'use client';
-
-import { reverse } from 'named-urls';
 import { redirect } from 'next/navigation';
-import useSWR from 'swr';
 
-import Container from '@/components/Ui/Structure/Container';
-import useParams from '@/components/useParams/useParams';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
-import { getStatements, statementsUrl } from '@/services/backend/statements';
+import { reverse } from '@/lib/namedRoute';
+import { getStatements } from '@/services/backend/statements';
 import { Statement } from '@/services/backend/types';
 
-/**
- * Component for redirecting visualization IDs to the comparison view
- */
-export default function Visualization() {
-    const params = useParams();
-    const visualizationId = params.id;
+export default async function Visualization({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-    const {
-        data: statements,
-        isLoading,
-        error,
-    } = useSWR(
-        visualizationId ? [{ objectId: visualizationId, predicateId: PREDICATES.HAS_VISUALIZATION }, statementsUrl, 'getStatements'] : null,
-        ([params]) => getStatements(params) as Promise<Statement[]>,
-    );
-
-    const comparisonId = statements?.[0]?.subject.id;
-
-    if (!isLoading && (!comparisonId || error)) {
-        return redirect(`${reverse(ROUTES.RESOURCE, { id: visualizationId })}?noRedirect`);
+    let comparisonId: string | undefined;
+    try {
+        const statements = (await getStatements({ objectId: id, predicateId: PREDICATES.HAS_VISUALIZATION })) as Statement[];
+        comparisonId = statements?.[0]?.subject.id;
+    } catch (e) {
+        console.error(e);
     }
-    if (!isLoading && comparisonId) {
-        return redirect(`${reverse(ROUTES.COMPARISON, { comparisonId })}#Vis${visualizationId}`);
+
+    if (!comparisonId) {
+        redirect(`${reverse(ROUTES.RESOURCE, { id })}?noRedirect`);
     }
-    return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
+    redirect(`${reverse(ROUTES.COMPARISON, { comparisonId })}#Vis${id}`);
 }

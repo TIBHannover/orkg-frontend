@@ -2,7 +2,7 @@ import ComparisonVideo from '@/components/VideoThumbnails/ComparisonVideo';
 
 const ComparisonInfoText = () => {
     return (
-        <div className="d-flex">
+        <div className="flex">
             <ComparisonVideo />
             <span>
                 ORKG comparisons provide condensed overviews of the state-of-the-art for a particular research question.{' '}

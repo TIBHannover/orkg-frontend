@@ -1,0 +1,139 @@
+/*
+ * Dark theme for Intro.js — loaded only when [data-theme="dark"] / .dark is active.
+ * Based on: https://github.com/usablica/intro.js/blob/master/themes/introjs-dark.css
+ * Adapted to use ORKG CSS variables for consistency.
+ */
+
+.dark .introjs-helperLayer,
+[data-theme='dark'] .introjs-helperLayer {
+    background-color: transparent;
+    border: 1px solid oklch(60% 0.01 250);
+}
+
+.dark .introjs-tooltipReferenceLayer *,
+[data-theme='dark'] .introjs-tooltipReferenceLayer * {
+    font-family: inherit;
+}
+
+.dark .introjs-tooltip,
+[data-theme='dark'] .introjs-tooltip {
+    background-color: oklch(25% 0.01 250);
+    color: oklch(95% 0 0);
+    border: 1px solid oklch(35% 0.01 250);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.dark .introjs-tooltiptext,
+[data-theme='dark'] .introjs-tooltiptext {
+    color: oklch(90% 0 0);
+}
+
+.dark .introjs-arrow.top,
+[data-theme='dark'] .introjs-arrow.top {
+    border-bottom-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-arrow.top-right,
+[data-theme='dark'] .introjs-arrow.top-right {
+    border-bottom-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-arrow.top-middle,
+[data-theme='dark'] .introjs-arrow.top-middle {
+    border-bottom-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-arrow.right,
+[data-theme='dark'] .introjs-arrow.right {
+    border-left-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-arrow.bottom,
+[data-theme='dark'] .introjs-arrow.bottom {
+    border-top-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-arrow.left,
+[data-theme='dark'] .introjs-arrow.left {
+    border-right-color: oklch(25% 0.01 250);
+}
+
+.dark .introjs-helperNumberLayer,
+[data-theme='dark'] .introjs-helperNumberLayer {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.dark .introjs-button,
+[data-theme='dark'] .introjs-button {
+    border: 1px solid oklch(50% 0.01 250);
+    color: oklch(90% 0 0) !important;
+    background: oklch(30% 0.01 250);
+    text-shadow: none;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    padding: 0.35em 0.8em;
+}
+
+.dark .introjs-button:hover,
+[data-theme='dark'] .introjs-button:hover {
+    background: oklch(40% 0.01 250);
+    color: oklch(95% 0 0) !important;
+    border-color: oklch(55% 0.01 250);
+}
+
+.dark .introjs-button:focus,
+.dark .introjs-button:active,
+[data-theme='dark'] .introjs-button:focus,
+[data-theme='dark'] .introjs-button:active {
+    background: var(--accent) !important;
+    color: var(--accent-foreground) !important;
+    border-color: var(--accent) !important;
+}
+
+.dark .introjs-skipbutton,
+[data-theme='dark'] .introjs-skipbutton {
+    color: oklch(70% 0 0);
+}
+
+.dark .introjs-disabled,
+.dark .introjs-disabled:hover,
+.dark .introjs-disabled:focus,
+[data-theme='dark'] .introjs-disabled,
+[data-theme='dark'] .introjs-disabled:hover,
+[data-theme='dark'] .introjs-disabled:focus {
+    color: oklch(50% 0 0) !important;
+    background: transparent;
+    border-color: oklch(35% 0.01 250);
+    cursor: default;
+    box-shadow: none;
+}
+
+.dark .introjs-tooltipbuttons,
+[data-theme='dark'] .introjs-tooltipbuttons {
+    border-top: 1px solid oklch(35% 0.01 250);
+    background: oklch(22% 0.01 250);
+}
+
+.dark .introjs-bullets ul li a,
+[data-theme='dark'] .introjs-bullets ul li a {
+    background: oklch(40% 0 0);
+}
+
+.dark .introjs-bullets ul li a:hover,
+.dark .introjs-bullets ul li a.active,
+[data-theme='dark'] .introjs-bullets ul li a:hover,
+[data-theme='dark'] .introjs-bullets ul li a.active {
+    background: var(--accent);
+}
+
+.dark .introjs-progress,
+[data-theme='dark'] .introjs-progress {
+    background-color: oklch(30% 0 0);
+}
+
+.dark .introjs-progressbar,
+[data-theme='dark'] .introjs-progressbar {
+    background-color: var(--accent);
+}

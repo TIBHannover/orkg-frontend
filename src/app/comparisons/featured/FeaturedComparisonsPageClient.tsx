@@ -92,59 +92,64 @@ const FeaturedComparisonsPageClient = () => {
         <div>
             <TitleBar
                 buttonGroup={
-                    <Link href={ROUTES.COMPARISONS} className="btn btn-secondary flex-shrink-0 btn-sm">
+                    <Link
+                        href={ROUTES.COMPARISONS}
+                        className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary text-white hover:bg-secondary-darker focus:ring-secondary shrink-0 px-3 py-1.5 text-xs"
+                    >
                         View all comparisons
                     </Link>
                 }
             >
                 Featured paper comparisons
             </TitleBar>
-            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
-                <Alert color="info" fade={false}>
-                    With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons that
-                    are created using the comparison functionality. The featured comparisons below are organized by category.
-                </Alert>
+            <Container>
+                <div className="box rounded pt-6 pb-6 pl-12 pr-12">
+                    <Alert color="info" fade={false}>
+                        With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons
+                        that are created using the comparison functionality. The featured comparisons below are organized by category.
+                    </Alert>
 
-                {isLoadingCategories && (
-                    <div className="text-center mt-4 mb-4">
-                        <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
-                {!isLoadingCategories &&
-                    categories &&
-                    (categories as Resource[])?.map((category: Resource) => {
-                        const id = encodeURIComponent(kebabCase(category.label));
-                        return (
-                            <Fragment key={category.id}>
-                                <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
-                                    {category.label}
-                                    <Link href={`#${id}`} scroll={false} className="ms-2 invisible">
-                                        <FontAwesomeIcon icon={faLink} />
-                                    </Link>
-                                </Header>
-                                {!isLoadingIcons &&
-                                    !isLoadingTypes &&
-                                    !isLoadingComparisons &&
-                                    !isLoadingComparisonResources &&
-                                    !isLoadingCategories && (
-                                        <Row>
-                                            {comparisons
-                                                ?.filter((comparison) => getType(comparison.id) === category.id)
-                                                .map((comparison) => (
-                                                    <FeaturedComparisonsItem
-                                                        key={comparison.id}
-                                                        title={comparison.title}
-                                                        description={comparison.description}
-                                                        icon={getIcon(comparison.id)}
-                                                        id={comparison.id}
-                                                        sourcesCount={comparison.sources?.length ?? 0}
-                                                    />
-                                                ))}
-                                        </Row>
-                                    )}
-                            </Fragment>
-                        );
-                    })}
+                    {isLoadingCategories && (
+                        <div className="text-center mt-6 mb-6">
+                            <FontAwesomeIcon icon={faSpinner} spin /> Loading
+                        </div>
+                    )}
+                    {!isLoadingCategories &&
+                        categories &&
+                        (categories as Resource[])?.map((category: Resource) => {
+                            const id = encodeURIComponent(kebabCase(category.label));
+                            return (
+                                <Fragment key={category.id}>
+                                    <Header id={id} ref={scrollTo} className="text-2xl mt-6 mb-4">
+                                        {category.label}
+                                        <Link href={`#${id}`} scroll={false} className="ml-2 invisible">
+                                            <FontAwesomeIcon icon={faLink} />
+                                        </Link>
+                                    </Header>
+                                    {!isLoadingIcons &&
+                                        !isLoadingTypes &&
+                                        !isLoadingComparisons &&
+                                        !isLoadingComparisonResources &&
+                                        !isLoadingCategories && (
+                                            <Row>
+                                                {comparisons
+                                                    ?.filter((comparison) => getType(comparison.id) === category.id)
+                                                    .map((comparison) => (
+                                                        <FeaturedComparisonsItem
+                                                            key={comparison.id}
+                                                            title={comparison.title}
+                                                            description={comparison.description}
+                                                            icon={getIcon(comparison.id)}
+                                                            id={comparison.id}
+                                                            sourcesCount={comparison.sources?.length ?? 0}
+                                                        />
+                                                    ))}
+                                            </Row>
+                                        )}
+                                </Fragment>
+                            );
+                        })}
+                </div>
             </Container>
         </div>
     );

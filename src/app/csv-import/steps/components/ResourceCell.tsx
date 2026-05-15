@@ -1,13 +1,12 @@
+import { Chip, Skeleton } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 
 import { findTypeByIdOrName, parseCellString } from '@/app/csv-import/steps/helpers';
 import { getEntityLink } from '@/app/search/components/Item/Item';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import { getThing } from '@/services/backend/things';
@@ -24,7 +23,7 @@ const ResourceCell: FC<ResourceCellProps> = ({ data, columnDataType }) => {
 
     const { label, typeStr, hasTypeInfo } = parseCellString(data);
 
-    if (isLoading) return <Skeleton />;
+    if (isLoading) return <Skeleton className="w-full h-4 rounded" />;
     if (!resource) {
         return (
             <div>
@@ -32,9 +31,9 @@ const ResourceCell: FC<ResourceCellProps> = ({ data, columnDataType }) => {
                     <Tooltip content="This resource will be created during the import process">
                         <span>
                             {label.replace('resource:', '')}{' '}
-                            <Badge color="light" className="ms-1">
+                            <Chip size="sm" variant="soft" className="ml-1">
                                 resource
-                            </Badge>
+                            </Chip>
                         </span>
                     </Tooltip>
                 ) : (
@@ -44,9 +43,9 @@ const ResourceCell: FC<ResourceCellProps> = ({ data, columnDataType }) => {
                 )}
                 {hasTypeInfo && typeStr && (
                     <small>
-                        <Badge color="light" className="ms-1">
+                        <Chip size="sm" variant="soft" className="ml-1">
                             {findTypeByIdOrName(typeStr)?.name ?? typeStr}
-                        </Badge>
+                        </Chip>
                     </small>
                 )}
             </div>

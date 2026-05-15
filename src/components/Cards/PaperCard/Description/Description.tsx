@@ -26,12 +26,12 @@ const Description = ({ description, isEditable, handleUpdate }: DescriptionProps
 
     return (
         (isEditable || description) && (
-            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2, whiteSpace: 'pre-line' }}>
+            <p className="mb-0 mt-1 min-h-[28px] w-full whitespace-pre-line pt-0 leading-[1.2]">
                 {!isEditingDescription ? (
                     <>
                         <small className="text-muted">{description || <em>No description</em>}</small>
                         {isEditable && (
-                            <span className="ms-2">
+                            <span className="ml-2">
                                 <ActionButtonView icon={faPen} action={() => setIsEditingDescription(true)} isDisabled={false} title="Edit" />
                             </span>
                         )}
@@ -42,7 +42,7 @@ const Description = ({ description, isEditable, handleUpdate }: DescriptionProps
                         value={localDescription}
                         onChange={(e) => setLocalDescription(e.target.value)}
                         onBlur={handleStopEditingDescription}
-                        className="form-control form-control-sm"
+                        className="w-full rounded-md border border-default bg-field-background px-2 py-1 text-sm text-field-foreground placeholder:text-field-placeholder focus:outline-2 focus:outline-focus"
                         autoFocus
                     />
                 )}

@@ -12,7 +12,13 @@ export const motion = {
     onLeaveActive: () => ({ height: 0 }),
 };
 
+/*
+ * AnimatedTree — rc-tree styled with ORKG CSS variables (see globals.css).
+ * All colors resolve via CSS vars so the tree adapts automatically to dark mode.
+ */
 const AnimatedTree = styled(Tree as any)`
+    color: var(--foreground);
+
     .rc-tree-indent {
         line-height: 40px;
         height: 24px;
@@ -26,22 +32,36 @@ const AnimatedTree = styled(Tree as any)`
         top: 0;
         inset-inline-end: 7px;
         bottom: -4px;
-        border-inline-end: 1.4px dotted #ddd;
+        border-inline-end: 1.4px dotted var(--separator);
         content: '';
     }
+    .rc-tree-switcher {
+        color: var(--muted);
+    }
+    .rc-tree-node-content-wrapper {
+        color: var(--foreground);
+        border-radius: var(--radius);
+        transition:
+            background-color 0.15s ease,
+            color 0.15s ease;
+    }
     .rc-tree-node-content-wrapper:hover {
-        background-color: ${(props) => props.theme.primary};
-        color: #fff;
-        opacity: 0.8;
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+        opacity: 0.85;
         pointer-events: auto;
     }
     .rc-tree-node-selected {
-        background-color: ${(props) => props.theme.primary};
-        color: #fff;
+        background-color: var(--accent) !important;
+        color: var(--accent-foreground) !important;
         padding: 0 4px !important;
-        box-shadow: 0 0 0 1px ${(props) => props.theme.primary};
+        box-shadow: 0 0 0 1px var(--accent);
         display: inline-block;
         opacity: 1;
+    }
+    .rc-tree-node-selected a,
+    .rc-tree-node-content-wrapper:hover a {
+        color: var(--accent-foreground);
     }
     .rc-tree-child-tree {
         display: block;
@@ -69,7 +89,7 @@ const AnimatedTree = styled(Tree as any)`
                         position: absolute;
                         top: 0;
                         bottom: 0;
-                        border-right: 1px solid blue;
+                        border-right: 1px solid var(--separator);
                         left: 50%;
                         content: '';
                     }
@@ -79,13 +99,6 @@ const AnimatedTree = styled(Tree as any)`
                             display: none;
                         }
                     }
-
-                    // End should ignore
-                    // &-end {
-                    //   &::before {
-                    //     display: none;
-                    //   }
-                    // }
                 }
             }
 
@@ -95,18 +108,9 @@ const AnimatedTree = styled(Tree as any)`
                     display: inline-block;
                     width: 16px;
                     height: 16px;
-                    background: red;
+                    background: var(--muted);
                     border-radius: 100%;
                 }
-            }
-
-            // Motion
-            &-motion:not(.node-motion-appear-active) {
-                // .rc-tree-indent-unit {
-                //   &::before {
-                //     display: none;
-                //   }
-                // }
             }
         }
     }

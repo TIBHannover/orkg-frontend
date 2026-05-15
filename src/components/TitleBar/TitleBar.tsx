@@ -2,76 +2,10 @@
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, cn } from '@heroui/react';
 import { FC, ReactNode, useState } from 'react';
-import styled from 'styled-components';
 
-import { SubtitleSeparator } from '@/components/styled';
-import Button from '@/components/Ui/Button/Button';
-import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import Container from '@/components/Ui/Structure/Container';
-
-const ContainerStyled = styled(Container)`
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
-        margin-top: 1rem !important;
-        flex-wrap: wrap;
-    }
-`;
-
-const ButtonGroupStyled = styled(ButtonGroup)`
-    margin-left: auto;
-
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 0.2rem;
-
-        > {
-            margin-right: 0 !important;
-        }
-        > button:first-child,
-        > .btn:first-child,
-        > .btn-group:first-child > button:first-child {
-            border-radius: ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius} 0 0 !important;
-        }
-        > button:last-child,
-        > .btn:last-child,
-        > .btn-group:last-child > button {
-            border-radius: 0 0 ${(props) => props.theme.borderRadius} ${(props) => props.theme.borderRadius} !important;
-        }
-        > button:first-child:last-child,
-        .btn:first-child:last-child,
-        .btn-group:first-child:last-child > button {
-            border-radius: ${(props) => props.theme.borderRadius} !important;
-        }
-        > * {
-            margin-top: 1px !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-
-        .dropdown-menu {
-            width: calc(100% - 0rem);
-        }
-    }
-`;
-
-const MenuButton = styled(Button)`
-    display: none;
-    flex-grow: 0;
-    margin-left: auto;
-
-    @media (max-width: ${(props) => props.theme.gridBreakpoints.sm}) {
-        display: block;
-    }
-`;
-
-const H1Styled = styled.h1`
-    max-width: 70%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-`;
 
 type TitleBarProps = {
     buttonGroup?: ReactNode | string;
@@ -85,26 +19,38 @@ const TitleBar: FC<TitleBarProps> = ({ buttonGroup = null, titleAddition = null,
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <ContainerStyled className={`d-flex mt-4 mb-4 align-items-center ${wrap ? 'flex-wrap' : ''}`}>
-            <H1Styled className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''} `}>{children}</H1Styled>{' '}
-            {titleAddition && <SubtitleSeparator />}
+        <Container className={cn('flex mt-6 mb-6 items-center', wrap && 'flex-wrap', 'max-sm:mt-4 max-sm:flex-wrap')}>
+            <h1 className={cn('max-w-[70%] truncate m-0 mr-4', titleSize, !wrap && 'shrink-0')}>{children}</h1>
+            {titleAddition && <div className="bg-secondary w-0.5 h-6 my-0.5 mr-4 max-sm:hidden" />}
             {titleAddition}
+
+            {/* Mobile menu toggle */}
             {buttonGroup && (
-                <MenuButton
+                <Button
                     aria-label="Open action menu"
                     size="sm"
-                    color={!isMenuOpen ? 'secondary' : 'secondary-darker'}
-                    onClick={() => setIsMenuOpen((v) => !v)}
+                    variant={isMenuOpen ? 'primary' : 'secondary'}
+                    isIconOnly
+                    className="ml-auto hidden max-sm:inline-flex"
+                    onPress={() => setIsMenuOpen((v) => !v)}
                 >
                     <FontAwesomeIcon icon={faEllipsisV} />
-                </MenuButton>
+                </Button>
             )}
+
+            {/* Action bar — connected buttons via CSS (.action-bar in globals.css) */}
             {buttonGroup && (
-                <ButtonGroupStyled className="flex-shrink-0" style={isMenuOpen ? { display: 'flex' } : {}}>
+                <div
+                    className={cn(
+                        'action-bar inline-flex shrink-0 ml-auto',
+                        'max-sm:hidden max-sm:w-full max-sm:mt-1',
+                        isMenuOpen && 'max-sm:!inline-flex',
+                    )}
+                >
                     {buttonGroup}
-                </ButtonGroupStyled>
+                </div>
             )}
-        </ContainerStyled>
+        </Container>
     );
 };
 

@@ -1,21 +1,15 @@
-import { faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faFile, faGraduationCap, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Chip, Popover, Switch } from '@heroui/react';
 import dayjs from 'dayjs';
 import { isString } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { useState } from 'react';
 import useSWR from 'swr';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Resource } from '@/services/backend/types';
 import { getAuthorsByLabel, semanticScholarUrl } from '@/services/semanticScholar';
 
@@ -44,7 +38,7 @@ const AuthorCard = ({ author, paperAmount, papers, isVisibleGoogleScholar = fals
 
     return (
         <>
-            <div className="d-flex justify-content-between">
+            <div className="flex items-center justify-between">
                 {!isString(author) && (
                     <Link href={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
                         {author.label}
@@ -52,68 +46,73 @@ const AuthorCard = ({ author, paperAmount, papers, isVisibleGoogleScholar = fals
                 )}
                 {isString(author) && <span>{author}</span>}
                 {isVisibleShowCitations && (
-                    <small>
-                        <FormGroup switch className="d-inline-block ms-3">
-                            <Label check>
-                                <Input type="switch" role="switch" checked={isCitationsEnabled} onChange={() => setIsCitationsEnabled((v) => !v)} />
-                                <Tooltip
-                                    content={
-                                        <>
-                                            This feature is in beta, citation counts might be inaccurate or wrong. Citation data provided by{' '}
-                                            <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer">
-                                                Semantic Scholar
-                                            </a>
-                                            .
-                                        </>
-                                    }
-                                >
-                                    <span>Show citations</span>
-                                </Tooltip>
-                            </Label>
-                        </FormGroup>
-                    </small>
+                    <div className="ml-4 flex items-center gap-1">
+                        <Popover>
+                            <Button isIconOnly aria-label="About citations" size="sm" variant="ghost" className="text-muted">
+                                <FontAwesomeIcon icon={faCircleInfo} />
+                            </Button>
+                            <Popover.Content className="max-w-72">
+                                <Popover.Dialog>
+                                    <Popover.Arrow />
+                                    <p className="text-sm">
+                                        This feature is in beta, citation counts might be inaccurate or wrong. Citation data provided by{' '}
+                                        <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer">
+                                            Semantic Scholar
+                                        </a>
+                                        .
+                                    </p>
+                                </Popover.Dialog>
+                            </Popover.Content>
+                        </Popover>
+                        <Switch size="sm" isSelected={isCitationsEnabled} onChange={() => setIsCitationsEnabled((v) => !v)}>
+                            <Switch.Control>
+                                <Switch.Thumb />
+                            </Switch.Control>
+                            <Switch.Content>
+                                <span className="text-sm">Show citations</span>
+                            </Switch.Content>
+                        </Switch>
+                    </div>
                 )}
             </div>
-            <small>
+            <div className="mt-1 text-sm">
                 {isVisibleGoogleScholar && (
-                    <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="me-1">
-                        <Badge color="light" size="sm">
-                            <FontAwesomeIcon icon={faGraduationCap} className="text-primary" /> <span>Google Scholar</span>
-                        </Badge>
+                    <a href={GOOGLE_SCHOLAR_URL + encodeURIComponent(authorLabel)} target="_blank" rel="noreferrer" className="mr-1">
+                        <Chip size="sm" variant="soft">
+                            <FontAwesomeIcon icon={faGraduationCap} className="text-accent" /> <span>Google Scholar</span>
+                        </Chip>
                     </a>
                 )}
-                {paperAmount !== undefined && <span className="text-muted ms-1">{pluralize('paper', paperAmount, true)}</span>}
-                {papers &&
-                    papers?.map((paper, index) => (
-                        <Link key={index} href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
-                            <Badge color="light" size="sm" className="ms-1">
-                                <FontAwesomeIcon icon={faFile} className="text-primary" /> {dayjs.localeData().ordinal(paper.author_index + 1)} author
-                                {paper.paper_year ? ` - ${paper.paper_year}` : ''}
-                            </Badge>
-                        </Link>
-                    ))}
+                {paperAmount !== undefined && <span className="ml-1 text-muted">{pluralize('paper', paperAmount, true)}</span>}
+                {papers?.map((paper, index) => (
+                    <Link key={index} href={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paper_id })} target="_blank">
+                        <Chip size="sm" variant="soft" className="ml-1">
+                            <FontAwesomeIcon icon={faFile} className="text-accent" /> {dayjs.localeData().ordinal(paper.author_index + 1)} author
+                            {paper.paper_year ? ` - ${paper.paper_year}` : ''}
+                        </Chip>
+                    </Link>
+                ))}
 
                 {isCitationsEnabled && (
-                    <ListGroup className="my-2">
+                    <ul className="my-2 flex w-full list-none flex-col divide-y divide-border overflow-hidden rounded-(--radius) border border-border bg-surface p-0">
                         {!isLoadingSemanticScholar &&
-                            semanticScholarAuthors?.data &&
                             semanticScholarAuthors?.data?.map((result) => (
-                                <ListGroupItem key={result.authorId}>
+                                <li key={result.authorId} className="px-4 py-2">
                                     <a href={result.url} target="_blank" rel="noreferrer">
                                         {result.name}
                                     </a>{' '}
                                     - Citations {result.citationCount} - h-index {result.hIndex}
-                                </ListGroupItem>
+                                </li>
                             ))}
-                        {!isLoadingSemanticScholar && semanticScholarAuthors?.data?.length === 0 && <ListGroupItem>Author not found</ListGroupItem>}
+                        {!isLoadingSemanticScholar && semanticScholarAuthors?.data?.length === 0 && <li className="px-4 py-2">Author not found</li>}
                         {isLoadingSemanticScholar && (
-                            <ListGroupItem>
+                            <li className="px-4 py-2">
                                 <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                            </ListGroupItem>
+                            </li>
                         )}
-                    </ListGroup>
+                    </ul>
                 )}
-            </small>
+            </div>
         </>
     );
 };

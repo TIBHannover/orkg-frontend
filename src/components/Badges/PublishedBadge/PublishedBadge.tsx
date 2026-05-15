@@ -1,14 +1,14 @@
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import React from 'react';
-
-import Badge from '@/components/Ui/Badge/Badge';
 
 const PublishedBadge = () => {
     return (
-        <Badge color="light" className="me-2 mb-2">
-            <FontAwesomeIcon icon={faBookOpen} /> Published
-        </Badge>
+        <Chip className="mr-2 mb-2">
+            <FontAwesomeIcon icon={faBookOpen} />
+            Published
+        </Chip>
     );
 };
 

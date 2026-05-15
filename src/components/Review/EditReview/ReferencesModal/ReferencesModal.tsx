@@ -1,19 +1,12 @@
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Chip, Modal } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ReferenceModal from '@/components/Review/EditReview/ReferencesModal/ReferenceModal/ReferenceModal';
 import useReview from '@/components/Review/hooks/useReview';
-import Alert from '@/components/Ui/Alert/Alert';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 
 type ReferencesModalProps = {
     toggle: () => void;
@@ -51,45 +44,72 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
     };
 
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Manage references</ModalHeader>
-            <ModalBody>
-                <Alert color="info">
-                    Use references within content sections using the command <em>[@citationKey]</em>
-                </Alert>
+        <Modal.Backdrop
+            isOpen
+            onOpenChange={(open) => {
+                if (!open) toggle();
+            }}
+        >
+            <Modal.Container size="lg">
+                <Modal.Dialog className="sm:max-w-3xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Manage references</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="p-6 space-y-4">
+                        <Alert status="accent">
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Description>
+                                    Use references within content sections using the command <em>[@citationKey]</em>
+                                </Alert.Description>
+                            </Alert.Content>
+                        </Alert>
 
-                <ListGroup>
-                    {parsedReferences.map((reference) => (
-                        <ListGroupItem key={reference.referenceIndex} className="d-flex align-items-start pe-2">
-                            <div className="flex-grow-1">
-                                <Badge color="light">@{reference.parsedReference['citation-key']}</Badge>{' '}
-                                {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
-                                <em>{reference.parsedReference.title}</em>
-                            </div>
-                            <div className="d-flex flex-shrink-0">
-                                <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference.referenceIndex)}>
-                                    <FontAwesomeIcon icon={faPen} />
-                                </Button>
-                                <Button
-                                    color="link"
-                                    className="px-1 py-0 text-danger"
-                                    style={{ fontSize: '120%' }}
-                                    onClick={() => handleDelete(reference.referenceIndex)}
-                                >
-                                    <FontAwesomeIcon icon={faTimes} />
-                                </Button>
-                            </div>
-                        </ListGroupItem>
-                    ))}
-                    {parsedReferences.length === 0 && <div className="text-center mt-3">No references added yet</div>}
-                </ListGroup>
-                <ButtonWithLoading size="sm" onClick={handleAdd} className="mt-4">
-                    Add BibTeX
-                </ButtonWithLoading>
-            </ModalBody>
-
+                        <ul className="m-0 flex w-full flex-col list-none divide-y divide-border overflow-hidden rounded-[var(--radius)] border border-border bg-surface p-0">
+                            {parsedReferences.map((reference) => (
+                                <li key={reference.referenceIndex} className="flex items-start px-4 py-2 pr-2 text-foreground">
+                                    <div className="grow">
+                                        <Chip size="sm" variant="soft">
+                                            @{reference.parsedReference['citation-key']}
+                                        </Chip>{' '}
+                                        {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
+                                        <em>{reference.parsedReference.title}</em>
+                                    </div>
+                                    <div className="flex shrink-0">
+                                        <Button
+                                            isIconOnly
+                                            variant="ghost"
+                                            size="sm"
+                                            aria-label="Edit reference"
+                                            className="mr-1 text-secondary"
+                                            onPress={() => handleEdit(reference.referenceIndex)}
+                                        >
+                                            <FontAwesomeIcon icon={faPen} />
+                                        </Button>
+                                        <Button
+                                            isIconOnly
+                                            variant="ghost"
+                                            size="sm"
+                                            aria-label="Delete reference"
+                                            className="text-red-600 text-[120%]"
+                                            onPress={() => handleDelete(reference.referenceIndex)}
+                                        >
+                                            <FontAwesomeIcon icon={faTimes} />
+                                        </Button>
+                                    </div>
+                                </li>
+                            ))}
+                            {parsedReferences.length === 0 && <li className="text-center px-4 py-4">No references added yet</li>}
+                        </ul>
+                        <ButtonWithLoading size="sm" onPress={handleAdd} className="mt-2">
+                            Add BibTeX
+                        </ButtonWithLoading>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
             {isOpenReferenceModal && <ReferenceModal toggle={() => setIsOpenReferenceModal((v) => !v)} editReferenceIndex={editReferenceIndex} />}
-        </Modal>
+        </Modal.Backdrop>
     );
 };
 

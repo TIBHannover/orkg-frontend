@@ -31,7 +31,6 @@ import {
     useState,
 } from 'react';
 
-import { FloatingContentStyled } from '@/components/FloatingUI/styled';
 import { BaseFloatingOptions, FloatingComponentProps, FloatingContentProps, FloatingTriggerProps } from '@/components/FloatingUI/types';
 
 export function useTooltip({
@@ -42,7 +41,7 @@ export function useTooltip({
     onOpenChange: setControlledOpen,
     onTrigger,
     showArrow = true,
-    arrowFill = '#444',
+    arrowFill = 'var(--overlay)',
 }: BaseFloatingOptions = {}) {
     const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
     const arrowRef = useRef(null);
@@ -163,8 +162,9 @@ export const TooltipContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
     return (
         isMounted && (
             <FloatingPortal>
-                <FloatingContentStyled
+                <div
                     ref={ref}
+                    className="tooltip w-max max-w-[calc(100vw-10px)] z-[99999] transition-opacity duration-300 data-[status=initial]:opacity-0 data-[status=close]:opacity-0 data-[status=close]:duration-[250ms]"
                     style={{
                         ...context.floatingStyles,
                         ...style,
@@ -174,8 +174,15 @@ export const TooltipContent = forwardRef<HTMLDivElement, FloatingContentProps>(f
                 >
                     {props.children}
 
-                    {context.showArrow && <FloatingArrow ref={context.arrowRef} context={context.context} fill={context.arrowFill ?? '#444'} />}
-                </FloatingContentStyled>
+                    {context.showArrow && (
+                        <FloatingArrow
+                            ref={context.arrowRef}
+                            context={context.context}
+                            fill={context.arrowFill ?? 'var(--overlay)'}
+                            className="stroke-border/40"
+                        />
+                    )}
+                </div>
             </FloatingPortal>
         )
     );

@@ -1,11 +1,12 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Modal } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import pluralize from 'pluralize';
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import TemplateButton from '@/components/DataBrowser/components/TemplatesModal/TemplateButton/TemplateButton';
+import TemplateListItem from '@/components/DataBrowser/components/TemplatesModal/TemplateListItem/TemplateListItem';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useFeaturedTemplates from '@/components/DataBrowser/hooks/useFeaturedTemplates';
 import useRecommendedTemplates from '@/components/DataBrowser/hooks/useRecommendedTemplates';
@@ -14,21 +15,10 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TemplatesFilters from '@/components/Templates/TemplatesFilters/TemplatesFilters';
 import useTemplateGallery from '@/components/Templates/TemplatesFilters/useTemplateGallery';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import Tooltip from '@/components/Utils/Tooltip';
 import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA } from '@/constants/contentTypes';
 import { CLASSES, ENTITY_CLASSES } from '@/constants/graphSettings';
 import { Template } from '@/services/backend/types';
-
-const FiltersWrapperStyled = styled.div`
-    background: ${(props) => props.theme.light};
-`;
-
-const ListWrapperStyled = styled.div``;
 
 type TemplatesModalProps = {
     isOpen: boolean;
@@ -58,13 +48,18 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const isCurationAllowed = user?.isCurationAllowed ?? false;
     const { entity } = useEntity();
     const { templates: _usedTemplates } = useTemplates();
-    // Filter out resource templates
     const usedTemplates = _usedTemplates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggle();
+            setPage(0);
+        }
+    };
+
     const renderListItem = (template: Template) => (
-        <TemplateButton
+        <TemplateListItem
             isDisabled={
-                (entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)) ||
                 ENTITY_CLASSES.includes(template.target_class.id) ||
                 (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed)
             }
@@ -74,28 +69,23 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     );
 
     return (
-        <div>
-            <Modal
-                size="xl"
-                isOpen={isOpen}
-                toggle={toggle}
-                onClosed={() => {
-                    // reset the page size to the default value for the next time the modal is opened with just one page loaded
-                    setPage(0);
-                }}
-            >
-                <ModalHeader toggle={toggle}>Template gallery</ModalHeader>
-                <ModalBody>
-                    <div className="clearfix">
-                        <AnimatePresence>
-                            {usedTemplates?.length > 0 && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <div>
+        <Modal.Backdrop className="z-[1055]" isOpen={isOpen} onOpenChange={handleOpenChange} isDismissable>
+            <Modal.Container>
+                <Modal.Dialog className="max-w-6xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Template gallery</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="flow-root">
+                            <AnimatePresence>
+                                {usedTemplates?.length > 0 && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
                                         <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
                                         {usedTemplates?.map((template) => (
                                             <TemplateButton
@@ -106,87 +96,89 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                                 key={`tr${template.id}`}
                                             />
                                         ))}
-                                    </div>
-                                </motion.div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                            {usedTemplates?.length === 0 && (
+                                <Alert status="default" className="!bg-secondary-100 dark:!bg-secondary-800/40">
+                                    <Alert.Indicator />
+                                    <Alert.Content>
+                                        <i className="text-secondary-darker">No templates applied</i>
+                                    </Alert.Content>
+                                </Alert>
                             )}
-                        </AnimatePresence>
-                        {usedTemplates?.length === 0 && (
-                            <Alert color="light">
-                                <i className="text-secondary-darker">No templates applied</i>
-                            </Alert>
-                        )}
-                        <FiltersWrapperStyled className="mt-2 p-3 rounded border border-light">
-                            <TemplatesFilters isLoading={isLoading} size="sm" key={key} />
-                        </FiltersWrapperStyled>
+                            <div className="mt-2 p-4 rounded border border-default bg-surface-secondary">
+                                <TemplatesFilters isLoading={isLoading} size="sm" key={key} />
+                            </div>
 
-                        {!isFilterApplied && recommendedTemplates && recommendedTemplates.length > 0 && (
-                            <div className="text-muted my-3">
-                                <p>
-                                    <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
-                                        Suggestions
-                                    </Tooltip>
-                                </p>
-                                <div>
-                                    {recommendedTemplates.map((template) => (
-                                        <TemplateButton
-                                            isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
-                                            template={template}
-                                            key={`tr${template.id}`}
-                                            isSmart
-                                        />
-                                    ))}
+                            {!isFilterApplied && recommendedTemplates && recommendedTemplates.length > 0 && (
+                                <div className="text-muted my-4">
+                                    <p>
+                                        <Tooltip message="The suggestions listed below are automatically generated based on the title and abstract from the paper. Using these suggestions is optional.">
+                                            Suggestions
+                                        </Tooltip>
+                                    </p>
+                                    <div>
+                                        {recommendedTemplates.map((template) => (
+                                            <TemplateButton
+                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+                                                template={template}
+                                                key={`tr${template.id}`}
+                                                isSmart
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {!isFilterApplied && featuredTemplates && featuredTemplates.length > 0 && (
-                            <div className="text-muted my-3">
-                                <p>Featured templates:</p>
+                            {!isFilterApplied && featuredTemplates && featuredTemplates.length > 0 && (
+                                <div className="text-muted my-4">
+                                    <p>Featured templates:</p>
+                                    <div>
+                                        {featuredTemplates.map((template) => (
+                                            <TemplateButton
+                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+                                                template={template}
+                                                key={`tr${template.id}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {(isFilterApplied || !featuredTemplates || featuredTemplates?.length === 0) && (
                                 <div>
-                                    {featuredTemplates.map((template) => (
-                                        <TemplateButton
-                                            isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
-                                            template={template}
-                                            key={`tr${template.id}`}
-                                        />
-                                    ))}
+                                    <div className="text-muted my-4">
+                                        {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
+                                        {isFilterApplied ? 'templates found by applying the filter' : 'templates'}
+                                        {isFilterApplied && (
+                                            <Button onPress={resetFilters} className="ml-1 px-2" size="sm" variant="secondary">
+                                                Reset
+                                            </Button>
+                                        )}
+                                    </div>
+                                    <ListPaginatedContent<Template>
+                                        renderListItem={renderListItem}
+                                        pageSize={pageSize}
+                                        label="templates"
+                                        isLoading={isLoading}
+                                        items={items ?? []}
+                                        hasNextPage={hasNextPage}
+                                        page={page}
+                                        setPage={setPage}
+                                        setPageSize={setPageSize}
+                                        totalElements={totalElements}
+                                        error={error}
+                                        totalPages={totalPages}
+                                        boxShadow={false}
+                                        flush={false}
+                                    />
                                 </div>
-                            </div>
-                        )}
-                        {(isFilterApplied || !featuredTemplates || featuredTemplates?.length === 0) && (
-                            <div>
-                                <div className="text-muted my-3">
-                                    {isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : totalElements}{' '}
-                                    {isFilterApplied ? 'templates found by applying the filter' : 'templates'}
-                                    {isFilterApplied && (
-                                        <Button onClick={resetFilters} className="ms-1 ps-2 pe-2" size="sm">
-                                            Reset
-                                        </Button>
-                                    )}
-                                </div>
-                                <ListPaginatedContent<Template>
-                                    renderListItem={renderListItem}
-                                    pageSize={pageSize}
-                                    label="templates"
-                                    isLoading={isLoading}
-                                    items={items ?? []}
-                                    hasNextPage={hasNextPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    setPageSize={setPageSize}
-                                    totalElements={totalElements}
-                                    error={error}
-                                    totalPages={totalPages}
-                                    boxShadow={false}
-                                    flush={false}
-                                    ListGroupComponent={ListWrapperStyled}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </ModalBody>
-            </Modal>
-        </div>
+                            )}
+                        </div>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

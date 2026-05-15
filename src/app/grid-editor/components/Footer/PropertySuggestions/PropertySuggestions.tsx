@@ -1,6 +1,3 @@
-import { AgGridReact } from 'ag-grid-react';
-import { RefObject } from 'react';
-
 import SuggestionsList from '@/app/grid-editor/components/Footer/PropertySuggestions/SuggestionsList/SuggestionsList';
 import usePropertySuggestions from '@/app/grid-editor/hooks/usePropertySuggestions';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
@@ -13,9 +10,9 @@ const PropertySuggestions = () => {
     }
 
     return (
-        <div className="tw:mt-4">
-            <div className="tw:text-lg tw:font-semibold tw:mb-3 tw:text-gray-800">Properties from templates</div>
-            <div className="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:lg:grid-cols-4 tw:gap-4">
+        <div className="mt-4">
+            <div className="text-lg font-semibold mb-3 text-foreground">Properties from templates</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {templates?.map((template) => {
                     const allProperties = getListPropertiesFromTemplate(template);
                     const filteredProperties = allProperties.filter((p) => !existingProperties.includes(p.id)) as Predicate[];

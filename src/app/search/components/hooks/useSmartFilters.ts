@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 import { CLASS_PARSERS } from '@/app/search/components/hooks/helpers';
@@ -39,7 +39,7 @@ const useSmartFilters = (searchTerm: string, results: PaginatedResponse<Thing> |
             setSmartFiltersVisible(true);
         } catch (error) {
             console.error('Error generating smart filters:', error);
-            toast.error('Failed to generate smart filters');
+            toast.danger('Failed to generate smart filters');
         } finally {
             setIsGeneratingSmartFilters(false);
         }

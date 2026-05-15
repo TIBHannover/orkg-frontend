@@ -113,7 +113,7 @@ export default class VisualizationWidget extends Component {
                                     <Button
                                         color="light"
                                         size="sm"
-                                        className="ms-3 mt-3"
+                                        className="ml-4 mt-4"
                                         onClick={() => {
                                             this.setState({ inputTableExpanded: !this.state.inputTableExpanded, enableAnimations: true });
                                         }}
@@ -125,7 +125,7 @@ export default class VisualizationWidget extends Component {
                                             ref={this.refVisualizationSelector}
                                             propagationFunction={this.selectorPropagateUpdates}
                                         />
-                                        <div className="px-3">
+                                        <div className="px-4">
                                             <AbstractCustomizationWidget
                                                 ref={this.refAbstractCustomizationWidget}
                                                 propagateUpdates={this.customizerPropagateUpdates}

@@ -1,6 +1,5 @@
 'use client';
 
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
@@ -15,6 +14,7 @@ import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Resource } from '@/services/backend/types';
 
 type TabsContainerProps = {
@@ -51,7 +51,7 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, resource, editMode, content
     const defaultTab = resource?.classes?.includes(CLASSES.CSVW_TABLE) ? 'preview' : 'information';
 
     return (
-        <Container className="mt-3 p-0">
+        <Container className="mt-4">
             <Tabs
                 className="box rounded"
                 destroyOnHidden
@@ -62,7 +62,7 @@ const TabsContainer: FC<TabsContainerProps> = ({ id, resource, editMode, content
                         label: <TabLabel tabKey="information" id={id} label={`${contentType} information`} />,
                         key: 'information',
                         children: (
-                            <div className="p-4">
+                            <div className="p-6">
                                 <DataBrowser isEditMode={editMode} id={id} valuesAsLinks propertiesAsLinks canEditSharedRootLevel />
                             </div>
                         ),

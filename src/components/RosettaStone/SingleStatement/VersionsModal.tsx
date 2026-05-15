@@ -1,9 +1,9 @@
-import { reverse } from 'named-urls';
 import { FC } from 'react';
 import useSWR from 'swr';
 
 import HistoryModalComponent from '@/components/HistoryModal/HistoryModal';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getRSStatementVersions, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 
 type VersionsModalProps = {

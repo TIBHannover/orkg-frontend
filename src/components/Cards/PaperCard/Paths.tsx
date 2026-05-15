@@ -1,36 +1,18 @@
 import { faAnglesRight, faChevronCircleDown, faChevronCircleUp, faRoute } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 import { FC, Fragment, useState } from 'react';
-import styled from 'styled-components';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
-import Button from '@/components/Ui/Button/Button';
 import { ENTITIES } from '@/constants/graphSettings';
 import { Resource } from '@/services/backend/types';
 import { getLinkByEntityType } from '@/utils';
 
-const StyledPaths = styled.div`
-    & .typeCircle {
-        width: 18px;
-        height: 18px;
-        line-height: 15px;
-        text-align: center;
-        color: white;
-        display: inline-block;
-        border: 1px ${(props) => props.theme.secondaryDarker} solid;
-        border-radius: 100%;
-        font-size: 9px;
-        font-weight: bold;
-        background: ${(props) => props.theme.secondary};
-    }
-
-    & a:hover .typeCircle {
-        background: ${(props) => props.theme.primary};
-    }
-`;
-
 const MAX_ITEMS = 3;
+
+const TYPE_CIRCLE_CLASS =
+    'inline-block size-[18px] rounded-full border border-secondary-darker bg-secondary text-center text-[9px] font-bold leading-[15px] text-white group-hover:bg-accent';
 
 type PathsProps = {
     paths: Resource[][];
@@ -51,26 +33,26 @@ const Paths: FC<PathsProps> = ({ paths }) => {
     };
 
     return (
-        <StyledPaths>
-            <ul className="list-unstyled d-flex flex-column justify-content-center align-items-center">
+        <div>
+            <ul className="list-unstyled flex flex-col items-center justify-center">
                 {data.map((path, index) => (
                     <li key={`${index}-${data.length}`}>
-                        <FontAwesomeIcon size="sm" icon={faRoute} className="me-1 " />
-                        Path: Paper <FontAwesomeIcon icon={faAnglesRight} className="me-1" />
+                        <FontAwesomeIcon size="sm" icon={faRoute} className="mr-1 text-muted" />
+                        Path: Paper <FontAwesomeIcon icon={faAnglesRight} className="mr-1 text-muted" />
                         {path.slice(1).map((entity, i) => (
                             <Fragment key={i}>
                                 <DescriptionTooltip classes={entity.classes} id={entity.id} _class={entity._class}>
                                     <Link
                                         href={getLinkByEntityType(entity._class, entity.id)}
-                                        className={entity._class === ENTITIES.PREDICATE ? 'position-relative ps-1' : 'position-relative'}
+                                        className={`group ${entity._class === ENTITIES.PREDICATE ? 'relative pl-1' : 'relative'}`}
                                     >
-                                        {entity._class === ENTITIES.PREDICATE && <div className="typeCircle position-absolute">P</div>}
-                                        <div className={entity._class === ENTITIES.PREDICATE ? 'd-inline-block ms-4' : 'd-inline-block'}>
+                                        {entity._class === ENTITIES.PREDICATE && <div className={`absolute ${TYPE_CIRCLE_CLASS}`}>P</div>}
+                                        <div className={entity._class === ENTITIES.PREDICATE ? 'ml-6 inline-block' : 'inline-block'}>
                                             {entity.label}
                                         </div>
                                     </Link>
                                 </DescriptionTooltip>
-                                {i !== path.length - 2 && <FontAwesomeIcon icon={faAnglesRight} className="mx-1" />}
+                                {i !== path.length - 2 && <FontAwesomeIcon icon={faAnglesRight} className="mx-1 text-muted" />}
                             </Fragment>
                         ))}
                         {index + 1 < data.length && <hr className="my-1" />}
@@ -78,12 +60,12 @@ const Paths: FC<PathsProps> = ({ paths }) => {
                 ))}
             </ul>
             {paths.length > MAX_ITEMS && (
-                <Button color="secondary" outline size="sm" className="mt-1 border-0" onClick={toggleExpand}>
+                <Button variant="ghost" size="sm" className="mt-1 border-0" onPress={toggleExpand}>
                     {isExpanded ? 'Show less' : `Show ${paths.length - MAX_ITEMS} more`}{' '}
                     <FontAwesomeIcon icon={isExpanded ? faChevronCircleUp : faChevronCircleDown} />
                 </Button>
             )}
-        </StyledPaths>
+        </div>
     );
 };
 

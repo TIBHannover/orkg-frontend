@@ -1,0 +1,779 @@
+@import 'tailwindcss';
+@import '@heroui/styles';
+@plugin '@tailwindcss/typography';
+
+/*
+ * ORKG custom colors — no HeroUI semantic equivalent.
+ * These remain as Tailwind utilities: bg-secondary, text-dark, bg-smart, etc.
+ */
+@theme {
+    --color-accent-darker: oklch(53.05% 0.2014 27.65);
+    --color-secondary: oklch(62.23% 0.0325 272.8);
+    --color-secondary-darker: oklch(45.11% 0.027 271.59);
+    --color-dark: oklch(49.53% 0.0345 272.56);
+    --color-smart: oklch(65.52% 0.1105 212.21);
+    --color-smart-darker: oklch(59.19% 0.0994 211.95);
+    --max-width-container: 1320px;
+    --color-info: oklch(0.9172 0.0599 212.01);
+}
+
+/*
+ * Action bar — connected button group for TitleBar.
+ * Targets [data-slot="button"] (always present on HeroUI Button) for border-radius.
+ * No React ButtonGroup needed — avoids cloneElement/fragment issues.
+ */
+.action-bar {
+    @apply items-center gap-0;
+}
+
+.action-bar > [data-slot='button'] {
+    @apply rounded-none border-r border-r-white/20;
+}
+
+.action-bar > [data-slot='button']:last-child {
+    @apply border-r-0;
+}
+
+.action-bar > [data-slot='button']:first-child {
+    @apply rounded-s-md;
+}
+
+.action-bar > [data-slot='button']:last-child {
+    @apply rounded-e-md;
+}
+
+.action-bar > [data-slot='button']:only-child {
+    @apply rounded-md;
+}
+
+/*
+ * Markdown editor toolbar — joined buttons via descendant [data-slot='button']
+ * so it works through wrappers like Tooltip.Trigger that block direct-child selectors.
+ */
+.toolbar-group {
+    @apply flex items-center;
+}
+
+.toolbar-group [data-slot='button'] {
+    border-radius: 0 !important;
+}
+
+.toolbar-group > *:first-child [data-slot='button'] {
+    border-start-start-radius: var(--radius) !important;
+    border-end-start-radius: var(--radius) !important;
+}
+
+.toolbar-group > *:last-child [data-slot='button'] {
+    border-start-end-radius: var(--radius) !important;
+    border-end-end-radius: var(--radius) !important;
+}
+
+.toolbar-group > * + * [data-slot='button'] {
+    margin-inline-start: -1px;
+}
+
+/*
+ * MarkdownEditor — autocomplete dropdown styling (react-textarea-autocomplete).
+ */
+.markdown-editor-rta .rta__list {
+    @apply overflow-hidden rounded-md text-[90%];
+}
+
+.markdown-editor-rta .rta__entity--selected {
+    @apply bg-accent;
+}
+
+/* ORKG secondary button variant — follows HeroUI's button variant pattern (.button--primary, etc.) */
+.button--orkg-secondary {
+    --button-bg: var(--color-secondary);
+    --button-bg-hover: var(--color-secondary-darker);
+    --button-bg-pressed: var(--color-secondary-darker);
+    --button-fg: white;
+}
+
+.button--orkg-smart {
+    --button-bg: var(--color-smart);
+    --button-bg-hover: var(--color-smart-darker);
+    --button-bg-pressed: var(--color-smart-darker);
+    --button-fg: white;
+}
+
+.button--orkg-secondary-darker {
+    --button-bg: var(--color-secondary-darker);
+    --button-bg-hover: var(--color-secondary);
+    --button-bg-pressed: var(--color-secondary);
+    --button-fg: white;
+}
+
+/*
+ * HeroUI Theme Customization
+ * Add this to your global.css after importing @heroui/styles
+ * Only includes base variables from variables.css
+ * @see https://v3.heroui.com/docs/react/getting-started/theming
+ */
+
+:root,
+.light,
+.default,
+[data-theme='light'],
+[data-theme='default'] {
+    /* Theme Colors (Light Mode) */
+    --accent: oklch(66.3% 0.1683 22.81);
+    --accent-foreground: oklch(99.11% 0 0);
+    --background: oklch(94.06% 0.01 273.35);
+    --border: oklch(90% 0.0015 22.81);
+    --danger: oklch(65.32% 0.2335 358.02);
+    --danger-foreground: oklch(99.11% 0 0);
+    --default: oklch(94.06% 0.0096 273.35);
+    --default-foreground: oklch(21.03% 0.0059 22.81);
+    --field-background: oklch(98% 0 0);
+    --field-border: var(--border);
+    --field-border-width: 1px;
+    --field-foreground: oklch(21.03% 0.0015 22.81);
+    --field-placeholder: oklch(55.17% 0.003 22.81);
+    --field-shadow: none;
+    --focus: oklch(66.3% 0.1683 22.81);
+    --foreground: oklch(21.03% 0.0015 22.81);
+    --muted: oklch(55.17% 0.003 22.81);
+    --overlay: oklch(100% 0.0004 22.81);
+    --overlay-foreground: oklch(21.03% 0.0015 22.81);
+    --scrollbar: oklch(87.1% 0.0015 22.81);
+    --segment: oklch(100% 0.0015 22.81);
+    --segment-foreground: oklch(21.03% 0.0015 22.81);
+    --separator: oklch(92% 0.0015 22.81);
+    --success: oklch(73.29% 0.1941 123.09);
+    --success-foreground: oklch(21.03% 0.0059 123.09);
+    --surface: oklch(100% 0.0008 22.81);
+    --surface-foreground: oklch(21.03% 0.0015 22.81);
+    --surface-secondary: oklch(94.06% 0.0096 273.35);
+    --surface-secondary-foreground: oklch(21.03% 0.0015 22.81);
+    --surface-tertiary: oklch(91% 0.01 275.11);
+    --surface-tertiary-foreground: oklch(21.03% 0.0015 22.81);
+    --warning: oklch(78.19% 0.159 44.61);
+    --warning-foreground: oklch(21.03% 0.0059 44.61);
+
+    /* DataBrowser / ComparisonTable nested-level backgrounds (light) */
+    --db-level-0: var(--surface);
+    --db-level-1: oklch(95.5% 0.0015 22.81);
+    --db-level-2: oklch(93.5% 0.0015 22.81);
+    --db-level-3: oklch(91.5% 0.0015 22.81);
+    --db-level-4: oklch(89.5% 0.0015 22.81);
+    --db-level-5: oklch(87.5% 0.0015 22.81);
+    --db-level-6: oklch(85.5% 0.0015 22.81);
+    --db-level-7: oklch(83.5% 0.0015 22.81);
+    --db-level-8: oklch(81.5% 0.0015 22.81);
+    --db-level-9: oklch(79.5% 0.0015 22.81);
+    --db-level-10: oklch(77.5% 0.0015 22.81);
+
+    /* Border Radius */
+    --radius: 0.5rem;
+    --field-radius: 0.5rem;
+
+    /* Font Family */
+    /* Make sure to load Inter font in your app */
+    --font-sans: var(--font-inter);
+}
+
+.dark,
+[data-theme='dark'] {
+    color-scheme: dark;
+
+    /* ORKG custom colors — dark mode variants */
+    --color-accent-darker: oklch(73% 0.16 27.65);
+    --color-secondary: oklch(72% 0.03 272.8);
+    --color-secondary-darker: oklch(55% 0.027 271.59);
+    --color-dark: oklch(85% 0.02 272.56);
+    --color-smart: oklch(72% 0.11 212.21);
+    --color-smart-darker: oklch(65% 0.1 211.95);
+    --color-info: oklch(0.4749 0.0398 212.23);
+
+    /* Theme Colors (Dark Mode) */
+    --accent: oklch(66.3% 0.1683 22.81);
+    --accent-foreground: oklch(15% 0.03 22.81);
+    --background: oklch(12% 0.0015 22.81);
+    --border: oklch(28% 0.0015 22.81);
+    --danger: oklch(59.4% 0.1973 356.91);
+    --danger-foreground: oklch(99.11% 0 0);
+    --default: oklch(27.4% 0.0015 22.81);
+    --default-foreground: oklch(99.11% 0 0);
+    --field-background: oklch(27% 0.003 22.81);
+    --field-foreground: oklch(99.11% 0.0015 22.81);
+    --field-placeholder: oklch(70.5% 0.003 22.81);
+    --focus: oklch(66.3% 0.1683 22.81);
+    --foreground: oklch(99.11% 0.0015 22.81);
+    --muted: oklch(70.5% 0.003 22.81);
+    --overlay: oklch(21.03% 0.003 22.81);
+    --overlay-foreground: oklch(99.11% 0.0015 22.81);
+    --scrollbar: oklch(70.5% 0.0015 22.81);
+    --segment: oklch(39.64% 0.0015 22.81);
+    --segment-foreground: oklch(99.11% 0.0015 22.81);
+    --separator: oklch(25% 0.0015 22.81);
+    --success: oklch(73.29% 0.1941 123.09);
+    --success-foreground: oklch(21.03% 0.0059 123.09);
+    --surface: oklch(21.03% 0.003 22.81);
+    --surface-foreground: oklch(99.11% 0.0015 22.81);
+    --surface-secondary: oklch(25.7% 0.0023 22.81);
+    --surface-secondary-foreground: oklch(99.11% 0.0015 22.81);
+    --surface-tertiary: oklch(27.21% 0.0023 22.81);
+    --surface-tertiary-foreground: oklch(99.11% 0.0015 22.81);
+    --warning: oklch(82.03% 0.1392 48.62);
+    --warning-foreground: oklch(21.03% 0.0059 48.62);
+
+    /* DataBrowser / ComparisonTable nested-level backgrounds (dark) */
+    --db-level-0: var(--surface);
+    --db-level-1: oklch(23% 0.003 22.81);
+    --db-level-2: oklch(25% 0.003 22.81);
+    --db-level-3: oklch(27% 0.003 22.81);
+    --db-level-4: oklch(29% 0.003 22.81);
+    --db-level-5: oklch(31% 0.003 22.81);
+    --db-level-6: oklch(33% 0.003 22.81);
+    --db-level-7: oklch(35% 0.003 22.81);
+    --db-level-8: oklch(37% 0.003 22.81);
+    --db-level-9: oklch(39% 0.003 22.81);
+    --db-level-10: oklch(41% 0.003 22.81);
+}
+
+.box {
+    @apply bg-surface rounded-lg shadow-sm;
+}
+
+/* Grid System for Structure Components */
+.col-1 {
+    flex: 0 0 8.333333%;
+    max-width: 8.333333%;
+}
+.col-2 {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+.col-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+.col-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+.col-5 {
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
+.col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+.col-7 {
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+}
+.col-8 {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+}
+.col-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+.col-10 {
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+}
+.col-11 {
+    flex: 0 0 91.666667%;
+    max-width: 91.666667%;
+}
+.col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 640px) {
+    .sm-col-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
+    }
+    .sm-col-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .sm-col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .sm-col-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .sm-col-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .sm-col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .sm-col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .sm-col-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    .sm-col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .sm-col-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    .sm-col-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+    .sm-col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .md-col-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
+    }
+    .md-col-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .md-col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .md-col-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .md-col-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .md-col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .md-col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .md-col-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    .md-col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .md-col-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    .md-col-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+    .md-col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg-col-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
+    }
+    .lg-col-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .lg-col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .lg-col-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .lg-col-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .lg-col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .lg-col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .lg-col-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    .lg-col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .lg-col-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    .lg-col-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+    .lg-col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .xl-col-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
+    }
+    .xl-col-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .xl-col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .xl-col-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .xl-col-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .xl-col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .xl-col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .xl-col-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    .xl-col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .xl-col-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    .xl-col-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+    .xl-col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+.orkgSwiper {
+    --swiper-theme-color: var(--accent);
+    --swiper-pagination-color: var(--accent);
+    --swiper-navigation-size: 18px;
+    --swiper-pagination-bullet-width: 10px;
+    --swiper-pagination-bullet-height: 10px;
+}
+
+/* We use @layer base to apply the styles to the base elements 
+so when we use a tailwind classname on the element it will be overridden by the tailwind classname
+Example:
+<a href="/" class="text-primary">Home</a>
+<a href="/" class="text-primary hover:text-primary-darker">Home</a>
+*/
+
+@layer base {
+    html {
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+    }
+
+    body {
+        color: var(--foreground);
+        background-color: var(--background);
+    }
+
+    a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+    a:hover {
+        color: color-mix(in oklch, var(--accent) 80%, black);
+        text-decoration: underline;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+    }
+    h3 {
+        font-size: 1.3rem;
+    }
+    h4 {
+        font-size: 1.2rem;
+    }
+    h5 {
+        font-size: 1.1rem;
+    }
+    h6 {
+        font-size: 1.05rem;
+    }
+}
+
+@layer components {
+    .alert {
+        @apply shadow-none rounded text-foreground;
+    }
+    .alert__description {
+        @apply text-inherit;
+    }
+    .alert__title {
+        @apply text-inherit!;
+    }
+    .alert--accent {
+        background: color-mix(in oklab, var(--color-info) 30%, var(--surface));
+    }
+    .alert--warning {
+        background: color-mix(in oklab, var(--warning) 15%, var(--surface));
+    }
+    .alert--danger {
+        background: color-mix(in oklab, var(--danger) 15%, var(--surface));
+    }
+    .card {
+        @apply rounded;
+    }
+    .checkbox__control {
+        border-width: var(--field-border-width);
+    }
+    .modal__backdrop {
+        z-index: 1031; /* above ORKG header (1030) */
+    }
+}
+
+.table > :not(:first-child) {
+    border-top: 0;
+}
+
+.bg-background {
+    color: var(--foreground);
+}
+
+.annotation-tooltip.show {
+    opacity: 1 !important;
+}
+
+.annotation-tooltip-inner {
+    max-width: none !important;
+    opacity: 1 !important;
+}
+
+/* SmartSentenceDetection — pdf.js find-result highlights inside the pdf-annotation viewer */
+[data-show-highlights='true'] .highlight {
+    cursor: pointer !important;
+    background: #d2d5df !important;
+}
+
+[data-show-highlights='false'] .highlight {
+    cursor: text !important;
+    background: transparent !important;
+}
+
+.box-shadow {
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
+}
+.dark .box-shadow {
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.4);
+}
+
+.page {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+}
+.dark .page {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* intro.js */
+.introjs-ORKG-tooltip .introjs-bullets ul li a,
+.introjs-ORKG-tooltip .introjs-bullets ul li a.active {
+    background-color: var(--accent);
+}
+.introjs-ORKG-tooltip {
+    max-width: 550px !important;
+}
+
+/* react-contexify */
+.contexify_item:not(.contexify_item-disabled):hover > .contexify_itemContent,
+.contexify_item:not(.contexify_item-disabled):focus > .contexify_itemContent {
+    background-color: var(--accent);
+}
+
+/*
+ * tailwindcss/typography — default `prose` uses ORKG palette (@theme + neutrals).
+ * Override Typography’s gray defaults by setting --tw-prose-* on `.prose` (see
+ * https://github.com/tailwindlabs/tailwindcss-typography#adding-custom-color-themes).
+ * Use `prose-slate`, `prose-gray`, etc. when you need the plugin’s stock themes.
+ */
+.prose,
+.dark .prose {
+    --tw-prose-body: var(--color);
+    --tw-prose-headings: var(--color);
+    --tw-prose-lead: var(--color-secondary-darker);
+    --tw-prose-links: var(--accent);
+    --tw-prose-bold: var(--color);
+    --tw-prose-counters: var(--color-secondary);
+    --tw-prose-bullets: color-mix(in srgb, var(--accent) 55%, var(--surface));
+    --tw-prose-hr: var(--border);
+    --tw-prose-quotes: var(--color-accent-darker);
+    --tw-prose-quote-borders: var(--border);
+    --tw-prose-captions: var(--color-secondary);
+    --tw-prose-code: var(--color-accent-darker);
+    --tw-prose-pre-code: var(--surface);
+    --tw-prose-pre-bg: var(--color-secondary-darker);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--background);
+    --tw-prose-invert-body: var(--background);
+    --tw-prose-invert-headings: var(--surface);
+    --tw-prose-invert-lead: var(--color-secondary);
+    --tw-prose-invert-links: var(--accent);
+    --tw-prose-invert-bold: var(--surface);
+    --tw-prose-invert-counters: color-mix(in srgb, var(--accent) 75%, var(--background));
+    --tw-prose-invert-bullets: var(--color-secondary);
+    --tw-prose-invert-hr: var(--color-secondary-darker);
+    --tw-prose-invert-quotes: var(--background);
+    --tw-prose-invert-quote-borders: var(--color-secondary-darker);
+    --tw-prose-invert-captions: var(--color-secondary);
+    --tw-prose-invert-code: var(--surface);
+    --tw-prose-invert-pre-code: var(--background);
+    --tw-prose-invert-pre-bg: color-mix(in srgb, var(--color-accent-darker) 88%, black);
+    --tw-prose-invert-th-borders: var(--color-secondary-darker);
+    --tw-prose-invert-td-borders: var(--color-secondary);
+    max-width: none;
+}
+
+/*
+ * ORKG prose: disable Typography’s decorative backticks on inline <code>
+ * (@tailwindcss/typography sets code::before/after content to "`").
+ * @see https://github.com/tailwindlabs/tailwindcss-typography
+ */
+.prose :where(code):not(:where(pre *, [class~='not-prose'], [class~='not-prose'] *))::before,
+.prose :where(code):not(:where(pre *, [class~='not-prose'], [class~='not-prose'] *))::after {
+    content: none;
+}
+
+/* Markdown video embeds */
+.video-embed iframe {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0;
+}
+
+/* Bootstrap-compatible responsive embeds for legacy CMS markup (`<div class="ratio ratio-16x9">…`) */
+.ratio {
+    position: relative;
+    width: 100%;
+}
+.ratio > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.ratio-1x1 {
+    aspect-ratio: 1 / 1;
+}
+.ratio-4x3 {
+    aspect-ratio: 4 / 3;
+}
+.ratio-16x9 {
+    aspect-ratio: 16 / 9;
+}
+.ratio-21x9 {
+    aspect-ratio: 21 / 9;
+}
+
+/* DataBrowser metadata hash-highlight flash */
+@keyframes blinkAnimation {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Review references: hash-link flash for citation jumps */
+@keyframes referenceBlink {
+    0%,
+    100% {
+        background-color: var(--color-warning-100, rgba(255, 230, 130, 0.55));
+    }
+    50% {
+        background-color: var(--surface);
+    }
+}
+.review-references li.blink-figure {
+    border-radius: 6px;
+    padding-inline: 0.5rem;
+    margin-inline: -0.5rem;
+    animation: referenceBlink 5s 1;
+}
+
+/* Review page: print only the review contents, drop layout chrome */
+@media print {
+    nav,
+    footer,
+    .container:not(.print-only) {
+        display: none !important;
+    }
+    .container.print-only,
+    .print-only {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+        margin-top: -100px;
+    }
+    .print-only .box {
+        box-shadow: none;
+    }
+    body {
+        background-color: var(--surface) !important;
+    }
+}
+
+/* react-image-lightbox: white backdrop behind loaded images */
+.ril__image.ril-image-current:not(.ril-not-loaded) {
+    background: #fff;
+}

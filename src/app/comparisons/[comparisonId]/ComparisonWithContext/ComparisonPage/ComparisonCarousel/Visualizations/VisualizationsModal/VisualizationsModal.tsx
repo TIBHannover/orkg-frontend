@@ -1,15 +1,12 @@
 import { faAdd, faLinkSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import useVisualizations from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonCarousel/Visualizations/hooks/useVisualizations';
 import ActionButton from '@/components/ActionButton/ActionButton';
 import Confirm from '@/components/Confirmation/Confirmation';
 import VisualizationPreview from '@/components/Resource/Tabs/Preview/VisualizationPreview/VisualizationPreview';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import AddVisualizationModal from '@/libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 
 type VisualizationsModalProps = {
@@ -36,53 +33,58 @@ const VisualizationsModal: FC<VisualizationsModalProps> = ({ toggle }) => {
         }
     };
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            toggle();
+        }
+    };
+
     return (
-        <Modal isOpen toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>Edit visualizations</ModalHeader>
-            <ModalBody>
-                {visualizations &&
-                    visualizations.map((visualization) => (
-                        <div className="border rounded p-2 mb-2 d-flex" key={visualization.id}>
-                            <div style={{ width: 200 }} className="border-end d-flex align-items-center justify-content-center flex-shrink-0">
-                                <VisualizationPreview id={visualization.id} width="200px" height="100px" className="" />
-                            </div>
-                            <div className="mx-3 d-flex justify-content-center flex-column border-end flex-grow-1">
-                                <span className="fw-bold">{visualization.title}</span>
-                                <div
-                                    style={{
-                                        WebkitLineClamp: 3,
-                                        overflow: 'hidden',
-                                        display: '-webkit-box',
-                                        WebkitBoxOrient: 'vertical',
-                                    }}
-                                >
-                                    {visualization.description}
+        <Modal.Backdrop isOpen onOpenChange={handleOpenChange}>
+            <Modal.Container size="lg">
+                <Modal.Dialog className="max-w-3xl">
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Edit visualizations</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-2">
+                        {visualizations?.map((visualization) => (
+                            <div className="border rounded p-2 flex" key={visualization.id}>
+                                <div style={{ width: 200 }} className="border-end flex items-center justify-center shrink-0">
+                                    <VisualizationPreview id={visualization.id} width="200px" height="100px" className="" />
+                                </div>
+                                <div className="mx-4 flex justify-center flex-col border-end grow">
+                                    <span className="font-bold">{visualization.title}</span>
+                                    <div
+                                        style={{
+                                            WebkitLineClamp: 3,
+                                            overflow: 'hidden',
+                                            display: '-webkit-box',
+                                            WebkitBoxOrient: 'vertical',
+                                        }}
+                                    >
+                                        {visualization.description}
+                                    </div>
+                                </div>
+                                <div className="flex items-center">
+                                    <ActionButton
+                                        title="Unlink visualization"
+                                        icon={faLinkSlash}
+                                        action={() => handleUnlink(visualization.id)}
+                                        isLoading={isLoadingUnlink}
+                                    />
                                 </div>
                             </div>
-                            <div className="d-flex align-items-center">
-                                <ActionButton
-                                    title="Unlink visualization"
-                                    icon={faLinkSlash}
-                                    action={() => handleUnlink(visualization.id)}
-                                    isLoading={isLoadingUnlink}
-                                />
-                            </div>
-                        </div>
-                    ))}
+                        ))}
 
-                <Button
-                    color="secondary"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => {
-                        setIsOpenVisualizationModal(true);
-                    }}
-                >
-                    <FontAwesomeIcon icon={faAdd} /> Add visualization
-                </Button>
-            </ModalBody>
+                        <Button variant="secondary" size="sm" className="mt-2 self-start" onPress={() => setIsOpenVisualizationModal(true)}>
+                            <FontAwesomeIcon icon={faAdd} /> Add visualization
+                        </Button>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
             <AddVisualizationModal isOpenVisualizationModal={isOpenVisualizationModal} setIsOpenVisualizationModal={setIsOpenVisualizationModal} />
-        </Modal>
+        </Modal.Backdrop>
     );
 };
 

@@ -7,7 +7,7 @@ const NoData = () => {
     const { isEditMode } = config;
     const { canEdit } = useCanEdit();
     return (
-        <ListGroupItem className="p-3 mb-0 rounded">
+        <ListGroupItem className="p-4 mb-0 rounded">
             No data yet
             <div>
                 {isEditMode && canEdit ? (

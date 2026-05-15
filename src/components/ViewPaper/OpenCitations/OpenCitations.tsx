@@ -1,12 +1,12 @@
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import { isNaN, parseInt } from 'lodash';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
 import { getCitationCount, openCitationsUrl } from '@/services/openCitations';
 
 type OpenCitationsProps = {
@@ -29,10 +29,10 @@ const OpenCitations: FC<OpenCitationsProps> = ({ doi }) => {
                     </span>
                 }
             >
-                <span className="me-2 mb-2">
-                    <Badge color="light">
+                <span className="mr-2 mb-2">
+                    <Chip>
                         <FontAwesomeIcon icon={faComment} /> {pluralize('citation', citationCount, true)}
-                    </Badge>
+                    </Chip>
                 </span>
             </Tooltip>
         )

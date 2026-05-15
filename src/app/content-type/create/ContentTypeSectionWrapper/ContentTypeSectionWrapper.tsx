@@ -19,13 +19,13 @@ const ContentTypeSectionWrapper = ({
     video,
     children,
 }: ContentTypeSectionWrapperProps) => (
-    <div className="tw:flex">
-        <div className="tw:w-2/3 me-3">
-            <h1 className="tw:text-2xl!">{title}</h1>
-            <div>{description}</div>
-            {children}
+    <div className="flex flex-col md:flex-row gap-6">
+        <div className="md:w-2/3 flex flex-col gap-4">
+            <h1 className="text-2xl m-0">{title}</h1>
+            <div className="m-0 leading-relaxed">{description}</div>
+            <div className="mt-1">{children}</div>
         </div>
-        <div className="tw:w-1/3">
+        <div className="md:w-1/3">
             <HelpfulResourcesBox title="Helpful resources" subtitle={helpfulResourcesSubtitle} video={video}>
                 {helpfulResourcesExamples}
             </HelpfulResourcesBox>

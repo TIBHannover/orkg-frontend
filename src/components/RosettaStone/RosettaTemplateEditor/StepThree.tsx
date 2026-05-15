@@ -1,8 +1,9 @@
+import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Accordion, Button, Label, Separator, TextArea, TextField, toast } from '@heroui/react';
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
 import PositionItem, { isPositionData } from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
@@ -12,11 +13,6 @@ import {
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { createInstanceId, createListMonitor, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
-import Accordion from '@/components/Ui/Accordion/Accordion';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import { guid } from '@/utils';
 
 function StepThree() {
@@ -24,7 +20,7 @@ function StepThree() {
     const dispatch = useRosettaTemplateEditorDispatch();
     const [instanceId] = useState(() => createInstanceId('rosetta-positions'));
 
-    const [open, setOpen] = useState(properties?.length > 0 ? properties[0].id ?? '' : '');
+    const [open, setOpen] = useState(properties?.length > 0 ? (properties[0].id ?? '') : '');
 
     const handleAddObjectPosition = () => {
         const newId = guid();
@@ -47,10 +43,15 @@ function StepThree() {
             });
 
             if (finishIndex !== startIndex) {
-                dispatch({ type: 'moveProperties', payload: { dragIndex: startIndex, hoverIndex: finishIndex } });
+                const reorderedProperties = reorder({
+                    list: properties,
+                    startIndex,
+                    finishIndex,
+                });
+                dispatch({ type: 'reorderProperties', payload: reorderedProperties });
             }
         },
-        [dispatch],
+        [dispatch, properties],
     );
 
     useEffect(() => {
@@ -67,21 +68,13 @@ function StepThree() {
         };
     }, [instanceId, properties, reorderPositions]);
 
-    const toggle = (id: string) => {
-        if (open === id) {
-            setOpen('');
-        } else {
-            setOpen(id);
-        }
-    };
-
-    const handleExamplesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleExamplesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (numberLockedProperties > 0) {
             if (e.target.value.startsWith(lockedExamples)) {
                 dispatch({ type: 'setExamples', payload: e.target.value });
             } else {
-                toast.dismiss();
-                toast.error(`Examples must start with "${lockedExamples}"`);
+                toast.clear();
+                toast.danger(`Examples must start with "${lockedExamples}"`);
             }
         } else {
             dispatch({ type: 'setExamples', payload: e.target.value });
@@ -89,36 +82,50 @@ function StepThree() {
     };
 
     return (
-        <div>
-            <FormGroup className="mt-2">
-                <Label for="examples">
-                    Provide some example sentences{' '}
+        <div className="flex flex-col gap-4">
+            <TextField fullWidth>
+                <Label className="inline-flex items-center gap-2">
+                    Provide some example sentences
                     <HelpIcon content="In the first step, we want you to provide several example sentences for the type of statement you are defining. Here are some examples for a measurement statement: 'This apple has a weight of 212.45 grams (95% conf. inter.: 212.44 - 212.47 grams).', 'The sample has a mean blood pressure of 120 mmHg.', 'The lake has a pH of 7.5.'" />
                 </Label>
-                <Input
+                <TextArea
+                    id="examples"
                     onChange={handleExamplesChange}
                     value={examples}
-                    type="textarea"
-                    id="examples"
                     placeholder="Provide example sentences that illustrate the type of information you expect this statement template to handle. These examples will help users understand the scope of the statement template."
-                    rows="4"
+                    rows={4}
                 />
-            </FormGroup>
-            <hr />
+            </TextField>
+            <Separator />
             <StatementPlaceholder />
-            <hr />
-            <p>
-                Positions:{' '}
-                <HelpIcon content="In this step, you create a pattern for the new statement template. At the top you see the progress you make in specifying that pattern and how it will be displayed in the ORKG. Each item you see at the top is a specific position in the sentence that you define. At the bottom you can add more object positions. Whenever you add an object, it will appear at the top. With the statement pattern it should be possible to express all the example sentences that you provided." />
-            </p>
-            <Accordion toggle={toggle} open={open}>
-                {properties.map((property, i) => (
-                    <PositionItem property={property} i={i} key={property?.id} instanceId={instanceId} totalItems={properties.length} />
-                ))}
-            </Accordion>
-            <Button className="my-2" outline size="sm" onClick={handleAddObjectPosition}>
-                <FontAwesomeIcon icon={faPlus} /> Add object position
-            </Button>
+            <Separator />
+            <div className="flex flex-col gap-2">
+                <div className="inline-flex items-center gap-2 font-medium text-foreground">
+                    Positions
+                    <HelpIcon content="In this step, you create a pattern for the new statement template. At the top you see the progress you make in specifying that pattern and how it will be displayed in the ORKG. Each item you see at the top is a specific position in the sentence that you define. At the bottom you can add more object positions. Whenever you add an object, it will appear at the top. With the statement pattern it should be possible to express all the example sentences that you provided." />
+                </div>
+                <Accordion
+                    allowsMultipleExpanded={false}
+                    expandedKeys={open ? new Set([open]) : new Set()}
+                    onExpandedChange={(keys) => {
+                        if (keys.size === 0) {
+                            setOpen('');
+                        } else {
+                            setOpen(String(Array.from(keys)[0]));
+                        }
+                    }}
+                    className="flex flex-col gap-2"
+                >
+                    {properties.map((property, i) => (
+                        <PositionItem property={property} i={i} key={property?.id} instanceId={instanceId} totalItems={properties.length} />
+                    ))}
+                </Accordion>
+                <div>
+                    <Button size="sm" variant="tertiary" onPress={handleAddObjectPosition}>
+                        <FontAwesomeIcon icon={faPlus} /> Add object position
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 }

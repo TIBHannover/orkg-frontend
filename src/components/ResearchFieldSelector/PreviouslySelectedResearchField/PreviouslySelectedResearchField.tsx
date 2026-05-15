@@ -1,10 +1,9 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Tooltip } from '@heroui/react';
 import { FC } from 'react';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import usePreviouslySelectedResearchField from '@/components/ResearchFieldSelector/PreviouslySelectedResearchField/hooks/usePreviouslySelectedResearchField';
-import Button from '@/components/Ui/Button/Button';
 import { Node } from '@/services/backend/types';
 
 type PreviouslySelectedResearchFieldProps = {
@@ -18,21 +17,27 @@ const PreviouslySelectedResearchField: FC<PreviouslySelectedResearchFieldProps> 
         <div className="mb-2">
             {researchFields.length > 0 && (
                 <>
-                    <h3 className="fw-bold h6 mt-1">
-                        <Tooltip content="Based on your 8 most recently added papers">
-                            <span>
-                                Recent fields <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
-                            </span>
+                    <h3 className="font-bold text-lg mt-1">
+                        <Tooltip delay={0}>
+                            <Tooltip.Trigger>
+                                <span>
+                                    Recent fields <FontAwesomeIcon icon={faQuestionCircle} className="text-accent" />
+                                </span>
+                            </Tooltip.Trigger>
+                            <Tooltip.Content showArrow>
+                                <Tooltip.Arrow />
+                                Based on your 8 most recently added papers
+                            </Tooltip.Content>
                         </Tooltip>
                     </h3>
 
-                    <div className="d-flex flex-wrap">
+                    <div className="flex flex-wrap">
                         {researchFields.map((rf) => (
                             <Button
                                 key={rf.id}
-                                color="light"
-                                onClick={() => handleFieldSelect(rf, true)}
-                                className={`me-2 mb-2 text-start rounded-pill ${selectedResearchField === rf.id ? 'active' : ''}`}
+                                variant={selectedResearchField === rf.id ? 'primary' : 'outline'}
+                                onPress={() => handleFieldSelect(rf, true)}
+                                className="mr-2 mb-2 text-left rounded-full"
                                 size="sm"
                             >
                                 {rf.label}

@@ -1,5 +1,4 @@
 import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -8,6 +7,7 @@ import useSwrStatementsCache from '@/app/grid-editor/hooks/useSwrStatementsCache
 import ActionButton from '@/components/ActionButton/ActionButton';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { deleteStatementById } from '@/services/backend/statements';
 import { Predicate } from '@/services/backend/types';
 
@@ -46,17 +46,17 @@ const PropertyCell = ({ value, data }: PropertyCellProps) => {
     }
 
     return (
-        <div className="tw:flex tw:items-center tw:justify-between tw:group tw:relative tw:w-full tw:h-full tw:cursor-pointer">
+        <div className="flex items-center justify-between group relative w-full h-full cursor-pointer">
             <Link
                 href={reverse(ROUTES.PROPERTY, { id: value.id })}
                 target="_blank"
-                className="tw:!text-black tw:hover:!text-decoration-none tw:no-underline"
+                className="text-foreground hover:text-decoration-none no-underline"
             >
                 <DescriptionTooltip id={value.id} _class={value._class}>
-                    <strong className="tw:line-clamp-3">{value.label}</strong>
+                    <strong className="line-clamp-3">{value.label}</strong>
                 </DescriptionTooltip>
             </Link>
-            <div className="tw:opacity-0 tw:group-hover:opacity-100 tw:transition-opacity tw:duration-200">
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <ActionButton
                     title="Delete entire row"
                     icon={faTrash}

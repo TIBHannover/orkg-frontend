@@ -1,15 +1,14 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 import { GroupBase, OptionsOrGroups } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import InputGroup from '@/components/Ui/Input/InputGroup';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getObservatories } from '@/services/backend/observatories';
 import { Observatory } from '@/services/backend/types';
 
@@ -57,8 +56,8 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChange, o
     };
 
     return (
-        <>
-            <InputGroup className="d-flex align-items-center w-100 flex-grow-1">
+        <div className="flex items-stretch w-full">
+            <div className={`flex-1 min-w-0 ${observatory && showLink ? '[&_.react-select\\_\\_control]:!rounded-e-none' : ''}`}>
                 <AsyncPaginate
                     value={observatory}
                     additional={{
@@ -72,22 +71,30 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChange, o
                     placeholder="Select an observatory"
                     isClearable
                     classNamePrefix="react-select"
-                    classNames={{
-                        container: () => 'form-control form-control-sm p-0',
-                        control: () => 'border-0 p-0 border-radius-0',
-                    }}
+                    classNames={customClassNames as any}
+                    styles={customStyles as any}
+                    menuPosition="fixed"
                     key={observatory?.id}
                 />
-                {observatory && showLink && (
-                    <Tooltip content="Open observatory page">
-                        <Link target="_blank" className=" px-2 btn btn-outline-secondary" href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
+            </div>
+            {observatory && showLink && (
+                <Tooltip delay={0}>
+                    <Tooltip.Trigger className="flex items-stretch">
+                        <Link
+                            target="_blank"
+                            className="shrink-0 inline-flex items-center h-full px-3 text-sm font-medium border border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 rounded-s-none rounded-e-md -ms-px"
+                            href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                        >
                             <FontAwesomeIcon icon={faLink} />
                         </Link>
-                    </Tooltip>
-                )}
-            </InputGroup>
-            <SelectGlobalStyle />
-        </>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content showArrow>
+                        <Tooltip.Arrow />
+                        Open observatory page
+                    </Tooltip.Content>
+                </Tooltip>
+            )}
+        </div>
     );
 };
 

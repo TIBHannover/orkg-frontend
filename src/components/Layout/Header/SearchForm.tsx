@@ -1,31 +1,17 @@
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+'use client';
+
+import { SearchField } from '@heroui/react';
 import { isString } from 'lodash';
-import { reverse } from 'named-urls';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { FC, useState } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
-import Form from '@/components/Ui/Form/Form';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getThing } from '@/services/backend/things';
 import { getLinkByEntityType } from '@/utils';
-
-const InputStyled = styled(Input)`
-    max-width: 130px;
-    width: 100%;
-    transition: max-width 0.3s ease-in-out;
-
-    &:focus {
-        max-width: 250px;
-    }
-`;
 
 type SearchFormProps = {
     placeholder: string;
@@ -37,55 +23,44 @@ const SearchForm: FC<SearchFormProps> = ({ placeholder, onSearch = undefined }) 
     const [type] = useQueryState('type', { defaultValue: '' });
     const [createdBy] = useQueryState('createdBy', { defaultValue: '' });
 
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(searchTerm || '');
+    const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
+    if (searchTerm !== prevSearchTerm) {
+        setPrevSearchTerm(searchTerm);
+        setValue(searchTerm || '');
+    }
 
     const router = useRouter();
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setValue(searchTerm || '');
-    }, [searchTerm]);
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        let route = '';
-        if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && value.startsWith('#')) {
-            const id = value.substring(1);
+    const handleSubmit = async (submittedValue: string) => {
+        if (isString(submittedValue) && submittedValue.length >= REGEX.MINIMUM_LENGTH_PATTERN && submittedValue.startsWith('#')) {
+            const id = submittedValue.substring(1);
             const entity = await getThing(id);
             const link = getLinkByEntityType(entity?._class, id);
             setValue('');
             router.push(link);
-        } else if (isString(value)) {
-            route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(value)}&type=${type}&createdBy=${createdBy}`;
+        } else if (isString(submittedValue)) {
+            const route = `${reverse(ROUTES.SEARCH)}?q=${encodeURIComponent(submittedValue)}&type=${type}&createdBy=${createdBy}`;
+            router.push(route);
         }
         onSearch?.();
-
-        return route ? router.push(route) : null;
     };
 
     return (
-        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" onSubmit={handleSubmit} id="tour-search-bar">
-            <InputGroup className="flex-nowrap">
-                <InputStyled
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="Search ORKG"
-                    aria-describedby="button-main-search"
-                    type="text"
-                    maxLength={MAX_LENGTH_INPUT}
-                />
-
-                <Button id="button-main-search" className="ps-2 pe-2 search-icon" type="submit">
-                    <FontAwesomeIcon icon={faSearch} />
-                </Button>
-            </InputGroup>
-        </Form>
+        <SearchField
+            aria-label="Search ORKG"
+            id="tour-search-bar"
+            value={value}
+            onChange={setValue}
+            onSubmit={handleSubmit}
+            maxLength={MAX_LENGTH_INPUT}
+        >
+            <SearchField.Group>
+                <SearchField.SearchIcon />
+                <SearchField.Input placeholder={placeholder} className="w-[130px] focus:w-[180px] transition-[width] duration-300 ease-in-out" />
+                <SearchField.ClearButton />
+            </SearchField.Group>
+        </SearchField>
     );
 };
 

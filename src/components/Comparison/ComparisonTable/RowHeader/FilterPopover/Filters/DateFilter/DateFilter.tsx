@@ -1,11 +1,8 @@
+import { Input, Label, toast } from '@heroui/react';
 import { Dispatch, FC, FormEvent, SetStateAction, useEffect, useId, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import Footer from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/Footer/Footer';
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 
 type DateFilterProps = {
     predicateId: string;
@@ -35,7 +32,7 @@ const DateFilter: FC<DateFilterProps> = ({ predicateId, path, setIsOpenFilterPop
             });
             setIsOpenFilterPopover(false);
         } else {
-            toast.error('Please provide at least one filter value.');
+            toast.danger('Please provide at least one filter value.');
         }
     };
 
@@ -52,21 +49,15 @@ const DateFilter: FC<DateFilterProps> = ({ predicateId, path, setIsOpenFilterPop
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="tw:flex tw:gap-2 tw:text-black tw:flex-row tw:!items-center">
-                <FormGroup floating className="tw:!mb-0">
-                    <Input
-                        id={`${formId}-start`}
-                        type="date"
-                        placeholder="Start date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                    />
-                    <Label for={`${formId}-start`}>Start</Label>
-                </FormGroup>
-                <FormGroup floating className="tw:!mb-0">
-                    <Input id={`${formId}-end`} type="date" placeholder="End date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                    <Label for={`${formId}-end`}>End</Label>
-                </FormGroup>
+            <div className="flex gap-2">
+                <div className="flex flex-col gap-1 flex-1">
+                    <Label htmlFor={`${formId}-start`}>Start</Label>
+                    <Input id={`${formId}-start`} type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} fullWidth />
+                </div>
+                <div className="flex flex-col gap-1 flex-1">
+                    <Label htmlFor={`${formId}-end`}>End</Label>
+                    <Input id={`${formId}-end`} type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} fullWidth />
+                </div>
             </div>
 
             <Footer predicateId={predicateId} path={path} setIsOpenFilterPopover={setIsOpenFilterPopover} />

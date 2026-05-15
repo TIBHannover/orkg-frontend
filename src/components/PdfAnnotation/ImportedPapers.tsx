@@ -1,14 +1,12 @@
-import { reverse } from 'named-urls';
+import { Button, Spinner } from '@heroui/react';
 import Link from 'next/link';
-import React from 'react';
+import { AnchorHTMLAttributes } from 'react';
 import { useSelector } from 'react-redux';
-import { Spinner } from 'reactstrap';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import useImportedPapers from '@/components/PdfAnnotation/hooks/useImportedPapers';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Paper } from '@/services/backend/types';
 import { RootStore } from '@/slices/types';
 
@@ -26,26 +24,41 @@ const ImportedPapers = ({ annotationId }: ImportedPapersProps) => {
     const comparisonUrl = annotation?.importedContributions
         ? `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${annotation.importedContributions.join(',')}`
         : null;
+
     return (
         <div>
             {isLoading && <Spinner />}
             {!isLoading && papers && papers.length > 0 && (
                 <>
-                    <div className="mb-3">
+                    <div className="mb-4">
                         The imported papers can be viewed in the grid editor or a new comparison can be created with them.
                         <br />
-                        <Button size="sm" tag={Link} href={gridEditorUrl} target="_blank" color="primary" className="mt-3 me-2">
-                            Grid editor
-                        </Button>
-                        <Button size="sm" tag={Link} href={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                            Create comparison
-                        </Button>
+                        <div className="mt-4 flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="primary"
+                                render={(props) => (
+                                    <Link {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)} href={gridEditorUrl ?? ''} target="_blank" />
+                                )}
+                            >
+                                Grid editor
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="primary"
+                                render={(props) => (
+                                    <Link {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)} href={comparisonUrl ?? ''} target="_blank" />
+                                )}
+                            >
+                                Create comparison
+                            </Button>
+                        </div>
                     </div>
-                    <ListGroup>
+                    <ul className="divide-y divide-border rounded-md border border-border">
                         {papers.map((paper: Paper) => (
                             <PaperCard key={paper.id} paper={paper} />
                         ))}
-                    </ListGroup>
+                    </ul>
                 </>
             )}
         </div>

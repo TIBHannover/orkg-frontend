@@ -1,18 +1,13 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Modal, Tabs } from '@heroui/react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
-import styled from 'styled-components';
 
 import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import Button from '@/components/Ui/Button/Button';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import useParams from '@/components/useParams/useParams';
 import HelpVideoModal from '@/libs/selfVisModel/ComparisonComponents/HelpVideoModal';
 import PublishVisualization from '@/libs/selfVisModel/ComparisonComponents/PublishVisualization';
@@ -20,31 +15,6 @@ import CellEditor from '@/libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from '@/libs/selfVisModel/RenderingComponents/CellSelector';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
 import VisualizationWidget from '@/libs/selfVisModel/VisRenderer/VisualizationWidget';
-
-const TabButtons = styled.div`
-    border-bottom: 2px solid ${(props) => props.theme.lightDarker};
-    display: flex;
-`;
-
-const TabButton = styled.div`
-    cursor: pointer;
-    padding: 4px 20px;
-    background-color: ${(props) => (props.active ? props.theme.primary : props.theme.light)};
-    border: ${(props) => (props.active ? 'none' : `1px solid ${props.theme.lightDarker}`)};
-    border-bottom: 0;
-    color: ${(props) => (props.active ? '#ffffff' : '')};
-    font-size: 18px;
-
-    &:first-child {
-        margin-left: 5px;
-        border-top-left-radius: 10px;
-        border-right: 0px;
-    }
-    &:last-child {
-        border-top-right-radius: 10px;
-        border-left: 0px;
-    }
-`;
 
 function AddVisualizationModal({ isOpenVisualizationModal, setIsOpenVisualizationModal }) {
     const [processStep, setProcessStep] = useState(0);
@@ -84,17 +54,15 @@ function AddVisualizationModal({ isOpenVisualizationModal, setIsOpenVisualizatio
     useEffect(() => {
         if (isOpenVisualizationModal) {
             if (!prevShowDialog) {
-                // reset the model >> this is called when we start the visualization modal
                 new SelfVisDataModel().resetCustomizationModel();
                 setProcessStep(0);
+                onLoadModal();
+                setLoadedModel(true);
             } else if (prevProcessStep === 0 && processStep === 2) {
-                // this shall trigger the cell validation
-                // shall be done when the user switches between select directly to visualize
-                new SelfVisDataModel().forceCellValidation(); // singleton call
-                new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
+                new SelfVisDataModel().forceCellValidation();
+                new SelfVisDataModel().createGDCDataModel();
             }
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpenVisualizationModal, processStep]);
 
@@ -107,14 +75,12 @@ function AddVisualizationModal({ isOpenVisualizationModal, setIsOpenVisualizatio
     };
 
     const onLoadModal = () => {
-        // check if we need to run the parser
-        const mmr = new SelfVisDataModel(); // this is a singleton
+        const mmr = new SelfVisDataModel();
 
         const propsWithId = table
             .map((row) => selectedPathsFlattened.find((prop) => prop?.id === row.pathId))
             .map((p, index) => ({ ...p, id: `${index}${p.id}/${p.path.join('/')}` }));
 
-        // TODO trying to make the data compatible with visualizations code, needs to be refactored
         mmr.integrateInputData({
             properties: propsWithId,
             data: Object.fromEntries(propsWithId.map((p, index) => [p.id, table?.[index]?.values.map((v) => (v ? [v] : undefined))])),
@@ -127,109 +93,87 @@ function AddVisualizationModal({ isOpenVisualizationModal, setIsOpenVisualizatio
         });
     };
 
+    const handleOpenChange = (open) => {
+        if (!open) {
+            setIsOpenVisualizationModal(false);
+        }
+    };
+
     return (
-        <Modal
-            isOpen={isOpenVisualizationModal}
-            toggle={() => setIsOpenVisualizationModal(!isOpenVisualizationModal)}
-            size="lg"
-            onOpened={() => {
-                onLoadModal();
-                setLoadedModel(true);
-            }}
-            style={{ maxWidth: '90%', marginBottom: 0 }}
-        >
-            <ModalHeader toggle={() => setIsOpenVisualizationModal(!isOpenVisualizationModal)}>
-                Create comparison visualization
-                <Button
-                    outline
-                    color="secondary"
-                    size="sm"
-                    className="ms-3"
-                    onClick={() => {
-                        setShowVideoModal(!showVideoModal);
-                    }}
-                >
-                    How to use <FontAwesomeIcon className="ms-1" icon={faQuestionCircle} />
-                </Button>
-            </ModalHeader>
-            <ModalBody id="selfVisServiceModalBody">
-                <TabButtons>
-                    {/*  TAB BUTTONS */}
-                    <TabButton active={processStep === 0} onClick={() => setProcessStep(0)}>
-                        Select
-                    </TabButton>
-                    <TabButton active={processStep === 1} onClick={() => setProcessStep(1)}>
-                        Map &amp; edit
-                    </TabButton>
-                    <TabButton active={processStep === 2} onClick={() => setProcessStep(2)}>
-                        Visualize
-                    </TabButton>
-                </TabButtons>
-                {/*  renders different views based on the current step in the process */}
-                {processStep === 0 && <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />}
-                {processStep === 1 && <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />}
-                {processStep === 2 && (
-                    <VisualizationWidget
-                        isLoading={!loadedModel}
-                        height={windowHeight - 10}
-                        width={windowWidth}
-                        comparePropsWithActualWidth={compareWidth}
-                    />
-                )}
+        <Modal.Backdrop isOpen={isOpenVisualizationModal} onOpenChange={handleOpenChange}>
+            <Modal.Container className="!max-w-none !w-[90vw]">
+                <Modal.Dialog className="!max-w-none w-full max-h-[85vh] overflow-y-auto mb-0">
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading className="flex items-center gap-3">
+                            Create comparison visualization
+                            <Button variant="outline" size="sm" onPress={() => setShowVideoModal(!showVideoModal)}>
+                                How to use <FontAwesomeIcon className="ml-1" icon={faQuestionCircle} />
+                            </Button>
+                        </Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body id="selfVisServiceModalBody" className="pt-4 pb-2 px-1">
+                        <Tabs selectedKey={String(processStep)} onSelectionChange={(key) => setProcessStep(Number(key))}>
+                            <Tabs.List>
+                                <Tabs.Tab id="0">Select</Tabs.Tab>
+                                <Tabs.Tab id="1">Map &amp; edit</Tabs.Tab>
+                                <Tabs.Tab id="2">Visualize</Tabs.Tab>
+                            </Tabs.List>
+                            <Tabs.Panel id="0">
+                                <CellSelector isLoading={!loadedModel} height={windowHeight - 50} />
+                            </Tabs.Panel>
+                            <Tabs.Panel id="1">
+                                <CellEditor isLoading={!loadedModel} height={windowHeight - 50} />
+                            </Tabs.Panel>
+                            <Tabs.Panel id="2">
+                                <VisualizationWidget
+                                    isLoading={!loadedModel}
+                                    height={windowHeight - 10}
+                                    width={windowWidth}
+                                    comparePropsWithActualWidth={compareWidth}
+                                />
+                            </Tabs.Panel>
+                        </Tabs>
 
-                <HelpVideoModal showDialog={showVideoModal} toggle={() => setShowVideoModal(!showVideoModal)} />
+                        <HelpVideoModal showDialog={showVideoModal} toggle={() => setShowVideoModal(!showVideoModal)} />
 
-                <PublishVisualization
-                    showDialog={showPublishVisualizationDialog}
-                    toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
-                    closeAllAndReloadVisualizations={() => {
-                        setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
-                        setIsOpenVisualizationModal(!isOpenVisualizationModal);
-                    }}
-                    comparisonId={comparisonId}
-                />
-            </ModalBody>
-            <ModalFooter className="p-2">
-                {/*
-                    <Button
-                        color="primary"
-                        className="me-2"
-                        onClick={() => {
-                            const mmr = new SelfVisDataModel(); // this is a singleton
-                            mmr.debug();
-                        }}
-                    >
-                        Debug
-                    </Button>
-                    */}
-
-                {processStep === 1 && <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>}
-                <div className="d-flex justify-content-end">
-                    {processStep > 0 && (
-                        <Button color="light" className="me-2" onClick={() => setProcessStep(processStep - 1)}>
-                            Previous
-                        </Button>
-                    )}
-                    {processStep <= 1 && (
-                        <Button color="primary" className="me-2" onClick={() => setProcessStep(processStep + 1)}>
-                            Next
-                        </Button>
-                    )}
-                    {processStep === 2 && (
-                        <RequireAuthentication
-                            component={Button}
-                            color="primary"
-                            className="me-2"
-                            onClick={() => {
+                        <PublishVisualization
+                            showDialog={showPublishVisualizationDialog}
+                            toggle={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
+                            closeAllAndReloadVisualizations={() => {
                                 setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
+                                setIsOpenVisualizationModal(!isOpenVisualizationModal);
                             }}
-                        >
-                            Publish
-                        </RequireAuthentication>
-                    )}
-                </div>
-            </ModalFooter>
-        </Modal>
+                            comparisonId={comparisonId}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer className="p-2">
+                        {processStep === 1 && <div className="absolute left-0">Please select at least one mapper at the top of a column.</div>}
+                        <div className="flex justify-end">
+                            {processStep > 0 && (
+                                <Button variant="secondary" className="mr-2" onPress={() => setProcessStep(processStep - 1)}>
+                                    Previous
+                                </Button>
+                            )}
+                            {processStep <= 1 && (
+                                <Button className="mr-2" onPress={() => setProcessStep(processStep + 1)}>
+                                    Next
+                                </Button>
+                            )}
+                            {processStep === 2 && (
+                                <RequireAuthentication
+                                    component={Button}
+                                    className="mr-2"
+                                    onPress={() => setShowPublishVisualizationDialog(!showPublishVisualizationDialog)}
+                                >
+                                    Publish
+                                </RequireAuthentication>
+                            )}
+                        </div>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 }
 

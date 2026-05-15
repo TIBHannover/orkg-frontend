@@ -27,8 +27,8 @@ const GeonameDescription: FC<GeonameDescriptionProps> = ({ externalResourceUrl }
 
     return (
         <div>
-            <div className="d-flex justify-content-between">
-                <h2 className="h5">Statements from Geonames</h2>
+            <div className="flex justify-between">
+                <h2 className="text-xl">Statements from Geonames</h2>
                 <a href={externalResourceUrl} target="_blank" rel="noopener noreferrer">
                     <Image alt="Geonames logo" src={GEONAMES_LOGO} style={{ height: 40, width: 120 }} />
                 </a>

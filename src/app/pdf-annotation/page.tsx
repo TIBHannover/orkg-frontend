@@ -5,7 +5,7 @@ import 'react-pdf-highlighter/dist/style.css';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dynamic from 'next/dynamic';
-import React, { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Content, IHighlight, LTWH, LTWHP, Position, Scaled, ScaledPosition } from 'react-pdf-highlighter';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,7 +15,6 @@ import { CustomAreaHighlight } from '@/components/PdfAnnotation/CustomAreaHighli
 import DragUpload from '@/components/PdfAnnotation/DragUpload';
 import Highlight from '@/components/PdfAnnotation/Highlight';
 import useDeleteAnnotation from '@/components/PdfAnnotation/hooks/useDeleteAnnotation';
-import StablePopup from '@/components/PdfAnnotation/StablePopup';
 import requireAuthentication from '@/requireAuthentication';
 import { createAnnotation, setIsLoadedPdfViewer } from '@/slices/pdfAnnotationSlice';
 import { RootStore } from '@/slices/types';
@@ -35,7 +34,6 @@ const PdfAnnotation = () => {
         scrollTo: (highlight: IHighlight) => void;
         scaledPositionToViewport?: (position: ScaledPosition) => Position;
     }>({ scrollTo: () => {} });
-    const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleAnnotate = ({
         content,
@@ -87,84 +85,18 @@ const PdfAnnotation = () => {
     ) => {
         const isTextHighlight = !highlight.content?.image;
 
-        // Use the viewport-mapped position provided by the library (already rotation/scale aware)
-        const currentHighlight = highlight;
-
         const component = isTextHighlight ? (
-            <Highlight isScrolledTo={isScrolledTo} position={currentHighlight.position} type={currentHighlight.type ?? null} />
+            <Highlight isScrolledTo={isScrolledTo} position={highlight.position} type={highlight.type ?? null} />
         ) : (
-            (() => {
-                return <CustomAreaHighlight highlight={currentHighlight} />;
-            })()
+            <CustomAreaHighlight highlight={highlight} />
         );
 
-        // Enhanced hover behavior with delay to prevent flickering
-        const handleMouseOver = (popupContent: React.ReactElement) => {
-            if (hideTimeoutRef.current) {
-                clearTimeout(hideTimeoutRef.current);
-                hideTimeoutRef.current = null;
-            }
-            setTip(highlight, () => popupContent);
-        };
-
-        const handleMouseOut = () => {
-            // Use a much longer delay for area highlights since they can be more finicky with hover detection
-            const delay = isTextHighlight ? 300 : 800;
-            hideTimeoutRef.current = setTimeout(() => {
-                hideTip();
-                hideTimeoutRef.current = null;
-            }, delay);
-        };
-
-        // For area highlights, use StablePopup for better hover behavior
-        if (!isTextHighlight) {
-            return (
-                <StablePopup
-                    key={index}
-                    popupContent={
-                        <AnnotationTooltipExisting
-                            id={currentHighlight.id ?? ''}
-                            type={currentHighlight.type ?? ''}
-                            deleteAnnotation={deleteAnnotation}
-                        />
-                    }
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                    isAreaHighlight
-                >
-                    {/* the package doesn't support the onBlur and onFocus events, so disable this rule */}
-                    <Popup
-                        popupContent={
-                            <AnnotationTooltipExisting
-                                id={currentHighlight.id ?? ''}
-                                type={currentHighlight.type ?? ''}
-                                deleteAnnotation={deleteAnnotation}
-                            />
-                        }
-                        onMouseOver={() => {}} // Handled by StablePopup
-                        onMouseOut={() => {}} // Handled by StablePopup
-                    >
-                        {component}
-                    </Popup>
-                </StablePopup>
-            );
-        }
-
-        // For text highlights, use the regular Popup
         return (
-            // the package doesn't support the onBlur and onFocus events, so disable this rule
-
             <Popup
                 key={index}
-                popupContent={
-                    <AnnotationTooltipExisting
-                        id={currentHighlight.id ?? ''}
-                        type={currentHighlight.type ?? ''}
-                        deleteAnnotation={deleteAnnotation}
-                    />
-                }
-                onMouseOver={handleMouseOver}
-                onMouseOut={handleMouseOut}
+                popupContent={<AnnotationTooltipExisting id={highlight.id ?? ''} type={highlight.type ?? ''} deleteAnnotation={deleteAnnotation} />}
+                onMouseOver={(popupContent) => setTip(highlight, () => popupContent)}
+                onMouseOut={hideTip}
             >
                 {component}
             </Popup>
@@ -188,9 +120,9 @@ const PdfAnnotation = () => {
     }, [scrollToHighlightFromHash]);
 
     return (
-        <div className="tw:-mt-[30px] tw:-mb-20 tw:flex">
+        <div className="-mt-[30px] -mb-20 flex">
             <Sidebar />
-            <div className="tw:h-[calc(100vh-73px)] tw:w-[calc(100%-380px)] tw:relative tw:overflow-y-auto">
+            <div className="h-[calc(100vh-73px)] w-[calc(100%-380px)] relative overflow-y-auto">
                 {!pdf && <DragUpload pdf={pdf} />}
                 {pdf && (
                     // @ts-expect-error - PdfLoader types are not compatible with Next.js dynamic imports

@@ -1,6 +1,6 @@
+import { toast } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
-import { toast } from 'react-toastify';
 import useSWR, { mutate } from 'swr';
 
 import useEntities from '@/app/grid-editor/hooks/useEntities';
@@ -60,9 +60,9 @@ const useEditEntity = (entity: Thing) => {
         } else {
             const newClasses = !selected ? [] : selected;
             if (action.option && ENTITY_CLASSES.includes(action.option.id)) {
-                toast.error(`The selected option ${action.option.label} cannot be set manually; it is reserved for managing entities in the system`);
+                toast.danger(`The selected option ${action.option.label} cannot be set manually; it is reserved for managing entities in the system`);
             } else if (!isCurationAllowed && action.option && CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(action.option.id)) {
-                toast.error(
+                toast.danger(
                     `The selected option ${action.option.label} cannot be set manually; it is reserved for managing content types in the system`,
                 );
             } else {

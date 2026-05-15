@@ -1,6 +1,6 @@
 'use client';
 
-import { reverse } from 'named-urls';
+import { Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { ReactNode, useEffect, useState } from 'react';
@@ -17,11 +17,16 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
-import Row from '@/components/Ui/Structure/Row';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
+
+const ObservatoryGrid = ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div {...props} className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${props.className ?? ''}`}>
+        {children}
+    </div>
+);
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getObservatories, getResearchFieldOfObservatories, observatoriesUrl } from '@/services/backend/observatories';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Observatory } from '@/services/backend/types';
@@ -119,8 +124,7 @@ const Observatories = () => {
                         />
                         <RequireAuthentication
                             component={Button}
-                            className="float-end"
-                            color="secondary"
+                            className="button--orkg-secondary"
                             size="sm"
                             onClick={() => {
                                 if (!isCurationAllowed) {
@@ -137,7 +141,7 @@ const Observatories = () => {
             >
                 Observatories
             </TitleBar>
-            <Container className="p-0 rounded mb-3 p-3" style={{ background: '#dcdee6' }}>
+            <Container className="rounded mb-4 p-4 bg-default">
                 Observatories organize research contributions in a particular research field and are curated by research organizations active in the
                 respective field.{' '}
                 <a href="https://orkg.org/about/27/Observatories" target="_blank" rel="noreferrer">
@@ -153,59 +157,61 @@ const Observatories = () => {
                     toggle={() => setIsOpenPreventModal((v) => !v)}
                 />
             )}
-            <Container className="box rounded p-4 clearfix">
-                {_researchFields?.length > 0 && (
-                    <Tabs
-                        className="mb-3"
-                        destroyOnHidden
-                        onChange={onTabChange}
-                        activeKey={researchFieldId ?? 'all'}
-                        items={[
-                            ..._researchFields.map((researchField) => ({
-                                label: (
-                                    <ConditionalWrapper
-                                        condition={researchField.label?.length > 40}
-                                        wrapper={(children: React.ReactNode) => labelWrapper(children, researchField.label)}
-                                    >
-                                        <div className="text-truncate" style={{ maxWidth: 250 }}>
-                                            {researchField.id === null || '' ? 'Others' : researchField.label}
-                                        </div>
-                                    </ConditionalWrapper>
-                                ),
-                                key: researchField.id,
-                                children: (
-                                    <ListPaginatedContent<Observatory>
-                                        ListGroupComponent={Row}
-                                        renderListItem={renderListItem}
-                                        pageSize={observatoriesPageSize}
-                                        label="research field"
-                                        isLoading={observatoriesIsLoading}
-                                        items={observatories ?? []}
-                                        hasNextPage={observatoriesHasNextPage}
-                                        page={observatoriesPage}
-                                        setPage={observatoriesSetPage}
-                                        setPageSize={observatoriesSetPageSize}
-                                        totalElements={observatoriesTotalElements}
-                                        error={observatoriesError}
-                                        totalPages={observatoriesTotalPages}
-                                        boxShadow={false}
-                                        flush={false}
-                                    />
-                                ),
-                            })),
-                            ...(hasNextPage
-                                ? [
-                                      {
-                                          label: <div className="opacity-75">{isLoadingResearchFields ? 'Loading...' : 'Load more...'}</div>,
-                                          key: 'loadMore',
-                                      },
-                                  ]
-                                : []),
-                        ]}
-                        tabPosition="left"
-                    />
-                )}
-                {_researchFields?.length === 0 && <div className="text-center mt-4 mb-4">No observatories yet</div>}
+            <Container>
+                <div className="box rounded p-6 flow-root">
+                    {_researchFields?.length > 0 && (
+                        <Tabs
+                            className="mb-4"
+                            destroyOnHidden
+                            onChange={onTabChange}
+                            activeKey={researchFieldId ?? 'all'}
+                            items={[
+                                ..._researchFields.map((researchField) => ({
+                                    label: (
+                                        <ConditionalWrapper
+                                            condition={researchField.label?.length > 40}
+                                            wrapper={(children: React.ReactNode) => labelWrapper(children, researchField.label)}
+                                        >
+                                            <div className="truncate" style={{ maxWidth: 250 }}>
+                                                {researchField.id === null || '' ? 'Others' : researchField.label}
+                                            </div>
+                                        </ConditionalWrapper>
+                                    ),
+                                    key: researchField.id,
+                                    children: (
+                                        <ListPaginatedContent<Observatory>
+                                            ListGroupComponent={ObservatoryGrid}
+                                            renderListItem={renderListItem}
+                                            pageSize={observatoriesPageSize}
+                                            label="research field"
+                                            isLoading={observatoriesIsLoading}
+                                            items={observatories ?? []}
+                                            hasNextPage={observatoriesHasNextPage}
+                                            page={observatoriesPage}
+                                            setPage={observatoriesSetPage}
+                                            setPageSize={observatoriesSetPageSize}
+                                            totalElements={observatoriesTotalElements}
+                                            error={observatoriesError}
+                                            totalPages={observatoriesTotalPages}
+                                            boxShadow={false}
+                                            flush={false}
+                                        />
+                                    ),
+                                })),
+                                ...(hasNextPage
+                                    ? [
+                                          {
+                                              label: <div className="opacity-75">{isLoadingResearchFields ? 'Loading...' : 'Load more...'}</div>,
+                                              key: 'loadMore',
+                                          },
+                                      ]
+                                    : []),
+                            ]}
+                            tabPosition="left"
+                        />
+                    )}
+                    {_researchFields?.length === 0 && <div className="text-center mt-6 mb-6">No observatories yet</div>}
+                </div>
             </Container>
         </>
     );

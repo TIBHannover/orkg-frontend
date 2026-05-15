@@ -1,6 +1,5 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -8,6 +7,7 @@ import styled from 'styled-components';
 import CopyId from '@/components/CopyId/CopyId';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 const StyledBox = styled.div`
     position: absolute;
@@ -22,9 +22,9 @@ const StyledBox = styled.div`
 
 const SelectedEdgeBox = ({ selectedEdge }) => (
     <StyledBox>
-        <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center">
-                <h4 className="h4 m-0 me-2">Property</h4>
+        <div className="flex justify-between items-center">
+            <div className="flex items-center">
+                <h4 className="text-2xl m-0 mr-2">Property</h4>
                 {selectedEdge && (
                     <Link href={`${reverse(ROUTES.PROPERTY, { id: selectedEdge?.propertyId })}?noRedirect`} target="_blank">
                         <Tooltip content="View property">
@@ -37,7 +37,7 @@ const SelectedEdgeBox = ({ selectedEdge }) => (
                 <CopyId id={selectedEdge?.propertyId} />
             </div>
         </div>
-        <div className="mt-2 text-break">{selectedEdge?.propertyId && <div>{selectedEdge?.label}</div>}</div>
+        <div className="mt-2 break-all">{selectedEdge?.propertyId && <div>{selectedEdge?.label}</div>}</div>
     </StyledBox>
 );
 

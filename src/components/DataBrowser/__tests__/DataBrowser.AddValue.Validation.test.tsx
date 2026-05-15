@@ -33,7 +33,7 @@ const setValueAndClickOnCreate = async (sc: Screen, datatype = 'Resource', value
     const selectInput = screen.getByText('Resource');
     await selectEvent.openMenu(selectInput);
     await selectEvent.select(selectInput, [datatype]);
-    fireEvent.click(sc.getByRole('button', { name: 'Create' }));
+    fireEvent.click(sc.getByRole('button', { name: /Save/i }));
 };
 
 describe('DataBrowser.AddValue.Validation', () => {
@@ -56,7 +56,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should not accept Integer datatype when the value is decimal', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Integer', '1.5');
-        await waitFor(() => expect(screen.getByText(/Expected integer, received float/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Invalid input: expected int, received number/i)).toBeInTheDocument());
     });
 });
 
@@ -64,7 +64,7 @@ describe('DataBrowser.AddValue.Validation', () => {
     it('should validate Date datatype', async () => {
         await setup();
         await setValueAndClickOnCreate(screen, 'Date');
-        await waitFor(() => expect(screen.getByText(/Invalid date/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Invalid ISO date/i)).toBeInTheDocument());
     });
 });
 

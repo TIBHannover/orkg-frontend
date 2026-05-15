@@ -1,13 +1,8 @@
-import { FC, useEffect, useRef } from 'react';
-import Select, { ActionMeta, components, MultiValue, OptionProps } from 'react-select';
-import styled from 'styled-components';
+import { Checkbox, Label, ListBox, Popover, Tooltip } from '@heroui/react';
+import { FC } from 'react';
+import type { Selection } from 'react-aria-components';
 
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import useComparisonPopup, { ContributionData } from '@/components/ComparisonPopup/useComparisonPopup';
-import Tooltip from '@/components/FloatingUI/Tooltip';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 
 type Contribution = {
     id: string;
@@ -25,11 +20,6 @@ type AddToComparisonProps = {
     contributionId?: string;
     paper: Paper;
     showLabel?: boolean;
-};
-
-type SelectOption = {
-    label: string;
-    value: string;
 };
 
 type SelectionState = boolean | 'half';
@@ -61,37 +51,11 @@ const createContributionData = (paper: Paper, contributionId: string): Contribut
     contributionTitle: paper.contributions.find((c) => c.id === contributionId)?.label ?? '',
 });
 
-const Option: FC<OptionProps<SelectOption>> = ({ children, data, ...props }) => (
-    <components.Option {...props} data={data}>
-        <div>{children}</div>
-        <div>
-            <small>{data.value}</small>
-        </div>
-    </components.Option>
-);
-
-const CustomInputStyled = styled(Input)`
-    &.custom-control {
-        z-index: 0;
-    }
-`;
-
-const SelectStyled = styled(Select<SelectOption, true>)`
-    width: 300px;
-    color: ${(props) => props.theme.bodyColor};
-`;
-
 const AddToComparison: FC<AddToComparisonProps> = ({ contributionId, paper, showLabel = false }) => {
-    const inputCheckboxRef = useRef<HTMLInputElement>(null);
     const { comparison, updateComparison } = useComparisonPopup();
 
     const isSelected = getSelectionState(contributionId, paper.contributions, comparison.allIds);
     const hasMultipleContributions = !contributionId && paper.contributions.length > 1;
-
-    const options: SelectOption[] = paper.contributions?.map((contribution) => ({
-        label: contribution.label,
-        value: contribution.id,
-    }));
 
     const toggleContribution = (cId: string) => {
         updateComparison((current) => {
@@ -99,7 +63,7 @@ const AddToComparison: FC<AddToComparisonProps> = ({ contributionId, paper, show
 
             if (isInComparison) {
                 // Remove from comparison
-                const { [cId]: removed, ...remainingById } = current.byId;
+                const { [cId]: _removed, ...remainingById } = current.byId;
                 return {
                     byId: remainingById,
                     allIds: current.allIds.filter((id) => id !== cId),
@@ -154,69 +118,77 @@ const AddToComparison: FC<AddToComparisonProps> = ({ contributionId, paper, show
         }
     };
 
-    const handleSelectChange = (selected: MultiValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => {
-        const { action, option, removedValue } = actionMeta;
+    const handleSelectionChange = (keys: Selection) => {
+        if (keys === 'all') return;
 
-        if (option) {
-            toggleContribution((option as SelectOption).value);
-        } else if (removedValue) {
-            toggleContribution((removedValue as SelectOption).value);
-        } else if (action === 'clear') {
-            // Remove all selected contributions
-            const contributionIdsToRemove = options.filter((o) => comparison.allIds.includes(o.value)).map((o) => o.value);
-            toggleMultipleContributions(contributionIdsToRemove);
+        const newSelectedIds = [...keys] as string[];
+        const currentSelectedIds = paper.contributions.filter((c) => comparison.allIds.includes(c.id)).map((c) => c.id);
+
+        const added = newSelectedIds.filter((id) => !currentSelectedIds.includes(id));
+        const removed = currentSelectedIds.filter((id) => !newSelectedIds.includes(id));
+
+        if (added.length > 0) {
+            added.forEach((id) => toggleContribution(id));
+        }
+        if (removed.length > 0) {
+            removed.forEach((id) => toggleContribution(id));
         }
     };
-
-    useEffect(() => {
-        if (inputCheckboxRef.current) {
-            inputCheckboxRef.current.indeterminate = isSelected === 'half';
-        }
-    }, [isSelected]);
 
     if (!contributionId && paper.contributions.length === 0) {
         return null;
     }
 
-    const checkboxId = `add2CPid${paper.id}cid${contributionId ?? ''}`;
     const simpleTooltipText = isSelected ? 'Remove from comparison' : 'Add to comparison';
 
-    const tooltipContent = hasMultipleContributions ? (
-        <>
-            <SelectGlobalStyle />
-            <SelectStyled
-                value={options.filter((o) => comparison.allIds.includes(o.value))}
-                onChange={handleSelectChange}
-                options={options}
-                components={{ Option }}
-                openMenuOnFocus
-                isMulti
-                placeholder="Select contribution to compare"
-                classNamePrefix="react-select"
-            />
-        </>
-    ) : (
-        simpleTooltipText
+    const selectedKeys = new Set(paper.contributions.filter((c) => comparison.allIds.includes(c.id)).map((c) => c.id));
+
+    const checkbox = (
+        <Checkbox isSelected={!!isSelected} isIndeterminate={isSelected === 'half'} onChange={handleCheckboxChange}>
+            <Checkbox.Control>
+                <Checkbox.Indicator />
+            </Checkbox.Control>
+            {showLabel && (
+                <Checkbox.Content>
+                    <Label>Add to comparison</Label>
+                </Checkbox.Content>
+            )}
+        </Checkbox>
     );
 
+    if (hasMultipleContributions) {
+        return (
+            <Popover>
+                <span>{checkbox}</span>
+                <Popover.Content placement="bottom start">
+                    <Popover.Dialog className="p-2">
+                        <ListBox
+                            aria-label="Select contributions to compare"
+                            selectionMode="multiple"
+                            selectedKeys={selectedKeys}
+                            onSelectionChange={handleSelectionChange}
+                            className="w-[300px]"
+                        >
+                            {paper.contributions.map((contribution) => (
+                                <ListBox.Item key={contribution.id} id={contribution.id} textValue={contribution.label}>
+                                    <div>{contribution.label}</div>
+                                    <div>
+                                        <small>{contribution.id}</small>
+                                    </div>
+                                    <ListBox.Item.Indicator />
+                                </ListBox.Item>
+                            ))}
+                        </ListBox>
+                    </Popover.Dialog>
+                </Popover.Content>
+            </Popover>
+        );
+    }
+
     return (
-        <Tooltip placement="bottom-start" content={tooltipContent}>
-            <span>
-                <FormGroup check>
-                    <CustomInputStyled
-                        onChange={handleCheckboxChange}
-                        checked={!!isSelected}
-                        type="checkbox"
-                        innerRef={inputCheckboxRef}
-                        id={checkboxId}
-                    />
-                    {showLabel && (
-                        <Label check for={checkboxId} className="mb-0">
-                            Add to comparison
-                        </Label>
-                    )}
-                </FormGroup>
-            </span>
+        <Tooltip>
+            <Tooltip.Trigger className="inline-flex">{checkbox}</Tooltip.Trigger>
+            <Tooltip.Content>{simpleTooltipText}</Tooltip.Content>
         </Tooltip>
     );
 };

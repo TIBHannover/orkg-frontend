@@ -1,65 +1,9 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Tooltip } from '@heroui/react';
 import { FC, useState } from 'react';
-import styled from 'styled-components';
 
-import Tooltip from '@/components/FloatingUI/Tooltip';
 import { defaultDragHandleProps } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-
-const SectionStyled = styled.div`
-    position: relative;
-    padding: 10px 40px 10px 40px !important;
-
-    a {
-        text-decoration: underline;
-    }
-`;
-
-const DeleteButton = styled(Button)`
-    position: absolute;
-    top: -8px;
-    left: -3px;
-    z-index: 1;
-    padding: 2px 8px !important;
-    display: none !important;
-    &.hover {
-        display: block !important;
-    }
-`;
-
-const MoveHandle = styled.div`
-    width: 25px;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: move;
-    color: grey;
-    border-radius: 6px 0 0 6px;
-    top: 0;
-    z-index: 0;
-    &.hover {
-        background: ${(props) => props.theme.secondary};
-        color: #fff;
-    }
-`;
-
-const MoveButton = styled.div`
-    position: absolute;
-    left: 0;
-    width: 25px;
-    top: 25px;
-    display: none;
-    &.hover {
-        display: block;
-    }
-    &.down {
-        top: calc(100% - 30px);
-    }
-`;
 
 export type SortableSectionProps = {
     handleDelete: () => void;
@@ -73,43 +17,70 @@ const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, c
     const [isHovering, setIsHovering] = useState(false);
 
     return (
-        <SectionStyled
+        <div
             tabIndex={0}
-            className={className}
+            role="presentation"
+            className={`relative px-10 py-2.5 [&_a]:underline ${className}`}
             onFocus={() => setIsHovering(true)}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
         >
-            <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete} aria-label="Delete section">
-                <FontAwesomeIcon icon={faTimes} />
-            </DeleteButton>
-
-            <MoveHandle className={isHovering ? 'hover' : ''} ref={dragHandleRef} {...defaultDragHandleProps} aria-label="Drag to reorder section">
+            {isHovering && (
+                <Button
+                    isIconOnly
+                    size="sm"
+                    variant="primary"
+                    aria-label="Delete section"
+                    onPress={handleDelete}
+                    className="absolute -top-2 -left-1 z-1 h-6 min-w-6"
+                >
+                    <FontAwesomeIcon icon={faTimes} />
+                </Button>
+            )}
+            <div
+                ref={dragHandleRef}
+                {...defaultDragHandleProps}
+                aria-label="Drag to reorder section"
+                className={`absolute left-0 top-0 z-0 flex h-full w-[25px] cursor-move items-center justify-center rounded-l-md ${
+                    isHovering ? 'bg-secondary text-white' : 'text-muted'
+                }`}
+            >
                 <FontAwesomeIcon icon={faBars} />
-            </MoveHandle>
-
-            <MoveButton className={isHovering ? 'hover' : ''}>
-                <Tooltip content="Move up">
-                    <span>
-                        <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('up')} aria-label="Move section up">
-                            <FontAwesomeIcon icon={faArrowUp} />
-                        </Button>
-                    </span>
-                </Tooltip>
-            </MoveButton>
-
-            <MoveButton className={isHovering ? 'hover down' : 'down'}>
-                <Tooltip content="Move down">
-                    <span>
-                        <Button className="p-0 w-100" color="secondary" onClick={() => handleSort('down')} aria-label="Move section down">
-                            <FontAwesomeIcon icon={faArrowDown} />
-                        </Button>
-                    </span>
-                </Tooltip>
-            </MoveButton>
-
+            </div>
+            {isHovering && (
+                <>
+                    <div className="absolute left-0 top-[25px] w-[25px]">
+                        <Tooltip>
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                aria-label="Move section up"
+                                onPress={() => handleSort('up')}
+                                className="h-6 w-full min-w-0 bg-secondary text-white hover:bg-secondary-darker"
+                            >
+                                <FontAwesomeIcon icon={faArrowUp} />
+                            </Button>
+                            <Tooltip.Content>Move up</Tooltip.Content>
+                        </Tooltip>
+                    </div>
+                    <div className="absolute left-0 top-[calc(100%-30px)] w-[25px]">
+                        <Tooltip>
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                aria-label="Move section down"
+                                onPress={() => handleSort('down')}
+                                className="h-6 w-full min-w-0 bg-secondary text-white hover:bg-secondary-darker"
+                            >
+                                <FontAwesomeIcon icon={faArrowDown} />
+                            </Button>
+                            <Tooltip.Content>Move down</Tooltip.Content>
+                        </Tooltip>
+                    </div>
+                </>
+            )}
             {children}
-        </SectionStyled>
+        </div>
     );
 };
 

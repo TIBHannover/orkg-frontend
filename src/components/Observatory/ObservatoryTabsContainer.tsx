@@ -1,5 +1,5 @@
+import { toast } from '@heroui/react';
 import { parseAsJson, useQueryState } from 'nuqs';
-import { toast } from 'react-toastify';
 
 import CardFactory from '@/components/Cards/CardFactory/CardFactory';
 import ContentTypeListHeader from '@/components/ContentTypeList/ContentTypeListHeader';
@@ -45,7 +45,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
 
     // Set Default filters
     if (filterConfig && filterConfig.length > 0 && contentType !== CLASSES.PAPER) {
-        toast.dismiss();
+        toast.clear();
         toast.info('Filters are only available on the paper type');
         setContentType(CLASSES.PAPER, { scroll: false });
     }
@@ -88,7 +88,6 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
     return (
         <>
             <ContentTypeListHeader isLoading={isLoading} totalElements={totalElements} />
-
             <Tabs
                 className="box rounded mt-2"
                 destroyOnHidden

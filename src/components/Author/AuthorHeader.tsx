@@ -1,174 +1,183 @@
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faGoogle, faLinkedin, faOrcid, faResearchgate } from '@fortawesome/free-brands-svg-icons';
-import { faEllipsisV, faExternalLinkAlt, faGlobe, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faExternalLinkAlt, faGlobe, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import Link from 'next/link';
-import { FC, useState } from 'react';
+import { Button, Dropdown, Skeleton } from '@heroui/react';
+import { FC, ReactNode, useState } from 'react';
 
 import NotFound from '@/app/not-found';
 import useAuthor from '@/components/Author/hooks/useAuthor';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
-import ButtonDropdown from '@/components/Ui/Button/ButtonDropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
-import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 
 type AuthorHeaderProps = {
     authorId: string;
 };
 
+type SocialLinkProps = {
+    label: string;
+    icon: IconDefinition;
+    iconColor?: string;
+    href: string;
+    value: ReactNode;
+};
+
+const SocialLink: FC<SocialLinkProps> = ({ label, icon, iconColor, href, value }) => (
+    <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-start gap-3 rounded-lg border border-border bg-surface-1 p-3 transition-colors hover:border-primary hover:bg-primary/5"
+    >
+        <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary-100 text-base dark:bg-secondary-800/60"
+            aria-hidden
+        >
+            <FontAwesomeIcon icon={icon} color={iconColor} />
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col">
+            <span className="text-xs font-medium text-muted">{label}</span>
+            <span className="truncate text-sm text-foreground group-hover:text-primary">{value}</span>
+        </span>
+        <FontAwesomeIcon icon={faExternalLinkAlt} className="mt-1 text-xs text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+    </a>
+);
+
 const AuthorHeader: FC<AuthorHeaderProps> = ({ authorId }) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-
-    const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
-        authorId,
-    });
-
+    const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({ authorId });
     const [editMode, setEditMode] = useState(false);
+
+    if (isLoading) {
+        return (
+            <>
+                <div className="flex flex-wrap items-center gap-3 mt-6 mb-6 max-sm:mt-4">
+                    <Skeleton className="h-7 w-48 rounded-md" />
+                    <Skeleton className="h-5 w-20 rounded-md" />
+                    <div className="ml-auto flex gap-2">
+                        <Skeleton className="h-8 w-20 rounded-md" />
+                        <Skeleton className="h-8 w-8 rounded-md" />
+                    </div>
+                </div>
+                <div className="rounded-lg border border-border bg-surface-1 p-4 mb-4">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <Skeleton key={i} className="h-14 rounded-lg" />
+                        ))}
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    if (isFailedLoading) {
+        return <NotFound />;
+    }
+
+    if (!author) {
+        return null;
+    }
+
+    const socials: SocialLinkProps[] = [];
+    if (author.orcid) {
+        socials.push({
+            label: 'ORCID',
+            icon: faOrcid,
+            iconColor: '#A6CE39',
+            href: `https://orcid.org/${author.orcid.label}`,
+            value: author.orcid.label,
+        });
+    }
+    if (author.website) {
+        socials.push({
+            label: 'Website',
+            icon: faGlobe,
+            href: author.website.label,
+            value: author.website.label,
+        });
+    }
+    if (author.googleScholar) {
+        socials.push({
+            label: 'Google Scholar',
+            icon: faGoogle,
+            href: `https://scholar.google.com/citations?user=${author.googleScholar.label}&=en&oi=ao`,
+            value: author.googleScholar.label,
+        });
+    }
+    if (author.researchGate) {
+        socials.push({
+            label: 'ResearchGate',
+            icon: faResearchgate,
+            href: `https://www.researchgate.net/profile/${author.researchGate.label}`,
+            value: author.researchGate.label,
+        });
+    }
+    if (author.linkedIn) {
+        socials.push({
+            label: 'LinkedIn',
+            icon: faLinkedin,
+            href: `https://www.linkedin.com/in/${author.linkedIn.label}`,
+            value: author.linkedIn.label,
+        });
+    }
+    if (author.dblp) {
+        socials.push({
+            label: 'DBLP',
+            icon: faExternalLinkAlt,
+            href: `https://dblp.org/pid/${author.dblp}`,
+            value: author.dblp,
+        });
+    }
 
     return (
         <>
-            {isLoading && (
-                <div className="text-center mt-4 mb-4">
-                    <FontAwesomeIcon icon={faSpinner} spin /> Loading
-                </div>
-            )}
-            {!isLoading && isFailedLoading && <NotFound />}
-            {!isLoading && author && (
-                <>
-                    <TitleBar
-                        buttonGroup={
-                            <>
-                                <RequireAuthentication
-                                    component={Button}
-                                    size="sm"
-                                    color="secondary"
-                                    className="float-end"
-                                    onClick={() => setEditMode((v) => !v)}
-                                >
-                                    <FontAwesomeIcon icon={faPen} /> Edit
-                                </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen((v) => !v)}>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
-                                        <FontAwesomeIcon icon={faEllipsisV} />
-                                    </DropdownToggle>
-                                    <DropdownMenu end="true">
-                                        <DropdownItem tag={Link} end="true" href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`}>
-                                            View resource
-                                        </DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
-                            </>
-                        }
-                        titleAddition="Author"
-                    >
-                        {author.label}
-                    </TitleBar>
+            <TitleBar
+                buttonGroup={
+                    <>
+                        <RequireAuthentication component={Button} size="sm" className="button--orkg-secondary" onClick={() => setEditMode((v) => !v)}>
+                            <FontAwesomeIcon icon={faPen} /> Edit
+                        </RequireAuthentication>
+                        <Dropdown>
+                            <Button size="sm" className="button--orkg-secondary" isIconOnly aria-label="More options">
+                                <FontAwesomeIcon icon={faEllipsisV} />
+                            </Button>
+                            <Dropdown.Popover placement="bottom end">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href={`${reverse(ROUTES.RESOURCE, { id: authorId })}?noRedirect`} textValue="View resource">
+                                        View resource
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown>
+                    </>
+                }
+                titleAddition="Author"
+            >
+                {author.label}
+            </TitleBar>
 
-                    {editMode && (
-                        <DataBrowserDialog
-                            isEditMode
-                            show={editMode}
-                            toggleModal={() => setEditMode((v) => !v)}
-                            id={author.id}
-                            label={author.label}
-                            onCloseModal={() => loadAuthorData()}
-                        />
-                    )}
-                    <Container className="p-0">
-                        <div className="box rounded p-4 pb-2 mb-3">
-                            <div className="row">
-                                {author.orcid && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>
-                                            ORCID <FontAwesomeIcon color="#A6CE39" icon={faOrcid} />
-                                        </div>
-                                        <div className="mb-3 text-wrap">
-                                            <a href={`https://orcid.org/${author.orcid.label}`} target="_blank" rel="noopener noreferrer">
-                                                {author.orcid.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {author.website && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>
-                                            Website <FontAwesomeIcon icon={faGlobe} />
-                                        </div>
-                                        <div className="mb-3 text-wrap">
-                                            <a href={author.website.label} target="_blank" rel="noopener noreferrer">
-                                                {author.website.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {author.googleScholar && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>
-                                            Google Scholar <FontAwesomeIcon icon={faGoogle} />
-                                        </div>
-                                        <div className="mb-3 text-wrap">
-                                            <a
-                                                href={`https://scholar.google.com/citations?user=${author.googleScholar.label}&=en&oi=ao`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {author.googleScholar.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {author.researchGate && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>
-                                            ResearchGate <FontAwesomeIcon icon={faResearchgate} />
-                                        </div>
-                                        <div className="mb-3 text-wrap">
-                                            <a
-                                                href={`https://www.researchgate.net/profile/${author.researchGate.label}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {author.researchGate.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {author.linkedIn && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>
-                                            Linkedin <FontAwesomeIcon icon={faLinkedin} />
-                                        </div>
-                                        <div className="mb-3 text-wrap">
-                                            <a
-                                                href={`https://www.linkedin.com/in/${author.linkedIn.label}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {author.linkedIn.label} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {author.dblp && (
-                                    <div className="col-md-3 col-sm-6">
-                                        <div>DBLP</div>
-                                        <div className="mb-3 text-wrap">
-                                            <a href={`https://dblp.org/pid/${author.dblp}`} target="_blank" rel="noopener noreferrer">
-                                                {author.dblp} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </Container>
-                </>
+            {editMode && (
+                <DataBrowserDialog
+                    isEditMode
+                    show={editMode}
+                    toggleModal={() => setEditMode((v) => !v)}
+                    id={author.id}
+                    label={author.label}
+                    onCloseModal={() => loadAuthorData()}
+                />
+            )}
+
+            {socials.length > 0 && (
+                <div className="rounded-lg border border-border bg-surface-1 p-4 mb-4">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {socials.map((s) => (
+                            <SocialLink key={s.label} {...s} />
+                        ))}
+                    </div>
+                </div>
             )}
         </>
     );

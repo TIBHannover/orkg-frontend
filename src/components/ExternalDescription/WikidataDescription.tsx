@@ -70,28 +70,26 @@ const WikidataDescription: FC<WikidataDescriptionProp> = ({ externalResource }) 
 
     return (
         <div>
-            <div className="d-flex justify-content-between">
-                <h2 className="h5">Statements from Wikidata</h2>
+            <div className="flex justify-between">
+                <h2 className="text-xl">Statements from Wikidata</h2>
                 <a href={externalResource} target="_blank" rel="noopener noreferrer">
                     <Image alt="Wikidata logo" src={WIKIDATA_LOGO} style={{ height: 40 }} />
                 </a>
             </div>
-
             {isLoading && (
                 <div className="text-center">
                     <FontAwesomeIcon icon={faSpinner} spin /> Loading
                 </div>
             )}
             {hasFailed && <p className="text-center">Failed loading Wikidata statements</p>}
-
             {Object.keys(statementsByProperty).map((propertyUri) => (
                 <StatementsGroupStyle key={propertyUri} className="noTemplate list-group-item">
-                    <Row className="row gx-0">
-                        <PropertyStyle className="col-4">
+                    <Row className="flex flex-wrap items-stretch gap-x-0">
+                        <PropertyStyle className="shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12">
                             <div>
                                 <a
                                     href={statementsByProperty[propertyUri]?.[0]?.property?.value}
-                                    className="text-dark text-break"
+                                    className="text-dark break-all"
                                     style={{ fontWeight: 500 }}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -100,11 +98,11 @@ const WikidataDescription: FC<WikidataDescriptionProp> = ({ externalResource }) 
                                 </a>
                             </div>
                         </PropertyStyle>
-                        <ValuesStyle className="col-8 valuesList">
+                        <ValuesStyle className="shrink-0 grow-0 w-8/12 basis-8/12 max-w-8/12 valuesList">
                             {statementsByProperty[propertyUri].map((value) => (
                                 <div key={value?.object?.value}>
                                     {value?.object?.type === 'uri' ? (
-                                        <a href={value?.object?.value} className="text-break" target="_blank" rel="noopener noreferrer">
+                                        <a href={value?.object?.value} className="break-all" target="_blank" rel="noopener noreferrer">
                                             {value.objectLabel?.value}
                                         </a>
                                     ) : (

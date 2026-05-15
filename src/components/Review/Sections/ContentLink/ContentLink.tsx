@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import { SelectGlobalStyle } from '@/components/Autocomplete/styled';
 import { OptionType } from '@/components/Autocomplete/types';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import useReview from '@/components/Review/hooks/useReview';
@@ -80,7 +79,6 @@ const ContentLink: FC<ContentLinkProps> = ({ section }) => {
 
     return (
         <div>
-            <SelectGlobalStyle />
             <Autocomplete
                 excludeClasses={
                     section.type === 'resource'

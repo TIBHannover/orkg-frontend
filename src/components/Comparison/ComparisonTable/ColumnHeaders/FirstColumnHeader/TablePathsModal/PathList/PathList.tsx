@@ -56,7 +56,7 @@ const PathList: FC<PathListProps> = ({ paths, handleReorder, handleToggleExpandP
     }, [instanceId, parentPathIds, paths, reorderItems]);
 
     return (
-        <ul className={`tw:relative list-unstyled mb-0 ${parentPathIds.length !== 0 ? 'ms-4' : ''}`}>
+        <ul className={`relative list-unstyled mb-0 ${parentPathIds.length !== 0 ? 'ml-6' : ''}`}>
             {paths.map((path) => (
                 <PathListItem
                     key={parentPathIds.join('/') + path.id}

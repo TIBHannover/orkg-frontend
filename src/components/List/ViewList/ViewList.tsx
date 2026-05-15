@@ -1,9 +1,8 @@
-import { reverse } from 'named-urls';
+import { Alert, Button } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import { SectionStyled } from '@/components/ArticleBuilder/styled';
 import AuthorBadges from '@/components/Badges/AuthorBadges/AuthorBadges';
 import PublishedBadge from '@/components/Badges/PublishedBadge/PublishedBadge';
 import ResearchFieldBadge from '@/components/Badges/ResearchFieldBadge/ResearchFieldBadge';
@@ -19,15 +18,12 @@ import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/use
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import ObservatoryBox from '@/components/ObservatoryBox/ObservatoryBox';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ListGroup from '@/components/Ui/List/ListGroup';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { VISIBILITY } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Paper } from '@/services/backend/types';
 
 type ListProps = {
@@ -51,39 +47,51 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
     }
 
     return (
-        <Container className="p-0 position-relative">
+        <Container className="relative">
             {!list.published && (
-                <Alert color="warning" fade={false} className="box-shadow border-0">
-                    Warning: you are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
-                    <Button color="link" className="p-0" onClick={() => setIsOpenHistoryModal(true)}>
-                        View publish history
-                    </Button>
+                <Alert status="warning" className="mt-2 mb-4 rounded-2xl flex-row items-center shadow">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Unpublished version</Alert.Title>
+                        <Alert.Description>
+                            You are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
+                            <Button variant="primary" className="px-2 py-1" onPress={() => setIsOpenHistoryModal(true)} size="sm">
+                                View publish history
+                            </Button>
+                        </Alert.Description>
+                    </Alert.Content>
                 </Alert>
             )}
             {newVersionAvailable && (
-                <Alert color="warning" fade={false} className="box-shadow border-0">
-                    Warning: a newer version of this list is available.{' '}
-                    <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link> or{' '}
-                    <Link href={reverse(ROUTES.LIST_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
+                <Alert status="accent" className="mt-2 mb-4 rounded-2xl flex-row items-center">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Newer version available</Alert.Title>
+                        <Alert.Description>
+                            A newer version of this list is available.{' '}
+                            <Link href={reverse(ROUTES.LIST, { id: latestVersionId })}>View latest version</Link> or{' '}
+                            <Link href={reverse(ROUTES.LIST_DIFF, { oldId: id, newId: latestVersionId })}>compare to latest version</Link>.
+                        </Alert.Description>
+                    </Alert.Content>
                 </Alert>
             )}
-            <main>
-                <SectionStyled className="box rounded">
-                    <header className="border-bottom pb-2">
-                        <div className="d-flex justify-content-between">
+            <div>
+                <div className="relative px-10 py-2.5 box rounded [&_a]:underline">
+                    <header className="border-b pb-2">
+                        <div className="flex justify-between">
                             <div>
-                                <div className="d-flex mb-2 mt-4">
+                                <div className="flex mb-2 mt-6">
                                     <h1 style={{ whiteSpace: 'pre-line' }}>{list.title}</h1>
                                     {list.published && (
-                                        <h2 className="h4 ms-2 mt-2">
+                                        <h2 className="text-2xl ml-2 mt-2">
                                             <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                            <div className="d-inline-block ms-1">
+                                            <div className="inline-block ml-1">
                                                 <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                             </div>
                                         </h2>
                                     )}
                                 </div>
-                                <div className="my-3">
+                                <div className="my-4">
                                     {list.published && <PublishedBadge />}
                                     <ResearchFieldBadge researchField={list.research_fields?.[0]} />
                                     <ListEntryAmount />
@@ -91,7 +99,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                 </div>
                             </div>
                             <div>
-                                <div className="d-flex flex-column align-items-end gap-2 mt-2 border-start border-light ps-4">
+                                <div className="flex flex-col items-end gap-2 mt-2 border-start border-default pl-6">
                                     <ObservatoryBox resourceId={list.id} observatory={observatory} organization={organization} />
                                     <div style={{ marginRight: -25 }}>
                                         <SustainableDevelopmentGoals />
@@ -105,15 +113,15 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                         if (isTextSection(section)) {
                             return (
                                 <section key={section.id}>
-                                    <h2 className={`h${section?.heading_size} mt-4`}>{section.heading}</h2>
+                                    <h2 className={`h${section?.heading_size} mt-6`}>{section.heading}</h2>
                                     <MarkdownRenderer text={section.text} />
                                 </section>
                             );
                         }
                         if (isListSection(section)) {
                             return (
-                                <section key={section.id} className="mt-3">
-                                    <ListGroup>
+                                <section key={section.id} className="mt-4">
+                                    <ul className="m-0 flex w-full flex-col divide-y divide-border overflow-hidden rounded-[var(--radius)] border border-border bg-surface p-0 list-none">
                                         {section.entries.map((entry) => {
                                             const isPaper = entry?.value.classes?.includes(CLASSES.PAPER);
                                             const contentTypeClass = entry.value?.classes?.filter((classId) =>
@@ -129,7 +137,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                             };
 
                                             return (
-                                                <ListGroupItem key={entry.value?.id} className="p-0">
+                                                <li key={entry.value?.id} className="block w-full min-w-0 bg-surface p-0 text-foreground">
                                                     <PaperCard
                                                         showCurationFlags={false}
                                                         isListGroupItem={false}
@@ -143,10 +151,10 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                                         route={route}
                                                         renderCoins={isPaper}
                                                     />
-                                                </ListGroupItem>
+                                                </li>
                                             );
                                         })}
-                                    </ListGroup>
+                                    </ul>
                                 </section>
                             );
                         }
@@ -154,15 +162,15 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                     })}
 
                     <section>
-                        <h2 className="h4 border-bottom mt-5">
+                        <h2 className="text-2xl border-b mt-12">
                             <Tooltip content="Contributors are automatically generated based on ORKG users that contributed to this list">
                                 <span>Contributors</span>
                             </Tooltip>
                         </h2>
                         <Contributors />
                     </section>
-                </SectionStyled>
-            </main>
+                </div>
+            </div>
         </Container>
     );
 };

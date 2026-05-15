@@ -1,14 +1,12 @@
-import { ChangeEvent, FC } from 'react';
+import { Input, Label, TextField } from '@heroui/react';
+import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
-import { PropertyShape as PropertyShapeType, PropertyShapeNumberType } from '@/services/backend/types';
+import { PropertyShapeNumberType } from '@/services/backend/types';
 import { updatePropertyShapes } from '@/slices/templateEditorSlice';
+import { RootStore } from '@/slices/types';
 
 type ValidationRulesNumberProps = {
     id: number;
@@ -16,17 +14,14 @@ type ValidationRulesNumberProps = {
 
 const ValidationRulesNumber: FC<ValidationRulesNumberProps> = ({ id }) => {
     const dispatch = useDispatch();
-    // @ts-expect-error
-    const propertyShape: PropertyShapeNumberType = useSelector((state) => state.templateEditor.properties[id]);
-    // @ts-expect-error
-    const propertyShapes: PropertyShapeType[] = useSelector((state) => state.templateEditor.properties);
+    const propertyShape = useSelector((state: RootStore) => state.templateEditor.properties[id]) as PropertyShapeNumberType;
+    const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newValidationRules = { [e.target.name]: e.target.value };
+    const updateField = (name: 'min_inclusive' | 'max_inclusive', value: string) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
             if (j === id) {
-                return { ...item, ...newValidationRules };
+                return { ...item, [name]: value };
             }
             return item;
         });
@@ -34,43 +29,57 @@ const ValidationRulesNumber: FC<ValidationRulesNumberProps> = ({ id }) => {
     };
 
     return (
-        <div className="mt-2">
-            <FormGroup row>
-                <Label className="text-end text-muted" for="minInclusiveInput" sm={3}>
-                    <small>Minimum value</small>
+        <div className="flex flex-col gap-2 mt-1">
+            <div className="grid grid-cols-12 items-center gap-2">
+                <Label htmlFor="minInclusiveInput" className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                    Minimum value
                 </Label>
-                <Col sm={9}>
-                    <Input
-                        disabled={!isEditMode}
-                        onChange={onChange}
-                        bsSize="sm"
-                        type="text"
-                        value={propertyShape.min_inclusive}
-                        name="min_inclusive"
-                        id="minInclusiveInput"
-                        placeholder="Specify the minimum value"
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                </Col>
-            </FormGroup>
-            <FormGroup row>
-                <Label className="text-end text-muted" for="maxInclusiveInput" sm={3}>
-                    <small>Maximum value</small>
+                <div className="col-span-12 md:col-span-9">
+                    <TextField
+                        fullWidth
+                        value={
+                            propertyShape.min_inclusive !== undefined && propertyShape.min_inclusive !== null
+                                ? String(propertyShape.min_inclusive)
+                                : ''
+                        }
+                        onChange={(value) => updateField('min_inclusive', value)}
+                        isDisabled={!isEditMode}
+                        aria-label="Minimum value"
+                    >
+                        <Input
+                            id="minInclusiveInput"
+                            placeholder="Specify the minimum value"
+                            maxLength={MAX_LENGTH_INPUT}
+                            className="!border !border-border focus:!border-accent"
+                        />
+                    </TextField>
+                </div>
+            </div>
+            <div className="grid grid-cols-12 items-center gap-2">
+                <Label htmlFor="maxInclusiveInput" className="col-span-12 md:col-span-3 text-muted text-sm md:text-right">
+                    Maximum value
                 </Label>
-                <Col sm={9}>
-                    <Input
-                        disabled={!isEditMode}
-                        onChange={onChange}
-                        bsSize="sm"
-                        value={propertyShape.max_inclusive}
-                        type="text"
-                        name="max_inclusive"
-                        id="maxInclusiveInput"
-                        placeholder="Specify the maximum value"
-                        maxLength={MAX_LENGTH_INPUT}
-                    />
-                </Col>
-            </FormGroup>
+                <div className="col-span-12 md:col-span-9">
+                    <TextField
+                        fullWidth
+                        value={
+                            propertyShape.max_inclusive !== undefined && propertyShape.max_inclusive !== null
+                                ? String(propertyShape.max_inclusive)
+                                : ''
+                        }
+                        onChange={(value) => updateField('max_inclusive', value)}
+                        isDisabled={!isEditMode}
+                        aria-label="Maximum value"
+                    >
+                        <Input
+                            id="maxInclusiveInput"
+                            placeholder="Specify the maximum value"
+                            maxLength={MAX_LENGTH_INPUT}
+                            className="!border !border-border focus:!border-accent"
+                        />
+                    </TextField>
+                </div>
+            </div>
         </div>
     );
 };

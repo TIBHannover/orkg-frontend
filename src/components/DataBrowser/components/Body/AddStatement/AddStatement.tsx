@@ -56,14 +56,14 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
     };
 
     return (
-        <div className="tw:border-b tw:border-gray-200 tw:flex tw:flex-wrap tw:items-stretch tw:gap-0">
-            <div className="tw:flex tw:flex-1 tw:min-w-0">
-                <div className="tw:flex tw:shrink-0 tw:grow-0 tw:w-4/12 tw:basis-4/12 tw:max-w-4/12" style={{ borderRight: '1px solid #e0e0e0' }}>
+        <div className="border-b border-gray-200 flex flex-wrap items-stretch gap-0">
+            <div className="flex flex-1 min-w-0">
+                <div className="flex shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12" style={{ borderRight: '1px solid #e0e0e0' }}>
                     {shift && <HierarchyIndicator path={['1', '1']} side="left" />}
-                    <StatementWrapperStyled className="tw:px-2 tw:py-2 tw:flex tw:items-center tw:flex-1 tw:min-w-0 tw:flex-grow">
+                    <StatementWrapperStyled className="px-2 py-2 flex items-center flex-1 min-w-0 flex-grow">
                         <PredicateView predicate={predicate} isNewPredicate />{' '}
                         {showDeleteButton && canEdit && isEditMode && (
-                            <span className="tw:ml-1 actionButtons">
+                            <span className="ml-1 actionButtons">
                                 <ActionButton
                                     isDisabled={!canDelete}
                                     title={canDelete ? 'Delete property' : 'This property is required by the template'}
@@ -89,10 +89,10 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
                         )}
                     </StatementWrapperStyled>
                 </div>
-                <div className="tw:flex tw:flex-1 tw:min-w-0">
-                    <div className="tw:px-2 tw:py-1 tw:flex tw:flex-1 tw:min-w-0 tw:items-center">
+                <div className="flex flex-1 min-w-0">
+                    <div className="px-2 py-1 flex flex-1 min-w-0 items-center min-h-11">
                         {canEdit && isEditMode && !showAdd && (
-                            <div className="">
+                            <div className="flex items-center">
                                 <ActionButton
                                     isDisabled={!canAddValue}
                                     title={canAddValue ? 'Add value' : 'This property reached the maximum number of values set by template'}

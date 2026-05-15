@@ -62,7 +62,7 @@ export const ValueCell = styled.div`
     display: ruby;
     padding: 0 2px;
 
-    background: rgb(233, 235, 242) !important;
+    background: var(--background) !important;
     color: black;
     width: 150px;
     min-width: 150px;

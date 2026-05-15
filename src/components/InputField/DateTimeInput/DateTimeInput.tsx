@@ -1,8 +1,7 @@
+import { Input, Label, TextField } from '@heroui/react';
 import { FC, useEffect, useId, useState } from 'react';
 
 import { DateTimeValues, formatDateTimeValue, parseDateTimeString } from '@/components/InputField/DateTimeInput/helpers';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import { DateTimeType } from '@/constants/DataTypes';
 
 type DateTimeInputProps = {
@@ -24,7 +23,6 @@ const DateTimeInput: FC<DateTimeInputProps> = ({ value, onChange, type = 'dateTi
     });
     const formId = useId();
 
-    // Parse input string to object
     useEffect(() => {
         if (!value) return;
         const parsedDateTime = parseDateTimeString(value);
@@ -38,10 +36,8 @@ const DateTimeInput: FC<DateTimeInputProps> = ({ value, onChange, type = 'dateTi
         let newDateTime = { ...dateTime };
 
         if (field === 'timezone') {
-            // Simply update the timezone value without any validation
             newDateTime[field] = newValue;
         } else if (field === 'date') {
-            // Handle date input change
             const [year, month, day] = newValue.split('-');
             newDateTime = {
                 ...newDateTime,
@@ -50,14 +46,11 @@ const DateTimeInput: FC<DateTimeInputProps> = ({ value, onChange, type = 'dateTi
                 day: day || '',
             };
         } else if (['hours', 'minutes', 'seconds'].includes(field)) {
-            // For time fields, keep the value as is, including leading zeros
             newDateTime[field] = newValue;
         } else if (field === 'milliseconds') {
-            // Validate milliseconds (0-999)
             const ms = parseInt(newValue, 10) || 0;
             newDateTime[field] = Math.min(999, Math.max(0, ms)).toString();
         } else {
-            // For other fields, remove leading zeros
             const cleanValue = newValue.replace(/^0+/, '') || '';
             newDateTime[field] = cleanValue;
         }
@@ -70,96 +63,52 @@ const DateTimeInput: FC<DateTimeInputProps> = ({ value, onChange, type = 'dateTi
         dateTime.year && dateTime.month && dateTime.day ? `${dateTime.year}-${dateTime.month.padStart(2, '0')}-${dateTime.day.padStart(2, '0')}` : '';
 
     return (
-        <div className="d-flex flex-column gap-3">
-            {/* Date Input */}
-            <div className="d-flex flex-column">
-                <Label className="mb-1" for={`${formId}date`}>
+        <div className="flex flex-col gap-3">
+            <TextField fullWidth value={dateValue} onChange={(v) => handleChange('date', v)}>
+                <Label htmlFor={`${formId}date`} className="mb-1">
                     Date
                 </Label>
-                <Input
-                    id={`${formId}date`}
-                    className="form-control"
-                    type="date"
-                    value={dateValue}
-                    onChange={(e) => handleChange('date', e.target.value)}
-                />
-            </div>
-
-            {/* Hours, Minutes, Seconds Row */}
-            <div className="d-flex gap-3">
-                <div className="d-flex flex-column flex-grow-1">
-                    <Label className="mb-1" for={`${formId}hours`}>
+                <Input id={`${formId}date`} type="date" />
+            </TextField>
+            <div className="flex gap-3">
+                <TextField fullWidth value={dateTime.hours} onChange={(v) => handleChange('hours', v)} className="grow">
+                    <Label htmlFor={`${formId}hours`} className="mb-1">
                         Hours
                     </Label>
-                    <Input
-                        placeholder="hh"
-                        type="number"
-                        min="0"
-                        max="23"
-                        value={dateTime.hours}
-                        onChange={(e) => handleChange('hours', e.target.value)}
-                        id={`${formId}hours`}
-                    />
-                </div>
-                <div className="d-flex flex-column flex-grow-1">
-                    <Label className="mb-1" for={`${formId}minutes`}>
+                    <Input id={`${formId}hours`} placeholder="hh" type="number" min="0" max="23" />
+                </TextField>
+                <TextField fullWidth value={dateTime.minutes} onChange={(v) => handleChange('minutes', v)} className="grow">
+                    <Label htmlFor={`${formId}minutes`} className="mb-1">
                         Minutes
                     </Label>
-                    <Input
-                        placeholder="mm"
-                        type="number"
-                        min="0"
-                        max="59"
-                        value={dateTime.minutes}
-                        onChange={(e) => handleChange('minutes', e.target.value)}
-                        id={`${formId}minutes`}
-                    />
-                </div>
-                <div className="d-flex flex-column flex-grow-1">
-                    <Label className="mb-1" for={`${formId}seconds`}>
+                    <Input id={`${formId}minutes`} placeholder="mm" type="number" min="0" max="59" />
+                </TextField>
+                <TextField fullWidth value={dateTime.seconds} onChange={(v) => handleChange('seconds', v)} className="grow">
+                    <Label htmlFor={`${formId}seconds`} className="mb-1">
                         Seconds
                     </Label>
-                    <Input
-                        placeholder="ss"
-                        type="number"
-                        min="0"
-                        max="59"
-                        value={dateTime.seconds}
-                        onChange={(e) => handleChange('seconds', e.target.value)}
-                        id={`${formId}seconds`}
-                    />
-                </div>
+                    <Input id={`${formId}seconds`} placeholder="ss" type="number" min="0" max="59" />
+                </TextField>
             </div>
-
-            {/* Milliseconds and Timezone Row */}
-            <div className="d-flex gap-3">
-                <div className="d-flex flex-column flex-grow-1">
-                    <Label className="mb-1" for={`${formId}milliseconds`}>
+            <div className="flex gap-3">
+                <TextField fullWidth value={dateTime.milliseconds} onChange={(v) => handleChange('milliseconds', v)} className="grow">
+                    <Label htmlFor={`${formId}milliseconds`} className="mb-1">
                         Milliseconds
                     </Label>
-                    <Input
-                        placeholder="sss"
-                        type="number"
-                        min="0"
-                        max="999"
-                        value={dateTime.milliseconds}
-                        onChange={(e) => handleChange('milliseconds', e.target.value)}
-                        id={`${formId}milliseconds`}
-                    />
-                </div>
-                <div className="d-flex flex-column flex-grow-1">
-                    <Label className="mb-1" for={`${formId}timezone`}>
+                    <Input id={`${formId}milliseconds`} placeholder="sss" type="number" min="0" max="999" />
+                </TextField>
+                <TextField
+                    fullWidth
+                    value={dateTime.timezone}
+                    onChange={(v) => handleChange('timezone', v)}
+                    isRequired={type === 'dateTimeStamp'}
+                    className="grow"
+                >
+                    <Label htmlFor={`${formId}timezone`} className="mb-1">
                         Timezone {type === 'dateTimeStamp' ? '(required)' : '(optional)'}
                     </Label>
-                    <Input
-                        placeholder={type === 'dateTimeStamp' ? 'Z or ±hh:mm' : '[Z or ±hh:mm]'}
-                        type="text"
-                        value={dateTime.timezone}
-                        onChange={(e) => handleChange('timezone', e.target.value)}
-                        required={type === 'dateTimeStamp'}
-                        id={`${formId}timezone`}
-                    />
-                </div>
+                    <Input id={`${formId}timezone`} placeholder={type === 'dateTimeStamp' ? 'Z or ±hh:mm' : '[Z or ±hh:mm]'} type="text" />
+                </TextField>
             </div>
         </div>
     );

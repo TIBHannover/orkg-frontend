@@ -2,6 +2,7 @@
 
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Label, Modal as HeroUIModal } from '@heroui/react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
@@ -22,10 +23,8 @@ import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES } from '@/constants/graphSettings';
 
 const GraphCanvas = dynamic(() => import('reagraph').then((mod) => mod.GraphCanvas), { ssr: false });
@@ -91,13 +90,14 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
     };
 
     return (
-        <Modal size="lg" isOpen toggle={toggle} style={{ maxWidth: '90%', marginBottom: 0 }}>
-            <ModalHeader toggle={toggle} tag="div" cssModule={{ 'modal-title': 'w-100' }}>
-                <div className="d-flex align-items-center">
-                    <h1 className="h5 m-0">View graph</h1>
-                    <div className="d-flex ms-3 align-items-center flex-grow-1">
-                        <Button color="secondary" className="me-2" size="sm" onClick={() => graphRef.current?.centerGraph()}>
-                            <FontAwesomeIcon icon={faHome} className="me-1" /> Center graph
+        <Modal size="lg" isOpen toggle={toggle} className="h-[calc(100vh-80px)]" style={{ maxWidth: '90%', marginBottom: 0 }}>
+            <HeroUIModal.Header className="relative z-10 shrink-0">
+                <HeroUIModal.CloseTrigger />
+                <div className="flex w-full items-center">
+                    <HeroUIModal.Heading>View graph</HeroUIModal.Heading>
+                    <div className="flex ml-4 items-center grow">
+                        <Button color="secondary" className="mr-2" size="sm" onClick={() => graphRef.current?.centerGraph()}>
+                            <FontAwesomeIcon icon={faHome} className="mr-1" /> Center graph
                         </Button>
                         <Dropdown
                             color="secondary"
@@ -107,7 +107,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 setLayoutSelectionOpen(!layoutSelectionOpen);
                             }}
                         >
-                            <DropdownToggle caret color="secondary" className="me-2">
+                            <DropdownToggle caret color="secondary" className="mr-2">
                                 Layout:
                                 <FontAwesomeIcon icon={layoutIcon} rotation={layoutType === 'treeLr2d' ? 270 : undefined} className="mx-2" />
                             </DropdownToggle>
@@ -134,7 +134,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                        <div className="d-flex me-2 align-items-center">
+                        <div className="flex mr-2 items-center">
                             <Popover
                                 contentStyle={{
                                     zIndex: 9999,
@@ -143,7 +143,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 onOpenChange={setBlackListClassesPopoverOpen}
                                 content={
                                     <div className="p-1" style={{ minWidth: 300 }}>
-                                        <Label for={classSelectorId}>Blacklisted classes</Label>
+                                        <Label htmlFor={classSelectorId}>Blacklisted classes</Label>
                                         <div>
                                             <Autocomplete
                                                 entityType={ENTITIES.CLASS}
@@ -164,14 +164,14 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 }
                             >
                                 <span>
-                                    <Button color="secondary" className="px-3" size="sm" onClick={() => setBlackListClassesPopoverOpen(true)}>
+                                    <Button color="secondary" className="px-4" size="sm" onClick={() => setBlackListClassesPopoverOpen(true)}>
                                         <FontAwesomeIcon icon={faWrench} />
                                     </Button>
                                 </span>
                             </Popover>
                         </div>
-                        <div className="d-flex me-3 align-items-center">
-                            <Label for={depthId} className="m-0">
+                        <div className="flex mr-4 items-center">
+                            <Label htmlFor={depthId} className="m-0">
                                 Depth
                             </Label>
                             <Input
@@ -179,13 +179,13 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 id={depthId}
                                 min="1"
                                 bsSize="sm"
-                                className="ms-2"
+                                className="ml-2"
                                 style={{ width: '60px' }}
                                 value={depth}
                                 onChange={(e) => setDepth(e.target.value)}
                             />
                         </div>
-                        <div className="ms-auto me-3 w-100" style={{ maxWidth: 300 }}>
+                        <div className="ms-auto mr-4 w-full" style={{ maxWidth: 300 }}>
                             <GraphSearch
                                 nodes={nodes}
                                 edges={edges}
@@ -197,8 +197,8 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                         </div>
                     </div>
                 </div>
-            </ModalHeader>
-            <ModalBody className="p-0 mb-2" style={{ minHeight: '100px', height: 'calc(100vh - 150px)' }}>
+            </HeroUIModal.Header>
+            <ModalBody className="p-0 mb-2 min-h-[100px] flex-1 overflow-hidden">
                 {selectedNode && (
                     <SelectedNodeBox
                         nodes={nodes}
@@ -263,12 +263,12 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                     />
                 )}
                 {isLoadingStatements && (
-                    <div className="text-center text-primary mt-4 mb-4">
+                    <div className="text-center text-accent mt-6 mb-6">
                         <span style={{ fontSize: '200%' }}>
                             <FontAwesomeIcon icon={faSpinner} spin />
                         </span>
                         <br />
-                        <h2 className="h5">Loading graph...</h2>
+                        <h2 className="text-xl">Loading graph...</h2>
                     </div>
                 )}
             </ModalBody>

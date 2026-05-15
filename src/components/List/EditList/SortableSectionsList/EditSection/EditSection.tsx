@@ -1,5 +1,6 @@
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { draggable, dropTargetForElements, type ElementDropTargetEventBasePayload } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { attachClosestEdge, type Edge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -73,6 +74,18 @@ const EditSection: FC<EditSectionProps> = ({ section, handleManualSort, atIndex,
                 element,
                 dragHandle: dragHandleElement || undefined,
                 getInitialData: () => data,
+                onGenerateDragPreview({ nativeSetDragImage }) {
+                    setCustomNativeDragPreview({
+                        nativeSetDragImage,
+                        render: ({ container }) => {
+                            const preview = document.createElement('div');
+                            preview.className =
+                                'inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
+                            preview.textContent = isTextSection(section) ? (section.heading ?? 'Text section') : 'List section';
+                            container.appendChild(preview);
+                        },
+                    });
+                },
                 onDragStart() {
                     setIsDragging(true);
                 },

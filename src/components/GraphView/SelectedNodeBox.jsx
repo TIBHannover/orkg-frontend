@@ -1,6 +1,5 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
@@ -13,6 +12,7 @@ import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getResourceLink } from '@/utils';
 
 const StyledBox = styled.div`
@@ -28,9 +28,9 @@ const StyledBox = styled.div`
 
 const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpandNode, fetchIncomingStatements }) => (
     <StyledBox>
-        <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center">
-                <h2 className="h4 m-0 me-2">{selectedNode.data._class === ENTITIES.RESOURCE ? 'Resource' : 'Literal'}</h2>
+        <div className="flex justify-between items-center">
+            <div className="flex items-center">
+                <h2 className="text-2xl m-0 mr-2">{selectedNode.data._class === ENTITIES.RESOURCE ? 'Resource' : 'Literal'}</h2>
                 {selectedNode.data._class === ENTITIES.RESOURCE && (
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: selectedNode.id })}?noRedirect`} target="_blank">
                         <Tooltip content="View resource">
@@ -51,7 +51,7 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
         {selectedNode.data._class === ENTITIES.RESOURCE && (
             <>
                 {selectedNode.data.classes?.length > 0 && (
-                    <div className="text-muted small">
+                    <div className="text-gray-500 text-sm">
                         Instance of{' '}
                         <span>
                             {selectedNode.data.classes.map((c, index) => (
@@ -67,7 +67,7 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 )}
 
                 <hr />
-                <ButtonGroup className="d-flex">
+                <ButtonGroup className="flex">
                     <Button
                         disabled={!nodes.find((node) => node.id === selectedNode.id).data.hasObjectStatements}
                         color="primary"

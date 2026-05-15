@@ -1,23 +1,11 @@
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Chip } from '@heroui/react';
 import type { GroupBase } from 'react-select';
 import { components, MenuProps } from 'react-select';
-import styled from 'styled-components';
 
 import { useAutocompleteDispatch, useAutocompleteState } from '@/components/Autocomplete/AutocompleteContext';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Badge from '@/components/Ui/Badge/Badge';
-import Button from '@/components/Ui/Button/Button';
-
-export const StyledMenuListFooter = styled.div`
-    background-color: ${(props) => props.theme.bodyBg};
-    border-bottom: 1px solid ${(props) => props.theme.bodyBg};
-    color: ${(props) => props.theme.bodyColor};
-    border-radius: 0 0 4px 4px;
-    font-size: 12px;
-    line-height: 12px;
-    cursor: default;
-`;
 
 const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends boolean = false>(props: MenuProps<OptionType, IsMulti, Group>) => {
     const dispatch = useAutocompleteDispatch();
@@ -28,28 +16,27 @@ const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends b
     return (
         <components.Menu<OptionType, IsMulti, Group> {...props}>
             <div>{children}</div>
-
-            <StyledMenuListFooter className="d-flex justify-content-between align-items-center p-1">
-                <div className="d-flex align-items-center flex-grow-1">
+            <div className="bg-surface-secondary text-foreground rounded-b text-xs leading-3 cursor-default flex justify-between items-center p-1">
+                <div className="flex items-center grow">
                     {selectProps.enableExternalSources && (
                         <>
-                            <div className="ps-2 align-items-center d-flex">
+                            <div className="pl-2 items-center flex">
                                 Sources
                                 <div className="overflow-hidden">
                                     {selectedOntologies.map((ontology) => (
                                         <Tooltip
                                             key={ontology.id}
                                             content={
-                                                <div className="text-break">
+                                                <div className="break-all">
                                                     <strong>Label:</strong> {ontology.label} <br />
                                                     <strong>URI:</strong> {ontology.uri}
                                                 </div>
                                             }
                                         >
                                             <span>
-                                                <Badge color="light-darker text-black ms-2 rounded-pill" size="sm">
+                                                <Chip size="sm" variant="soft" className="ml-2">
                                                     {ontology.shortLabel}
-                                                </Badge>
+                                                </Chip>
                                             </span>
                                         </Tooltip>
                                     ))}
@@ -57,21 +44,32 @@ const Menu = <OptionType, Group extends GroupBase<OptionType>, IsMulti extends b
                             </div>
 
                             <Tooltip content="Select sources">
-                                <span>
-                                    <Button color="light-darker" className="px-2 py-0 ms-2" onClick={toggle} size="sm">
-                                        <FontAwesomeIcon icon={faGear} size="sm" />
-                                    </Button>
-                                </span>
+                                <button
+                                    type="button"
+                                    className="px-2 py-0 ml-2 text-sm bg-default hover:bg-surface-tertiary text-foreground rounded cursor-pointer"
+                                    onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        toggle();
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faGear} size="sm" />
+                                </button>
                             </Tooltip>
                         </>
                     )}
                 </div>
-                <div className="me-2 my-1">
-                    <a href="https://www.orkg.org/help-center/article/12/Tips_for_the_ORKG_Autocomplete" target="_blank" rel="noopener noreferrer">
+                <div className="mr-2 my-1">
+                    <a
+                        href="https://www.orkg.org/help-center/article/12/Tips_for_the_ORKG_Autocomplete"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent hover:underline"
+                    >
                         Search syntax tips
                     </a>
                 </div>
-            </StyledMenuListFooter>
+            </div>
         </components.Menu>
     );
 };

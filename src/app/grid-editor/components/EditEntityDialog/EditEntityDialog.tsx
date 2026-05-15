@@ -1,18 +1,12 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Input, Label, Modal, TextField } from '@heroui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 
 import useEditEntity from '@/app/grid-editor/hooks/useEditEntity';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import Button from '@/components/Ui/Button/Button';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { Thing } from '@/services/backend/things';
@@ -25,81 +19,82 @@ type EditEntityDialogProps = {
     fixedClasses?: string[];
 };
 
+const TYPE_TITLE: Record<string, string> = {
+    [ENTITIES.CLASS]: 'class',
+    [ENTITIES.PREDICATE]: 'property',
+    [ENTITIES.RESOURCE]: 'resource',
+};
+
 const EditEntityDialog: FC<EditEntityDialogProps> = ({ entity, isOpen, toggle, fixedClasses }) => {
     const { draftClasses, label, isLoading, isSaving, handleChangeClasses, setLabel, handleSave } = useEditEntity(entity);
 
-    const typeTitle = {
-        [ENTITIES.CLASS]: 'class',
-        [ENTITIES.PREDICATE]: 'property',
-        [ENTITIES.RESOURCE]: 'resource',
-        default: 'entity',
-    };
+    const typeLabel = TYPE_TITLE[entity._class] ?? 'entity';
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle} size="lg">
-            <ModalHeader toggle={toggle}>
-                Edit {typeTitle[entity._class]}
-                <Link
-                    className="tw:absolute tw:right-11 tw:top-3 tw:ml-2"
-                    href={getLinkByEntityType(entity._class, entity?.id)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Button color="link" className="tw:p-0">
-                        Open {typeTitle[entity._class]} <FontAwesomeIcon icon={faExternalLinkAlt} className="tw:mr-1" />
-                    </Button>
-                </Link>
-            </ModalHeader>
-            <ModalBody>
-                <FormGroup>
-                    <Label for="label">Label</Label>
-                    <Input
-                        id="label"
-                        name="label"
-                        placeholder={`${typeTitle[entity._class]} label`}
-                        type="text"
-                        maxLength={MAX_LENGTH_INPUT}
-                        value={label}
-                        onChange={(e) => setLabel(e.target.value)}
-                    />
-                </FormGroup>
-                {entity._class === ENTITIES.RESOURCE && (
-                    <FormGroup>
-                        <Label for="label">Classes</Label>
-                        <Autocomplete
-                            entityType={ENTITIES.CLASS}
-                            onChange={(selected, action) => {
-                                if (action.removedValue && action.removedValue.isFixed) {
-                                    return;
-                                }
-                                handleChangeClasses(selected, action);
+        <Modal.Backdrop isOpen={isOpen} onOpenChange={toggle}>
+            <Modal.Container size="lg">
+                <Modal.Dialog>
+                    <Modal.CloseTrigger />
+                    <Modal.Header>
+                        <div className="flex items-center justify-between gap-3 pe-8">
+                            <Modal.Heading>Edit {typeLabel}</Modal.Heading>
+                            <Link
+                                href={getLinkByEntityType(entity._class, entity?.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm inline-flex items-center gap-1 shrink-0"
+                            >
+                                Open {typeLabel} <FontAwesomeIcon icon={faExternalLinkAlt} className="text-xs" />
+                            </Link>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body className="flex flex-col gap-4 p-1">
+                        <TextField fullWidth name="label" value={label} onChange={setLabel}>
+                            <Label>Label</Label>
+                            <Input placeholder={`${typeLabel} label`} maxLength={MAX_LENGTH_INPUT} />
+                        </TextField>
+
+                        {entity._class === ENTITIES.RESOURCE && (
+                            <div className="flex flex-col gap-1">
+                                <Label htmlFor="classes-autocomplete">Classes</Label>
+                                <Autocomplete
+                                    entityType={ENTITIES.CLASS}
+                                    onChange={(selected, action) => {
+                                        if (action.removedValue && action.removedValue.isFixed) {
+                                            return;
+                                        }
+                                        handleChangeClasses(selected, action);
+                                    }}
+                                    placeholder="Specify the classes of the resource"
+                                    value={draftClasses}
+                                    openMenuOnFocus
+                                    allowCreate
+                                    isMulti
+                                    enableExternalSources
+                                    fixedOptions={fixedClasses}
+                                    inputId="classes-autocomplete"
+                                />
+                            </div>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onPress={toggle}>
+                            Cancel
+                        </Button>
+                        <ButtonWithLoading
+                            isLoading={isSaving || isLoading}
+                            variant="primary"
+                            onPress={async () => {
+                                await handleSave();
+                                toggle();
                             }}
-                            placeholder="Specify the classes of the resource"
-                            value={draftClasses}
-                            openMenuOnFocus
-                            allowCreate
-                            isMulti
-                            enableExternalSources
-                            fixedOptions={fixedClasses}
-                            inputId="classes-autocomplete"
-                        />
-                    </FormGroup>
-                )}
-                <div className="tw:flex tw:justify-end">
-                    <ButtonWithLoading
-                        isLoading={isSaving || isLoading}
-                        color="primary"
-                        className="tw:mt-2 tw:mb-2"
-                        onClick={async () => {
-                            await handleSave();
-                            toggle();
-                        }}
-                    >
-                        Save
-                    </ButtonWithLoading>
-                </div>
-            </ModalBody>
-        </Modal>
+                        >
+                            Save
+                        </ButtonWithLoading>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

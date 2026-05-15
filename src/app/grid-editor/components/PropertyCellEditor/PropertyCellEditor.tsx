@@ -71,20 +71,20 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
 
     return (
         <div
-            className="custom-cell-editor tw:bg-white tw:w-[500px] tw:min-w-[500px] tw:h-full tw:flex tw:flex-col tw:p-1 tw:gap-1 tw:relative tw:z-[100]"
+            className="custom-cell-editor bg-white w-[500px] min-w-[500px] h-full flex flex-col p-1 gap-1 relative z-[100]"
             style={{ minHeight: ROW_HEIGHT }}
             onKeyDown={handleKeyDown}
             role="textbox"
             tabIndex={0}
         >
             {isLoading && (
-                <div className="tw:flex tw:items-center tw:justify-center tw:h-full tw:w-full">
+                <div className="flex items-center justify-center h-full w-full">
                     <FontAwesomeIcon icon={faSpinner} spin />
                 </div>
             )}
             {!isLoading && (
-                <div className="tw:flex tw:items-center tw:w-full">
-                    <InputGroup size="sm" className="tw:flex-grow-1 tw:flex-nowrap">
+                <div className="flex items-center w-full">
+                    <InputGroup size="sm" className="flex-grow-1 flex-nowrap">
                         <Autocomplete
                             entityType={ENTITIES.PREDICATE}
                             size="sm"
@@ -110,7 +110,7 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
                                     setInputValue(newValue);
                                 }
                             }}
-                            className="tw:flex-1 tw:min-w-0"
+                            className="flex-1 min-w-0"
                             menuPortalTarget={document.body}
                         />
                         <SmartPropertyGuidelinesCheck label={inputValue} />
@@ -118,7 +118,7 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
                             size="sm"
                             type="submit"
                             color="secondary"
-                            className="tw:px-2"
+                            className="px-2"
                             onClick={() => {
                                 stopEditing();
                             }}

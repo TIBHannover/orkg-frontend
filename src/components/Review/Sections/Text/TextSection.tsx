@@ -1,10 +1,6 @@
-import DOMPurify from 'isomorphic-dompurify';
 import { FC, useCallback, useContext, useEffect, useMemo } from 'react';
-import * as Showdown from 'showdown';
-import footnotes from 'showdown-footnotes';
 
-import showdownVideoPlugin from '@/components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
-import { MarkdownContainer } from '@/components/ArticleBuilder/MarkdownEditor/styled';
+import MarkdownRenderer from '@/components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { reviewContext } from '@/components/Review/context/ReviewContext';
 import useReview from '@/components/Review/hooks/useReview';
 
@@ -13,7 +9,6 @@ import useReview from '@/components/Review/hooks/useReview';
  * Markdown renderer, takes care of sanitation to prevent XSS injections
  * and configures the markdown to HTML parser
  */
-/* TODO: secure ADD_ATTR */
 
 type TextSectionProps = {
     text: string | null;
@@ -26,7 +21,11 @@ const TextSection: FC<TextSectionProps> = ({ text = null, sectionId }) => {
 
     const referenceRegex = useMemo(() => /\[@(.*?)\]/gi, []);
 
-    const formatReferenceKey = useCallback((key: string) => key.slice(0, -1).slice(2, key.length), []);
+    const formatReferenceKey = useCallback((key: string) => {
+        const content = key.slice(0, -1).slice(2); // strip [@ and ]
+        const idMatch = content.match(/id="([^"]+)"/);
+        return idMatch ? idMatch[1] : content.trim();
+    }, []);
 
     const getReferenceByKey = useCallback(
         (key: string) => {
@@ -41,20 +40,20 @@ const TextSection: FC<TextSectionProps> = ({ text = null, sectionId }) => {
         [parsedReferences],
     );
 
-    const inlineReferences = {
-        type: 'lang',
-        regex: referenceRegex,
-        replace: (referenceKey: string) => {
-            const keyFormatted = formatReferenceKey(referenceKey);
-            const matchingReference = getReferenceByKey(keyFormatted);
-            if (matchingReference) {
-                return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${
-                    matchingReference?.parsedReference?.issued?.['date-parts']?.[0]?.[0] ?? ''
-                }](#reference${keyFormatted}))`;
-            }
-            return '<strong>[?]</strong>';
-        },
-    };
+    const replaceInlineReferences = useCallback(
+        (content: string) =>
+            content.replace(referenceRegex, (referenceKey) => {
+                const keyFormatted = formatReferenceKey(referenceKey);
+                const matchingReference = getReferenceByKey(keyFormatted);
+                if (matchingReference) {
+                    return `([${matchingReference?.parsedReference?.author?.[0]?.family ?? 'Unknown'}, ${
+                        matchingReference?.parsedReference?.issued?.['date-parts']?.[0]?.[0] ?? ''
+                    }](#reference${keyFormatted}))`;
+                }
+                return '<strong>[?]</strong>';
+            }),
+        [formatReferenceKey, getReferenceByKey, referenceRegex],
+    );
 
     useEffect(() => {
         if (!text) {
@@ -79,14 +78,7 @@ const TextSection: FC<TextSectionProps> = ({ text = null, sectionId }) => {
         }));
     }, [formatReferenceKey, getReferenceByKey, referenceRegex, sectionId, setUsedReferences, text]);
 
-    const converter = new Showdown.Converter({
-        openLinksInNewWindow: true,
-        extensions: [footnotes, inlineReferences, showdownVideoPlugin],
-        underline: true, // enabled for backward compatibility, option not visible in toolbar
-    });
-    converter.setFlavor('github');
-
-    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(DOMPurify.sanitize(text ?? '', { ADD_ATTR: ['target'] })) }} />;
+    return <MarkdownRenderer text={replaceInlineReferences(text ?? '')} />;
 };
 
 export default TextSection;

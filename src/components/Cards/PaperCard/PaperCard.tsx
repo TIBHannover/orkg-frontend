@@ -1,11 +1,10 @@
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Checkbox, Chip } from '@heroui/react';
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
-import styled from 'styled-components';
 
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
 import Authors from '@/components/Cards/PaperCard/Authors';
@@ -17,18 +16,11 @@ import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFea
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { CardBadge } from '@/components/styled';
-import Input from '@/components/Ui/Input/Input';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { VISIBILITY } from '@/constants/contentTypes';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Paper, Resource } from '@/services/backend/types';
-
-const PaperCardStyled = styled.div`
-    &.selected {
-        background: ${(props) => props.theme.bodyBg};
-    }
-`;
 
 type PaperCardType = {
     paper: Partial<Paper>;
@@ -79,19 +71,23 @@ const PaperCard: FC<PaperCardType> = ({
     });
 
     return (
-        <PaperCardStyled
-            className={`${isListGroupItem ? 'list-group-item' : ''} d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
-                selected ? 'selected' : ''
-            } py-3`}
-            style={{ flexWrap: 'wrap' }}
+        <div
+            className={`${isListGroupItem ? 'list-group-item' : ''} flex flex-wrap py-4 pr-6 ${showActionButtons ? 'pl-4' : 'pl-6'} ${selected ? 'bg-default' : ''}`}
         >
-            <div className="col-md-9 d-flex p-0">
+            <div className="flex w-full items-start p-0 md:w-9/12 md:shrink-0 md:grow-0 md:basis-9/12 md:max-w-9/12">
                 {renderCoins && <Coins item={paper} />}
                 {showActionButtons && (
-                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                    <div className="mt-0.5 flex w-[25px] shrink-0 flex-col gap-1">
                         {selectable && (
                             <div>
-                                <Input type="checkbox" id={`${paper.id}input`} onChange={onSelect} checked={selected} />
+                                <Checkbox
+                                    id={`${paper.id}input`}
+                                    isSelected={selected}
+                                    onChange={(isSelected: boolean) => {
+                                        const syntheticEvent = { target: { checked: isSelected } } as ChangeEvent<HTMLInputElement>;
+                                        onSelect(syntheticEvent);
+                                    }}
+                                />
                             </div>
                         )}
                         {!selectable && showAddToComparison && !!paper.contributions?.length && (
@@ -111,7 +107,7 @@ const PaperCard: FC<PaperCardType> = ({
                         )}
                     </div>
                 )}
-                <div className="d-flex flex-column flex-grow-1">
+                <div className="flex grow flex-col">
                     <div className="mb-2">
                         <Link
                             target={linkTarget || undefined}
@@ -125,27 +121,29 @@ const PaperCard: FC<PaperCardType> = ({
                             <PaperTitle title={paper.title} />
                         </Link>
                         {showBadge && (
-                            <div className="d-inline-block ms-2">
-                                <CardBadge color="primary">Paper</CardBadge>
-                            </div>
+                            <span className="ml-2 inline-block align-middle">
+                                <Chip color="accent" variant="primary" size="sm">
+                                    Paper
+                                </Chip>
+                            </span>
                         )}
                     </div>
                     <div>
-                        <div className="d-inline-block d-md-none mt-1 me-1">
+                        <div className="mr-1 mt-1 inline-block md:hidden">
                             {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.research_fields?.[0]} />}
                         </div>
                     </div>
                     <div className="mb-1">
                         <small>
                             {showContributionCount && (
-                                <div className="d-inline-block me-1">
-                                    <FontAwesomeIcon size="sm" icon={faFile} className="me-1" />
+                                <div className="mr-1 inline-block">
+                                    <FontAwesomeIcon size="sm" icon={faFile} className="mr-1 text-muted" />
                                     {pluralize('contribution', paper.contributions?.length, true)}
                                 </div>
                             )}
                             <Authors authors={paper.authors} />
                             {(paper.publication_info?.published_month || paper.publication_info?.published_year) && (
-                                <FontAwesomeIcon size="sm" icon={faCalendar} className="ms-2 me-1" />
+                                <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />
                             )}
                             {paper.publication_info?.published_month && paper.publication_info?.published_month > 0
                                 ? dayjs()
@@ -158,22 +156,22 @@ const PaperCard: FC<PaperCardType> = ({
                     </div>
                 </div>
             </div>
-            <div className="col-md-3 d-flex align-items-end flex-column p-0">
-                <div className="flex-grow-1 mb-1">
-                    <div className="d-none d-md-flex align-items-end justify-content-end">
+            <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
+                <div className="mb-1 grow">
+                    <div className="hidden items-end justify-end md:flex">
                         {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.research_fields?.[0]} />}
                     </div>
                 </div>
                 {showCreator && <UserAvatar userId={paper.created_by} />}
             </div>
             {paths && paths?.length > 0 && (
-                <div className={`${showActionButtons ? 'ps-4' : 'ps-5'} mb-1`}>
+                <div className={`${showActionButtons ? 'pl-6' : 'pl-12'} mb-1`}>
                     <small>
                         <Paths paths={paths} />
                     </small>
                 </div>
             )}
-        </PaperCardStyled>
+        </div>
     );
 };
 

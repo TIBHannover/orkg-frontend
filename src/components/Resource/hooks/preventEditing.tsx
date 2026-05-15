@@ -1,8 +1,9 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert } from '@heroui/react';
 import { env } from 'next-runtime-env';
 
-import Alert from '@/components/Ui/Alert/Alert';
+import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';
 import { Resource } from '@/services/backend/types';
 
@@ -32,7 +33,7 @@ const PREVENT_EDIT_CASES: PreventEditCase[] = [
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="me-1" />
+                        paperswithcode <FontAwesomeIcon icon={faExternalLinkAlt} className="mr-1" />
                     </a>{' '}
                     website to suggest changes.
                 </>
@@ -57,9 +58,17 @@ const PREVENT_EDIT_CASES: PreventEditCase[] = [
     {
         condition: (resource: Resource) => resource.classes.includes(CLASSES.COMPARISON_PUBLISHED),
         warningOnEdit: (
-            <Alert className="container" color="danger">
-                This resource should not be edited because it is published, please make sure that you know what are you doing!
-            </Alert>
+            <Container className="mb-3">
+                <Alert status="danger">
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>Editing a published resource</Alert.Title>
+                        <Alert.Description>
+                            This resource should not be edited because it is published. Please make sure you know what you are doing.
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert>
+            </Container>
         ),
         preventModalProps: () => ({
             header: 'Editing not possible',

@@ -1,15 +1,11 @@
+import { Alert, Button, Modal } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import PathList from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/PathList/PathList';
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalFooter from '@/components/Ui/Modal/ModalFooter';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 import { comparisonUrl, getComparisonTablePaths, updateComparisonContents } from '@/services/backend/comparisons';
 import { ComparisonPath, ComparisonUpdateSelectedPath } from '@/services/backend/types';
 
@@ -45,22 +41,17 @@ const toggleSelectPath = (paths: PathWithSettings[], targetPath: string[]): Path
             return path;
         }
 
-        // target path
         if (targetPath.length === 1) {
             return {
                 ...path,
                 isSelected: !path.isSelected,
-                // deselecting a parent also deselects children
                 children: path.isSelected && path.children ? deselectChildren(path.children) : path.children,
             };
         }
 
         if (path.children) {
             const updatedChildren = toggleSelectPath(path.children, targetPath.slice(1));
-
-            // select parent if any child is selected
             const isAnyChildSelected = updatedChildren.some((child) => child.isSelected);
-
             return {
                 ...path,
                 isSelected: isAnyChildSelected || path.isSelected,
@@ -181,30 +172,46 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
         toggle();
     };
 
+    const isBusy = isLoadingTablePaths || isLoading;
+
+    const handleOpenChange = (open: boolean) => {
+        if (!open && !isBusy) {
+            toggle();
+        }
+    };
+
     return (
-        <ModalWithLoading size="lg" isOpen toggle={toggle} isLoading={isLoadingTablePaths || isLoading}>
-            <ModalHeader toggle={toggle}>Select properties</ModalHeader>
-            <ModalBody>
-                {!isLoadingTablePaths && pathsNew.length > 0 && (
-                    <PathList
-                        paths={pathsNew}
-                        handleReorder={handleReorder}
-                        handleToggleExpandPath={handleToggleExpandPath}
-                        handleSelectPath={handleSelectPath}
-                    />
-                )}
-                {!isLoadingTablePaths && pathsNew.length === 0 && (
-                    <Alert color="info">No properties available for selection. Add sources or edit data from your sources and try again</Alert>
-                )}
-            </ModalBody>
-            {!isLoadingTablePaths && pathsNew.length > 0 && (
-                <ModalFooter>
-                    <Button color="primary" onClick={handleSelect}>
-                        Select
-                    </Button>
-                </ModalFooter>
-            )}
-        </ModalWithLoading>
+        <Modal.Backdrop isOpen onOpenChange={handleOpenChange} isDismissable={!isBusy} isKeyboardDismissDisabled={isBusy}>
+            <Modal.Container size="lg" className="max-h-[calc(100vh-73px)] mt-[73px]">
+                <Modal.Dialog className="max-w-3xl">
+                    <LoadingOverlay isLoading={isBusy} className="rounded" />
+                    <Modal.Header className="flex-row items-center justify-between gap-3">
+                        <Modal.Heading>Select properties</Modal.Heading>
+                        <Modal.CloseTrigger className="static" />
+                    </Modal.Header>
+                    <Modal.Body className="pt-4 pb-2 px-1">
+                        {!isLoadingTablePaths && pathsNew.length > 0 && (
+                            <PathList
+                                paths={pathsNew}
+                                handleReorder={handleReorder}
+                                handleToggleExpandPath={handleToggleExpandPath}
+                                handleSelectPath={handleSelectPath}
+                            />
+                        )}
+                        {!isLoadingTablePaths && pathsNew.length === 0 && (
+                            <Alert status="accent">
+                                No properties available for selection. Add sources or edit data from your sources and try again
+                            </Alert>
+                        )}
+                    </Modal.Body>
+                    {!isLoadingTablePaths && pathsNew.length > 0 && (
+                        <Modal.Footer>
+                            <Button onPress={handleSelect}>Select</Button>
+                        </Modal.Footer>
+                    )}
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

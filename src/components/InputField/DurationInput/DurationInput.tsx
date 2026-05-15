@@ -1,10 +1,7 @@
+import { Input, Label, TextField } from '@heroui/react';
 import { FC, useEffect, useId, useState } from 'react';
 
 import { DurationValues, formatDurationValue, parseDurationString } from '@/components/InputField/DurationInput/helpers';
-import FormGroup from '@/components/Ui/Form/FormGroup';
-import Input from '@/components/Ui/Input/Input';
-import Label from '@/components/Ui/Label/Label';
-import Col from '@/components/Ui/Structure/Col';
 import { DurationType } from '@/constants/DataTypes';
 
 type DurationInputProps = { value: string; onChange: (value: string) => void; type?: DurationType };
@@ -12,14 +9,14 @@ type DurationInputProps = { value: string; onChange: (value: string) => void; ty
 const DurationField: FC<{ label: string; value: string; onChange: (value: string) => void }> = ({ label, value, onChange }) => {
     const fieldId = useId();
     return (
-        <FormGroup row>
-            <Label className="me-2 text-nowrap" style={{ minWidth: '100px' }} for={fieldId} sm={2}>
+        <div className="grid grid-cols-[100px_1fr] items-center gap-2">
+            <Label htmlFor={fieldId} className="text-sm whitespace-nowrap">
                 {label}
             </Label>
-            <Col sm={9}>
-                <Input type="number" min="0" value={value} onChange={(e) => onChange(e.target.value)} className="rounded" id={fieldId} />
-            </Col>
-        </FormGroup>
+            <TextField fullWidth value={value} onChange={onChange}>
+                <Input id={fieldId} type="number" min="0" />
+            </TextField>
+        </div>
     );
 };
 
@@ -55,18 +52,18 @@ const DurationInput: FC<DurationInputProps> = ({ value, onChange, type = 'durati
 
     if (type === 'dayTimeDuration') {
         return (
-            <div>
-                <h6 className="mb-3 fw-bold">Day/time duration</h6>
+            <div className="flex flex-col gap-3">
+                <h6 className="font-bold">Day/time duration</h6>
                 <DurationField label="Days" value={duration.days} onChange={(v) => handleChange('days', v)} />
-                <h6 className="mb-2 mt-3 fw-bold">Time</h6>
+                <h6 className="mt-2 font-bold">Time</h6>
                 <TimeFields duration={duration} onChange={handleChange} />
             </div>
         );
     }
 
     return (
-        <div>
-            <h6 className="mb-3 fw-bold">Period</h6>
+        <div className="flex flex-col gap-3">
+            <h6 className="font-bold">Period</h6>
             {(type === 'duration' || type === 'yearMonthDuration') && (
                 <>
                     <DurationField label="Years" value={duration.years} onChange={(v) => handleChange('years', v)} />
@@ -76,7 +73,7 @@ const DurationInput: FC<DurationInputProps> = ({ value, onChange, type = 'durati
             {type === 'duration' && (
                 <>
                     <DurationField label="Days" value={duration.days} onChange={(v) => handleChange('days', v)} />
-                    <h6 className="mb-2 mt-3 fw-bold">Time</h6>
+                    <h6 className="mt-2 font-bold">Time</h6>
                     <TimeFields duration={duration} onChange={handleChange} />
                 </>
             )}

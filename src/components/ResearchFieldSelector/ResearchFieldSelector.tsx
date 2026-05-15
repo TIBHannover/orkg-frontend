@@ -1,51 +1,18 @@
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Alert, Button, Skeleton } from '@heroui/react';
 import { find, sortBy, uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import styled, { useTheme } from 'styled-components';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import ContentLoader from '@/components/ContentLoader/ContentLoader';
 import FieldStatistics from '@/components/ResearchFieldSelector/FieldStatistics';
 import PreviouslySelectedResearchField from '@/components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from '@/components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
-import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
 import { FieldChildren, getFieldChildren, getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Node } from '@/services/backend/types';
-
-const FieldItem = styled(Button)`
-    &&& {
-        // &&& https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
-        background: ${(props) => props.theme.light};
-        border-radius: 6px;
-        padding: 6px 7px;
-        margin-bottom: 4px;
-        width: 100%;
-        text-align: left;
-        display: flex;
-        text-decoration: none;
-        color: inherit;
-        transition: none;
-
-        &.active {
-            background: ${(props) => props.theme.secondary};
-            color: #fff;
-        }
-
-        &:focus {
-            box-shadow: 0 0 0 0.2rem rgba(232, 97, 97, 0.25);
-        }
-
-        &:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-    }
-`;
 
 export type ResearchField = {
     label: string;
@@ -74,7 +41,6 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
     abstract = '',
     showStatistics = false,
 }) => {
-    const theme = useTheme();
     const [loadingSubFieldsId, setLoadingSubFieldsId] = useState<string | null>(null);
     const [researchFields, setResearchFields] = useState<ResearchField[]>([]);
 
@@ -195,10 +161,20 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                 icon = faPlusSquare;
             }
 
+            const isActive = selectedResearchFieldId === field.id;
+
             return (
                 <li key={field.id}>
-                    <FieldItem onClick={() => handleFieldClick(field)} color="link" className={selectedResearchFieldId === field.id ? 'active' : ''}>
-                        <div className="flex-grow-1 d-flex">
+                    <button
+                        type="button"
+                        onClick={() => handleFieldClick(field)}
+                        className={`w-full rounded-md px-2 py-1.5 mb-1 flex items-center text-left text-sm transition-none min-w-0 ${
+                            isActive
+                                ? 'bg-[var(--color-secondary)] text-white'
+                                : 'bg-[var(--background)] text-inherit hover:bg-[var(--surface)] focus:ring-2 focus:ring-[var(--color-secondary)]/25'
+                        } disabled:opacity-60 disabled:cursor-not-allowed`}
+                    >
+                        <div className="grow flex items-center min-w-0">
                             <div
                                 role="button"
                                 tabIndex={0}
@@ -212,21 +188,17 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                                         handleFieldClick(field, false);
                                     }
                                 }}
-                                className="w-10 me-2 text-center"
+                                className="w-8 shrink-0 mr-2 text-center"
                             >
                                 {field.hasChildren && (
-                                    <FontAwesomeIcon
-                                        icon={icon}
-                                        spin={_isLoading}
-                                        className={selectedResearchFieldId !== field.id ? 'text-secondary' : ''}
-                                    />
+                                    <FontAwesomeIcon icon={icon} spin={_isLoading} className={!isActive ? 'text-[var(--color-secondary)]' : ''} />
                                 )}
                             </div>
-                            {find(path, (pId) => pId === field.id) ? <b>{field.label}</b> : field.label}
+                            <span className="truncate">{find(path, (pId) => pId === field.id) ? <b>{field.label}</b> : field.label}</span>
                         </div>
                         {showStatistics && <FieldStatistics field={field} />}
-                    </FieldItem>
-                    {field.isExpanded && !_isLoading && <ul className="ps-3 list-unstyled">{fieldList(field.id)}</ul>}
+                    </button>
+                    {field.isExpanded && !_isLoading && <ul className="pl-4 list-none">{fieldList(field.id)}</ul>}
                 </li>
             );
         });
@@ -234,7 +206,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
 
     return (
         <>
-            <div className="mb-3">
+            <div className="mb-4">
                 <Autocomplete
                     entityType={ENTITIES.RESOURCE}
                     includeClasses={[CLASSES.RESEARCH_FIELD]}
@@ -253,52 +225,46 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                     aria-label="Search research fields"
                 />
             </div>
-
-            <div className="row">
-                <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
+            <div className="flex flex-wrap items-stretch">
+                <div
+                    className={`${insideModal ? 'shrink-0 grow-0 w-12/12 basis-12/12 max-w-12/12' : 'w-full md:shrink-0 md:grow-0 md:w-4/12 md:basis-4/12 md:max-w-4/12 order-md-2'}`}
+                >
                     <SmartSuggestionsFields handleFieldSelect={handleFieldSelect} title={title} abstract={abstract} />
                     {showPreviouslySelected && (
                         <PreviouslySelectedResearchField selectedResearchField={selectedResearchFieldId} handleFieldSelect={handleFieldSelect} />
                     )}
                 </div>
 
-                <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
+                <div
+                    className={`${insideModal || !showPreviouslySelected ? 'shrink-0 grow-0 w-12/12 basis-12/12 max-w-12/12' : 'w-full md:shrink-0 md:grow-0 md:w-8/12 md:basis-8/12 md:max-w-8/12 order-md-1'} overflow-hidden`}
+                >
                     {!isParentLoading && path.length === 1 && selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN && (
-                        <Alert color="info">This research field is not part of the ORKG taxonomy.</Alert>
+                        <Alert status="accent">This research field is not part of the ORKG taxonomy.</Alert>
                     )}
-                    <div className="d-flex">
-                        <h3 className="fw-bold h6 mt-1 mb-0">Browse taxonomy</h3>
+                    <div className="flex">
+                        <h3 className="font-bold text-lg mt-1 mb-0">Browse taxonomy</h3>
                         <Button
                             size="sm"
-                            color="link"
-                            disabled={!find(researchFields, (f) => f.isExpanded)}
-                            className="ms-auto text-decoration-none p-0"
-                            onClick={() => setResearchFields((v) => v.map((f) => ({ ...f, isExpanded: false })))}
+                            variant="ghost"
+                            isDisabled={!find(researchFields, (f) => f.isExpanded)}
+                            className="ms-auto p-0 text-[var(--color-secondary)]"
+                            onPress={() => setResearchFields((v) => v.map((f) => ({ ...f, isExpanded: false })))}
                             aria-label="Collapse all fields"
-                            style={{ color: theme.secondary }}
                         >
-                            <FontAwesomeIcon icon={faMinusSquare} className="me-1" />
-                            <span className="text-decoration-underline">Collapse all</span>
+                            <FontAwesomeIcon icon={faMinusSquare} className="mr-1" />
+                            <span className="underline">Collapse all</span>
                         </Button>
                     </div>
                     {!researchFields && isLoading ? (
-                        <div>
-                            <ContentLoader
-                                width="100%"
-                                speed={2}
-                                viewBox="0 0 100 30"
-                                style={{ width: '100% !important' }}
-                                aria-label="Loading research fields"
-                            >
-                                <rect x="0" y="0" rx="1" ry="1" width="100" height="5" />
-                                <rect x="0" y="6" rx="1" ry="1" width="100" height="5" />
-                                <rect x="0" y="12" rx="1" ry="1" width="100" height="5" />
-                                <rect x="0" y="18" rx="1" ry="1" width="100" height="5" />
-                                <rect x="0" y="24" rx="1" ry="1" width="100" height="5" />
-                            </ContentLoader>
+                        <div className="flex flex-col gap-2" aria-label="Loading research fields">
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-full h-5 rounded" />
+                            <Skeleton className="w-full h-5 rounded" />
                         </div>
                     ) : (
-                        <ul className="pt-3 list-unstyled" role="tree" aria-label="Research field hierarchy">
+                        <ul className="pt-4 list-none overflow-hidden" role="tree" aria-label="Research field hierarchy">
                             {fieldList(RESOURCES.RESEARCH_FIELD_MAIN)}
                         </ul>
                     )}

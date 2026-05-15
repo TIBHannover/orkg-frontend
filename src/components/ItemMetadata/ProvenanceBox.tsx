@@ -1,6 +1,6 @@
 import { faBinoculars, faPen, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
+import { Chip } from '@heroui/react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -8,8 +8,8 @@ import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import useProvenance from '@/components/ItemMetadata/hooks/useProvenance';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
-import Badge from '@/components/Ui/Badge/Badge';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Thing } from '@/services/backend/things';
 
 type ProvenanceBoxProps = {
@@ -34,26 +34,22 @@ function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBox
     return (
         <>
             {organization && (
-                <Badge color="light" className="me-2 mt-2">
-                    <FontAwesomeIcon icon={faUsers} /> Organization
-                    <span className="ms-1">
+                <Chip color="default">
+                    <FontAwesomeIcon icon={faUsers} className="text-muted" /> Organization
+                    <span className="ml-1">
                         <Link href={reverse(ROUTES.ORGANIZATION, { type: organization.type, id: organization.display_id })}>{organization.name}</Link>
                     </span>
-                </Badge>
+                </Chip>
             )}
             {observatory && (
-                <Badge color="light" className="me-2 mt-2">
-                    <FontAwesomeIcon icon={faBinoculars} /> Observatory
-                    <span className="ms-1">
+                <Chip color="default">
+                    <FontAwesomeIcon icon={faBinoculars} className="text-muted" /> Observatory
+                    <span className="ml-1">
                         <Link href={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                     </span>
-                </Badge>
+                </Chip>
             )}
-            {editMode && isCurationAllowed && !organization && !observatory && (
-                <Badge color="light" className="me-2 mt-2">
-                    Not assigned to any observatory
-                </Badge>
-            )}
+            {editMode && isCurationAllowed && !organization && !observatory && <Chip color="default">Not assigned to any observatory</Chip>}
             {editMode && isCurationAllowed && (
                 <ActionButton title="Edit provenance" icon={faPen} action={() => setShowAssignObservatory((v) => !v)} />
             )}

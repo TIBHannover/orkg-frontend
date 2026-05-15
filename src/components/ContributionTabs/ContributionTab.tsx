@@ -1,49 +1,12 @@
 import { faCheck, faClose, faPen, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ChangeEvent, FC, KeyboardEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { Button, Input } from '@heroui/react';
+import { ChangeEvent, FC, KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { ActionButton } from '@/components/ContributionTabs/styled';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Button from '@/components/Ui/Button/Button';
-import Input from '@/components/Ui/Input/Input';
-import InputGroup from '@/components/Ui/Input/InputGroup';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import MathJax from '@/components/ValuePlugins/MathJax/MathJax';
 import { Resource } from '@/services/backend/types';
-
-export const StyledInput = styled(Input)`
-    background: #fff;
-    color: ${(props) => props.theme.primary};
-    outline: 0;
-    border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
-    border-radius: 0;
-    padding: 0 4px;
-    display: inline-block;
-    min-width: 200px;
-    margin-bottom: 0;
-    width: 200px;
-    flex: 0 0 auto;
-    vertical-align: middle;
-
-    /* Increase specificity to override Bootstrap's .input-group > .form-control */
-    && {
-        flex: 0 0 auto;
-        width: 200px;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-
-    &:focus {
-        background: #fff;
-        color: ${(props) => props.theme.primary};
-        outline: 0;
-        border: dotted 2px ${(props) => props.theme.listGroupBorderColor};
-        padding: 0 4px;
-        border-radius: 0;
-        display: inline-block;
-    }
-`;
 
 type ContributionTabProps = {
     contribution: Resource & { statementId: string };
@@ -74,13 +37,12 @@ const ContributionTab: FC<ContributionTabProps> = ({
     }, [contribution.label]);
 
     return (
-        <div className="tw:flex tw:items-center">
+        <div className="flex items-center min-h-8">
             {isEditing && (
-                <InputGroup className="tw:!inline-flex tw:items-center tw:!flex-nowrap">
-                    <StyledInput
-                        bsSize="sm"
+                <div className="inline-flex items-stretch flex-nowrap h-8">
+                    <Input
                         type="text"
-                        innerRef={refInput}
+                        ref={refInput}
                         value={draftLabel}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setDraftLabel(e.target.value)}
                         onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -95,47 +57,45 @@ const ContributionTab: FC<ContributionTabProps> = ({
                         }}
                         autoFocus
                         onFocus={() =>
-                            // Highlights the entire label when edit
                             setTimeout(() => {
                                 refInput.current?.select();
                             }, 0)
                         }
+                        className="w-[200px] !h-8 rounded-e-none bg-surface text-foreground"
                     />
                     <Button
                         size="sm"
-                        type="submit"
-                        color="secondary"
-                        className="tw:!px-2"
-                        onClick={() => {
+                        variant="secondary"
+                        className="px-2 !h-8 rounded-none -ms-px"
+                        onPress={() => {
                             setIsEditing(false);
                         }}
-                        title="Cancel"
+                        aria-label="Cancel"
                     >
                         <FontAwesomeIcon icon={faClose} />
                     </Button>
                     <Button
-                        className="tw:!px-2"
                         size="sm"
-                        type="submit"
-                        color="primary"
-                        onClick={async () => {
+                        variant="primary"
+                        className="px-2 !h-8 rounded-s-none -ms-px"
+                        onPress={async () => {
                             setIsSaving(true);
                             await handleChangeContributionLabel(contribution.id, draftLabel);
                             setIsSaving(false);
                             setIsEditing(false);
                         }}
-                        title="Save"
+                        aria-label="Save"
                     >
                         <FontAwesomeIcon icon={faCheck} />
                     </Button>
-                </InputGroup>
+                </div>
             )}
             {!isEditing && (
                 <ConditionalWrapper
                     condition={contribution.label?.length > 40}
                     wrapper={(children: ReactNode) => <Tooltip content={contribution.label}>{children}</Tooltip>}
                 >
-                    <div className="tw:truncate tw:inline-block tw:py-1" style={{ maxWidth: 300 }}>
+                    <div className="truncate inline-flex items-center h-8" style={{ maxWidth: 300 }}>
                         <MathJax text={contribution.label} />
                     </div>
                 </ConditionalWrapper>
@@ -143,13 +103,17 @@ const ContributionTab: FC<ContributionTabProps> = ({
             {enableEdit && !isEditing && (
                 <>
                     {canDelete && isSelected && (
-                        <span className="tw:inline-block tw:ml-1 tw:mr-1">
+                        <span className="inline-block ml-1 mr-1">
                             <Tooltip content="Delete contribution">
                                 <span>
-                                    <ActionButton
-                                        color="link"
-                                        disabled={isSaving || isDeleting}
-                                        onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        isIconOnly
+                                        aria-label="Delete contribution"
+                                        isDisabled={isSaving || isDeleting}
+                                        className="!min-w-0 !h-8 px-1 text-inherit"
+                                        onClick={async (e: React.MouseEvent) => {
                                             e.stopPropagation();
                                             setIsDeleting(true);
                                             await toggleDeleteContribution(contribution.id);
@@ -157,24 +121,28 @@ const ContributionTab: FC<ContributionTabProps> = ({
                                         }}
                                     >
                                         <FontAwesomeIcon icon={!isDeleting ? faTrash : faSpinner} spin={isDeleting} />
-                                    </ActionButton>
+                                    </Button>
                                 </span>
                             </Tooltip>
                         </span>
                     )}
                     {isSelected && (
-                        <span className="tw:inline-block tw:ml-1">
+                        <span className="inline-block ml-1">
                             <Tooltip content="Edit the contribution label">
                                 <span>
-                                    <ActionButton
-                                        color="link"
-                                        disabled={isSaving || isDeleting}
-                                        onClick={() => {
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        isIconOnly
+                                        aria-label="Edit contribution label"
+                                        isDisabled={isSaving || isDeleting}
+                                        className="!min-w-0 !h-8 px-1 text-inherit"
+                                        onPress={() => {
                                             setIsEditing(true);
                                         }}
                                     >
                                         <FontAwesomeIcon icon={!isSaving ? faPen : faSpinner} spin={isSaving} />
-                                    </ActionButton>
+                                    </Button>
                                 </span>
                             </Tooltip>
                         </span>

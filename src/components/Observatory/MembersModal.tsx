@@ -1,13 +1,12 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Dispatch, FC, SetStateAction } from 'react';
+import { faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Modal } from '@heroui/react';
+import { Dispatch, FC, SetStateAction, useEffect } from 'react';
 
-import ContributorCard from '@/components/Cards/ContributorCard/ContributorCard';
+import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import MemberRow from '@/components/Observatory/MemberRow';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
-import ModalHeader from '@/components/Ui/Modal/ModalHeader';
 import { getUsersByObservatoryId, observatoriesUrl } from '@/services/backend/observatories';
 import { Contributor, Organization } from '@/services/backend/types';
 
@@ -43,60 +42,84 @@ const MembersModal: FC<MembersModalProps> = ({ observatoryId, organizationsList,
         prefixParams: 'members_',
     });
 
-    const renderListItem = (member: Contributor, lastItem?: boolean) => (
-        <div key={`member${member.id}`}>
-            <ContributorCard
-                id={member.id}
-                subTitle={organizationsList.find((o) => o.id.includes(member.organizationId))?.name}
-                options={
-                    isEditMode && !!user && user.isCurationAllowed
-                        ? [
-                              {
-                                  title: 'Delete this member from the observatory',
-                                  action: () => deleteObservatoryMember(member),
-                                  icon: faTrash,
-                                  requireConfirmation: true,
-                              },
-                          ]
-                        : []
-                }
-            />
-            {!lastItem && <hr style={{ width: '90%', margin: '10px auto' }} />}
-        </div>
+    useEffect(
+        () => () => {
+            setPage(0);
+            setPageSize(10);
+        },
+        [setPage, setPageSize],
+    );
+
+    const canDelete = isEditMode && !!user && user.isCurationAllowed;
+
+    const renderListItem = (member: Contributor) => (
+        <MemberRow
+            key={`member${member.id}`}
+            member={member}
+            organizationsList={organizationsList}
+            className="px-2 py-3 border-b border-border last:border-b-0"
+            actions={
+                canDelete ? (
+                    <ActionButton
+                        title="Delete this member from the observatory"
+                        icon={faTrash}
+                        requireConfirmation
+                        confirmationMessage="Are you sure?"
+                        confirmationButtons={[
+                            {
+                                title: 'Delete',
+                                color: 'danger',
+                                icon: faCheck,
+                                action: () => deleteObservatoryMember(member),
+                            },
+                            {
+                                title: 'Cancel',
+                                color: 'secondary',
+                                icon: faTimes,
+                            },
+                        ]}
+                    />
+                ) : null
+            }
+        />
     );
 
     return (
-        <Modal
+        <Modal.Backdrop
             isOpen={openModal}
-            toggle={() => setOpenModal((v) => !v)}
-            size="lg"
-            onExit={() => {
-                setPage(0);
-                setPageSize(10);
+            onOpenChange={(open) => {
+                if (!open) setOpenModal(false);
             }}
+            isDismissable
         >
-            <ModalHeader toggle={() => setOpenModal((v) => !v)}>Observatory members</ModalHeader>
-            <ModalBody>
-                <div className="clearfix">
-                    <ListPaginatedContent<Contributor>
-                        renderListItem={renderListItem}
-                        pageSize={pageSize}
-                        label="members"
-                        isLoading={isLoading}
-                        items={items ?? []}
-                        hasNextPage={hasNextPage}
-                        page={page}
-                        setPage={setPage}
-                        setPageSize={setPageSize}
-                        totalElements={totalElements}
-                        error={error}
-                        totalPages={totalPages}
-                        boxShadow={false}
-                        prefixParams="members_"
-                    />
-                </div>
-            </ModalBody>
-        </Modal>
+            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+                <Modal.Dialog className="max-w-2xl">
+                    <Modal.Header>
+                        <Modal.CloseTrigger />
+                        <Modal.Heading>Observatory members</Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ListPaginatedContent<Contributor>
+                            renderListItem={renderListItem}
+                            pageSize={pageSize}
+                            label="members"
+                            isLoading={isLoading}
+                            items={items ?? []}
+                            hasNextPage={hasNextPage}
+                            page={page}
+                            setPage={setPage}
+                            setPageSize={setPageSize}
+                            totalElements={totalElements}
+                            error={error}
+                            totalPages={totalPages}
+                            boxShadow={false}
+                            flush={false}
+                            prefixParams="members_"
+                        />
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 };
 

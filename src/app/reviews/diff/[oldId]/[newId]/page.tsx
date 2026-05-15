@@ -1,7 +1,6 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { reverse } from 'named-urls';
 
 import DiffView from '@/components/DiffView/DiffView';
 import useDiff from '@/components/DiffView/useDiff';
@@ -9,6 +8,7 @@ import Tooltip from '@/components/FloatingUI/Tooltip';
 import useReview from '@/components/Review/hooks/useReview';
 import useParams from '@/components/useParams/useParams';
 import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { Review } from '@/services/backend/types';
 
 const ReviewDiff = () => {
@@ -43,7 +43,11 @@ const ReviewDiff = () => {
     };
 
     const getData = async () => {
-        if (!oldReview || !newReview || oldReview.versions.head?.id !== newReview.versions.head?.id) {
+        if (!oldReview || !newReview) {
+            // Data still loading from SWR — stay in loading state until the next render provides a resolved getData.
+            return new Promise<never>(() => {});
+        }
+        if (oldReview.versions.head?.id !== newReview.versions.head?.id) {
             throw new Error('Reviews not found');
         }
         return {

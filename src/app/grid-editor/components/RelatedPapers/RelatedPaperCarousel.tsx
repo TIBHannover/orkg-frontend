@@ -1,14 +1,12 @@
+import { faExternalLinkAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Card } from '@heroui/react';
 import React, { useState } from 'react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
 
 import RelatedPaperModal from '@/app/grid-editor/components/RelatedPapers/RelatedPaperModal';
-import Button from '@/components/Ui/Button/Button';
-import Card from '@/components/Ui/Card/Card';
-import CardBody from '@/components/Ui/Card/CardBody';
-import CardText from '@/components/Ui/Card/CardText';
-import CardTitle from '@/components/Ui/Card/CardTitle';
 import { getSimilarPapers, GetSimilarPapersParams, similarPaperURL } from '@/services/orkgSimpaper';
 import { SimilarPaper } from '@/services/orkgSimpaper/types';
 
@@ -33,99 +31,74 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
     }
 
     return (
-        <div className="py-3 mb-5">
-            <div className="d-flex mb-3 mt-4">
+        <section className="py-4 mb-12">
+            <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4 mt-6">
                 <h5 className="m-0">Add related papers</h5>
-                <div className="ms-2">
-                    | Search supported by{' '}
-                    <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer">
+                <span className="text-sm text-muted">
+                    Search supported by{' '}
+                    <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer" className="font-medium">
                         Semantic Scholar
                     </a>
-                </div>
-            </div>
+                </span>
+            </header>
 
-            <div>
-                <Swiper
-                    slidesPerView={3}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    navigation
-                    modules={[Pagination, Navigation]}
-                    className="orkgSwiper"
-                >
-                    {similarPaperList.map((paper) => (
-                        <SwiperSlide className="pb-4" key={paper?.title} style={{ width: '33%' }}>
-                            <Card>
-                                <CardBody
-                                    className="bg-smart"
-                                    style={{
-                                        height: '150px',
-                                        borderRadius: '5px',
-                                        padding: '5px 10px',
-                                        color: 'white',
+            <Swiper
+                slidesPerView={1}
+                spaceBetween={16}
+                breakpoints={{
+                    640: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                }}
+                pagination={{ clickable: true }}
+                navigation
+                modules={[Pagination, Navigation]}
+                className="orkgSwiper"
+            >
+                {similarPaperList.map((paper) => (
+                    <SwiperSlide className="pb-10 h-auto" key={paper?.title}>
+                        <Card className="h-full min-h-[180px] flex flex-col gap-2 bg-smart text-white border-0">
+                            <Card.Header className="gap-1">
+                                <Card.Title className="text-sm font-semibold leading-snug line-clamp-2 text-white pr-2">{paper?.title}</Card.Title>
+                            </Card.Header>
+                            {paper?.abstract && (
+                                <Card.Content className="flex-1">
+                                    <p className="text-xs leading-relaxed line-clamp-3 text-white/85">{paper.abstract}</p>
+                                </Card.Content>
+                            )}
+                            <Card.Footer className="mt-auto flex items-center justify-between gap-2">
+                                {paper?.abstract ? (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="!bg-transparent !p-0 h-auto min-h-0 text-white/90 hover:text-white no-underline"
+                                        onPress={() => {
+                                            setCurrentSimilarPaper(paper);
+                                            setIsOpenRelatedPaperModal(true);
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faExternalLinkAlt} className="text-xs" />
+                                        Read more
+                                    </Button>
+                                ) : (
+                                    <span />
+                                )}
+                                <Button
+                                    size="sm"
+                                    className="!bg-smart-darker text-white hover:!brightness-110"
+                                    onPress={() => {
+                                        setCurrentSimilarPaper(paper);
+                                        handleAddContributions(paper.title);
                                     }}
                                 >
-                                    <CardTitle>
-                                        <div className="p-1 d-flex justify-content-between flex-row">
-                                            <div
-                                                style={{
-                                                    WebkitLineClamp: 2,
-                                                    overflow: 'hidden',
-                                                    display: '-webkit-box',
-                                                    WebkitBoxOrient: 'vertical',
-                                                }}
-                                            >
-                                                {paper?.title}
-                                            </div>
-                                            <div>
-                                                <Button
-                                                    color="smart-darker"
-                                                    size="sm"
-                                                    className="float-right"
-                                                    onClick={() => {
-                                                        setCurrentSimilarPaper(paper);
-                                                        handleAddContributions(paper.title);
-                                                    }}
-                                                >
-                                                    Add
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </CardTitle>
-                                    <CardText className="text-break">
-                                        {paper?.abstract && (
-                                            <div>
-                                                <div
-                                                    className="text-break"
-                                                    style={{
-                                                        WebkitLineClamp: 2,
-                                                        overflow: 'hidden',
-                                                        display: '-webkit-box',
-                                                        WebkitBoxOrient: 'vertical',
-                                                    }}
-                                                >
-                                                    {paper?.abstract}
-                                                </div>
-                                                <Button
-                                                    color="link"
-                                                    className="p-0 text-white"
-                                                    onClick={() => {
-                                                        setCurrentSimilarPaper(paper);
-                                                        setIsOpenRelatedPaperModal(true);
-                                                    }}
-                                                >
-                                                    Read more
-                                                </Button>
-                                            </div>
-                                        )}
-                                    </CardText>
-                                </CardBody>
-                            </Card>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </div>
+                                    <FontAwesomeIcon icon={faPlus} />
+                                    Add
+                                </Button>
+                            </Card.Footer>
+                        </Card>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+
             {isOpenRelatedPaperModal && (
                 <RelatedPaperModal
                     paper={currentSimilarPaper}
@@ -133,7 +106,7 @@ const RelatedPapersCarousel: React.FC<RelatedPapersCarouselProps> = ({ handleAdd
                     toggle={() => setIsOpenRelatedPaperModal((v) => !v)}
                 />
             )}
-        </div>
+        </section>
     );
 };
 

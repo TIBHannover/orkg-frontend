@@ -1,9 +1,8 @@
+import { toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
-import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-toastify';
 
 import FEEDBACK_QUESTIONS from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/hooks/feedbackQuestions';
 import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
@@ -11,6 +10,7 @@ import useComparison from '@/components/Comparison/hooks/useComparison';
 import { PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import THING_TYPES from '@/constants/thingTypes';
+import { reverse } from '@/lib/namedRoute';
 import { getStatements } from '@/services/backend/statements';
 import { ComparisonPath } from '@/services/backend/types';
 import { getThing } from '@/services/simcomp';
@@ -258,7 +258,7 @@ const useQualityReport = () => {
             setIsLoading(false);
         } catch (e) {
             console.error(e);
-            toast.error('Something went wrong while evaluating the comparison. Please try again later.');
+            toast.danger('Something went wrong while evaluating the comparison. Please try again later.');
         }
     }, [comparison, selectedPathsFlattened, table]);
 

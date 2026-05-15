@@ -2,9 +2,9 @@ import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge
 import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faMinusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import capitalize from 'capitalize';
 import { FC, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 
 import {
     createDragDataFactory,
@@ -13,24 +13,8 @@ import {
     createDraggableItem,
     createEdgeChangeHandler,
 } from '@/components/shared/dnd/dragAndDropUtils';
-import Button from '@/components/Ui/Button/Button';
-import ListGroupItem from '@/components/Ui/List/ListGroupItem';
 import { ReviewSectionData } from '@/services/backend/types';
 
-const DragHandle = styled.div`
-    cursor: move;
-    color: #a5a5a5;
-    width: 30px;
-    text-align: center;
-    flex-shrink: 0;
-`;
-
-const ListGroupItemStyled = styled(ListGroupItem)`
-    padding: 10px 10px 9px 5px !important;
-    display: flex !important;
-`;
-
-// Create shared symbols and functions for entity drag and drop
 export const entityKey = createDragDataKey('selectEntity');
 export const createEntityData = createDragDataFactory<ReviewSectionData | Omit<ReviewSectionData, 'classes'>>(entityKey);
 export const isEntityData = createDragDataValidator<ReviewSectionData | Omit<ReviewSectionData, 'classes'>>(entityKey);
@@ -83,18 +67,30 @@ const EntityListItem: FC<EntityListItemProps> = ({ entity, index, instanceId, on
     }, [entity, index, instanceId, totalItems, dragHandleElement]);
 
     return (
-        <div ref={ref} style={{ opacity: isDragging ? 0.4 : 1, position: 'relative' }}>
-            <ListGroupItemStyled className="py-2 d-flex justify-content-between">
-                <div className="d-flex">
-                    <DragHandle ref={setDragHandleElement} role="button" tabIndex={0} aria-label="Drag to reorder entity">
+        <div ref={ref} className={`relative ${isDragging ? 'opacity-40' : 'opacity-100'}`}>
+            <li className="flex items-center justify-between border-b border-default-200 bg-surface py-2 pe-[10px] ps-[5px] text-foreground">
+                <div className="flex items-center gap-2">
+                    <div
+                        ref={setDragHandleElement}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Drag to reorder entity"
+                        className="w-[30px] shrink-0 cursor-move text-center text-muted"
+                    >
                         <FontAwesomeIcon icon={faSort} />
-                    </DragHandle>
+                    </div>
                     {capitalize(entity.label)}
                 </div>
-                <Button color="link" className="p-0 ms-2" onClick={() => onRemove(entity.id)}>
+                <Button
+                    isIconOnly
+                    variant="ghost"
+                    aria-label="Remove entity"
+                    className="!h-auto !min-w-0 !bg-transparent !p-0 ml-2 text-danger hover:!bg-transparent"
+                    onPress={() => onRemove(entity.id)}
+                >
                     <FontAwesomeIcon icon={faMinusCircle} />
                 </Button>
-            </ListGroupItemStyled>
+            </li>
             {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
         </div>
     );
