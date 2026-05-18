@@ -53,7 +53,7 @@ const ComparisonPopup: FC = () => {
 
     const contributionAmount = allIds.length;
     const ids = allIds.join(',');
-    const comparisonUrl = `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${ids}`;
+    const comparisonUrl = `${reverse(ROUTES.CREATE_COMPARISON)}&sourceIds=${ids}`;
 
     return (
         <>
