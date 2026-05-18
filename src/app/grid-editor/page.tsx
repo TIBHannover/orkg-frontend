@@ -50,7 +50,7 @@ const GridEditorPage = () => {
 
     const viewComparisonHref = comparisonId
         ? reverse(ROUTES.COMPARISON, { comparisonId })
-        : `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${entityIds?.join(',') ?? ''}`;
+        : `${reverse(ROUTES.CREATE_COMPARISON)}&sourceIds=${entityIds?.join(',') ?? ''}`;
 
     return (
         <div>
@@ -59,10 +59,13 @@ const GridEditorPage = () => {
                     <ButtonGroup size="sm">
                         {isViewComparisonButtonDisabled ? (
                             <Tooltip delay={150}>
-                                <Button size="sm" isDisabled className="button--orkg-secondary">
-                                    View comparison
-                                </Button>
-                                <Tooltip.Content className="max-w-xs">
+                                <Tooltip.Trigger>
+                                    <Button size="sm" isDisabled className="button--orkg-secondary">
+                                        View comparison
+                                    </Button>
+                                    <span hidden />
+                                </Tooltip.Trigger>
+                                <Tooltip.Content showArrow className="max-w-xs">
                                     <Tooltip.Arrow />
                                     The selected entities are not part of a paper. You need to add at least 2 contributions to a paper to view the
                                     comparison.

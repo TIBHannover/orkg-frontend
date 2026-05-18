@@ -18,7 +18,7 @@ const KeyboardBanner = () => {
 
     return (
         <Container className="my-2">
-            <Alert status="accent">
+            <Alert status="accent" className="shadow">
                 <Alert.Indicator />
                 <Alert.Content>
                     <Alert.Title>Keyboard shortcuts available</Alert.Title>

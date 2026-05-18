@@ -22,7 +22,7 @@ const ImportedPapers = ({ annotationId }: ImportedPapersProps) => {
         ? `${reverse(ROUTES.GRID_EDITOR)}?entityIds=${annotation.importedContributions.map((entry) => entry)}`
         : null;
     const comparisonUrl = annotation?.importedContributions
-        ? `${reverse(ROUTES.CREATE_COMPARISON)}?sourceIds=${annotation.importedContributions.join(',')}`
+        ? `${reverse(ROUTES.CREATE_COMPARISON)}&sourceIds=${annotation.importedContributions.join(',')}`
         : null;
 
     return (

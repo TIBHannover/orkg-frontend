@@ -27,7 +27,7 @@ const Footer = ({ gridRef }: FooterProps) => {
                     {entities?.every((entity: Thing) => entity._class === ENTITIES.RESOURCE) && (
                         <>
                             <TemplatesModal isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} />
-                            <Button variant="secondary" size="sm" className="ml-1" onPress={() => setIsOpen(true)}>
+                            <Button variant="secondary" size="sm" className="ml-1 button--orkg-secondary" onPress={() => setIsOpen(true)}>
                                 <FontAwesomeIcon className="mr-1" icon={faPuzzlePiece} /> Templates
                             </Button>
                         </>
