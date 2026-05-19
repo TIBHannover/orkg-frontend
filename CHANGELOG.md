@@ -2,6 +2,13 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-19
+
+### Changes
+
+- fix: add a trailing slash to simcomp calls [`#1687`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1687)
+
+---
 ## [v0.182.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.181.0...v0.182.0) - 2026-05-18
 
 ### Changes
