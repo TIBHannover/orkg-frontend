@@ -1,14 +1,15 @@
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { List } from '@/services/backend/types';
+import { CreateListRequest, ListsApi, UpdateListRequest } from '@orkg/orkg-client';
 
-export const listsUrl = `${url}lists/`;
-export const listsApi = backendApi.extend(() => ({ prefixUrl: listsUrl }));
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId } from '@/services/backend/backendApi';
 
-export const getList = (id: string) => listsApi.get<List>(id).json();
+const listsApiClient = new ListsApi(configuration);
 
-export const updateList = ({ id, label = null, elements }: { id: string; label?: string | null; elements: string[] }) =>
-    listsApi.patch<void>(id, { json: { label, elements } }).json();
+export const listsUrl = `${urlNoTrailingSlash}/lists`;
 
-export const createList = ({ label = '', elements = [] }: { label?: string; elements?: string[] }) =>
-    listsApi.post<List>('', { json: { label, elements } }).then(({ headers }) => getCreatedIdFromHeaders(headers));
+export const getList = (id: string) => listsApiClient.findById({ id });
+
+export const updateList = ({ id, label = null, elements }: UpdateListRequest & { id: string }) =>
+    listsApiClient.update({ id, updateListRequest: { label, elements } });
+
+export const createList = (data: CreateListRequest) => listsApiClient.createRaw({ createListRequest: data }).then(getCreatedId);

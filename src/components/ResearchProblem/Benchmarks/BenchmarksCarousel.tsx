@@ -1,8 +1,8 @@
 import { faArrowCircleLeft, faArrowCircleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
+import { DatasetRepresentation } from '@orkg/orkg-client';
 import classNames from 'classnames';
 import Link from 'next/link';
-import styled from 'styled-components';
 
 import StyledSlider from '@/components/ResearchProblem/Benchmarks/styled';
 import ROUTES from '@/constants/routes';
@@ -16,61 +16,34 @@ type SlickArrowProps = FontAwesomeIconProps & {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SlickArrow = ({ currentSlide, slideCount, ...rest }: SlickArrowProps) => <FontAwesomeIcon {...rest} />;
 
-const BenchmarkCarouselCardStyled = styled.div`
-    display: flex !important;
-
-    .benchmarkStats {
-        text-align: left;
-        font-size: smaller;
-    }
-
-    .benchmarkName {
-        font-weight: bold;
-    }
-    &:hover {
-        .benchmarkName {
-            text-decoration: underline;
-        }
-    }
-`;
-
-type Benchmark = {
-    id: string;
-    label: string;
-    total_models: number;
-    total_papers: number;
-    total_codes: number;
-};
-
 type BenchmarksCarouselProps = {
     problemId: string;
-    benchmarks: Benchmark[];
+    benchmarks: DatasetRepresentation[];
     isLoading: boolean;
-    isLastPageReached: boolean;
     hasNextPage: boolean;
     loadNextPage: () => void;
-    handleKeyDown: () => void;
-    page: number;
 };
 
-const BenchmarksCarousel = ({ problemId, benchmarks, isLoading, hasNextPage, loadNextPage, page }: BenchmarksCarouselProps) => {
+const SLIDES_TO_SHOW = 5;
+
+const BenchmarksCarousel = ({ problemId, benchmarks, isLoading, hasNextPage, loadNextPage }: BenchmarksCarouselProps) => {
     const settings = {
         dots: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 5,
+        slidesToShow: SLIDES_TO_SHOW,
         centerMode: false,
-        slidesToScroll: 5,
-        nextArrow: !isLoading ? <SlickArrow icon={faArrowCircleRight} /> : <SlickArrow icon={faSpinner} spin />,
-        prevArrow: <SlickArrow icon={faArrowCircleLeft} />,
+        slidesToScroll: SLIDES_TO_SHOW,
+        nextArrow: !isLoading ? (
+            <SlickArrow icon={faArrowCircleRight} style={{ width: 20, height: 20 }} />
+        ) : (
+            <SlickArrow icon={faSpinner} spin style={{ width: 20, height: 20 }} />
+        ),
+        prevArrow: <SlickArrow icon={faArrowCircleLeft} style={{ width: 20, height: 20 }} />,
         rows: 1,
-        lazyLoad: 'ondemand' as const,
-        onLazyLoad: (slidesLoaded: number[]) => {
-            if (hasNextPage) {
+        afterChange: (currentSlide: number) => {
+            if (hasNextPage && !isLoading && currentSlide + SLIDES_TO_SHOW >= benchmarks.length) {
                 loadNextPage();
-            }
-            if (page !== 0 && slidesLoaded && !hasNextPage) {
-                // slidesLoaded();
             }
         },
         responsive: [
@@ -104,26 +77,25 @@ const BenchmarksCarousel = ({ problemId, benchmarks, isLoading, hasNextPage, loa
                 {benchmarks.map((benchmark, index) => {
                     const marginClasses = classNames({
                         'ms-0': index === 0,
-                        'me-0': index === benchmarks.length,
+                        'me-0': index === benchmarks.length - 1,
                     });
                     return (
-                        <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>
+                        <div key={benchmark.id} className={classNames('!flex group', marginClasses)}>
                             <Link
                                 href={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId })}
-                                className="flex box rounded m-2 p-4 grow"
-                                style={{ textDecoration: 'none', flex: 1 }}
+                                className="flex box rounded m-2 p-4 grow no-underline flex-1"
                             >
                                 <div className="flex flex-col">
-                                    <div className="benchmarkName grow">{benchmark.label}</div>
+                                    <div className="grow font-bold group-hover:underline">{benchmark.label}</div>
 
-                                    <div className="benchmarkStats text-gray-500">
-                                        Models: <b>{benchmark.total_models}</b> <br />
-                                        Papers: <b>{benchmark.total_papers}</b> <br />
-                                        Code: <b>{benchmark.total_codes}</b>
+                                    <div className="text-left text-sm text-gray-500">
+                                        Models: <b>{benchmark.totalModels}</b> <br />
+                                        Papers: <b>{benchmark.totalPapers}</b> <br />
+                                        Code: <b>{benchmark.totalCodes}</b>
                                     </div>
                                 </div>
                             </Link>
-                        </BenchmarkCarouselCardStyled>
+                        </div>
                     );
                 })}
             </StyledSlider>

@@ -1,27 +1,30 @@
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { EntityImportApi, ImportImportClassByRequest, ImportImportPredicateByRequest } from '@orkg/orkg-client';
+
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId } from '@/services/backend/backendApi';
 import { getClassById } from '@/services/backend/classes';
 import { getPredicate } from '@/services/backend/predicates';
 import { getResource } from '@/services/backend/resources';
 import { Class, Predicate, Resource } from '@/services/backend/types';
 
-export const importUrl = `${url}import/`;
-export const importApi = backendApi.extend(() => ({ prefixUrl: importUrl }));
+export const importUrl = `${urlNoTrailingSlash}/import`;
 
-export const importResourceByURI = ({ ontology, uri }: { ontology: string; uri: string }): Promise<Resource> =>
-    importApi
-        .post<Resource>(`resources`, { json: { ontology, uri } })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers))
+const importApiClient = new EntityImportApi(configuration);
+
+export const importResourceByURI = (data: ImportImportClassByRequest): Promise<Resource> =>
+    importApiClient
+        .importResourceByRaw({ importImportClassByRequest: data })
+        .then(getCreatedId)
         .then((id) => getResource(id));
 
-export const importPredicateByURI = ({ ontology, uri }: { ontology: string; uri: string }): Promise<Predicate> =>
-    importApi
-        .post<Predicate>(`predicates`, { json: { ontology, uri } })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers))
+export const importPredicateByURI = (data: ImportImportPredicateByRequest): Promise<Predicate> =>
+    importApiClient
+        .importPredicateByRaw({ importImportPredicateByRequest: data })
+        .then(getCreatedId)
         .then((id) => getPredicate(id));
 
-export const importClassByURI = ({ ontology, uri }: { ontology: string; uri: string }): Promise<Class> =>
-    importApi
-        .post<Class>(`classes`, { json: { ontology, uri } })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers))
+export const importClassByURI = (data: ImportImportClassByRequest): Promise<Class> =>
+    importApiClient
+        .importClassByRaw({ importImportClassByRequest: data })
+        .then(getCreatedId)
         .then((id) => getClassById(id));

@@ -34,10 +34,13 @@ const CodeURLsTooltip: FC<CodeURLsTooltipProps> = ({ urls, title, id }) => {
             </a>
         );
     }
+    if (urls?.length === 0) {
+        return <span className="text-muted text-sm flex w-full justify-center items-center">-</span>;
+    }
     return (
         <>
-            <Button variant="ghost" className="p-0 h-auto min-w-0" onPress={() => setIsOpen(true)}>
-                <FontAwesomeIcon icon={faGithub} className="icon ml-2 mr-2" style={{ color: 'var(--accent)' }} />
+            <Button variant="ghost" onPress={() => setIsOpen(true)} isIconOnly>
+                <FontAwesomeIcon icon={faGithub} className="text-accent" />
             </Button>
             <Modal.Backdrop isOpen={isOpen} onOpenChange={setIsOpen}>
                 <Modal.Container size="lg">

@@ -89,20 +89,6 @@ export type Contributor = ContributorType;
 
 export type Class = ClassRepresentation;
 
-export type BenchmarkSummary = {
-    research_problem: {
-        id: string;
-        label: string;
-    };
-    research_fields: {
-        id: string;
-        label: string;
-    }[];
-    total_papers: number;
-    total_datasets: number;
-    total_codes: number;
-};
-
 export type ConferenceSeries = {
     id: string;
     organizationId: string;
