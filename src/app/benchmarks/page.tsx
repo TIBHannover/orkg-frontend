@@ -3,6 +3,7 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Separator, Skeleton } from '@heroui/react';
+import { BenchmarkSummaryRepresentation } from '@orkg/orkg-client';
 import pluralize from 'pluralize';
 import { useEffect } from 'react';
 
@@ -13,7 +14,6 @@ import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedCon
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import { benchmarksUrl, getAllBenchmarks } from '@/services/backend/benchmarks';
-import { BenchmarkSummary } from '@/services/backend/types';
 
 const CardGrid = ({ children, ...props }: React.ComponentProps<'div'>) => (
     <div {...props} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -43,7 +43,7 @@ const Benchmarks = () => {
         defaultSortDirection: 'desc',
     });
 
-    const renderListItem = (item: BenchmarkSummary) => <BenchmarkCard key={item.research_problem.id} benchmark={item} />;
+    const renderListItem = (item: BenchmarkSummaryRepresentation) => <BenchmarkCard key={item.researchProblem.id} benchmark={item} />;
 
     useEffect(() => {
         document.title = 'Benchmarks list - ORKG';
@@ -83,7 +83,7 @@ const Benchmarks = () => {
 
                     <Separator className="my-3" />
 
-                    <ListPaginatedContent<BenchmarkSummary>
+                    <ListPaginatedContent<BenchmarkSummaryRepresentation>
                         renderListItem={renderListItem}
                         pageSize={pageSize}
                         label="Benchmarks"

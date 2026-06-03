@@ -1,16 +1,17 @@
 import { Skeleton } from '@heroui/react';
+import { DatasetsApiFindAllDatasetsByResearchProblemIdRequest } from '@orkg/orkg-client';
 import useSWRInfinite from 'swr/infinite';
 
 import BenchmarksCarousel from '@/components/ResearchProblem/Benchmarks/BenchmarksCarousel';
 import Container from '@/components/Ui/Structure/Container';
-import { datasetsUrl, getDatasetsBenchmarksByResearchProblemId } from '@/services/backend/datasets';
+import { datasetsUrl, findAllDatasetsByResearchProblemId } from '@/services/backend/datasets';
 
 type BenchmarksProps = {
     id: string;
 };
 
 const Benchmarks = ({ id }: BenchmarksProps) => {
-    const getKey = (pageIndex: number): any => ({
+    const getKey = (pageIndex: number): DatasetsApiFindAllDatasetsByResearchProblemIdRequest => ({
         id,
         page: pageIndex,
         size: 6,
@@ -19,18 +20,17 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
     const {
         data: benchmarks,
         isLoading,
+        isValidating,
         size: page,
         setSize,
     } = useSWRInfinite(
-        (pageIndex) => [getKey(pageIndex), datasetsUrl, 'getDatasetsBenchmarksByResearchProblemId'],
-        ([params]) => getDatasetsBenchmarksByResearchProblemId(params),
+        (pageIndex) => [getKey(pageIndex), datasetsUrl, 'findAllDatasetsByResearchProblemId'],
+        ([params]) => findAllDatasetsByResearchProblemId(params),
         { revalidateIfStale: true, revalidateOnFocus: true, revalidateOnReconnect: true },
     );
 
-    const isEmpty = benchmarks?.[0]?.page?.total_elements === 0;
-    const isLastPageReached =
-        isEmpty || benchmarks?.[benchmarks.length - 1]?.page?.number === (benchmarks?.[benchmarks.length - 1]?.page?.total_pages || 0) - 1;
-    const hasNextPage = !isLastPageReached;
+    const lastPage = benchmarks?.[benchmarks.length - 1]?.page;
+    const hasNextPage = lastPage ? lastPage.number < lastPage.totalPages - 1 : false;
 
     if (benchmarks && benchmarks.map((b) => b.content).flat().length === 0 && !isLoading) {
         return null;
@@ -47,12 +47,9 @@ const Benchmarks = ({ id }: BenchmarksProps) => {
                 <BenchmarksCarousel
                     problemId={id}
                     benchmarks={[...(benchmarks?.map((_content) => _content.content).flat() ?? [])]}
-                    isLoading={isLoading}
-                    isLastPageReached={isLastPageReached ?? false}
+                    isLoading={isLoading || isValidating}
                     hasNextPage={hasNextPage}
                     loadNextPage={() => setSize(page + 1)}
-                    handleKeyDown={() => setSize(page + 1)}
-                    page={page}
                 />
 
                 {isLoading && (

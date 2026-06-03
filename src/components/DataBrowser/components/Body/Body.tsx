@@ -14,7 +14,7 @@ import useListOrdering from '@/components/DataBrowser/hooks/useListOrdering';
 import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
-import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { Predicate, Resource, Statement } from '@/services/backend/types';
 
 const Body = () => {
@@ -35,7 +35,8 @@ const Body = () => {
         'id',
     );
 
-    const { statementsOrdered, visibleProperties } = useComparisonRecommendations({ statements });
+    const isList = entity && 'classes' in entity && entity.classes?.includes(CLASSES.LIST);
+    const { statementsOrdered, visibleProperties } = useComparisonRecommendations({ statements, isList });
 
     const { canEdit } = useCanEdit();
 

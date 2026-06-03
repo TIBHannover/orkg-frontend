@@ -54,7 +54,7 @@ export const createValue = async (_class: EntityType | 'empty', value: Resource 
     switch (_class) {
         case ENTITIES.RESOURCE:
             if ('datatype' in value && value.datatype === 'list') {
-                apiCall = getList(await createList({ label: value.label }));
+                apiCall = getList(await createList({ label: value.label, elements: [] }));
             } else if ('datatype' in value && value.datatype === 'table') {
                 apiCall = getResource(await createResource({ label: value.label, classes: [CLASSES.CSVW_TABLE] }));
             } else {

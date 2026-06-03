@@ -1,109 +1,54 @@
-import qs from 'qs';
+import {
+    DatasetsApi,
+    DatasetsApiFindAllDatasetsByResearchProblemIdRequest,
+    DatasetsApiFindAllDatasetSummariesByIdAndResearchProblemIdRequest,
+    DatasetsApiFindAllResearchProblemsByDatasetIdRequest,
+} from '@orkg/orkg-client';
+import { sortBy } from 'lodash';
 
-import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
-import { prepareParams } from '@/services/backend/misc';
-import { PaginatedResponse, PaginationParams } from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration } from '@/services/backend/backendApi';
 
-export const datasetsUrl = `${url}datasets/`;
-export const datasetsApi = backendApi.extend(() => ({ prefixUrl: datasetsUrl }));
+const datasetsApiClient = new DatasetsApi(configuration);
+
+export const datasetsUrl = `${urlNoTrailingSlash}/datasets`;
 
 // The services defined here were discussed in the following issue
 // https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/263
 
-/**
- * Get a dataset benchmark summary for a research problem
- * Each benchmark on the dataset is define by the following attributes:
- * model_name, score, metric, paper_title, code_urls
- * */
-export const getDatasetBenchmarksByDatasetId = ({
-    datasetId,
-    problemId,
+export const findAllDatasetSummariesByIdAndResearchProblemId = ({
+    id,
+    researchProblemId,
     page = 0,
     size = 9999,
-}: {
-    datasetId: string;
-    problemId: string;
-    page?: number;
-    size?: number;
-}) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return datasetsApi
-        .get<
-            PaginatedResponse<{
-                model_name: string;
-                model_id: string;
-                score: string;
-                metric: string;
-                paper_id: string;
-                paper_title: string;
-                paper_month: number;
-                paper_year: number;
-                code_urls: string[];
-            }>
-        >(`${datasetId}/problem/${problemId}/summary`, {
-            searchParams,
-        })
-        .json();
+}: DatasetsApiFindAllDatasetSummariesByIdAndResearchProblemIdRequest) => {
+    return datasetsApiClient.findAllDatasetSummariesByIdAndResearchProblemId({
+        id,
+        researchProblemId,
+        page,
+        size,
+        sort: sortBy(sortBy, ['paper_year', 'paper_month']),
+    });
 };
 
-/**
- * Get the list of research problems of a dataset
- * */
-
-export const getResearchProblemsByDatasetId = ({ datasetId, page = 0, size = 9999 }: { datasetId: string; page?: number; size?: number }) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return datasetsApi
-        .get<
-            PaginatedResponse<{
-                id: string;
-                label: string;
-            }>
-        >(`${datasetId}/problems`, {
-            searchParams,
-        })
-        .json();
+export const getResearchProblemsByDatasetId = ({ id, page = 0, size = 9999 }: DatasetsApiFindAllResearchProblemsByDatasetIdRequest) => {
+    return datasetsApiClient.findAllResearchProblemsByDatasetId({
+        id,
+        page,
+        size,
+    });
 };
 
-/**
- * Get the datasets for a research problem: (a.k.a. Benchmark Summary)
- * */
-
-export const getDatasetsBenchmarksByResearchProblemId = ({
+export const findAllDatasetsByResearchProblemId = ({
     id,
     page = 0,
     size = 9999,
-    sortBy = [
-        { property: 'totalPapers', direction: 'desc' },
-        { property: 'totalModels', direction: 'desc' },
-        { property: 'totalCodes', direction: 'desc' },
-        { property: 'dataset.label', direction: 'asc' },
-    ],
-}: PaginationParams & {
-    id: string;
-}) => {
-    const searchParams = prepareParams({ page, size, sortBy });
-    return datasetsApi
-        .get<
-            PaginatedResponse<{
-                id: string;
-                label: string;
-                total_models: number;
-                total_papers: number;
-                total_codes: number;
-            }>
-        >(`research-problem/${encodeURIComponent(id)}`, {
-            searchParams,
-        })
-        .json();
+    sort = ['totalPapers,desc', 'totalModels,desc', 'totalCodes,desc', 'dataset.label,asc'],
+}: DatasetsApiFindAllDatasetsByResearchProblemIdRequest) => {
+    return datasetsApiClient.findAllDatasetsByResearchProblemId({
+        id,
+        page,
+        size,
+        sort,
+    });
 };

@@ -12,7 +12,7 @@ import { Statement } from '@/services/backend/types';
  * - Show invisible predicates, i.e. properties that are not displayed in the comparison
  * - Show predicate that are not part of any statements but are part of the displayed properties in the comparison
  */
-const useComparisonRecommendations = ({ statements }: { statements?: Statement[] }) => {
+const useComparisonRecommendations = ({ statements, isList = false }: { statements?: Statement[]; isList?: boolean }) => {
     const { config } = useDataBrowserState();
     const { history } = useHistory();
     const { comparisonSelectedPaths } = config;
@@ -46,7 +46,7 @@ const useComparisonRecommendations = ({ statements }: { statements?: Statement[]
         [
             ...Object.keys(predicateGroup).map((predicateId) => ({
                 predicate: predicateGroup[predicateId][0].predicate,
-                statements: sortBy(predicateGroup[predicateId], 'object.label'),
+                statements: isList ? predicateGroup[predicateId] : sortBy(predicateGroup[predicateId], 'object.label'),
             })),
             ...(additionalPredicates ?? []).map((predicate) => ({
                 predicate,
