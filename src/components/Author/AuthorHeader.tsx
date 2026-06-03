@@ -30,7 +30,7 @@ const SocialLink: FC<SocialLinkProps> = ({ label, icon, iconColor, href, value }
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex items-start gap-3 rounded-lg border border-border bg-surface-1 p-3 transition-colors hover:border-primary hover:bg-primary/5"
+        className="group flex items-start gap-3 rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary hover:bg-primary/5"
     >
         <span
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-secondary-100 text-base dark:bg-secondary-800/60"
@@ -171,7 +171,7 @@ const AuthorHeader: FC<AuthorHeaderProps> = ({ authorId }) => {
             )}
 
             {socials.length > 0 && (
-                <div className="rounded-lg border border-border bg-surface-1 p-4 mb-4">
+                <div className="box rounded p-4 mb-4">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {socials.map((s) => (
                             <SocialLink key={s.label} {...s} />

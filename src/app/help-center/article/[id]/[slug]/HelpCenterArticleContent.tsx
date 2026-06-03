@@ -32,7 +32,18 @@ export default async function HelpCenterArticleContent({ params }: HelpCenterArt
         redirect(reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, { id, slug: title }));
     }
 
-    const html = parseMarkdown(pageData.attributes?.content ?? '');
+    const rawContent = pageData.attributes?.content ?? '';
+
+    // Some legacy CMS articles use <meta http-equiv="refresh"> to redirect to a new URL.
+    // DOMPurify strips <meta> tags, so we handle this server-side before rendering.
+    const metaRefreshMatch =
+        rawContent.match(/<meta[^>]+http-equiv=["']?refresh["']?[^>]+content=["']?\d+;\s*url=([^"'\s>]+)/i) ??
+        rawContent.match(/<meta[^>]+content=["']?\d+;\s*url=([^"'\s>]+)[^>]*http-equiv=["']?refresh["']?/i);
+    if (metaRefreshMatch?.[1]) {
+        redirect(metaRefreshMatch[1]);
+    }
+
+    const html = parseMarkdown(rawContent);
 
     return (
         <div>
