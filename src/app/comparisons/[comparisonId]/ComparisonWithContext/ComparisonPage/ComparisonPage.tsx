@@ -1,8 +1,9 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
 import AppliedFilters from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/AppliedFilters/AppliedFilters';
-import ComparisonCarousel from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonCarousel/ComparisonCarousel';
 import ComparisonHeader from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ComparisonHeader';
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import ComparisonMetaData from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonMetaData/ComparisonMetaData';
@@ -10,11 +11,21 @@ import NewComparisonsAlert from '@/app/comparisons/[comparisonId]/ComparisonWith
 import References from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/References';
 import NotFound from '@/app/not-found';
 import ComparisonLoading from '@/components/Comparison/ComparisonLoading/ComparisonLoading';
-import ComparisonTable from '@/components/Comparison/ComparisonTable/ComparisonTable';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import Alert from '@/components/Ui/Alert/Alert';
 import Container from '@/components/Ui/Structure/Container';
+
+// Both rely on browser-only globals (ResizeObserver / react-slick). Render client-side only — data is
+// already hydrated synchronously via SWR fallback, so there is no fetch wait at hydration time.
+const ComparisonTable = dynamic(() => import('@/components/Comparison/ComparisonTable/ComparisonTable'), {
+    ssr: false,
+    loading: () => <ComparisonLoading />,
+});
+const ComparisonCarousel = dynamic(
+    () => import('@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonCarousel/ComparisonCarousel'),
+    { ssr: false },
+);
 
 const ComparisonPage = () => {
     const { id: comparisonId } = useComparisonState();
