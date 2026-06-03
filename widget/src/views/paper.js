@@ -78,7 +78,8 @@ export function show(params) {
             .catch(() => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary.add[language];
 
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = `${process.env.FRONTEND_SERVER_URL}papers/create?entry=${doi}`;
+                temporary.getElementsByClassName('orkg-widget-link')[0].href =
+                    `${process.env.FRONTEND_SERVER_URL}content-type/create?type=Paper&entry=${doi}`;
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
                 while (temporary.children.length > 0) {

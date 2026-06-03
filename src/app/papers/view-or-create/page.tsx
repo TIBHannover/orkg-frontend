@@ -24,8 +24,8 @@ const ViewOrCreatePaper = async ({ searchParams }: { searchParams: Promise<{ [ke
         return redirect(
             `${ROUTES.CREATE_PAPER}${
                 searchParamsResolved.doi
-                    ? `?entry=${searchParamsResolved.doi}`
-                    : `?title=${encodeURIComponent(searchParamsResolved.title?.toString() ?? '')}`
+                    ? `&entry=${searchParamsResolved.doi}`
+                    : `&title=${encodeURIComponent(searchParamsResolved.title?.toString() ?? '')}`
             }`,
         );
     }

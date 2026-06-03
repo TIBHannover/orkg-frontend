@@ -16,7 +16,7 @@ Place the following code on your website and set the parameter data-doi.
             function () {
                 (w[o].q = w[o].q || []).push(arguments);
             };
-        (js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]);
+        ((js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]));
         js.id = o;
         js.src = f;
         js.async = 1;
@@ -30,8 +30,8 @@ Place the following code on your website and set the parameter data-doi.
 
 ORKG widget supports two languages :
 
--   `en` _(for English)_
--   `de` _(for German)_
+- `en` _(for English)_
+- `de` _(for German)_
 
 ### Css Classes
 
@@ -54,7 +54,7 @@ The orkg widget uses this following html template to render the widget:
 
 ### Building
 
-minimum supported Node.js version is `18.12.0`
+minimum supported Node.js version is `20.10.0`
 
 ```
 npm run build

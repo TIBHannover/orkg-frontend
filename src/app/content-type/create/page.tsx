@@ -20,6 +20,9 @@ import { CLASSES } from '@/constants/graphSettings';
 
 export const metadata: Metadata = {
     title: 'Add to ORKG - ORKG',
+    alternates: {
+        canonical: '/content-type/create',
+    },
 };
 
 const loadSearchParams = createLoader({
