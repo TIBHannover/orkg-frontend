@@ -29,7 +29,7 @@ const OrkgAskBanner: FC<OrkgAskBannerProps> = () => {
     );
 
     return (
-        <div className="rounded p-3 mb-4 lg:flex bg-default text-foreground text-sm">
+        <div className="rounded p-3 mb-4 lg:flex bg-surface-tertiary dark:bg-default text-foreground text-sm">
             <div className="lg:w-5/12">
                 <a href="https://ask.orkg.org" target="_blank" rel="noreferrer" className="text-inherit flex items-center text-sm">
                     <div>
