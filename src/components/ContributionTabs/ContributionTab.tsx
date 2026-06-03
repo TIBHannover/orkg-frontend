@@ -5,7 +5,7 @@ import { ChangeEvent, FC, KeyboardEvent, ReactNode, useEffect, useRef, useState 
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
-import MathJax from '@/components/ValuePlugins/MathJax/MathJax';
+import Math from '@/components/ValuePlugins/Math/Math';
 import { Resource } from '@/services/backend/types';
 
 type ContributionTabProps = {
@@ -96,7 +96,7 @@ const ContributionTab: FC<ContributionTabProps> = ({
                     wrapper={(children: ReactNode) => <Tooltip content={contribution.label}>{children}</Tooltip>}
                 >
                     <div className="truncate inline-flex items-center h-8" style={{ maxWidth: 300 }}>
-                        <MathJax text={contribution.label} />
+                        <Math text={contribution.label} />
                     </div>
                 </ConditionalWrapper>
             )}

@@ -1,7 +1,6 @@
 import { Toast } from '@heroui/react';
 import type { RenderOptions } from '@testing-library/react';
 import { render as rtlRender } from '@testing-library/react';
-import { MathJaxContext } from 'better-react-mathjax';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -12,7 +11,6 @@ import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
 
 import theme from '@/assets/css/ThemeVariables';
-import MATH_JAX_CONFIG from '@/constants/mathJax';
 import { RootStore } from '@/slices/types';
 import { AppStore, setupStore } from '@/store';
 
@@ -33,10 +31,8 @@ const Wrapper = ({ children, initialState = {}, store = setupStore(initialState)
             <Provider store={_store}>
                 <ThemeProvider theme={theme}>
                     <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
-                        <MathJaxContext config={MATH_JAX_CONFIG}>
-                            {children}
-                            <Toast.Provider placement="top end" />
-                        </MathJaxContext>
+                        {children}
+                        <Toast.Provider placement="top end" />
                     </SWRConfig>
                 </ThemeProvider>
             </Provider>

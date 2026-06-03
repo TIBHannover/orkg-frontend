@@ -1,6 +1,7 @@
 import '@/app/globals.css';
 import 'fast-text-encoding/text.min';
 import 'intro.js/introjs.css';
+import 'katex/dist/katex.min.css';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';

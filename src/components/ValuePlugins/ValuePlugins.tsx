@@ -10,7 +10,7 @@ import Gregorian, { isGregorianValue } from '@/components/ValuePlugins/Gregorian
 import ImageAsFigure, { isImageValue } from '@/components/ValuePlugins/Images/ImageAsFigures';
 import Link, { isLinkValue } from '@/components/ValuePlugins/Link/Link';
 import Map, { isMapValue } from '@/components/ValuePlugins/Map/Map';
-import MathJax, { isMathJaxValue } from '@/components/ValuePlugins/MathJax/MathJax';
+import Math, { isMathValue } from '@/components/ValuePlugins/Math/Math';
 import Video, { isVideoValue } from '@/components/ValuePlugins/Video/Video';
 import { ENTITIES } from '@/constants/graphSettings';
 import { EntityType } from '@/services/backend/types';
@@ -49,8 +49,8 @@ const ValuePlugins: FC<ValuePluginsProps> = ({ options = {}, type, children, dat
         if (isBooleanValue(text)) {
             return <Boolean text={text} />;
         }
-        if (isMathJaxValue(text)) {
-            return <MathJax text={text} />;
+        if (isMathValue(text)) {
+            return <Math text={text} />;
         }
         if (isDoiValue(text)) {
             return <Doi text={text} />;
