@@ -54,6 +54,22 @@ export default [
                 },
             ],
 
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector:
+                        "MemberExpression[object.object.name='process'][object.property.name='env'][property.name=/^NEXT_PUBLIC_/]",
+                    message:
+                        "Use `env('NEXT_PUBLIC_*')` from `next-runtime-env` instead of `process.env.NEXT_PUBLIC_*` so the value is read at runtime, not baked in at build time.",
+                },
+                {
+                    selector:
+                        "MemberExpression[object.object.name='process'][object.property.name='env'][property.value=/^NEXT_PUBLIC_/]",
+                    message:
+                        "Use `env('NEXT_PUBLIC_*')` from `next-runtime-env` instead of `process.env['NEXT_PUBLIC_*']` so the value is read at runtime, not baked in at build time.",
+                },
+            ],
+
             'no-var': 'error',
             'prefer-const': 'warn',
             curly: 'warn',
