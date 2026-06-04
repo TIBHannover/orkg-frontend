@@ -29,5 +29,9 @@ junit.xml
 # coding agents
 .claude/settings.local.json
 screenshots/
-
+CLAUDE.local.md
 .worktrees
+
+# mise
+.mise.local.toml
+
