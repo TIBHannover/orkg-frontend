@@ -1,6 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked as markedRaw } from 'marked';
 import markedFootnote from 'marked-footnote';
+import { env } from 'next-runtime-env';
 
 import { processVideoEmbeds } from '@/lib/videoPostProcessor';
 
@@ -28,7 +29,7 @@ const ALLOWED_VIDEO_EMBED_HOSTNAMES = [
 ];
 
 const MATOMO_TRACKER_HOSTNAME = (() => {
-    const raw = process.env.NEXT_PUBLIC_MATOMO_TRACKER_URL;
+    const raw = env('NEXT_PUBLIC_MATOMO_TRACKER_URL');
     if (!raw?.trim()) return null;
     try {
         return new URL(raw).hostname;
