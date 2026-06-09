@@ -73,7 +73,7 @@ const ListPaginatedContent = <ItemType,>({
     const { flush: _, ...safeListGroupProps } = listGroupProps;
     const componentProps = ListGroupComponent === ListGroup ? listGroupProps : safeListGroupProps;
     return (
-        <Container>
+        <Container className="px-0">
             {isLoading && loadingComponent}
             {!isLoading && error && error.statusCode === 404 && <NotFound />}
             {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
