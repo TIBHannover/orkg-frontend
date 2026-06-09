@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import Button from '@/components/Ui/Button/Button';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
 
@@ -22,9 +21,14 @@ export default function ReadMore({ text = '', maxLength = 750 }: ReadMoreProps) 
             {isExpandable && (
                 <>
                     {!isExpanded ? '...' : ''}{' '}
-                    <Button color="link" className="p-0 m-0 border-0" onClick={() => setIsExpanded(!isExpanded)}>
-                        Read {isExpanded ? 'less' : 'more'}
-                    </Button>
+                    <button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        className="text-accent hover:underline underline-offset-2 cursor-pointer"
+                        onClick={() => setIsExpanded(!isExpanded)}
+                    >
+                        Show {isExpanded ? 'less' : 'more'}
+                    </button>
                 </>
             )}
         </p>

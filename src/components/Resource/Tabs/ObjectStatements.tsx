@@ -28,7 +28,7 @@ const ObjectStatements = ({ id, contentType, showInfoTabLink = true }: { id: str
     return (
         <div className="flex flex-col gap-3">
             {showInfoTabLink && (
-                <Alert>
+                <Alert status="accent">
                     <Alert.Indicator />
                     <Alert.Content className="min-w-0 flex-1">
                         <Alert.Title>Note</Alert.Title>

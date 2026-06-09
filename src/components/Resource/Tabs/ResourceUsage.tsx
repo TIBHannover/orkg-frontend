@@ -29,7 +29,7 @@ function ResourceUsage({ id }: { id: string }) {
 
     return (
         <div>
-            <Alert className="mb-2">
+            <Alert className="mb-2" status="accent">
                 <Alert.Indicator />
                 <Alert.Content className="min-w-0 flex-1">
                     <Alert.Title>Note</Alert.Title>
