@@ -31,7 +31,7 @@ include:
   - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-tag-release@0.0.7
 
 install:
-  image: node:22-bookworm
+  image: node:24-bookworm
   stage: install
   script:
     - npm install
@@ -40,7 +40,7 @@ install:
       - node_modules/
 
 vitest:
-  image: node:22-bookworm
+  image: node:24-bookworm
   stage: test
   script:
     - cp default.env .env
@@ -57,7 +57,7 @@ dependency_scanning:
 
 # deploy storybook to Gitlab pages
 pages:
-  image: node:22-bookworm
+  image: node:24-bookworm
   stage: pages
   script:
     - rm -rf public # remove the currently existing 'public' folder that contains static files for running the frontend

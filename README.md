@@ -7,7 +7,9 @@ Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBH
 
 ### Prerequisites
 
-In order to run the frontend, ensure that Node.js is installed (version >=24.0.0). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
+In order to run the frontend, ensure that you are using the Node and npm versions specified in `.mise.toml`. To install and activate them automatically in the project directory, [install mise](https://mise.jdx.dev/getting-started.html) and run `mise install`. Once mise is activated in your shell, the versions switch automatically when you `cd` into the project directory.
+
+Alternatively, install Node.js manually (version >=24.14.1). Check whether you have the right version installed by running `node --version` in your command prompt or terminal. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
 
 ### Installation
 
