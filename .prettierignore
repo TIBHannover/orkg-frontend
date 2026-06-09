@@ -1,0 +1,5 @@
+# Generated / minified bundle - don't reformat
+public/widget.js
+public/storybook
+.next
+widget/dist

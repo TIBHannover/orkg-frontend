@@ -18,8 +18,8 @@ const dictionary = {
 };
 
 export const getItemByDoi = (doi) => {
-    // http://localhost:8000/api/widgets/?doi=10.1007/s00799-015-0158-y
-    const url = `${process.env.BACKEND_URL}widgets/?doi=${encodeURIComponent(decodeURIComponent(doi))}`;
+    // http://localhost:8000/api/widgets?doi=10.1007/s00799-015-0158-y
+    const url = `${process.env.BACKEND_URL}widgets?doi=${encodeURIComponent(decodeURIComponent(doi))}`;
     return new Promise((resolve, reject) => {
         fetch(url)
             .then((response) => {
