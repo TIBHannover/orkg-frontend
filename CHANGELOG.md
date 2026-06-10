@@ -2,6 +2,23 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.182.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.1...v0.182.2) - 2026-06-10
+
+### Changes
+
+- refactor(ReadMore): replace deprecated Ui Button wrapper with native link button [`#1695`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1695)
+- ci: update to dependency scanning component version 2 [`#1698`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1698)
+- build: migrate to mise-en-place from NVM [`#1694`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1694)
+- chore(lint): forbid process.env.NEXT_PUBLIC_* in favor of env() runtime reads [`#1693`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1693)
+- fix: minimize widget.js file and remove trailing slash [`#1697`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1697)
+- refactor: migrate benchmarks service [`#1690`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1690)
+- fix: handle legacy meta refresh redirects in HelpCenterArticleContent [`#1691`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1691)
+- perf(comparison): ssr + SWR fallback to remove client-side fetch waterfall [`#1679`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1679)
+- fix: update ORKG widget and dependencies, enhance page metadata, and fix URL parameters [`#1689`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1689)
+- refactor(math): replace better-react-mathjax with katex [`#1680`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1680)
+- ci: migrate to CI components [`#1678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1678)
+
+---
 ## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-19
 
 ### Changes
