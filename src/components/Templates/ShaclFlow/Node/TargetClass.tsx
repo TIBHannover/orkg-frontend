@@ -1,6 +1,6 @@
 import { Position } from '@xyflow/react';
 
-import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import DescriptionPopover from '@/components/DescriptionPopover/DescriptionPopover';
 import Handle from '@/components/Templates/ShaclFlow/Node/Handle';
 import { ENTITIES } from '@/constants/graphSettings';
 
@@ -17,9 +17,9 @@ function TargetClass({ data, nodeId }: TargetClassProps) {
         <div className="bg-secondary-darker text-surface border-b border-border py-1 px-2 relative">
             <Handle type="target" position={Position.Left} id={nodeId} />
             <div>
-                <DescriptionTooltip id={data.id} _class={ENTITIES.CLASS} showURL>
+                <DescriptionPopover id={data.id} _class={ENTITIES.CLASS} showURL>
                     {data.label}
-                </DescriptionTooltip>
+                </DescriptionPopover>
             </div>
         </div>
     );
