@@ -1,4 +1,10 @@
-import { ClassRepresentation, Contributor as ContributorType, LiteralRepresentation, PageOfAuthorRecordRepresentationsPage } from '@orkg/orkg-client';
+import {
+    ClassRepresentation,
+    Contributor as ContributorType,
+    LiteralRepresentation,
+    PageOfAuthorRecordRepresentationsPage,
+    ResourceRepresentationExtractionMethodEnum,
+} from '@orkg/orkg-client';
 
 export type EntityType = string;
 
@@ -23,7 +29,7 @@ export type Pagination<T> = {
     page: PageOfAuthorRecordRepresentationsPage;
 };
 
-export type ExtractionMethod = 'UNKNOWN' | 'MANUAL' | 'AUTOMATIC';
+export type ExtractionMethod = ResourceRepresentationExtractionMethodEnum;
 export type Visibility = 'DEFAULT' | 'FEATURED' | 'UNLISTED' | 'DELETED';
 export type VisibilityFilter = 'combined' | 'ALL_LISTED' | 'UNLISTED' | 'FEATURED' | 'NON_FEATURED' | 'DELETED';
 export type Certainty = 'LOW' | 'MODERATE' | 'HIGH';
@@ -139,6 +145,7 @@ export type Statement = {
     subject: Resource;
     predicate: Predicate;
     object: Resource | Literal;
+    extraction_method: ExtractionMethod;
     created_at: string;
     created_by: string;
 };

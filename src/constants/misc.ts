@@ -18,5 +18,19 @@ export const EXTRACTION_METHODS: {
     UNKNOWN: 'UNKNOWN',
     AUTOMATIC: 'AUTOMATIC',
     MANUAL: 'MANUAL',
+    AI_GENERATED: 'AI_GENERATED',
+    AI_GENERATED_WITH_MANUAL_REVIEW: 'AI_GENERATED_WITH_MANUAL_REVIEW',
 };
+
+export const EXTRACTION_METHOD_LABELS: {
+    [key in ExtractionMethod]: string;
+} = {
+    UNKNOWN: 'Unknown',
+    AUTOMATIC: 'Automatic',
+    MANUAL: 'Manual',
+    AI_GENERATED: 'AI generated',
+    AI_GENERATED_WITH_MANUAL_REVIEW: 'AI with manual review',
+};
+
+export const getExtractionMethodLabel = (method: ExtractionMethod): string => EXTRACTION_METHOD_LABELS[method] ?? method;
 export const MAX_LENGTH_INPUT: number = 8164;

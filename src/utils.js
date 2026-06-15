@@ -199,21 +199,6 @@ export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, pr
     return isUnique ? null : [];
 };
 
-// https://stackoverflow.com/questions/42921220/is-any-solution-to-do-localstorage-setitem-in-asynchronous-way-in-javascript
-export const asyncLocalStorage = {
-    setItem(key, value) {
-        return Promise.resolve().then(() => {
-            localStorage.setItem(key, value);
-        });
-    },
-    getItem(key) {
-        return Promise.resolve().then(() => localStorage.getItem(key));
-    },
-    removeItem(key) {
-        return Promise.resolve().then(() => localStorage.removeItem(key));
-    },
-};
-
 export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions') {
     const flatten = (children, extractChildren) =>
         Array.prototype.concat.apply(

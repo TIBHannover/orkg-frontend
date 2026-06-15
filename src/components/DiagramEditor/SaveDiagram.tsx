@@ -6,6 +6,7 @@ import { FC, useEffect, useState } from 'react';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { CLASSES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { DIAGRAM_LOCAL_STORAGE_KEY } from '@/constants/localStorageKeys';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import THING_TYPES from '@/constants/thingTypes';
@@ -14,7 +15,7 @@ import { createResource } from '@/services/backend/resources';
 import { createResourceStatement } from '@/services/backend/statements';
 import { Resource } from '@/services/backend/types';
 import { createThing } from '@/services/simcomp';
-import { asyncLocalStorage } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 type SaveDiagramProps = {
     isSaveDiagramModalOpen: boolean;
@@ -41,7 +42,7 @@ const SaveDiagram: FC<SaveDiagramProps> = ({ isSaveDiagramModalOpen, setIsSaveDi
                 toast.success('Diagram published successfully');
                 setIsSaving(false);
                 setIsSaveDiagramModalOpen();
-                asyncLocalStorage.removeItem('diagram');
+                asyncLocalStorage.removeItem(DIAGRAM_LOCAL_STORAGE_KEY);
             })
             .catch(() => {
                 setIsSaving(false);

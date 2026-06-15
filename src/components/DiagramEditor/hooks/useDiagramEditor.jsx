@@ -6,11 +6,13 @@ import Confirm from '@/components/Confirmation/Confirmation';
 import CustomEdge from '@/components/DiagramEditor/CustomEdge';
 import CustomGroup from '@/components/DiagramEditor/CustomGroup';
 import CustomNode from '@/components/DiagramEditor/CustomNode';
+import { DIAGRAM_LOCAL_STORAGE_KEY } from '@/constants/localStorageKeys';
 import { DIAGRAM_CONTEXT_MENU_ID } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
 import { getResource } from '@/services/backend/resources';
 import { getThing } from '@/services/simcomp';
-import { asyncLocalStorage, guid } from '@/utils';
+import { guid } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 function useDiagramEditor({ id }) {
     const { show } = useContextMenu({
@@ -247,7 +249,7 @@ function useDiagramEditor({ id }) {
         });
 
         if (confirm) {
-            asyncLocalStorage.removeItem('diagram');
+            asyncLocalStorage.removeItem(DIAGRAM_LOCAL_STORAGE_KEY);
             setNodes([]);
             setEdges([]);
             setIsDataLoadedFromLocalStorage(false);
@@ -379,13 +381,13 @@ function useDiagramEditor({ id }) {
 
     useEffect(() => {
         if (nodes?.length > 0 && !id) {
-            asyncLocalStorage.setItem('diagram', JSON.stringify(reactFlowInstance?.toObject()));
+            asyncLocalStorage.setItem(DIAGRAM_LOCAL_STORAGE_KEY, JSON.stringify(reactFlowInstance?.toObject()));
         }
     }, [nodes, edges, reactFlowInstance, id]);
 
     useEffect(() => {
         const loadLocalData = async () => {
-            const data = await asyncLocalStorage.getItem('diagram');
+            const data = await asyncLocalStorage.getItem(DIAGRAM_LOCAL_STORAGE_KEY);
             const localDiagram = await JSON.parse(data);
             if (!id && localDiagram && localDiagram.nodes.length > 0) {
                 setNodes(localDiagram.nodes);

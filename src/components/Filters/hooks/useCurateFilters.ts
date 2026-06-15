@@ -4,10 +4,12 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import Confirm from '@/components/Confirmation/Confirmation';
 import { areFiltersEqual, loadFiltersFromLocalStorage } from '@/components/Filters/helpers';
 import useAuthentication from '@/components/hooks/useAuthentication';
-import { FILTER_SOURCE, FILTERS_LOCAL_STORAGE_NAME } from '@/constants/filters';
+import { FILTER_SOURCE } from '@/constants/filters';
+import { FILTERS_LOCAL_STORAGE_KEY } from '@/constants/localStorageKeys';
 import { createFiltersInObservatory, deleteFilterOfObservatory, updateFiltersOfObservatory } from '@/services/backend/observatories';
 import { FilterConfig } from '@/services/backend/types';
-import { asyncLocalStorage, getErrorMessage, guid } from '@/utils';
+import { getErrorMessage, guid } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 const useCurateFilters = ({
     oId,
@@ -49,13 +51,13 @@ const useCurateFilters = ({
             if (!filterId) {
                 const _id = guid();
                 asyncLocalStorage.setItem(
-                    FILTERS_LOCAL_STORAGE_NAME,
+                    FILTERS_LOCAL_STORAGE_KEY,
                     JSON.stringify([..._localStorage, { id: _id, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE }]),
                 );
                 setFilters([...filters, { id: _id, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE }]);
             } else {
                 asyncLocalStorage.setItem(
-                    FILTERS_LOCAL_STORAGE_NAME,
+                    FILTERS_LOCAL_STORAGE_KEY,
                     JSON.stringify(
                         _localStorage.map((f) => (f.id === filterId ? { id: filterId, ...filter, source: FILTER_SOURCE.LOCAL_STORAGE } : f)),
                     ),
@@ -80,7 +82,7 @@ const useCurateFilters = ({
             }
             if (filter.source === FILTER_SOURCE.LOCAL_STORAGE && filter.id) {
                 const _localStorage = await loadFiltersFromLocalStorage();
-                asyncLocalStorage.setItem(FILTERS_LOCAL_STORAGE_NAME, JSON.stringify(_localStorage.filter((f) => f.id !== filter.id)));
+                asyncLocalStorage.setItem(FILTERS_LOCAL_STORAGE_KEY, JSON.stringify(_localStorage.filter((f) => f.id !== filter.id)));
             }
             setFilters(filters.filter((f) => f.id !== filter.id || (!f.id && !areFiltersEqual(filter, f))));
             refreshFilters();

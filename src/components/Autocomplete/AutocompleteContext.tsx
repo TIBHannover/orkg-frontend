@@ -3,7 +3,7 @@ import { MultiValue } from 'react-select';
 
 import { Ontology } from '@/components/Autocomplete/types';
 import { DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
-import { asyncLocalStorage } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 type AutocompleteState = {
     isOntologySelectorIsOpen: boolean;

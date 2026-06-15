@@ -15,7 +15,9 @@ type PublishProps = {
 const Publish: FC<PublishProps> = ({ toggle }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const { comparison } = useComparison();
-    const { isLoading, handleSubmit, shouldAssignDoi, setShouldAssignDoi, isPublishable } = usePublish();
+    const { isLoading, handleSubmit, shouldAssignDoi, setShouldAssignDoi, isPublishable, hasUnverified, unverifiedCount, rejectedCount } =
+        usePublish();
+    const canPublish = isPublishable && !hasUnverified;
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
@@ -33,8 +35,36 @@ const Publish: FC<PublishProps> = ({ toggle }) => {
                     </Modal.Header>
                     <form onSubmit={handleSubmit}>
                         <Modal.Body className="pt-4 pb-2 px-1 flex flex-col gap-4">
-                            {isPublishable ? (
+                            {!isPublishable && (
+                                <Alert status="danger">
+                                    <span>
+                                        Before publishing a comparison, make sure a comparison has a{' '}
+                                        <em>title, description, research field, authors, and has at least two sources</em>.<br />
+                                        <Button size="sm" className="mt-2 mr-2" onPress={() => setIsOpenEditModal(true)}>
+                                            <FontAwesomeIcon icon={faPen} /> Edit metadata
+                                        </Button>
+                                    </span>
+                                </Alert>
+                            )}
+                            {isPublishable && hasUnverified && (
+                                <Alert status="danger">
+                                    <span>
+                                        Before publishing, all AI-generated values must be reviewed. There {unverifiedCount === 1 ? 'is' : 'are'}{' '}
+                                        still <em>{unverifiedCount}</em> unverified {unverifiedCount === 1 ? 'value' : 'values'} (marked with an
+                                        exclamation mark). Please accept or reject {unverifiedCount === 1 ? 'it' : 'them'} before publishing.
+                                    </span>
+                                </Alert>
+                            )}
+                            {canPublish && (
                                 <>
+                                    {rejectedCount > 0 && (
+                                        <Alert status="warning">
+                                            <span>
+                                                <em>{rejectedCount}</em> rejected {rejectedCount === 1 ? 'value' : 'values'} will be removed when
+                                                publishing.
+                                            </span>
+                                        </Alert>
+                                    )}
                                     <Alert status="accent">
                                         Once a comparison is published, the current state is saved and will be persistent over time.
                                     </Alert>
@@ -57,20 +87,10 @@ const Publish: FC<PublishProps> = ({ toggle }) => {
                                         </Checkbox.Content>
                                     </Checkbox>
                                 </>
-                            ) : (
-                                <Alert status="danger">
-                                    <span>
-                                        Before publishing a comparison, make sure a comparison has a{' '}
-                                        <em>title, description, research field, authors, and has at least two sources</em>.<br />
-                                        <Button size="sm" className="mt-2 mr-2" onPress={() => setIsOpenEditModal(true)}>
-                                            <FontAwesomeIcon icon={faPen} /> Edit metadata
-                                        </Button>
-                                    </span>
-                                </Alert>
                             )}
                         </Modal.Body>
 
-                        {isPublishable && (
+                        {canPublish && (
                             <Modal.Footer>
                                 <ButtonWithLoading type="submit" isLoading={isLoading}>
                                     Publish

@@ -58,13 +58,15 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
     return (
         <div className="flex flex-col grow min-w-0">
             <div className="flex items-stretch min-h-9 grow min-w-0">
-                <DatatypeSelector
-                    _class={editMode && value && '_class' in value ? value._class : undefined}
-                    range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
-                    isDisabled={!!range}
-                    dataType={dataType}
-                    setDataType={setDataType}
-                />
+                <div>
+                    <DatatypeSelector
+                        _class={editMode && value && '_class' in value ? value._class : undefined}
+                        range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
+                        isDisabled={!!range}
+                        dataType={dataType}
+                        setDataType={setDataType}
+                    />
+                </div>
                 <InputField
                     range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                     inputValue={inputValue}

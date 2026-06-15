@@ -33,3 +33,31 @@ export const getDedicatedLink = (classes?: string[]) => {
     }
     return undefined;
 };
+
+// https://stackoverflow.com/questions/42921220/is-any-solution-to-do-localstorage-setitem-in-asynchronous-way-in-javascript
+export const asyncLocalStorage = {
+    setItem: (key: string, value: string): Promise<void> =>
+        Promise.resolve().then(() => {
+            try {
+                localStorage.setItem(key, value);
+            } catch {
+                /* storage unavailable */
+            }
+        }),
+    getItem: (key: string): Promise<string | null> =>
+        Promise.resolve().then(() => {
+            try {
+                return localStorage.getItem(key);
+            } catch {
+                return null;
+            }
+        }),
+    removeItem: (key: string): Promise<void> =>
+        Promise.resolve().then(() => {
+            try {
+                localStorage.removeItem(key);
+            } catch {
+                /* storage unavailable */
+            }
+        }),
+};

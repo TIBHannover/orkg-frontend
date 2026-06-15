@@ -16,7 +16,13 @@ import errorHandler from '@/helpers/errorHandler';
 import { reverse } from '@/lib/namedRoute';
 import { createComparison } from '@/services/backend/comparisons';
 
-const CreateForm = () => {
+type CreateFormProps = {
+    // Set while the AI comparison creator below the form is showing a job, so
+    // the manual form can't be submitted at the same time.
+    isDisabled?: boolean;
+};
+
+const CreateForm = ({ isDisabled = false }: CreateFormProps) => {
     const [title, setTitle] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const router = useRouter();
@@ -84,7 +90,7 @@ const CreateForm = () => {
                     </Alert.Content>
                 </Alert>
             )}
-            <TextField fullWidth isDisabled={isSaving} value={title} onChange={setTitle} className="mb-4">
+            <TextField fullWidth isDisabled={isSaving || isDisabled} value={title} onChange={setTitle} className="mb-4">
                 <Label htmlFor="comparisonTitle">
                     Title
                     <Tooltip message="Choose the title of your comparison. You can always update the title later" />
@@ -92,7 +98,7 @@ const CreateForm = () => {
                 <Input id="comparisonTitle" type="text" maxLength={MAX_LENGTH_INPUT} />
             </TextField>
             <div className="text-right">
-                <RequireAuthentication component={ButtonWithLoading} type="submit" variant="primary" isLoading={isSaving}>
+                <RequireAuthentication component={ButtonWithLoading} type="submit" variant="primary" isLoading={isSaving} isDisabled={isDisabled}>
                     Create
                 </RequireAuthentication>
             </div>

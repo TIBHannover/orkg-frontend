@@ -6,8 +6,6 @@ export const FILTER_SOURCE = {
     LOCAL_STORAGE: 'LocalStorage',
 };
 
-export const FILTERS_LOCAL_STORAGE_NAME = 'filters';
-
 // Define a map of operators and their corresponding codes
 export const OPERATORS_MAP: { [_key in string]: FilterConfigOperator } = {
     '<=': 'LE',

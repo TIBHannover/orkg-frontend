@@ -12,7 +12,7 @@ import { customClassNames, customStyles } from '@/components/Autocomplete/styles
 import { AdditionalType, Ontology } from '@/components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE, DEFAULT_SOURCES, STORAGE_NAME } from '@/constants/autocompleteSources';
 import { loadOntologiesOptions } from '@/services/ols';
-import { asyncLocalStorage } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 const defaultAdditional: AdditionalType = {
     page: 0,
