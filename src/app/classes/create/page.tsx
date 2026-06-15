@@ -54,7 +54,7 @@ const CreateClassPage = () => {
                 return;
             }
             try {
-                const newClassId = await createClass(label, uri || null);
+                const newClassId = await createClass(label, uri || undefined);
                 if (parentClass) {
                     await setParentClassByID(newClassId, parentClass.id);
                 }

@@ -9,7 +9,7 @@ let cachedToken: string | null = null;
 let tokenExpiryTime: number | null = null;
 let pendingTokenPromise: Promise<string | null> | null = null;
 
-const getAccessToken = async (): Promise<string | null> => {
+export const getAccessToken = async (): Promise<string | null> => {
     const EXPIRY_BUFFER_TIME = 60 * 1000; // 60 seconds
     // Use cached token if it is still considered valid (with buffer)
     if (cachedToken && tokenExpiryTime && Date.now() < tokenExpiryTime) {

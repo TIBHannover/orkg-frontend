@@ -2,9 +2,8 @@ import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from '@heroui/react';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { type FileRejection, useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const DragPdf = styled.div`
@@ -37,25 +36,43 @@ const FilePlaceholder = styled(FontAwesomeIcon)`
     color: inherit;
 `;
 
-const DragUploadPdf = ({ pdf = null, onDrop: _onDrop }) => {
-    const [isLoading, setIsLoading] = useState(false);
+type DragUploadPdfProps = {
+    onDrop: (files: File[]) => void;
+    pdf?: File | null;
+    isLoading?: boolean;
+    multiple?: boolean;
+};
 
-    const onDrop = (files) => {
+const DragUploadPdf = ({ pdf = null, onDrop: _onDrop, isLoading: controlledIsLoading, multiple = false }: DragUploadPdfProps) => {
+    const [internalIsLoading, setInternalIsLoading] = useState(false);
+    const isControlled = controlledIsLoading !== undefined;
+    const isLoading = isControlled ? controlledIsLoading : internalIsLoading;
+
+    const onDrop = (files: File[]) => {
         _onDrop(files);
-        setIsLoading(true);
+        if (!isControlled) {
+            setInternalIsLoading(true);
+        }
     };
 
-    const onDropRejected = () => {
+    const onDropRejected = (_fileRejections: FileRejection[]) => {
         toast.danger('Error uploading your file, only PDF files are accepted');
-        setIsLoading(false);
+        if (!isControlled) {
+            setInternalIsLoading(false);
+        }
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: { 'application/pdf': ['.pdf'] } });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        onDropRejected,
+        accept: { 'application/pdf': ['.pdf'] },
+        multiple,
+    });
 
     return (
         <>
             {!isLoading && !pdf && (
-                <DragPdf {...getRootProps()} className={isDragActive && 'active'}>
+                <DragPdf {...getRootProps()} className={isDragActive ? 'active' : undefined}>
                     <FilePlaceholder icon={faFile} style={{ fontSize: 70 }} /> <br />
                     Drag 'n' drop a PDF file here, or click here to upload one
                     <input {...getInputProps()} />
@@ -70,11 +87,6 @@ const DragUploadPdf = ({ pdf = null, onDrop: _onDrop }) => {
             )}
         </>
     );
-};
-
-DragUploadPdf.propTypes = {
-    onDrop: PropTypes.func.isRequired,
-    pdf: PropTypes.object,
 };
 
 export default DragUploadPdf;

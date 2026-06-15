@@ -1,8 +1,8 @@
 import { isEqual } from 'lodash';
 
-import { FILTERS_LOCAL_STORAGE_NAME } from '@/constants/filters';
+import { FILTERS_LOCAL_STORAGE_KEY } from '@/constants/localStorageKeys';
 import { FilterConfig } from '@/services/backend/types';
-import { asyncLocalStorage } from '@/utils';
+import { asyncLocalStorage } from '@/utilsTyped';
 
 export function areFiltersEqual(a: FilterConfig, b: FilterConfig): boolean {
     return a.range === b.range && isEqual(a.path, b.path) && isEqual(a.exact, b.exact);
@@ -25,7 +25,7 @@ export const mergeFilters = (initialFilters: FilterConfig[], newFilters: FilterC
 };
 
 export const loadFiltersFromLocalStorage = async () => {
-    const data = await asyncLocalStorage.getItem(FILTERS_LOCAL_STORAGE_NAME);
+    const data = await asyncLocalStorage.getItem(FILTERS_LOCAL_STORAGE_KEY);
     if (!data) {
         return [];
     }

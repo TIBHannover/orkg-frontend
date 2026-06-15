@@ -47,6 +47,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                       subject: snapshot?.data.root,
                       predicate: snapshot?.data?.predicates?.[predicateId],
                       object: data?.thing,
+                      extraction_method: 'UNKNOWN' as const,
                       created_by: data?.created_by,
                       created_at: data?.created_at,
                   };

@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Key } from '@heroui/react';
 import { Chip, ListBox, Select, toast } from '@heroui/react';
 import dayjs from 'dayjs';
-import { capitalize } from 'lodash';
 import pluralize from 'pluralize';
 import { FC, useEffect, useState } from 'react';
 
@@ -11,7 +10,7 @@ import CopyId from '@/components/CopyId/CopyId';
 import ProvenanceBox from '@/components/ItemMetadata/ProvenanceBox';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
-import { EXTRACTION_METHODS } from '@/constants/misc';
+import { EXTRACTION_METHODS, getExtractionMethodLabel } from '@/constants/misc';
 import { updateResource } from '@/services/backend/resources';
 import { Thing } from '@/services/backend/things';
 import { ExtractionMethod } from '@/services/backend/types';
@@ -122,21 +121,20 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                                 <span className="ml-1 inline-block align-middle" style={{ marginTop: -30, marginBottom: -30 }}>
                                     <Select
                                         aria-label="Extraction method"
-                                        className="w-28"
                                         value={extractionMethod}
                                         onChange={(key: Key | null) => {
                                             if (key) handleSave(key as ExtractionMethod);
                                         }}
                                     >
-                                        <Select.Trigger className="!h-6 !min-h-6 !py-0 !px-2 text-xs">
+                                        <Select.Trigger className="!h-6 !min-h-6 !py-0 text-xs">
                                             <Select.Value />
                                             <Select.Indicator className="size-3" />
                                         </Select.Trigger>
                                         <Select.Popover>
                                             <ListBox>
                                                 {Object.values(EXTRACTION_METHODS).map((method) => (
-                                                    <ListBox.Item key={method} id={method} textValue={capitalize(method)}>
-                                                        {capitalize(method)}
+                                                    <ListBox.Item key={method} id={method} textValue={getExtractionMethodLabel(method)}>
+                                                        {getExtractionMethodLabel(method)}
                                                         <ListBox.ItemIndicator />
                                                     </ListBox.Item>
                                                 ))}
@@ -146,7 +144,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                                 </span>
                             ) : (
                                 <span className="ml-1 inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
-                                    {capitalize(extractionMethod)}
+                                    {getExtractionMethodLabel(extractionMethod)}
                                 </span>
                             )}
                         </Chip>

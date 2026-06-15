@@ -19,7 +19,7 @@ const classHierarchiesApi = new ClassHierarchiesApi(configuration);
 
 export const getClassById = (id: string) => classesApi.findById({ id });
 
-export const createClass = (label: string, uri: string | null = null, id: string | null = null) =>
+export const createClass = (label: string, uri?: string, id?: string) =>
     classesApi.createRaw({ createClassRequest: { label, uri, id } }).then(getCreatedId);
 
 export const updateClass = (id: string, label: string) => classesApi.update({ id, updateClassRequest: { label } });

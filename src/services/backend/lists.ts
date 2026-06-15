@@ -9,7 +9,7 @@ export const listsUrl = `${urlNoTrailingSlash}/lists`;
 
 export const getList = (id: string) => listsApiClient.findById({ id });
 
-export const updateList = ({ id, label = null, elements }: UpdateListRequest & { id: string }) =>
+export const updateList = ({ id, label = undefined, elements }: UpdateListRequest & { id: string }) =>
     listsApiClient.update({ id, updateListRequest: { label, elements } });
 
 export const createList = (data: CreateListRequest) => listsApiClient.createRaw({ createListRequest: data }).then(getCreatedId);

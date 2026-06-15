@@ -98,6 +98,12 @@
     --button-fg: white;
 }
 
+/* Soft chip tinted with the ORKG "smart" (AI) color, e.g. in the AI comparison plan editor */
+.chip--orkg-smart {
+    --chip-bg: color-mix(in oklab, var(--color-smart) 18%, transparent);
+    --chip-fg: var(--color-smart-darker);
+}
+
 .button--orkg-secondary-darker {
     --button-bg: var(--color-secondary-darker);
     --button-bg-hover: var(--color-secondary);

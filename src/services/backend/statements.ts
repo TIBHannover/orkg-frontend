@@ -4,7 +4,7 @@ import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import { url } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
 import { getTemplate } from '@/services/backend/templates';
-import { PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from '@/services/backend/types';
+import { ExtractionMethod, PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from '@/services/backend/types';
 
 export const statementsUrl = `${url}statements/`;
 export const statementsApi = backendApi.extend(() => ({ prefixUrl: statementsUrl }));
@@ -120,7 +120,13 @@ export const updateStatement = (
         subject_id = null,
         predicate_id = null,
         object_id = null,
-    }: { subject_id?: string | null; predicate_id?: string | null; object_id?: string | null },
+        extraction_method = null,
+    }: {
+        subject_id?: string | null;
+        predicate_id?: string | null;
+        object_id?: string | null;
+        extraction_method?: ExtractionMethod | null;
+    },
 ) =>
     statementsApi
         .put<Statement>(id, {
@@ -128,9 +134,13 @@ export const updateStatement = (
                 ...(subject_id ? { subject_id } : null),
                 ...(predicate_id ? { predicate_id } : null),
                 ...(object_id ? { object_id } : null),
+                ...(extraction_method ? { extraction_method } : null),
             },
         })
         .json();
+
+export const setStatementsExtractionMethod = (statementIds: string[], extractionMethod: ExtractionMethod) =>
+    Promise.all(statementIds.map((id) => updateStatement(id, { extraction_method: extractionMethod })));
 
 export const deleteStatementById = (id: string) => statementsApi.delete<void>(encodeURIComponent(id)).json();
 

@@ -20,6 +20,7 @@ import AboutDropdown from '@/components/Layout/Header/Menu/AboutDropdown';
 import ToolsDropdown from '@/components/Layout/Header/Menu/ToolsDropdown';
 import ViewDropdown from '@/components/Layout/Header/Menu/ViewDropdown';
 import Nfdi4dsButton from '@/components/Layout/Header/Nfdi4dsButton';
+import NotificationsBell from '@/components/Layout/Header/NotificationsBell/NotificationsBell';
 import SearchForm from '@/components/Layout/Header/SearchForm';
 import StyledTopBar from '@/components/Layout/Header/styled';
 import ThemeSwitcher from '@/components/Layout/Header/ThemeSwitcher';
@@ -139,6 +140,7 @@ const Header = () => {
                             <SearchForm placeholder="Search..." onSearch={closeMenu} />
                             <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
                             <ThemeSwitcher isTransparentNavbar={isTransparentNavbar} />
+                            {status === 'authenticated' && user && <NotificationsBell isTransparentNavbar={isTransparentNavbar} />}
                             {status === 'authenticated' && user && <UserTooltip />}
                             {status === 'unauthenticated' && (
                                 <Button
@@ -207,6 +209,17 @@ const Header = () => {
                     <div className="mt-2 flex flex-col gap-2 border-t border-separator px-4 pt-3">
                         <SearchForm placeholder="Search..." onSearch={closeMenu} />
                         <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
+                        {status === 'authenticated' && user && (
+                            <div
+                                className={cn(
+                                    'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium',
+                                    isTransparentNavbar ? 'text-white' : 'text-foreground',
+                                )}
+                            >
+                                <NotificationsBell isTransparentNavbar={isTransparentNavbar} />
+                                <span>Notifications</span>
+                            </div>
+                        )}
                         {status === 'authenticated' && user && <UserTooltip />}
                         {status === 'unauthenticated' && (
                             <Button

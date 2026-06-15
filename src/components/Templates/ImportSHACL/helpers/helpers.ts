@@ -124,7 +124,7 @@ export const mapClass = async (g: Store, classNode: Quad_Object | null) => {
         // the database should have the class, if not, create it
         if (!fetchedClass) {
             try {
-                const fetchedClassId = await createClass(labelNode?.value ?? extractedId, classURI?.value ?? null, extractedId);
+                const fetchedClassId = await createClass(labelNode?.value ?? extractedId, classURI?.value, extractedId);
                 fetchedClass = await getClassById(fetchedClassId);
             } catch {
                 fetchedClass = null;

@@ -40,7 +40,7 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
             return;
         }
         try {
-            const newClassId = await createClass(label, uri || null);
+            const newClassId = await createClass(label, uri || undefined);
             if (description && description.trim() !== '') {
                 const descriptionLiteralId = await createLiteral(description);
                 createLiteralStatement(newClassId, PREDICATES.DESCRIPTION, descriptionLiteralId);

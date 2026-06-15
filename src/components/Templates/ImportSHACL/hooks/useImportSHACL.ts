@@ -239,7 +239,7 @@ const useImportSHACL = () => {
 
                     // If still no ID, create the class
                     if (!('id' in mappedClass)) {
-                        const newClassId = await createClass(originalClass.label, originalClass.uri);
+                        const newClassId = await createClass(originalClass.label, originalClass.uri ?? undefined);
                         const createdClass = await getClassById(newClassId);
                         mappedClass = { ...createdClass, extractedId: originalClass.extractedId };
                     }

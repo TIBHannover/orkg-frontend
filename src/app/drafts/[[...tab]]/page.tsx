@@ -6,6 +6,7 @@ import Link from 'next/link';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
+import DraftAiComparisons from '@/components/UserSettings/DraftAiComparisons/DraftAiComparisons';
 import DraftComparisons from '@/components/UserSettings/DraftComparisons/DraftComparisons';
 import DraftLists from '@/components/UserSettings/DraftLists/DraftLists';
 import DraftReviews from '@/components/UserSettings/DraftReviews/DraftReviews';
@@ -15,12 +16,14 @@ import requireAuthentication from '@/requireAuthentication';
 
 const TABS = {
     DRAFT_COMPARISONS: 'draft-comparisons',
+    DRAFT_AI_COMPARISONS: 'draft-ai-comparisons',
     DRAFT_REVIEWS: 'draft-reviews',
     DRAFT_LISTS: 'draft-lists',
 } as const;
 
 const NAV_ITEMS = [
     { id: TABS.DRAFT_COMPARISONS, label: 'Draft comparisons' },
+    { id: TABS.DRAFT_AI_COMPARISONS, label: 'Draft AI comparisons' },
     { id: TABS.DRAFT_REVIEWS, label: 'Draft reviews' },
     { id: TABS.DRAFT_LISTS, label: 'Draft lists' },
 ];
@@ -61,6 +64,7 @@ const UserSettings = () => {
                     </Card>
                     <div className="flex-1 min-w-0">
                         {activeTab === TABS.DRAFT_COMPARISONS && <DraftComparisons />}
+                        {activeTab === TABS.DRAFT_AI_COMPARISONS && <DraftAiComparisons />}
                         {activeTab === TABS.DRAFT_REVIEWS && <DraftReviews />}
                         {activeTab === TABS.DRAFT_LISTS && <DraftLists />}
                     </div>
