@@ -3,8 +3,9 @@ import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indi
 import { faSquareMinus, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox } from '@heroui/react';
+import { Button, Checkbox, Chip, Tooltip } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import pluralize from 'pluralize';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
@@ -92,7 +93,24 @@ const PathListItem: FC<PathListItemProps> = ({
                         <Checkbox.Control>
                             <Checkbox.Indicator />
                         </Checkbox.Control>
-                        <Checkbox.Content className={!isSelected ? 'text-gray-500' : ''}>{currentPath.label}</Checkbox.Content>
+                        <Checkbox.Content className={!isSelected ? 'text-gray-500' : ''}>
+                            <div className="flex flex-col">
+                                <span>
+                                    {currentPath.label}
+                                    <Tooltip>
+                                        <Tooltip.Trigger className="inline-flex">
+                                            <Chip size="sm" className="mt-1 ml-2 h-auto py-0 text-xs">
+                                                {currentPath.sources}
+                                            </Chip>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content>
+                                            A total of {currentPath.sources ?? 0} {pluralize('source', currentPath.sources ?? 0)}{' '}
+                                            {(currentPath.sources ?? 0) === 1 ? 'has' : 'have'} a value for this property
+                                        </Tooltip.Content>
+                                    </Tooltip>
+                                </span>
+                            </div>
+                        </Checkbox.Content>
                     </Checkbox>
                 </div>
             </div>

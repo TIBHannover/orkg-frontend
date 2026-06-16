@@ -71,14 +71,13 @@ const mergeSelectedPathsWithTablePaths = (selectedPaths: ComparisonPath[], table
     );
 
     tablePaths.forEach((node) => {
-        if (map.has(node.id)) {
-            const existing = map.get(node.id)!;
-            if (node.children) {
-                existing.children = mergeSelectedPathsWithTablePaths(existing.children || [], node.children);
-            }
-        } else {
-            map.set(node.id, { ...node, children: node.children ? [...node.children] : [] });
-        }
+        const existing = map.get(node.id);
+        map.set(node.id, {
+            ...node,
+            ...existing,
+            sources: node.sources,
+            children: node.children ? mergeSelectedPathsWithTablePaths(existing?.children || [], node.children) : existing?.children || [],
+        });
     });
 
     return Array.from(map.values());
