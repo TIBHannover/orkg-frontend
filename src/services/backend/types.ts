@@ -651,6 +651,7 @@ export type ComparisonPath = {
     description: string | null;
     type: ComparisonPathType;
     children: ComparisonPath[];
+    sources?: number | null;
 };
 
 export type ComparisonSelectedPathFlattened = ComparisonPath & {
