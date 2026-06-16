@@ -2,6 +2,16 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.183.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.2...v0.183.0) - 2026-06-16
+
+### Changes
+
+- refactor(Alert): consolidate alert styling by removing unnecessary shadow classes [`#1701`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1701)
+- feat: add DescriptionPopover and use it in SHACL flow nodes [`#1702`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1702)
+- feat(PathList): add usage counts to comparison table path selector [`#1700`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1700)
+- feat: agentic comparison creator [`#1692`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1692)
+
+---
 ## [v0.182.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.1...v0.182.2) - 2026-06-10
 
 ### Changes
