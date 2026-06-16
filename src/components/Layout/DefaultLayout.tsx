@@ -78,7 +78,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
         setVisible(!cookieDismissed);
     }, [cookieDismissed]);
 
-    const topBannerClass = 'm-0';
+    const topBannerClass = 'm-0 shadow';
     const hasTopBanner = showBrowserWarning || env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true';
 
     return (

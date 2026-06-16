@@ -55,7 +55,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
         <div className="print-only relative mx-auto flex max-w-container flex-col gap-y-4 px-3">
             <Outline />
             {!review.published && (
-                <Alert status="warning" className="shadow-sm">
+                <Alert status="warning" className="shadow">
                     <Alert.Indicator />
                     <Alert.Content>
                         <Alert.Title>Unpublished version</Alert.Title>
@@ -69,7 +69,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                 </Alert>
             )}
             {newVersionAvailable && (
-                <Alert status="warning" className="shadow-sm">
+                <Alert status="warning" className="shadow">
                     <Alert.Indicator />
                     <Alert.Content>
                         <Alert.Title>Newer version available</Alert.Title>

@@ -357,7 +357,7 @@ const ComparisonHeader = () => {
             </TitleBar>
             {isPublished && comparison.id !== comparison.versions.published[0]?.id && (
                 <Container className="mb-2">
-                    <Alert status="warning" className="shadow-sm">
+                    <Alert status="warning" className="shadow">
                         <Alert.Indicator />
                         <Alert.Content>
                             <Alert.Title>Newer version available</Alert.Title>
@@ -403,7 +403,7 @@ const ComparisonHeader = () => {
                             <Alert.Title>Unpublished version</Alert.Title>
                             <Alert.Description>
                                 You are viewing an unpublished version of this comparison. The content can be changed by anyone.{' '}
-                                <Button size="sm" onPress={() => setIsOpenVersionsModal(true)}>
+                                <Button size="sm" variant="primary" onPress={() => setIsOpenVersionsModal(true)}>
                                     View publish history
                                 </Button>
                             </Alert.Description>

@@ -21,7 +21,7 @@ const NewComparisonsAlert = () => {
 
     return (
         <Container className="mb-4">
-            <Alert status="accent" className="shadow-sm">
+            <Alert status="accent" className="shadow">
                 <Alert.Indicator />
                 <Alert.Content>
                     <Alert.Title>Comparison update</Alert.Title>

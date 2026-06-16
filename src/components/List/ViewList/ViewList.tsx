@@ -49,7 +49,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
     return (
         <Container className="relative">
             {!list.published && (
-                <Alert status="warning" className="mt-2 mb-4 rounded-2xl flex-row items-center shadow">
+                <Alert status="warning" className="mt-2 mb-4 flex-row items-center shadow-sm">
                     <Alert.Indicator />
                     <Alert.Content>
                         <Alert.Title>Unpublished version</Alert.Title>
