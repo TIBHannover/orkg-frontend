@@ -1,7 +1,7 @@
 import { Position } from '@xyflow/react';
 import { FC } from 'react';
 
-import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
+import DescriptionPopover from '@/components/DescriptionPopover/DescriptionPopover';
 import Handle from '@/components/Templates/ShaclFlow/Node/Handle';
 import DATA_TYPES from '@/constants/DataTypes';
 import { ENTITIES } from '@/constants/graphSettings';
@@ -39,7 +39,7 @@ const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
             {initialType === 'C' && <Handle id={data.path.id} type="source" position={Position.Right} />}
             <div className="flex">
                 <div className="grow mr-2 flex">
-                    <DescriptionTooltip
+                    <DescriptionPopover
                         id={data.path.id}
                         _class={ENTITIES.PREDICATE}
                         showURL
@@ -56,15 +56,15 @@ const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
                         }
                     >
                         <span className="truncate inline-block mr-1 max-w-[300px]">{data.path.label}</span>
-                    </DescriptionTooltip>{' '}
+                    </DescriptionPopover>{' '}
                     [{data.min_count}..{data.max_count ?? '*'}]
                 </div>
                 {initialType && range && (
-                    <DescriptionTooltip id={range.id} _class={ENTITIES.CLASS} showURL>
+                    <DescriptionPopover id={range.id} _class={ENTITIES.CLASS} showURL>
                         <span className="w-[22px] h-[22px] rounded-full bg-secondary-darker text-white text-center text-xs leading-[22px] inline-block shrink-0">
                             {initialType}
                         </span>
-                    </DescriptionTooltip>
+                    </DescriptionPopover>
                 )}
             </div>
         </div>
