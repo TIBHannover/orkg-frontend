@@ -4,6 +4,7 @@ import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Dropdown, InputGroup, Label, Modal, Separator, Skeleton, TextField, toast } from '@heroui/react';
+import { buttonVariants } from '@heroui/styles';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useCopyToClipboard } from 'react-use';
@@ -134,8 +135,13 @@ const ViewPaperVersion = () => {
                                         <Alert.Title>Paper already published</Alert.Title>
                                         <Alert.Description>
                                             You can find the persistent link below.{' '}
-                                            <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link> to update
-                                            the current version.
+                                            <Link
+                                                className={`${buttonVariants({ size: 'sm' })} hover:no-underline`}
+                                                href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}
+                                            >
+                                                Fetch live data
+                                            </Link>{' '}
+                                            to update the current version.
                                         </Alert.Description>
                                     </Alert.Content>
                                 </Alert>

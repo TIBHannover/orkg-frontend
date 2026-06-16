@@ -83,7 +83,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                     </TitleBar>
 
                     <Container className="mt-1 mb-3">
-                        <Alert status="warning" className="shadow-sm">
+                        <Alert status="warning" className="shadow">
                             <Alert.Indicator />
                             <Alert.Content>
                                 <Alert.Title>Viewing published {contentType.toLowerCase()}</Alert.Title>

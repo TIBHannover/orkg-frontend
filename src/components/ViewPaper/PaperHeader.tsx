@@ -1,6 +1,7 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Chip } from '@heroui/react';
+import { buttonVariants } from '@heroui/styles';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { FC, ReactNode, useState } from 'react';
@@ -65,28 +66,38 @@ const PaperHeader: FC<PaperHeaderProps> = ({ editMode, isPublishedVersionView = 
         <>
             <div className="flex flex-col gap-3">
                 {!isPublishedVersionView && version && (
-                    <Container>
+                    <Container className="w-full px-0">
                         <Alert status="warning">
                             <Alert.Indicator />
                             <Alert.Content>
                                 <Alert.Title>Published version available</Alert.Title>
                                 <Alert.Description>
                                     A published version of this paper is available. You are currently viewing the live data.{' '}
-                                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: version.id })}>View published version</Link>
+                                    <Link
+                                        className={`${buttonVariants({ size: 'sm' })} hover:no-underline`}
+                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: version.id })}
+                                    >
+                                        View published version
+                                    </Link>
                                 </Alert.Description>
                             </Alert.Content>
                         </Alert>
                     </Container>
                 )}
                 {isPublishedVersionView && originalPaperId && (
-                    <Container>
+                    <Container className="w-full px-0">
                         <Alert status="warning">
                             <Alert.Indicator />
                             <Alert.Content>
                                 <Alert.Title>Viewing published paper</Alert.Title>
                                 <Alert.Description>
                                     This is a published snapshot of the paper.{' '}
-                                    <Link href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}>Fetch live data</Link>
+                                    <Link
+                                        className={`${buttonVariants({ size: 'sm' })} hover:no-underline`}
+                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}
+                                    >
+                                        Fetch live data
+                                    </Link>
                                 </Alert.Description>
                             </Alert.Content>
                         </Alert>
