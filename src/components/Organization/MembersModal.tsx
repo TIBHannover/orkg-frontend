@@ -27,7 +27,7 @@ const MembersModal: FC<MembersModalProps> = ({ members, openModal, setOpenModal 
                     <Modal.CloseTrigger />
                     <Modal.Heading>Organization members</Modal.Heading>
                 </Modal.Header>
-                <Modal.Body className="p-6">
+                <Modal.Body>
                     {members.length === 0 ? (
                         <div className="text-center text-muted py-6">No members yet</div>
                     ) : (

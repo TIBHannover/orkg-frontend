@@ -52,7 +52,7 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
                 <Modal.CloseTrigger />
                 <Modal.Heading>Publish resource</Modal.Heading>
             </Modal.Header>
-            <Modal.Body className="p-6">
+            <Modal.Body>
                 {!canPublish && (
                     <Alert status="danger">
                         <Alert.Indicator />

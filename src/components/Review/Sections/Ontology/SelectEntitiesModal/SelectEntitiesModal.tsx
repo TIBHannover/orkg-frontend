@@ -190,7 +190,7 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                         <Modal.CloseTrigger />
                         <Modal.Heading>Select {type}</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-4">
+                    <Modal.Body className="space-y-4">
                         <ul className={LIST_BASE}>
                             <li className={`${ROW_BASE} bg-default-100 px-2 py-2 font-bold`}>Selected {type}</li>
                             {selectedEntities.map((entity, index) => (

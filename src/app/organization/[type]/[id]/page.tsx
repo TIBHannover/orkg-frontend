@@ -3,6 +3,7 @@
 import { faExternalLinkAlt, faGlobe, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, ButtonGroup, Card, Separator, Skeleton } from '@heroui/react';
+import { Organization as OrganizationType } from '@orkg/orkg-client';
 import { upperFirst } from 'lodash';
 import Link from 'next/link';
 import { AnchorHTMLAttributes, useEffect, useState } from 'react';
@@ -15,6 +16,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import EditOrganization from '@/components/Organization/EditOrganization';
 import Members from '@/components/Organization/Members';
 import Observatories from '@/components/Organization/Observatories';
+import ReadMore from '@/components/ShowMore/ShowMore';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import useParams from '@/components/useParams/useParams';
 import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
@@ -42,8 +44,9 @@ const Organization = () => {
         getOrganization(params as string),
     );
 
-    const [logoOverride, setLogoOverride] = useState<string | null>(null);
-    const logo = logoOverride ?? (organization?.id ? getOrganizationLogoUrl(organization.id) : null);
+    // The logo lives at a stable URL, so bump a cache-buster whenever it changes to force the browser to refetch it.
+    const [logoCacheBuster, setLogoCacheBuster] = useState(0);
+    const logo = organization?.id ? `${getOrganizationLogoUrl(organization.id)}${logoCacheBuster ? `?v=${logoCacheBuster}` : ''}` : null;
 
     useEffect(() => {
         if (organization?.name) {
@@ -51,14 +54,14 @@ const Organization = () => {
         }
     }, [organization?.name, typeName]);
 
-    const updateOrganizationMetadata = (newLabel: string, newUrl: string, newLogo: string) => {
-        setLogoOverride(newLogo);
-        if (organization) {
-            mutate({ ...organization, name: newLabel, homepage: newUrl }, { revalidate: false });
+    const updateOrganizationMetadata = (updatedOrganization: OrganizationType, logoChanged: boolean) => {
+        if (logoChanged) {
+            setLogoCacheBuster((v) => v + 1);
         }
+        mutate(updatedOrganization, { revalidate: false });
     };
 
-    const canEdit = !!user && (user.id === organization?.created_by || user.isCurationAllowed);
+    const canEdit = !!user && (user.id === organization?.createdBy || user.isCurationAllowed);
     const isGeneral = orgTypeId === ORGANIZATIONS_MISC.GENERAL;
     const isEvent = orgTypeId === ORGANIZATIONS_MISC.EVENT;
 
@@ -144,6 +147,11 @@ const Organization = () => {
                                 ) : (
                                     <span className="text-muted text-sm">No homepage provided</span>
                                 )}
+                                {organization.description && (
+                                    <div className="whitespace-pre-wrap break-words">
+                                        <ReadMore text={organization.description} />
+                                    </div>
+                                )}
                             </div>
                             {logo && (
                                 <div className="order-1 md:order-2">
@@ -174,16 +182,14 @@ const Organization = () => {
             {isEvent && <ConferenceEvents conferenceId={organization.id} conferenceName={organization.name} />}
             {isGeneral && <Observatories organizationsId={organization.id} />}
 
-            <EditOrganization
-                showDialog={showEditDialog}
-                toggle={() => setShowEditDialog((v) => !v)}
-                label={organization.name}
-                id={organization.id}
-                url={homepage}
-                previewSrc={logo ?? ''}
-                updateOrganizationMetadata={updateOrganizationMetadata}
-                typeName={typeName}
-            />
+            {organization && showEditDialog && (
+                <EditOrganization
+                    toggle={() => setShowEditDialog((v) => !v)}
+                    organizationData={organization}
+                    updateOrganizationMetadata={updateOrganizationMetadata}
+                    typeName={typeName}
+                />
+            )}
         </>
     );
 };

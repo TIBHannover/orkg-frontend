@@ -214,7 +214,7 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
                         <Modal.CloseTrigger />
                         <Modal.Heading>Abstract annotator</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         {(isAbstractLoading || isAnnotationLoading) && (
                             <div className="text-center text-accent">
                                 <FontAwesomeIcon icon={faSpinner} spin className="text-6xl" />

@@ -128,7 +128,7 @@ const UserProfile = () => {
                                                 <Link
                                                     href={reverse(ROUTES.ORGANIZATION, {
                                                         type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                        id: organizationData.display_id,
+                                                        id: organizationData.displayId,
                                                     })}
                                                     className="relative size-16 shrink-0 bg-white rounded-md p-1"
                                                 >
@@ -148,7 +148,7 @@ const UserProfile = () => {
                                                     <Link
                                                         href={reverse(ROUTES.ORGANIZATION, {
                                                             type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                                            id: organizationData.display_id,
+                                                            id: organizationData.displayId,
                                                         })}
                                                         className="text-base font-medium text-primary hover:underline truncate"
                                                     >

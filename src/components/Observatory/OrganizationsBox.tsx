@@ -54,7 +54,7 @@ const OrganizationsBox: FC<OrganizationsBoxProps> = ({ organizations, isLoadingO
                             <Link
                                 href={reverse(ROUTES.ORGANIZATION, {
                                     type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                    id: organization.display_id,
+                                    id: organization.displayId,
                                 })}
                                 className="flex items-center justify-center w-full h-full"
                             >

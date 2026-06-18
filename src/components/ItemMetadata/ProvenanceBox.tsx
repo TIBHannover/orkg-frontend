@@ -37,7 +37,7 @@ function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBox
                 <Chip color="default">
                     <FontAwesomeIcon icon={faUsers} className="text-muted" /> Organization
                     <span className="ml-1">
-                        <Link href={reverse(ROUTES.ORGANIZATION, { type: organization.type, id: organization.display_id })}>{organization.name}</Link>
+                        <Link href={reverse(ROUTES.ORGANIZATION, { type: organization.type, id: organization.displayId })}>{organization.name}</Link>
                     </span>
                 </Chip>
             )}

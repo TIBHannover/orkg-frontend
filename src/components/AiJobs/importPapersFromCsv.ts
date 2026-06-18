@@ -1,5 +1,5 @@
 import type { JobStatusRepresentation } from '@orkg/orkg-client';
-import { JobStatusRepresentationStatusEnum, ResponseError } from '@orkg/orkg-client';
+import { JobStatusRepresentationStatusEnum } from '@orkg/orkg-client';
 
 import { PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
@@ -12,6 +12,7 @@ import {
     startCsvImport,
     startCsvValidation,
 } from '@/services/backend/csvs';
+import { parseProblemDetails } from '@/services/backend/problemDetails';
 import { getStatements, setStatementsExtractionMethod } from '@/services/backend/statements';
 
 const POLL_INTERVAL_MS = 2000;
@@ -21,15 +22,11 @@ const POLL_TIMEOUT_MS = 10 * 60 * 1000;
 
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-// Pulls a human-readable message out of a backend problem+json error response.
+// Pulls a human-readable message out of a backend RFC 9457 problem+json error response.
 const extractProblemMessage = async (error: unknown, fallback: string): Promise<string> => {
-    if (error instanceof ResponseError) {
-        try {
-            const body = await error.response.clone().json();
-            return body?.detail || body?.message || body?.title || fallback;
-        } catch {
-            return fallback;
-        }
+    const problem = await parseProblemDetails(error);
+    if (problem) {
+        return problem.detail ?? problem.title ?? fallback;
     }
     return error instanceof Error ? error.message : fallback;
 };

@@ -6,6 +6,7 @@ import { env } from 'next-runtime-env';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { normalizeProblemDetails, pointerToFieldPath } from '@/services/backend/problemDetails';
 import { getStatements } from '@/services/backend/statements';
 
 export const guid = () => {
@@ -20,9 +21,12 @@ export const guid = () => {
 export const range = (start, end) => [...Array(1 + end - start).keys()].map((v) => start + v);
 
 /**
- * Parse error response body (originating from server) by field name
+ * Parse an already-parsed error response body (RFC 9457 problem details, originating
+ * from the server) by field name.
  *
- * Not specifying a `field` name will return the global `errors.message`
+ * Not specifying a `field` returns the occurrence-level message (`detail`/`title`,
+ * with a fallback to the deprecated `message`). With a `field` it returns the matching
+ * field error's message, matching on the `pointer`-derived path or the deprecated `field`.
  *
  * @param {Object} errors
  * @param {String} field
@@ -31,11 +35,13 @@ export const getErrorMessage = (errors, field = null) => {
     if (!errors) {
         return null;
     }
+    const problem = normalizeProblemDetails(errors);
     if (field === null) {
-        return errors.message ? errors.message?.replace?.('Predicate', 'Property') : null;
+        const message = problem?.detail ?? problem?.title ?? errors.message;
+        return message ? message?.replace?.('Predicate', 'Property') : null;
     }
-    const fieldError = errors.errors ? errors.errors.find((e) => e.field === field) : null;
-    return fieldError ? capitalize(fieldError.message).replace('Predicate', 'Property') : null;
+    const fieldError = problem?.errors.find((e) => pointerToFieldPath(e.pointer) === field);
+    return fieldError?.detail ? capitalize(fieldError.detail).replace('Predicate', 'Property') : null;
 };
 
 /**

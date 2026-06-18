@@ -101,7 +101,7 @@ const SaveTableResourceModal = ({ isOpen, toggle, id }: SaveTableResourceModalPr
                         <Modal.CloseTrigger />
                         <Modal.Heading>Save table as resource</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-3">
+                    <Modal.Body className="space-y-3">
                         <p>Please provide a label for the resource.</p>
                         <TextField fullWidth value={resourceLabel} onChange={setResourceLabel}>
                             <Label htmlFor="resourceLabel">Label</Label>

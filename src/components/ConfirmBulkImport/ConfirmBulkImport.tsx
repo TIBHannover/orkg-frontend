@@ -63,7 +63,7 @@ const ConfirmBulkImport = ({ data, isOpen, toggle, onFinish: onFinishParent = ()
                         <Modal.CloseTrigger />
                         <Modal.Heading>Review import</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-4">
+                    <Modal.Body className="space-y-4">
                         {showReview && (
                             <>
                                 <Alert status="accent">

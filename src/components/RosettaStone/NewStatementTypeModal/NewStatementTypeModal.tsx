@@ -37,7 +37,7 @@ const NewStatementTypeModal: FC<NewStatementTypeModalProps> = ({ initialLabel, i
                     <Modal.Header>
                         <Modal.Heading>Statement template editor</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <RosettaTemplateEditor
                             saveButtonText="Create and insert statement template"
                             onCancel={toggle}

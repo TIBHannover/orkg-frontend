@@ -1,9 +1,9 @@
-import { ApiError } from '@/services/backend/types';
+import { ProblemDetails } from '@/services/backend/problemDetails';
 
 export class BackendError extends Error {
-    public apiError: ApiError;
+    public apiError: ProblemDetails;
 
-    constructor(message: string, apiError: ApiError, options?: ErrorOptions) {
+    constructor(message: string, apiError: ProblemDetails, options?: ErrorOptions) {
         super(message, options);
 
         this.apiError = apiError;

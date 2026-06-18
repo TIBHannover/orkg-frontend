@@ -1,167 +1,162 @@
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Input, Label, Modal, TextField, toast } from '@heroui/react';
+import { Form, Modal, toast } from '@heroui/react';
+import { Organization, UpdateOrganizationRequestProperties } from '@orkg/orkg-client';
 import capitalize from 'capitalize';
-import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
+import { z } from 'zod';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ControlledImageUpload from '@/components/Form/ControlledImageUpload/ControlledImageUpload';
+import ControlledTextArea from '@/components/Form/ControlledTextArea/ControlledTextArea';
+import ControlledTextField from '@/components/Form/ControlledTextField/ControlledTextField';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import useConfirmDiscardChanges from '@/components/Form/hooks/useConfirmDiscardChanges';
+import useZodForm from '@/components/Form/hooks/useZodForm';
+import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
-import { updateOrganization } from '@/services/backend/organizations';
+import { getOrganizationLogoUrl, updateOrganization } from '@/services/backend/organizations';
 
-const URL_REGEX = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
+const editOrganizationSchema = z.object({
+    name: z.string().trim().min(1, 'Please enter an organization name'),
+    homepage: z.httpUrl({ error: 'Please enter a valid homepage URL' }),
+    description: z.string(),
+    logo: z.union([z.instanceof(File), z.string().min(1, 'Please upload an organization image')]),
+});
+
+type EditOrganizationFormValues = z.infer<typeof editOrganizationSchema>;
+
+const toFormValues = (organization: Organization): EditOrganizationFormValues => ({
+    name: organization.name,
+    homepage: organization.homepage,
+    description: organization.description ?? '',
+    logo: organization.id ? getOrganizationLogoUrl(organization.id) : '',
+});
 
 type EditOrganizationProps = {
-    showDialog: boolean;
     toggle: () => void;
-    label: string;
-    id: string;
-    url: string;
-    previewSrc: string;
-    updateOrganizationMetadata: (label: string, url: string, logo: string) => void;
+    updateOrganizationMetadata: (organizationData: Organization, logoChanged: boolean) => void;
+    organizationData: Organization;
     typeName: string;
 };
 
-const EditOrganization: FC<EditOrganizationProps> = ({ showDialog, toggle, label, id, url, previewSrc, updateOrganizationMetadata, typeName }) => {
-    const [organizationLabel, setOrganizationLabel] = useState('');
-    const [organizationUrl, setOrganizationUrl] = useState('');
-    const [organizationPreviewSrc, setOrganizationPreviewSrc] = useState('');
-    const [newLogo, setNewLogo] = useState<File | string>('');
-    const [isSaving, setIsSaving] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+const EditOrganization: FC<EditOrganizationProps> = ({ toggle, organizationData, updateOrganizationMetadata, typeName }) => {
+    const {
+        control,
+        handleSubmit,
+        setError,
+        formState: { dirtyFields, isDirty, isSubmitting, errors },
+    } = useZodForm({
+        schema: editOrganizationSchema,
+        values: toFormValues(organizationData),
+    });
 
-    useEffect(() => {
-        setOrganizationLabel(label);
-        setOrganizationUrl(url);
-        setOrganizationPreviewSrc(previewSrc);
-    }, [label, url, previewSrc]);
+    const { requestClose } = useConfirmDiscardChanges({ isDirty, onClose: toggle });
 
-    const handlePreview = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) {
-            return;
-        }
-        const [file] = e.target.files;
-        setNewLogo(file);
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setOrganizationPreviewSrc(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    const handleSubmit = async () => {
-        const value = organizationLabel;
-        const image = organizationPreviewSrc;
-        const orgUrl = organizationUrl;
-
+    const onSubmit = async (values: EditOrganizationFormValues) => {
         toast.clear();
 
-        if (value !== label && value.length === 0) {
-            toast.danger('Please enter an organization name');
-            return;
+        const properties: UpdateOrganizationRequestProperties = {};
+        if (dirtyFields.name) {
+            properties.name = values.name;
         }
-        if (orgUrl !== url && !orgUrl.match(URL_REGEX)) {
-            toast.danger('Please enter a valid organization url');
-            return;
+        if (dirtyFields.homepage) {
+            // Naming asymmetry in the backend: the read model exposes `homepage`, but the update request expects `url`.
+            properties.url = values.homepage;
         }
-        if (image !== previewSrc && image.length === 0) {
-            toast.danger('Please upload an organization image');
-            return;
+        if (dirtyFields.description) {
+            properties.description = values.description;
         }
+        const logo = values.logo instanceof File ? values.logo : undefined;
 
-        const data: { name?: string; url?: string; logo?: File | string } = {};
-        if (value !== label && value.length !== 0) {
-            data.name = value;
-        }
-        if (orgUrl !== url && orgUrl.match(URL_REGEX)) {
-            data.url = orgUrl;
-        }
-        if (image !== previewSrc && image.length !== 0) {
-            data.logo = newLogo;
-        }
-
-        if (Object.keys(data).length === 0) {
+        if (Object.keys(properties).length === 0 && !logo) {
             toggle();
             return;
         }
 
-        setIsSaving(true);
         try {
-            await updateOrganization(id, data as Parameters<typeof updateOrganization>[1]);
-            toast.success(`${typeName} updated successfully`);
-            updateOrganizationMetadata(value, orgUrl, image !== previewSrc && image.length !== 0 ? image : previewSrc);
+            await updateOrganization({ id: organizationData.id, logo, properties });
+            toast.success(`${organizationData.name} updated successfully`);
+            updateOrganizationMetadata(
+                { ...organizationData, name: values.name, homepage: values.homepage, description: values.description },
+                Boolean(logo),
+            );
             toggle();
-        } catch {
-            toast.warning(`Something went wrong while updating ${typeName}`);
-        } finally {
-            setIsSaving(false);
+        } catch (error) {
+            const handled = await applyServerErrorsToForm(error, {
+                setError,
+                // Naming asymmetry: the backend update request uses `url`, the form field is `homepage`.
+                fieldMap: { url: 'homepage' },
+                knownFields: Object.keys(editOrganizationSchema.shape),
+            });
+            if (!handled) {
+                toast.warning(`Something went wrong while updating ${organizationData.name}`);
+            }
         }
     };
 
     return (
         <Modal.Backdrop
-            isOpen={showDialog}
+            className="z-[1055]"
+            isOpen
             onOpenChange={(open) => {
-                if (!open) toggle();
+                if (!open && !isSubmitting) requestClose();
             }}
-            isDismissable
+            isDismissable={!isSubmitting}
         >
-            <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
+            <Modal.Container>
                 <Modal.Dialog>
-                    <Modal.Header>
-                        <Modal.CloseTrigger />
-                        <Modal.Heading>Update {typeName}</Modal.Heading>
-                    </Modal.Header>
-                    <Modal.Body className="p-6">
-                        <div className="flex flex-col gap-4">
-                            <TextField fullWidth name="label" value={organizationLabel} onChange={setOrganizationLabel} isDisabled={isSaving}>
-                                <Label>{capitalize(typeName)} name</Label>
-                                <Input placeholder={`${typeName} name`} maxLength={MAX_LENGTH_INPUT} />
-                            </TextField>
+                    <Form onSubmit={handleSubmit(onSubmit)} className="contents">
+                        <Modal.Header>
+                            <Modal.CloseTrigger />
+                            <Modal.Heading>Update {typeName}</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="flex flex-col gap-4">
+                                <FormRootError message={errors.root?.server?.message} />
 
-                            <TextField fullWidth name="url" value={organizationUrl} onChange={setOrganizationUrl} isDisabled={isSaving}>
-                                <Label>{capitalize(typeName)} URL</Label>
-                                <Input placeholder="https://www.example.com" maxLength={MAX_LENGTH_INPUT} />
-                            </TextField>
+                                <ControlledTextField
+                                    control={control}
+                                    name="name"
+                                    label={`${capitalize(typeName)} name`}
+                                    placeholder={`${typeName} name`}
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
 
-                            <div className="flex flex-col gap-2">
-                                <Label>Logo</Label>
-                                <div className="flex items-center gap-3">
-                                    {organizationPreviewSrc && (
-                                        <div className="size-20 rounded-[var(--radius)] border border-border bg-default/30 p-1 shrink-0 flex items-center justify-center overflow-hidden">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={organizationPreviewSrc}
-                                                className="max-w-full max-h-full object-contain"
-                                                alt={`${typeName} logo preview`}
-                                            />
-                                        </div>
-                                    )}
-                                    <div className="flex flex-col gap-1">
-                                        <Button variant="secondary" size="sm" isDisabled={isSaving} onPress={() => fileInputRef.current?.click()}>
-                                            <FontAwesomeIcon icon={faUpload} className="me-2" />
-                                            {organizationPreviewSrc ? 'Change logo' : 'Upload logo'}
-                                        </Button>
-                                        {newLogo instanceof File && <span className="text-xs text-muted truncate max-w-[14rem]">{newLogo.name}</span>}
-                                    </div>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        aria-label={`${typeName} logo`}
-                                        disabled={isSaving}
-                                        onChange={handlePreview}
-                                        className="sr-only"
-                                    />
-                                </div>
+                                <ControlledTextField
+                                    control={control}
+                                    name="homepage"
+                                    type="url"
+                                    label={`${capitalize(typeName)} URL`}
+                                    placeholder="https://www.example.com"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
+
+                                <ControlledTextArea
+                                    control={control}
+                                    name="description"
+                                    label="Description"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
+
+                                <ControlledImageUpload
+                                    control={control}
+                                    name="logo"
+                                    label="Logo"
+                                    uploadLabel="Upload logo"
+                                    changeLabel="Change logo"
+                                    alt={`${typeName} logo preview`}
+                                    isDisabled={isSubmitting}
+                                />
                             </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <ButtonWithLoading variant="primary" isLoading={isSaving} onPress={handleSubmit}>
-                            Save
-                        </ButtonWithLoading>
-                    </Modal.Footer>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <ButtonWithLoading type="submit" variant="primary" isLoading={isSubmitting}>
+                                Save
+                            </ButtonWithLoading>
+                        </Modal.Footer>
+                    </Form>
                 </Modal.Dialog>
             </Modal.Container>
         </Modal.Backdrop>

@@ -25,7 +25,7 @@ const EditAnnotationTextModal: FC<EditAnnotationTextModalProps> = ({ value, setV
                     <Modal.CloseTrigger />
                     <Modal.Heading>Edit text</Modal.Heading>
                 </Modal.Header>
-                <Modal.Body className="p-6 space-y-4">
+                <Modal.Body className="space-y-4">
                     <Alert>
                         <Alert.Indicator />
                         <Alert.Content>

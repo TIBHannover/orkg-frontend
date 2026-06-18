@@ -83,7 +83,7 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
                     <Modal.Header>
                         <Modal.Heading>BibTeX export</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <Textarea
                             disabled
                             value={!isLoading ? bibtex || 'No items added' : 'Loading...'}

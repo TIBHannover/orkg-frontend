@@ -47,7 +47,7 @@ const AbstractModal: FC<AbstractModalProps> = ({ toggle }) => {
                         <Modal.CloseTrigger />
                         <Modal.Heading>Abstract</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <div className="flex flex-col gap-3">
                             <TitleWarningAlert />
                             <Alert status="accent">

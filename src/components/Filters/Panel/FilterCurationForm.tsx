@@ -87,7 +87,7 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                 <Modal.CloseTrigger />
                 <Modal.Heading>{filter ? 'Edit' : 'Add'} Filter</Modal.Heading>
             </Modal.Header>
-            <Modal.Body className="p-6">
+            <Modal.Body>
                 <div className="flex flex-col gap-4">
                     {!isCurationAllowed && !filter && (
                         <Alert status="accent">

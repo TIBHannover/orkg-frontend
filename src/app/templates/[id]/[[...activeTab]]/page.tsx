@@ -178,7 +178,7 @@ const Template = () => {
                                     <Modal.Header>
                                         <Modal.Heading>Export as SHACL</Modal.Heading>
                                     </Modal.Header>
-                                    <Modal.Body className="p-6">
+                                    <Modal.Body>
                                         <div className="text-center">
                                             <FontAwesomeIcon icon={faSpinner} spin className="text-muted" /> Loading
                                         </div>

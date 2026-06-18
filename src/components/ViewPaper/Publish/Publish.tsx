@@ -120,7 +120,7 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
                         <Modal.CloseTrigger />
                         <Modal.Heading>Publish ORKG paper</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <div className="flex flex-col gap-4">
                             {isPublished ? (
                                 <Alert status="success">

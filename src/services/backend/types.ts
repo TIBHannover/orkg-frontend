@@ -2,6 +2,7 @@ import {
     ClassRepresentation,
     Contributor as ContributorType,
     LiteralRepresentation,
+    Organization as OrganizationRepresentation,
     PageOfAuthorRecordRepresentationsPage,
     ResourceRepresentationExtractionMethodEnum,
 } from '@orkg/orkg-client';
@@ -130,15 +131,7 @@ export type Observatory = {
     sdgs: Node[];
 };
 
-export type Organization = {
-    id: string;
-    name: string;
-    created_by: string;
-    homepage: string;
-    observatory_ids: string[];
-    display_id: string;
-    type: string;
-};
+export type Organization = OrganizationRepresentation;
 
 export type Statement = {
     id: string;
@@ -919,17 +912,11 @@ export type TopContributor = {
     total?: number;
 } & Contributor;
 
-export type ApiError = {
-    status: number;
-    error: number;
-    path: string;
-    timestamp: string;
-    message?: string;
-    errors?: {
-        field: string;
-        message: string;
-    }[];
-};
+/**
+ * @deprecated Use `ProblemDetails` from `@/services/backend/problemDetails`, which models the
+ * RFC 9457 (Problem Details) error format the backend now returns. Kept as an alias for back-compat.
+ */
+export type { ProblemDetails as ApiError } from '@/services/backend/problemDetails';
 
 export type ContentType = Paper | Comparison | LiteratureList | Visualization | Review | Template | RosettaStoneTemplate;
 

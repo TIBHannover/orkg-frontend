@@ -75,7 +75,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
                         <Modal.Heading>Publish list</Modal.Heading>
                     </Modal.Header>
                     <form onSubmit={handlePublish}>
-                        <Modal.Body className="p-6">
+                        <Modal.Body>
                             <Alert status="accent" className="mb-4">
                                 <Alert.Indicator />
                                 <Alert.Content>

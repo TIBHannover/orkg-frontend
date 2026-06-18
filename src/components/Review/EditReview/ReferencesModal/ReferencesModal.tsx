@@ -56,7 +56,7 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
                         <Modal.CloseTrigger />
                         <Modal.Heading>Manage references</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-4">
+                    <Modal.Body className="space-y-4">
                         <Alert status="accent">
                             <Alert.Indicator />
                             <Alert.Content>

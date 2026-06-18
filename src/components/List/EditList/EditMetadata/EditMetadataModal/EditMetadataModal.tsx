@@ -70,7 +70,7 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
                         <Modal.Heading>Edit metadata</Modal.Heading>
                     </Modal.Header>
                     <form onSubmit={handleSave}>
-                        <Modal.Body className="flex flex-col gap-4 p-6">
+                        <Modal.Body className="flex flex-col gap-4">
                             <TextField className="w-full" value={title} onChange={setTitle}>
                                 <HelpLabel htmlFor={`${formId}-title`} tooltip="The title of the list">
                                     Title

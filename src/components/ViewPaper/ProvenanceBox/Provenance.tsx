@@ -80,7 +80,7 @@ const Provenance: FC<ProvenanceProps> = ({
                                 <Link
                                     href={reverse(ROUTES.ORGANIZATION, {
                                         type: capitalize(ORGANIZATIONS_MISC.GENERAL),
-                                        id: organizationInfo.display_id,
+                                        id: organizationInfo.displayId,
                                     })}
                                 >
                                     <img className="mx-auto block my-2 max-w-[80%] h-auto" src={getOrganizationLogoUrl(organizationInfo.id)} alt="" />

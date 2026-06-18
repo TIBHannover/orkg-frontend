@@ -137,7 +137,7 @@ const PublishVisualization: FC<PublishVisualizationProps> = ({ showDialog, toggl
                 <Modal.CloseTrigger />
                 <Modal.Heading>Publish visualization</Modal.Heading>
             </Modal.Header>
-            <Modal.Body className="p-6">
+            <Modal.Body>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <Alert status="accent">
                         <Alert.Indicator />

@@ -70,7 +70,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
                             <Modal.CloseTrigger />
                             <Modal.Heading>Publish review</Modal.Heading>
                         </Modal.Header>
-                        <Modal.Body className="p-6 space-y-4">
+                        <Modal.Body className="space-y-4">
                             {!publishedId ? (
                                 <>
                                     <Alert status="accent">
