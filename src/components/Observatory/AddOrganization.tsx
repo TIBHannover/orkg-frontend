@@ -70,7 +70,7 @@ const AddOrganization: FC<AddOrganizationProps> = ({ showDialog, toggle, id, org
                         <Modal.CloseTrigger />
                         <Modal.Heading>Add an organization</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <Select
                             options={localOrganizations}
                             value={selectedOrganization}

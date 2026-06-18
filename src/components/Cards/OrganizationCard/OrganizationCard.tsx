@@ -10,7 +10,7 @@ import { getOrganizationLogoUrl } from '@/services/backend/organizations';
 type OrganizationCardProps = {
     organization: {
         id: string;
-        display_id: string;
+        displayId: string;
         name: string;
     };
     type?: string;
@@ -20,7 +20,7 @@ const OrganizationCard = ({ organization, type }: OrganizationCardProps) => {
     const [optimizedLogo, setOptimizedLogo] = useState(true);
 
     return (
-        <Link href={reverse(ROUTES.ORGANIZATION, { type, id: organization.display_id })}>
+        <Link href={reverse(ROUTES.ORGANIZATION, { type, id: organization.displayId })}>
             <Card className="h-full">
                 <div className="relative h-[150px] w-full p-4">
                     <Image

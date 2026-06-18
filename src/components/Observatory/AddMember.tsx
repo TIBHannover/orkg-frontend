@@ -59,7 +59,7 @@ const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, orga
                         <Modal.CloseTrigger />
                         <Modal.Heading>Add a member</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <div className="flex flex-col gap-4">
                             <div className="flex flex-col gap-1">
                                 <Label htmlFor="organization">Organization</Label>

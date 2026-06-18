@@ -62,7 +62,7 @@ const Control = ({ children, ...props }: ControlProps<OptionType, boolean, Group
                                     <Modal.CloseTrigger />
                                     <Modal.Heading>Tree view</Modal.Heading>
                                 </Modal.Header>
-                                <Modal.Body className="p-6">
+                                <Modal.Body>
                                     <Alert status="accent" className="mb-3">
                                         <Alert.Indicator />
                                         <Alert.Content>

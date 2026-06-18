@@ -85,7 +85,7 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
                             void handleConfirm();
                         }}
                     >
-                        <Modal.Body className="flex flex-col gap-5 p-6 [&_svg]:text-muted">
+                        <Modal.Body className="flex flex-col gap-5 [&_svg]:text-muted">
                             <p className="text-sm text-muted">
                                 Often there are existing classes that you can use as well. It is better to use existing classes than new ones.
                             </p>

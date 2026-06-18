@@ -46,7 +46,7 @@ const StatementTypeModal = ({ template, isOpen, toggle, context, subject, handle
                     <Modal.Header>
                         <Modal.Heading>Select statement template</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <p>Select the type of statement you want to add.</p>
                         <StatementTypeAutocomplete
                             additionalOptions={usedStatementTypes}

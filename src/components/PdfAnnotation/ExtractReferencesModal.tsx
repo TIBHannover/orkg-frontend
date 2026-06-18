@@ -149,7 +149,7 @@ const ExtractReferencesModal: FC<ExtractReferencesModalProps> = ({ id, isOpen, t
                         <Modal.CloseTrigger />
                         <Modal.Heading>Reference extraction</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-4">
+                    <Modal.Body className="space-y-4">
                         <Alert>
                             <Alert.Indicator />
                             <Alert.Content>

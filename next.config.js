@@ -6,6 +6,7 @@ const cspHeader = `
     default-src 'self';
     img-src 'self'
         *
+        blob:
         data:;
     script-src 'self' 'unsafe-inline' 'unsafe-eval'
         blob:

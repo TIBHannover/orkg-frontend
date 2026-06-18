@@ -73,7 +73,7 @@ const ReferenceModal: FC<ReferenceModalProps> = ({ toggle, editReferenceIndex = 
                         <Modal.Heading>Reference</Modal.Heading>
                     </Modal.Header>
                     <form action={() => handleSaveReference({ editReferenceIndex, _bibtex: bibtex })}>
-                        <Modal.Body className="p-6">
+                        <Modal.Body>
                             <TextField value={bibtex} onChange={setBibtex} className="w-full" aria-label="Enter a valid bibtex entry in this field">
                                 <TextArea rows={10} placeholder="Paste your BibTeX here..." className="font-mono text-[90%]" />
                             </TextField>

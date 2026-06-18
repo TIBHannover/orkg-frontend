@@ -112,7 +112,7 @@ const EditObservatory: FC<EditObservatoryProps> = ({
                         <Modal.CloseTrigger />
                         <Modal.Heading>Update observatory</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <div className="flex flex-col gap-4">
                             <TextField fullWidth name="label" value={label} onChange={setLabel} isDisabled={isLoading}>
                                 <Label>Name</Label>

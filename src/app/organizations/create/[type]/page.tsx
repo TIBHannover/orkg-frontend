@@ -2,7 +2,7 @@
 
 import { faUpload, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Card, Form, Input, InputGroup, Label, TextField, toast } from '@heroui/react';
+import { Button, Card, Form, Input, InputGroup, Label, TextArea, TextField, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ const AddOrganization = () => {
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
     const [permalink, setPermalink] = useState('');
+    const [description, setDescription] = useState('');
     const [logo, setLogo] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
     const organizationType = ORGANIZATIONS_TYPES.find((t) => t.label === params.type);
@@ -44,6 +45,7 @@ const AddOrganization = () => {
         setName('');
         setWebsite('');
         setPermalink('');
+        setDescription('');
         router.push(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label ?? '', id: displayId }));
     };
 
@@ -72,9 +74,9 @@ const AddOrganization = () => {
         }
 
         try {
-            const organizationId = await createOrganization(name, logo, user?.id ?? '', website, permalink, organizationType?.id ?? '');
+            const organizationId = await createOrganization(name, logo, user?.id ?? '', website, permalink, organizationType?.id ?? '', description);
             const organization = await getOrganization(organizationId);
-            navigateToOrganization(organization.display_id);
+            navigateToOrganization(organization.displayId);
         } catch (error) {
             console.error(error);
             const message =
@@ -145,6 +147,11 @@ const AddOrganization = () => {
                                 <TextField fullWidth name="website" isDisabled={isLoading} value={website} onChange={setWebsite}>
                                     <Label htmlFor="organizationWebsite">Website</Label>
                                     <Input id="organizationWebsite" type="text" placeholder="https://www.example.com" maxLength={MAX_LENGTH_INPUT} />
+                                </TextField>
+
+                                <TextField fullWidth name="description" isDisabled={isLoading} value={description} onChange={setDescription}>
+                                    <Label htmlFor="organizationDescription">Description</Label>
+                                    <TextArea id="organizationDescription" rows={4} maxLength={MAX_LENGTH_INPUT} />
                                 </TextField>
 
                                 <div className="flex flex-col gap-2">

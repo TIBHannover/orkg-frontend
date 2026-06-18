@@ -56,7 +56,7 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
                         <Modal.Heading>Edit metadata</Modal.Heading>
                     </Modal.Header>
                     <form onSubmit={handleSave}>
-                        <Modal.Body className="p-6 space-y-4">
+                        <Modal.Body className="space-y-4">
                             <TextField value={title} onChange={setTitle} className="w-full">
                                 <Label>
                                     <Tooltip message="The title of the list">Title</Tooltip>

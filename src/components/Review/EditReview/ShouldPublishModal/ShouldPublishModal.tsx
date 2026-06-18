@@ -16,7 +16,7 @@ const ShouldPublishModal: FC<ShouldPublishModalProps> = ({ toggle, openPublishMo
                     <Modal.CloseTrigger />
                     <Modal.Heading>Publish article</Modal.Heading>
                 </Modal.Header>
-                <Modal.Body className="p-6">Do you want to publish a new version of this article?</Modal.Body>
+                <Modal.Body>Do you want to publish a new version of this article?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onPress={toggle}>
                         Cancel

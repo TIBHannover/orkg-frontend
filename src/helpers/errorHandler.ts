@@ -1,7 +1,7 @@
 import { toast } from '@heroui/react';
 
 import { BackendError } from '@/services/backend/error';
-import { ApiError } from '@/services/backend/types';
+import { normalizeProblemDetails, pointerToFieldPath } from '@/services/backend/problemDetails';
 
 const errorHandler = ({
     error,
@@ -14,29 +14,30 @@ const errorHandler = ({
 }) => {
     console.error(error);
 
-    const getLabelByField = (field: string) => {
-        return fieldLabels[field] ?? field;
-    };
+    const getLabelByField = (field: string) => fieldLabels[field] ?? field;
 
-    // if the error comes from the backend
-    if (error && typeof error === 'object' && 'error' in error && error.error === 'Bad Request') {
-        const apiError = error as ApiError;
-        if (apiError.errors && apiError.errors?.length > 0 && shouldShowToast) {
-            toast.danger(`An error occurred. The ${getLabelByField(apiError.errors[0].field)} ${apiError.errors[0].message}`);
-        } else {
-            toast.danger(apiError.message);
+    // RFC 9457 problem response from the backend (with fallback to the deprecated fields).
+    const problem = normalizeProblemDetails(error);
+    if (problem) {
+        if (shouldShowToast) {
+            const [firstFieldError] = problem.errors;
+            if (firstFieldError) {
+                toast.danger(`An error occurred. The ${getLabelByField(pointerToFieldPath(firstFieldError.pointer))} ${firstFieldError.detail}`);
+            } else if (problem.detail ?? problem.title) {
+                toast.danger(problem.detail ?? problem.title);
+            }
         }
-        throw new BackendError(`Backend error: ${apiError.error}`, apiError);
-    } else {
-        if (error && typeof error === 'object' && 'message' in error && shouldShowToast) {
-            // @ts-expect-error: error.message is available in the backend error object
-            toast.danger(error.message);
-        }
-        if (error instanceof Error && shouldShowToast) {
-            toast.danger(error.message);
-        }
-        throw error;
+        throw new BackendError(`Backend error: ${problem.title ?? problem.status ?? 'unknown'}`, problem);
     }
+
+    if (shouldShowToast) {
+        if (error instanceof Error) {
+            toast.danger(error.message);
+        } else if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+            toast.danger(error.message);
+        }
+    }
+    throw error;
 };
 
 export default errorHandler;

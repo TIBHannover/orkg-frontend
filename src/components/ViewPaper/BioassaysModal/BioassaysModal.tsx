@@ -129,7 +129,7 @@ const BioassaysModal: FC<BioassaysModalProps> = ({ selectedResource, toggle, sho
                         <Modal.CloseTrigger />
                         <Modal.Heading>Semantification of Bioassays</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         {isLoadingData && (
                             <div className="text-center text-accent">
                                 <FontAwesomeIcon icon={faSpinner} spin className="text-6xl" />

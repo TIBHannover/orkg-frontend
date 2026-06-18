@@ -143,7 +143,7 @@
     --muted: oklch(55.17% 0.003 22.81);
     --overlay: oklch(100% 0.0004 22.81);
     --overlay-foreground: oklch(21.03% 0.0015 22.81);
-    --scrollbar: oklch(87.1% 0.0015 22.81);
+    --scrollbar-thumb: oklch(87.1% 0.0015 22.81);
     --segment: oklch(100% 0.0015 22.81);
     --segment-foreground: oklch(21.03% 0.0015 22.81);
     --separator: oklch(92% 0.0015 22.81);
@@ -210,7 +210,7 @@
     --muted: oklch(70.5% 0.003 22.81);
     --overlay: oklch(21.03% 0.003 22.81);
     --overlay-foreground: oklch(99.11% 0.0015 22.81);
-    --scrollbar: oklch(70.5% 0.0015 22.81);
+    --scrollbar-thumb: oklch(70.5% 0.0015 22.81);
     --segment: oklch(39.64% 0.0015 22.81);
     --segment-foreground: oklch(99.11% 0.0015 22.81);
     --separator: oklch(25% 0.0015 22.81);
@@ -516,6 +516,9 @@ Example:
     html {
         overflow-y: auto;
         scrollbar-gutter: stable;
+        /* HeroUI v3.1.0 removed its global scrollbar rule; theme the page scrollbar here (--scrollbar-thumb is set per theme above) */
+        scrollbar-width: var(--scrollbar-width);
+        scrollbar-color: var(--scrollbar-color);
     }
 
     body {

@@ -60,7 +60,7 @@ const Organizations = () => {
                         {organizations && organizations.length > 0 && (
                             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                                 {organizations.map((organization) => (
-                                    <OrganizationCard key={organization.display_id} organization={{ ...organization }} type={params.id} />
+                                    <OrganizationCard key={organization.displayId} organization={{ ...organization }} type={params.id} />
                                 ))}
                             </div>
                         )}

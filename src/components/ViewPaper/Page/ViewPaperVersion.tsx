@@ -127,7 +127,7 @@ const ViewPaperVersion = () => {
                         <Modal.Header>
                             <Modal.Heading>Publish ORKG paper</Modal.Heading>
                         </Modal.Header>
-                        <Modal.Body className="p-6">
+                        <Modal.Body>
                             {dataCiteDoi && originalPaperId && (
                                 <Alert status="accent" className="mb-4">
                                     <Alert.Indicator />

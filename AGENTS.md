@@ -98,6 +98,8 @@ import ROUTES from '@/constants/routes';
 
 **UI Components**: `src/components/Ui/` contains wrappers that were created during the migration from reactstrap to HeroUI (the wrappers originally used reactstrap and blocked direct reactstrap imports). The migration to HeroUI is complete but the wrappers are now overly complex and partially broken. **Import HeroUI directly** (`@heroui/react`) rather than using these wrappers. The wrappers are being phased out — do not add new usage of them, and prefer replacing wrapper usage with direct HeroUI components when touching existing code.
 
+**Forms**: Build new forms with react-hook-form + zod via `useZodForm` (`@/components/Form/hooks/useZodForm`) and the `Controlled*` field components in `src/components/Form/`. Feed source data through the reactive `values` option, not `defaultValues`. Surface backend (RFC 9457) submit errors with `applyServerErrorsToForm` (`@/components/Form/utils/applyServerErrors`) + `<FormRootError>` (`@/components/Form/FormRootError`) rather than a generic toast. For forms rendered in a modal, guard the close paths against unsaved input with `useConfirmDiscardChanges` (`@/components/Form/hooks/useConfirmDiscardChanges`) — pass `formState.isDirty` and the modal's close callback, then route the modal's `onOpenChange` through the returned `requestClose`. See the examples under "Rules with examples".
+
 ### Testing
 
 Tests use **Vitest** + **React Testing Library** + **MSW** for API mocking. Import `render` from `@/testUtils` (not `@testing-library/react`) — it wraps components with Redux, ThemeProvider, SWR, MathJax, and Nuqs providers.
@@ -145,3 +147,82 @@ const MyComponent = ({ title, count = 0, onUpdate }: MyComponentProps) => {
     // ...
 };
 ```
+
+**Forms: react-hook-form + zod**
+
+Use `useZodForm` + the `Controlled*` field components (`src/components/Form/`) for every new form. Define a zod schema, infer the value type, and feed source data through the reactive `values` option (not `defaultValues`).
+
+```tsx
+'use client';
+import { Form } from '@heroui/react';
+import { z } from 'zod';
+
+import ControlledTextField from '@/components/Form/ControlledTextField/ControlledTextField';
+import useZodForm from '@/components/Form/hooks/useZodForm';
+
+const schema = z.object({ name: z.string().trim().min(1, 'Please enter a name') });
+type FormValues = z.infer<typeof schema>;
+
+const MyForm = ({ data }: { data: FormValues }) => {
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useZodForm({ schema, values: data }); // reactive `values`, not `defaultValues`
+
+    const onSubmit = async (values: FormValues) => {
+        /* ... */
+    };
+
+    return (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            <ControlledTextField control={control} name="name" label="Name" isDisabled={isSubmitting} />
+        </Form>
+    );
+};
+```
+
+**Forms: handling backend errors (RFC 9457)**
+
+In the submit `catch`, map the backend problem response onto the form with `applyServerErrorsToForm` (default export of `@/components/Form/utils/applyServerErrors`). Field errors are matched from the problem's `pointer` and render inline via the `Controlled*` components; anything that can't be tied to a field — unmapped field errors and non-field (occurrence-level) problems — is collected into a single `root.server` error that `<FormRootError>` renders as a form-level alert. The call returns `false` for non-problem errors (e.g. a network failure) so you can fall back to a toast.
+
+- Pass `knownFields` (typically `Object.keys(schema.shape)`) so errors that don't resolve to a real field fall back to the alert instead of silently disappearing.
+- Use `fieldMap` only when a backend field name differs from the form field (e.g. the org update sends `url` but the form field is `homepage`). Wrapped pointers like `/properties/url` are also resolved via their last segment, so the map key is the bare field name (`url`).
+
+```tsx
+import { toast } from '@heroui/react';
+
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
+
+const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, errors },
+} = useZodForm({ schema, values: data });
+
+const onSubmit = async (values: FormValues) => {
+    try {
+        await save(values);
+    } catch (error) {
+        const handled = await applyServerErrorsToForm(error, {
+            setError,
+            fieldMap: { url: 'homepage' }, // backend field -> form field (only when names differ)
+            knownFields: Object.keys(schema.shape),
+        });
+        if (!handled) {
+            toast.warning('Something went wrong');
+        }
+    }
+};
+
+return (
+    <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormRootError message={errors.root?.server?.message} />
+        <ControlledTextField control={control} name="name" label="Name" isDisabled={isSubmitting} />
+    </Form>
+);
+```
+
+The underlying parser (`parseProblemDetails` / `normalizeProblemDetails` in `@/services/backend/problemDetails`) normalizes the RFC 9457 body across both HTTP transports (the `@orkg/orkg-client` `ResponseError` and `ky`), reading the new fields with a fallback to the deprecated ones (`error`/`path`/`timestamp`/`errors[].field`). The shared `errorHandler` (`@/helpers/errorHandler`) and `getErrorMessage` (`@/utils`) helpers build on the same normalizer. `src/components/Organization/EditOrganization.tsx` is the reference implementation.

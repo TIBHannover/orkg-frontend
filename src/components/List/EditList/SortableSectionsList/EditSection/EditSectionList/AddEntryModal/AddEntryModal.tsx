@@ -248,7 +248,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                     <Modal.Header>
                         <Modal.Heading>Add entries</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <ButtonGroup className="w-full mb-6">
                             <Button size="sm" variant={tab === 'title' ? 'primary' : 'outline'} onPress={() => switchTab('title')}>
                                 Title

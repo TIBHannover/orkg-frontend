@@ -52,7 +52,7 @@ const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, i
                         <Modal.CloseTrigger />
                         <Modal.Heading>Add research problem</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6">
+                    <Modal.Body>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="ResearchProblem" className="text-sm font-medium">
                                 Research problem

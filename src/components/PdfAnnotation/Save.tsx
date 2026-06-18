@@ -193,7 +193,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                         <Modal.CloseTrigger />
                         <Modal.Heading>Save annotations</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="p-6 space-y-4">
+                    <Modal.Body className="space-y-4">
                         {!paperId && textAnnotations.length > 0 && (
                             <>
                                 <div>

@@ -27,7 +27,7 @@ type Props = {
 };
 
 const RootLayout: FC<Props> = ({ children }) => (
-    <html lang="en">
+    <html lang="en" data-vibrant-palette="true">
         <head>
             <PublicEnvScript />
             <meta charSet="utf-8" />
