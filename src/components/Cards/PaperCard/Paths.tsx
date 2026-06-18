@@ -34,7 +34,7 @@ const Paths: FC<PathsProps> = ({ paths }) => {
 
     return (
         <div>
-            <ul className="list-unstyled flex flex-col items-center justify-center">
+            <ul className="list-unstyled">
                 {data.map((path, index) => (
                     <li key={`${index}-${data.length}`}>
                         <FontAwesomeIcon size="sm" icon={faRoute} className="mr-1 text-muted" />
