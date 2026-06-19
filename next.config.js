@@ -58,6 +58,7 @@ const cspHeader = `
         https://dbpedia.org/sparql
         https://api.unpaywall.org
         https://raw.githubusercontent.com
+        https://cdn.jsdelivr.net/gh/lojjic/
         https://api.opencitations.net
         https://fonts.gstatic.com
         https://mastodon.social
