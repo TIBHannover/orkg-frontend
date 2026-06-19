@@ -2,6 +2,14 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.184.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.183.0...v0.184.0) - 2026-06-19
+
+### Changes
+
+- feat: support organization descriptions [`#1699`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1699)
+- refactor(Paths): left align path list items [`#1703`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1703)
+
+---
 ## [v0.183.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.2...v0.183.0) - 2026-06-16
 
 ### Changes
