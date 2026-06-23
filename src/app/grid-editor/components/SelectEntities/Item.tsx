@@ -85,10 +85,12 @@ const Item: FC<{
         <div key={`result-${item.id}`} className="py-3 px-4 flex flex-col gap-2" style={{ overflowWrap: 'anywhere' }}>
             <div className="flex flex-nowrap items-center gap-2">
                 <Checkbox isSelected={isSelected(item.id)} onChange={() => handleSelect(item)}>
-                    <Checkbox.Control>
-                        <Checkbox.Indicator />
-                    </Checkbox.Control>
-                    <Checkbox.Content className="text-accent capitalize line-clamp-2 min-w-0">{item.label}</Checkbox.Content>
+                    <Checkbox.Content className="text-accent capitalize line-clamp-2 min-w-0">
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        {item.label}
+                    </Checkbox.Content>
                 </Checkbox>
                 {!!badge && (
                     <div className="shrink-0">
@@ -109,10 +111,12 @@ const Item: FC<{
                             </button>
                             {contributionsList.map((contribution) => (
                                 <Checkbox key={contribution.id} isSelected={isSelected(contribution.id)} onChange={() => handleSelect(contribution)}>
-                                    <Checkbox.Control>
-                                        <Checkbox.Indicator />
-                                    </Checkbox.Control>
-                                    <Checkbox.Content className="capitalize line-clamp-1">{contribution.label}</Checkbox.Content>
+                                    <Checkbox.Content className="capitalize line-clamp-1">
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                        {contribution.label}
+                                    </Checkbox.Content>
                                 </Checkbox>
                             ))}
                         </>

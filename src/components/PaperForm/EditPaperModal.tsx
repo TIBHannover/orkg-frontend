@@ -1,6 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox, Label, Modal } from '@heroui/react';
+import { Button, Checkbox, Modal } from '@heroui/react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -94,11 +94,11 @@ const EditPaperModal = ({ paperData, toggle, afterUpdate, isPaperLinkVisible = f
                     <Tooltip content="Mark the metadata as verified">
                         <div className="mr-auto">
                             <Checkbox id="edit-paper-verified" isSelected={isVerified} onChange={setIsVerified}>
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
                                 <Checkbox.Content>
-                                    <Label htmlFor="edit-paper-verified">Verified</Label>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Verified
                                 </Checkbox.Content>
                             </Checkbox>
                         </div>

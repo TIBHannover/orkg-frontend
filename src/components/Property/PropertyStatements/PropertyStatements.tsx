@@ -22,10 +22,12 @@ const PropertyStatements: FC<PropertyStatementsProps> = ({ id }) => {
     return (
         <div>
             <Checkbox className="m-4" isSelected={isFormattedLabelEnabled} onChange={setIsFormattedLabelEnabled}>
-                <Checkbox.Control>
-                    <Checkbox.Indicator />
-                </Checkbox.Control>
-                <Checkbox.Content>Show formatted label when available</Checkbox.Content>
+                <Checkbox.Content>
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    Show formatted label when available
+                </Checkbox.Content>
             </Checkbox>
             <hr className="m-0" />
             <div className="py-3 text-sm font-medium text-muted" style={{ backgroundColor: 'var(--surface)' }}>

@@ -229,13 +229,16 @@ const SmartSentenceDetection = ({ pdfViewer }: SmartSentenceDetectionProps) => {
             {!isLoading ? (
                 <Switch
                     size="sm"
+                    aria-label="Smart sentence detection"
                     isSelected={showHighlights && !fetchFailed}
                     isDisabled={!pdf || fetchFailed}
                     onChange={(checked) => setShowHighlights(checked)}
                 >
-                    <Switch.Control>
-                        <Switch.Thumb />
-                    </Switch.Control>
+                    <Switch.Content>
+                        <Switch.Control>
+                            <Switch.Thumb />
+                        </Switch.Control>
+                    </Switch.Content>
                 </Switch>
             ) : (
                 <Spinner size="sm" color="current" />

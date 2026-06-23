@@ -137,10 +137,10 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
                                 isDisabled={isConferenceDoubleBlind}
                                 onChange={(checked) => setIsAnonymized(checked)}
                             >
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
                                 <Checkbox.Content>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
                                     <Tooltip message="Hide the authors and the creator to make the comparison suitable for a anonymous conference submission">
                                         Is anonymized
                                     </Tooltip>

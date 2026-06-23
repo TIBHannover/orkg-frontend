@@ -66,12 +66,14 @@ const Preferences: FC<PreferencesProps> = ({ closeTippy }) => {
             <div className="flex flex-col gap-3">
                 {PREFERENCE_ITEMS.map(({ key, label, description }) => (
                     <Switch key={key} isSelected={preferences[key] ?? false} onChange={handleToggle(key)} className="flex items-center gap-3">
-                        <Switch.Control>
-                            <Switch.Thumb />
-                        </Switch.Control>
-                        <Switch.Content className="flex flex-col">
-                            <span className="text-sm font-medium leading-tight">{label}</span>
-                            <span className="text-xs text-foreground-500 leading-tight">{description}</span>
+                        <Switch.Content>
+                            <Switch.Control>
+                                <Switch.Thumb />
+                            </Switch.Control>
+                            <span className="flex flex-col">
+                                <span className="text-sm font-medium leading-tight">{label}</span>
+                                <span className="text-xs text-foreground-500 leading-tight">{description}</span>
+                            </span>
                         </Switch.Content>
                     </Switch>
                 ))}

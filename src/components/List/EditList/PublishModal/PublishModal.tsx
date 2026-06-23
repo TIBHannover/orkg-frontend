@@ -93,10 +93,10 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
                                     </TextField>
 
                                     <Checkbox isSelected={shouldAssignDoi} onChange={(checked) => setShouldAssignDoi(checked)}>
-                                        <Checkbox.Control>
-                                            <Checkbox.Indicator />
-                                        </Checkbox.Control>
                                         <Checkbox.Content className="text-accent capitalize line-clamp-2 min-w-0">
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
                                             <Tooltip delay={0}>
                                                 <Tooltip.Trigger>
                                                     <span>

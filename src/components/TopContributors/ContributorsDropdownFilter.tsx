@@ -82,10 +82,12 @@ const ContributorsDropdownFilter: FC<ContributorsDropdownFilterProps> = ({
                         isDisabled={isLoading}
                         className="mt-3"
                     >
-                        <Checkbox.Control>
-                            <Checkbox.Indicator />
-                        </Checkbox.Control>
-                        <Checkbox.Content>Include subfields</Checkbox.Content>
+                        <Checkbox.Content>
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            Include subfields
+                        </Checkbox.Content>
                     </Checkbox>
                 </Popover.Dialog>
             </Popover.Content>

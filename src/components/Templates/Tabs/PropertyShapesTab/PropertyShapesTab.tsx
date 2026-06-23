@@ -210,10 +210,12 @@ const PropertyShapesTab: FC = () => {
                     onChange={handleSwitchIsClosedTemplate}
                     isDisabled={!isEditMode}
                 >
-                    <Switch.Control>
-                        <Switch.Thumb />
-                    </Switch.Control>
-                    <Switch.Content>This template is strict (users cannot add additional properties themselves)</Switch.Content>
+                    <Switch.Content>
+                        <Switch.Control>
+                            <Switch.Thumb />
+                        </Switch.Control>
+                        This template is strict (users cannot add additional properties themselves)
+                    </Switch.Content>
                 </Switch>
             </div>
         </div>

@@ -86,10 +86,12 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
                     </TextField>
                 </div>
                 <Checkbox isSelected={isFormattedLabelEnabled} onChange={setIsFormattedLabelEnabled}>
-                    <Checkbox.Control>
-                        <Checkbox.Indicator />
-                    </Checkbox.Control>
-                    <Checkbox.Content>Show formatted label when available</Checkbox.Content>
+                    <Checkbox.Content>
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        Show formatted label when available
+                    </Checkbox.Content>
                 </Checkbox>
             </div>
             <p className="mt-2">Total number of instances: {!isLoading ? <b>{totalElements}</b> : 'Loading...'}</p>

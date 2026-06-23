@@ -106,11 +106,11 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
 
                         <div className="flex items-center gap-2">
                             <Checkbox id={`${formId}-handle`} isSelected={isAssignHandleSelected} onChange={setIsAssignHandleSelected}>
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
                                 <Checkbox.Content>
-                                    <Label htmlFor={`${formId}-handle`}>Assign handle to resource</Label>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Assign handle to resource
                                 </Checkbox.Content>
                             </Checkbox>
                             <Tooltip>

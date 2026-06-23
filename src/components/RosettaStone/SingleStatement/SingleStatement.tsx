@@ -1,5 +1,5 @@
 import { faCheck, faClose, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Chip, Label, Skeleton, Switch, Tooltip } from '@heroui/react';
+import { Chip, Skeleton, Switch, Tooltip } from '@heroui/react';
 import { toInteger } from 'lodash';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
@@ -167,11 +167,11 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
                 <div className="mt-4 flex items-center justify-between gap-3">
                     <Tooltip>
                         <Switch isSelected={isNegate} onChange={setIsNegate} size="sm">
-                            <Switch.Control>
-                                <Switch.Thumb />
-                            </Switch.Control>
-                            <Switch.Content>
-                                <Label className="text-sm">Negate statement</Label>
+                            <Switch.Content className="text-sm">
+                                <Switch.Control>
+                                    <Switch.Thumb />
+                                </Switch.Control>
+                                Negate statement
                             </Switch.Content>
                         </Switch>
                         <Tooltip.Content>By activating this option the statement would be negated.</Tooltip.Content>

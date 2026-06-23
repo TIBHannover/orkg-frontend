@@ -1,7 +1,7 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox, cn, Label, Modal, toast, Tooltip } from '@heroui/react';
+import { Button, Checkbox, cn, Modal, toast, Tooltip } from '@heroui/react';
 import dayjs from 'dayjs';
 import { clone } from 'lodash';
 // @ts-expect-error package doesn't support typescript
@@ -306,10 +306,12 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                                     <div className="grow flex flex-col gap-2">
                                         <Tooltip>
                                             <Checkbox isSelected={replaceTitles} onChange={setReplaceTitles}>
-                                                <Checkbox.Control>
-                                                    <Checkbox.Indicator />
-                                                </Checkbox.Control>
-                                                <Label>Replace contribution titles by reference</Label>
+                                                <Checkbox.Content>
+                                                    <Checkbox.Control>
+                                                        <Checkbox.Indicator />
+                                                    </Checkbox.Control>
+                                                    Replace contribution titles by reference
+                                                </Checkbox.Content>
                                             </Checkbox>
                                             <Tooltip.Content>
                                                 Since contribution titles can be long, it is sometimes better to replace the title by a reference
@@ -317,10 +319,12 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                                             </Tooltip.Content>
                                         </Tooltip>
                                         <Checkbox isSelected={includeFootnote} onChange={setIncludeFootnote}>
-                                            <Checkbox.Control>
-                                                <Checkbox.Indicator />
-                                            </Checkbox.Control>
-                                            <Label>Include a persistent link to this page as a footnote</Label>
+                                            <Checkbox.Content>
+                                                <Checkbox.Control>
+                                                    <Checkbox.Indicator />
+                                                </Checkbox.Control>
+                                                Include a persistent link to this page as a footnote
+                                            </Checkbox.Content>
                                         </Checkbox>
                                     </div>
                                     <Button variant="primary" size="sm" onPress={() => copyToClipboard(latexTable)}>

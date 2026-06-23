@@ -90,10 +90,10 @@ const PathListItem: FC<PathListItemProps> = ({
                         <Icon className="text-secondary" icon={faGripVertical} size="lg" />
                     </span>
                     <Checkbox isSelected={!!isSelected} onChange={() => handleSelectPath(fullPath)}>
-                        <Checkbox.Control>
-                            <Checkbox.Indicator />
-                        </Checkbox.Control>
                         <Checkbox.Content className={!isSelected ? 'text-gray-500' : ''}>
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
                             <div className="flex flex-col">
                                 <span>
                                     {currentPath.label}
