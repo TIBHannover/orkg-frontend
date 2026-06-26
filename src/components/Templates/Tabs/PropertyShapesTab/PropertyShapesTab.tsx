@@ -204,12 +204,7 @@ const PropertyShapesTab: FC = () => {
                         key={`p${showAddProperty}`}
                     />
                 )}
-                <Switch
-                    className="mt-6 flex items-center gap-3"
-                    isSelected={isClosedTemplate}
-                    onChange={handleSwitchIsClosedTemplate}
-                    isDisabled={!isEditMode}
-                >
+                <Switch className="mt-6 flex gap-3" isSelected={isClosedTemplate} onChange={handleSwitchIsClosedTemplate} isDisabled={!isEditMode}>
                     <Switch.Content>
                         <Switch.Control>
                             <Switch.Thumb />
