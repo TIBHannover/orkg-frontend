@@ -73,7 +73,7 @@ const AddPropertyView: FC<AddPropertyViewProps> = ({
                 addPropertyWithTooltip
             ) : (
                 <div className="flex items-stretch min-h-8">
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 overflow-hidden">
                         <Autocomplete
                             entityType={ENTITIES.PREDICATE}
                             size="sm"

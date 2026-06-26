@@ -57,7 +57,7 @@ const AddProperty = () => {
     const defaultProperties = _defaultProperties?.filter((p) => !propertyIds.includes(p.id));
 
     return (
-        <div className={`min-h-[34px] ${showAdd ? 'grow' : ''}`}>
+        <div className={`min-h-[34px] ${showAdd ? 'grow min-w-0' : ''}`}>
             <ConditionalWrapper
                 condition={!canAddProperty}
                 // eslint-disable-next-line react/no-unstable-nested-components
@@ -82,7 +82,7 @@ const AddProperty = () => {
                     </ButtonGroup>
                 ) : (
                     <div className="flex items-stretch min-h-8">
-                        <div className="min-w-0 flex-1">
+                        <div className="min-w-0 flex-1 overflow-hidden">
                             <Autocomplete
                                 entityType={ENTITIES.PREDICATE}
                                 size="sm"
