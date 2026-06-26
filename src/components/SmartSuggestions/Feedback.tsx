@@ -74,10 +74,12 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                             {VALUES[type].options.map((option) => (
                                 <div className="mb-1" key={option}>
                                     <Checkbox isSelected={options.includes(option)} onChange={() => toggleOption(option)}>
-                                        <Checkbox.Control>
-                                            <Checkbox.Indicator />
-                                        </Checkbox.Control>
-                                        <Checkbox.Content>{option}</Checkbox.Content>
+                                        <Checkbox.Content>
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
+                                            {option}
+                                        </Checkbox.Content>
                                     </Checkbox>
                                 </div>
                             ))}

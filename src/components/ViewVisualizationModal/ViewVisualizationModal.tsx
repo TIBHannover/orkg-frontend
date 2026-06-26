@@ -113,24 +113,30 @@ const ViewVisualizationModal: FC<ViewVisualizationModalProps> = ({ isOpen, toggl
                                                 orientation="horizontal"
                                             >
                                                 <Radio value="JPGformat">
-                                                    <Radio.Control>
-                                                        <Radio.Indicator />
-                                                    </Radio.Control>
-                                                    <Radio.Content>JPG</Radio.Content>
+                                                    <Radio.Content>
+                                                        <Radio.Control>
+                                                            <Radio.Indicator />
+                                                        </Radio.Control>
+                                                        JPG
+                                                    </Radio.Content>
                                                 </Radio>
                                                 <Radio value="PDFformat">
-                                                    <Radio.Control>
-                                                        <Radio.Indicator />
-                                                    </Radio.Control>
-                                                    <Radio.Content>PDF</Radio.Content>
+                                                    <Radio.Content>
+                                                        <Radio.Control>
+                                                            <Radio.Indicator />
+                                                        </Radio.Control>
+                                                        PDF
+                                                    </Radio.Content>
                                                 </Radio>
                                             </RadioGroup>
                                         </div>
                                         <Checkbox isSelected={caption} onChange={(checked) => enableCaption(checked)}>
-                                            <Checkbox.Control>
-                                                <Checkbox.Indicator />
-                                            </Checkbox.Control>
-                                            <Checkbox.Content>Enable caption</Checkbox.Content>
+                                            <Checkbox.Content>
+                                                <Checkbox.Control>
+                                                    <Checkbox.Indicator />
+                                                </Checkbox.Control>
+                                                Enable caption
+                                            </Checkbox.Content>
                                         </Checkbox>
                                         <div className="text-center">
                                             <Button onPress={initChartDownload} size="sm">

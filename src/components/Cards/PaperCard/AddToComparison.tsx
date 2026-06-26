@@ -1,4 +1,4 @@
-import { Checkbox, Label, ListBox, Popover, Tooltip } from '@heroui/react';
+import { Checkbox, ListBox, Popover, Tooltip } from '@heroui/react';
 import { FC } from 'react';
 import type { Selection } from 'react-aria-components';
 
@@ -144,15 +144,13 @@ const AddToComparison: FC<AddToComparisonProps> = ({ contributionId, paper, show
     const selectedKeys = new Set(paper.contributions.filter((c) => comparison.allIds.includes(c.id)).map((c) => c.id));
 
     const checkbox = (
-        <Checkbox isSelected={!!isSelected} isIndeterminate={isSelected === 'half'} onChange={handleCheckboxChange}>
-            <Checkbox.Control>
-                <Checkbox.Indicator />
-            </Checkbox.Control>
-            {showLabel && (
-                <Checkbox.Content>
-                    <Label>Add to comparison</Label>
-                </Checkbox.Content>
-            )}
+        <Checkbox aria-label="Add to comparison" isSelected={!!isSelected} isIndeterminate={isSelected === 'half'} onChange={handleCheckboxChange}>
+            <Checkbox.Content>
+                <Checkbox.Control>
+                    <Checkbox.Indicator />
+                </Checkbox.Control>
+                {showLabel && 'Add to comparison'}
+            </Checkbox.Content>
         </Checkbox>
     );
 

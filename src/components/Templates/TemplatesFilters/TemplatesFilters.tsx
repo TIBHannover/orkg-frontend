@@ -67,13 +67,11 @@ const TemplatesFilters: FC<TemplatesFiltersProps> = ({ isLoading, size }) => {
                             }}
                             isDisabled={isLoading}
                         >
-                            <Checkbox.Control>
-                                <Checkbox.Indicator />
-                            </Checkbox.Control>
-                            <Checkbox.Content>
-                                <Label htmlFor="include-subfields" className={labelClass}>
-                                    Include subfields
-                                </Label>
+                            <Checkbox.Content className={labelClass}>
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                Include subfields
                             </Checkbox.Content>
                         </Checkbox>
                     </div>

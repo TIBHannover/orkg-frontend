@@ -64,9 +64,11 @@ const BioassaySelectItem: FC<BioassaySelectItemProps> = ({ data, selectedItems, 
                                     onChange={() => handleSelect(labelKey, resource)}
                                     aria-label={`Select ${resource.label}`}
                                 >
-                                    <Checkbox.Control>
-                                        <Checkbox.Indicator />
-                                    </Checkbox.Control>
+                                    <Checkbox.Content>
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                    </Checkbox.Content>
                                 </Checkbox>
                             </li>
                         ))}

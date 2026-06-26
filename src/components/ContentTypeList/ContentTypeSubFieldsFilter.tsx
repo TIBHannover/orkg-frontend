@@ -25,10 +25,12 @@ const ContentTypeSubFieldsFilter: FC<ContentTypeSubFieldsFilterProps> = ({ isLoa
                 isDisabled={isLoading}
                 className="text-sm"
             >
-                <Checkbox.Control>
-                    <Checkbox.Indicator />
-                </Checkbox.Control>
-                <Checkbox.Content>Include subfields</Checkbox.Content>
+                <Checkbox.Content>
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    Include subfields
+                </Checkbox.Content>
             </Checkbox>
         </div>
     );

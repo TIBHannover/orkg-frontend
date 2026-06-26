@@ -69,10 +69,10 @@ const Publish: FC<PublishProps> = ({ toggle }) => {
                                         Once a comparison is published, the current state is saved and will be persistent over time.
                                     </Alert>
                                     <Checkbox id="switchAssignDoi" isSelected={shouldAssignDoi} onChange={(checked) => setShouldAssignDoi(checked)}>
-                                        <Checkbox.Control>
-                                            <Checkbox.Indicator />
-                                        </Checkbox.Control>
                                         <Checkbox.Content>
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
                                             <Tooltip delay={0}>
                                                 <Tooltip.Trigger>
                                                     <span>

@@ -159,10 +159,10 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
 
                     <RadioGroup value={exact ? 'exact' : 'anywhere'} onChange={(value) => setExact(value === 'exact')}>
                         <Radio value="exact">
-                            <Radio.Control>
-                                <Radio.Indicator />
-                            </Radio.Control>
                             <Radio.Content>
+                                <Radio.Control>
+                                    <Radio.Indicator />
+                                </Radio.Control>
                                 Exact match
                                 <div className="text-muted text-xs mt-1">
                                     Selecting this option will search for paths that exactly match the provided path, starting from the contribution
@@ -172,10 +172,10 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                             </Radio.Content>
                         </Radio>
                         <Radio value="anywhere">
-                            <Radio.Control>
-                                <Radio.Indicator />
-                            </Radio.Control>
                             <Radio.Content>
+                                <Radio.Control>
+                                    <Radio.Indicator />
+                                </Radio.Control>
                                 Match anywhere
                                 <div className="text-muted text-xs mt-1">
                                     Selecting this option will search for paths that contain the provided path anywhere within the subgraph of the
@@ -217,16 +217,20 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
                     {filter?.source !== FILTER_SOURCE.LOCAL_STORAGE && isCurationAllowed && (
                         <div className="flex flex-col gap-2">
                             <Checkbox isSelected={persisted} onChange={(checked) => setPersisted(checked)}>
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
-                                <Checkbox.Content>Persist this filter on the observatory page</Checkbox.Content>
+                                <Checkbox.Content>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Persist this filter on the observatory page
+                                </Checkbox.Content>
                             </Checkbox>
                             <Checkbox isSelected={persisted && featured} onChange={(checked) => setFeatured(checked)} isDisabled={!persisted}>
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
-                                <Checkbox.Content>Show this filter by default on the observatory page</Checkbox.Content>
+                                <Checkbox.Content>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Show this filter by default on the observatory page
+                                </Checkbox.Content>
                             </Checkbox>
                         </div>
                     )}

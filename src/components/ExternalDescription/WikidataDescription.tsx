@@ -99,8 +99,8 @@ const WikidataDescription: FC<WikidataDescriptionProp> = ({ externalResource }) 
                             </div>
                         </PropertyStyle>
                         <ValuesStyle className="shrink-0 grow-0 w-8/12 basis-8/12 max-w-8/12 valuesList">
-                            {statementsByProperty[propertyUri].map((value) => (
-                                <div key={value?.object?.value}>
+                            {statementsByProperty[propertyUri].map((value, index) => (
+                                <div key={`${value?.object?.value}-${index}`}>
                                     {value?.object?.type === 'uri' ? (
                                         <a href={value?.object?.value} className="break-all" target="_blank" rel="noopener noreferrer">
                                             {value.objectLabel?.value}

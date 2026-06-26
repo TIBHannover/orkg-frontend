@@ -18,6 +18,18 @@
 }
 
 /*
+ * Tooltip timing — restore the pre-v3.2 HeroUI defaults.
+ * HeroUI v3.2 bumped the global tooltip defaults to --tooltip-delay: 1500ms and
+ * --tooltip-close-delay: 500ms, which feels sluggish across the app. Keep the
+ * previous snappy behaviour (700ms open, 0ms close). Override is unlayered so it
+ * wins over @heroui/styles' @layer base declaration.
+ */
+:root {
+    --tooltip-delay: 700ms;
+    --tooltip-close-delay: 0ms;
+}
+
+/*
  * Action bar — connected button group for TitleBar.
  * Targets [data-slot="button"] (always present on HeroUI Button) for border-radius.
  * No React ButtonGroup needed — avoids cloneElement/fragment issues.

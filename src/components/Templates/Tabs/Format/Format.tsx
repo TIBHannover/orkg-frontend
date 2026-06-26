@@ -25,10 +25,12 @@ const Format = () => {
     return (
         <div className="p-6">
             <Switch isSelected={hasLabelFormat} onChange={handleSwitchHasLabelFormat} isDisabled={!isEditMode} className="flex items-center gap-3">
-                <Switch.Control>
-                    <Switch.Thumb />
-                </Switch.Control>
-                <Switch.Content>Show formatted text instead of resource label</Switch.Content>
+                <Switch.Content>
+                    <Switch.Control>
+                        <Switch.Thumb />
+                    </Switch.Control>
+                    Show formatted text instead of resource label
+                </Switch.Content>
             </Switch>
 
             {hasLabelFormat && propertyShapes?.length > 0 && (

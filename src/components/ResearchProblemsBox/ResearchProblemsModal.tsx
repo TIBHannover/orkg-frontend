@@ -136,10 +136,12 @@ const ResearchProblemsModal: FC<ResearchProblemsModalProps> = ({ id, by = 'Resea
                                     onChange={(isSelected) => setIncludeSubfields(isSelected)}
                                     isDisabled={isLoading}
                                 >
-                                    <Checkbox.Control>
-                                        <Checkbox.Indicator />
-                                    </Checkbox.Control>
-                                    <Checkbox.Content className="text-sm whitespace-nowrap">Include subfields</Checkbox.Content>
+                                    <Checkbox.Content className="text-sm whitespace-nowrap">
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                        Include subfields
+                                    </Checkbox.Content>
                                 </Checkbox>
                             )}
                         </div>

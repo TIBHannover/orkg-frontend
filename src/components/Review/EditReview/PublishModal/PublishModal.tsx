@@ -87,10 +87,10 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
                                         <Input id="update-message" placeholder="Example: added introduction section" maxLength={MAX_LENGTH_INPUT} />
                                     </TextField>
                                     <Checkbox isSelected={shouldAssignDoi} onChange={setShouldAssignDoi} id="switchAssignDoi">
-                                        <Checkbox.Control>
-                                            <Checkbox.Indicator />
-                                        </Checkbox.Control>
                                         <Checkbox.Content>
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
                                             <Tooltip message="Assign a DOI to the published version of this review">Assign DOI to article</Tooltip>
                                         </Checkbox.Content>
                                     </Checkbox>

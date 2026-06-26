@@ -260,10 +260,10 @@ const Filters: FC<FiltersProps> = ({
                                                     isSelected={selectedSmartFilter.includes(fv.facet_value)}
                                                     onChange={(checked) => handleSmartFilterChange(fv.facet_value, checked)}
                                                 >
-                                                    <Checkbox.Control>
-                                                        <Checkbox.Indicator />
-                                                    </Checkbox.Control>
                                                     <Checkbox.Content>
+                                                        <Checkbox.Control>
+                                                            <Checkbox.Indicator />
+                                                        </Checkbox.Control>
                                                         <span>
                                                             {fv.facet_value} <span className="text-gray-500">({fv.frequency})</span>
                                                         </span>

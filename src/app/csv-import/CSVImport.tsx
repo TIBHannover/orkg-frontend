@@ -2,7 +2,7 @@
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Button, Checkbox, Label } from '@heroui/react';
+import { Alert, Button, Checkbox } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { ZodError } from 'zod';
 
@@ -285,13 +285,11 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                         {data && data.length > 0 && (
                             <div className="flex items-center gap-3">
                                 <Checkbox id="csv-debug-mode" isSelected={debugMode} onChange={setDebugMode}>
-                                    <Checkbox.Control>
-                                        <Checkbox.Indicator />
-                                    </Checkbox.Control>
-                                    <Checkbox.Content>
-                                        <Label htmlFor="csv-debug-mode" className="text-sm font-normal">
-                                            Debug mode
-                                        </Label>
+                                    <Checkbox.Content className="text-sm font-normal">
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                        Debug mode
                                     </Checkbox.Content>
                                 </Checkbox>
                                 <Button variant="secondary" size="sm" onPress={handleCsvDownload}>

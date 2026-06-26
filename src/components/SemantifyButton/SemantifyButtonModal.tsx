@@ -245,10 +245,12 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
 
                         <div className="mt-5 flex flex-wrap items-center gap-3">
                             <Checkbox isSelected={isCheckedSeparated} onChange={toggleIsChecked}>
-                                <Checkbox.Control>
-                                    <Checkbox.Indicator />
-                                </Checkbox.Control>
-                                <Checkbox.Content>Split the original value by separator</Checkbox.Content>
+                                <Checkbox.Content>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Split the original value by separator
+                                </Checkbox.Content>
                             </Checkbox>
                             <TextField
                                 value={separator}

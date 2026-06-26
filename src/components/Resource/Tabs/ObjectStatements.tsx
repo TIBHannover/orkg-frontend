@@ -45,10 +45,12 @@ const ObjectStatements = ({ id, contentType, showInfoTabLink = true }: { id: str
             <div className="box rounded-lg overflow-hidden">
                 <div className="px-4 py-3">
                     <Checkbox isSelected={isFormattedLabelEnabled} onChange={setIsFormattedLabelEnabled}>
-                        <Checkbox.Control>
-                            <Checkbox.Indicator />
-                        </Checkbox.Control>
-                        <Checkbox.Content>Show formatted label when available</Checkbox.Content>
+                        <Checkbox.Content>
+                            <Checkbox.Control>
+                                <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            Show formatted label when available
+                        </Checkbox.Content>
                     </Checkbox>
                 </div>
                 <Separator />

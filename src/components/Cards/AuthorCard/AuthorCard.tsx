@@ -65,10 +65,10 @@ const AuthorCard = ({ author, paperAmount, papers, isVisibleGoogleScholar = fals
                             </Popover.Content>
                         </Popover>
                         <Switch size="sm" isSelected={isCitationsEnabled} onChange={() => setIsCitationsEnabled((v) => !v)}>
-                            <Switch.Control>
-                                <Switch.Thumb />
-                            </Switch.Control>
                             <Switch.Content>
+                                <Switch.Control>
+                                    <Switch.Thumb />
+                                </Switch.Control>
                                 <span className="text-sm">Show citations</span>
                             </Switch.Content>
                         </Switch>

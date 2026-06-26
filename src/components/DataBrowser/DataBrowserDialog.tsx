@@ -63,8 +63,8 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     };
 
     return (
-        <Modal.Backdrop isOpen={show} onOpenChange={handleOpenChange}>
-            <Modal.Container className="max-h-[calc(100vh-73px)] mt-[73px]">
+        <Modal.Backdrop isOpen={show} onOpenChange={handleOpenChange} className="z-[1055]">
+            <Modal.Container>
                 <Modal.Dialog className="sm:max-w-6xl">
                     <Modal.CloseTrigger />
                     <Modal.Header>
