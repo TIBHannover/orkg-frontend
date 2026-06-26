@@ -2,6 +2,13 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.184.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.184.2...v0.184.3) - 2026-06-26
+
+### Changes
+
+- fix: update RDF dump download link [`#1710`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1710)
+
+---
 ## [v0.184.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.184.1...v0.184.2) - 2026-06-26
 
 ### Changes
