@@ -55,7 +55,7 @@ export default function DataAccessPage() {
             title: 'RDF Dump',
             icon: faDownload,
             description: 'Download the complete ORKG knowledge graph as an RDF dump in N-Triples format.',
-            links: [{ label: 'Download RDF dump', href: `${publicUrl}/api/rdf/dump` }],
+            links: [{ label: 'Download RDF dump', href: `${publicUrl}/files/rdf-dumps/rdf-export-orkg.nt` }],
         },
     ];
 
