@@ -18,7 +18,7 @@ include:
       stage: verify
       job_name: dependency_scanning
       disabled_resolution_jobs: maven,gradle,python
-  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/pipeline-trigger-orkg@0.0.7
+  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/pipeline-trigger-orkg@0.0.8
     inputs:
       component_name: orkg-frontend
       needs:
@@ -26,10 +26,10 @@ include:
           optional: true
         - job: docker-build-default-branch
           optional: true
-  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-build@0.0.7
+  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-build@0.0.8
     inputs:
       oci_image_vendor: $DOCKER_IMAGE_OCI_VENDOR
-  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-tag-release@0.0.7
+  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-tag-release@0.0.8
 
 install:
   image: node:24-bookworm
