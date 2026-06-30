@@ -8,6 +8,7 @@ import ComparisonHeader from '@/app/comparisons/[comparisonId]/ComparisonWithCon
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import ComparisonMetaData from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonMetaData/ComparisonMetaData';
 import NewComparisonsAlert from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/NewComparisonsAlert/NewComparisonsAlert';
+import PropertySelectionInfoAlert from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/PropertySelectionInfoAlert/PropertySelectionInfoAlert';
 import References from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/References';
 import NotFound from '@/app/not-found';
 import ComparisonLoading from '@/components/Comparison/ComparisonLoading/ComparisonLoading';
@@ -64,6 +65,7 @@ const ComparisonPage = () => {
             )}
             {!isLoadingComparisonContents && sourceAmount > 1 && <ComparisonCarousel />}
             <NewComparisonsAlert />
+            <PropertySelectionInfoAlert />
             <Container className="transition-[max-width] duration-500" style={containerStyle}>
                 <div className="box p-0 relative">
                     {!isLoadingComparisonContents && sourceAmount > 0 && <ComparisonTable id={comparisonId} />}
