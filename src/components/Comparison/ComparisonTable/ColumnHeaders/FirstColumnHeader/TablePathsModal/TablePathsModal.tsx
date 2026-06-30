@@ -181,14 +181,17 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
 
     return (
         <Modal.Backdrop isOpen onOpenChange={handleOpenChange} isDismissable={!isBusy} isKeyboardDismissDisabled={isBusy}>
-            <Modal.Container size="lg" className="max-h-[calc(100vh-73px)] mt-[73px]">
+            <Modal.Container size="lg">
                 <Modal.Dialog className="max-w-3xl">
                     <LoadingOverlay isLoading={isBusy} className="rounded" />
+                    <Modal.CloseTrigger />
                     <Modal.Header className="flex-row items-center justify-between gap-3">
                         <Modal.Heading>Select properties</Modal.Heading>
-                        <Modal.CloseTrigger className="static" />
                     </Modal.Header>
                     <Modal.Body className="pt-4 pb-2 px-1">
+                        <p className="text-sm mb-4">
+                            The following properties reflect the full path of nested resources across the comparison sources, up to 10 levels deep.
+                        </p>
                         {!isLoadingTablePaths && pathsNew.length > 0 && (
                             <PathList
                                 paths={pathsNew}
