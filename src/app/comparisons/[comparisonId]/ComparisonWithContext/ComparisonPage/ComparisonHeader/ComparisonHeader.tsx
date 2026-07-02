@@ -4,7 +4,7 @@ import { Alert, Button, Dropdown, Header, Label, Modal, Separator, toast } from 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import pluralize from 'pluralize';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import ColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ColumnWidth/ColumnWidth';
 import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
@@ -52,6 +52,10 @@ const ComparisonHeader = () => {
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const { generateRdfDataVocabularyFile } = useRdfExport();
     const numberOfSources = comparison?.sources.length ?? 0;
+    const selectEntitiesInitial = useMemo(
+        () => comparisonContents?.titles.map((title, i) => comparisonContents.subtitles[i] ?? title),
+        [comparisonContents],
+    );
     const { isFullWidth, toggleIsFullWidth } = useFullWidth({ sourceAmount: numberOfSources });
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -461,7 +465,7 @@ const ComparisonHeader = () => {
                     showDialog
                     toggle={() => setIsOpenSelectEntities((v) => !v)}
                     onCreatePaper={() => setIsOpenCreatePaper(true)}
-                    entities={comparisonContents?.titles.map((title, i) => comparisonContents.subtitles[i] ?? title)}
+                    entities={selectEntitiesInitial}
                     setEntityIds={handleAddSources}
                 />
             )}
