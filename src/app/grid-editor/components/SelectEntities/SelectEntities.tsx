@@ -1,7 +1,7 @@
 import { Button, Modal, Skeleton, Tabs } from '@heroui/react';
 import { difference, intersection, uniq } from 'lodash';
 import Link from 'next/link';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import Item from '@/app/grid-editor/components/SelectEntities/Item';
 import SelectedItem from '@/app/grid-editor/components/SelectEntities/SelectedItem';
@@ -54,10 +54,12 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
     const [activeTab, setActiveTab] = useState<'search' | 'selected'>('search');
     const [selectedEntities, setSelectedEntities] = useState<(Thing | ResourceThingReference)[]>(entities ?? []);
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+    const entitiesKey = entities?.map((e) => e.id).join(',');
+    const [prevEntitiesKey, setPrevEntitiesKey] = useState(entitiesKey);
+    if (entitiesKey !== prevEntitiesKey) {
+        setPrevEntitiesKey(entitiesKey);
         setSelectedEntities(entities ?? []);
-    }, [entities]);
+    }
 
     const {
         searchTerm,
@@ -167,6 +169,7 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
             setSearchTerm('');
+            setPage(0);
             toggle();
         }
     };
