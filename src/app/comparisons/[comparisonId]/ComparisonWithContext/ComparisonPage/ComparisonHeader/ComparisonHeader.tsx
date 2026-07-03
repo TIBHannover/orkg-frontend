@@ -1,6 +1,6 @@
 import { faChevronRight, faEllipsisV, faExternalLinkAlt, faPen, faPlus, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Button, Dropdown, Header, Label, Modal, Separator, toast } from '@heroui/react';
+import { Alert, Button, Description, Dropdown, Header, Label, Modal, Separator, toast } from '@heroui/react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import pluralize from 'pluralize';
@@ -9,8 +9,9 @@ import { useState } from 'react';
 import ColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ColumnWidth/ColumnWidth';
 import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
 import ExportToLatex from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportToLatex';
-import generatePdf from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generatepdf';
+import generatePdfText from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generatePdfText';
 import HistoryModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/HistoryModal/HistoryModal';
+import useColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useColumnWidth';
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import useRdfExport from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useRdfExport';
 import Publish from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Publish/Publish';
@@ -18,6 +19,7 @@ import QualityReportModal from '@/app/comparisons/[comparisonId]/ComparisonWithC
 import WriteFeedbackModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/QualityReportModal/WriteFeedbackModal/WriteFeedbackModal';
 import SelectEntities from '@/app/grid-editor/components/SelectEntities/SelectEntities';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
+import useComparisonTable from '@/components/Comparison/ComparisonTable/hooks/useComparisonTable';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Confirm from '@/components/Confirmation/Confirmation';
 import Tooltip from '@/components/FloatingUI/Tooltip';
@@ -47,8 +49,9 @@ const ComparisonHeader = () => {
     const [isOpenColumnWidthModal, setIsOpenColumnWidthModal] = useState(false);
     const [isOpenSelectEntities, setIsOpenSelectEntities] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
-
     const { comparison, isPublished, updateComparison, mutateComparisonContents, comparisonContents } = useComparison();
+    const { columns, activeColumns } = useComparisonTable();
+    const { columnWidth } = useColumnWidth();
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
     const { generateRdfDataVocabularyFile } = useRdfExport();
     const numberOfSources = comparison?.sources.length ?? 0;
@@ -79,7 +82,7 @@ const ComparisonHeader = () => {
         const download = async () => {
             const csv = await getComparisonTableCsv(comparison.id, { transposed });
             const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-            const link = Object.assign(document.createElement('a'), { href: url, download: `${comparison.id} - ORKG Comparison.csv` });
+            const link = Object.assign(document.createElement('a'), { href: url, download: `${comparison.title} - ORKG Comparison.csv` });
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -92,12 +95,29 @@ const ComparisonHeader = () => {
         });
     };
 
-    const handleExportPdf = () => {
-        toast.promise(generatePdf('comparisonTable'), {
-            loading: 'Generating PDF, this may take a moment...',
-            success: 'PDF downloaded',
-            error: 'An error occurred while exporting the PDF',
-        });
+    const handleExportPdfText = (mode: 'single' | 'chunked') => {
+        if (!comparisonContents || !comparison?.id) return;
+
+        const comparisonId = comparison.id;
+        const comparisonTitle = comparison.title ?? 'ORKG Comparison';
+
+        // activeColumns reflects row filters — PDF exports only visible source columns.
+        toast.promise(
+            generatePdfText({
+                mode,
+                comparisonId,
+                comparisonContents,
+                columns,
+                activeColumns,
+                columnWidth,
+                title: comparisonTitle,
+            }),
+            {
+                loading: mode === 'single' ? 'Generating PDF (wide page)...' : 'Generating PDF (printable)...',
+                success: 'PDF downloaded',
+                error: 'An error occurred while exporting the PDF',
+            },
+        );
     };
 
     const handleOpenGridEditor = async () => {
@@ -182,9 +202,6 @@ const ComparisonHeader = () => {
                                                 break;
                                             case 'export-latex':
                                                 setIsOpenLatexModal((v) => !v);
-                                                break;
-                                            case 'export-pdf':
-                                                handleExportPdf();
                                                 break;
                                             case 'export-rdf':
                                                 generateRdfDataVocabularyFile();
@@ -290,9 +307,41 @@ const ComparisonHeader = () => {
                                                 </Dropdown.Menu>
                                             </Dropdown.Popover>
                                         </Dropdown.SubmenuTrigger>
-                                        <Dropdown.Item id="export-pdf" textValue="Export as PDF">
-                                            <Label>Export as PDF</Label>
-                                        </Dropdown.Item>
+                                        <Dropdown.SubmenuTrigger>
+                                            <Dropdown.Item id="export-pdf-submenu" textValue="Export as PDF">
+                                                <Label>Export as PDF</Label>
+                                                <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronRight} className="ml-auto" />
+                                            </Dropdown.Item>
+                                            <Dropdown.Popover>
+                                                <Dropdown.Menu
+                                                    onAction={(key) => {
+                                                        switch (key) {
+                                                            case 'wide-page':
+                                                                handleExportPdfText('single');
+                                                                break;
+                                                            case 'print-friendly':
+                                                                handleExportPdfText('chunked');
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
+                                                    }}
+                                                >
+                                                    <Dropdown.Item id="wide-page" textValue="Wide-page format">
+                                                        <div className="flex flex-col">
+                                                            <Label>Wide-page format</Label>
+                                                            <Description>Oversized page, best on screen.</Description>
+                                                        </div>
+                                                    </Dropdown.Item>
+                                                    <Dropdown.Item id="print-friendly" textValue="Print-friendly format">
+                                                        <div className="flex flex-col">
+                                                            <Label>Print-friendly format</Label>
+                                                            <Description>Split across pages, best for printing.</Description>
+                                                        </div>
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown.Popover>
+                                        </Dropdown.SubmenuTrigger>
                                         <Dropdown.Item id="export-rdf" textValue="Export as RDF">
                                             <Label>Export as RDF</Label>
                                         </Dropdown.Item>
@@ -397,7 +446,7 @@ const ComparisonHeader = () => {
             )}
             {!isEditMode && !isPublished && (
                 <Container className="mb-4">
-                    <Alert status="warning" className="shadow">
+                    <Alert status="warning">
                         <Alert.Indicator />
                         <Alert.Content>
                             <Alert.Title>Unpublished version</Alert.Title>
@@ -466,6 +515,7 @@ const ComparisonHeader = () => {
                 />
             )}
             {isOpenCreatePaper && <AddPaperModal isOpen onCreatePaper={handleCreatePaper} toggle={() => setIsOpenCreatePaper((v) => !v)} />}
+
             <Modal.Backdrop isOpen={isOpenColumnWidthModal} onOpenChange={setIsOpenColumnWidthModal}>
                 <Modal.Container>
                     <Modal.Dialog className="sm:max-w-sm">
