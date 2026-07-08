@@ -2,6 +2,18 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.185.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.184.3...v0.185.0) - 2026-07-08
+
+### Changes
+
+- fix(csv-import): map paper:url & extraction_method headers and accept AI_GENERATED [`#1713`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1713)
+- feat(Comparison): enhanced PDF export functionality [`#1296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1296)
+- fix(SelectEntities): prevent selection loss on rerender [`#1712`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1712)
+- chore: update GitLab CI components to version 0.0.8 [`#1711`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1711)
+- feat(Comparison): add informational alert on path selection in CreateForm and TablePathsModal [`#1705`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1705)
+- fix(AddProperty): adjust layout styles for better responsiveness [`#1704`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1704)
+
+---
 ## [v0.184.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.184.2...v0.184.3) - 2026-06-26
 
 ### Changes
@@ -58,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - ci: migrate to CI components [`#1678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1678)
 
 ---
-## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-19
+## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-21
 
 ### Changes
 
@@ -120,7 +132,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - feat: improve dataset/software content type view [`#1649`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1649)
 
 ---
-## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
+## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-14
 
 ### Changes
 
