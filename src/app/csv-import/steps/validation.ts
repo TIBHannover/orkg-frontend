@@ -6,6 +6,7 @@ import { getConfigByType, preprocessNumber } from '@/constants/DataTypes';
 import { PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import REGEX from '@/constants/regex';
+import { ExtractionMethod } from '@/services/backend/types';
 
 export const validateCsvStructure = (data: string[][]) => {
     if (!data || data.length === 0) {
@@ -189,15 +190,18 @@ export const validateValueOfCell = <T extends boolean = true>(
         case PREDICATES.URL:
             cellSchema = z.string().regex(REGEX.URL, { message: 'URL must be valid' }).optional().or(z.literal(''));
             break;
-        case 'extraction_method':
+        case 'extraction_method': {
+            const extractionMethods = Object.values(EXTRACTION_METHODS);
             cellSchema = z
-                .enum([EXTRACTION_METHODS.UNKNOWN, EXTRACTION_METHODS.MANUAL, EXTRACTION_METHODS.AUTOMATIC])
+                .enum(extractionMethods as [ExtractionMethod, ...ExtractionMethod[]])
                 .optional()
                 .refine((value) => value, {
-                    message:
-                        'The extraction method can be empty, or if a value is given, it must be one of the following: UNKNOWN, MANUAL, AUTOMATIC.',
+                    message: `The extraction method can be empty, or if a value is given, it must be one of the following: ${extractionMethods.join(
+                        ', ',
+                    )}.`,
                 });
             break;
+        }
         default:
             break;
     }

@@ -9,7 +9,7 @@ export type MappedColumn = { predicate: OptionType | null; inputValue: string; t
 export const DEFAULT_HEADERS = [
     { id: 'title', label: 'title', _class: ENTITIES.PREDICATE, hideLink: true },
     { id: PREDICATES.HAS_DOI, label: 'doi', _class: ENTITIES.PREDICATE },
-    { id: PREDICATES.URL, label: ' url', _class: ENTITIES.PREDICATE },
+    { id: PREDICATES.URL, label: 'url', _class: ENTITIES.PREDICATE },
     { id: PREDICATES.HAS_AUTHORS, label: 'authors', _class: ENTITIES.PREDICATE },
     { id: PREDICATES.HAS_PUBLICATION_MONTH, label: 'publication month', alternativeLabels: ['publication_month'], _class: ENTITIES.PREDICATE },
     { id: PREDICATES.HAS_PUBLICATION_YEAR, label: 'publication year', alternativeLabels: ['publication_year'], _class: ENTITIES.PREDICATE },
@@ -21,7 +21,7 @@ export const DEFAULT_HEADERS = [
     },
     { id: PREDICATES.HAS_RESEARCH_FIELD, label: 'research field', alternativeLabels: ['research_field'], _class: ENTITIES.PREDICATE },
     { id: PREDICATES.HAS_RESEARCH_PROBLEM, label: 'research problem', alternativeLabels: ['research_problem'], _class: ENTITIES.PREDICATE },
-    { id: 'extraction_method', label: 'extraction method', _class: ENTITIES.PREDICATE, hideLink: true },
+    { id: 'extraction_method', label: 'extraction method', alternativeLabels: ['extraction_method'], _class: ENTITIES.PREDICATE, hideLink: true },
 ];
 
 export const matchHeaderByLabel = (header: string) => {
