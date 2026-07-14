@@ -26,9 +26,11 @@ class CheckboxSelector extends Component {
 
         return (
             <Checkbox id={cbx_id} isSelected={isChecked} onChange={this.toggleCheckboxChange} aria-label="Toggle column selection">
-                <Checkbox.Control>
-                    <Checkbox.Indicator />
-                </Checkbox.Control>
+                <Checkbox.Content>
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                </Checkbox.Content>
             </Checkbox>
         );
     }
