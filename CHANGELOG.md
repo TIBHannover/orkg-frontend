@@ -2,6 +2,13 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.185.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.185.0...v0.185.1) - 2026-07-14
+
+### Changes
+
+- fix: wrap selfVis checkbox in Checkbox.Content for click handling [`#1715`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1715)
+
+---
 ## [v0.185.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.184.3...v0.185.0) - 2026-07-08
 
 ### Changes
