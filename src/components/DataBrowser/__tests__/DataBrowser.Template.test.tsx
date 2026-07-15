@@ -39,8 +39,8 @@ describe('DataBrowser.Template', () => {
         // Basic reproduction number
         await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P23140-true'));
-        await waitFor(() => expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument());
-        fireEvent.click(screen.getByRole('button', { name: /back/i }));
+        await waitFor(() => expect(screen.getByRole('link', { name: /back/i })).toBeInTheDocument());
+        fireEvent.click(screen.getByRole('link', { name: /back/i }));
         await waitFor(() => expect(screen.getByText(/Test Resource R0/i)).toBeInTheDocument());
         const addR0Value = screen.getByTestId('add-value-P23140-true');
         expect(addR0Value).toBeInTheDocument();

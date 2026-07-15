@@ -165,7 +165,6 @@ const AuthorHeader: FC<AuthorHeaderProps> = ({ authorId }) => {
                     show={editMode}
                     toggleModal={() => setEditMode((v) => !v)}
                     id={author.id}
-                    label={author.label}
                     onCloseModal={() => loadAuthorData()}
                 />
             )}

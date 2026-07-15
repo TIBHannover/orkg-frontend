@@ -1,60 +1,32 @@
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Modal } from '@heroui/react';
-import Link from 'next/link';
 import { FC } from 'react';
 
+import DialogHeader from '@/components/DataBrowser/components/Header/DialogHeader';
 import DataBrowser from '@/components/DataBrowser/DataBrowser';
-import { ENTITIES } from '@/constants/graphSettings';
-import ROUTES from '@/constants/routes';
-import { reverse } from '@/lib/namedRoute';
 
 type DataBrowserDialogProps = {
     isEditMode?: boolean;
     id: string;
-    label: string;
-    type?: string;
     show: boolean;
-    defaultHistory?: string[];
     toggleModal: () => void;
     onCloseModal?: () => void;
     showFooter?: boolean;
     comparisonSelectedPaths?: string[][];
+    historyPrefix?: string[];
+    scopeKey?: string;
 };
 
 const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     isEditMode = false,
-    label,
     id,
     show,
-    defaultHistory,
     toggleModal,
     onCloseModal,
-    type = ENTITIES.RESOURCE,
     showFooter = true,
     comparisonSelectedPaths,
+    historyPrefix,
+    scopeKey,
 }) => {
-    let route = ROUTES.RESOURCE;
-    switch (type) {
-        case ENTITIES.PREDICATE:
-        case 'property':
-            route = ROUTES.PROPERTY;
-            break;
-        case ENTITIES.CLASS:
-            route = ROUTES.CLASS;
-            break;
-        default:
-            route = ROUTES.RESOURCE;
-            break;
-    }
-
-    const typeLabel = type === ENTITIES.PREDICATE ? 'property' : type;
-
-    let rootId = id;
-    if (defaultHistory && defaultHistory.length > 0) {
-        [rootId] = defaultHistory;
-    }
-
     const handleOpenChange = (open: boolean) => {
         if (!open) {
             toggleModal();
@@ -67,32 +39,24 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
             <Modal.Container>
                 <Modal.Dialog className="sm:max-w-6xl">
                     <Modal.CloseTrigger />
-                    <Modal.Header>
-                        <div className="flex items-center justify-between gap-4 pr-8">
-                            <Modal.Heading>
-                                View existing {typeLabel}: {label}
-                            </Modal.Heading>
-                            <Link
-                                href={`${reverse(route, { id })}?noRedirect`}
-                                title={`Go to ${typeLabel} page`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="whitespace-nowrap text-sm text-accent hover:underline"
-                            >
-                                Open {typeLabel} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                            </Link>
-                        </div>
-                    </Modal.Header>
                     <Modal.Body>
                         {show && (
                             <DataBrowser
                                 isEditMode={isEditMode}
-                                key={rootId}
-                                id={rootId}
+                                key={id}
+                                id={id}
                                 canEditSharedRootLevel
-                                defaultHistory={defaultHistory}
                                 showFooter={showFooter}
                                 comparisonSelectedPaths={comparisonSelectedPaths}
+                                historyPrefix={historyPrefix}
+                                scopeKey={scopeKey}
+                                // Dialogs keep history local ("history lives where open-state
+                                // lives"): their open-state is a local flag, so URL entries they
+                                // wrote could never reopen them and would be orphaned in shareable
+                                // URLs. Scoped dialogs (comparison cells/column headers) pass
+                                // scopeKey, which forces URL storage regardless.
+                                historyStorage="local"
+                                renderAboveHeader={() => <DialogHeader />}
                             />
                         )}
                     </Modal.Body>

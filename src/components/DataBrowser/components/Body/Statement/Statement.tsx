@@ -33,16 +33,8 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0,
     const dispatch = useDataBrowserDispatch();
     const { isEditMode, valuesAsLinks, comparisonSelectedPaths } = config;
 
-    const {
-        isLoadingObjectStatements,
-        deleteStatement,
-        handleOnClick,
-        isEditingValue,
-        setIsEditingValue,
-        setShowSubLevel,
-        showSubLevel,
-        objectStatements,
-    } = useStatement(statement, path, level);
+    const { isLoadingObjectStatements, deleteStatement, isEditingValue, setIsEditingValue, setShowSubLevel, showSubLevel, objectStatements } =
+        useStatement(statement, path, level);
 
     const valueWrapper = (children: ReactElement) => <ValuePreviewFactory value={statement.object}>{children}</ValuePreviewFactory>;
 
@@ -71,7 +63,6 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0,
                                 path={path}
                                 statement={statement}
                                 isEditingValue={isEditingValue}
-                                handleOnClick={handleOnClick}
                                 hasObjectStatements={Object.keys(objectStatements).length > 0}
                                 setShowSubLevel={setShowSubLevel}
                                 showSubLevel={showSubLevel}

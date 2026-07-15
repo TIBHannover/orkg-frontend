@@ -49,7 +49,7 @@ const SectionComparison: FC<SectionComparisonProps> = ({ section }) => {
             <div className="d-print-none">
                 {store && id && (
                     <Provider store={store}>
-                        <EmbeddedComparison id={id} updateReferences={updateReferences} />
+                        <EmbeddedComparison id={id} updateReferences={updateReferences} scopeKey={section.id} />
                     </Provider>
                 )}
             </div>

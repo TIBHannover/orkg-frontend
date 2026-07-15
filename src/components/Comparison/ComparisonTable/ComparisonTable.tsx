@@ -5,6 +5,7 @@ import { FC, useMemo } from 'react';
 import AiReviewAlert from '@/components/Comparison/ComparisonTable/AiReview/AiReviewAlert';
 import ComparisonAiReviewProvider from '@/components/Comparison/ComparisonTable/AiReview/ComparisonAiReviewProvider';
 import ColumnHeaders from '@/components/Comparison/ComparisonTable/ColumnHeaders/ColumnHeaders';
+import ComparisonDialogs from '@/components/Comparison/ComparisonTable/ComparisonDialogs/ComparisonDialogs';
 import useComparisonTable from '@/components/Comparison/ComparisonTable/hooks/useComparisonTable';
 import useFilters from '@/components/Comparison/ComparisonTable/RowHeader/FilterPopover/Filters/hooks/useFilters';
 import ScrollShadow from '@/components/Comparison/ComparisonTable/ScrollShadow/ScrollShadow';
@@ -26,6 +27,7 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
     return (
         <ComparisonAiReviewProvider comparisonId={id}>
             <AiReviewAlert />
+            <ComparisonDialogs />
             <div className="relative">
                 {(hasData || !hasFilters) && (
                     <ScrollShadow tbodyRef={tbodyRef}>

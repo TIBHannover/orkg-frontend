@@ -118,7 +118,6 @@ const BenchmarkPage = ({ datasetId, problemId }: BenchmarkPageProps) => {
                             show={editMode}
                             toggleModal={() => setEditMode((v) => !v)}
                             id={datasetId}
-                            label={datasetResource.label}
                             isEditMode
                             onCloseModal={() => loadResourceData()}
                         />

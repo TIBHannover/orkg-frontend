@@ -88,6 +88,8 @@ import ROUTES from '@/constants/routes';
 <Link href={reverse(ROUTES.PAPER, { resourceId })}>View Paper</Link>
 ```
 
+**DataBrowser dialog & history state**: a plain `DataBrowserDialog` needs only `id`/`show`/`toggleModal` — it keeps navigation history provider-local and derives its own header from the browsed entity (no `label`, `type`, or `historyStorage` props). Embedded `DataBrowser`s and scoped comparison dialogs keep history in the `?history=` URL param instead; never combine `historyStorage="local"` with `scopeKey`. Render in-browser navigation links with `HistoryLink` (`@/components/DataBrowser/components/HistoryLink`) rather than hand-rolled anchors, and never subscribe to the `history` param from per-cell comparison components. The schema doc lives on `schemaHistory` in `src/components/DataBrowser/types/DataBrowserTypes.ts`; the contract tests in `src/components/DataBrowser/hooks/__tests__/useHistory.test.ts` are the executable spec.
+
 **Server vs. client components**: Default to server components for data fetching and static content. Add `'use client'` only when using hooks, browser APIs, or event handlers.
 
 **Styling**: Tailwind CSS is the current standard. `styled-components` is still present for legacy code but being phased out — do not use it for new code.

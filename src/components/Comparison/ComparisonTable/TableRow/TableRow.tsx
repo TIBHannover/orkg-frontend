@@ -36,7 +36,12 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
                         style={{ minWidth: `${columnWidth}px` }}
                         className="p-0 bg-inherit w-[2px] grow-[2] shrink-0 basis-auto"
                     >
-                        <Cell value={value ?? undefined} path={path} dataBrowserHistory={[...historyPrefix, pathNode.id, value?.id ?? '']} />
+                        <Cell
+                            value={value ?? undefined}
+                            path={path}
+                            // no prefix for empty cells — a ''-terminated path must never enter entry matching
+                            dataBrowserHistory={value?.id ? [...historyPrefix, pathNode.id, value.id] : undefined}
+                        />
                     </td>
                 );
             })}

@@ -11,7 +11,9 @@ import { CLASSES } from '@/constants/graphSettings';
 const DataBrowser: FC<DataBrowserProps> = ({
     id,
     isEditMode = false,
-    defaultHistory = [], // if not set or empty array, the history will be from the url
+    historyPrefix = [],
+    scopeKey,
+    historyStorage = 'url',
     openValuesInDialog = false,
     propertiesAsLinks = false,
     valuesAsLinks = false,
@@ -26,10 +28,13 @@ const DataBrowser: FC<DataBrowserProps> = ({
     statementsSnapshot,
     snapshotCreatedAt,
     comparisonSelectedPaths,
+    renderAboveHeader,
 }) => {
     const config = {
         isEditMode,
-        defaultHistory,
+        historyPrefix,
+        scopeKey,
+        historyStorage,
         openValuesInDialog,
         propertiesAsLinks,
         valuesAsLinks,
@@ -46,6 +51,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
     return (
         <ErrorBoundary fallback="Something went wrong while loading the data browser!">
             <DataBrowserProvider rootId={id} config={config} context={context}>
+                {renderAboveHeader?.()}
                 <div className="bg-surface border border-border rounded-md overflow-hidden mb-2">
                     {showHeader && <Header />}
                     <Body />

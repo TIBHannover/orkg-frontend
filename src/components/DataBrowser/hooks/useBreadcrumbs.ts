@@ -6,15 +6,37 @@ import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStat
 import { getThing, thingsUrl } from '@/services/backend/things';
 import { Class, Literal, Predicate, Resource } from '@/services/backend/types';
 
+// Navigation extends the path one hop at a time, but the SWR key is the whole
+// array — without this cache every step would refetch the entire breadcrumb
+// chain instead of just the new tail entity. Cached promises also dedupe
+// in-flight requests; the short TTL bounds label staleness after edits.
+const THING_CACHE_TTL = 60_000;
+const thingCache = new Map<string, { promise: ReturnType<typeof getThing>; at: number }>();
+const getThingCached = (id: string) => {
+    const hit = thingCache.get(id);
+    if (hit && Date.now() - hit.at < THING_CACHE_TTL) return hit.promise;
+    // sweep expired entries on write so the cache stays bounded to recently
+    // visited ids instead of growing for the tab's lifetime
+    thingCache.forEach((entry, key) => {
+        if (Date.now() - entry.at >= THING_CACHE_TTL) thingCache.delete(key);
+    });
+    const promise = getThing(id).catch((error) => {
+        thingCache.delete(id);
+        throw error;
+    });
+    thingCache.set(id, { promise, at: Date.now() });
+    return promise;
+};
+
 const useBreadcrumbs = () => {
     const { isUsingSnapshot } = useSnapshotStatement();
-    const { history, setHistory } = useHistory();
+    const { history } = useHistory();
     const { config } = useDataBrowserState();
     let historyEntities: (Resource | Class | Predicate | Literal | undefined)[] = [];
 
     const { data: _historyEntities, isLoading } = useSWR(
-        !isUsingSnapshot && history && history.length > 0 ? [history, thingsUrl, 'getThing'] : null,
-        ([params]) => Promise.all(params.map((id) => getThing(id))),
+        !isUsingSnapshot && history && history.length > 1 ? [history, thingsUrl, 'getThing'] : null,
+        ([params]) => Promise.all(params.map((id) => getThingCached(id))),
     );
 
     if (!isUsingSnapshot && _historyEntities) {
@@ -40,15 +62,6 @@ const useBreadcrumbs = () => {
             .filter((entity) => entity !== undefined);
     }
 
-    const handleBackClick = () => {
-        setHistory([...history.slice(0, history.length - 2)]);
-    };
-
-    const selectResource = (resourceId: string) => {
-        const selectIndex = history.indexOf(resourceId);
-        setHistory([...history.slice(0, selectIndex + 1)]);
-    };
-
-    return { historyEntities, isLoading, handleBackClick, selectResource };
+    return { historyEntities, isLoading };
 };
 export default useBreadcrumbs;

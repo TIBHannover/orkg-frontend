@@ -1,4 +1,56 @@
+import { ReactNode } from 'react';
+import { z } from 'zod';
+
 import { Statement } from '@/services/backend/types';
+
+/**
+ * URL state for open DataBrowser dialogs (`history` search param).
+ * One entry per open dialog. Example on a review page:
+ *   ?history=[{"s":"Sec1","p":["C1","P32","R5","P7","R9"],"r":3}]
+ *   → the dialog opened from the cell [C1,P32,R5] in review section Sec1,
+ *     then navigated inside the dialog via P7 to R9.
+ *
+ * s — scope/instance key: which embed owns the entry (comparison id on
+ *     /comparisons/[id], section id for comparisons embedded in reviews).
+ *     Opaque — compared for equality only, never part of the graph path.
+ *     Absent on legacy URLs and standalone data browser pages.
+ * p — graph path of alternating entity/predicate ids, from the cell root
+ *     (contribution) down to the resource currently shown. In-dialog
+ *     navigation rewrites the tail of this same entry.
+ * r — length of the fixed root prefix of p (the cell path; 1 or absent for
+ *     standalone data browsers). Entry identity is (s, p.slice(0, r)) —
+ *     this distinguishes a cell entry [C1,P,R] (r=3) from a contribution
+ *     dialog navigated to the same path (r=1), and nested sub-row cells
+ *     whose paths extend their parent's.
+ *
+ * A scoped entry exists exactly while its dialog is open — a scoped r=1
+ * entry with p = [C1] is the contribution's column-header dialog sitting at
+ * its root. Unscoped entries only track navigation of an always-visible
+ * browser (standalone pages, local-state dialogs) and are dropped when it
+ * returns to its root.
+ *
+ * Field names are single letters to keep shareable URLs short.
+ */
+const schemaHistoryEntry = z.object({
+    s: z.string().optional(),
+    p: z.array(z.string()),
+    r: z.number().int().positive().optional(),
+});
+
+// Entries are validated individually so one malformed entry (e.g. a truncated
+// shared link) drops only itself, not every open dialog — nuqs falls back to
+// the default [] whenever this schema throws, which now only happens when the
+// param as a whole isn't a JSON array.
+export const schemaHistory = z.array(z.unknown()).transform((entries) =>
+    entries.flatMap((entry) => {
+        const result = schemaHistoryEntry.safeParse(entry);
+        return result.success ? [result.data] : [];
+    }),
+);
+
+export type HistoryEntry = z.infer<typeof schemaHistoryEntry>;
+
+export type History = HistoryEntry[];
 
 export type DataBrowserConfig = {
     /**
@@ -6,10 +58,32 @@ export type DataBrowserConfig = {
      */
     isEditMode?: boolean;
     /**
-     * An array of resource IDs representing the default history.
-     * If not set or an empty array, the history will be taken from the URL.
+     * Fixed root prefix of this browser's history entry, e.g. the comparison
+     * cell path [contributionId, predicateId, resourceId]. The dialog cannot
+     * navigate above it; its length is persisted as `r` in the URL entry.
+     * Leave unset for standalone browsers rooted at a single entity.
      */
-    defaultHistory?: string[];
+    historyPrefix?: string[];
+    /**
+     * Scope/instance key persisted as `s` in the URL history entry, so that
+     * multiple embedded data browsers on one page (e.g. comparisons in a
+     * review) keep independent dialog state. Leave unset for standalone pages.
+     */
+    scopeKey?: string;
+    /**
+     * Where navigation history lives — the rule is "history lives where the
+     * browser's open-state lives":
+     * 'url' — shared `history` search param: shareable, restored on reload,
+     *         browser Back steps through navigation. Default for embedded
+     *         (always-visible) browsers.
+     * 'local' — provider-local state: dies when the browser unmounts, browser
+     *         Back does not step navigation. Default for DataBrowserDialog,
+     *         whose open-state is local — URL entries it wrote could never
+     *         reopen it and would be orphaned in shareable URLs.
+     * Ignored when `scopeKey` is set: scoped entries rely on
+     * "presence in the URL = dialog open", so a scope always forces 'url'.
+     */
+    historyStorage?: 'url' | 'local';
     /**
      * Determines if values should be opened in a dialog.
      */
@@ -93,6 +167,11 @@ export type DataBrowserProps = {
      * The ID of the root resource to be browsed (the current resource will be taken from the URL).
      */
     id: string;
+    /**
+     * Rendered inside the DataBrowserProvider, above the browser header — lets
+     * dialogs inject a context-aware heading that follows navigation (see DialogHeader).
+     */
+    renderAboveHeader?: () => ReactNode;
 } & DataBrowserConfig &
     DataBrowserResourceContext;
 

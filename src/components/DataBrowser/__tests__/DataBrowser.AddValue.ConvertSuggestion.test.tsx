@@ -118,6 +118,6 @@ describe('DataBrowser.AddValue.ConvertSuggestion', () => {
         fireEvent.click(createButton);
         await waitFor(() => expect(screen.getByText(/URL/i)).toBeInTheDocument());
         fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
-        await waitFor(() => expect(screen.getByRole('button', { name: 'https://www.orkg.org/' })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('link', { name: 'https://www.orkg.org/' })).toBeInTheDocument());
     });
 });
