@@ -26,35 +26,39 @@ type Props = {
     children: React.ReactNode;
 };
 
-const RootLayout: FC<Props> = ({ children }) => (
-    <html lang="en" data-vibrant-palette="true">
-        <head>
-            <PublicEnvScript />
-            <meta charSet="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="theme-color" content="#000000" />
-            <link rel="manifest" href="/manifest.json" />
-            <link rel="shortcut icon" href="/favicon.ico" />
-            <link href="https://mastodon.social/@orkg" rel="me" />
-            {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && <meta name="robots" content="noindex" />}
-            <meta property="og:image" content="/og_image.png" />
-            <link
-                rel="stylesheet"
-                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-                integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-                crossOrigin=""
-            />
-        </head>
-        <body>
-            <NextTopLoader color="var(--accent)" />
-            {/* CookiesProvider is a server component so cannot be placed in <Providers> */}
-            <CookiesProvider>
-                <NuqsAdapter>
-                    <Providers>{children}</Providers>
-                </NuqsAdapter>
-            </CookiesProvider>
-        </body>
-    </html>
-);
+const RootLayout: FC<Props> = ({ children }) => {
+    const ogImageUrl = `${env('NEXT_PUBLIC_URL')}/og_image.png`;
+
+    return (
+        <html lang="en" data-vibrant-palette="true">
+            <head>
+                <PublicEnvScript />
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <meta name="theme-color" content="#000000" />
+                <link rel="manifest" href="/manifest.json" />
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <link href="https://mastodon.social/@orkg" rel="me" />
+                {env('NEXT_PUBLIC_IS_TESTING_SERVER') === 'true' && <meta name="robots" content="noindex" />}
+                <meta property="og:image" content={ogImageUrl} />
+                <link
+                    rel="stylesheet"
+                    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                    crossOrigin=""
+                />
+            </head>
+            <body>
+                <NextTopLoader color="var(--accent)" />
+                {/* CookiesProvider is a server component so cannot be placed in <Providers> */}
+                <CookiesProvider>
+                    <NuqsAdapter>
+                        <Providers>{children}</Providers>
+                    </NuqsAdapter>
+                </CookiesProvider>
+            </body>
+        </html>
+    );
+};
 
 export default RootLayout;
