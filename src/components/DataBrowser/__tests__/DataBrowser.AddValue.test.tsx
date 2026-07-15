@@ -147,7 +147,7 @@ describe('DataBrowser.AddValue', () => {
         selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i }), 'resource label 0');
         // await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitForElementToBeRemoved(() => screen.getByRole('combobox', { name: /Enter a resource/i }));
-        await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 0' })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('link', { name: 'resource label 0' })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
         await waitFor(() => expect(addButton).toBeInTheDocument());
     });
@@ -160,7 +160,7 @@ describe('DataBrowser.AddValue', () => {
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'new resource via create button' } });
         const createButton = screen.getByRole('button', { name: 'Save' });
         fireEvent.click(createButton);
-        await waitFor(() => expect(screen.getByRole('button', { name: /new resource via create button/i })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('link', { name: /new resource via create button/i })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
         await waitFor(() => expect(addButton).toBeInTheDocument());
     });

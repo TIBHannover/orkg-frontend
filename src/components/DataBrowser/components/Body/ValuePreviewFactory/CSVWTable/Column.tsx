@@ -260,13 +260,7 @@ const Column: Partial<ColumnDef<TableRow>> = {
                 {'_class' in initialValue && initialValue._class !== 'literal_ref' && initialValue._class !== ENTITIES.LITERAL && (
                     <>
                         {isModalOpen && (
-                            <DataBrowserDialog
-                                show
-                                toggleModal={() => setIsModalOpen(!isModalOpen)}
-                                id={initialValue.id}
-                                label={initialValue.value}
-                                isEditMode={isEditMode}
-                            />
+                            <DataBrowserDialog show toggleModal={() => setIsModalOpen(!isModalOpen)} id={initialValue.id} isEditMode={isEditMode} />
                         )}
                         <DescriptionTooltip id={initialValue.id} _class={initialValue._class as EntityType}>
                             <button

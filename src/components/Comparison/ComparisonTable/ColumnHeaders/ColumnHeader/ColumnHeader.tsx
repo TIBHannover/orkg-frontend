@@ -6,10 +6,9 @@ import { Button } from '@heroui/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
+import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
 import useColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useColumnWidth';
-import classToType from '@/components/Comparison/ComparisonTable/Cell/helpers/classToType';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import {
@@ -61,8 +60,11 @@ type ColumnHeaderProps = {
 };
 
 const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
-    const [isOpenDataBrowserModal, setIsOpenDataBrowserModal] = useState(false);
-    const { selectedPathsFlattened, comparison, mutateComparisonContents, comparisonContents, updateComparison, isEditMode } = useComparison();
+    const { comparison, mutateComparisonContents, comparisonContents, updateComparison, isEditMode } = useComparison();
+    // This column's r=1 (parent-level) dialog is rendered by the shared
+    // ComparisonDialogs controller from the URL entry — the header only
+    // triggers it, without holding a URL subscription.
+    const { openDialogEntry } = useComparisonState();
     const { columnWidth } = useColumnWidth();
 
     const mainSource = column.subtitle ?? column.title;
@@ -149,7 +151,7 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                     {isEditMode && (
                         <Button
                             size="sm"
-                            onPress={() => setIsOpenDataBrowserModal(true)}
+                            onPress={() => openDialogEntry([mainSource.id])}
                             className="bg-accent-darker text-white hover:bg-accent-darker/90"
                         >
                             Edit data
@@ -167,17 +169,6 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                     </Button>
                 )}
             </div>
-            <DataBrowserDialog
-                show={isOpenDataBrowserModal}
-                toggleModal={() => setIsOpenDataBrowserModal((v) => !v)}
-                id={mainSource?.id}
-                label={mainSource?.label}
-                type={classToType[mainSource?._class ?? 'literal_ref']}
-                comparisonSelectedPaths={selectedPathsFlattened.map((selectedPath) => [...(selectedPath.path ?? []), selectedPath.id])}
-                isEditMode={isEditMode}
-                defaultHistory={[mainSource?.id]}
-                onCloseModal={() => isEditMode && mutateComparisonContents(comparisonContents, { revalidate: true })}
-            />
             {closestEdge && isEditMode && <DropIndicator edge={closestEdge} />}
         </th>
     );

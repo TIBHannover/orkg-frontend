@@ -138,7 +138,6 @@ const ResearchProblemHeader: FC<ResearchProblemHeaderProps> = ({ id }) => {
                             isEditMode
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
-                            label={researchProblemData.label ?? ''}
                             onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}

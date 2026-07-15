@@ -4,7 +4,6 @@ import useSWR from 'swr';
 
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
-import useHistory from '@/components/DataBrowser/hooks/useHistory';
 import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
 import { getStatementsBySubjectId } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
@@ -16,7 +15,6 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
     const { isUsingSnapshot } = useSnapshotStatement();
     const { config, preferences } = useDataBrowserState();
     const { isEditMode } = config;
-    const { currentId, history, setHistory } = useHistory();
     const { entity, mutateStatements } = useEntity();
 
     // if the object is a resource and the classes is not in the collapsedClasses, show the sub-level
@@ -69,11 +67,6 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
         mutateStatements();
     };
 
-    const handleOnClick = () => {
-        const indexCurrentId = history.indexOf(currentId);
-        setHistory([...(indexCurrentId > -1 ? history.slice(0, indexCurrentId) : []), ...path, statement.predicate.id, statement.object.id]);
-    };
-
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowSubLevel(level < 10 && showSubLevelDefault && preferences.expandValuesByDefault);
@@ -84,7 +77,6 @@ const useStatement = (statement: Statement, path: string[], level: number) => {
         setShowSubLevel,
         objectStatements: _objectStatements,
         deleteStatement,
-        handleOnClick,
         isEditingValue,
         setIsEditingValue,
         isLoadingObjectStatements,

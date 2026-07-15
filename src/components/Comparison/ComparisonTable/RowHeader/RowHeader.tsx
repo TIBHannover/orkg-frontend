@@ -41,9 +41,7 @@ const RowHeader: FC<RowHeaderProps> = ({ row, path }) => {
 
                 <FilterPopover id={row.id} path={path.slice(0, -1)} />
             </div>
-            {isOpenDataBrowser && (
-                <DataBrowserDialog show type={ENTITIES.PREDICATE} toggleModal={() => setIsOpenDataBrowser((v) => !v)} id={row.id} label={row.label} />
-            )}
+            {isOpenDataBrowser && <DataBrowserDialog show toggleModal={() => setIsOpenDataBrowser((v) => !v)} id={row.id} />}
         </th>
     );
 };

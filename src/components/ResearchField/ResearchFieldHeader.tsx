@@ -76,7 +76,6 @@ const ResearchFieldHeader: FC<ResearchFieldHeaderProps> = ({ id }) => {
                             show={editMode}
                             toggleModal={() => setEditMode((v) => !v)}
                             id={id}
-                            label={researchFieldData.label}
                             onCloseModal={() => loadResearchFieldData(id)}
                         />
                     )}

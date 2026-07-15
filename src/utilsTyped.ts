@@ -1,7 +1,16 @@
+import { MouseEvent } from 'react';
 import slugifyString from 'slugify';
 
 import DEDICATED_PAGE_LINKS from '@/components/Resource/hooks/redirectionSettings';
 import { reverse } from '@/lib/namedRoute';
+
+/**
+ * True when a click should be left to the browser / next-link default
+ * (open in new tab/window, download): a modifier key is held or a
+ * non-primary button was used. Mirrors next/link's internal isModifiedEvent.
+ * Use in Links that intercept plain left-clicks for shallow URL updates.
+ */
+export const isModifiedClickEvent = (event: MouseEvent) => event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
 
 /**
  * Use reverse from '@/lib/namedRoute' and automatically slugifies the slug param

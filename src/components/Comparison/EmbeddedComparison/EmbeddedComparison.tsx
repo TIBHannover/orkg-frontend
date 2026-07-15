@@ -9,9 +9,10 @@ import { CLASSES } from '@/constants/graphSettings';
 type EmbeddedComparisonProps = {
     id: string;
     updateReferences: (paperIds: string[]) => void;
+    scopeKey?: string;
 };
 
-const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences }) => {
+const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences, scopeKey }) => {
     const { comparisonContents, isLoadingComparisonContents, isLoading } = useComparison(id, true);
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences 
     const isLoadingResult = isLoading || isLoadingComparisonContents;
 
     return (
-        <ComparisonContextProvider id={id} isEmbedded>
+        <ComparisonContextProvider id={id} isEmbedded scopeKey={scopeKey}>
             {id && !isLoadingResult && comparisonContents && comparisonContents?.titles.length > 0 && <ComparisonTable id={id} />}
             {id && isLoadingResult && <ComparisonLoading />}
         </ComparisonContextProvider>

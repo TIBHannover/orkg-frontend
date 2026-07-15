@@ -9,6 +9,8 @@ import { loadComparison, loadComparisonContents } from '@/app/comparisons/[compa
 import Coins from '@/components/Coins/Coins';
 import { MISC } from '@/constants/graphSettings';
 import { LICENSE_URL } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { comparisonUrl } from '@/services/backend/comparisons';
 import { conferenceSeriesUrl, getConferenceById } from '@/services/backend/conferences-series';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
@@ -31,6 +33,9 @@ export async function generateMetadata({ params }: { params: Promise<{ compariso
     return {
         title,
         description: comparison?.description,
+        // Every version self-canonicalizes: published versions carry their own DOI, so pointing an
+        // older one at versions.head would deindex the page that DOI resolves to.
+        alternates: comparisonId ? { canonical: reverse(ROUTES.COMPARISON, { comparisonId }) } : undefined,
         openGraph: {
             title,
             type: 'article',

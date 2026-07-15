@@ -88,7 +88,6 @@ const ValueCell = (params: ValueCellParams) => {
                     show
                     toggleModal={() => setIsModalOpen(!isModalOpen)}
                     id={value.object.id}
-                    label={value.object.label}
                     isEditMode={
                         !(
                             env('NEXT_PUBLIC_PWC_USER_ID') === value.object.created_by ||

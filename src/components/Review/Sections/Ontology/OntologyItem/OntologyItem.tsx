@@ -29,7 +29,7 @@ const OntologyItem: FC<OntologyItemProps> = ({ id, label, type, isEditable, hand
             >
                 {label}
             </Button>
-            {isModelOpen && <DataBrowserDialog toggleModal={handleToggleModal} id={id} label={label} show isEditMode={isEditable} />}
+            {isModelOpen && <DataBrowserDialog toggleModal={handleToggleModal} id={id} show isEditMode={isEditable} />}
         </>
     );
 };

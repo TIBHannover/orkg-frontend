@@ -34,7 +34,7 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
     const [showAdd, setShowAdd] = useState(false);
     const { canEdit } = useCanEdit();
     const { entity, mutateStatements } = useEntity();
-    const { currentId, history, setHistory } = useHistory();
+    const { currentId, navigateToPath } = useHistory();
 
     const dispatch = useDataBrowserDispatch();
     const deleteProperty = () => {
@@ -47,8 +47,7 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
         if (isBlankNode) {
             const newResourceId = await createBlankNode();
             await createResourceStatement(currentId, predicate.id, newResourceId);
-            const indexCurrentId = history.indexOf(currentId);
-            setHistory([...(indexCurrentId > -1 ? history.slice(0, indexCurrentId) : []), currentId, predicate.id, newResourceId]);
+            navigateToPath([currentId, predicate.id, newResourceId]);
             mutateStatements();
         } else {
             setShowAdd(true);

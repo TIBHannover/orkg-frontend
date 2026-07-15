@@ -39,7 +39,7 @@ const Label = () => {
             mutateEntity();
             const paperMatch = match(ROUTES.VIEW_PAPER_CONTRIBUTION)(pathname);
             const isPaperView = !!match(ROUTES.VIEW_PAPER)(pathname) || !!paperMatch;
-            if (isPaperView && history.length === 0) {
+            if (isPaperView && history.length <= 1) {
                 // @ts-expect-error not typed
                 const paperid = paperMatch?.params?.resourceId;
                 mutate([{ subjectId: paperid, predicateId: PREDICATES.HAS_CONTRIBUTION }, statementsUrl, 'getStatements'], undefined, {

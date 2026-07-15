@@ -3,7 +3,7 @@
 import { useCookies } from 'next-client-cookies';
 import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 
-import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext } from '@/components/DataBrowser/types/DataBrowserTypes';
+import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext, History } from '@/components/DataBrowser/types/DataBrowserTypes';
 import { parseBooleanPreferenceCookie } from '@/lib/cookieHelpers';
 import { Predicate } from '@/services/backend/types';
 
@@ -13,18 +13,20 @@ type DataBrowserState = {
     config: DataBrowserConfig;
     preferences: DataBrowserPreferences;
     context: DataBrowserResourceContext;
-    history?: string[];
     loadedResources: Record<string, string[]>; // key is the resource id, value is the path to the resource
+    localHistory: History; // navigation history when config.historyStorage === 'local' (see useHistory)
 };
 
 type DataBrowserAction =
     | { type: 'ADD_PROPERTY'; payload: { predicate: Predicate; id: string } }
     | { type: 'DELETE_PROPERTY'; payload: { id: string; predicateId: string } }
     | { type: 'SET_IS_EDIT_MODE'; payload: boolean }
-    | { type: 'SET_HISTORY'; payload: string[] }
     | { type: 'UPDATE_PREFERENCES'; payload: Partial<DataBrowserPreferences> }
     | { type: 'ADD_LOADED_RESOURCES'; payload: Record<string, string[]> }
-    | { type: 'SET_LOADED_RESOURCES'; payload: Record<string, string[]> };
+    | { type: 'SET_LOADED_RESOURCES'; payload: Record<string, string[]> }
+    // Functional payload so useHistory's computeUpdatedHistory always sees the
+    // true previous value — same contract as the nuqs functional setter
+    | { type: 'SET_LOCAL_HISTORY'; payload: (prev: History) => History };
 
 const initialState = {
     rootId: '',
@@ -36,6 +38,7 @@ const initialState = {
         expandValuesByDefault: true,
     },
     loadedResources: {},
+    localHistory: [],
 };
 
 export const DataBrowserContext = createContext<DataBrowserState>(initialState);
@@ -64,9 +67,6 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
         case 'SET_IS_EDIT_MODE': {
             return { ...state, config: { ...state.config, isEditMode: action.payload } };
         }
-        case 'SET_HISTORY': {
-            return { ...state, history: action.payload };
-        }
         case 'UPDATE_PREFERENCES': {
             return {
                 ...state,
@@ -78,6 +78,9 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
         }
         case 'SET_LOADED_RESOURCES': {
             return { ...state, loadedResources: action.payload };
+        }
+        case 'SET_LOCAL_HISTORY': {
+            return { ...state, localHistory: action.payload(state.localHistory) };
         }
         default: {
             throw Error('Unknown action');
@@ -115,7 +118,7 @@ const DataBrowserProvider: FC<DataBrowserProviderProps> = ({ children, rootId, c
             },
             context: ctx,
             loadedResources: {},
-            ...(cfg.defaultHistory && cfg.defaultHistory.length > 0 && { history: cfg.defaultHistory }),
+            localHistory: [],
         }),
     );
 
