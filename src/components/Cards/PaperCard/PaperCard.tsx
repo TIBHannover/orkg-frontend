@@ -87,7 +87,14 @@ const PaperCard: FC<PaperCardType> = ({
                                         const syntheticEvent = { target: { checked: isSelected } } as ChangeEvent<HTMLInputElement>;
                                         onSelect(syntheticEvent);
                                     }}
-                                />
+                                    aria-label="Select paper"
+                                >
+                                    <Checkbox.Content>
+                                        <Checkbox.Control>
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                    </Checkbox.Content>
+                                </Checkbox>
                             </div>
                         )}
                         {!selectable && showAddToComparison && !!paper.contributions?.length && (
