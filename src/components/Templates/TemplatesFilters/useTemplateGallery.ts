@@ -25,9 +25,8 @@ const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
         defaultValue: '',
     });
 
-    // since the filters are not controlled by the user, we need to reset the key when the reset is called
-    // eslint-disable-next-line react-hooks/purity
-    const [key, setKey] = useState(Date.now());
+    // the filter inputs are uncontrolled, so consumers remount them via this key to clear them on reset
+    const [key, setKey] = useState(0);
 
     const {
         data: items,
@@ -63,7 +62,7 @@ const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
         setResearchProblem(null);
         setTargetClass(null);
         setPage(0);
-        setKey(Date.now());
+        setKey((k) => k + 1);
     };
 
     return {

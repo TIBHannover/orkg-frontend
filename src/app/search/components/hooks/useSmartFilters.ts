@@ -9,8 +9,6 @@ import { PaginatedResponse } from '@/services/backend/types';
 import { getSmartFilters, smartFiltersUrl } from '@/services/smartFilters/index';
 
 const useSmartFilters = (searchTerm: string, results: PaginatedResponse<Thing> | undefined) => {
-    'use memo';
-
     const [itemsIds, setItemsIds] = useState<string[]>([]);
     const [itemsAbstracts, setItemsAbstracts] = useState<string[]>([]);
     const [smartFiltersVisible, setSmartFiltersVisible] = useState(false);
