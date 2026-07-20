@@ -155,11 +155,50 @@ const AddToComparison: FC<AddToComparisonProps> = ({ contributionId, paper, show
     );
 
     if (hasMultipleContributions) {
+        // The checkbox is a read-only status indicator; the Popover.Trigger owns the press so the
+        // popover anchors to it and clicking opens the contribution list (selection happens in the ListBox).
+        const triggerCheckbox = (
+            <Checkbox
+                aria-label="Add to comparison"
+                isSelected={!!isSelected}
+                isIndeterminate={isSelected === 'half'}
+                isReadOnly
+                className="pointer-events-none"
+            >
+                <Checkbox.Content>
+                    <Checkbox.Control>
+                        <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    {showLabel && 'Add to comparison'}
+                </Checkbox.Content>
+            </Checkbox>
+        );
+
         return (
             <Popover>
-                <span>{checkbox}</span>
+                <Popover.Trigger
+                    aria-label="Select contributions to add to comparison"
+                    className="inline-flex cursor-pointer items-center rounded outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                    {triggerCheckbox}
+                </Popover.Trigger>
                 <Popover.Content placement="bottom start">
                     <Popover.Dialog className="p-2">
+                        <div className="mb-1 border-b border-default px-1 pb-2">
+                            <Checkbox
+                                aria-label="Select all contributions"
+                                isSelected={isSelected === true}
+                                isIndeterminate={isSelected === 'half'}
+                                onChange={handleCheckboxChange}
+                            >
+                                <Checkbox.Content>
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                    Select all
+                                </Checkbox.Content>
+                            </Checkbox>
+                        </div>
                         <ListBox
                             aria-label="Select contributions to compare"
                             selectionMode="multiple"
