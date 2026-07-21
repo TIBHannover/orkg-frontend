@@ -32,8 +32,9 @@ const ConfirmCreatePropertyModal: FC<ConfirmCreatePropertyModalProps> = ({ label
         }
     };
 
+    // z-[1060] stacks above the z-[1055] DataBrowserDialog backdrop
     return (
-        <Modal.Backdrop isOpen={isOpen} onOpenChange={(open) => !open && toggle()} isDismissable>
+        <Modal.Backdrop isOpen={isOpen} onOpenChange={(open) => !open && toggle()} isDismissable className="z-[1060]">
             <Modal.Container>
                 <Modal.Dialog>
                     <Modal.Header>
