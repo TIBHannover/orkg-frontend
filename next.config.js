@@ -111,9 +111,7 @@ const nextConfig = {
         ],
     },
     serverExternalPackages: ['citeproc'],
-    reactCompiler: {
-        compilationMode: 'annotation',
-    },
+    reactCompiler: true,
     transpilePackages: ['ky'],
     output: 'standalone',
     env: {

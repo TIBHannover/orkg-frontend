@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import DOMPurify from 'isomorphic-dompurify';
 import { useCookies } from 'next-client-cookies';
 import { env } from 'next-runtime-env';
+import { useState } from 'react';
 import useSWR from 'swr';
 
 import { loadMastodonTimeline, Message } from '@/services/mastodon';
@@ -13,15 +14,20 @@ const COOKIE_NAME = 'loadMastodonTimeline';
 
 const MastodonTimeline = () => {
     const cookies = useCookies();
-    const isVisible = cookies.get(COOKIE_NAME);
+    // `useCookies()` is memoized on the provider context, so a `cookies.get()` in render is keyed on a
+    // value that never changes and the React Compiler caches it for the provider's lifetime. The cookie
+    // seeds the initial value; state carries the update, since only this component reads it.
+    const [isVisible, setIsVisible] = useState(() => !!cookies.get(COOKIE_NAME));
 
     const { data: messages, isLoading } = useSWR(isVisible ? 'mastodonTimeline' : null, loadMastodonTimeline);
 
-    const handleLoadTimeline = () =>
+    const handleLoadTimeline = () => {
         cookies.set(COOKIE_NAME, 'true', {
             path: env('NEXT_PUBLIC_PUBLIC_URL'),
             expires: 7,
         });
+        setIsVisible(true);
+    };
 
     if (!env('NEXT_PUBLIC_MASTODON_URL') || !env('NEXT_PUBLIC_MASTODON_ACCOUNT_ID')) {
         return null;
