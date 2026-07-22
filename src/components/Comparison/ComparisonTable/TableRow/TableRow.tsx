@@ -39,8 +39,11 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
                         <Cell
                             value={value ?? undefined}
                             path={path}
-                            // no prefix for empty cells — a ''-terminated path must never enter entry matching
-                            dataBrowserHistory={value?.id ? [...historyPrefix, pathNode.id, value.id] : undefined}
+                            // no prefix for empty cells — a ''-terminated path must never enter entry
+                            // matching. Literal values may have a null id but still need the path so the
+                            // AI-review subject/predicate stay derivable; literals render no HistoryLink,
+                            // so their '' terminal never reaches entry matching.
+                            dataBrowserHistory={value ? [...historyPrefix, pathNode.id, value.id ?? ''] : undefined}
                         />
                     </td>
                 );
