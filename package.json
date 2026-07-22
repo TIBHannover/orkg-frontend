@@ -64,7 +64,7 @@
         "marked-footnote": "^1.4.0",
         "motion": "^12.38.0",
         "n3": "^2.0.3",
-        "next": "^16.2.7",
+        "next": "^16.2.11",
         "next-auth": "^4.24.13",
         "next-client-cookies": "^2.1.1",
         "next-runtime-env": "^3.3.0",
