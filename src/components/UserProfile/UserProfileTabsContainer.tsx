@@ -1,3 +1,4 @@
+import { Button } from '@heroui/react';
 import { flatten } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useQueryState } from 'nuqs';
@@ -9,7 +10,6 @@ import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
-import Button from '@/components/Ui/Button/Button';
 import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
@@ -43,7 +43,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
 
     const handleSelect = (paperId: string) => {
         if (selectedItems.includes(paperId)) {
-            setSelectedItems(selectedItems.filter((id) => id !== paperId));
+            setSelectedItems(selectedItems.filter((itemId) => itemId !== paperId));
         } else {
             setSelectedItems([...selectedItems, paperId]);
         }
@@ -89,6 +89,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
     const onTabChange = (tab: string) => {
         setContentType(tab, { scroll: false, history: 'push' });
         setPage(0);
+        setSelectedItems([]);
     };
 
     const { deletePapers, isLoading: loadingDeletePapers } = useDeletePapers({
@@ -151,13 +152,13 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
                                 totalPages={totalPages}
                                 boxShadow={false}
                             />
-                            {contentType === CLASSES.PAPER && selectedItems.length > 0 && (
+                            {selectedItems.length > 0 && (
                                 <div className="mx-2 my-2">
-                                    <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
-                                        Compare selected papers({selectedItems.length})
+                                    <Button size="sm" variant="secondary" className="mt-2 mr-2" onPress={comparePapers}>
+                                        Compare selected papers ({selectedItems.length})
                                     </Button>
 
-                                    <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
+                                    <Button size="sm" variant="danger" className="mt-2" onPress={deletePapers}>
                                         Delete selected papers ({selectedItems.length})
                                     </Button>
                                 </div>
