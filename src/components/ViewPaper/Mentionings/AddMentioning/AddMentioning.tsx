@@ -33,8 +33,8 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
 
     if (!isVisibleAutocomplete) {
         return (
-            <div className="flex h-[38px]">
-                <Button size="sm" className="button--orkg-secondary !h-[38px]" onPress={() => setIsVisibleAutocomplete(true)}>
+            <div className="flex min-h-9">
+                <Button size="sm" className="button--orkg-secondary !h-9" onPress={() => setIsVisibleAutocomplete(true)}>
                     <FontAwesomeIcon icon={faPlus} /> Add item
                 </Button>
             </div>
@@ -42,11 +42,11 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
     }
 
     return (
-        <div className="flex items-stretch w-full h-[38px]">
-            <span className="inline-flex items-center px-3 border border-border border-e-0 rounded-s bg-surface-secondary text-muted">
+        <div className="flex items-stretch w-full min-h-9">
+            <span className="inline-flex items-center px-3 border border-border border-e-0 rounded-s-[var(--radius)] bg-surface-secondary text-muted">
                 <FontAwesomeIcon icon={faPlus} />
             </span>
-            <div className="flex-1 min-w-0 [&_.form-control]:rounded-none">
+            <div className="flex-1 min-w-0 grid relative focus-within:z-10">
                 <Autocomplete
                     entityType={ENTITIES.RESOURCE}
                     placeholder="Select a resource"
@@ -55,9 +55,16 @@ const AddMentioning: FC<AddMentioningProps> = ({ handleAddMentioning }) => {
                     allowCreate
                     autoFocus
                     openMenuOnFocus
+                    size="sm"
+                    groupPosition="middle"
                 />
             </div>
-            <Button size="sm" variant="secondary" className="rounded-s-none -ms-px !h-[38px]" onPress={() => setIsVisibleAutocomplete(false)}>
+            <Button
+                size="sm"
+                variant="secondary"
+                className="!h-auto !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                onPress={() => setIsVisibleAutocomplete(false)}
+            >
                 Cancel
             </Button>
         </div>

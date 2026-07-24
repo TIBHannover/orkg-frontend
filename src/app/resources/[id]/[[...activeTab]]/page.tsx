@@ -12,7 +12,10 @@ type Props = {
 };
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-    const { id } = await params;
+    const { id: rawId } = await params;
+    // Next.js route params are not URL-decoded, so prefixed ids like `wikidata:Q34` arrive encoded.
+    // Decode once so downstream API calls and `reverse()` links use the canonical id (avoids double-encoding).
+    const id = decodeURIComponent(rawId);
     const { noRedirect } = await searchParams;
     let resource: Resource | null = null;
     try {
@@ -37,7 +40,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 }
 
 const ResourceRoute = async ({ params }: Props) => {
-    const { id } = await params;
+    const { id: rawId } = await params;
+    const id = decodeURIComponent(rawId);
     const resource = await getResource(id);
     if (!resource) {
         return notFound();

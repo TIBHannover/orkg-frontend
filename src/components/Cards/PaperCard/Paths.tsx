@@ -12,7 +12,7 @@ import { getLinkByEntityType } from '@/utils';
 const MAX_ITEMS = 3;
 
 const TYPE_CIRCLE_CLASS =
-    'inline-block size-[18px] rounded-full border border-secondary-darker bg-secondary text-center text-[9px] font-bold leading-[15px] text-white group-hover:bg-accent';
+    'inline-block size-[18px] rounded-full border border-secondary-darker bg-secondary-solid text-center text-[9px] font-bold leading-[15px] text-white group-hover:bg-accent';
 
 type PathsProps = {
     paths: Resource[][];

@@ -95,6 +95,12 @@ const EditorComponent = () => {
 
     const { inputFormType } = config;
 
+    const showDatatypeSelector =
+        !headerEntityId ||
+        headerEntityId !== PREDICATES.HAS_RESEARCH_FIELD ||
+        // eslint-disable-next-line react-hooks/refs
+        (hotInstanceRef.current as ExtendedHandsontable)?.isSurveyTable === false;
+
     if (isLoading) return <Skeleton className="w-full h-4 rounded" />;
 
     // eslint-disable-next-line react-hooks/refs
@@ -145,10 +151,7 @@ const EditorComponent = () => {
             onMouseDown={stopMousedownPropagation}
         >
             <div className="flex items-stretch min-h-9 grow min-w-0">
-                {(!headerEntityId ||
-                    headerEntityId !== PREDICATES.HAS_RESEARCH_FIELD ||
-                    // eslint-disable-next-line react-hooks/refs
-                    (hotInstanceRef.current as ExtendedHandsontable)?.isSurveyTable === false) && (
+                {showDatatypeSelector && (
                     <DatatypeSelector
                         _class={entity && '_class' in entity ? entity._class : undefined}
                         range={undefined}
@@ -158,6 +161,7 @@ const EditorComponent = () => {
                     />
                 )}
                 <InputField
+                    groupPosition={showDatatypeSelector ? 'middle' : 'start'}
                     range={undefined}
                     inputValue={label || ''}
                     setInputValue={(v) => {

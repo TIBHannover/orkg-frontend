@@ -40,7 +40,7 @@ WithButtonGroup.args = {
             tag={Link}
             color="secondary"
             size="sm"
-            className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary text-white hover:bg-secondary-darker focus:ring-secondary px-3 py-1.5 text-xs shrink-0"
+            className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary-solid text-white hover:bg-secondary-solid-hover focus:ring-secondary px-3 py-1.5 text-xs shrink-0"
             href="https://orkg.org"
         >
             <FontAwesomeIcon icon={faPlus} /> Create paper

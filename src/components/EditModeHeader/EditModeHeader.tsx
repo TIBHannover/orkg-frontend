@@ -19,7 +19,7 @@ const EditModeHeader = ({ isVisible, message = null }: EditModeHeaderProps) => (
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
                 <Container>
-                    <div className="rounded-t bg-secondary text-white flex items-center py-2 px-4 md:px-12 shadow-[0_-2px_4px_0_rgb(0_0_0/13%)] relative z-[1]">
+                    <div className="rounded-t bg-secondary-solid text-white flex items-center py-2 px-4 md:px-12 shadow-[0_-2px_4px_0_rgb(0_0_0/13%)] relative z-[1]">
                         <div className="text-base sm:text-[1.1rem] grow truncate">
                             {!message ? (
                                 <>

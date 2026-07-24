@@ -11,7 +11,10 @@ type ContentTypePageProps = {
 };
 
 export async function generateMetadata({ params }: ContentTypePageProps): Promise<Metadata> {
-    const { id, type } = await params;
+    const { id: rawId, type } = await params;
+    // Next.js route params are not URL-decoded, so prefixed ids like `wikidata:Q34` arrive encoded.
+    // Decode once so downstream API calls and `reverse()` links use the canonical id (avoids double-encoding).
+    const id = decodeURIComponent(rawId);
     let resource: Resource | null = null;
 
     try {
@@ -25,7 +28,8 @@ export async function generateMetadata({ params }: ContentTypePageProps): Promis
 }
 
 const ContentTypePage = async ({ params }: ContentTypePageProps) => {
-    const { id, type } = await params;
+    const { id: rawId, type } = await params;
+    const id = decodeURIComponent(rawId);
     const resource = await getResource(id);
     if (!resource) {
         return notFound();

@@ -92,7 +92,12 @@ export default function Benefits() {
                                     <Card.Content className="pt-0 mb-0 flex justify-center items-center flex-col">
                                         <div className="pt-0 flex gap-3">
                                             <div className="shrink-0">
-                                                <Image src={item.Icon} width="50" alt="Icon representing benefits of using ORKG" />
+                                                <Image
+                                                    src={item.Icon}
+                                                    width="50"
+                                                    alt="Icon representing benefits of using ORKG"
+                                                    className="dark:invert"
+                                                />
                                             </div>
                                             <span className="items-center flex text-foreground font-medium">{item.title}</span>
                                         </div>

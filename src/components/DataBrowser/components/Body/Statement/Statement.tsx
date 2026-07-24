@@ -49,12 +49,12 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, path, level = 0,
     return (
         <>
             <motion.div layout>
-                <StatementStyled className="border-b border-gray-200">
+                <StatementStyled className="border-b border-border">
                     <div
                         className={`flex ${isHidden ? 'transition-opacity opacity-50 hover:opacity-100' : ''}`}
                         style={{ background: getBackgroundColor(level) }}
                     >
-                        <div className="flex basis-1/3 shrink-0 border-r border-gray-200">
+                        <div className="flex basis-1/3 shrink-0 border-r border-border">
                             <TriplePredicate level={level} statement={statement} deleteStatement={deleteStatement} isHidden={isHidden} />
                         </div>
                         <div className="flex flex-1 min-w-0">

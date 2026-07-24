@@ -15,7 +15,7 @@ type NodeHeaderProps = {
 
 const NodeHeader: FC<NodeHeaderProps> = ({ label, id }) => {
     return (
-        <div className="bg-secondary text-white p-2 flex rounded-t-[4px]">
+        <div className="bg-secondary-solid text-white p-2 flex rounded-t-[4px]">
             <ConditionalWrapper
                 condition={label?.length > 40}
                 // eslint-disable-next-line react/no-unstable-nested-components

@@ -66,7 +66,7 @@ const UserTooltip = () => {
                 </Popover.Trigger>
                 <Popover.Content placement="bottom end" className="w-max max-w-[550px] overflow-hidden p-0">
                     <Popover.Dialog className="p-0">
-                        <div className="flex items-center gap-4 bg-secondary p-4 text-white">
+                        <div className="flex items-center gap-4 bg-secondary-solid p-4 text-white">
                             <Link
                                 onClick={() => setIsOpen(false)}
                                 href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}

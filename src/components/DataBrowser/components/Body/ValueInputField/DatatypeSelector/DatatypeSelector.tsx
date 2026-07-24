@@ -63,15 +63,14 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({
                 inputId="datatypeSelector"
                 isDisabled={isDisabled}
                 size="sm"
-                noFormControl
+                groupPosition="start"
                 // @ts-expect-error customClassNames is typed for OptionType but works with any option type
                 classNames={{
                     ...customClassNames,
-                    container: () =>
-                        classNames(customClassNames.container?.({ selectProps: { noFormControl: true, size: 'sm' } } as never), 'shrink-0 w-48'),
+                    container: (state) => classNames(customClassNames.container?.(state as never), 'shrink-0 w-48'),
                     control: (state) =>
                         state.isDisabled
-                            ? '!bg-default !border-border !cursor-not-allowed opacity-70 grow overflow-auto rounded-[inherit] !min-h-[inherit]'
+                            ? '!bg-default !border-border !cursor-not-allowed opacity-70 grow overflow-auto !rounded-[inherit] !min-h-[inherit]'
                             : (customClassNames.control?.(state as never) ?? ''),
                     singleValue: (state) => classNames('!block !truncate !max-w-full', state.isDisabled ? '!text-muted' : '!text-foreground'),
                 }}

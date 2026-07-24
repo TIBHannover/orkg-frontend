@@ -80,7 +80,7 @@ const GeneralSettings = () => {
                             isDisabled={!isEditMode}
                             isClearable={false}
                             inputId="target-class"
-                            noFormControl={hasTargetClass}
+                            groupPosition={hasTargetClass ? 'start' : undefined}
                         />
                     </div>
                     {hasTargetClass && (

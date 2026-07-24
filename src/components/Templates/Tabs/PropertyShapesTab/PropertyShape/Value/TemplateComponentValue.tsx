@@ -116,7 +116,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         ]}
                         size="sm"
                         enableExternalSources
-                        noFormControl={hasRange}
+                        groupPosition={hasRange ? 'start' : undefined}
                     />
                 </div>
                 {hasRange && (

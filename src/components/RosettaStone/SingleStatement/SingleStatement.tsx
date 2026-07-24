@@ -64,12 +64,13 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
         return null;
     }
 
-    const replacementFunction = (match: string) => {
+    const replacementFunction = (match: string, index: number) => {
         const i = toInteger(match);
         const value = match === '0' ? statement.subjects : statement.objects[i - 1];
         if (isEditing && isEditMode && template.properties[i] !== undefined) {
             return (
                 <StatementInputField
+                    key={index}
                     value={localValues[match] ?? []}
                     propertyShape={template.properties[i]}
                     updateValue={(v: OptionType[]) => updateLocalValue(match, v)}
@@ -78,7 +79,7 @@ const SingleStatement: FC<SingleStatementProps> = ({ statement, showContext = fa
         }
         return (
             <StatementValue
-                key={i}
+                key={index}
                 template={template}
                 propertyShape={template.properties[i]}
                 value={value}

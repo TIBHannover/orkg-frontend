@@ -78,7 +78,10 @@ const ColumnHeaders = ({ columns }: { columns?: ComparisonTableColumn[] }) => {
 
     return (
         <tr className="flex items-stretch flex-grow">
-            <th className="p-0 sticky left-0 font-medium z-20" style={{ boxSizing: 'border-box', flex: ' 2 0 auto', minWidth: 250, width: 2 }}>
+            <th
+                className="p-0 sticky left-0 font-medium z-20 bg-surface"
+                style={{ boxSizing: 'border-box', flex: ' 2 0 auto', minWidth: 250, width: 2 }}
+            >
                 <FirstColumnHeader />
             </th>
             {columns?.map((column, index) => (

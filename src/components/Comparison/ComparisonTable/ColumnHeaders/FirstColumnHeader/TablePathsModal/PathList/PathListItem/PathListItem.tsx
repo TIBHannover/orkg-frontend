@@ -85,7 +85,7 @@ const PathListItem: FC<PathListItemProps> = ({
                     <Icon icon={isExpanded ? faSquareMinus : faSquarePlus} size="lg" />
                 </Button>
 
-                <div className="border border-[#e4e4e4] rounded py-2 px-3 my-[2px] ml-3 grow flex items-center gap-3">
+                <div className="border border-border rounded py-2 px-3 my-[2px] ml-3 grow flex items-center gap-3">
                     <span className="cursor-move opacity-50" ref={setDragHandleElement}>
                         <Icon className="text-secondary" icon={faGripVertical} size="lg" />
                     </span>

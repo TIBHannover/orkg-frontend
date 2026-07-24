@@ -114,6 +114,7 @@ const CustomCellEditor: FC<CustomCellEditorProps> = ({ initialValue, value: stat
                     placeholder={placeholder}
                     includeClasses={optionsClasses}
                     allowCreate
+                    groupPosition="middle"
                     menuPortalTarget={document.body}
                     onChange={(selectedValue) => {
                         if (selectedValue) {

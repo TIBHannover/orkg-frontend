@@ -84,6 +84,7 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                     isMulti
                     enableExternalSources
                     size="sm"
+                    groupPosition="start"
                     inputId="classes-autocomplete"
                 />
             </div>
@@ -92,7 +93,7 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                 size="sm"
                 isIconOnly
                 aria-label="Cancel"
-                className="!h-7 !rounded-none -ms-px"
+                className="!h-auto !rounded-none -ms-px"
                 onPress={() => setIsEditing(false)}
             >
                 <FontAwesomeIcon icon={faClose} />
@@ -103,7 +104,7 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                 isIconOnly
                 isDisabled={isUpdating}
                 aria-label="Save"
-                className="!h-7 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                className="!h-auto !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
                 onPress={submitChanges}
             >
                 <FontAwesomeIcon icon={faCheck} />

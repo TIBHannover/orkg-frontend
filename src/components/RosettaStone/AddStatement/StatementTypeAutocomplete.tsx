@@ -24,6 +24,9 @@ type StatementTypeAutocompleteProps = {
     autoFocus?: boolean;
     openMenuOnFocus?: boolean;
     defaultValue?: RosettaStoneTemplateOption;
+    size?: 'sm';
+    /** Position inside a joined input group: 'start' rounds only the left corners, 'middle' none. Omit for a standalone field. */
+    groupPosition?: 'start' | 'middle';
 };
 
 const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
@@ -32,6 +35,8 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
     autoFocus = true,
     openMenuOnFocus = true,
     defaultValue,
+    size,
+    groupPosition,
 }) => {
     const loadOptions = async (
         search: string,
@@ -81,6 +86,8 @@ const StatementTypeAutocomplete: FC<StatementTypeAutocompleteProps> = ({
             additional={defaultAdditional}
             getOptionValue={({ id }) => id}
             isMulti={false}
+            size={size}
+            groupPosition={groupPosition}
             components={{ Option: SelectOption }}
             onChange={onChange}
             formatCreateLabel={(inputValue: string) => `Create new statement template "${inputValue}"`}

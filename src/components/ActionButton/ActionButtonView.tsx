@@ -41,7 +41,7 @@ const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
                 className={cn(
                     'inline-flex shrink-0 items-center justify-center rounded-full border-0 p-0',
                     '!bg-default !text-dark',
-                    'hover:!bg-secondary hover:!text-white',
+                    'hover:!bg-secondary-solid hover:!text-white',
                     'aria-[disabled=true]:!bg-default aria-[disabled=true]:opacity-100',
                     'focus-visible:ring-2 focus-visible:ring-[rgba(203,206,209,0.5)]',
                     ACTION_BUTTON_SIZE_CLASSES[size],

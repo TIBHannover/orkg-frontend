@@ -45,13 +45,13 @@ const AddStatement: FC<AddStatementProps> = ({ context, handleAddStatement }) =>
                     <span className="inline-flex items-center bg-default border border-border border-e-0 rounded-s-[var(--radius)] px-3 text-sm">
                         <FontAwesomeIcon icon={faPlus} />
                     </span>
-                    <div className="flex-1 min-w-0">
-                        <StatementTypeAutocomplete additionalOptions={usedStatementTypes} onChange={onChange} />
+                    <div className="flex-1 min-w-0 grid relative focus-within:z-10">
+                        <StatementTypeAutocomplete additionalOptions={usedStatementTypes} onChange={onChange} size="sm" groupPosition="middle" />
                     </div>
                     <Button
                         size="sm"
                         variant="tertiary"
-                        className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                        className="!h-auto !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
                         onPress={() => setShowAdd(false)}
                     >
                         Cancel

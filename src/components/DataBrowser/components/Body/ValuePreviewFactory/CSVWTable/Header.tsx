@@ -70,7 +70,7 @@ const Header = ({
                         if (e.key === 'Escape') setIsEditing(false);
                     }}
                 >
-                    <Input placeholder="Enter a title" autoFocus className="!rounded-e-none" />
+                    <Input placeholder="Enter a title" autoFocus className="h-9 !rounded-e-none" />
                 </TextField>
                 <Button
                     variant="secondary"

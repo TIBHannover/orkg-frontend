@@ -81,11 +81,12 @@ const AddProperty = () => {
                         )}
                     </ButtonGroup>
                 ) : (
-                    <div className="flex items-stretch min-h-8">
-                        <div className="min-w-0 flex-1 overflow-hidden">
+                    <div className="flex items-stretch min-h-9">
+                        <div className="min-w-0 flex-1 grid relative focus-within:z-10">
                             <Autocomplete
                                 entityType={ENTITIES.PREDICATE}
                                 size="sm"
+                                groupPosition="start"
                                 placeholder="Select or type to enter a property"
                                 onChange={(value, { action }) => {
                                     if (action === 'select-option') {
@@ -109,13 +110,13 @@ const AddProperty = () => {
                                 }}
                             />
                         </div>
-                        <SmartPropertyGuidelinesCheck label={inputValue} className="!h-8 !rounded-none -ms-px" />
+                        <SmartPropertyGuidelinesCheck label={inputValue} className="!h-9 !rounded-none -ms-px" />
                         <Button
                             variant="secondary"
                             size="sm"
                             isIconOnly
                             aria-label="Cancel"
-                            className="!h-8 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
+                            className="!h-9 !rounded-s-none !rounded-e-[var(--radius)] -ms-px"
                             onPress={() => setShowAdd(false)}
                         >
                             <FontAwesomeIcon icon={faClose} />

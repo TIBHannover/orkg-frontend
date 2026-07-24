@@ -28,6 +28,8 @@ type InputFieldProps = {
     menuPortalTarget?: HTMLElement | null;
     autoFocus?: boolean;
     onCreate?: (value?: Node) => void;
+    /** Position inside a joined input group: 'middle' squares all corners, 'start' only the right ones. Omit for a standalone field. */
+    groupPosition?: 'start' | 'middle';
 };
 
 const InputField: FC<InputFieldProps> = ({
@@ -45,10 +47,13 @@ const InputField: FC<InputFieldProps> = ({
     menuPortalTarget,
     autoFocus = true,
     onCreate,
+    groupPosition,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const entityType = getConfigByType(dataType).type as EntityType;
+
+    const groupRounding = groupPosition && (groupPosition === 'middle' ? '!rounded-none' : '!rounded-e-none');
 
     const Forms: { [key: string]: React.ReactNode } = {
         textarea: (
@@ -57,7 +62,10 @@ const InputField: FC<InputFieldProps> = ({
                 name="literalValue"
                 value={inputValue}
                 onChange={(e) => setInputValue(e ? e.target.value : '')}
-                className="flex-1 min-w-0 min-h-9 rounded-[var(--radius)] border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:border-accent"
+                className={cn(
+                    'flex-1 min-w-0 min-h-9 rounded-[var(--radius)] border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:border-accent relative focus:z-10',
+                    groupRounding,
+                )}
                 autoFocus={autoFocus}
                 minRows={1}
             />
@@ -69,7 +77,7 @@ const InputField: FC<InputFieldProps> = ({
                 onChange={(key) => setInputValue(key ? String(key) : 'false')}
                 className="flex-1 min-w-0 relative focus-within:z-10"
             >
-                <Select.Trigger className="h-9 w-full">
+                <Select.Trigger className={cn('h-9 w-full', groupRounding)}>
                     <Select.Value />
                     <Select.Indicator />
                 </Select.Trigger>
@@ -88,27 +96,28 @@ const InputField: FC<InputFieldProps> = ({
             </Select>
         ),
         duration: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <DurationInput value={inputValue} onChange={setInputValue} />
             </InputFieldModal>
         ),
         yearMonthDuration: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <DurationInput value={inputValue} onChange={setInputValue} type="yearMonthDuration" />
             </InputFieldModal>
         ),
         dayTimeDuration: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <DurationInput value={inputValue} onChange={setInputValue} type="dayTimeDuration" />
             </InputFieldModal>
         ),
-        gYearMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gYearMonth" />,
-        gYear: <GregorianInput value={inputValue} onChange={setInputValue} type="gYear" />,
-        gMonthDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonthDay" />,
-        gDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gDay" />,
-        gMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonth" />,
+        gYearMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gYearMonth" groupPosition={groupPosition} />,
+        gYear: <GregorianInput value={inputValue} onChange={setInputValue} type="gYear" groupPosition={groupPosition} />,
+        gMonthDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonthDay" groupPosition={groupPosition} />,
+        gDay: <GregorianInput value={inputValue} onChange={setInputValue} type="gDay" groupPosition={groupPosition} />,
+        gMonth: <GregorianInput value={inputValue} onChange={setInputValue} type="gMonth" groupPosition={groupPosition} />,
         autocomplete: (
-            <div className="flex-1 min-w-0">
+            // grid so the react-select container stretches to the row height; z raise keeps the focus ring visible
+            <div className="flex-1 min-w-0 grid relative focus-within:z-10">
                 <Autocomplete
                     key={entityType}
                     entityType={entityType}
@@ -147,12 +156,13 @@ const InputField: FC<InputFieldProps> = ({
                     size="sm"
                     onFailure={onFailure}
                     menuPortalTarget={menuPortalTarget}
+                    groupPosition={groupPosition}
                 />
             </div>
         ),
         empty: (
             <TextField fullWidth value="Value not reported in paper" isDisabled className="flex-1 min-w-0 relative">
-                <Input type="text" />
+                <Input type="text" className={cn(groupPosition && 'h-9', groupRounding)} />
             </TextField>
         ),
         default: (
@@ -168,22 +178,22 @@ const InputField: FC<InputFieldProps> = ({
                     name="literalValue"
                     type={inputFormType as StandardInputType}
                     autoFocus={autoFocus}
-                    className={cn(!isValid && 'border-danger')}
+                    className={cn(!isValid && 'border-danger', groupPosition && 'h-9', groupRounding)}
                 />
             </TextField>
         ),
         dateTime: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <DateTimeInput value={inputValue} onChange={setInputValue} type="dateTime" />
             </InputFieldModal>
         ),
         dateTimeStamp: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <DateTimeInput value={inputValue} onChange={setInputValue} type="dateTimeStamp" />
             </InputFieldModal>
         ),
         time: (
-            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue}>
+            <InputFieldModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} dataType={dataType} inputValue={inputValue} className={groupRounding}>
                 <TimeInput value={inputValue} onChange={setInputValue} />
             </InputFieldModal>
         ),

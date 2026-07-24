@@ -175,7 +175,7 @@ const CreateClassPage = () => {
                                             inputId="target-class"
                                             isDisabled={!isCurationAllowed}
                                             enableExternalSources
-                                            noFormControl={hasParentClass}
+                                            groupPosition={hasParentClass ? 'start' : undefined}
                                         />
                                     </div>
                                     {hasParentClass && (

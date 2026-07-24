@@ -55,9 +55,9 @@ const AddStatement: FC<AddStatementProps> = ({ predicate, shift, canDelete, show
     };
 
     return (
-        <div className="border-b border-gray-200 flex flex-wrap items-stretch gap-0">
+        <div className="border-b border-border flex flex-wrap items-stretch gap-0">
             <div className="flex flex-1 min-w-0">
-                <div className="flex shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12" style={{ borderRight: '1px solid #e0e0e0' }}>
+                <div className="flex shrink-0 grow-0 w-4/12 basis-4/12 max-w-4/12 border-r border-border">
                     {shift && <HierarchyIndicator path={['1', '1']} side="left" />}
                     <StatementWrapperStyled className="px-2 py-2 flex items-center flex-1 min-w-0 flex-grow">
                         <PredicateView predicate={predicate} isNewPredicate />{' '}

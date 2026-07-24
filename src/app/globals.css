@@ -10,6 +10,15 @@
     --color-accent-darker: oklch(53.05% 0.2014 27.65);
     --color-secondary: oklch(62.23% 0.0325 272.8);
     --color-secondary-darker: oklch(45.11% 0.027 271.59);
+    /*
+     * "Solid" secondary — for grey-blue fills that carry white text (TitleBar action
+     * buttons, edit-mode banners, table corner headers). Identical to --color-secondary
+     * in light mode, but stays DARK in dark mode, unlike --color-secondary which is
+     * lightened there for text/icon legibility. Use bg-secondary-solid (+ hover variant)
+     * whenever white text sits on the fill.
+     */
+    --color-secondary-solid: oklch(62.23% 0.0325 272.8);
+    --color-secondary-solid-hover: oklch(45.11% 0.027 271.59);
     --color-dark: oklch(49.53% 0.0345 272.56);
     --color-smart: oklch(65.52% 0.1105 212.21);
     --color-smart-darker: oklch(59.19% 0.0994 211.95);
@@ -97,9 +106,9 @@
 
 /* ORKG secondary button variant — follows HeroUI's button variant pattern (.button--primary, etc.) */
 .button--orkg-secondary {
-    --button-bg: var(--color-secondary);
-    --button-bg-hover: var(--color-secondary-darker);
-    --button-bg-pressed: var(--color-secondary-darker);
+    --button-bg: var(--color-secondary-solid);
+    --button-bg-hover: var(--color-secondary-solid-hover);
+    --button-bg-pressed: var(--color-secondary-solid-hover);
     --button-fg: white;
 }
 
@@ -121,6 +130,14 @@
     --button-bg-hover: var(--color-secondary);
     --button-bg-pressed: var(--color-secondary);
     --button-fg: white;
+}
+
+/* In dark mode --color-secondary(-darker) turn light for text legibility, so give
+   the darker button variant its own dark surfaces instead of inheriting them. */
+.dark .button--orkg-secondary-darker {
+    --button-bg: oklch(30% 0.028 272.8);
+    --button-bg-hover: var(--color-secondary-solid);
+    --button-bg-pressed: var(--color-secondary-solid);
 }
 
 /*
@@ -183,6 +200,15 @@
     --db-level-9: oklch(79.5% 0.0015 22.81);
     --db-level-10: oklch(77.5% 0.0015 22.81);
 
+    /* Home hero graph banner (light) — the original graph-background.svg colors */
+    --graph-banner-bg: #5f6474;
+    --graph-edge: #6d7184;
+    --graph-edge-soft: #83879b;
+    --graph-node: #474a5d;
+    --graph-node-muted: #787b8b;
+    --graph-node-soft: #626577;
+    --graph-accent: #e96161;
+
     /* Border Radius */
     --radius: 0.5rem;
     --field-radius: 0.5rem;
@@ -204,6 +230,8 @@
     --color-smart: oklch(72% 0.11 212.21);
     --color-smart-darker: oklch(65% 0.1 211.95);
     --color-info: oklch(0.4749 0.0398 212.23);
+    --color-secondary-solid: oklch(38% 0.03 272.8);
+    --color-secondary-solid-hover: oklch(46% 0.032 272.8);
 
     /* Theme Colors (Dark Mode) */
     --accent: oklch(66.3% 0.1683 22.81);
@@ -249,6 +277,15 @@
     --db-level-8: oklch(37% 0.003 22.81);
     --db-level-9: oklch(39% 0.003 22.81);
     --db-level-10: oklch(41% 0.003 22.81);
+
+    /* Home hero graph banner (dark) */
+    --graph-banner-bg: oklch(23% 0.022 272.8);
+    --graph-edge: oklch(34% 0.028 272.8);
+    --graph-edge-soft: oklch(42% 0.03 272.8);
+    --graph-node: oklch(17% 0.024 272.8);
+    --graph-node-muted: oklch(42% 0.03 272.8);
+    --graph-node-soft: oklch(26% 0.026 272.8);
+    --graph-accent: var(--accent);
 }
 
 .box {
@@ -770,6 +807,39 @@ Example:
     padding-inline: 0.5rem;
     margin-inline: -0.5rem;
     animation: referenceBlink 5s 1;
+}
+
+/* Home hero graph banner — theme-aware colors for GraphBackground */
+.graph-edge {
+    stroke: var(--graph-edge);
+}
+.graph-edge-soft {
+    stroke: var(--graph-edge-soft);
+}
+.graph-node {
+    fill: var(--graph-node);
+}
+.graph-node-soft {
+    fill: var(--graph-node-soft);
+}
+.graph-node-muted {
+    fill: var(--graph-node-muted);
+}
+.graph-ring {
+    fill: var(--graph-node-soft);
+    stroke: var(--graph-node);
+}
+.graph-ring-muted {
+    fill: var(--graph-node-soft);
+    stroke: var(--graph-node-soft);
+}
+.graph-ring-accent {
+    fill: var(--graph-node-soft);
+    stroke: var(--graph-accent);
+}
+.graph-node-accent {
+    fill: var(--graph-accent);
+    stroke: var(--graph-accent);
 }
 
 /* Review page: print only the review contents, drop layout chrome */

@@ -180,7 +180,7 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                 className="relative p-0"
             >
                 {isHovering && (
-                    <div className="absolute left-1/2 -top-3.75 z-100 flex h-7.5 w-50 -translate-x-1/2 items-center justify-between rounded-md bg-secondary px-0.5">
+                    <div className="absolute left-1/2 -top-3.75 z-100 flex h-7.5 w-50 -translate-x-1/2 items-center justify-between rounded-md bg-secondary-solid px-0.5">
                         <Button
                             isIconOnly
                             size="sm"

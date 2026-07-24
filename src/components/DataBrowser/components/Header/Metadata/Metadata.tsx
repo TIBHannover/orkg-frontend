@@ -29,7 +29,7 @@ const Metadata = () => {
         <div
             id={entity?.id}
             className={cn(
-                'py-4 px-4 border-b border-zinc-200',
+                'py-4 px-4 border-b border-border',
                 isHighlighted && 'bg-accent animate-[blinkAnimation_0.7s_3] [&_a.text-accent]:!text-white',
             )}
             onAnimationEnd={() => setIsHighlighted(false)}

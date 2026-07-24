@@ -11,9 +11,9 @@ import { RosettaStoneTemplate } from '@/services/backend/types';
 export type RosettaStoneTemplateOption = RosettaStoneTemplate & { used?: boolean };
 
 const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ children, data, ...props }) => {
-    const replacementFunction = (match: string) => {
+    const replacementFunction = (match: string, index: number) => {
         const i = toInteger(match);
-        return <i>{data.properties[i].placeholder}</i>;
+        return <i key={index}>{data.properties[i].placeholder}</i>;
     };
 
     const formattedLabelWithPlaceholders = ReactStringReplace(

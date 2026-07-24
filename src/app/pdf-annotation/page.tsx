@@ -122,7 +122,7 @@ const PdfAnnotation = () => {
     return (
         <div className="-mt-[30px] -mb-20 flex">
             <Sidebar />
-            <div className="h-[calc(100vh-73px)] w-[calc(100%-380px)] relative overflow-y-auto">
+            <div className="h-[calc(100vh-73px)] w-[calc(100%-380px)] relative overflow-y-auto bg-surface border-s border-border">
                 {!pdf && <DragUpload pdf={pdf} />}
                 {pdf && (
                     // @ts-expect-error - PdfLoader types are not compatible with Next.js dynamic imports

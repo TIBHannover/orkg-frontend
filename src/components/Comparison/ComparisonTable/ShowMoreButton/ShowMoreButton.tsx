@@ -49,7 +49,7 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({ hiddenCount, isExpanded, path
             >
                 <HierarchyIndicator path={path?.slice(1) ?? []} side="left" showHorizontalLine={false} />
                 <div className="flex flex-row items-start py-1 px-2 w-full">
-                    <div className="flex items-start gap-1.5 text-xs font-medium text-gray-600 group-hover:text-accent transition-colors duration-150">
+                    <div className="flex items-start gap-1.5 text-xs font-medium text-muted group-hover:text-accent transition-colors duration-150">
                         <motion.div
                             animate={{ rotate: isExpanded ? 180 : 0 }}
                             transition={{ duration: 0.4, ease: 'easeInOut' }}
