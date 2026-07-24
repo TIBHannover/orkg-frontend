@@ -1,43 +1,22 @@
-import { useCallback, useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 import { RESOURCES } from '@/constants/graphSettings';
-import { getObservatories } from '@/services/backend/observatories';
-import { Observatory } from '@/services/backend/types';
+import { getObservatories, observatoriesUrl } from '@/services/backend/observatories';
 
 function useResearchFieldObservatories({ researchFieldId }: { researchFieldId: string }) {
-    const [data, setData] = useState<Observatory[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isFailedLoading, setIsFailedLoading] = useState<boolean>(true);
+    const {
+        data: observatories = [],
+        isLoading,
+        error,
+    } = useSWR(
+        researchFieldId
+            ? [{ researchFieldId: researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? researchFieldId : null }, observatoriesUrl, 'getObservatories']
+            : null,
+        async ([params]) => (await getObservatories(params)).content,
+        { shouldRetryOnError: false },
+    );
 
-    const loadResearchFieldObservatories = useCallback((rfId: string) => {
-        if (rfId) {
-            setIsLoading(true);
-            const observatories = getObservatories({ researchFieldId: rfId !== RESOURCES.RESEARCH_FIELD_MAIN ? rfId : null }).then(
-                (res) => res.content,
-            );
-
-            observatories
-                .then((_data) => {
-                    setData(_data);
-                    setIsLoading(false);
-                    setIsFailedLoading(false);
-                })
-                .catch(() => {
-                    setIsLoading(false);
-                    setIsFailedLoading(true);
-                });
-        }
-    }, []);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setData([]);
-        if (researchFieldId !== undefined) {
-            loadResearchFieldObservatories(researchFieldId);
-        }
-    }, [researchFieldId, loadResearchFieldObservatories]);
-
-    return { observatories: data, isLoading, isFailedLoading };
+    return { observatories, isLoading, isFailedLoading: !!error };
 }
 
 export default useResearchFieldObservatories;

@@ -1,8 +1,9 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Modal } from '@heroui/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import Select, { OnChangeValue } from 'react-select';
+import useSWR from 'swr';
 
 import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
@@ -10,7 +11,7 @@ import { sortSdgs } from '@/components/SustainableDevelopmentGoals/helpers';
 import Goal from '@/components/SustainableDevelopmentGoals/SdgModal/Sdg';
 import SelectOption from '@/components/SustainableDevelopmentGoals/SdgModal/SelectOption';
 import { SUSTAINABLE_DEVELOPMENT_GOALS } from '@/constants/graphSettings';
-import { getResource } from '@/services/backend/resources';
+import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Node } from '@/services/backend/types';
 
 type SdgModalProps = {
@@ -28,18 +29,19 @@ export type OptionType = {
 const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing = false }) => {
     const [sdgsLocal, setSdgsLocal] = useState(sortSdgs(sdgs));
     const [isAdding, setIsAdding] = useState(false);
-    const [options, setOptions] = useState<OptionType[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
-    useEffect(() => {
-        const getOptions = async () => {
-            setIsLoading(true);
-            const sdgResources = await Promise.all(Object.values(SUSTAINABLE_DEVELOPMENT_GOALS).map((resourceId) => getResource(resourceId)));
-            setOptions(sdgResources.map((resource) => ({ id: resource.id, label: resource.label })));
-            setIsLoading(false);
-        };
-        getOptions();
-    }, []);
+    const { data: options = [], isLoading: isLoadingOptions } = useSWR(
+        [Object.values(SUSTAINABLE_DEVELOPMENT_GOALS), resourcesUrl, 'getResource'],
+        async ([resourceIds]) => {
+            const sdgResources = await Promise.all(resourceIds.map((resourceId) => getResource(resourceId)));
+            return sdgResources.map((resource): OptionType => ({ id: resource.id, label: resource.label }));
+        },
+        { shouldRetryOnError: false },
+    );
+
+    // The overlay and the dismiss guards cover both fetching the goals and saving them
+    const isLoading = isLoadingOptions || isSaving;
 
     const handleOpenChange = (open: boolean) => {
         if (!open && !isLoading) {
@@ -57,7 +59,7 @@ const SdgModal: FC<SdgModalProps> = ({ toggle, sdgs = [], handleSave, isEditing 
     };
 
     const handleSaveClick = async () => {
-        setIsLoading(true);
+        setIsSaving(true);
         await handleSave(sdgsLocal);
         toggle();
     };

@@ -21,6 +21,11 @@ export default [
             'simple-import-sort': simpleImportSort,
             'no-relative-import-paths': noRelativeImportPaths,
         },
+        linterOptions: {
+            // A suppression that no longer suppresses anything is itself an error. This keeps
+            // migrations honest: you cannot fix a file and leave its stale eslint-disable behind.
+            reportUnusedDisableDirectives: 'error',
+        },
         languageOptions: {
             parserOptions: {
                 projectService: true,
@@ -57,14 +62,12 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 {
-                    selector:
-                        "MemberExpression[object.object.name='process'][object.property.name='env'][property.name=/^NEXT_PUBLIC_/]",
+                    selector: "MemberExpression[object.object.name='process'][object.property.name='env'][property.name=/^NEXT_PUBLIC_/]",
                     message:
                         "Use `env('NEXT_PUBLIC_*')` from `next-runtime-env` instead of `process.env.NEXT_PUBLIC_*` so the value is read at runtime, not baked in at build time.",
                 },
                 {
-                    selector:
-                        "MemberExpression[object.object.name='process'][object.property.name='env'][property.value=/^NEXT_PUBLIC_/]",
+                    selector: "MemberExpression[object.object.name='process'][object.property.name='env'][property.value=/^NEXT_PUBLIC_/]",
                     message:
                         "Use `env('NEXT_PUBLIC_*')` from `next-runtime-env` instead of `process.env['NEXT_PUBLIC_*']` so the value is read at runtime, not baked in at build time.",
                 },

@@ -118,23 +118,48 @@ The project is actively migrating from JavaScript to TypeScript. New components 
 
 **Fetching Data in Components**
 
+Server components fetch directly:
+
 ```typescript
-// Server component
 export default async function ResourcePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const resource = await getResource(id);
     return <ResourceView resource={resource} />;
 }
+```
 
-// Client component with SWR
+Client components **always use SWR — never `useEffect` + `useState`**. The SWR key is a 3-tuple, `[params, serviceUrl, 'serviceFunctionName']`:
+
+- `params` — the argument passed to the service function. SWR hashes keys structurally, so inline objects are fine: no `useMemo`/`useCallback` needed.
+- `serviceUrl` — the `*Url` token exported alongside the service function (`resourcesUrl`, `statementsUrl`, `nlpServiceUrl`, …). It is a cache namespace only; it is never used to fetch.
+- The third element is the service function's name as a string literal.
+
+The fetcher is always inline and destructures the key. There is **no global fetcher** — `src/services/SWRConfig.ts` only disables revalidation.
+
+```tsx
 'use client';
 import useSWR from 'swr';
 
-export default function LiveStats() {
-    const { data } = useSWR('/api/stats', fetcher);
-    return <div>Count: {data?.count}</div>;
-}
+import { getResource, resourcesUrl } from '@/services/backend/resources';
+
+const ResourceView = ({ id }: { id?: string }) => {
+    const { data, isLoading, error, mutate } = useSWR(
+        id ? [id, resourcesUrl, 'getResource'] : null, // a null key means "don't fetch"
+        ([params]) => getResource(params),
+        { shouldRetryOnError: false }, // for anything that can 404 — SWR retries by default
+    );
+
+    if (isLoading) return <LoadingComponent />;
+    if (error) return <NotFound />;
+    return <div>{data?.label}</div>;
+};
 ```
+
+- Loading → `isLoading`. Failure → `error`. A "reload"/"try again" button → `mutate()`.
+- On a `mutate()` refresh SWR keeps the previous `data` and reports `isLoading === false`. If you need a spinner there, use `isLoading || isValidating`.
+- Multi-step fetches: chain them inside the fetcher and key on the entry-point call.
+- Paginated lists: use `usePaginate` (`@/components/PaginatedContent/hooks/usePaginate`).
+- Every input that affects the fetcher's **output** must be in the key — including params that aren't sent to the API but change how the result is derived. Otherwise two components collide on one cache entry.
 
 **Component Props: Use TypeScript type, destructure in parameters**
 

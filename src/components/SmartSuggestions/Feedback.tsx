@@ -1,10 +1,9 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox, Separator, TextArea, toast } from '@heroui/react';
+import { Button, Checkbox, Popover, Separator, TextArea, toast } from '@heroui/react';
 import { FC, useState } from 'react';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import Popover from '@/components/FloatingUI/Popover';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { createFeedback } from '@/services/cms';
 import { FeedbackType } from '@/services/cms/types';
@@ -64,9 +63,19 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
     };
 
     return (
-        <Popover
-            content={
-                <div style={{ minWidth: 300, fontSize: '100%' }} className="p-2">
+        <Popover>
+            <Button
+                isIconOnly
+                variant="ghost"
+                aria-label={`Leave ${type} feedback`}
+                className="!p-0 !min-w-0 !h-auto ml-1 border-0 bg-transparent hover:bg-white/10"
+                style={{ fontSize: '130%' }}
+            >
+                {VALUES[type].icon}
+            </Button>
+            <Popover.Content className="w-[320px]">
+                <Popover.Dialog>
+                    <Popover.Arrow />
                     <div className="font-semibold my-1">Provide feedback {VALUES[type].icon}</div>
                     <Separator className="my-3" />
                     {!isSubmitted ? (
@@ -90,7 +99,6 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                                 onChange={(e) => setComments(e.target.value)}
                                 rows={4}
                                 className="my-4"
-                                style={{ fontSize: 'inherit' }}
                                 maxLength={MAX_LENGTH_INPUT}
                             />
                             <div className="flex justify-end">
@@ -101,22 +109,12 @@ const Feedback: FC<FeedbackProps> = ({ type, inputData, outputData, llmTask }) =
                         </>
                     ) : (
                         <p className="flex items-center mb-1">
-                            <FontAwesomeIcon icon={faCheck} className="mr-2" style={{ color: '#C1F8C0', fontSize: '160%' }} /> Successfully saved,
-                            thank you!
+                            <FontAwesomeIcon icon={faCheck} className="mr-2 text-success" style={{ fontSize: '160%' }} /> Successfully saved, thank
+                            you!
                         </p>
                     )}
-                </div>
-            }
-        >
-            <Button
-                isIconOnly
-                variant="ghost"
-                aria-label={`Leave ${type} feedback`}
-                className="!p-0 !min-w-0 !h-auto ml-1 border-0 bg-transparent hover:bg-white/10"
-                style={{ fontSize: '130%' }}
-            >
-                {VALUES[type].icon}
-            </Button>
+                </Popover.Dialog>
+            </Popover.Content>
         </Popover>
     );
 };

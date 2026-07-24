@@ -1,13 +1,14 @@
 import { Label } from '@heroui/react';
 import { truncate } from 'lodash';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import Select, { components, GroupBase, OptionProps, OptionsOrGroups, SingleValue } from 'react-select';
 import { AsyncPaginate } from 'react-select-async-paginate';
+import useSWR from 'swr';
 
 import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
 import { getObservatories } from '@/services/backend/observatories';
-import { getConferences, getOrganization } from '@/services/backend/organizations';
+import { getConferences, getOrganization, organizationsUrl } from '@/services/backend/organizations';
 import { Observatory, Organization } from '@/services/backend/types';
 
 const PAGE_SIZE = 10;
@@ -28,17 +29,12 @@ type AutocompleteObservatoryProps = {
 };
 
 const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObservatory, onChangeOrganization, observatory, organization }) => {
-    const [optionsOrganizations, setOptionsOrganizations] = useState<Organization[]>([]);
-    const [conferences, setConferences] = useState<Organization[]>([]);
+    const { data: conferences } = useSWR([null, organizationsUrl, 'getConferences'], () => getConferences(), { shouldRetryOnError: false });
 
-    useEffect(() => {
-        const loadConferences = async () => {
-            const callConferences = await getConferences();
-            setConferences(callConferences);
-            setOptionsOrganizations(callConferences);
-        };
-        loadConferences();
-    }, []);
+    // The organizations of the selected observatory, or null when no observatory is selected
+    // (in which case the conferences are offered instead).
+    const [observatoryOrganizations, setObservatoryOrganizations] = useState<Organization[] | null>(null);
+    const optionsOrganizations = observatoryOrganizations ?? conferences ?? [];
 
     const loadObservatoryOptions = async (
         search: string,
@@ -79,7 +75,7 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
         const data = selected ? await Promise.all(selected?.organization_ids.map((o) => getOrganization(o))) : [];
         // Select the first organization
         onChangeOrganization(data?.[0] ?? null);
-        setOptionsOrganizations(selected ? data : conferences);
+        setObservatoryOrganizations(selected ? data : null);
     };
 
     const handleChangeOrganization = (selected: SingleValue<Organization>) => {
@@ -88,9 +84,7 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
 
     return (
         <>
-            <p>
-                <small>Clear the observatory field to select a conference in the organization field.</small>
-            </p>
+            <p className="text-sm text-gray-500 mb-2">Clear the observatory field to select a conference in the organization field.</p>
             <div className="mb-3">
                 <Label htmlFor="select-observatory">Select an observatory</Label>
                 <AsyncPaginate

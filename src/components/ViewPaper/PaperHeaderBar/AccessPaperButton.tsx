@@ -1,10 +1,11 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Dropdown, Skeleton } from '@heroui/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
+import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import { getLinksByDoi, getLinksByTitle } from '@/services/unpaywall';
+import { getLinksByDoi, getLinksByTitle, unpaywallUrl } from '@/services/unpaywall';
 
 type AccessPaperButtonProps = {
     paperLink?: string | null;
@@ -13,26 +14,14 @@ type AccessPaperButtonProps = {
 };
 
 const AccessPaperButton: FC<AccessPaperButtonProps> = ({ paperLink = null, doi = null, title = null }) => {
-    const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [hasLoaded, setHasLoaded] = useState(false);
 
-    useEffect(() => {
-        const fetchLinks = async () => {
-            setIsLoading(true);
-            if (doi) {
-                setLinks(await getLinksByDoi(doi));
-            } else if (title) {
-                setLinks(await getLinksByTitle(title));
-            }
-            setIsLoading(false);
-            setHasLoaded(true);
-        };
-        if (isMenuOpen && !hasLoaded) {
-            fetchLinks();
-        }
-    }, [doi, hasLoaded, isMenuOpen, title]);
+    // The cache replaces the previous `hasLoaded` guard: reopening the menu does not refetch
+    const { data: links = [], isLoading } = useSWR<{ url: string; name: string }[]>(
+        isMenuOpen && (doi || title) ? [{ doi, title }, unpaywallUrl, 'getPaperLinks'] : null,
+        ([params]) => (params.doi ? getLinksByDoi(params.doi) : getLinksByTitle(params.title)),
+        { shouldRetryOnError: false },
+    );
 
     const tibLink = `https://www.tib.eu/de/suchen?tx_tibsearch_search%5Bquery%5D=${encodeURIComponent(
         doi ? `identifier:doi\\:${doi}` : `"${title}"`,

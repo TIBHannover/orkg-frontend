@@ -1,32 +1,27 @@
 import { Skeleton } from '@heroui/react';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
+import useSWR from 'swr';
 
 import EventsCard from '@/components/Organization/EventsCard';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
-import { getSeriesListByConferenceId } from '@/services/backend/conferences-series';
+import { conferenceSeriesUrl, getSeriesListByConferenceId } from '@/services/backend/conferences-series';
 
-const ConferenceEvents = ({ conferenceId, conferenceName }) => {
-    const [isLoadingConferences, setIsLoadingConferences] = useState(null);
-    const [conferencesList, setConferencesList] = useState([]);
+type ConferenceEventsProps = {
+    conferenceId: string;
+    conferenceName: string;
+};
+
+const ConferenceEvents: FC<ConferenceEventsProps> = ({ conferenceId, conferenceName }) => {
+    const { data: conferencesList = [], isLoading } = useSWR(
+        conferenceId ? [conferenceId, conferenceSeriesUrl, 'getSeriesListByConferenceId'] : null,
+        async ([id]) => (await getSeriesListByConferenceId(id)).content,
+        { shouldRetryOnError: false },
+    );
 
     useEffect(() => {
-        const loadConferences = async () => {
-            setIsLoadingConferences(true);
-            getSeriesListByConferenceId(conferenceId)
-                .then((responseJson) => {
-                    setConferencesList(responseJson.content);
-                    document.title = `${conferenceName} - Conference - ORKG`;
-                })
-                .catch(() => {
-                    setIsLoadingConferences(false);
-                });
-            setIsLoadingConferences(false);
-        };
-
-        loadConferences();
-    }, [conferenceId, conferenceName]);
+        document.title = `${conferenceName} - Conference - ORKG`;
+    }, [conferenceName]);
 
     return (
         <>
@@ -36,7 +31,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                 </div>
             </Container>
             <Container className="p-0 box rounded">
-                {!isLoadingConferences && (
+                {!isLoading && (
                     <ListGroup>
                         {conferencesList.length > 0 ? (
                             <>
@@ -49,7 +44,7 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
                         )}
                     </ListGroup>
                 )}
-                {isLoadingConferences && (
+                {isLoading && (
                     <div className="mt-6 mb-6 container mx-auto px-4 box rounded">
                         <div className="text-left flex flex-col gap-2">
                             <Skeleton className="w-full h-5 rounded" />
@@ -60,11 +55,6 @@ const ConferenceEvents = ({ conferenceId, conferenceName }) => {
             </Container>
         </>
     );
-};
-
-ConferenceEvents.propTypes = {
-    conferenceId: PropTypes.string.isRequired,
-    conferenceName: PropTypes.string.isRequired,
 };
 
 export default ConferenceEvents;
