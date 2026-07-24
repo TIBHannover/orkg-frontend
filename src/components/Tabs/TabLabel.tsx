@@ -16,7 +16,7 @@ type TabLabelProps = {
     description?: string;
 };
 
-const getStatsName = (classId: string) => {
+export const getStatsName = (classId: string) => {
     switch (classId) {
         case 'statement-count':
             return 'statement-count';
