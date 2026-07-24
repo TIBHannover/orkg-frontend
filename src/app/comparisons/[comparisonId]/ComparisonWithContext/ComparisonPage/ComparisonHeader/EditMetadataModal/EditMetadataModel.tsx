@@ -2,20 +2,21 @@ import { Button, Checkbox, Input, Label, Modal, TextArea, TextField } from '@her
 import dayjs from 'dayjs';
 import { FC, useEffect, useId, useState } from 'react';
 import Select from 'react-select';
+import useSWR from 'swr';
 
 import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
+import SmartDescriptivenessCheck from '@/components/SmartSuggestions/SmartDescriptivenessCheck';
 import Tooltip from '@/components/Utils/Tooltip';
 import { CONFERENCE_REVIEW_MISC } from '@/constants/organizationsTypes';
-import { getConferencesSeries } from '@/services/backend/conferences-series';
+import { conferenceSeriesUrl, getConferencesSeries } from '@/services/backend/conferences-series';
 import { Author, ConferenceSeries, Node } from '@/services/backend/types';
 
 const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ toggle, comparisonId }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [conferences, setConferences] = useState<ConferenceSeries[]>([]);
     const [selectedConference, setSelectedConference] = useState<ConferenceSeries | null>(null);
     const [isAnonymized, setIsAnonymized] = useState(false);
 
@@ -23,6 +24,14 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
     const [authors, setAuthors] = useState<Author[]>([]);
     const { comparison, updateComparison } = useComparison(comparisonId);
     const formId = useId();
+
+    const { data: conferences = [] } = useSWR(
+        [null, conferenceSeriesUrl, 'getConferencesSeries'],
+        async () => (await getConferencesSeries()).content,
+        {
+            shouldRetryOnError: false,
+        },
+    );
 
     useEffect(() => {
         if (comparison) {
@@ -38,13 +47,6 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
             }
         }
     }, [comparison, conferences, setSelectedConference]);
-
-    useEffect(() => {
-        const loadConferences = async () => {
-            setConferences((await getConferencesSeries()).content);
-        };
-        loadConferences();
-    }, []);
 
     const handleSave = () => {
         updateComparison({
@@ -89,12 +91,17 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
                                 <Label htmlFor={`${formId}-description`}>
                                     <Tooltip message="The description of the comparison">Description</Tooltip>
                                 </Label>
-                                <TextArea
-                                    id={`${formId}-description`}
-                                    rows={3}
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
+                                <div className="relative">
+                                    <TextArea
+                                        id={`${formId}-description`}
+                                        rows={3}
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                    />
+                                    <div className="absolute right-1 top-1">
+                                        <SmartDescriptivenessCheck value={description} />
+                                    </div>
+                                </div>
                             </TextField>
 
                             <div className="flex flex-col gap-2">

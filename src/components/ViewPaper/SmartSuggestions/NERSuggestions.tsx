@@ -2,10 +2,10 @@ import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AnimatePresence, motion } from 'framer-motion';
 import { capitalize } from 'lodash';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
-import { mutate } from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import useParams from '@/components/useParams/useParams';
@@ -14,7 +14,7 @@ import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { ENTITIES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
-import { determineActiveNERService, getNerResults, saveFeedback } from '@/services/orkgNlp';
+import { determineActiveNERService, getNerResults, nlpServiceUrl, saveFeedback } from '@/services/orkgNlp';
 import { RootStore } from '@/slices/types';
 import { setNerProperties, setNerRawResponse, setNerResources } from '@/slices/viewPaperSlice';
 
@@ -35,16 +35,18 @@ const NERSuggestions: FC<NERSuggestionsProps> = ({ title = '', abstract = '', re
     const { paper } = useViewPaper({ paperId });
     const nerProperties = useSelector((state: RootStore) => state.viewPaper.nerProperties);
     const dispatch = useDispatch();
-    const [activeNERService, setActiveNERService] = useState<string | null>(null);
+
+    const researchField = paper?.research_fields?.[0];
+
+    const { data: activeNERService = null } = useSWR(
+        [researchField?.id ?? '', nlpServiceUrl, 'determineActiveNERService'],
+        ([fieldId]) => determineActiveNERService(fieldId),
+        { shouldRetryOnError: false },
+    );
 
     const { suggestions } = useEntityRecognition({ activeNERService, title, abstract, resourceId }) as unknown as {
         suggestions: Record<string, Suggestion[]>;
     };
-    const researchField = paper?.research_fields?.[0];
-
-    useEffect(() => {
-        (async () => setActiveNERService(await determineActiveNERService(researchField?.id ?? '')))();
-    }, [researchField]);
 
     useDebounce(
         () => {
