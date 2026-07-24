@@ -41,11 +41,11 @@ const Header = () => {
                     </Alert.Content>
                 </Alert>
             )}
-            <div className="flex border-b border-zinc-200 p-2 items-center gap-2">
+            <div className="flex border-b border-border p-2 items-center gap-2">
                 <Breadcrumbs />
                 <div className="ml-auto shrink-0 flex">
                     <Popover isOpen={preferencesPopover} onOpenChange={setPreferencesPopover}>
-                        <Button variant="outline" size="sm" isIconOnly aria-label="Preferences" className="!rounded-e-none !border-r-0 text-zinc-500">
+                        <Button variant="outline" size="sm" isIconOnly aria-label="Preferences" className="!rounded-e-none !border-r-0 text-muted">
                             <FontAwesomeIcon fixedWidth icon={faSlidersH} />
                         </Button>
                         <Popover.Content>
@@ -60,7 +60,7 @@ const Header = () => {
                         size="sm"
                         isIconOnly
                         aria-label="Open help center"
-                        className="!rounded-s-none text-zinc-500"
+                        className="!rounded-s-none text-muted"
                         onPress={() => window.open('https://orkg.org/help-center/category/2', '_blank', 'noopener,noreferrer')}
                     >
                         <FontAwesomeIcon fixedWidth icon={faQuestionCircle} />
@@ -68,7 +68,7 @@ const Header = () => {
                 </div>
             </div>
             {!canEdit && isEditMode && (
-                <Alert status="accent" className="mb-0 p-2 rounded-none border-t border-zinc-200">
+                <Alert status="accent" className="mb-0 p-2 rounded-none border-t border-border">
                     <Alert.Indicator />
                     <Alert.Content>
                         <Alert.Title>A shared resource cannot be edited directly</Alert.Title>

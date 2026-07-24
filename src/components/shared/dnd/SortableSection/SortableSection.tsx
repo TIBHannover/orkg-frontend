@@ -42,7 +42,7 @@ const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, c
                 {...defaultDragHandleProps}
                 aria-label="Drag to reorder section"
                 className={`absolute left-0 top-0 z-0 flex h-full w-[25px] cursor-move items-center justify-center rounded-l-md ${
-                    isHovering ? 'bg-secondary text-white' : 'text-muted'
+                    isHovering ? 'bg-secondary-solid text-white' : 'text-muted'
                 }`}
             >
                 <FontAwesomeIcon icon={faBars} />
@@ -56,7 +56,7 @@ const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, c
                                 size="sm"
                                 aria-label="Move section up"
                                 onPress={() => handleSort('up')}
-                                className="h-6 w-full min-w-0 bg-secondary text-white hover:bg-secondary-darker"
+                                className="h-6 w-full min-w-0 bg-secondary-solid text-white hover:bg-secondary-solid-hover"
                             >
                                 <FontAwesomeIcon icon={faArrowUp} />
                             </Button>
@@ -70,7 +70,7 @@ const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, c
                                 size="sm"
                                 aria-label="Move section down"
                                 onPress={() => handleSort('down')}
-                                className="h-6 w-full min-w-0 bg-secondary text-white hover:bg-secondary-darker"
+                                className="h-6 w-full min-w-0 bg-secondary-solid text-white hover:bg-secondary-solid-hover"
                             >
                                 <FontAwesomeIcon icon={faArrowDown} />
                             </Button>

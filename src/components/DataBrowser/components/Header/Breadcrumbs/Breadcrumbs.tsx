@@ -95,12 +95,15 @@ const Breadcrumbs = () => {
                 {history
                     .slice(1)
                     .filter((_, index) => index % 2 === 0)
-                    .map((item, index) => {
-                        const propertyIndex = history.indexOf(item);
+                    .map((_, index) => {
+                        // history alternates entity/property, so the nth kept item sits at 1 + 2n.
+                        // Looking the id up instead would collapse cyclic paths onto their first
+                        // occurrence, rendering the same crumb twice.
+                        const propertyIndex = 1 + index * 2;
                         const propertyLabel = historyEntities?.[propertyIndex]?.label;
                         const resourceLabel = historyEntities?.[propertyIndex + 1]?.label || 'No label';
                         return (
-                            <li className={breadcrumbItemClasses} key={historyEntities?.[propertyIndex + 1]?.id ?? index}>
+                            <li className={breadcrumbItemClasses} key={propertyIndex}>
                                 {crumb(
                                     history.slice(0, propertyIndex + 2),
                                     `${propertyLabel ? `${propertyLabel} → ` : ''}${resourceLabel}`,

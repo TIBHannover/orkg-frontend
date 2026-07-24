@@ -29,7 +29,7 @@ const CellMenu = (params: CellMenuProps) => {
                     size="sm"
                     variant="tertiary"
                     aria-label="Open cell menu"
-                    className="!h-6 !w-6 !min-w-6 rounded-full bg-content2 text-foreground-600 hover:bg-secondary hover:text-white shadow-sm"
+                    className="!h-6 !w-6 !min-w-6 rounded-full bg-content2 text-foreground-600 hover:bg-secondary-solid hover:text-white shadow-sm"
                     onClick={(e) => {
                         e.stopPropagation();
                     }}

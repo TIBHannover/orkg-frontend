@@ -34,15 +34,18 @@ const CellAiReview: FC<CellAiReviewProps> = ({ statementId, extractionMethod }) 
     };
 
     let icon = faTriangleExclamation;
-    let buttonClassName = 'min-w-6 h-6 w-6 p-0 rounded-full bg-gray-100 text-amber-500 hover:bg-gray-200';
+    let buttonClassName =
+        'min-w-6 h-6 w-6 p-0 rounded-full bg-gray-100 text-amber-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-amber-400 dark:hover:bg-gray-700';
     let ariaLabel = 'Review AI-generated value';
     if (incorrect) {
         icon = faXmark;
-        buttonClassName = 'min-w-6 h-6 w-6 p-0 rounded-full bg-red-100 text-red-600 hover:bg-red-200';
+        buttonClassName =
+            'min-w-6 h-6 w-6 p-0 rounded-full bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900';
         ariaLabel = 'Value marked incorrect, click to change';
     } else if (isReviewed) {
         icon = faCheck;
-        buttonClassName = 'min-w-6 h-6 w-6 p-0 rounded-full bg-green-100 text-green-600 hover:bg-green-200';
+        buttonClassName =
+            'min-w-6 h-6 w-6 p-0 rounded-full bg-green-100 text-green-600 hover:bg-green-200 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900';
         ariaLabel = 'Reviewed value, click to change';
     }
 

@@ -30,7 +30,8 @@ declare module 'react-select/base' {
         enableExternalSources?: boolean;
         size?: 'sm';
         rightAligned?: boolean;
-        noFormControl?: boolean;
+        /** Position of the select inside a joined input group: 'start' rounds only the left corners, 'middle' none. Omit for a standalone field. */
+        groupPosition?: 'start' | 'middle';
         onFailure?: (e: Error) => void;
         baseClass?: string;
         rootBaseClass?: string;

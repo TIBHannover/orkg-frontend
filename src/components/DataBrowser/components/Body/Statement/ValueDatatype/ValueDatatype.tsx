@@ -27,7 +27,7 @@ const ValueDatatype: FC<ValueDatatypeProps> = ({ value }) => {
                         {value.classes
                             .map((c) => (
                                 <DescriptionTooltip key={c} id={c} _class={ENTITIES.CLASS}>
-                                    <Link target="_blank" style={{ color: '#60687a' }} href={reverse(ROUTES.CLASS, { id: c })}>
+                                    <Link target="_blank" className="text-muted" href={reverse(ROUTES.CLASS, { id: c })}>
                                         {c}
                                     </Link>
                                 </DescriptionTooltip>

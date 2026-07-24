@@ -42,7 +42,7 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
 
     return (
         <div
-            className={cx('flex h-full border-b-[#e7eaf1] border-b bg-inherit border-r border-r-[#e7eaf1] break-words', incorrect && 'bg-danger/8!')}
+            className={cx('flex h-full border-b-border border-b bg-inherit border-r border-r-border break-words', incorrect && 'bg-danger/8!')}
             style={{ background: incorrect ? undefined : getBackgroundColor(path?.length ? path.length - 1 : 0) }}
         >
             {value ? (

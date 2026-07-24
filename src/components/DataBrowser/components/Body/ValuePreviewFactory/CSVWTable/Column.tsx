@@ -219,7 +219,7 @@ const Column: Partial<ColumnDef<TableRow>> = {
                                     }
                                 }}
                             >
-                                <Input placeholder="Enter a title" autoFocus className="!rounded-e-none" />
+                                <Input placeholder="Enter a title" autoFocus className="h-9 !rounded-e-none" />
                             </TextField>
                         )}
                         <Button

@@ -30,7 +30,7 @@ const RootLayout: FC<Props> = ({ children }) => {
     const ogImageUrl = `${env('NEXT_PUBLIC_URL')}/og_image.png`;
 
     return (
-        <html lang="en" data-vibrant-palette="true">
+        <html lang="en" data-vibrant-palette="true" suppressHydrationWarning>
             <head>
                 <PublicEnvScript />
                 <meta charSet="utf-8" />

@@ -1,19 +1,24 @@
 import classNames from 'classnames';
 import type { ClassNamesConfig, CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select';
-// Import to ensure module augmentation from Autocomplete.tsx is visible (adds noFormControl, size, rightAligned to Props)
+// Import to ensure module augmentation from Autocomplete.tsx is visible (adds groupPosition, size, rightAligned to Props)
 import type {} from 'react-select/base';
 
 import { OptionType } from '@/components/Autocomplete/types';
 
 const controlStyles = {
-    base: '!bg-field !border-border !cursor-pointer grow overflow-auto rounded-[inherit]',
+    // !rounded-[inherit] so the control follows the container's radius (react-select's own 4px default wins otherwise)
+    base: '!bg-field !border-border !cursor-pointer grow overflow-auto !rounded-[inherit]',
     focus: '!border-accent/25 !shadow-[0_0_0_0.2rem] !shadow-accent/25 !outline-0 transition-[border-color,box-shadow] duration-150 ease-in-out',
 };
 
 export const customClassNames: ClassNamesConfig<OptionType, boolean, GroupBase<OptionType>> = {
     container: (state) =>
         classNames('!p-0 !border-0 !flex', {
-            '!rounded-l-md !rounded-r-none': state.selectProps.noFormControl,
+            '!rounded-[var(--field-radius)]': !state.selectProps.groupPosition,
+            '!rounded-s-[var(--radius)] !rounded-e-none': state.selectProps.groupPosition === 'start',
+            '!rounded-none': state.selectProps.groupPosition === 'middle',
+            // lift the focused select above the joined neighbors so its focus ring isn't painted over
+            '!z-10': state.isFocused,
         }),
     control: (state) =>
         classNames(controlStyles.base, {

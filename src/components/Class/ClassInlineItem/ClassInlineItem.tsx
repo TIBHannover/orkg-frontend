@@ -152,7 +152,7 @@ const ClassInlineItem: FC<ClassInlineItemProps> = ({
                                 // @ts-expect-error innerRef is supported by underlying AsyncPaginate/Creatable
                                 innerRef={classAutocompleteRef}
                                 inputId="target-class"
-                                noFormControl
+                                groupPosition="start"
                             />
                         </div>
                         <ButtonGroup

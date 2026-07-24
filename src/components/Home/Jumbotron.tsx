@@ -3,7 +3,7 @@ import Container from '@/components/Ui/Structure/Container';
 
 export default function Jumbotron() {
     return (
-        <div className="pt-4 pb-5">
+        <div className="relative pt-4 pb-5">
             <Container className="relative text-center pb-2 pt-2">
                 <div className="flex flex-col justify-center items-center text-white text-shadow!">
                     <h1 className="text-3xl! md:text-5xl! tracking-tight text-shadow-lg text-white! mb-3!">Scholarly Knowledge.</h1>

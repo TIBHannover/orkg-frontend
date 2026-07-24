@@ -58,15 +58,13 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
     return (
         <div className="flex flex-col grow min-w-0">
             <div className="flex items-stretch min-h-9 grow min-w-0">
-                <div>
-                    <DatatypeSelector
-                        _class={editMode && value && '_class' in value ? value._class : undefined}
-                        range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
-                        isDisabled={!!range}
-                        dataType={dataType}
-                        setDataType={setDataType}
-                    />
-                </div>
+                <DatatypeSelector
+                    _class={editMode && value && '_class' in value ? value._class : undefined}
+                    range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
+                    isDisabled={!!range}
+                    dataType={dataType}
+                    setDataType={setDataType}
+                />
                 <InputField
                     range={range && range.id !== CLASSES.RESOURCE ? range : undefined}
                     inputValue={inputValue}
@@ -77,6 +75,7 @@ const ValueInputField: FC<ValueInputFieldProps> = ({ predicate, value, allowCrea
                     placeholder={placeholder}
                     includeClasses={optionsClasses}
                     allowCreate={allowCreate}
+                    groupPosition="middle"
                     onChange={(selectedValue) => {
                         if (selectedValue) {
                             handleSubmitValue(_class, selectedValue, true);

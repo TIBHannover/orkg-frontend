@@ -94,7 +94,7 @@ const FeaturedComparisonsPageClient = () => {
                 buttonGroup={
                     <Link
                         href={ROUTES.COMPARISONS}
-                        className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary text-white hover:bg-secondary-darker focus:ring-secondary shrink-0 px-3 py-1.5 text-xs"
+                        className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary-solid text-white hover:bg-secondary-solid-hover focus:ring-secondary shrink-0 px-3 py-1.5 text-xs"
                     >
                         View all comparisons
                     </Link>

@@ -16,13 +16,13 @@ import LogoWhite from '@/assets/img/logo_white.svg';
 import Jumbotron from '@/components/Home/Jumbotron';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import AddNew from '@/components/Layout/Header/AddNew';
+import GraphBackground from '@/components/Layout/Header/GraphBackground';
 import AboutDropdown from '@/components/Layout/Header/Menu/AboutDropdown';
 import ToolsDropdown from '@/components/Layout/Header/Menu/ToolsDropdown';
 import ViewDropdown from '@/components/Layout/Header/Menu/ViewDropdown';
 import Nfdi4dsButton from '@/components/Layout/Header/Nfdi4dsButton';
 import NotificationsBell from '@/components/Layout/Header/NotificationsBell/NotificationsBell';
 import SearchForm from '@/components/Layout/Header/SearchForm';
-import StyledTopBar from '@/components/Layout/Header/styled';
 import ThemeSwitcher from '@/components/Layout/Header/ThemeSwitcher';
 import UserTooltip from '@/components/Layout/Header/UserTooltip';
 import ROUTES from '@/constants/routes';
@@ -77,7 +77,8 @@ const Header = () => {
     );
 
     return (
-        <StyledTopBar className={isHomePage ? 'home-page' : ''}>
+        <div className="relative pt-[72px]">
+            {isHomePage && <GraphBackground />}
             <nav className={shellNavClass} id="main-navbar">
                 <div className={innerClass}>
                     <button
@@ -172,7 +173,7 @@ const Header = () => {
                 </div>
 
                 <div
-                    className={cn(mobilePanelClass, isTransparentNavbar && 'bg-[#5f6474]')}
+                    className={cn(mobilePanelClass, isTransparentNavbar && 'bg-(--graph-banner-bg)')}
                     onClickCapture={(e) => {
                         if ((e.target as HTMLElement).closest('a[href]')) {
                             closeMenu();
@@ -251,7 +252,7 @@ const Header = () => {
             </nav>
 
             {isHomePage && <Jumbotron />}
-        </StyledTopBar>
+        </div>
     );
 };
 

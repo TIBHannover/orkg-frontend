@@ -22,7 +22,7 @@ const RowHeader: FC<RowHeaderProps> = ({ row, path }) => {
 
     return (
         <th
-            className="sticky left-0 border-[#e7eaf1] border-b bg-inherit border-r border-l flex z-10 min-w-[250px] w-[2px] grow-[2] shrink-0 basis-auto"
+            className="sticky left-0 border-border border-b bg-inherit border-r border-l flex z-10 min-w-[250px] w-[2px] grow-[2] shrink-0 basis-auto"
             scope="row"
             style={{ background: getBackgroundColor(path?.length ? path.length - 1 : 0) }}
         >

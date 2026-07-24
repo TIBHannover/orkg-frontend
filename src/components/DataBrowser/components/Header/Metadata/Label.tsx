@@ -64,7 +64,7 @@ const Label = () => {
                     }}
                     className="flex-1 min-w-0"
                 >
-                    <Input autoFocus className="!rounded-e-none" />
+                    <Input autoFocus className="h-9 !rounded-e-none" />
                 </TextField>
                 <Button
                     variant="secondary"

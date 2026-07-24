@@ -29,7 +29,7 @@ const TemplateEditorHeaderBar = () => {
         >
             <div
                 className={`fixed top-[72px] right-0 left-0 z-[1000] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.13)] ${
-                    inEditMode ? 'bg-secondary text-white' : 'bg-default border-b border-border'
+                    inEditMode ? 'bg-secondary-solid text-white' : 'bg-default border-b border-border'
                 }`}
             >
                 <Container className="flex items-center gap-2 py-2 min-h-12">

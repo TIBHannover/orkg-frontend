@@ -174,7 +174,7 @@ const TemplateNew = () => {
                                         // @ts-expect-error innerRef is supported by underlying AsyncPaginate/Creatable
                                         innerRef={classAutocompleteRef}
                                         inputId="target-class"
-                                        noFormControl={hasTargetClass}
+                                        groupPosition={hasTargetClass ? 'start' : undefined}
                                     />
                                 </div>
                                 {hasTargetClass && (

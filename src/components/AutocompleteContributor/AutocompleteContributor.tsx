@@ -97,7 +97,7 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
                     <Tooltip.Trigger className="flex items-stretch">
                         <Link
                             target="_blank"
-                            className="shrink-0 inline-flex items-center h-full px-3 text-sm font-medium border border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 rounded-s-none rounded-e-md -ms-px"
+                            className="shrink-0 inline-flex items-center h-full px-3 text-sm font-medium border border-secondary text-secondary bg-transparent hover:bg-secondary-solid hover:text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 rounded-s-none rounded-e-md -ms-px"
                             href={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}
                         >
                             <FontAwesomeIcon icon={faLink} />

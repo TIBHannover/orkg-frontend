@@ -15,6 +15,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
 import { env } from 'next-runtime-env';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
@@ -59,25 +60,28 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     // The session provider would make sure that the session is kept alive by polling the nextjs server every 4 minutes
     const router = useRouter();
     return (
-        <RouterProvider navigate={router.push}>
-            <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
-                <StyledComponentsRegistry>
-                    <Provider store={store}>
-                        <ResetStoreOnNavigate>
-                            <ThemeProvider theme={theme}>
-                                <SWRConfig value={SWR_CONFIG}>
-                                    <DefaultLayout>{children}</DefaultLayout>
+        // Our theme CSS keys on both the `.dark` class and `[data-theme]` (see globals.css), so set both attributes
+        <NextThemesProvider attribute={['class', 'data-theme']} defaultTheme="light" enableSystem={false} storageKey="orkg-theme">
+            <RouterProvider navigate={router.push}>
+                <SessionProvider baseUrl={`${env('NEXT_PUBLIC_URL')}`} basePath="/auth" refetchInterval={4 * 60}>
+                    <StyledComponentsRegistry>
+                        <Provider store={store}>
+                            <ResetStoreOnNavigate>
+                                <ThemeProvider theme={theme}>
+                                    <SWRConfig value={SWR_CONFIG}>
+                                        <DefaultLayout>{children}</DefaultLayout>
 
-                                    <Suspense fallback={null}>
-                                        <MatomoAnalytics />
-                                    </Suspense>
-                                </SWRConfig>
-                            </ThemeProvider>
-                        </ResetStoreOnNavigate>
-                    </Provider>
-                </StyledComponentsRegistry>
-            </SessionProvider>
-        </RouterProvider>
+                                        <Suspense fallback={null}>
+                                            <MatomoAnalytics />
+                                        </Suspense>
+                                    </SWRConfig>
+                                </ThemeProvider>
+                            </ResetStoreOnNavigate>
+                        </Provider>
+                    </StyledComponentsRegistry>
+                </SessionProvider>
+            </RouterProvider>
+        </NextThemesProvider>
     );
 };
 
