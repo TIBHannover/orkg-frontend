@@ -87,7 +87,7 @@ const ControlledImageUpload = <T extends FieldValues>({
                     ref={fileInputRef}
                     type="file"
                     accept={accept}
-                    aria-label={label ?? uploadLabel}
+                    aria-label={typeof label === 'string' ? label : uploadLabel}
                     disabled={isDisabled}
                     onChange={handleChange}
                     className="sr-only"
