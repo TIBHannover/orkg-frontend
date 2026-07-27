@@ -2,6 +2,21 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.186.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.186.0...v0.186.1) - 2026-07-27
+
+### Changes
+
+- fix(profile): show compare/delete buttons for papers selected on any profile tab [`#1730`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1730)
+- fix(profile): align statistics visibility filters [`#1728`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1728)
+- style: enhance dark mode [`#1719`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1719)
+- refactor(swr): migrate read-only useEffect fetches and SmartSuggestions to SWR [`#1717`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1717)
+- chore: update NextJs [`#1727`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1727)
+- fix(Comparison): restore AI review buttons on null-id literal cells [`#1726`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1726)
+- perf: enable React Compiler and fix compiler-unsafe render reads [`#1720`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1720)
+- chore: update GitLab CI components to version 0.0.9 [`#1724`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1724)
+- fix(DataBrowser): stack create property dialog above the data browser dialog [`#1718`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1718)
+
+---
 ## [v0.186.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.185.1...v0.186.0) - 2026-07-20
 
 ### Changes
