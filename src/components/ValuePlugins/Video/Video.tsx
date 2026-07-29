@@ -19,38 +19,26 @@ const IframeFullWidth = styled.iframe`
     border: 0;
 `;
 
-// Plugin for video previews of TIB AV portal, Youtube, Dailymotion and Vimeo
+// Plugin for video previews of TIB AV portal and Youtube
 
 type ValuePluginsProps = {
     text: string;
     options?: { isModal?: boolean };
 };
 
-export const isVideoValue = (text: string) =>
-    text.match(new RegExp(REGEX.TIB_URL)) ||
-    text.match(new RegExp(REGEX.YOUTUBE_URL)) ||
-    text.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
-    text.match(new RegExp(REGEX.VIMEO_URL));
+export const isVideoValue = (text: string) => text.match(new RegExp(REGEX.TIB_URL)) || text.match(new RegExp(REGEX.YOUTUBE_URL));
 
 const Video: FC<ValuePluginsProps> = ({ text, options = { inModal: false } }) => {
     const [showVideoDialog, setShowVideoDialog] = useState(false);
 
     if (isVideoValue(text)) {
-        const videoId = text
-            .replace(new RegExp(REGEX.TIB_URL), '')
-            .replace(new RegExp(REGEX.YOUTUBE_URL), '')
-            .replace(new RegExp(REGEX.DAILYMOTION_URL), '')
-            .replace(new RegExp(REGEX.VIMEO_URL), '');
+        const videoId = text.replace(new RegExp(REGEX.TIB_URL), '').replace(new RegExp(REGEX.YOUTUBE_URL), '');
 
         let providerUrl = '';
         if (text.match(new RegExp(REGEX.TIB_URL))) {
             providerUrl = '//av.tib.eu/player/';
         } else if (text.match(new RegExp(REGEX.YOUTUBE_URL))) {
-            providerUrl = 'https://www.youtube.com/embed/';
-        } else if (text.match(new RegExp(REGEX.DAILYMOTION_URL))) {
-            providerUrl = 'https://www.dailymotion.com/embed/video/';
-        } else if (text.match(new RegExp(REGEX.VIMEO_URL))) {
-            providerUrl = 'https://player.vimeo.com/video/';
+            providerUrl = 'https://www.youtube-nocookie.com/embed/';
         }
         if (!('inModal' in options) || ('inModal' in options && !options.inModal)) {
             return (

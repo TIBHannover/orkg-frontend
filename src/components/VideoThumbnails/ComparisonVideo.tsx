@@ -6,9 +6,8 @@ const ComparisonVideo = () => (
         previewStyle={{ width: 65, height: 35, background: `url(${comparisonsThumbnail.src})` }}
         video={
             <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/j4lVfO6GBZ8"
+                className="w-full aspect-video"
+                src="https://www.youtube-nocookie.com/embed/j4lVfO6GBZ8"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen

@@ -18,15 +18,8 @@ function isFragmentOnlyHref(href: string): boolean {
     return href.trimStart().startsWith('#');
 }
 
-/** Allowed iframe hostnames for video embeds (YouTube, Vimeo, TIB AV) */
-const ALLOWED_VIDEO_EMBED_HOSTNAMES = [
-    'www.youtube.com',
-    'youtube.com',
-    'www.youtube-nocookie.com',
-    'youtube-nocookie.com',
-    'player.vimeo.com',
-    'av.tib.eu',
-];
+/** Allowed iframe hostnames for video embeds (YouTube, TIB AV) */
+const ALLOWED_VIDEO_EMBED_HOSTNAMES = ['www.youtube.com', 'youtube.com', 'www.youtube-nocookie.com', 'youtube-nocookie.com', 'av.tib.eu'];
 
 const MATOMO_TRACKER_HOSTNAME = (() => {
     const raw = env('NEXT_PUBLIC_MATOMO_TRACKER_URL');
@@ -62,10 +55,15 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     // Security: only allow iframe src from trusted embed domains (video + optional Matomo)
     if (node.tagName === 'IFRAME') {
         const src = node.getAttribute('src');
-        if (!isAllowedIframeSrc(src)) {
+        if (!src || !isAllowedIframeSrc(src)) {
             node.removeAttribute('src');
-        } else if (src?.startsWith('//')) {
-            node.setAttribute('src', `https:${src}`);
+        } else {
+            let normalizedSrc = src.startsWith('//') ? `https:${src}` : src;
+            // Privacy: the CSP only allows the cookieless YouTube domain, so pasted youtube.com embeds must be rewritten
+            normalizedSrc = normalizedSrc.replace(/^https?:\/\/(?:www\.)?youtube\.com\//i, 'https://www.youtube-nocookie.com/');
+            if (normalizedSrc !== src) {
+                node.setAttribute('src', normalizedSrc);
+            }
         }
     }
 });

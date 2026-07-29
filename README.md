@@ -56,7 +56,7 @@ The **environment variables** descriptions:
 | NEXT_PUBLIC_MATOMO_TRACKER_URL      | ✅ Optional | ✅ Optional | Tracker URL of Matomo configuration                                                                                                             |
 | NEXT_PUBLIC_MATOMO_TRACKER_SITE_ID  | ✅ Optional | ✅ Optional | Site ID of Matomo configuration                                                                                                                 |
 | NEXT_PUBLIC_PWC_USER_ID             | ✅ Optional | ✅ Optional | ID of the user used to import Papers with code data                                                                                             |
-| NEXT_PUBLIC_OLS_BASE_URL            | ✅ Used     | ✅ Used     | [Ontology Lookup Service](https://www.ebi.ac.uk/ols/) API                                                                                       |
+| NEXT_PUBLIC_OLS_BASE_URL            | ✅ Used     | ✅ Used     | [TIB Terminology Service](https://terminology.tib.eu/) API                                                                                      |
 | NEXT_PUBLIC_CMS_URL                 | ✅ Used     | ✅ Used     | CMS URL of [Strapi](https://gitlab.com/TIBHannover/orkg/strapi)                                                                                 |
 | NEXT_PUBLIC_ALTMETRIC_URL           | ✅ Used     | ✅ Used     | URL of [Altmetric](https://www.altmetric.com/) API                                                                                              |
 | NEXT_PUBLIC_DATACITE_URL            | ✅ Used     | ✅ Used     | URL [Datacite api](https://support.datacite.org/docs/api) URL                                                                                   |

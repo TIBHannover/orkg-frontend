@@ -10,8 +10,6 @@ export const isLinkValue = (text: string) => {
     const excludeMatch =
         text.match(new RegExp(REGEX.TIB_URL)) ||
         text.match(new RegExp(REGEX.YOUTUBE_URL)) ||
-        text.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
-        text.match(new RegExp(REGEX.VIMEO_URL)) ||
         text.match(new RegExp(REGEX.GITHUB_CODE_URL)) ||
         text.match(new RegExp(REGEX.TIB_CODE_URL)) ||
         text.match(new RegExp(REGEX.IMAGE_URL));
