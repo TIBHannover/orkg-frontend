@@ -49,7 +49,7 @@ describe('parseMarkdown iframe sanitization', () => {
     });
 
     it('keeps video embed iframes from trusted hosts', () => {
-        const src = getIframeSrc(parseMarkdown('<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>'));
-        expect(src).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+        const src = getIframeSrc(parseMarkdown('<iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"></iframe>'));
+        expect(src).toBe('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ');
     });
 });
