@@ -31,7 +31,7 @@ const cspHeader = `
         https://*.orkg.org
         https://av.tib.eu
         http://av.tib.eu
-        https://www.youtube.com
+        https://www.youtube-nocookie.com
         https://time.graphics
         https://support.tib.eu;
     frame-ancestors 'self' https://accounts.orkg.org;
@@ -63,8 +63,7 @@ const cspHeader = `
         https://fonts.gstatic.com
         https://mastodon.social
         https://dbpedia.org
-        https://api.terminology.tib.eu
-        https://www.ebi.ac.uk/ols4/api/;
+        https://api.terminology.tib.eu;
 `;
 
 /** @type {import('next').NextConfig} */

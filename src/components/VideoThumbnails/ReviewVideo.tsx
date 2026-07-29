@@ -6,9 +6,8 @@ const ReviewVideo = () => (
         previewStyle={{ width: 65, height: 35, background: `url(${reviewsThumbnail.src})` }}
         video={
             <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/FIFQKx-0Bqg"
+                className="w-full aspect-video"
+                src="https://www.youtube-nocookie.com/embed/FIFQKx-0Bqg"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
