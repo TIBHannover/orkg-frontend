@@ -28,25 +28,26 @@ const ALLOWED_VIDEO_EMBED_HOSTNAMES = [
     'av.tib.eu',
 ];
 
-const MATOMO_TRACKER_HOSTNAME = (() => {
-    const raw = env('NEXT_PUBLIC_MATOMO_TRACKER_URL');
-    if (!raw?.trim()) return null;
+/** Read at call time, not module load: next-runtime-env values are runtime-provided. The tracker URL is usually protocol-relative (//host/path) in Matomo configs */
+function getMatomoTrackerHostname(): string | null {
+    const raw = env('NEXT_PUBLIC_MATOMO_TRACKER_URL')?.trim();
+    if (!raw) return null;
     try {
-        return new URL(raw).hostname;
+        return new URL(raw.startsWith('//') ? `https:${raw}` : raw).hostname;
     } catch {
         return null;
     }
-})();
-
-const ALLOWED_IFRAME_HOSTNAMES = [...ALLOWED_VIDEO_EMBED_HOSTNAMES, ...(MATOMO_TRACKER_HOSTNAME ? [MATOMO_TRACKER_HOSTNAME] : [])];
+}
 
 function isAllowedIframeSrc(src: string | null): boolean {
     if (!src?.trim()) return false;
+    const matomoTrackerHostname = getMatomoTrackerHostname();
+    const allowedHostnames = [...ALLOWED_VIDEO_EMBED_HOSTNAMES, ...(matomoTrackerHostname ? [matomoTrackerHostname] : [])];
     try {
         // Protocol-relative (//host/...) is common in pasted iframe HTML; URL() needs a base for that form
         const url = src.startsWith('//') ? new URL(`https:${src}`) : new URL(src, 'https://orkg.org');
         if (url.protocol !== 'https:' && url.protocol !== 'http:') return false;
-        return ALLOWED_IFRAME_HOSTNAMES.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`));
+        return allowedHostnames.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`));
     } catch {
         return false;
     }
