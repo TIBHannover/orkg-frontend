@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { match } from 'path-to-regexp';
-import { useEffect, useState } from 'react';
-import { useMountedState, useWindowScroll } from 'react-use';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useWindowScroll } from 'react-use';
 
 import Logo from '@/assets/img/logo.svg';
 import LogoWhite from '@/assets/img/logo_white.svg';
@@ -27,18 +27,27 @@ import ThemeSwitcher from '@/components/Layout/Header/ThemeSwitcher';
 import UserTooltip from '@/components/Layout/Header/UserTooltip';
 import ROUTES from '@/constants/routes';
 
+const emptySubscribe = () => () => {};
+
 const Header = () => {
     const { user, status } = useAuthentication();
     const [isOpenNavBar, setIsOpenNavBar] = useState(false);
 
-    const isMounted = useMountedState();
+    // Not react-use's useMountedState: reading its ref during render is non-idempotent, so the
+    // React Compiler kept the memoized pre-hydration value until a scroll forced a recompute
+    const isMounted = useSyncExternalStore(
+        emptySubscribe,
+        () => true,
+        () => false,
+    );
     const { y: scrollPosition } = useWindowScroll();
     const pathname = usePathname();
 
     const closeMenu = () => setIsOpenNavBar(false);
 
     const isHomePage = pathname === ROUTES.HOME || !!match(ROUTES.HOME_WITH_RESEARCH_FIELD)(pathname);
-    const isTransparentNavbar = isMounted() ? isHomePage && scrollPosition === 0 : true;
+    // Pre-hydration, scrollPosition is unknown (SSR renders 0) — assume top-of-page; only the home page is ever transparent
+    const isTransparentNavbar = isHomePage && (!isMounted || scrollPosition === 0);
 
     useEffect(() => {
         if (!isOpenNavBar) {
