@@ -7,13 +7,13 @@ stages:
   - pages
 
 include:
-  - component: gitlab.com/components/container-scanning/container-scanning@5.2.0
+  - component: $CI_SERVER_FQDN/components/container-scanning/container-scanning@5.2.0
     inputs:
       stage: verify
       # Change image name to match our repository naming convention
-      cs_image: $CI_REGISTRY_IMAGE
+      cs_image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
       enable_mr_pipelines: false
-  - component: gitlab.com/components/dependency-scanning/main@2.0.0
+  - component: $CI_SERVER_FQDN/components/dependency-scanning/main@2.0.0
     inputs:
       stage: verify
       job_name: dependency_scanning
