@@ -78,7 +78,7 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
     };
 
     const runValidation = (_data: string[][], columnTypes: (MappedColumn | null)[]) => {
-        setColumnValidation(validateColumns(_data));
+        setColumnValidation(validateColumns(_data, columnTypes));
 
         const _cellValidations = _data.slice(1).map((row) => {
             const requiredFieldsError = validateRequiredFields(row, columnTypes);

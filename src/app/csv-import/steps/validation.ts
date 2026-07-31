@@ -1,7 +1,8 @@
 import pluralize from 'pluralize';
 import { z } from 'zod';
 
-import { findTypeByIdOrName, MappedColumn, parseCellString } from '@/app/csv-import/steps/helpers';
+import type { MappedColumn } from '@/app/csv-import/steps/helpers';
+import { DEFAULT_HEADERS, findTypeByIdOrName, parseCellString } from '@/app/csv-import/steps/helpers';
 import { getConfigByType, preprocessNumber } from '@/constants/DataTypes';
 import { PREDICATES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
@@ -57,7 +58,23 @@ export const validateCsvStructure = (data: string[][]) => {
     return null;
 };
 
-export const validateColumns = (data: string[][]) => {
+const getColumnDisplayName = (headerId: string, header: string[], mappedColumns?: (MappedColumn | null)[]) => {
+    const indices = header.reduce<number[]>((acc, column, index) => {
+        if (column === headerId) {
+            acc.push(index);
+        }
+        return acc;
+    }, []);
+    const mappedDuplicateColumns = indices.map((index) => mappedColumns?.[index]);
+    const label =
+        mappedDuplicateColumns.find((mappedColumn) => mappedColumn?.predicate?.label)?.predicate?.label ||
+        mappedDuplicateColumns.find((mappedColumn) => mappedColumn?.inputValue)?.inputValue ||
+        DEFAULT_HEADERS.find((h) => h.id === headerId)?.label;
+
+    return label && label !== headerId ? `"${label}" (${headerId})` : headerId;
+};
+
+export const validateColumns = (data: string[][], mappedColumns?: (MappedColumn | null)[]) => {
     const header = data && data[0];
     const values = data && data.slice(1).map((r) => r.map((s) => (s ? s.trim() : '')));
 
@@ -92,7 +109,8 @@ export const validateColumns = (data: string[][]) => {
     for (const headerId of defaultHeaderIds) {
         const count = header?.filter((col) => col === headerId).length || 0;
         if (count > 1) {
-            return `Duplicate ${headerId} columns detected. Please ensure there is only one ${headerId} column.`;
+            const displayName = getColumnDisplayName(headerId, header ?? [], mappedColumns);
+            return `Duplicate column ${displayName} detected. Please ensure there is only one ${displayName} column.`;
         }
     }
 
