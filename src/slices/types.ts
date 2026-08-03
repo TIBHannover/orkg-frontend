@@ -53,8 +53,8 @@ export type TemplateEditor = {
     created_by: string | null;
     created_at: string | null;
     extraction_method: ExtractionMethod;
-    observatory_id?: string;
-    organization_id?: string;
+    observatories: string[];
+    organizations: string[];
 };
 
 export type Annotation = IHighlight & {

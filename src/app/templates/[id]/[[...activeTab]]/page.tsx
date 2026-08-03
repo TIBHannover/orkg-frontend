@@ -29,7 +29,7 @@ import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { Thing } from '@/services/backend/things';
-import { loadTemplate, saveTemplate, setDiagramMode, updateLabel } from '@/slices/templateEditorSlice';
+import { loadTemplate, saveTemplate, setDiagramMode, updateLabel, updateProvenance } from '@/slices/templateEditorSlice';
 import { RootStore } from '@/slices/types';
 
 const Template = () => {
@@ -47,8 +47,8 @@ const Template = () => {
         id: loadedId,
         created_by: createdBy,
         created_at: createdAt,
-        observatory_id: observatoryId,
-        organization_id: organizationId,
+        observatories,
+        organizations,
         extraction_method: extractionMethod,
     } = useSelector((state: RootStore) => state.templateEditor);
     const router = useRouter();
@@ -211,8 +211,8 @@ const Template = () => {
                                     label,
                                     created_by: createdBy,
                                     created_at: createdAt,
-                                    organization_id: organizationId,
-                                    observatory_id: observatoryId,
+                                    organizations,
+                                    observatories,
                                     extraction_method: extractionMethod,
                                 } as unknown as Thing
                             }
@@ -221,6 +221,9 @@ const Template = () => {
                             showProvenance
                             showExtractionMethod
                             editMode={editMode}
+                            updateCallBack={(observatoryId, organizationId) =>
+                                dispatch(updateProvenance({ observatory_id: observatoryId, organization_id: organizationId }))
+                            }
                         />
                     </div>
                 </Container>

@@ -15,7 +15,7 @@ import { Thing } from '@/services/backend/things';
 type ProvenanceBoxProps = {
     item: Thing & { version_id?: string; observatories?: string[]; organizations?: string[]; observatory_id?: string; organization_id?: string };
     editMode: boolean;
-    updateCallBack?: () => void;
+    updateCallBack?: (observatoryId?: string, organizationId?: string) => void;
 };
 
 function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBoxProps) {
