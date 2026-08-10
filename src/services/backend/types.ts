@@ -1,10 +1,17 @@
 import {
+    AuthorIdentifierMap,
     ClassRepresentation,
+    ContributionRequestPart,
     Contributor as ContributorType,
+    CreateContributionRequest,
+    CreatePaperRequest,
     LiteralRepresentation,
     Organization as OrganizationRepresentation,
     PageOfAuthorRecordRepresentationsPage,
+    PaperRepresentation,
+    ResourceReferenceRepresentation,
     ResourceRepresentationExtractionMethodEnum,
+    UpdatePaperRequest,
 } from '@orkg/orkg-client';
 
 export type EntityType = string;
@@ -153,17 +160,17 @@ export type User = {
     is_curation_allowed: boolean;
 };
 
-type AuthorIdentifiers = {
-    orcid?: string[];
+// Bridges the generated AuthorIdentifierMap (camelCase keys) with the snake_case keys
+// still delivered by un-migrated endpoints (comparisons, reviews, lists)
+export type AuthorIdentifiers = AuthorIdentifierMap & {
     google_scholar?: string[];
     research_gate?: string[];
     linked_in?: string[];
-    wikidata?: string[];
     web_of_science?: string[];
 };
 
 export type Author = {
-    id: string | null;
+    id?: string | null;
     name: string;
     identifiers: AuthorIdentifiers;
     homepage?: string;
@@ -196,42 +203,9 @@ export type FilterConfig = {
     source?: string;
 };
 
-type PaperPublicationInfo = {
-    published_month?: number | null;
-    published_year?: number | null;
-    published_in?: Node;
-    url?: string | null;
-};
+export type Mentioning = ResourceReferenceRepresentation;
 
-export type UpdatePaperPublicationInfo = Omit<PaperPublicationInfo, 'published_in'> & { published_in?: string | null };
-export type Mentioning = {
-    id: string;
-    _class: string;
-    classes: string[];
-    label: string;
-};
-export type Paper = {
-    id: string;
-    title: string;
-    research_fields: Node[];
-    identifiers: {
-        doi?: string[];
-    };
-    publication_info: PaperPublicationInfo;
-    authors: Author[];
-    contributions: Node[];
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    observatory_id: string;
-    verified: boolean;
-    visibility: Visibility;
-    unlisted_by: string;
-    sdgs: Node[];
-    mentionings: Mentioning[];
-};
+export type Paper = PaperRepresentation;
 
 export type RSPropertyShapeUntypedType = {
     id?: string;
@@ -453,63 +427,34 @@ export type ContributionContentsStatements = {
     }[];
 };
 
-export type CreateContributionData = {
-    resources?: {
-        [key: string]: {
-            label: string;
-            classes: string[];
-        };
-    };
-    literals?: {
-        [key: string]: {
-            label: string;
-            data_type?: string;
-        };
-    };
-    predicates?: {
-        [key: string]: {
-            label: string;
-            description?: string;
-        };
-    };
-    lists?: {
-        [key: string]: {
-            label: string;
-            elements: string[];
-        };
-    };
-};
-
-export type NewContribution = {
-    label: string;
-    classes?: string[];
-    statements: ContributionContentsStatements;
-};
+export type CreateContributionData = Omit<CreateContributionRequest, 'contribution' | 'extractionMethod'>;
 
 export type CreatePaperContents = CreateContributionData & {
-    contributions: NewContribution[];
+    contributions: ContributionRequestPart[];
 };
 
 export type CreateContribution = CreateContributionData & {
-    contribution: NewContribution;
+    contribution: ContributionRequestPart;
 };
 
-export type CreatePaperParams = Partial<
-    Omit<Paper, 'id' | 'research_fields' | 'sdgs' | 'authors' | 'publication_info'> & { research_fields: string[]; contents: CreatePaperContents }
-> & {
-    sdgs?: string[];
-} & {
-    authors: UpdateAuthor[];
-} & {
-    publication_info: UpdatePaperPublicationInfo;
+// The generated publication info types are stricter than the app actually is (nullable fields)
+export type PaperPublicationInfoData = {
+    publishedMonth?: number | null;
+    publishedYear?: number | null;
+    publishedIn?: string | null;
+    url?: string | null;
 };
-export type UpdatePaperParams = Partial<
-    Omit<Paper, 'id' | 'research_fields' | 'sdgs' | 'mentionings'> & {
-        sdgs: string[];
-        mentionings: string[];
-        research_fields: string[];
-    }
->;
+
+export type CreatePaperParams = Omit<CreatePaperRequest, 'authors' | 'extractionMethod' | 'publicationInfo'> & {
+    authors: UpdateAuthor[];
+    extractionMethod?: ExtractionMethod;
+    publicationInfo?: PaperPublicationInfoData;
+};
+
+export type UpdatePaperParams = Omit<UpdatePaperRequest, 'authors' | 'publicationInfo'> & {
+    authors?: UpdateAuthor[];
+    publicationInfo?: PaperPublicationInfoData;
+};
 
 export type Visualization = {
     id: string;

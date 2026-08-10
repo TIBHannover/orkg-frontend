@@ -18,7 +18,7 @@ import { reverseWithSlug } from '@/utilsTyped';
 
 export const HOME_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
-    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: false } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
@@ -64,7 +64,7 @@ function HomeTabsContainer({ researchFieldId, researchFieldLabel }: { researchFi
             include_subfields: researchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? includeSubFields : undefined,
             visibility: sort,
             contentType,
-            published: true,
+            published: HOME_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
         },
         defaultPageSize: 10,
     });

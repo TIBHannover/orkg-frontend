@@ -65,8 +65,8 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                 // eslint-disable-next-line no-await-in-loop
                 const paper = await createPaperMergeIfExists({
                     paper: {
-                        title: result.title,
-                        research_fields: [RESOURCES.RESEARCH_FIELD_MAIN],
+                        title: result.title ?? '',
+                        researchFields: [RESOURCES.RESEARCH_FIELD_MAIN],
                         ...(result.doi
                             ? {
                                   identifiers: {
@@ -74,10 +74,10 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                                   },
                               }
                             : {}),
-                        publication_info: {
-                            published_month: result.publicationMonth || undefined,
-                            published_year: result.publicationYear || undefined,
-                            published_in: result.publishedIn || null,
+                        publicationInfo: {
+                            publishedMonth: result.publicationMonth || undefined,
+                            publishedYear: result.publicationYear || undefined,
+                            publishedIn: result.publishedIn || null,
                         },
                         authors: result.authors ?? [],
                         observatories: observatoryId ? [observatoryId] : [],
@@ -110,9 +110,9 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
         id: paper.id,
         title: paper.title,
         authors: paper.authors,
-        publicationMonth: paper.publication_info?.published_month,
-        publicationYear: paper.publication_info?.published_year,
-        publishedIn: paper.publication_info?.published_in?.label,
+        publicationMonth: paper.publicationInfo?.publishedMonth,
+        publicationYear: paper.publicationInfo?.publishedYear,
+        publishedIn: paper.publicationInfo?.publishedIn?.label,
         doi: paper.identifiers?.doi?.[0],
     });
 

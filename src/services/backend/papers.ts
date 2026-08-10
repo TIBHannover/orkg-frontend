@@ -1,209 +1,74 @@
-import qs from 'qs';
+import { CreatePaperRequest, PapersApi, PapersApiFindAllRequest, PublishPaperRequest, UpdatePaperRequest } from '@orkg/orkg-client';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { CLASSES, PREDICATES } from '@/constants/graphSettings';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { prepareParams } from '@/services/backend/misc';
+import { PREDICATES } from '@/constants/graphSettings';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
 import { getStatements } from '@/services/backend/statements';
 import {
-    Author,
-    CreateContribution,
-    CreatedByParam,
     CreatePaperParams,
-    ExtractionMethod,
-    ObservatoryIdParam,
-    PaginatedResponse,
-    PaginationParams,
     Paper,
-    ResearchFieldIdParams,
-    Resource,
-    SdgParam,
+    PublishedParam,
     Statement,
     UpdatePaperParams,
-    VenueIdParam,
     VerifiedParam,
     VisibilityParam,
+    WithPaginationParams,
 } from '@/services/backend/types';
 
-export const papersUrl = `${url}papers/`;
-export const papersApi = backendApi.extend(() => ({ prefixUrl: papersUrl }));
-const PAPERS_CONTENT_TYPE = 'application/vnd.orkg.paper.v2+json';
-const CONTRIBUTIONS_CONTENT_TYPE = 'application/vnd.orkg.contribution.v2+json';
+export const papersUrl = `${urlNoTrailingSlash}/papers`;
 
-export const getPaper = (id: string) =>
-    papersApi
-        .get<Paper>(id, {
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .json();
+const papersApi = new PapersApi(configuration);
 
-export const updatePaper = (id: string, data: UpdatePaperParams) =>
-    papersApi
-        .put<Paper>(id, {
-            json: data,
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const getPaper = (id: string) => papersApi.findById({ id });
+
+export const updatePaper = (id: string, data: UpdatePaperParams) => papersApi.update({ id, updatePaperRequest: data as UpdatePaperRequest });
 
 export const createPaper = (data: CreatePaperParams): Promise<string> =>
-    papersApi
-        .post<void>('', {
-            json: data,
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    papersApi.createRaw({ createPaperRequest: data as CreatePaperRequest }).then(getCreatedId);
 
-export const getOriginalPaperId = (paperId: string) => {
-    const getPaperId = async (id: string): Promise<string> => {
-        const statements = (await getStatements({
-            objectId: id,
-            predicateId: PREDICATES.HAS_PREVIOUS_VERSION,
-        })) as Statement[];
-
-        // finding the original paperId from the published version
-        if (!statements?.[0]?.subject.classes?.includes(CLASSES.PAPER)) {
-            return getPaperId(statements[0].subject.id);
-        }
-        return statements?.[0]?.subject.id;
-    };
-    const pId = getPaperId(paperId);
-    return pId;
+// the head paper is the center of a star graph linking to its snapshots via hasPublishedVersion,
+// so the head of a published version is the subject of the single incoming statement
+export const getOriginalPaperId = async (paperId: string): Promise<string | undefined> => {
+    const statements = (await getStatements({
+        objectId: paperId,
+        predicateId: PREDICATES.HAS_PUBLISHED_VERSION,
+    })) as Statement[];
+    return statements?.[0]?.subject.id;
 };
 
-export const getPapersLinkedToResource = async ({
-    id,
-    page = 0,
-    size = 9999,
-    sortBy = [{ property: 'paper.created_at', direction: 'desc' }],
-    returnContent = false,
-}: {
-    id: string;
-    returnContent?: boolean;
-} & PaginationParams) => {
-    const searchParams = qs.stringify(
-        { linked_to: id, page, size },
-        {
-            skipNulls: true,
-        },
-    );
-
-    const resources = await papersApi
-        .get<
-            PaginatedResponse<
-                Resource & {
-                    path: Resource[][];
-                }
-            >
-        >('', {
-            searchParams,
-        })
-        .json()
-        .then((res) => (returnContent ? res.content : res));
-    return resources;
-};
-
+// existence checks must match the editable head version, never a published snapshot
 export const getPaperByDoi = async (doi: string): Promise<Paper | null> => {
-    const papers = await papersApi
-        .get<PaginatedResponse<Paper>>('', {
-            searchParams: `doi=${encodeURIComponent(doi)}`,
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    const papers = await papersApi.findAll({ doi, published: 'false' });
     return papers.content[0] ?? null;
 };
 
 export const getPaperByTitle = async (title: string): Promise<Paper | null> => {
-    const papers = await papersApi
-        .get<PaginatedResponse<Paper>>('', {
-            searchParams: `title=${encodeURIComponent(title)}&exact=true`,
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    const papers = await papersApi.findAll({ title, exact: true, published: 'false' });
     return papers.content?.[0] ?? null;
 };
 
 export const getPapers = ({
-    page = 0,
-    size = 999,
-    sortBy,
     verified,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by,
-    observatory_id,
-    research_field,
-    include_subfields,
-    sdg,
-    venue,
-}: PaginationParams & VisibilityParam & VerifiedParam & CreatedByParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams & VenueIdParam) => {
-    const searchParams = prepareParams({
-        page,
-        size,
-        sortBy,
-        verified,
-        visibility,
-        created_by,
-        observatory_id,
-        sdg,
-        research_field,
-        include_subfields,
-        venue,
-    });
-    return papersApi
-        .get<PaginatedResponse<Paper>>('', {
-            searchParams,
-            headers: {
-                'Content-Type': PAPERS_CONTENT_TYPE,
-                Accept: PAPERS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+    published,
+    ...params
+}: Omit<WithPaginationParams<PapersApiFindAllRequest>, 'verified' | 'visibility' | 'published'> & VerifiedParam & VisibilityParam & PublishedParam) =>
+    papersApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as PapersApiFindAllRequest['visibility'],
+            verified: verified ?? undefined,
+            // the generated request type declares published as a string, unlike the app-level boolean
+            published: published != null ? String(published) : undefined,
+        }),
+    );
 
-type CreateContributionParams = {
-    paperId: string;
-    contributionStatements: {
-        extraction_method?: ExtractionMethod;
-    } & CreateContribution;
-};
+export const publishPaper = (paperId: string, data: PublishPaperRequest) =>
+    papersApi.publishRaw({ id: paperId, publishPaperRequest: data }).then(getCreatedId);
 
-export const createContribution = ({ paperId, contributionStatements }: CreateContributionParams) =>
-    papersApi
-        .post<void>(`${paperId}/contributions`, {
-            json: contributionStatements,
-            headers: {
-                'Content-Type': CONTRIBUTIONS_CONTENT_TYPE,
-                Accept: CONTRIBUTIONS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-
-type PublishPaperParams = {
-    subject: string;
-    description: string;
-    authors: Author[];
-};
-
-export const publishPaper = (paperId: string, data: PublishPaperParams) =>
-    papersApi
-        .post<string>(`${paperId}/publish`, {
-            json: data,
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-
-export const getPublishedContents = (paperId: string) => papersApi.get<{ statements: Statement[] }>(`${paperId}/published-contents`).json();
+// snapshot consumers only read id/subject/predicate/object/label/classes, which are identical in both shapes
+export const getPublishedContents = (paperId: string) =>
+    papersApi.findPublishedContentsById({ id: paperId }) as unknown as Promise<{ statements: Statement[] }>;

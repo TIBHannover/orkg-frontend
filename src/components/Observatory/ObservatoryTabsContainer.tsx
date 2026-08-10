@@ -23,7 +23,7 @@ export const OBSERVATORY_CONTENT_TABS = [
         description: 'All content types except statements and statements types',
     },
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
-    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: false } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
@@ -73,7 +73,7 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
             observatory_id: id,
             visibility: sort,
             contentType,
-            published: true,
+            published: OBSERVATORY_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
             // ignore the label while requesting the result from the backend
             filter_config: filterConfig?.map(({ label, ...restConfig }) => restConfig),
         },

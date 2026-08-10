@@ -14,7 +14,7 @@ import { Item, VisibilityOptions } from '@/services/backend/types';
 
 export const RESEARCH_FIELD_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
-    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: false } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
@@ -55,7 +55,7 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
             include_subfields: includeSubFields,
             visibility: sort,
             contentType,
-            published: true,
+            published: RESEARCH_FIELD_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
         },
     });
 

@@ -16,6 +16,7 @@ import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import PaperHeader from '@/components/ViewPaper/PaperHeader';
 import PaperHeaderBar from '@/components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from '@/components/ViewPaper/PaperHeaderBar/PaperMenuBar';
+import PaperVersionAlert from '@/components/ViewPaper/PaperVersionAlert/PaperVersionAlert';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -39,19 +40,17 @@ const ViewPaper = () => {
             {!isLoading && !isLoadingFailed && viewPaper && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by} editMode={isEditMode} toggle={toggle} />
+                        <PaperHeaderBar disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy} editMode={isEditMode} toggle={toggle} />
                     )}
                     <Breadcrumbs
-                        researchFieldId={
-                            viewPaper?.research_fields && viewPaper.research_fields.length > 0 ? viewPaper.research_fields?.[0]?.id : null
-                        }
+                        researchFieldId={viewPaper?.researchFields && viewPaper.researchFields.length > 0 ? viewPaper.researchFields?.[0]?.id : null}
                     />
 
                     <InView as="div" initialInView={false} onChange={(inView) => handleShowHeaderBar(inView)}>
                         <TitleBar
                             buttonGroup={
                                 <PaperMenuBar
-                                    disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.created_by}
+                                    disableEdit={env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper.createdBy}
                                     editMode={isEditMode}
                                     toggle={toggle}
                                 />
@@ -62,6 +61,8 @@ const ViewPaper = () => {
                     </InView>
 
                     <EditModeHeader isVisible={isEditMode} />
+
+                    <PaperVersionAlert />
 
                     <Container>
                         <div className={`box flow-root relative p-4 md:p-12 ${isEditMode ? 'rounded-b' : 'rounded'}`}>

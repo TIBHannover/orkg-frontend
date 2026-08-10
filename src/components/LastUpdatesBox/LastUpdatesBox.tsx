@@ -42,9 +42,11 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId }) => {
                             activities.length > 0 &&
                             activities.slice(0, 2).map((activity, index) => (
                                 <ActivityItem key={`log${activity.id}`} isLast={index === Math.min(activities.length, 2) - 1}>
-                                    <div className="mb-1 text-[95%] text-muted">{dayjs(activity.created_at).fromNow()}</div>
+                                    <div className="mb-1 text-[95%] text-muted">
+                                        {dayjs('created_at' in activity ? activity.created_at : activity.createdAt).fromNow()}
+                                    </div>
                                     <div className="flex items-center flex-wrap gap-x-1 text-[15px] text-foreground">
-                                        <UserAvatar userId={activity.created_by} showDisplayName />
+                                        <UserAvatar userId={'created_by' in activity ? activity.created_by : activity.createdBy} showDisplayName />
                                         <span>
                                             {`added a ${activity._class} `}
                                             <Link

@@ -16,7 +16,8 @@ const usePreviouslySelectedResearchField = () => {
                       page: 0,
                       size: 8,
                       sortBy: [{ property: 'created_at', direction: 'desc' as SortDirectionOptions }],
-                      created_by: userId,
+                      createdBy: userId,
+                      published: false,
                   },
                   papersUrl,
                   'getPapers',
@@ -27,7 +28,7 @@ const usePreviouslySelectedResearchField = () => {
 
     const researchFields =
         uniqBy(
-            papers?.content.map((paper) => paper.research_fields?.[0]),
+            papers?.content.map((paper) => paper.researchFields?.[0]),
             'id',
         ) ?? [];
 

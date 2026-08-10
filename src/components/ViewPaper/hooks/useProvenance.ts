@@ -1,20 +1,16 @@
-import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import useParams from '@/components/useParams/useParams';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
-import { MISC, PREDICATES } from '@/constants/graphSettings';
+import { MISC } from '@/constants/graphSettings';
 import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
-import { getStatements } from '@/services/backend/statements';
 import { Contributor, Resource } from '@/services/backend/types';
 
 function useProvenance() {
     const { resourceId } = useParams();
-    const { paper } = useViewPaper({ paperId: resourceId });
-
-    const [versions, setVersions] = useState<{ created_at: string; created_by: Contributor; publishedResource: Resource }[]>([]);
+    const { paper, publishedVersions } = useViewPaper({ paperId: resourceId });
 
     const { data: observatoryInfo, isLoading: isLoadingObservatory } = useSWR(
         paper?.observatories?.[0] !== MISC.UNKNOWN_ID && paper?.observatories?.[0]
@@ -33,30 +29,24 @@ function useProvenance() {
     const isLoadingProvenance = isLoadingObservatory || isLoadingOrganization;
 
     const { data: createdBy, isLoading: isLoadingCreatedBy } = useSWR(
-        paper?.created_by !== MISC.UNKNOWN_ID && paper?.created_by ? [paper?.created_by, contributorsUrl, 'getContributorById'] : null,
+        paper?.createdBy !== MISC.UNKNOWN_ID && paper?.createdBy ? [paper?.createdBy, contributorsUrl, 'getContributorById'] : null,
         ([params]) => getContributorById(params),
     );
 
-    useEffect(() => {
-        const loadVersions = (_resourceId: string, list: { created_at: string; created_by: Contributor; publishedResource: Resource }[]) => {
-            getStatements({ subjectId: _resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
-                .then((response) => {
-                    if (response.length > 0) {
-                        const publishedResource = response[0].object as Resource;
-                        getContributorById(publishedResource.created_by).then((user) => {
-                            list.push({ created_at: publishedResource.created_at, created_by: user, publishedResource });
-                        });
-                        loadVersions(publishedResource.id, list);
-                    } else {
-                        setVersions(list);
-                    }
-                })
-                .catch(() => setVersions([]));
-        };
-        if (paper?.id) {
-            loadVersions(paper.id, []);
-        }
-    }, [paper?.id]);
+    // the API delivers the publication history on the head paper (versions.published, latest first)
+    const { data: versions = [] } = useSWR(
+        publishedVersions.length > 0 ? [publishedVersions, contributorsUrl, 'getContributorById'] : null,
+        ([entries]) =>
+            Promise.all(
+                entries.map(async (entry) => ({
+                    created_at: entry.createdAt,
+                    created_by: await getContributorById(entry.createdBy).catch(
+                        () => ({ id: MISC.UNKNOWN_ID, displayName: 'Unknown' }) as Contributor,
+                    ),
+                    publishedResource: { id: entry.id, label: entry.label } as Resource,
+                })),
+            ),
+    );
 
     return {
         isLoadingProvenance,

@@ -2,7 +2,8 @@ import { Alert } from '@heroui/react';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import { getPaper, getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
+import { getPaper, papersUrl } from '@/services/backend/papers';
+import { getPapersLinkedToResource } from '@/services/backend/paths';
 import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
 
 function ResourceUsage({ id }: { id: string }) {

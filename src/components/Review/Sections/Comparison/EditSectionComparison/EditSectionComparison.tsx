@@ -61,8 +61,8 @@ const EditSectionComparison: FC<EditSectionComparisonProps> = ({ section, index 
                 id: paper.id,
                 title: paper.title,
                 author: paper.authors?.map((author) => ({ name: author.name })),
-                year: paper.publication_info.published_year,
-                ...(paper.identifiers.doi && paper.identifiers.doi.length > 0
+                year: paper.publicationInfo.publishedYear,
+                ...(paper.identifiers?.doi && paper.identifiers.doi.length > 0
                     ? { identifier: [{ type: 'doi', id: paper.identifiers?.doi?.[0] ?? null }] }
                     : {}),
             };

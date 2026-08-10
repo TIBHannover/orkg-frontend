@@ -1,5 +1,6 @@
 import classes from '@/services/mocks/backend/classes';
 import literals from '@/services/mocks/backend/literals';
+import papers from '@/services/mocks/backend/papers';
 import predicates from '@/services/mocks/backend/predicates';
 import resources from '@/services/mocks/backend/resources';
 import statements from '@/services/mocks/backend/statements';
@@ -13,6 +14,7 @@ import wikidata from '@/services/mocks/wikidata';
 export const handlers = [
     ...literals,
     ...resources,
+    ...papers,
     ...predicates,
     ...statements,
     ...templates,

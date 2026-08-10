@@ -22,7 +22,7 @@ import { Item, Paper, VisibilityOptions } from '@/services/backend/types';
 export const USER_PROFILE_CONTENT_TABS = [
     { id: ALL_CONTENT_TYPES_ID, label: 'All', description: 'All content types except statements and statements types' },
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
-    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: false } },
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', params: { published: undefined } },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Lists', params: { published: true } },
@@ -82,7 +82,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
             created_by: id,
             visibility: sort,
             contentType,
-            published: true,
+            published: USER_PROFILE_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
         },
     });
 

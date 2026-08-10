@@ -19,6 +19,7 @@ import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import PaperHeader from '@/components/ViewPaper/PaperHeader';
+import PaperVersionAlert from '@/components/ViewPaper/PaperVersionAlert/PaperVersionAlert';
 import Contributions from '@/components/ViewPaperVersion/ContributionsVersion/Contributions';
 import useViewPaperVersion from '@/components/ViewPaperVersion/hooks/useViewPaperVersion';
 import ROUTES from '@/constants/routes';
@@ -27,7 +28,7 @@ import { reverse } from '@/lib/namedRoute';
 const ViewPaperVersion = () => {
     const { resourceId } = useParams();
 
-    const { paper, dataCiteDoi, originalPaperId, isLoadingPaperVersion } = useViewPaper({ paperId: resourceId });
+    const { paper, dataCiteDoi, originalPaperId, isLoading: isLoadingPaper } = useViewPaper({ paperId: resourceId });
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [state, copyToClipboard] = useCopyToClipboard();
@@ -40,10 +41,10 @@ const ViewPaperVersion = () => {
     }, [state.value]);
 
     useEffect(() => {
-        if (paper && !isLoadingPaperVersion) {
+        if (paper && !isLoadingPaper) {
             document.title = paper?.title;
         }
-    }, [paper, isLoadingPaperVersion]);
+    }, [paper, isLoadingPaper]);
 
     const { isLoading, isLoadingFailed, contributions, paperStatements } = useViewPaperVersion({
         paperId: resourceId,
@@ -51,11 +52,11 @@ const ViewPaperVersion = () => {
 
     return (
         <div>
-            {!isLoading && !isLoadingPaperVersion && isLoadingFailed && <NotFound />}
-            {!isLoading && !isLoadingPaperVersion && !isLoadingFailed && paper && (
+            {!isLoading && !isLoadingPaper && isLoadingFailed && <NotFound />}
+            {!isLoading && !isLoadingPaper && !isLoadingFailed && paper && (
                 <>
                     <Coins item={paper} />
-                    <Breadcrumbs researchFieldId={paper?.research_fields?.length > 0 ? paper.research_fields?.[0]?.id : null} />
+                    <Breadcrumbs researchFieldId={paper?.researchFields?.length > 0 ? paper.researchFields?.[0]?.id : null} />
                     <TitleBar
                         buttonGroup={
                             <>
@@ -91,6 +92,7 @@ const ViewPaperVersion = () => {
                     >
                         Paper
                     </TitleBar>
+                    <PaperVersionAlert isPublishedVersionView />
                     <Container>
                         <div className="box flow-root relative rounded p-4 md:p-12">
                             {isLoading && (
@@ -111,7 +113,7 @@ const ViewPaperVersion = () => {
                                     <Contributions
                                         contributions={contributions}
                                         paperStatements={paperStatements}
-                                        snapshotCreatedAt={paper?.created_at}
+                                        snapshotCreatedAt={paper?.createdAt}
                                     />
                                 </>
                             )}

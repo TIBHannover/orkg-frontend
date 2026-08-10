@@ -39,16 +39,16 @@ const useEditPaper = ({ paperData, afterUpdate }: UseEditPaperArgs) => {
             return;
         }
         setTitle(paperData.title ?? '');
-        const pubMonth = paperData.publication_info?.published_month;
-        const pubYear = paperData.publication_info?.published_year;
+        const pubMonth = paperData.publicationInfo?.publishedMonth;
+        const pubYear = paperData.publicationInfo?.publishedYear;
         setPublicationMonth(pubMonth != null ? String(pubMonth) : '');
         setPublicationYear(pubYear != null ? String(pubYear) : '');
         setAuthors(paperData.authors ?? []);
         setDoi(paperData.identifiers?.doi?.[0] ?? '');
-        const pubIn = paperData.publication_info?.published_in;
+        const pubIn = paperData.publicationInfo?.publishedIn;
         setPublishedIn(pubIn ? { id: pubIn.id, label: pubIn.label } : null);
-        setResearchField(paperData.research_fields?.[0] ?? null);
-        setUrl(paperData.publication_info?.url ?? '');
+        setResearchField(paperData.researchFields?.[0] ?? null);
+        setUrl(paperData.publicationInfo?.url ?? '');
         setIsVerified(!!paperData.verified);
     }, [paperData]);
 
@@ -66,23 +66,23 @@ const useEditPaper = ({ paperData, afterUpdate }: UseEditPaperArgs) => {
             }
 
             setIsLoadingEdit(true);
-            const data = {
+            const data: UpdatePaperParams = {
                 title,
                 identifiers: {
                     doi: doi ? [doi] : [],
                 },
                 authors,
-                research_fields: researchField?.id ? [researchField.id] : [],
-                publication_info: {
-                    published_month: toIntOrNull(publicationMonth),
-                    published_year: toIntOrNull(publicationYear),
+                researchFields: researchField?.id ? [researchField.id] : [],
+                publicationInfo: {
+                    publishedMonth: toIntOrNull(publicationMonth),
+                    publishedYear: toIntOrNull(publicationYear),
                     url: url || null,
-                    published_in: publishedIn?.label ?? null,
+                    publishedIn: publishedIn?.label ?? null,
                 },
                 ...(!!user && user.isCurationAllowed && { verified: isVerified }),
             };
 
-            await updatePaper(paperData.id, data as unknown as UpdatePaperParams);
+            await updatePaper(paperData.id, data);
 
             if (afterUpdate) {
                 toast.success('Paper updated successfully');

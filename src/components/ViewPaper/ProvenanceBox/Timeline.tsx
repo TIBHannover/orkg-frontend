@@ -45,14 +45,14 @@ const Timeline = ({
                         <ActivityItem key={`prov-${index}`} isLast={isLast}>
                             <div className="mb-1 text-muted text-[15px]">{dayjs(version.created_at).format('DD MMM YYYY HH:mm')}</div>
                             <div className="text-sm text-foreground">
-                                {paperResource.created_by && (
+                                {paperResource.createdBy && (
                                     <>
                                         {version.publishedResource && 'Published by '}
                                         {!version.publishedResource &&
                                         !isLoadingContributors &&
                                         !hasNextPageContributors &&
                                         dayjs(version.created_at).format('DD MMM YYYY HH:mm') ===
-                                            dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm') &&
+                                            dayjs(paperResource.createdAt).format('DD MMM YYYY HH:mm') &&
                                         version.created_by.id === (createdBy?.id ?? MISC.UNKNOWN_ID)
                                             ? 'Added by '
                                             : 'Updated by '}
@@ -107,7 +107,7 @@ const Timeline = ({
 
             {!isLoadingContributors && hasNextPageContributors && (
                 <ActivityItem isLast>
-                    <div className="mb-1 text-muted text-[15px]">{dayjs(paperResource.created_at).format('DD MMM YYYY HH:mm')}</div>
+                    <div className="mb-1 text-muted text-[15px]">{dayjs(paperResource.createdAt).format('DD MMM YYYY HH:mm')}</div>
                     <div className="text-sm text-foreground">
                         Added by{' '}
                         {createdBy ? (

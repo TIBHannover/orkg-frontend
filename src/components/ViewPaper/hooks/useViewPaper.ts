@@ -4,11 +4,9 @@ import { useState } from 'react';
 import useSWR from 'swr';
 
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import { getPaperContentType } from '@/components/ViewPaper/hooks/helpers';
-import { CLASSES, PREDICATES } from '@/constants/graphSettings';
+import { PREDICATES } from '@/constants/graphSettings';
 import { getOriginalPaperId, getPaper, papersUrl } from '@/services/backend/papers';
-import { getResource } from '@/services/backend/resources';
-import { getStatements, getStatementsBundleBySubject, statementsUrl } from '@/services/backend/statements';
+import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Resource } from '@/services/backend/types';
 
 const useViewPaper = ({ paperId }: { paperId: string }) => {
@@ -16,34 +14,24 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const { isEditMode, toggleIsEditMode } = useIsEditMode();
 
-    const { data: resource } = useSWR(paperId ? [paperId, papersUrl, 'getResource'] : null, ([params]) => getResource(params));
-
+    // the papers endpoint serves head papers and published snapshots alike
     const {
-        data: _paper,
+        data: paper,
         isLoading: isPaperLoading,
         error: errorPaper,
         mutate: mutatePaper,
-    } = useSWR(resource && paperId && !resource?.classes.includes(CLASSES.PAPER_VERSION) ? [paperId, papersUrl, 'getPaper'] : null, ([params]) =>
-        getPaper(params),
+    } = useSWR(paperId ? [paperId, papersUrl, 'getPaper'] : null, ([params]) => getPaper(params));
+
+    // a snapshot's representation doesn't carry its own history (versions.head points to itself),
+    // so the head paper is resolved through the incoming hasPublishedVersion statement
+    const { data: originalPaperId } = useSWR(paper?.published ? [paperId, papersUrl, 'getOriginalPaperId'] : null, async ([params]) =>
+        getOriginalPaperId(params),
     );
 
-    const { data: _paperVersion, isLoading: isPaperVersionLoading } = useSWR(
-        resource && paperId && resource?.classes.includes(CLASSES.PAPER_VERSION)
-            ? [{ id: paperId, maxLevel: 3, blacklist: [CLASSES.RESEARCH_FIELD] }, statementsUrl, 'getStatementsBundleBySubject']
-            : null,
-        async ([params]) => {
-            const pStatements = await getStatementsBundleBySubject(params);
-            const data = getPaperContentType(resource!, pStatements.statements);
-            return data;
-        },
-    );
+    const { data: headPaper } = useSWR(originalPaperId ? [originalPaperId, papersUrl, 'getPaper'] : null, ([params]) => getPaper(params));
 
-    const { data: originalPaperId } = useSWR(
-        resource && paperId && resource?.classes.includes(CLASSES.PAPER_VERSION) ? [paperId, papersUrl, 'getOriginalPaperId'] : null,
-        async ([params]) => getOriginalPaperId(params),
-    );
-
-    const paper = _paper || _paperVersion;
+    const publishedVersions = (paper?.published ? headPaper?.versions?.published : paper?.versions?.published) ?? [];
+    const [version] = publishedVersions;
 
     const {
         data: contributions,
@@ -52,19 +40,9 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
     } = useSWR(paperId ? [{ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION }, statementsUrl, 'getStatements'] : null, ([params]) =>
         getStatements(params).then((s) => {
             return sortBy(
-                s.map((statement) => ({ ...statement.object, statementId: statement.id } as Resource & { statementId: string })),
+                s.map((statement) => ({ ...statement.object, statementId: statement.id }) as Resource & { statementId: string }),
                 'label',
             );
-        }),
-    );
-
-    const {
-        data: version,
-        isLoading: isVersionStatementLoading,
-        mutate: mutateVersionStatement,
-    } = useSWR(paperId ? [{ subjectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }, statementsUrl, 'getStatements'] : null, ([params]) =>
-        getStatements(params).then((s) => {
-            return s?.[0]?.object || null;
         }),
     );
 
@@ -92,12 +70,11 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
         originalPaperId,
         isLoading: isPaperLoading,
         isLoadingFailed: !!errorPaper,
-        isLoadingPaperVersion: isPaperVersionLoading,
         isLoadingContributions: isContributionsLoading,
-        isLoadingVersionStatement: isVersionStatementLoading,
         paper,
         contributions,
         version,
+        publishedVersions,
         showHeaderBar,
         isEditMode,
         showGraphModal,
@@ -106,7 +83,6 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
         setShowGraphModal,
         mutatePaper,
         mutateContributions,
-        mutateVersionStatement,
     };
 };
 

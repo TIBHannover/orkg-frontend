@@ -59,7 +59,6 @@ const AuthorPage = () => {
             ...(authorString ? { author_name: authorString } : {}),
             visibility: sort,
             contentType,
-            published: true,
         },
     });
 

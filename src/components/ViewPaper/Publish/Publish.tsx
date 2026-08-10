@@ -67,7 +67,7 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setResearchField(viewPaper?.research_fields && viewPaper?.research_fields?.length > 0 ? viewPaper?.research_fields?.[0] : null);
+        setResearchField(viewPaper?.researchFields && viewPaper?.researchFields?.length > 0 ? viewPaper?.researchFields?.[0] : null);
         setCreators(viewPaper?.authors || []);
     }, [viewPaper]);
 
@@ -80,7 +80,7 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
             const publishedPaperId = await publishPaper(paperId, {
                 subject: researchField.label,
                 description,
-                authors: creators,
+                authors: creators.map(({ id, ...creator }) => ({ ...creator, id: id ?? undefined })),
             });
             const statements = await getStatements({ subjectId: publishedPaperId, predicateId: PREDICATES.HAS_DOI });
             setCreatedPaperId(publishedPaperId);

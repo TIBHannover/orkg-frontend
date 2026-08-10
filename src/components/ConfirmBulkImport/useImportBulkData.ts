@@ -1,6 +1,7 @@
 import { Cite } from '@citation-js/core';
 import { toast } from '@heroui/react';
 import { isUri } from '@hyperjump/uri';
+import { CreateLiteralRequestPart } from '@orkg/orkg-client';
 import { isString, omit, uniqueId } from 'lodash';
 import { useCallback, useState } from 'react';
 
@@ -253,7 +254,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
 
             const paper = {
                 title,
-                research_fields: [researchField],
+                researchFields: [researchField],
                 ...(doi
                     ? {
                           identifiers: {
@@ -261,16 +262,16 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                           },
                       }
                     : {}),
-                publication_info: {
-                    published_month: publicationMonth,
-                    published_year: publicationYear,
-                    published_in: publishedIn || null,
+                publicationInfo: {
+                    publishedMonth: publicationMonth,
+                    publishedYear: publicationYear,
+                    publishedIn: publishedIn || null,
                     url,
                 },
                 authors,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                extraction_method: extractionMethod as ExtractionMethod,
+                extractionMethod: extractionMethod as ExtractionMethod,
                 contents: [
                     {
                         label: 'Contribution',
@@ -301,7 +302,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
         const _idToLabel = { ...idToLabel };
         const newProperties: Record<string, string> = {};
         const newResources: Record<string, string> = {};
-        const newLiterals: Record<string, { label: string; data_type: string }> = {};
+        const newLiterals: Record<string, CreateLiteralRequestPart> = {};
         const importedContributionsIds: string[] = [];
         const importedPapersIds: string[] = [];
         for (const paper of papers.filter((_paper) => Object.keys(_paper.contents[0].statements).length > 0)) {
@@ -344,7 +345,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                             const literalId = uniqueId('#');
                             newLiterals[literalId] = {
                                 label: value.text,
-                                data_type: value.datatype,
+                                dataType: value.datatype,
                             };
                             paper.contents[0].statements[property][index] = {
                                 id: literalId,
@@ -354,8 +355,8 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                 }
                 const contribution = paper.contents[0];
                 delete paper.contents[0];
-                const extractionMethod = paper.extraction_method;
-                delete paper.extraction_method;
+                const { extractionMethod } = paper;
+                delete paper.extractionMethod;
 
                 // only create the paper if there is contribution data (backend endpoint requirement)
                 let _paperId;

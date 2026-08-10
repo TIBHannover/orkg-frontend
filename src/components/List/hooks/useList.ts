@@ -1,3 +1,4 @@
+import { PaperRepresentationFromJSON } from '@orkg/orkg-client';
 import { uniqueId } from 'lodash';
 import useSWR from 'swr';
 import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
@@ -172,7 +173,13 @@ const useList = (listId?: string) => {
     const { data: papersPublished } = useSWR(
         list && list.published && paperIds && paperIds.length > 0 ? [paperIds, list, 'getLiteratureListPublishedContentById'] : null,
         ([_paperIds]) => {
-            return Promise.all(_paperIds.map((_id) => getLiteratureListPublishedContentById(list!.id, _id) as Promise<Paper>)); // only papers are returned, so cast as Paper
+            // only papers are returned; the endpoint is not migrated to the generated client yet,
+            // so normalize the wire format (snake_case) to the camelCase Paper type
+            return Promise.all(
+                _paperIds.map((_id) =>
+                    getLiteratureListPublishedContentById(list!.id, _id).then((paper) => PaperRepresentationFromJSON(paper) as Paper),
+                ),
+            );
         },
     );
 

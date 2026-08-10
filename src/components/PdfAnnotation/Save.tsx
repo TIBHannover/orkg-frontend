@@ -2,6 +2,7 @@ import { Cite } from '@citation-js/core';
 import { faCheck, faCheckCircle, faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, ButtonGroup, Input, Label, Modal, TextField, toast } from '@heroui/react';
+import { ContributionRequestPart } from '@orkg/orkg-client';
 import { uniqueId } from 'lodash';
 import Link from 'next/link';
 import { FC, useState } from 'react';
@@ -15,7 +16,7 @@ import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import createPaperMergeIfExists from '@/helpers/createPaperMergeIfExists';
 import { reverse } from '@/lib/namedRoute';
-import { Author, CreateContributionData, NewContribution } from '@/services/backend/types';
+import { Author, CreateContributionData } from '@/services/backend/types';
 import { deleteAnnotation, updateAnnotationIsExtractionModalOpen } from '@/slices/pdfAnnotationSlice';
 import { RootStore } from '@/slices/types';
 import { parseCiteResult } from '@/utils';
@@ -69,8 +70,9 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
         }
         setIsLoading(true);
 
-        const contribution: NewContribution = {
+        const contribution: ContributionRequestPart = {
             label: 'Annotation contribution',
+            classes: [],
             statements: {},
         };
         const createContributionData: CreateContributionData = {
@@ -106,7 +108,7 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
         const _paperId = await createPaperMergeIfExists({
             paper: {
                 title: _title,
-                research_fields: [RESOURCES.RESEARCH_FIELD_MAIN],
+                researchFields: [RESOURCES.RESEARCH_FIELD_MAIN],
                 ...(_doi
                     ? {
                           identifiers: {
@@ -114,10 +116,10 @@ const Save: FC<SaveProps> = ({ toggle, isOpen }) => {
                           },
                       }
                     : {}),
-                publication_info: {
-                    published_month: paperPublicationMonth,
-                    published_year: paperPublicationYear,
-                    published_in: publishedIn || null,
+                publicationInfo: {
+                    publishedMonth: paperPublicationMonth,
+                    publishedYear: paperPublicationYear,
+                    publishedIn: publishedIn || null,
                 },
                 authors: paperAuthors,
                 observatories: observatoryId ? [observatoryId] : [],

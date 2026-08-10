@@ -21,8 +21,8 @@ type PaperMenuBarProps = {
 };
 
 const getPaperLink = (paper?: Paper) => {
-    if (paper?.publication_info?.url) {
-        return paper.publication_info?.url;
+    if (paper?.publicationInfo?.url) {
+        return paper.publicationInfo?.url;
     }
     if (paper?.identifiers?.doi?.[0] && paper?.identifiers?.doi?.[0].startsWith('10.')) {
         return `https://doi.org/${paper?.identifiers?.doi?.[0]}`;

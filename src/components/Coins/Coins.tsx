@@ -25,8 +25,8 @@ const Coins: FC<CoinsProps> = ({ item, genre = 'article' }) => {
             title = item.label ?? '';
         }
         let date = '';
-        if ('publication_info' in item) {
-            date = item.publication_info?.published_year?.toString() ?? '';
+        if ('publicationInfo' in item) {
+            date = item.publicationInfo?.publishedYear?.toString() ?? '';
         } else if ('created_at' in item) {
             date = item.created_at ?? '';
         }
