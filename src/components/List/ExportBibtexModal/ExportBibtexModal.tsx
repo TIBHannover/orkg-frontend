@@ -40,7 +40,7 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
             id: paper.id,
             title: paper.title,
             author: paper.authors?.length > 0 ? paper.authors.map((author) => ({ literal: author.name })) : null,
-            issued: { 'date-parts': [[paper.publication_info.published_year]] },
+            issued: { 'date-parts': [[paper.publicationInfo.publishedYear]] },
         });
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
             const bibtexPromises =
                 allPapers && allPapers.length > 0
                     ? allPapers.map((paper) => {
-                          if (paper.identifiers.doi) {
+                          if (paper.identifiers?.doi) {
                               return Cite.async(paper.identifiers.doi).catch(() => getCite(paper));
                           }
                           return getCite(paper);

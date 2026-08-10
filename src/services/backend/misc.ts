@@ -62,18 +62,27 @@ export const getEntities = (
  * @return {PaginatedResponse<Resource>} - Merged responses
  */
 export const mergePaginateResponses = (
-    response1: PaginatedResponse<Resource | Item>,
-    response2: PaginatedResponse<Resource | Item>,
-): PaginatedResponse<Resource | Item> => ({
-    ...response1,
-    content: mergeAlternate(response1.content, response2.content),
-    page: {
-        number: response1.page.number,
-        size: response1.page.size,
-        total_elements: response1.page.total_elements + response2.page.total_elements,
-        total_pages: Math.max(response1.page.total_pages, response2.page.total_pages),
-    },
-});
+    response1: PaginatedResponse<Resource | Item> | Pagination<Resource | Item>,
+    response2: PaginatedResponse<Resource | Item> | Pagination<Resource | Item>,
+): PaginatedResponse<Resource | Item> => {
+    // responses can come from legacy endpoints (snake_case page) or the generated client (camelCase page)
+    const normalizePage = (page: PaginatedResponse<unknown>['page'] | Pagination<unknown>['page']) =>
+        'total_elements' in page
+            ? page
+            : { number: page.number ?? 0, size: page.size ?? 0, total_elements: page.totalElements ?? 0, total_pages: page.totalPages ?? 0 };
+    const page1 = normalizePage(response1.page);
+    const page2 = normalizePage(response2.page);
+    return {
+        ...response1,
+        content: mergeAlternate(response1.content, response2.content),
+        page: {
+            number: page1.number,
+            size: page1.size,
+            total_elements: page1.total_elements + page2.total_elements,
+            total_pages: Math.max(page1.total_pages, page2.total_pages),
+        },
+    };
+};
 
 export const prepareParams = (
     params: PaginationParams &

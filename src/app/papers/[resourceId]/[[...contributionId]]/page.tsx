@@ -14,23 +14,20 @@ import { Paper, Resource } from '@/services/backend/types';
 
 const getDescription = (paper?: Paper) =>
     `ORKG structured paper description. Published: ${
-        paper?.publication_info?.published_month
+        paper?.publicationInfo?.publishedMonth
             ? dayjs()
-                  .month(paper.publication_info?.published_month - 1)
+                  .month(paper.publicationInfo?.publishedMonth - 1)
                   .format('MMMM')
             : ''
-    } ${paper?.publication_info?.published_year ? paper.publication_info?.published_year : ''} • Research field: ${
-        paper?.research_fields?.[0]?.label
+    } ${paper?.publicationInfo?.publishedYear ? paper.publicationInfo?.publishedYear : ''} • Research field: ${
+        paper?.researchFields?.[0]?.label
     } • Authors: ${paper?.authors?.map((author) => author.name).join(', ')}`;
 
 export async function generateMetadata({ params }: { params: Promise<{ resourceId: string }> }): Promise<Metadata> {
     const { resourceId } = await params;
     let paper: Paper | undefined;
     try {
-        const paperResource = await getResource(resourceId);
-        if (!paperResource.classes.includes(CLASSES.PAPER_VERSION)) {
-            paper = await getPaper(resourceId);
-        }
+        paper = await getPaper(resourceId);
     } catch (e) {
         console.error(`Error getting paper metadata for ${resourceId}`);
     }
@@ -85,13 +82,13 @@ export default async function CheckPaperVersion(props: { params: Promise<{ resou
                 '@type': 'Person',
             })),
             datePublished: `${
-                paper.publication_info?.published_month
+                paper.publicationInfo?.publishedMonth
                     ? dayjs()
-                          .month(paper.publication_info?.published_month - 1)
+                          .month(paper.publicationInfo?.publishedMonth - 1)
                           .format('MMMM')
                     : ''
-            } ${paper.publication_info?.published_year ? paper.publication_info?.published_year : ''}`,
-            about: paper?.research_fields?.[0]?.label,
+            } ${paper.publicationInfo?.publishedYear ? paper.publicationInfo?.publishedYear : ''}`,
+            about: paper?.researchFields?.[0]?.label,
             license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },

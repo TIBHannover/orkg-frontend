@@ -1,8 +1,7 @@
 import { Chip, Skeleton } from '@heroui/react';
-import React from 'react';
 import useSWR from 'swr';
 
-import { getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
+import { getPapersLinkedToResource, papersUrl } from '@/services/backend/paths';
 import { getStatistics, statisticsUrl } from '@/services/backend/statistics';
 import { PaginatedResponse, Resource } from '@/services/backend/types';
 

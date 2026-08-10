@@ -11,6 +11,8 @@ import useSWR from 'swr';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
+import usePublishedFilter from '@/components/PublishedStatusFilter/hooks/usePublishedFilter';
+import PublishedStatusFilter from '@/components/PublishedStatusFilter/PublishedStatusFilter';
 import { SubTitle } from '@/components/styled';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import useParams from '@/components/useParams/useParams';
@@ -32,6 +34,8 @@ const VenuePage = () => {
         parse: (value) => value as VisibilityOptions,
     });
 
+    const { published } = usePublishedFilter();
+
     const {
         data: items,
         isLoading,
@@ -50,6 +54,7 @@ const VenuePage = () => {
         fetchExtraParams: {
             visibility,
             venue: venueId,
+            published,
         },
     });
     const { data: venueData, isLoading: loading } = useSWR(venueId ? [venueId, resourcesUrl, 'getResource'] : null, ([params]) =>
@@ -73,6 +78,7 @@ const VenuePage = () => {
                         buttonGroup={
                             <>
                                 <VisibilityFilter />
+                                <PublishedStatusFilter />
                                 <Dropdown>
                                     <Button size="sm" className="button--orkg-secondary px-4 rounded-r" isIconOnly aria-label="More options">
                                         <FontAwesomeIcon icon={faEllipsisV} />

@@ -95,7 +95,7 @@ const Provenance: FC<ProvenanceProps> = ({
                     <div className="mb-1">
                         <b>Added on</b>
                     </div>
-                    {paperResource.created_at && dayjs(paperResource.created_at).format('DD MMM YYYY')}
+                    {paperResource.createdAt && dayjs(paperResource.createdAt).format('DD MMM YYYY')}
                 </ProvenanceItem>
                 {createdBy && createdBy.id && (
                     <ProvenanceItem>

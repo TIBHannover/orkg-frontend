@@ -1,7 +1,6 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Button, Chip } from '@heroui/react';
-import { buttonVariants } from '@heroui/styles';
+import { Button, Chip } from '@heroui/react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { FC, ReactNode, useState } from 'react';
@@ -16,7 +15,6 @@ import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFea
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
-import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import useDeletePapers from '@/components/ViewPaper/hooks/useDeletePapers';
@@ -35,7 +33,7 @@ type PaperHeaderProps = {
 const PaperHeader: FC<PaperHeaderProps> = ({ editMode, isPublishedVersionView = false }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const { resourceId } = useParams();
-    const { paper, version, mutatePaper, originalPaperId } = useViewPaper({ paperId: resourceId });
+    const { paper, mutatePaper } = useViewPaper({ paperId: resourceId });
     const { user, isCurationAllowed } = useAuthentication();
     const userId = user?.id;
     const { deletePapers } = useDeletePapers({ paperIds: paper ? [paper.id] : [], redirect: true });
@@ -52,7 +50,7 @@ const PaperHeader: FC<PaperHeaderProps> = ({ editMode, isPublishedVersionView = 
     if (!paper) {
         return null;
     }
-    const userCreatedThisPaper = paper.created_by && userId && paper.created_by === userId;
+    const userCreatedThisPaper = paper.createdBy && userId && paper.createdBy === userId;
     const showDeleteButton = editMode && (isCurationAllowed || userCreatedThisPaper);
 
     const handleUpdatePaper = () => {
@@ -65,44 +63,6 @@ const PaperHeader: FC<PaperHeaderProps> = ({ editMode, isPublishedVersionView = 
     return (
         <>
             <div className="flex flex-col gap-3">
-                {!isPublishedVersionView && version && (
-                    <Container className="w-full px-0">
-                        <Alert status="warning">
-                            <Alert.Indicator />
-                            <Alert.Content>
-                                <Alert.Title>Published version available</Alert.Title>
-                                <Alert.Description>
-                                    A published version of this paper is available. You are currently viewing the live data.{' '}
-                                    <Link
-                                        className={`${buttonVariants({ size: 'sm' })} hover:no-underline`}
-                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: version.id })}
-                                    >
-                                        View published version
-                                    </Link>
-                                </Alert.Description>
-                            </Alert.Content>
-                        </Alert>
-                    </Container>
-                )}
-                {isPublishedVersionView && originalPaperId && (
-                    <Container className="w-full px-0">
-                        <Alert status="warning">
-                            <Alert.Indicator />
-                            <Alert.Content>
-                                <Alert.Title>Viewing published paper</Alert.Title>
-                                <Alert.Description>
-                                    This is a published snapshot of the paper.{' '}
-                                    <Link
-                                        className={`${buttonVariants({ size: 'sm' })} hover:no-underline`}
-                                        href={reverse(ROUTES.VIEW_PAPER, { resourceId: originalPaperId })}
-                                    >
-                                        Fetch live data
-                                    </Link>
-                                </Alert.Description>
-                            </Alert.Content>
-                        </Alert>
-                    </Container>
-                )}
                 <div className="flex items-start gap-2">
                     <h2 className="text-2xl grow mb-0">
                         <PaperTitle title={paper.title} />{' '}
@@ -128,29 +88,29 @@ const PaperHeader: FC<PaperHeaderProps> = ({ editMode, isPublishedVersionView = 
                 </div>
 
                 <div className="flex flex-wrap items-center -mb-2">
-                    {(paper.publication_info?.published_month || paper.publication_info?.published_year) && (
+                    {(paper.publicationInfo?.publishedMonth || paper.publicationInfo?.publishedYear) && (
                         <Chip color="default" className="mr-2 mb-2">
                             <FontAwesomeIcon icon={faCalendar} className="mr-1" />
-                            {paper.publication_info?.published_month
+                            {paper.publicationInfo?.publishedMonth
                                 ? dayjs()
-                                      .month(paper.publication_info?.published_month - 1)
+                                      .month(paper.publicationInfo?.publishedMonth - 1)
                                       .format('MMMM')
                                 : ''}{' '}
-                            {paper.publication_info?.published_year ? paper.publication_info?.published_year : ''}
+                            {paper.publicationInfo?.publishedYear ? paper.publicationInfo?.publishedYear : ''}
                         </Chip>
                     )}
                     {hasDoi && <OpenCitations doi={paper.identifiers?.doi?.[0]} />}
-                    <ResearchFieldBadge researchField={paper.research_fields?.[0]} />
+                    <ResearchFieldBadge researchField={paper.researchFields?.[0]} />
                     <AuthorBadges authors={paper.authors} />
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                    {paper.publication_info.published_in && paper.publication_info.published_in?.id && (
+                    {paper.publicationInfo.publishedIn && paper.publicationInfo.publishedIn?.id && (
                         <div className="grow">
                             <small>
                                 Published in:{' '}
-                                <Link href={reverse(ROUTES.VENUE_PAGE, { venueId: paper.publication_info.published_in?.id })}>
-                                    {paper.publication_info.published_in?.label}
+                                <Link href={reverse(ROUTES.VENUE_PAGE, { venueId: paper.publicationInfo.publishedIn?.id })}>
+                                    {paper.publicationInfo.publishedIn?.label}
                                 </Link>
                             </small>
                         </div>

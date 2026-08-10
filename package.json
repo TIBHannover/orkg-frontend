@@ -24,7 +24,7 @@
         "@hookform/resolvers": "^5.4.0",
         "@hyperjump/uri": "^1.3.3",
         "@orkg/agentic-loop-client": "^1.1.0",
-        "@orkg/orkg-client": "^0.98.3",
+        "@orkg/orkg-client": "^0.99.1",
         "@rc-component/tabs": "^1.8.0",
         "@react-hook/resize-observer": "^2.0.2",
         "@react-three/drei": "^10.7.7",

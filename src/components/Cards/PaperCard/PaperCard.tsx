@@ -10,6 +10,7 @@ import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
 import Authors from '@/components/Cards/PaperCard/Authors';
 import Description from '@/components/Cards/PaperCard/Description/Description';
 import Paths from '@/components/Cards/PaperCard/Paths';
+import Versions from '@/components/Cards/PaperCard/Versions';
 import Coins from '@/components/Coins/Coins';
 import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
@@ -41,6 +42,7 @@ type PaperCardType = {
     route?: string;
     handleUpdateDescription?: (description: string) => void;
     renderCoins?: boolean;
+    showVersions?: boolean;
 };
 
 const PaperCard: FC<PaperCardType> = ({
@@ -62,8 +64,10 @@ const PaperCard: FC<PaperCardType> = ({
     showContributionCount = false,
     route = null,
     renderCoins = true,
+    showVersions = true,
 }) => {
     const showActionButtons = showAddToComparison || selectable || showCurationFlags;
+    const publishedVersions = paper.versions?.published ?? [];
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: paper.id ?? '',
         unlisted: paper?.visibility === VISIBILITY.UNLISTED,
@@ -137,7 +141,7 @@ const PaperCard: FC<PaperCardType> = ({
                     </div>
                     <div>
                         <div className="mr-1 mt-1 inline-block md:hidden">
-                            {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.research_fields?.[0]} />}
+                            {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchFields?.[0]} />}
                         </div>
                     </div>
                     <div className="mb-1">
@@ -149,27 +153,28 @@ const PaperCard: FC<PaperCardType> = ({
                                 </div>
                             )}
                             <Authors authors={paper.authors} />
-                            {(paper.publication_info?.published_month || paper.publication_info?.published_year) && (
+                            {(paper.publicationInfo?.publishedMonth || paper.publicationInfo?.publishedYear) && (
                                 <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />
                             )}
-                            {paper.publication_info?.published_month && paper.publication_info?.published_month > 0
+                            {paper.publicationInfo?.publishedMonth && paper.publicationInfo?.publishedMonth > 0
                                 ? dayjs()
-                                      .month(paper.publication_info?.published_month - 1)
+                                      .month(paper.publicationInfo?.publishedMonth - 1)
                                       .format('MMMM')
                                 : ''}{' '}
-                            {paper.publication_info?.published_year ?? null}
+                            {paper.publicationInfo?.publishedYear ?? null}
                         </small>
                         <Description description={description} isEditable={isDescriptionEditable} handleUpdate={handleUpdateDescription} />
                     </div>
+                    {showVersions && publishedVersions.length > 0 && <Versions versions={publishedVersions} />}
                 </div>
             </div>
             <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
                 <div className="mb-1 grow">
                     <div className="hidden items-end justify-end md:flex">
-                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.research_fields?.[0]} />}
+                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchFields?.[0]} />}
                     </div>
                 </div>
-                {showCreator && <UserAvatar userId={paper.created_by} />}
+                {showCreator && <UserAvatar userId={paper.createdBy} />}
             </div>
             {paths && paths?.length > 0 && (
                 <div className={`${showActionButtons ? 'pl-6' : 'pl-12'} mb-1`}>

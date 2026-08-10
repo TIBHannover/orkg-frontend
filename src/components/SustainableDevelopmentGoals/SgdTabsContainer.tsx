@@ -20,7 +20,7 @@ type SgdTabsContainerProps = {
 
 export const SDG_CONTENT_TABS = [
     { id: CLASSES.COMPARISON, label: 'Comparisons', params: { published: true } },
-    { id: CLASSES.PAPER, label: 'Papers', params: { published: undefined } },
+    { id: CLASSES.PAPER, label: 'Papers', params: { published: false } },
     // visualizations can't be associated with sdg
     // { id: CLASSES.VISUALIZATION, label: 'Visualizations' },
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Reviews', params: { published: true } },
@@ -58,7 +58,7 @@ const SgdTabsContainer: FC<SgdTabsContainerProps> = ({ sdgId }) => {
             sdg: sdgId,
             visibility: sort,
             contentType,
-            published: true,
+            published: SDG_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
         },
     });
 

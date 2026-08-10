@@ -36,7 +36,7 @@ const NERSuggestions: FC<NERSuggestionsProps> = ({ title = '', abstract = '', re
     const nerProperties = useSelector((state: RootStore) => state.viewPaper.nerProperties);
     const dispatch = useDispatch();
 
-    const researchField = paper?.research_fields?.[0];
+    const researchField = paper?.researchFields?.[0];
 
     const { data: activeNERService = null } = useSWR(
         [researchField?.id ?? '', nlpServiceUrl, 'determineActiveNERService'],

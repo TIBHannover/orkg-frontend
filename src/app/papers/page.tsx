@@ -9,6 +9,8 @@ import { FC, useEffect } from 'react';
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
+import usePublishedFilter from '@/components/PublishedStatusFilter/hooks/usePublishedFilter';
+import PublishedStatusFilter from '@/components/PublishedStatusFilter/PublishedStatusFilter';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
@@ -29,6 +31,8 @@ const Papers: FC = () => {
         parse: (value) => value as VisibilityOptions,
     });
 
+    const { published } = usePublishedFilter();
+
     useEffect(() => {
         document.title = 'Papers list - ORKG';
     }, []);
@@ -40,6 +44,7 @@ const Papers: FC = () => {
     const buttons = (
         <>
             <VisibilityFilter />
+            <PublishedStatusFilter />
             {!!user && user.isCurationAllowed && (
                 <Dropdown>
                     <Button size="sm" className="button--orkg-secondary">
@@ -96,7 +101,7 @@ const Papers: FC = () => {
             fetchFunction={getPapers}
             fetchFunctionName="getPapers"
             fetchUrl={papersUrl}
-            fetchExtraParams={{ verified, visibility }}
+            fetchExtraParams={{ verified, visibility, published }}
             renderListItem={renderListItem}
             resourceClass={CLASSES.PAPER}
             buttons={buttons}

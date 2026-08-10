@@ -1,7 +1,8 @@
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import { CLASSES } from '@/constants/graphSettings';
-import { getPaper, getPapersLinkedToResource, papersUrl } from '@/services/backend/papers';
+import { getPaper, papersUrl } from '@/services/backend/papers';
+import { getPapersLinkedToResource } from '@/services/backend/paths';
 import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
 
 export const RESEARCH_PROBLEM_CONTENT_TABS = [

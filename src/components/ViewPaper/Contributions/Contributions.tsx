@@ -47,7 +47,7 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
 
     const { count, isLoading } = usePaperSectionStats({ paperId: resourceId });
 
-    const researchFieldId = paper?.research_fields?.[0]?.id;
+    const researchFieldId = paper?.researchFields?.[0]?.id;
 
     const onTabChange = (key: string) => {
         const url = reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId, contributionId: key });

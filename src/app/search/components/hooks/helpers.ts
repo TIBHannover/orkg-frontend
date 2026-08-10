@@ -82,7 +82,7 @@ export const parsePaper = async (item: Thing): Promise<string> => {
             const { title, identifiers } = paper;
             let _abstract = null;
             // try to fetch abstract by DOI
-            if (identifiers.doi && identifiers.doi.length > 0) {
+            if (identifiers?.doi && identifiers.doi.length > 0) {
                 try {
                     _abstract = await getAbstractByDoi(identifiers.doi[0]);
                 } catch (e) {

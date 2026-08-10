@@ -29,7 +29,7 @@ const ProvenanceBox = () => {
 
     return (
         <div>
-            {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper?.created_by && (
+            {env('NEXT_PUBLIC_PWC_USER_ID') === viewPaper?.createdBy && (
                 <div className="mb-2">
                     <PWCProvenanceBox />
                 </div>
@@ -48,7 +48,7 @@ const ProvenanceBox = () => {
                             </Tabs.Tab>
                         </Tabs.List>
                     </Tabs.ListContainer>
-                    {viewPaper?.extraction_method === 'AUTOMATIC' && (
+                    {viewPaper?.extractionMethod === 'AUTOMATIC' && (
                         <div className="bg-surface-secondary text-muted text-xs p-2.5">The data has been partially imported automatically.</div>
                     )}
                     <Tabs.Panel id="provenance">

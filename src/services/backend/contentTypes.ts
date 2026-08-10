@@ -1,3 +1,4 @@
+import { PaperRepresentationFromJSON } from '@orkg/orkg-client';
 import qs from 'qs';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
@@ -22,6 +23,7 @@ import {
     ObservatoryIdParam,
     OrganizationIdParam,
     PaginatedResponse,
+    Pagination,
     PaginationParams,
     PublishedParam,
     ResearchFieldIdParams,
@@ -89,7 +91,13 @@ export const getGenericContentTypes = ({
         .get<PaginatedResponse<Item>>('', {
             searchParams: `?${params}${classes ? `&classes=${classes.join(',')}` : ''}`,
         })
-        .json();
+        .json()
+        .then((response) => ({
+            ...response,
+            // this endpoint is not migrated to the generated client yet and delivers papers in the
+            // wire format (snake_case); normalize them to match the camelCase Paper type
+            content: response.content.map((item) => (item._class === 'paper' ? (PaperRepresentationFromJSON(item) as Item) : item)),
+        }));
 };
 
 const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, 'contentType'>) => {
@@ -104,7 +112,20 @@ const getAPIFunction = async (cType: string, paramsObj: Omit<GetContentParams, '
                 if (paramsObj.author_id || paramsObj.author_name) {
                     return getGenericContentTypes({ ...paramsObj, classes: ['PAPER'] });
                 }
-                return getPapers(paramsObj);
+                return getPapers({
+                    page: paramsObj.page,
+                    size: paramsObj.size,
+                    sortBy: paramsObj.sortBy,
+                    visibility: paramsObj.visibility,
+                    verified: paramsObj.verified,
+                    createdBy: paramsObj.created_by,
+                    observatoryId: paramsObj.observatory_id,
+                    researchField: paramsObj.research_field,
+                    includeSubfields: paramsObj.include_subfields,
+                    sdg: paramsObj.sdg,
+                    // listings show head versions only unless a caller explicitly asks otherwise
+                    published: paramsObj.published ?? false,
+                });
             }
             if (paramsObj.observatory_id) {
                 const result = await observatoriesApi
@@ -179,7 +200,7 @@ export const getContentTypes = ({
     published,
     author_id,
     author_name,
-}: { contentType: string } & GetContentParams): Promise<PaginatedResponse<Resource | Item>> => {
+}: { contentType: string } & GetContentParams): Promise<PaginatedResponse<Resource | Item> | Pagination<Resource | Item>> => {
     const paramsObj = {
         observatory_id,
         research_field,

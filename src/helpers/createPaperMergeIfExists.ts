@@ -1,17 +1,13 @@
+import { ContributionRequestPart } from '@orkg/orkg-client';
+
 import getExistingPaper from '@/helpers/getExistingPaper';
-import { createContribution, createPaper } from '@/services/backend/papers';
-import {
-    CreateContribution,
-    CreateContributionData,
-    CreatePaperContents,
-    CreatePaperParams,
-    ExtractionMethod,
-    NewContribution,
-} from '@/services/backend/types';
+import { createContribution } from '@/services/backend/contributions';
+import { createPaper } from '@/services/backend/papers';
+import { CreateContribution, CreateContributionData, CreatePaperContents, CreatePaperParams, ExtractionMethod } from '@/services/backend/types';
 
 type CreatePaperMergeIfExistsParams = {
     paper: CreatePaperParams;
-    contribution?: NewContribution;
+    contribution?: ContributionRequestPart;
     createContributionData?: CreateContributionData;
     extractionMethod?: ExtractionMethod;
 };
@@ -28,12 +24,11 @@ const createPaperMergeIfExists = async ({
 
     if (contribution) {
         if (existingPaper) {
-            contributionStatements = {
+            await createContribution(existingPaper.id, {
                 contribution,
-                ...(extractionMethod ? { extraction_method: extractionMethod } : {}),
                 ...createContributionData,
-            } as CreateContribution;
-            await createContribution({ paperId: existingPaper.id, contributionStatements });
+                ...(extractionMethod ? { extractionMethod } : {}),
+            });
         } else {
             contributionStatements = {
                 contributions: [contribution],
@@ -48,9 +43,7 @@ const createPaperMergeIfExists = async ({
 
     return createPaper({
         ...paper,
-        ...(contributionStatements
-            ? { contents: contributionStatements as CreatePaperContents, ...(extractionMethod ? { extraction_method: extractionMethod } : {}) }
-            : {}),
+        ...(contributionStatements ? { contents: contributionStatements, ...(extractionMethod ? { extractionMethod } : {}) } : {}),
     });
 };
 

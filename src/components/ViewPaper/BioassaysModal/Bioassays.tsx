@@ -16,7 +16,7 @@ const Bioassays: FC<BioassaysProps> = ({ resourceId }) => {
     const [isOpenBioassays, setIsOpenBioassays] = useState(false);
     const { resourceId: paperId } = useParams();
     const { paper } = useViewPaper({ paperId });
-    const researchFieldId = paper?.research_fields?.[0]?.id ?? null;
+    const researchFieldId = paper?.researchFields?.[0]?.id ?? null;
     const isBioassayField = BIOASSAYS_FIELDS_LIST.includes(researchFieldId ?? '');
 
     if (!isBioassayField) {

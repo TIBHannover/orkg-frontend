@@ -1,4 +1,5 @@
 import { toast } from '@heroui/react';
+import { PaperContentsRequestFromJSON } from '@orkg/orkg-client';
 import { useState } from 'react';
 
 import useExistingPaper from '@/components/ExistingPaperModal/useExistingPaper';
@@ -8,7 +9,6 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createPaper } from '@/services/backend/papers';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement, getStatements } from '@/services/backend/statements';
-import { CreatePaperContents } from '@/services/backend/types';
 import { getErrorMessage } from '@/utils';
 
 type UseAddPaperArgs = {
@@ -43,18 +43,18 @@ const useAddPaper = ({ onCreate }: UseAddPaperArgs = {}) => {
 
             const paperId = await createPaper({
                 title,
-                research_fields: researchField ? [researchField.id] : [],
+                researchFields: researchField ? [researchField.id] : [],
                 identifiers: doi ? { doi: [doi] } : undefined,
-                publication_info: {
-                    published_month: toIntOrNull(publicationMonth),
-                    published_year: toIntOrNull(publicationYear),
-                    published_in: publishedIn?.label || null,
+                publicationInfo: {
+                    publishedMonth: toIntOrNull(publicationMonth),
+                    publishedYear: toIntOrNull(publicationYear),
+                    publishedIn: publishedIn?.label || null,
                     url,
                 },
                 authors,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                ...(extractedContributionData ? { contents: extractedContributionData as CreatePaperContents } : {}),
+                ...(extractedContributionData ? { contents: PaperContentsRequestFromJSON(extractedContributionData) } : {}),
             });
 
             let contributionId: string | null = null;
