@@ -2,6 +2,18 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.187.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.186.1...v0.187.0) - 2026-08-10
+
+### Changes
+
+- refactor(services): migrate contribution creation to generated client [`#1738`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1738)
+- fix(csv-import): show labels for duplicate columns [`#1721`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1721)
+- fix(ci): set commit sha for cs_image name [`#1735`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1735)
+- fix(Header): show navbar background without scrolling on non-home pages [`#1731`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1731)
+- fix(privacy): embed YouTube videos via the cookieless domain [`#1734`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1734)
+- fix: show Matomo opt-out iframe on data-protection page [`#1733`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1733)
+
+---
 ## [v0.186.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.186.0...v0.186.1) - 2026-07-27
 
 ### Changes
