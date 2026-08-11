@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Control, FieldPath, FieldValues } from 'react-hook-form';
 
 /**
@@ -7,7 +8,7 @@ import { Control, FieldPath, FieldValues } from 'react-hook-form';
 export type ControlledFieldProps<T extends FieldValues> = {
     control: Control<T>;
     name: FieldPath<T>;
-    label?: string;
+    label?: ReactNode;
     description?: string;
     isDisabled?: boolean;
     isRequired?: boolean;
