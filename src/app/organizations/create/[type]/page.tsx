@@ -1,15 +1,22 @@
 'use client';
 
-import { faUpload, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Card, Form, Input, InputGroup, Label, TextArea, TextField, toast } from '@heroui/react';
+import { Button, Card, Form, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { FileTrigger } from 'react-aria-components';
+import { useEffect } from 'react';
 import slugify from 'slugify';
+import { mutate } from 'swr';
+import { z } from 'zod';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ControlledImageUpload from '@/components/Form/ControlledImageUpload/ControlledImageUpload';
+import ControlledTextArea from '@/components/Form/ControlledTextArea/ControlledTextArea';
+import ControlledTextField from '@/components/Form/ControlledTextField/ControlledTextField';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import useZodForm from '@/components/Form/hooks/useZodForm';
+import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
@@ -20,83 +27,103 @@ import { ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { createOrganization, getOrganization } from '@/services/backend/organizations';
+import { createOrganization, getOrganization, organizationsUrl } from '@/services/backend/organizations';
 import { getPublicUrl } from '@/utils';
+
+const createOrganizationSchema = z.object({
+    name: z.string().trim().min(1, 'Please enter an organization name'),
+    permalink: z.string().regex(new RegExp(REGEX.PERMALINK), 'Only underscores ( _ ), numbers, and letters are allowed in the permalink field'),
+    website: z.httpUrl({ error: 'Please enter a valid website URL' }),
+    description: z.string().trim(),
+    logo: z.union([z.instanceof(File), z.string().min(1, 'Please upload an organization logo')]),
+});
+
+type CreateOrganizationFormValues = z.infer<typeof createOrganizationSchema>;
+
+// The create endpoint still takes the logo as a base64 data URL in the JSON body
+// (unlike update, which sends the File as multipart).
+const readFileAsDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+    });
 
 const AddOrganization = () => {
     const params = useParams<{ type: string }>();
-    const [name, setName] = useState('');
-    const [website, setWebsite] = useState('');
-    const [permalink, setPermalink] = useState('');
-    const [description, setDescription] = useState('');
-    const [logo, setLogo] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
     const organizationType = ORGANIZATIONS_TYPES.find((t) => t.label === params.type);
     const publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { type: organizationType?.label ?? '', id: '' })}`;
     const { user } = useAuthentication();
-
     const router = useRouter();
+
+    const {
+        control,
+        handleSubmit,
+        setError,
+        setValue,
+        watch,
+        formState: { isSubmitting, errors },
+    } = useZodForm({
+        schema: createOrganizationSchema,
+        defaultValues: { name: '', permalink: '', website: '', description: '', logo: '' },
+    });
 
     useEffect(() => {
         document.title = `Create ${organizationType?.alternateLabel} - ORKG`;
     }, [organizationType]);
 
-    const navigateToOrganization = (displayId: string) => {
-        setName('');
-        setWebsite('');
-        setPermalink('');
-        setDescription('');
-        router.push(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label ?? '', id: displayId }));
-    };
+    useEffect(() => {
+        const subscription = watch((values, { name: changedField }) => {
+            if (changedField === 'name') {
+                setValue(
+                    'permalink',
+                    slugify((values.name ?? '').trim(), {
+                        replacement: '_',
+                        remove: /[*+~%\\<>/;.(){}?,'"!:@#\-^|]/g,
+                        lower: false,
+                    }),
+                );
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch, setValue]);
 
-    const createNewOrganization = async () => {
-        setIsLoading(true);
-
-        if (!name || name.length === 0) {
-            toast.danger('Please enter an organization name');
-            setIsLoading(false);
-            return;
-        }
-        if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.danger('Only underscores ( _ ), numbers, and letters are allowed in the permalink field');
-            setIsLoading(false);
-            return;
-        }
-        if (!new RegExp(REGEX.URL).test(website)) {
-            toast.danger('Please enter a valid website URL');
-            setIsLoading(false);
-            return;
-        }
-        if (logo.length === 0) {
-            toast.danger('Please upload an organization logo');
-            setIsLoading(false);
-            return;
-        }
+    const onSubmit = async (values: CreateOrganizationFormValues) => {
+        toast.clear();
 
         try {
-            const organizationId = await createOrganization(name, logo, user?.id ?? '', website, permalink, organizationType?.id ?? '', description);
+            const logo = values.logo instanceof File ? await readFileAsDataUrl(values.logo) : values.logo;
+            const organizationId = await createOrganization(
+                values.name,
+                logo,
+                user?.id ?? '',
+                values.website,
+                values.permalink,
+                organizationType?.id ?? '',
+                values.description || undefined,
+            );
             const organization = await getOrganization(organizationId);
-            navigateToOrganization(organization.displayId);
+            // SWR is configured with `revalidateIfStale: false`, so a cached listing would keep hiding the new
+            // organization. Drop the cached lists instead of only revalidating them: the listing pages aren't
+            // mounted here, so they would otherwise never refetch.
+            await mutate(
+                (key) =>
+                    Array.isArray(key) && key.includes(organizationsUrl) && (key.includes('getAllOrganizations') || key.includes('getConferences')),
+                undefined,
+            );
+            router.push(reverse(ROUTES.ORGANIZATION, { type: organizationType?.label ?? '', id: organization.displayId }));
         } catch (error) {
-            console.error(error);
-            const message =
-                (error as { errors?: { message: string }[] })?.errors?.[0]?.message ?? (error instanceof Error ? error.message : 'Unknown error');
-            toast.danger(`Error creating ${organizationType?.alternateLabel}: ${message}`);
-        } finally {
-            setIsLoading(false);
+            const handled = await applyServerErrorsToForm(error, {
+                setError,
+                // Backend create request field -> form field.
+                fieldMap: { organization_name: 'name', organization_logo: 'logo', url: 'website', display_id: 'permalink' },
+                knownFields: Object.keys(createOrganizationSchema.shape),
+            });
+            if (!handled) {
+                toast.warning(`Something went wrong while creating the ${organizationType?.alternateLabel ?? 'organization'}`);
+            }
         }
-    };
-
-    const handleFileSelect = (files: FileList | null) => {
-        const file = files?.[0];
-        if (!file) {
-            return;
-        }
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setLogo(reader.result as string);
-        };
-        reader.readAsDataURL(file);
     };
 
     return (
@@ -106,71 +133,61 @@ const AddOrganization = () => {
                 <Card className="box rounded p-12">
                     <Card.Content className="gap-6 p-0">
                         {!!user && user.isCurationAllowed && (
-                            <Form
-                                className="flex flex-col gap-6 px-4 pt-2"
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    void createNewOrganization();
-                                }}
-                            >
-                                <TextField
-                                    fullWidth
+                            <Form className="flex flex-col gap-6 px-4 pt-2" onSubmit={handleSubmit(onSubmit)}>
+                                <FormRootError message={errors.root?.server?.message} />
+
+                                <ControlledTextField
+                                    control={control}
                                     name="name"
-                                    isDisabled={isLoading}
-                                    value={name}
-                                    onChange={(value: string) => {
-                                        setName(value);
-                                        setPermalink(
-                                            slugify(value.trim(), {
-                                                replacement: '_',
-                                                remove: /[*+~%\\<>/;.(){}?,'"!:@#\-^|]/g,
-                                                lower: false,
-                                            }),
-                                        );
-                                    }}
-                                >
-                                    <Label htmlFor="organizationName">Name</Label>
-                                    <Input id="organizationName" type="text" maxLength={MAX_LENGTH_INPUT} />
-                                </TextField>
+                                    label="Name"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
 
-                                <TextField fullWidth name="permalink" isDisabled={isLoading} value={permalink} onChange={setPermalink}>
-                                    <Label htmlFor="organizationPermalink">
-                                        Permalink
-                                        <TooltipQuestion message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
-                                    </Label>
-                                    <InputGroup>
-                                        <InputGroup.Prefix>{publicOrganizationRoute}</InputGroup.Prefix>
-                                        <InputGroup.Input id="organizationPermalink" placeholder="name" maxLength={MAX_LENGTH_INPUT} />
-                                    </InputGroup>
-                                </TextField>
+                                <ControlledTextField
+                                    control={control}
+                                    name="permalink"
+                                    label={
+                                        <>
+                                            Permalink
+                                            <TooltipQuestion message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
+                                        </>
+                                    }
+                                    prefix={publicOrganizationRoute}
+                                    placeholder="name"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
 
-                                <TextField fullWidth name="website" isDisabled={isLoading} value={website} onChange={setWebsite}>
-                                    <Label htmlFor="organizationWebsite">Website</Label>
-                                    <Input id="organizationWebsite" type="text" placeholder="https://www.example.com" maxLength={MAX_LENGTH_INPUT} />
-                                </TextField>
+                                <ControlledTextField
+                                    control={control}
+                                    name="website"
+                                    type="url"
+                                    label="Website"
+                                    placeholder="https://www.example.com"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
 
-                                <TextField fullWidth name="description" isDisabled={isLoading} value={description} onChange={setDescription}>
-                                    <Label htmlFor="organizationDescription">Description</Label>
-                                    <TextArea id="organizationDescription" rows={4} maxLength={MAX_LENGTH_INPUT} />
-                                </TextField>
+                                <ControlledTextArea
+                                    control={control}
+                                    name="description"
+                                    label="Description"
+                                    maxLength={MAX_LENGTH_INPUT}
+                                    isDisabled={isSubmitting}
+                                />
 
-                                <div className="flex flex-col gap-2">
-                                    <Label>Logo</Label>
-                                    {logo && logo.length > 0 && (
-                                        <div>
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={logo} className="w-1/5" alt="organization logo" />
-                                        </div>
-                                    )}
-                                    <FileTrigger acceptedFileTypes={['image/*']} onSelect={handleFileSelect}>
-                                        <Button variant="secondary" isDisabled={isLoading} className="w-fit">
-                                            <FontAwesomeIcon icon={faUpload} />
-                                            {logo ? 'Change logo' : 'Upload logo'}
-                                        </Button>
-                                    </FileTrigger>
-                                </div>
+                                <ControlledImageUpload
+                                    control={control}
+                                    name="logo"
+                                    label="Logo"
+                                    uploadLabel="Upload logo"
+                                    changeLabel="Change logo"
+                                    alt="Organization logo preview"
+                                    isDisabled={isSubmitting}
+                                />
 
-                                <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isLoading}>
+                                <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isSubmitting}>
                                     Create organization
                                 </ButtonWithLoading>
                             </Form>
