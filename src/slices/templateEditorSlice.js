@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { match } from 'path-to-regexp';
 
 import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnNavigate';
-import { CLASSES } from '@/constants/graphSettings';
+import { CLASSES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
 import { getTemplatesByClass } from '@/services/backend/statements';
@@ -15,6 +15,8 @@ const initialState = {
     created_by: null,
     created_at: null,
     extraction_method: 'UNKNOWN',
+    observatories: [],
+    organizations: [],
     diagramMode: false,
     relations: {
         researchFields: [],
@@ -67,6 +69,10 @@ export const templateEditorSlice = createSlice({
         updatePropertyShapes: (state, { payload }) => {
             state.properties = payload;
         },
+        updateProvenance: (state, { payload }) => {
+            state.observatories = payload.observatory_id && payload.observatory_id !== MISC.UNKNOWN_ID ? [payload.observatory_id] : [];
+            state.organizations = payload.organization_id && payload.organization_id !== MISC.UNKNOWN_ID ? [payload.organization_id] : [];
+        },
         initTemplate: (state, { payload }) => ({
             ...initialState,
             hasLabelFormat: !!payload.formatted_label,
@@ -117,6 +123,7 @@ export const {
     updateResearchFields,
     setDiagramMode,
     updatePropertyShapes,
+    updateProvenance,
     initTemplate,
     setIsLoading,
     setFailureStatus,

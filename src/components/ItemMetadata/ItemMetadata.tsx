@@ -25,7 +25,7 @@ type ItemMetadataProps = {
     showExtractionMethod?: boolean;
     item: Thing;
     handleUrl?: string;
-    updateCallBack?: () => void;
+    updateCallBack?: (observatoryId?: string, organizationId?: string) => void;
 };
 
 const ItemMetadata: FC<ItemMetadataProps> = ({
