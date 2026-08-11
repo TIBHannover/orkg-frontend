@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import Button from '@/components/Ui/Button/Button';
-
 export const SubtitleSeparator = styled.div`
     @media (max-width: 480px) {
         display: none;
@@ -103,13 +101,6 @@ export const InputStyled = styled.input`
         to {
             width: 200px;
         }
-    }
-`;
-
-export const SearchButtonStyled = styled(Button)`
-    &&& {
-        color: #fff;
-        border: 0;
     }
 `;
 

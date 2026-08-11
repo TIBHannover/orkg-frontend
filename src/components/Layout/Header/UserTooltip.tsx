@@ -19,11 +19,22 @@ import { federatedLogout, visitAccountUrl } from '@/services/keycloak';
 const UserTooltip = () => {
     const { user: _user } = useAuthentication();
 
-    const { data: user, isLoading } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
+    const {
+        data: user,
+        isLoading,
+        error,
+    } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
 
-    const email = user?.email ? user?.email : 'example@example.com';
+    // Keycloak session can outlive a missing ORKG contributor. Settings and Sign out work without
+    // the backend, so keep the menu; Profile and drafts need a contributor id, so they stay hidden.
+    const hasBackendUser = !!user;
+    // 404 means not synced yet; other failures are transient and shouldn't blame account setup.
+    const isNotSyncedYet = error?.statusCode === 404;
 
-    const { data: hashedEmail, isLoading: isHashedEmailLoading } = useSWR(user && email ? [email, 'sha256Hex'] : null, ([params]) =>
+    const email = user?.email ?? _user?.email ?? 'example@example.com';
+    const displayName = user?.display_name ?? _user?.name ?? 'there';
+
+    const { data: hashedEmail, isLoading: isHashedEmailLoading } = useSWR(_user && email ? [email, 'sha256Hex'] : null, ([params]) =>
         sha256Hex(params),
     );
 
@@ -35,8 +46,8 @@ const UserTooltip = () => {
             setIsOpen(false);
             await federatedLogout({ redirectUri: window.location.href });
             toast.success('Signed out successfully');
-        } catch (error) {
-            console.error(error);
+        } catch (signOutError) {
+            console.error(signOutError);
         }
     };
 
@@ -48,7 +59,7 @@ const UserTooltip = () => {
         );
     }
 
-    if (!user) {
+    if (!_user) {
         return null;
     }
 
@@ -67,20 +78,37 @@ const UserTooltip = () => {
                 <Popover.Content placement="bottom end" className="w-max max-w-[550px] overflow-hidden p-0">
                     <Popover.Dialog className="p-0">
                         <div className="flex items-center gap-4 bg-secondary-solid p-4 text-white">
-                            <Link
-                                onClick={() => setIsOpen(false)}
-                                href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                className="hidden shrink-0 sm:block"
-                            >
+                            {hasBackendUser ? (
+                                <Link
+                                    onClick={() => setIsOpen(false)}
+                                    href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+                                    className="hidden shrink-0 sm:block"
+                                >
+                                    <Gravatar
+                                        className="rounded-full border-3 border-white transition-colors hover:border-accent"
+                                        hashedEmail={hashedEmail ?? ''}
+                                        size={76}
+                                    />
+                                </Link>
+                            ) : (
                                 <Gravatar
-                                    className="rounded-full border-3 border-white transition-colors hover:border-accent"
+                                    className="hidden shrink-0 rounded-full border-3 border-white sm:block"
                                     hashedEmail={hashedEmail ?? ''}
                                     size={76}
                                 />
-                            </Link>
-                            <span>
-                                {greeting} {user.display_name}
-                            </span>
+                            )}
+                            <div className="flex flex-col gap-1">
+                                <span>
+                                    {greeting} {displayName}
+                                </span>
+                                {!hasBackendUser && (
+                                    <span className="text-sm text-white/80">
+                                        {isNotSyncedYet
+                                            ? "Your ORKG account isn't set up yet, so your profile is unavailable."
+                                            : "Your ORKG profile couldn't be loaded."}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <ListBox
                             aria-label="User actions"
@@ -101,15 +129,19 @@ const UserTooltip = () => {
                                 }
                             }}
                         >
-                            <ListBox.Item textValue="Profile" href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
-                                <Label>Profile</Label>
-                            </ListBox.Item>
+                            {hasBackendUser && (
+                                <ListBox.Item textValue="Profile" href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
+                                    <Label>Profile</Label>
+                                </ListBox.Item>
+                            )}
                             <ListBox.Item id="settings" textValue="Settings">
                                 <Label>Settings</Label>
                             </ListBox.Item>
-                            <ListBox.Item textValue="My drafts" href={reverse(ROUTES.USER_SETTINGS_DEFAULT)}>
-                                <Label>My drafts</Label>
-                            </ListBox.Item>
+                            {hasBackendUser && (
+                                <ListBox.Item textValue="My drafts" href={reverse(ROUTES.USER_SETTINGS_DEFAULT)}>
+                                    <Label>My drafts</Label>
+                                </ListBox.Item>
+                            )}
                             <Separator />
                             <ListBox.Item id="sign-out" textValue="Sign out" variant="danger">
                                 <Label>Sign out</Label>

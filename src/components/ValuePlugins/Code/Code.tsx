@@ -1,3 +1,4 @@
+import { Button } from '@heroui/react';
 import { FC, useState } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python';
@@ -5,7 +6,6 @@ import r from 'react-syntax-highlighter/dist/cjs/languages/hljs/r';
 import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github';
 import useSWR from 'swr';
 
-import Button from '@/components/Ui/Button/Button';
 import CopyToClipboardButton from '@/components/ValuePlugins/Code/CopyToClipboardButton';
 import REGEX from '@/constants/regex';
 
@@ -65,7 +65,7 @@ const Code: FC<CodeProps> = ({ text }) => {
                 </CopyToClipboardButton>
                 {isCodeOverflowing && (
                     <div>
-                        <Button size="sm" color="link" className="p-0" onClick={() => setIsShowAll((v) => !v)}>
+                        <Button size="sm" variant="ghost" className="p-0" onPress={() => setIsShowAll((v) => !v)}>
                             {isShowAll ? 'Show less' : 'Show all'}
                         </Button>
                     </div>

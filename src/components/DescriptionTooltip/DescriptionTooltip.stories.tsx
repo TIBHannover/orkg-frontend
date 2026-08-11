@@ -57,7 +57,7 @@ Buttons.args = {
     children: 'Resource name',
     id: 'R100',
     buttons: [
-        { title: 'Edit', icon: faPencil, color: 'secondary', action: () => {} },
-        { title: 'Delete', icon: faTrash, color: 'danger', action: () => {} },
+        { title: 'Edit', icon: faPencil, variant: 'secondary', action: () => {} },
+        { title: 'Delete', icon: faTrash, variant: 'danger', action: () => {} },
     ],
 };

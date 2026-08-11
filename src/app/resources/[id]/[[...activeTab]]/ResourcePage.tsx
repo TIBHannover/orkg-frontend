@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert } from '@heroui/react';
+import { Alert, Button } from '@heroui/react';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -19,7 +19,6 @@ import getPreventEditCase, { PreventEditCase } from '@/components/Resource/hooks
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import TabsContainer from '@/components/Resource/Tabs/TabsContainer';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES } from '@/constants/graphSettings';
@@ -120,7 +119,7 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                                         .
                                     </Alert.Description>
                                 </Alert.Content>
-                                <Button color="secondary" size="sm" className="shrink-0" onClick={() => setIsOpenPublishHistoryModal(true)}>
+                                <Button variant="secondary" size="sm" className="shrink-0" onPress={() => setIsOpenPublishHistoryModal(true)}>
                                     Publish history
                                 </Button>
                             </Alert>

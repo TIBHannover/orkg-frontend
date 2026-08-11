@@ -1,6 +1,6 @@
+import { Button } from '@heroui/react';
 import PropTypes from 'prop-types';
 
-import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
@@ -11,7 +11,7 @@ const PreventModal = ({ isOpen, toggle, header, content }) => (
         <ModalHeader toggle={toggle}>{header}</ModalHeader>
         <ModalBody>{content}</ModalBody>
         <ModalFooter className="flex justify-center">
-            <Button onClick={toggle} color="primary">
+            <Button onPress={toggle}>
                 Close
             </Button>
         </ModalFooter>

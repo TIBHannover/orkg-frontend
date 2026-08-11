@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import Button from '@/components/Ui/Button/Button';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
 
@@ -17,17 +16,6 @@ export const StyledDropdownItem = styled(DropdownItem)`
 `;
 
 /* Template Wizard */
-export const StyledButton = styled(Button)`
-    border-color: var(--border) !important;
-    color: ${(props) => props.theme.dark} !important;
-    background: ${(props) => props.theme.lightDarker} !important;
-    &:hover {
-        color: var(--surface) !important;
-        background-color: ${(props) => props.theme.secondary} !important;
-        border-color: ${(props) => props.theme.secondary} !important;
-    }
-`;
-
 export const StyledDropdownToggle = styled(DropdownToggle)<{ disableBorderRadiusLeft?: boolean; disableBorderRadiusRight?: boolean }>`
     border-top-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${(props) => (props.disableBorderRadiusLeft ? '0' : '4px !important')};

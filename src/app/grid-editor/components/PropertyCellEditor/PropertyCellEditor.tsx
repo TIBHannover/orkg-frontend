@@ -1,5 +1,6 @@
 import { faClose, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { ColDef, RowNode } from 'ag-grid-community';
 import React, { FC, useState } from 'react';
 
@@ -9,7 +10,6 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import SmartPropertyGuidelinesCheck from '@/components/SmartSuggestions/SmartPropertyGuidelinesCheck';
-import Button from '@/components/Ui/Button/Button';
 import InputGroup from '@/components/Ui/Input/InputGroup';
 import { ENTITIES } from '@/constants/graphSettings';
 import { updateStatement } from '@/services/backend/statements';
@@ -117,12 +117,12 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
                         <Button
                             size="sm"
                             type="submit"
-                            color="secondary"
+                            variant="secondary"
                             className="px-2"
-                            onClick={() => {
+                            onPress={() => {
                                 stopEditing();
                             }}
-                            title="Cancel"
+                            aria-label="Cancel"
                         >
                             <FontAwesomeIcon icon={faClose} />
                         </Button>

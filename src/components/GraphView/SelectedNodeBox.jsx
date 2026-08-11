@@ -1,5 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
@@ -7,7 +8,6 @@ import styled from 'styled-components';
 
 import CopyId from '@/components/CopyId/CopyId';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
@@ -69,15 +69,14 @@ const SelectedNodeBox = ({ nodes, selectedNode, getExpandButtonLabel, toggleExpa
                 <hr />
                 <ButtonGroup className="flex">
                     <Button
-                        disabled={!nodes.find((node) => node.id === selectedNode.id).data.hasObjectStatements}
-                        color="primary"
+                        isDisabled={!nodes.find((node) => node.id === selectedNode.id).data.hasObjectStatements}
                         size="sm"
-                        onClick={() => toggleExpandNode(selectedNode.id)}
+                        onPress={() => toggleExpandNode(selectedNode.id)}
                         style={{ marginRight: 2 }}
                     >
                         {getExpandButtonLabel(nodes.find((node) => node.id === selectedNode.id).data)}
                     </Button>
-                    <Button color="primary" size="sm" onClick={() => fetchIncomingStatements(selectedNode.id)}>
+                    <Button size="sm" onPress={() => fetchIncomingStatements(selectedNode.id)}>
                         Fetching incoming
                     </Button>
                 </ButtonGroup>

@@ -1,10 +1,10 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { buttonVariants } from '@heroui/styles';
 import { StoryFn } from '@storybook/nextjs-vite';
 import Link from 'next/link';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 
 export default {
@@ -36,15 +36,12 @@ export const WithButtonGroup = Template.bind({});
 WithButtonGroup.args = {
     ...Default.args,
     buttonGroup: (
-        <Button
-            tag={Link}
-            color="secondary"
-            size="sm"
-            className="inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary-solid text-white hover:bg-secondary-solid-hover focus:ring-secondary px-3 py-1.5 text-xs shrink-0"
+        <Link
+            className={`${buttonVariants({ variant: 'secondary', size: 'sm' })} inline-flex items-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary-solid text-white hover:bg-secondary-solid-hover focus:ring-secondary px-3 py-1.5 text-xs shrink-0`}
             href="https://orkg.org"
         >
             <FontAwesomeIcon icon={faPlus} /> Create paper
-        </Button>
+        </Link>
     ),
 };
 

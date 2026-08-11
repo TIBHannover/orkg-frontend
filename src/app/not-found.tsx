@@ -2,11 +2,11 @@
 
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { buttonVariants } from '@heroui/styles';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 
@@ -25,10 +25,8 @@ const NotFound = () => {
                                 <span className="display-1 block">404</span>
                                 <FontAwesomeIcon icon={faBug} className="text-accent mt-4 mb-4" style={{ fontSize: 25 }} />
                                 <div className="mb-6 lead">The page you are looking for was not found.</div>
-                                <Link href={ROUTES.HOME}>
-                                    <Button color="primary" className="mr-4">
-                                        Back to home
-                                    </Button>
+                                <Link className={`${buttonVariants()} mr-4`} href={ROUTES.HOME}>
+                                    Back to home
                                 </Link>
                             </div>
                         </div>

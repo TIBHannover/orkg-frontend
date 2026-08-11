@@ -1,5 +1,6 @@
 import { faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 
@@ -7,7 +8,6 @@ import { OptionType } from '@/components/Autocomplete/types';
 import TreeView, { TreeNode } from '@/components/Class/TreeView';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import Alert from '@/components/Ui/Alert/Alert';
-import Button from '@/components/Ui/Button/Button';
 import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
@@ -43,7 +43,7 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
             {renderTrigger ? (
                 renderTrigger({ open, isDisabled, hasValue: !!value?.id })
             ) : (
-                <Button disabled={!value || !value?.id} onClick={open} outline className="px-2">
+                <Button isDisabled={!value || !value?.id} onPress={open} variant="outline" className="px-2">
                     <Tooltip content="Show class tree">
                         <span>
                             <FontAwesomeIcon icon={faSitemap} size="sm" />
@@ -70,14 +70,13 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
                     />
                 </ModalBody>
                 <ModalFooter className="flex">
-                    <Button className="float-left" color="light" onClick={toggleTree}>
+                    <Button className="float-left" variant="ghost" onPress={toggleTree}>
                         Cancel
                     </Button>
                     {!isDisabled && (
                         <Button
-                            color="primary"
                             className="float-right"
-                            onClick={() => {
+                            onPress={() => {
                                 if (valueFromTree) {
                                     onChange(valueFromTree, { option: valueFromTree, action: 'select-option' });
                                     setShowTree(false);

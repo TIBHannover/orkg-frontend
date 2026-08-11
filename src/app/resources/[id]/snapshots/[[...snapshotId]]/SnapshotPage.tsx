@@ -2,7 +2,8 @@
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert } from '@heroui/react';
+import { Alert, Button } from '@heroui/react';
+import { buttonVariants } from '@heroui/styles';
 import Link from 'next/link';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -14,7 +15,6 @@ import DataBrowser from '@/components/DataBrowser/DataBrowser';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import Button from '@/components/Ui/Button/Button';
 import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -68,11 +68,9 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                     <TitleBar
                         buttonGroup={
                             <RequireAuthentication
-                                size="sm"
-                                component={Button}
-                                color="secondary"
+                                component={Link}
+                                className={buttonVariants({ variant: 'secondary', size: 'sm' })}
                                 style={{ marginRight: 2 }}
-                                tag={Link}
                                 href={contentType === 'Resource' ? ROUTES.CREATE_RESOURCE : `${reverse(ROUTES.CONTENT_TYPE_NEW)}?type=${contentType}`}
                             >
                                 <FontAwesomeIcon icon={faPlus} className="mr-1" /> Create {contentType.toLowerCase()}
@@ -99,7 +97,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                                     .
                                 </Alert.Description>
                             </Alert.Content>
-                            <Button color="secondary" size="sm" className="shrink-0" onClick={() => setIsOpenPublishHistoryModal(true)}>
+                            <Button variant="secondary" size="sm" className="shrink-0" onPress={() => setIsOpenPublishHistoryModal(true)}>
                                 Publish history
                             </Button>
                         </Alert>
