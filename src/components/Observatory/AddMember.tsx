@@ -1,92 +1,115 @@
-import { Input, Label, Modal, TextField, toast } from '@heroui/react';
-import { FC, useEffect, useState } from 'react';
-import Select from 'react-select';
+import { Form, Modal, toast } from '@heroui/react';
+import { FC } from 'react';
 import { mutate } from 'swr';
+import { z } from 'zod';
 
-import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import { Organization } from '@/services/backend/types';
+import ControlledAutocompleteContributor from '@/components/Form/ControlledAutocompleteContributor/ControlledAutocompleteContributor';
+import ControlledSelect from '@/components/Form/ControlledSelect/ControlledSelect';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import useConfirmDiscardChanges from '@/components/Form/hooks/useConfirmDiscardChanges';
+import useZodForm from '@/components/Form/hooks/useZodForm';
+import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
+import { Contributor, Organization } from '@/services/backend/types';
 import { addUserToObservatory } from '@/services/backend/users';
-import { getErrorMessage } from '@/utils';
+
+const addMemberSchema = z.object({
+    organizationId: z.string().min(1, 'Please select an organization'),
+    // The explicit `: boolean` matters: without it TypeScript infers a type predicate for the check,
+    // which zod uses to narrow the field to a non-null `Contributor` — the empty form couldn't be typed then.
+    contributor: z.custom<Contributor | null>().refine((value): boolean => value !== null, 'Please select a contributor'),
+});
+
+type AddMemberFormValues = z.infer<typeof addMemberSchema>;
 
 type AddMemberProps = {
-    showDialog: boolean;
     toggle: () => void;
     observatoryId: string;
     organizationsList: Organization[];
 };
 
-const AddMember: FC<AddMemberProps> = ({ showDialog, toggle, observatoryId, organizationsList }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedOrganization, setSelectedOrganization] = useState(organizationsList.length === 1 ? organizationsList[0] : null);
-    const [contributorId, setContributorId] = useState('');
+const AddMember: FC<AddMemberProps> = ({ toggle, observatoryId, organizationsList }) => {
+    const {
+        control,
+        handleSubmit,
+        setError,
+        formState: { isDirty, isSubmitting, errors },
+    } = useZodForm({
+        schema: addMemberSchema,
+        values: {
+            // With a single organization there is nothing to choose, so preselect it.
+            organizationId: organizationsList.length === 1 ? organizationsList[0].id : '',
+            contributor: null,
+        },
+    });
 
-    useEffect(() => {
-        setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
-    }, [organizationsList]);
+    const { requestClose } = useConfirmDiscardChanges({ isDirty, onClose: toggle });
 
-    const handleSubmit = async () => {
-        if (!selectedOrganization || contributorId.length === 0) {
-            toast.danger('Organization or user email is missing');
+    const onSubmit = async ({ organizationId, contributor }: AddMemberFormValues) => {
+        if (!contributor) {
             return;
         }
-        setIsLoading(true);
         try {
-            await addUserToObservatory(contributorId, observatoryId, selectedOrganization.id);
+            await addUserToObservatory(contributor.id, observatoryId, organizationId);
             toast.success('Member added successfully');
-            mutate((key: any) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
-            setSelectedOrganization(organizationsList.length === 1 ? organizationsList[0] : null);
-            setContributorId('');
+            mutate((key: unknown) => Array.isArray(key) && key[key.length - 1] === 'getUsersByObservatoryId');
             toggle();
-        } catch (error: any) {
-            toast.danger(`Error adding member! ${getErrorMessage(error, 'contributor_id') ?? error?.message}`);
-        } finally {
-            setIsLoading(false);
+        } catch (error) {
+            const handled = await applyServerErrorsToForm(error, {
+                setError,
+                // The backend request uses snake_case field names, the form fields are camelCase.
+                fieldMap: { contributor_id: 'contributor', organization_id: 'organizationId' },
+                knownFields: Object.keys(addMemberSchema.shape),
+            });
+            if (!handled) {
+                toast.warning('Something went wrong while adding the member');
+            }
         }
     };
 
     return (
         <Modal.Backdrop
-            isOpen={showDialog}
+            isOpen
             onOpenChange={(open) => {
-                if (!open) toggle();
+                if (!open && !isSubmitting) requestClose();
             }}
-            isDismissable
+            isDismissable={!isSubmitting}
         >
             <Modal.Container className="mt-[73px] max-h-[calc(100vh-73px)]">
                 <Modal.Dialog className="sm:max-w-md">
-                    <Modal.Header>
-                        <Modal.CloseTrigger />
-                        <Modal.Heading>Add a member</Modal.Heading>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-1">
-                                <Label htmlFor="organization">Organization</Label>
-                                <Select
-                                    inputId="organization"
-                                    value={organizationsList.length === 1 ? organizationsList[0] : selectedOrganization}
-                                    options={organizationsList}
-                                    onChange={(selected) => setSelectedOrganization(selected)}
-                                    getOptionValue={({ id }) => id}
-                                    getOptionLabel={({ name }) => name}
-                                    classNamePrefix="react-select"
-                                    classNames={customClassNames as any}
-                                    styles={customStyles as any}
-                                    menuPosition="fixed"
+                    <Form onSubmit={handleSubmit(onSubmit)} className="contents">
+                        <Modal.Header>
+                            <Modal.CloseTrigger />
+                            <Modal.Heading>Add a member</Modal.Heading>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="flex flex-col gap-4 p-1">
+                                <FormRootError message={errors.root?.server?.message} />
+
+                                <ControlledSelect
+                                    control={control}
+                                    name="organizationId"
+                                    label="Organization"
+                                    placeholder="Select an organization"
+                                    options={organizationsList.map(({ id, name }) => ({ id, label: name }))}
+                                    isDisabled={isSubmitting}
+                                />
+
+                                <ControlledAutocompleteContributor
+                                    control={control}
+                                    name="contributor"
+                                    label="Contributor"
+                                    currentContributor={false}
+                                    isDisabled={isSubmitting}
                                 />
                             </div>
-                            <TextField fullWidth name="contributorId" value={contributorId} onChange={setContributorId}>
-                                <Label>Contributor ID</Label>
-                                <Input />
-                            </TextField>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <ButtonWithLoading variant="primary" isLoading={isLoading} onPress={handleSubmit}>
-                            Save
-                        </ButtonWithLoading>
-                    </Modal.Footer>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <ButtonWithLoading type="submit" variant="primary" isLoading={isSubmitting}>
+                                Save
+                            </ButtonWithLoading>
+                        </Modal.Footer>
+                    </Form>
                 </Modal.Dialog>
             </Modal.Container>
         </Modal.Backdrop>

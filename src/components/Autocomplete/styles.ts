@@ -24,6 +24,7 @@ export const customClassNames: ClassNamesConfig<OptionType, boolean, GroupBase<O
         classNames(controlStyles.base, {
             [controlStyles.focus]: state.isFocused,
             '!min-h-[inherit]': state.selectProps.size === 'sm',
+            '!border-danger': state.selectProps.isInvalid,
         }),
     valueContainer: (state) => classNames({ '!py-0 !px-2': state.selectProps.size === 'sm' }),
     menu: () => '!bg-surface !text-foreground !border !border-border',

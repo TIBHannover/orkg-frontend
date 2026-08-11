@@ -1,3 +1,4 @@
+import { cn } from '@heroui/react';
 import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
 
@@ -12,7 +13,10 @@ const Option = ({ data, isSelected, ...innerProps }: OptionProps<Contributor, fa
                 hashedEmail={data.gravatarId ?? 'example@example.com'}
                 size={20}
             />
-            <div>{data.displayName}</div>
+            <div className="min-w-0">
+                <div className={cn(isSelected && 'text-accent-foreground')}>{data.displayName}</div>
+                <div className={cn('text-xs', isSelected ? 'text-accent-foreground/70' : 'text-muted')}>{data.id}</div>
+            </div>
         </div>
     </components.Option>
 );

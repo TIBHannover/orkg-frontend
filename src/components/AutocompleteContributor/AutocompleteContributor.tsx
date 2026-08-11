@@ -21,12 +21,27 @@ const PAGE_SIZE = 10;
 
 type AutocompleteUserProps = {
     onChange: (contributor: Contributor | null) => void;
+    onBlur?: () => void;
     contributor?: Contributor;
     currentContributor?: boolean;
     showLink?: boolean;
+    inputId?: string;
+    placeholder?: string;
+    isDisabled?: boolean;
+    isInvalid?: boolean;
 };
 
-const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, currentContributor = true, showLink = true }) => {
+const AutocompleteUser: FC<AutocompleteUserProps> = ({
+    onChange,
+    onBlur,
+    contributor,
+    currentContributor = true,
+    showLink = true,
+    inputId = 'select-contributor',
+    placeholder = 'Select a contributor',
+    isDisabled = false,
+    isInvalid = false,
+}) => {
     const { user } = useAuthentication();
 
     const { data: currentUser } = useSWR(
@@ -70,7 +85,7 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
 
     return (
         <div className="flex items-stretch w-full">
-            <div className={`flex-1 min-w-0 ${contributor && showLink ? '[&_.react-select\\_\\_control]:!rounded-e-none' : ''}`}>
+            <div className="flex-1 min-w-0">
                 <AsyncPaginate
                     value={contributor}
                     components={{ Option, SingleValue }}
@@ -79,10 +94,15 @@ const AutocompleteUser: FC<AutocompleteUserProps> = ({ onChange, contributor, cu
                     }}
                     loadOptions={loadContributorOptions}
                     onChange={onChange}
+                    onBlur={onBlur}
                     getOptionValue={(option) => option.id}
                     getOptionLabel={(option) => option.displayName}
-                    inputId="select-contributor"
-                    placeholder="Select a contributor"
+                    inputId={inputId}
+                    placeholder={placeholder}
+                    isDisabled={isDisabled}
+                    isInvalid={isInvalid}
+                    // the profile link button is joined to the control, so only the leading corners stay rounded
+                    groupPosition={contributor && showLink ? 'start' : undefined}
                     isClearable
                     classNamePrefix="react-select"
                     classNames={customClassNames as any}

@@ -59,16 +59,17 @@ const MembersBox = ({ observatoryId, organizationsList, isEditMode }: MembersBox
                 <h2 className="text-xl mb-0 grow">Members</h2>
                 {canEdit && (
                     <>
-                        <Button variant="outline" size="sm" onPress={() => setShowAddMemberDialog((v) => !v)}>
+                        <Button variant="outline" size="sm" onPress={() => setShowAddMemberDialog(true)}>
                             <FontAwesomeIcon icon={faPlus} className="mr-1" />
                             Add
                         </Button>
-                        <AddMember
-                            showDialog={showAddMemberDialog}
-                            toggle={() => setShowAddMemberDialog((v) => !v)}
-                            observatoryId={observatoryId}
-                            organizationsList={organizationsList}
-                        />
+                        {showAddMemberDialog && (
+                            <AddMember
+                                toggle={() => setShowAddMemberDialog(false)}
+                                observatoryId={observatoryId}
+                                organizationsList={organizationsList}
+                            />
+                        )}
                     </>
                 )}
             </div>
