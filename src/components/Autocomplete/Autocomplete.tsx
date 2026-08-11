@@ -32,6 +32,8 @@ declare module 'react-select/base' {
         rightAligned?: boolean;
         /** Position of the select inside a joined input group: 'start' rounds only the left corners, 'middle' none. Omit for a standalone field. */
         groupPosition?: 'start' | 'middle';
+        /** Marks the field as invalid (e.g. a failed form validation), which paints the control border in the danger color. */
+        isInvalid?: boolean;
         onFailure?: (e: Error) => void;
         baseClass?: string;
         rootBaseClass?: string;
