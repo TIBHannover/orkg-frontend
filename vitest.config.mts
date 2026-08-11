@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { loadEnv } from 'vite';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 function stubNextAssetImport() {
     return {
@@ -26,6 +26,7 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./src/setupTests.ts'],
         include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+        exclude: [...configDefaults.exclude, '**/.claude/**'],
         env: loadEnv('', process.cwd(), ''),
     },
     resolve: {
