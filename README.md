@@ -25,6 +25,8 @@ Install the dependencies by running:
 
     npm install
 
+> **_NOTE:_**  On Windows machines depending on the terminal may not pick up the Node version managed by mise. We recommend prefixing any npm command with `mise x -- ` (eg. `mise x -- npm install`)
+
 Copy the file `default.env` to `.env`:
 
     cp default.env .env
