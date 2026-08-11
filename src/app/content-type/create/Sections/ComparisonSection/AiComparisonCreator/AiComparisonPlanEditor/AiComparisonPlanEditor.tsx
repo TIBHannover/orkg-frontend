@@ -1,14 +1,19 @@
 'use client';
 
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Chip, Disclosure, Input, Label, TextArea, TextField } from '@heroui/react';
 import type { ExtractionColumn, ExtractionPlan } from '@orkg/agentic-loop-client';
 import { uniqueId } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import EditablePropertyItem, {
+    type EditableProperty,
+    isPropertyDragData,
+} from '@/app/content-type/create/Sections/ComparisonSection/AiComparisonCreator/AiComparisonPlanEditor/EditablePropertyItem/EditablePropertyItem';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Confirm from '@/components/Confirmation/Confirmation';
+import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 
 type AiComparisonPlanEditorProps = {
     plan: ExtractionPlan;
@@ -16,8 +21,6 @@ type AiComparisonPlanEditorProps = {
     onExecute: (editedPlan: ExtractionPlan) => void;
     onCancel: () => void;
 };
-
-type EditableProperty = ExtractionColumn & { _id: string };
 
 // The API's ExtractionColumn has no id, so attach a client-only one to use as
 // a stable React key — without it, removing a row would remount the inputs of
@@ -28,6 +31,7 @@ const toEditable = (property: ExtractionColumn): EditableProperty => ({
 });
 
 const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiComparisonPlanEditorProps) => {
+    const [instanceId] = useState(() => createInstanceId('ai-comparison-plan-properties'));
     const [title, setTitle] = useState(plan.title);
     const [description, setDescription] = useState(plan.description);
     const [stepsText, setStepsText] = useState(plan.steps.join('\n'));
@@ -47,6 +51,51 @@ const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiC
     const removeProperty = (id: string) => {
         setProperties((prev) => prev.filter((property) => property._id !== id));
     };
+
+    const moveProperty = useCallback((index: number, direction: -1 | 1) => {
+        setProperties((prev) => {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= prev.length) {
+                return prev;
+            }
+
+            const next = [...prev];
+            [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+            return next;
+        });
+    }, []);
+
+    const reorderProperties = useCallback(({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+        setProperties((prev) => {
+            const reorderedProperties = performReorder({
+                items: prev,
+                startIndex,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: 'vertical',
+            });
+
+            return reorderedProperties === prev ? prev : reorderedProperties;
+        });
+    }, []);
+
+    useEffect(() => {
+        if (isSubmitting) {
+            return undefined;
+        }
+
+        const cleanup = createListMonitor({
+            instanceId,
+            items: properties,
+            isDragData: isPropertyDragData,
+            onReorder: reorderProperties,
+            getItemId: (property) => property._id,
+        });
+
+        return () => {
+            cleanup?.();
+        };
+    }, [instanceId, isSubmitting, properties, reorderProperties]);
 
     const addProperty = () => {
         setProperties((prev) => [
@@ -126,69 +175,17 @@ const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiC
                 <p className="mb-3 text-sm text-muted">Each property becomes a row in the comparison table, extracted from every paper.</p>
                 {properties.length === 0 && <div className="mb-2 text-sm italic text-muted">No properties defined.</div>}
                 <div className="flex flex-col gap-3">
-                    {properties.map((property) => (
-                        <div key={property._id} className="rounded-lg border border-smart/30 bg-surface p-3 shadow-sm">
-                            <div className="flex items-start gap-2">
-                                <div className="flex min-w-0 flex-1 flex-col gap-2 p-1">
-                                    <TextField
-                                        fullWidth
-                                        value={property.name}
-                                        onChange={(value) => updateProperty(property._id, { name: value })}
-                                        isDisabled={isSubmitting}
-                                        aria-label="Property name"
-                                    >
-                                        <Input type="text" placeholder="Property name" className="font-medium" />
-                                    </TextField>
-                                    <TextField
-                                        fullWidth
-                                        value={property.description}
-                                        onChange={(value) => updateProperty(property._id, { description: value })}
-                                        isDisabled={isSubmitting}
-                                        aria-label="Property description"
-                                    >
-                                        <TextArea className="text-sm" rows={2} placeholder="What information this property captures" />
-                                    </TextField>
-                                    <Disclosure>
-                                        <Disclosure.Heading>
-                                            <Disclosure.Trigger className="inline-flex items-center gap-1.5 text-sm text-muted">
-                                                Extraction hint
-                                                {property.extractionHint.trim().length > 0 && (
-                                                    <span aria-hidden className="bg-smart size-1.5 rounded-full" />
-                                                )}
-                                                <Disclosure.Indicator />
-                                            </Disclosure.Trigger>
-                                        </Disclosure.Heading>
-                                        <Disclosure.Content>
-                                            <Disclosure.Body className="p-1 pt-2">
-                                                <TextField
-                                                    fullWidth
-                                                    value={property.extractionHint}
-                                                    onChange={(value) => updateProperty(property._id, { extractionHint: value })}
-                                                    isDisabled={isSubmitting}
-                                                    aria-label="Property extraction hint"
-                                                >
-                                                    <TextArea
-                                                        className="text-sm"
-                                                        rows={2}
-                                                        placeholder="How to locate and extract this value from a paper"
-                                                    />
-                                                </TextField>
-                                            </Disclosure.Body>
-                                        </Disclosure.Content>
-                                    </Disclosure>
-                                </div>
-                                <Button
-                                    variant="danger-soft"
-                                    isIconOnly
-                                    size="sm"
-                                    onPress={() => removeProperty(property._id)}
-                                    aria-label="Remove property"
-                                    isDisabled={isSubmitting}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} size="sm" />
-                                </Button>
-                            </div>
-                        </div>
+                    {properties.map((property, index) => (
+                        <EditablePropertyItem
+                            key={property._id}
+                            property={property}
+                            index={index}
+                            instanceId={instanceId}
+                            isSubmitting={isSubmitting}
+                            updateProperty={updateProperty}
+                            removeProperty={removeProperty}
+                            moveProperty={moveProperty}
+                        />
                     ))}
                 </div>
                 <Button variant="secondary" className="button--orkg-smart mt-3!" size="sm" onPress={addProperty} isDisabled={isSubmitting}>

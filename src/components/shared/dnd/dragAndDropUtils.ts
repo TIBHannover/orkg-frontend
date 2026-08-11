@@ -33,7 +33,10 @@ export type DragState = {
     closestEdge: Edge | null;
 };
 
-export type EdgeChangeHandler = (params: { source: { element: HTMLElement }; self: { data: any } }) => void;
+export type EdgeChangeHandler = (params: {
+    source: { element: HTMLElement; data?: { index?: unknown } };
+    self: { data: any };
+}) => void;
 
 // ====================
 // Factory Functions
@@ -268,9 +271,14 @@ export function createEdgeChangeHandler({
         }
 
         const currentClosestEdge = extractClosestEdge(self.data);
+        // Each drop target is configured with its own index, so the dragged
+        // item's index must come from the source payload. Keep the configured
+        // value as a fallback for callers using a compatible custom payload.
+        const draggedSourceIndex = source.data?.index;
+        const effectiveSourceIndex = typeof draggedSourceIndex === 'number' ? draggedSourceIndex : sourceIndex;
 
-        const isItemBeforeSource = targetIndex === sourceIndex - 1;
-        const isItemAfterSource = targetIndex === sourceIndex + 1;
+        const isItemBeforeSource = targetIndex === effectiveSourceIndex - 1;
+        const isItemAfterSource = targetIndex === effectiveSourceIndex + 1;
 
         const isDropIndicatorHidden = (isItemBeforeSource && currentClosestEdge === 'bottom') || (isItemAfterSource && currentClosestEdge === 'top');
 
