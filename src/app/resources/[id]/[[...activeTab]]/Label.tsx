@@ -1,5 +1,6 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import React from 'react';
 
 import EditableHeader from '@/components/EditableHeader';
@@ -8,7 +9,6 @@ import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/use
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useDeleteResource from '@/components/Resource/hooks/useDeleteResource';
-import Button from '@/components/Ui/Button/Button';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import CONTENT_TYPES from '@/constants/contentTypes';
 import { ENTITIES } from '@/constants/graphSettings';
@@ -59,7 +59,7 @@ const Label = ({ id, resource, isShared, mutate, isDeletionAllowed }: LabelProps
                     <div className="flex justify-end">
                         <Tooltip content={preventDeletionTooltipText} disabled={isDeletionAllowed ?? false}>
                             <span>
-                                <Button color="danger" size="sm" onClick={deleteResource} disabled={!isDeletionAllowed}>
+                                <Button variant="danger" size="sm" onPress={deleteResource} isDisabled={!isDeletionAllowed}>
                                     <FontAwesomeIcon icon={faTrash} /> Delete resource
                                 </Button>
                             </span>

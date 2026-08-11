@@ -2,7 +2,7 @@
 
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Label, Modal as HeroUIModal } from '@heroui/react';
+import { Button, Label, Modal as HeroUIModal } from '@heroui/react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
@@ -17,7 +17,6 @@ import useGraphView from '@/components/GraphView/hooks/useGraphView';
 import Node from '@/components/GraphView/Node';
 import SelectedEdgeBox from '@/components/GraphView/SelectedEdgeBox';
 import SelectedNodeBox from '@/components/GraphView/SelectedNodeBox';
-import Button from '@/components/Ui/Button/Button';
 import Dropdown from '@/components/Ui/Dropdown/Dropdown';
 import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
 import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
@@ -96,7 +95,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                 <div className="flex w-full items-center">
                     <HeroUIModal.Heading>View graph</HeroUIModal.Heading>
                     <div className="flex ml-4 items-center grow">
-                        <Button color="secondary" className="mr-2" size="sm" onClick={() => graphRef.current?.centerGraph()}>
+                        <Button variant="secondary" className="mr-2" size="sm" onPress={() => graphRef.current?.centerGraph()}>
                             <FontAwesomeIcon icon={faHome} className="mr-1" /> Center graph
                         </Button>
                         <Dropdown
@@ -164,7 +163,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                                 }
                             >
                                 <span>
-                                    <Button color="secondary" className="px-4" size="sm" onClick={() => setBlackListClassesPopoverOpen(true)}>
+                                    <Button variant="secondary" className="px-4" size="sm" onPress={() => setBlackListClassesPopoverOpen(true)}>
                                         <FontAwesomeIcon icon={faWrench} />
                                     </Button>
                                 </span>

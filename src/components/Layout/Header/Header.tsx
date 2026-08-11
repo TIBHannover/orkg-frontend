@@ -117,10 +117,13 @@ const Header = () => {
                         onClick={closeMenu}
                         style={{ color: isTransparentNavbar ? '#545a71' : '#EF815E' }}
                     >
+                        {/* both logos have fractional intrinsic dimensions; without `w-auto` Tailwind's
+                            preflight `height: auto` would leave the width pinned to the rounded attribute
+                            and next/image would warn about a modified aspect ratio */}
                         {!isTransparentNavbar ? (
-                            <Image src={Logo} alt="Logo ORKG" priority />
+                            <Image src={Logo} alt="Logo ORKG" className="h-auto w-auto" priority />
                         ) : (
-                            <Image src={LogoWhite} alt="Logo ORKG in light colors" priority />
+                            <Image src={LogoWhite} alt="Logo ORKG in light colors" className="h-auto w-auto" priority />
                         )}
                     </Link>
 

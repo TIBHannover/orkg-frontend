@@ -1,11 +1,11 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@heroui/react';
 import { useState } from 'react';
 
 import TablePathsModal from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/TablePathsModal';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Button from '@/components/Ui/Button/Button';
 
 const FirstColumnHeader = () => {
     const [isOpenManagePropertiesModal, setIsOpenManagePropertiesModal] = useState(false);
@@ -22,7 +22,7 @@ const FirstColumnHeader = () => {
                 )}
             </div>
             {isEditMode && (
-                <Button color="secondary-darker" size="sm" onClick={() => setIsOpenManagePropertiesModal(true)}>
+                <Button size="sm" onPress={() => setIsOpenManagePropertiesModal(true)}>
                     Manage properties
                 </Button>
             )}

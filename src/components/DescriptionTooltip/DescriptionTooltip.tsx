@@ -1,14 +1,13 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { toast } from '@heroui/react';
+import { Button, type ButtonProps, toast } from '@heroui/react';
 import Link from 'next/link';
 import { FC, Fragment, useEffect, useState } from 'react';
 import { useCopyToClipboard } from 'react-use';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
-import Button from '@/components/Ui/Button/Button';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
@@ -26,7 +25,7 @@ type DescriptionTooltipProps = {
     showURL?: boolean;
     buttons?: {
         title: string;
-        color: string;
+        variant: ButtonProps['variant'];
         icon: IconProp;
         action?: () => void;
     }[];
@@ -96,14 +95,11 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                             <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
                             {id && (
                                 <Button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        copyToClipboard(id);
-                                    }}
-                                    title="Click to copy id"
+                                    onPress={() => copyToClipboard(id)}
+                                    aria-label="Click to copy id"
                                     className="py-0 px-0"
                                     size="sm"
-                                    color="link"
+                                    variant="ghost"
                                 >
                                     <FontAwesomeIcon icon={faClipboard} size="xs" />
                                 </Button>
@@ -155,12 +151,12 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                             <ButtonGroup tabIndex={0} size="sm">
                                 {buttons.map((button, i) => (
                                     <Button
-                                        onClick={() => {
+                                        onPress={() => {
                                             button.action?.();
                                         }}
                                         className="px-2 py-0"
                                         key={i}
-                                        color={button.color}
+                                        variant={button.variant}
                                     >
                                         <FontAwesomeIcon icon={button.icon} className="mr-1" />
                                         {button.title}
