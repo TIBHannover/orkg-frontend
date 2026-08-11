@@ -2,6 +2,23 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.188.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.187.0...v0.188.0) - 2026-08-11
+
+### Changes
+
+- fix(ai-comparison): allow moving plan properties [`#1723`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1723)
+- refactor(organizations): migrate create form to react-hook-form [`#1743`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1743)
+- fix(DataBrowser): prevent long values from breaking the edit row layout [`#1741`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1741)
+- chore: update to HeroUI v3.2.4 [`#1742`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1742)
+- chore: update NextJs to v16.3 [`#1739`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1739)
+- fix(Header): preserve logo aspect ratio to silence next/image warning [`#1744`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1744)
+- feat(observatory): add contributor autocomplete to the add member modal [`#1740`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1740)
+- fix(ai-comparison): clarify running progress state [`#1722`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1722)
+- fix(Templates): show assigned observatory and organization in template metadata [`#1737`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1737)
+- fix: clarify create property modal and align smart suggestions button [`#1732`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1732)
+- docs: add mise windows notice regarding npm version [`#1747`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1747)
+
+---
 ## [v0.187.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.186.1...v0.187.0) - 2026-08-10
 
 ### Changes
