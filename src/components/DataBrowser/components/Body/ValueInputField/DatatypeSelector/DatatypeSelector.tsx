@@ -67,7 +67,7 @@ const DatatypeSelector: FC<DatatypeSelectorProps> = ({
                 // @ts-expect-error customClassNames is typed for OptionType but works with any option type
                 classNames={{
                     ...customClassNames,
-                    container: (state) => classNames(customClassNames.container?.(state as never), 'shrink-0 w-48'),
+                    container: (state) => classNames(customClassNames.container?.(state as never), 'shrink-0 w-max max-w-48'),
                     control: (state) =>
                         state.isDisabled
                             ? '!bg-default !border-border !cursor-not-allowed opacity-70 grow overflow-auto !rounded-[inherit] !min-h-[inherit]'

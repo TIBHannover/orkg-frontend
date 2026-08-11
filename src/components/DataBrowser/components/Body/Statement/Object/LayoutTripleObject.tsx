@@ -33,7 +33,8 @@ const LayoutTripleObject: FC<LayoutTripleObjectProps> = ({ children, level, stat
     return (
         <>
             <StatementWrapperStyled
-                className={`px-2 py-1 min-h-9 text-wrap grow flex items-center ${isHighlighted ? 'highlight' : ''}`}
+                // min-w-0 so a long value shrinks the cell instead of pushing the edit row's buttons out of the card
+                className={`px-2 py-1 min-h-9 text-wrap grow flex items-center min-w-0 ${isHighlighted ? 'highlight' : ''}`}
                 style={{ background: getBackgroundColor(level) }}
                 onAnimationEnd={() => setIsHighlighted(false)}
                 {...(statement.object._class !== ENTITIES.LITERAL &&

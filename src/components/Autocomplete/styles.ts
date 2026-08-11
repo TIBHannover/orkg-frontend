@@ -13,7 +13,9 @@ const controlStyles = {
 
 export const customClassNames: ClassNamesConfig<OptionType, boolean, GroupBase<OptionType>> = {
     container: (state) =>
-        classNames('!p-0 !border-0 !flex', {
+        // min-w-0: react-select sizes its input from the typed text (a ::after mirror with white-space: pre),
+        // so without it the control refuses to shrink and overflows its slot instead of scrolling
+        classNames('!p-0 !border-0 !flex min-w-0', {
             '!rounded-[var(--field-radius)]': !state.selectProps.groupPosition,
             '!rounded-s-[var(--radius)] !rounded-e-none': state.selectProps.groupPosition === 'start',
             '!rounded-none': state.selectProps.groupPosition === 'middle',
