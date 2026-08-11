@@ -34,6 +34,7 @@ type AiComparisonProgressProps = {
 };
 
 const RUNNING_STATUSES: JobStatus[] = ['pending', 'parsing', 'planning', 'executing'];
+const INDETERMINATE_PROGRESS_STATUSES: JobStatus[] = ['pending', 'planning', 'executing'];
 
 const AiComparisonProgress = ({ job, onDismiss }: AiComparisonProgressProps) => {
     const stream = useAiJobStream(job.id);
@@ -48,6 +49,7 @@ const AiComparisonProgress = ({ job, onDismiss }: AiComparisonProgressProps) => 
     const isCompleted = status === 'completed';
     const isAwaitingApproval = status === 'awaiting_approval';
     const isRunning = RUNNING_STATUSES.includes(status);
+    const isProgressIndeterminate = INDETERMINATE_PROGRESS_STATUSES.includes(status) || !progressPct;
 
     const { plan, isLoading: isLoadingPlan, mutate: mutatePlan } = useAiJobPlan(job.id, status);
     const { createComparisonFromJob, downloadCsv, openInCsvImport, cancelJob, isCreatingComparison, isCancelling } = useAiJobActions(job.id);
@@ -178,7 +180,7 @@ const AiComparisonProgress = ({ job, onDismiss }: AiComparisonProgressProps) => 
                             className="w-full"
                             color="accent"
                             value={progressPct ?? 0}
-                            isIndeterminate={!progressPct}
+                            isIndeterminate={isProgressIndeterminate}
                         >
                             <Label className="text-sm text-muted">{progressMessage ?? 'Initializing...'}</Label>
                             {!!progressPct && <ProgressBar.Output className="text-sm" />}
