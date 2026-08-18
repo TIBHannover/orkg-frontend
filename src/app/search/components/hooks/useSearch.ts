@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { parseAsInteger, useQueryState } from 'nuqs';
@@ -14,6 +15,16 @@ import { getThing, getThings, Thing, thingsUrl } from '@/services/backend/things
 import { PaginatedResponse, Statement } from '@/services/backend/types';
 
 export const IGNORED_CLASSES = [CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT, CLASSES.COMPARISON_DELETED];
+
+// strict-parsed since this can come straight from the URL; an invalid value is dropped instead of sent to the backend
+const toStartOfDayIso = (date: string) => {
+    const d = dayjs(date, 'YYYY-MM-DD', true);
+    return !isEmpty(date) && d.isValid() ? d.startOf('day').toISOString() : undefined;
+};
+const toEndOfDayIso = (date: string) => {
+    const d = dayjs(date, 'YYYY-MM-DD', true);
+    return !isEmpty(date) && d.isValid() ? d.endOf('day').toISOString() : undefined;
+};
 
 type UseSearchProps = {
     defaultFilters?: { label: string; id: string }[];
@@ -33,6 +44,10 @@ const useSearch = ({
     const [searchTerm, setSearchTerm] = useQueryState('q', { defaultValue: '' });
     const [createdBy] = useQueryState('createdBy', { defaultValue: '' });
     const [observatoryId] = useQueryState('observatoryId', { defaultValue: '' });
+    const [organizationId] = useQueryState('organizationId', { defaultValue: '' });
+    const [createdAtStart] = useQueryState('createdAtStart', { defaultValue: '' });
+    const [createdAtEnd] = useQueryState('createdAtEnd', { defaultValue: '' });
+    const [excludeType] = useQueryState('excludeType', { defaultValue: '' });
     const [type, setType] = useQueryState('type', { defaultValue: '' });
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(0));
     const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(itemsPerFilter));
@@ -60,7 +75,10 @@ const useSearch = ({
                 q: searchTerm,
                 created_by: !isEmpty(createdBy) ? createdBy : undefined,
                 observatory_id: !isEmpty(observatoryId) ? observatoryId : undefined,
-                exclude: ignoredClasses,
+                organization_id: !isEmpty(organizationId) ? organizationId : undefined,
+                createdAtStart: toStartOfDayIso(createdAtStart),
+                createdAtEnd: toEndOfDayIso(createdAtEnd),
+                exclude: excludeType ? [...ignoredClasses, excludeType] : ignoredClasses,
                 include: type ? [type] : undefined,
             },
             thingsUrl,
@@ -70,7 +88,7 @@ const useSearch = ({
     );
 
     const { data: _countResults, isLoading: isLoadingCountResults } = useSWR(
-        [{ searchTerm, createdBy, observatoryId }, thingsUrl, 'getThings'],
+        [{ searchTerm, createdBy, observatoryId, organizationId, createdAtStart, createdAtEnd, excludeType }, thingsUrl, 'getThings'],
         ([params]) =>
             Promise.all(
                 defaultFilters.map((f) => {
@@ -79,8 +97,12 @@ const useSearch = ({
                         size: 1,
                         q: params.searchTerm,
                         include: [f.id],
+                        exclude: params.excludeType ? [...ignoredClasses, params.excludeType] : ignoredClasses,
                         created_by: !isEmpty(params.createdBy) ? params.createdBy : undefined,
                         observatory_id: !isEmpty(params.observatoryId) ? params.observatoryId : undefined,
+                        organization_id: !isEmpty(params.organizationId) ? params.organizationId : undefined,
+                        createdAtStart: toStartOfDayIso(params.createdAtStart),
+                        createdAtEnd: toEndOfDayIso(params.createdAtEnd),
                     });
                 }),
             ),

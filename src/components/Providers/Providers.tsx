@@ -10,6 +10,7 @@ import { plugins } from '@citation-js/core';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { RouterProvider } from '@heroui/react';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/navigation';
@@ -32,6 +33,7 @@ import { setupStore } from '@/store';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localeData);
+dayjs.extend(customParseFormat);
 
 config.autoAddCss = false;
 
