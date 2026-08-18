@@ -64,8 +64,12 @@ export const rosettaTemplateEditorReducer = (autocompleteState: RosettaTemplateE
             return { ...autocompleteState, isSaving: action.payload };
         }
         case 'setProperty': {
-            autocompleteState.properties[action.payload.index] = action.payload.data;
-            return { ...autocompleteState };
+            // must stay immutable: the React Compiler caches derivations keyed on the
+            // array identity, so mutating `properties` in place freezes the form fields
+            return {
+                ...autocompleteState,
+                properties: autocompleteState.properties.map((property, i) => (i === action.payload.index ? action.payload.data : property)),
+            };
         }
         case 'reorderProperties': {
             return { ...autocompleteState, properties: action.payload };
@@ -74,8 +78,10 @@ export const rosettaTemplateEditorReducer = (autocompleteState: RosettaTemplateE
             return { ...autocompleteState, properties: [...autocompleteState.properties, { id: action.payload, placeholder: '', description: '' }] };
         }
         case 'deleteObjectPosition': {
-            autocompleteState.properties.splice(action.payload, 1);
-            return { ...autocompleteState };
+            return {
+                ...autocompleteState,
+                properties: autocompleteState.properties.filter((_property, i) => i !== action.payload),
+            };
         }
         default: {
             throw Error('Unknown action');
