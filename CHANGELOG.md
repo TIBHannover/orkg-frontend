@@ -2,6 +2,14 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.189.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.188.0...v0.189.0) - 2026-08-18
+
+### Changes
+
+- fix(rosetta-stone): keep template editor reducer immutable so fields stay editable [`#1755`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1755)
+- feat(Search): add organization, date range, and type exclusion filters [`#1748`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1748)
+
+---
 ## [v0.188.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.187.0...v0.188.0) - 2026-08-11
 
 ### Changes
