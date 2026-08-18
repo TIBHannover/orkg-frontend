@@ -88,29 +88,39 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
     });
 
     let localValue = incomingValue;
-    if (defaultValueId) {
+    if (incomingValue !== undefined && isMulti && fixedOptions?.length && Array.isArray(incomingValue)) {
+        localValue = incomingValue.map((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
+    } else if (incomingValue === undefined && defaultValueId) {
         localValue = defaultValue;
-    } else if (isMulti && fixedOptions?.length) {
-        localValue = (incomingValue as OptionType[])?.map?.((v) => ({ ...v, isFixed: fixedOptions.includes(v.id) }));
+    } else if (incomingValue === undefined && defaultValueId !== undefined) {
+        // cleared defaultValueId must render as null, not undefined, or react-select keeps its stale internal value
+        localValue = null;
     }
 
     useEffect(() => {
         const loadNode = async () => {
-            if (defaultValueId && !incomingValue && !isMulti) {
-                const node = await getThing(defaultValueId as string);
-                setValue(node as OptionType);
-            } else if (defaultValueId && defaultValueId?.length > 0 && !incomingValue && isMulti) {
-                const nodes = await Promise.all((defaultValueId as string[]).map((v) => getThing(v) as Promise<OptionType>));
-                setValue(nodes);
-            } else {
+            try {
+                if (defaultValueId && !isMulti) {
+                    const node = await getThing(defaultValueId as string);
+                    setValue(node as OptionType);
+                } else if (defaultValueId && defaultValueId.length > 0 && isMulti) {
+                    const nodes = await Promise.all((defaultValueId as string[]).map((v) => getThing(v) as Promise<OptionType>));
+                    setValue(nodes);
+                }
+            } catch {
+                // defaultValueId can originate from a user-edited URL; an unknown id should leave the field empty
                 setValue(null);
             }
         };
 
-        if (defaultValueId && (!defaultValue || (!isMulti && defaultValueId !== (defaultValue as OptionType)?.id))) {
+        if (
+            incomingValue === undefined &&
+            defaultValueId &&
+            (!defaultValue || (!isMulti && defaultValueId !== (defaultValue as OptionType)?.id))
+        ) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setValue(null);
-            loadNode();
+            void loadNode();
         }
     }, [defaultValue, defaultValueId, isMulti, incomingValue]);
 

@@ -1,20 +1,24 @@
 import { faCaretDown, faCaretUp, faCircleInfo, faMagic, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox, Chip, Label, SearchField, Separator, Skeleton, Tooltip } from '@heroui/react';
+import { Button, Checkbox, Chip, Input, Label, SearchField, Separator, Skeleton, TextField, Tooltip } from '@heroui/react';
 import { sendEvent } from '@socialgouv/matomo-next';
 import { startCase, toLower } from 'lodash';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
+import Select, { SingleValue } from 'react-select';
+import useSWR from 'swr';
 
 import useFilters from '@/app/search/components/hooks/useFilters';
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import AutocompleteContributor from '@/components/AutocompleteContributor/AutocompleteContributor';
 import AutocompleteObservatory from '@/components/AutocompleteObservatory/AutocompleteObservatory2';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
+import { getAllOrganizations, organizationsUrl } from '@/services/backend/organizations';
 import { Thing } from '@/services/backend/things';
-import { PaginatedResponse } from '@/services/backend/types';
+import { Organization, PaginatedResponse } from '@/services/backend/types';
 import { FacetValuePair } from '@/services/smartFilters';
 
 type FiltersProps = {
@@ -55,12 +59,24 @@ const Filters: FC<FiltersProps> = ({
         handleSubmitSearch,
         type,
         setType,
+        excludeType,
+        setExcludeType,
         setObservatoryId,
         observatoryData,
+        setOrganizationId,
+        organizationData,
+        createdAtStart,
+        setCreatedAtStart,
+        createdAtEnd,
+        setCreatedAtEnd,
         createdByData,
         clearFilter,
         isFilterApplied,
     } = useFilters();
+
+    const { data: organizations } = useSWR([null, organizationsUrl, 'getAllOrganizations'], () => getAllOrganizations(), {
+        shouldRetryOnError: false,
+    });
 
     const [openFacets, setOpenFacets] = useState<Record<number, boolean>>({});
 
@@ -144,6 +160,38 @@ const Filters: FC<FiltersProps> = ({
                     </div>
                 </div>
 
+                <div className="flex flex-col gap-2 w-full">
+                    <Label htmlFor="select-organization">Organization</Label>
+                    <div className="w-full">
+                        <Select
+                            inputId="select-organization"
+                            value={organizationData ?? null}
+                            options={organizations ?? []}
+                            onChange={(selected: SingleValue<Organization>) => setOrganizationId(selected?.id || '')}
+                            getOptionValue={({ id }: Organization) => id}
+                            getOptionLabel={({ name }: Organization) => name}
+                            placeholder="Select an organization"
+                            isClearable
+                            classNamePrefix="react-select"
+                            classNames={customClassNames as any}
+                            styles={customStyles as any}
+                            menuPosition="fixed"
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2 w-full">
+                    <Label>Created between</Label>
+                    <div className="flex gap-2 w-full">
+                        <TextField fullWidth value={createdAtStart} onChange={(v: string) => setCreatedAtStart(v)} className="grow">
+                            <Input aria-label="Created after" type="date" max={createdAtEnd || undefined} />
+                        </TextField>
+                        <TextField fullWidth value={createdAtEnd} onChange={(v: string) => setCreatedAtEnd(v)} className="grow">
+                            <Input aria-label="Created before" type="date" min={createdAtStart || undefined} />
+                        </TextField>
+                    </div>
+                </div>
+
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="type-filters">Type</Label>
                     <Autocomplete
@@ -155,6 +203,7 @@ const Filters: FC<FiltersProps> = ({
                                 setType('');
                             }
                         }}
+                        defaultValueId={type}
                         placeholder="Select a class"
                         openMenuOnFocus
                         enableExternalSources={false}
@@ -188,6 +237,27 @@ const Filters: FC<FiltersProps> = ({
                             </Button>
                         ))}
                     </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="type-exclusion-filters">Exclude type</Label>
+                    <Autocomplete
+                        entityType={ENTITIES.CLASS}
+                        onChange={(selected, { action }) => {
+                            if (selected && action === 'select-option') {
+                                setExcludeType(selected.id);
+                            } else if (action === 'clear') {
+                                setExcludeType('');
+                            }
+                        }}
+                        defaultValueId={excludeType}
+                        placeholder="Select a class to exclude"
+                        openMenuOnFocus
+                        enableExternalSources={false}
+                        isClearable
+                        allowCreate={false}
+                        inputId="type-exclusion-filters"
+                    />
                 </div>
             </div>
 
