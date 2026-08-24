@@ -1,15 +1,18 @@
-import { faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faClock, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import { mutate } from 'swr';
 
+import Confirm from '@/components/Confirmation/Confirmation';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { comparisonUrl, GetComparisonParams, getComparisons } from '@/services/backend/comparisons';
+import { comparisonUrl, deleteComparison, GetComparisonParams, getComparisons } from '@/services/backend/comparisons';
 import { Comparison, PaginatedResponse } from '@/services/backend/types';
 
 const getDraftComparisons = async (params: GetComparisonParams): Promise<PaginatedResponse<Comparison>> => {
@@ -27,19 +30,41 @@ const DraftComparisons = () => {
         document.title = 'Draft comparisons - ORKG';
     });
 
+    const handleDelete = async (comparison: Comparison) => {
+        const confirmed = await Confirm({
+            title: 'Delete draft comparison?',
+            message: `Are you sure you want to delete the draft comparison "${comparison.title}"? This action cannot be undone.`,
+            proceedLabel: 'Delete',
+        });
+        if (confirmed) {
+            try {
+                await deleteComparison(comparison.id);
+                mutate((key: unknown) => Array.isArray(key) && key[key.length - 1] === 'getDraftComparisons');
+                toast.success('Draft comparison deleted successfully');
+            } catch {
+                toast.danger('An error occurred while deleting the draft comparison');
+            }
+        }
+    };
+
     const renderListItem = (comparison: Comparison) => (
         <ShortRecord key={comparison.id} header={comparison.title} href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-            <div className="flex items-center gap-3 text-muted">
-                <span className="flex items-center gap-1">
-                    <FontAwesomeIcon size="sm" icon={faCalendar} />
-                    {comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : ''}
-                </span>
-                {comparison.created_at && (
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 text-muted">
                     <span className="flex items-center gap-1">
-                        <FontAwesomeIcon size="sm" icon={faClock} />
-                        {dayjs(comparison.created_at).format('H:mm')}
+                        <FontAwesomeIcon size="sm" icon={faCalendar} />
+                        {comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : ''}
                     </span>
-                )}
+                    {comparison.created_at && (
+                        <span className="flex items-center gap-1">
+                            <FontAwesomeIcon size="sm" icon={faClock} />
+                            {dayjs(comparison.created_at).format('H:mm')}
+                        </span>
+                    )}
+                </div>
+                <Button variant="ghost" size="sm" className="text-danger" onPress={() => handleDelete(comparison)}>
+                    <FontAwesomeIcon icon={faTrash} /> Delete
+                </Button>
             </div>
         </ShortRecord>
     );

@@ -218,6 +218,15 @@ export const updateComparison = (id: string, data: UpdateComparisonParams) => {
         .json();
 };
 
+export const deleteComparison = (comparisonId: string) =>
+    comparisonsApi
+        .delete<void>(encodeURIComponent(comparisonId), {
+            headers: {
+                'Content-Type': COMPARISONS_CONTENT_TYPE,
+            },
+        })
+        .json();
+
 export type GetComparisonParams = PaginationParams &
     VerifiedParam &
     VisibilityParam &
