@@ -60,7 +60,7 @@ const CardFactory: FC<CardFactoryProps> = ({ item, showBadge, showCurationFlags,
         return <TemplateCard template={item as Template} showBadge={showBadge} />;
     }
     if ('context' in item) {
-        return <SingleStatement showContext key={item.id} statement={item as RosettaStoneStatement} />;
+        return <SingleStatement showContext showMetadata key={item.id} statement={item as RosettaStoneStatement} />;
     }
     if ('example_usage' in item) {
         return <RSTemplateCard template={item as RosettaStoneTemplate} showBadge={showBadge} />;

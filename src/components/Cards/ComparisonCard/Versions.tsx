@@ -28,7 +28,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
             <Tooltip>
                 <Tooltip.Trigger className="inline-flex">
                     <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
-                        Version {dayjs(version.created_at).format('DD-MM-YYYY')}
+                        Version {dayjs(version.created_at).format('DD MMM YYYY')}
                     </Link>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
@@ -69,7 +69,7 @@ const Versions = ({ versions }: VersionsProps) => {
     const _versions = !showMore && versions?.length > 0 ? versions.slice(1, 3) : versions.slice(1);
 
     return (
-        <small className="mt-2 block">
+        <div className="mt-2 text-sm">
             <FontAwesomeIcon size="sm" icon={faCodeBranch} className="mr-1 text-muted" />
             Versions:{' '}
             {_versions.map((version, index) => (
@@ -87,7 +87,7 @@ const Versions = ({ versions }: VersionsProps) => {
                     {showMore ? 'Show less' : 'Show more'}
                 </button>
             )}
-        </small>
+        </div>
     );
 };
 

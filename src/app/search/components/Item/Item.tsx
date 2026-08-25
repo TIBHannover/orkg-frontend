@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { FC } from 'react';
 
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
-import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
-import { CardBadge } from '@/components/styled';
+import CardBadge from '@/components/Cards/CardBadge/CardBadge';
+import CompactItemMetadata from '@/components/ItemMetadata/CompactItemMetadata';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { Thing } from '@/services/backend/things';
 import { getResourceLink } from '@/utils';
@@ -60,11 +60,11 @@ const Item: FC<{ item: Thing }> = ({ item }) => {
                 </Link>
                 {!!badge && (
                     <div className="shrink-0">
-                        <CardBadge color="primary">{badge.label}</CardBadge>
+                        <CardBadge>{badge.label}</CardBadge>
                     </div>
                 )}
             </div>
-            <ItemMetadata
+            <CompactItemMetadata
                 item={item}
                 showClasses={!badge}
                 showDataType

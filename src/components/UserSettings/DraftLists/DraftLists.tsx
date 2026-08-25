@@ -1,11 +1,8 @@
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import dayjs from 'dayjs';
 import { useEffect } from 'react';
 
+import EntityCard from '@/components/Cards/EntityCard/EntityCard';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -20,12 +17,7 @@ const DraftLists = () => {
     });
 
     const renderListItem = (list: LiteratureList) => (
-        <ShortRecord key={list.id} header={list.title} href={reverse(ROUTES.LIST, { id: list.id })}>
-            <div className="flex items-center gap-1 text-muted">
-                <FontAwesomeIcon size="sm" icon={faCalendar} />
-                {list.created_at ? dayjs(list.created_at).format('DD MMMM YYYY') : ''}
-            </div>
-        </ShortRecord>
+        <EntityCard key={list.id} item={list} label={list.title} href={reverse(ROUTES.LIST, { id: list.id })} showCreatedBy={false} />
     );
 
     if (!user) {

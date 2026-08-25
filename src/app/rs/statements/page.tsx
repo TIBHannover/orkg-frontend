@@ -13,7 +13,7 @@ const StatementsPage = () => {
         document.title = 'Statements list - ORKG';
     });
 
-    const renderListItem = (s: RosettaStoneStatement) => <SingleStatement showContext key={s.id} statement={s} />;
+    const renderListItem = (s: RosettaStoneStatement) => <SingleStatement showContext showMetadata key={s.id} statement={s} />;
 
     const infoContainerText = (
         <>

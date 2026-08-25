@@ -59,7 +59,7 @@ const Versions = ({ versions }: VersionsProps) => {
     const _versions = showMore ? versions : versions.slice(0, 2);
 
     return (
-        <small className="mt-2 block">
+        <div className="mt-2 text-sm">
             <FontAwesomeIcon size="sm" icon={faCodeBranch} className="mr-1 text-muted" />
             Published versions:{' '}
             {_versions.map((version, index) => (
@@ -77,7 +77,7 @@ const Versions = ({ versions }: VersionsProps) => {
                     {showMore ? 'Show less' : 'Show more'}
                 </button>
             )}
-        </small>
+        </div>
     );
 };
 

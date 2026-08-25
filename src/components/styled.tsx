@@ -104,18 +104,6 @@ export const InputStyled = styled.input`
     }
 `;
 
-export const CardBadge = styled.div`
-    background: var(--surface);
-    display: inline-block;
-    color: ${(props) => props.theme.bodyColor};
-    padding: 1px 5px;
-    margin-right: 6px;
-    font-size: 70%;
-    cursor: default;
-    border-radius: 4px;
-    border: 1px ${(props) => props.theme.bodyColor} solid;
-`;
-
 export const CardBadgeFilter = styled.div`
     background: var(--surface);
     display: inline-block;

@@ -1,13 +1,13 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClipboard, faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, type ButtonProps, toast } from '@heroui/react';
+import { Button, type ButtonProps } from '@heroui/react';
 import Link from 'next/link';
-import { FC, Fragment, useEffect, useState } from 'react';
-import { useCopyToClipboard } from 'react-use';
+import { FC, Fragment, useState } from 'react';
 import useSWR from 'swr';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import ButtonGroup from '@/components/Ui/Button/ButtonGroup';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
@@ -43,14 +43,7 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
     buttons,
 }) => {
     const [isActive, setIsActive] = useState(false);
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('ID copied to clipboard');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     const { data, isLoading } = useSWR(
         isActive && id && _class !== ENTITIES.LITERAL
@@ -94,14 +87,12 @@ const DescriptionTooltip: FC<DescriptionTooltipProps> = ({
                         <span className="flex items-center gap-1">
                             <span>{id ?? <em>{`${renderTypeLabel()} doesn't exist yet`}</em>}</span>
                             {id && (
-                                <Button
-                                    onPress={() => copyToClipboard(id)}
-                                    aria-label="Click to copy id"
-                                    className="py-0 px-0"
-                                    size="sm"
-                                    variant="ghost"
-                                >
-                                    <FontAwesomeIcon icon={faClipboard} size="xs" />
+                                <Button onPress={() => copy(id)} aria-label="Click to copy id" className="py-0 px-0" size="sm" variant="ghost">
+                                    <FontAwesomeIcon
+                                        icon={isCopied ? faCheck : faClipboard}
+                                        size="xs"
+                                        className={isCopied ? 'text-success' : undefined}
+                                    />
                                 </Button>
                             )}
                             {id && showURL && (

@@ -1,6 +1,6 @@
-import { faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Label, TextArea, TextField, toast, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, Label, TextArea, TextField, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
@@ -8,6 +8,7 @@ import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { updateDescription, updateResearchFields, updateResearchProblems, updateTargetClass } from '@/slices/templateEditorSlice';
@@ -18,6 +19,7 @@ export const MAX_DESCRIPTION_LENGTH = 350;
 
 const GeneralSettings = () => {
     const { isEditMode } = useIsEditMode();
+    const { isCopied, copy } = useCopyWithFeedback();
 
     const dispatch = useDispatch();
     const description = useSelector((state: RootStore) => state.templateEditor.description);
@@ -56,9 +58,8 @@ const GeneralSettings = () => {
     const targetClassLink = hasTargetClass ? getLinkByEntityType(targetClass?._class || 'class', targetClass!.id) : '#';
 
     const handleCopyTargetClassId = () => {
-        if (targetClass?.id && navigator.clipboard) {
-            navigator.clipboard.writeText(targetClass.id);
-            toast.success('ID copied to clipboard');
+        if (targetClass?.id) {
+            copy(targetClass.id);
         }
     };
 
@@ -92,9 +93,12 @@ const GeneralSettings = () => {
                         >
                             <Tooltip delay={0}>
                                 <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyTargetClassId} variant="tertiary">
-                                    <FontAwesomeIcon icon={faClipboard} className="size-3.5 text-muted" />
+                                    <FontAwesomeIcon
+                                        icon={isCopied ? faCheck : faClipboard}
+                                        className={`size-3.5 ${isCopied ? 'text-success' : 'text-muted'}`}
+                                    />
                                 </Button>
-                                <Tooltip.Content>Copy ID to clipboard</Tooltip.Content>
+                                <Tooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</Tooltip.Content>
                             </Tooltip>
                             <Tooltip delay={0}>
                                 <Button

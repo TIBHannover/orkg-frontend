@@ -54,7 +54,7 @@ const ListPaginatedContent = <ItemType,>({
     loadingComponent = (
         <div className={`text-left rounded ${boxShadow ? 'box' : ''}`}>
             {[...Array(5)].map((_, i) => (
-                <div key={i} className="p-3 flex items-center gap-3 border-b border-divider last:border-b-0">
+                <div key={i} className="px-6 py-4 flex items-center gap-3 border-b border-divider last:border-b-0">
                     <div className="flex-1 flex flex-col gap-2">
                         <Skeleton className="w-3/5 h-4 rounded" />
                         <Skeleton className="w-2/5 h-3 rounded" />

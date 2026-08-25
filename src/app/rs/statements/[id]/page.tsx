@@ -25,7 +25,6 @@ import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { classesUrl, getClassById } from '@/services/backend/classes';
 import { getPaper, papersUrl } from '@/services/backend/papers';
-import { Thing } from '@/services/backend/things';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -92,9 +91,10 @@ const RSStatementPage = () => {
                                 )}
                             </h3>
                             <ItemMetadata
-                                item={statement as unknown as Thing}
+                                item={statement}
                                 showCreatedAt
                                 showCreatedBy
+                                showCertainty
                                 showProvenance
                                 showExtractionMethod
                                 editMode={isEditMode}

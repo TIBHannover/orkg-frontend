@@ -1,12 +1,13 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Modal, TextArea, toast } from '@heroui/react';
+import { Button, Modal, TextArea } from '@heroui/react';
 import dayjs from 'dayjs';
 import { env } from 'next-runtime-env';
-import { FC, useEffect } from 'react';
-import { useCopyToClipboard } from 'react-use';
+import { FC } from 'react';
 
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { getResourceLink } from '@/utils';
 
@@ -42,14 +43,7 @@ const ExportCitation: FC<ExportCitationProps> = ({ isOpen, toggle, id, title, au
         bibtexOptions,
     );
 
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('Latex citation copied');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     return (
         <Modal.Backdrop
@@ -68,8 +62,8 @@ const ExportCitation: FC<ExportCitationProps> = ({ isOpen, toggle, id, title, au
                         <div className="p-1">
                             <TextArea fullWidth readOnly value={latex.get()} rows={10} maxLength={MAX_LENGTH_INPUT} className="font-mono text-sm" />
                             <div className="mt-3 flex justify-end">
-                                <Button size="sm" variant="primary" onPress={() => copyToClipboard(latex.get())}>
-                                    <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                                <Button size="sm" variant="primary" onPress={() => copy(latex.get())}>
+                                    <FontAwesomeIcon icon={isCopied ? faCheck : faClipboard} /> {isCopied ? 'Copied!' : 'Copy to clipboard'}
                                 </Button>
                             </div>
                         </div>

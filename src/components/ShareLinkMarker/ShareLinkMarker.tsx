@@ -45,7 +45,6 @@ const ShareLinkMarker = ({ typeOfLink, title, shareUrl, buttonProps, iconOnly = 
         try {
             await navigator.clipboard.writeText(resolvedShareUrl);
             toast.clear();
-            toast.success('Link copied to clipboard');
             setRecentlyCopied(true);
             if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
             resetTimerRef.current = setTimeout(() => setRecentlyCopied(false), 1800);

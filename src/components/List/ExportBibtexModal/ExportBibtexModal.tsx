@@ -1,11 +1,12 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Modal, toast } from '@heroui/react';
+import { Button, Modal } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
-import { useCopyToClipboard } from 'react-use';
 
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import useList from '@/components/List/hooks/useList';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { Paper } from '@/services/backend/types';
@@ -25,14 +26,7 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
     const [bibtex, setBibtex] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { allPapers } = useList();
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('Bibtex copied to clipboard');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     const getCite = (paper: Paper) =>
         new Cite({
@@ -93,8 +87,8 @@ const ExportBibtexModal: FC<ExportBibtexModalProps> = ({ toggle }) => {
                             className="w-full rounded-md border border-default bg-field-background px-3 py-2 text-sm text-field-foreground placeholder:text-field-placeholder focus:outline-2 focus:outline-focus disabled:opacity-70"
                         />
                         <div className="mt-2 flex justify-end">
-                            <Button isDisabled={isLoading} variant="primary" size="sm" onPress={() => copyToClipboard(bibtex)}>
-                                <FontAwesomeIcon icon={faClipboard} className="mr-1" /> Copy to clipboard
+                            <Button isDisabled={isLoading} variant="primary" size="sm" onPress={() => copy(bibtex)}>
+                                <FontAwesomeIcon icon={isCopied ? faCheck : faClipboard} className="mr-1" /> {isCopied ? 'Copied!' : 'Copy to clipboard'}
                             </Button>
                         </div>
                     </Modal.Body>

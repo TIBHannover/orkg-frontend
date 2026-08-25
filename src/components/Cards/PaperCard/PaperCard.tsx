@@ -1,11 +1,15 @@
 import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Checkbox, Chip } from '@heroui/react';
+import { Checkbox } from '@heroui/react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import pluralize from 'pluralize';
 import { ChangeEvent, FC } from 'react';
 
+import CardBadge from '@/components/Cards/CardBadge/CardBadge';
+import CardColumns from '@/components/Cards/CardShell/CardColumns';
+import CardShell from '@/components/Cards/CardShell/CardShell';
+import MetadataRow from '@/components/Cards/CardShell/MetadataRow';
 import AddToComparison from '@/components/Cards/PaperCard/AddToComparison';
 import Authors from '@/components/Cards/PaperCard/Authors';
 import Description from '@/components/Cards/PaperCard/Description/Description';
@@ -16,8 +20,6 @@ import useMarkFeaturedUnlisted from '@/components/MarkFeaturedUnlisted/hooks/use
 import MarkFeatured from '@/components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from '@/components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
-import RelativeBreadcrumbs from '@/components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { VISIBILITY } from '@/constants/contentTypes';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -68,6 +70,17 @@ const PaperCard: FC<PaperCardType> = ({
 }) => {
     const showActionButtons = showAddToComparison || selectable || showCurationFlags;
     const publishedVersions = paper.versions?.published ?? [];
+    const { publishedMonth, publishedYear } = paper.publicationInfo ?? {};
+    const publicationDate = [
+        publishedMonth && publishedMonth > 0
+            ? dayjs()
+                  .month(publishedMonth - 1)
+                  .format('MMMM')
+            : undefined,
+        publishedYear ?? undefined,
+    ]
+        .filter(Boolean)
+        .join(' ');
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: paper.id ?? '',
         unlisted: paper?.visibility === VISIBILITY.UNLISTED,
@@ -75,15 +88,12 @@ const PaperCard: FC<PaperCardType> = ({
     });
 
     return (
-        <div
-            className={`${isListGroupItem ? 'list-group-item' : ''} flex flex-wrap py-4 pr-6 ${showActionButtons ? 'pl-4' : 'pl-6'} ${selected ? 'bg-default' : ''}`}
-        >
-            <div className="flex w-full items-start p-0 md:w-9/12 md:shrink-0 md:grow-0 md:basis-9/12 md:max-w-9/12">
-                {renderCoins && <Coins item={paper} />}
-                {showActionButtons && (
-                    <div className="mt-0.5 flex w-[25px] shrink-0 flex-col gap-1">
-                        {selectable && (
-                            <div>
+        <CardShell asListItem={isListGroupItem} className={selected ? 'bg-default' : undefined}>
+            <CardColumns
+                gutter={
+                    showActionButtons && (
+                        <>
+                            {selectable && (
                                 <Checkbox
                                     id={`${paper.id}input`}
                                     isSelected={selected}
@@ -99,91 +109,74 @@ const PaperCard: FC<PaperCardType> = ({
                                         </Checkbox.Control>
                                     </Checkbox.Content>
                                 </Checkbox>
-                            </div>
-                        )}
-                        {!selectable && showAddToComparison && !!paper.contributions?.length && (
-                            <div>
-                                <AddToComparison paper={paper as Paper} />
-                            </div>
-                        )}
-                        {showCurationFlags && (
-                            <>
-                                <div>
+                            )}
+                            {!selectable && showAddToComparison && !!paper.contributions?.length && <AddToComparison paper={paper as Paper} />}
+                            {showCurationFlags && (
+                                <>
                                     <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                </div>
-                                <div>
                                     <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                </div>
-                            </>
-                        )}
-                    </div>
-                )}
-                <div className="flex grow flex-col">
-                    <div className="mb-2">
-                        <Link
-                            target={linkTarget || undefined}
-                            href={
-                                route ||
-                                reverse(ROUTES.VIEW_PAPER, {
-                                    resourceId: paper.id,
-                                })
-                            }
-                        >
-                            <PaperTitle title={paper.title} />
-                        </Link>
-                        {showBadge && (
-                            <span className="ml-2 inline-block align-middle">
-                                <Chip color="accent" variant="primary" size="sm">
-                                    Paper
-                                </Chip>
-                            </span>
-                        )}
-                    </div>
-                    <div>
-                        <div className="mr-1 mt-1 inline-block md:hidden">
-                            {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchFields?.[0]} />}
-                        </div>
-                    </div>
-                    <div className="mb-1">
-                        <small>
-                            {showContributionCount && (
-                                <div className="mr-1 inline-block">
-                                    <FontAwesomeIcon size="sm" icon={faFile} className="mr-1 text-muted" />
-                                    {pluralize('contribution', paper.contributions?.length, true)}
-                                </div>
+                                </>
                             )}
-                            <Authors authors={paper.authors} />
-                            {(paper.publicationInfo?.publishedMonth || paper.publicationInfo?.publishedYear) && (
-                                <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />
-                            )}
-                            {paper.publicationInfo?.publishedMonth && paper.publicationInfo?.publishedMonth > 0
-                                ? dayjs()
-                                      .month(paper.publicationInfo?.publishedMonth - 1)
-                                      .format('MMMM')
-                                : ''}{' '}
-                            {paper.publicationInfo?.publishedYear ?? null}
-                        </small>
-                        <Description description={description} isEditable={isDescriptionEditable} handleUpdate={handleUpdateDescription} />
-                    </div>
-                    {showVersions && publishedVersions.length > 0 && <Versions versions={publishedVersions} />}
+                        </>
+                    )
+                }
+                researchField={showBreadcrumbs ? paper.researchFields?.[0] : undefined}
+                createdBy={showCreator ? paper.createdBy : undefined}
+            >
+                {renderCoins && <Coins item={paper} />}
+                <div className="mb-2">
+                    <Link
+                        target={linkTarget || undefined}
+                        href={
+                            route ||
+                            reverse(ROUTES.VIEW_PAPER, {
+                                resourceId: paper.id,
+                            })
+                        }
+                    >
+                        <PaperTitle title={paper.title} />
+                    </Link>
+                    {showBadge && (
+                        <span className="ml-2 inline-block align-middle">
+                            <CardBadge>Paper</CardBadge>
+                        </span>
+                    )}
                 </div>
-            </div>
-            <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
-                <div className="mb-1 grow">
-                    <div className="hidden items-end justify-end md:flex">
-                        {showBreadcrumbs && <RelativeBreadcrumbs researchField={paper.researchFields?.[0]} />}
-                    </div>
+                <div className="mb-1">
+                    <MetadataRow
+                        items={[
+                            showContributionCount && {
+                                key: 'contributions',
+                                node: (
+                                    <span className="inline-flex items-center">
+                                        <FontAwesomeIcon size="sm" icon={faFile} className="me-1 text-muted" />
+                                        {pluralize('contribution', paper.contributions?.length ?? 0, true)}
+                                    </span>
+                                ),
+                            },
+                            !!paper.authors?.length && { key: 'authors', node: <Authors authors={paper.authors} /> },
+                            !!publicationDate && {
+                                key: 'published',
+                                node: (
+                                    <span className="inline-flex items-center" title={`Published ${publicationDate}`}>
+                                        <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
+                                        <span className="sr-only">Published </span>
+                                        {publicationDate}
+                                    </span>
+                                ),
+                            },
+                        ]}
+                    />
+                    <Description description={description} isEditable={isDescriptionEditable} handleUpdate={handleUpdateDescription} />
                 </div>
-                {showCreator && <UserAvatar userId={paper.createdBy} />}
-            </div>
+                {showVersions && publishedVersions.length > 0 && <Versions versions={publishedVersions} />}
+            </CardColumns>
             {paths && paths?.length > 0 && (
-                <div className={`${showActionButtons ? 'pl-6' : 'pl-12'} mb-1`}>
-                    <small>
-                        <Paths paths={paths} />
-                    </small>
+                <div className={`text-sm ${showActionButtons ? 'pl-6' : 'pl-12'}`}>
+                    <Paths paths={paths} />
                 </div>
             )}
-        </div>
+        </CardShell>
     );
 };
 

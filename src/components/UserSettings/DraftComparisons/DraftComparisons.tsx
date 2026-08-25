@@ -1,14 +1,12 @@
-import { faCalendar, faClock, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, toast } from '@heroui/react';
-import dayjs from 'dayjs';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { toast } from '@heroui/react';
 import { useEffect } from 'react';
 import { mutate } from 'swr';
 
+import EntityCard from '@/components/Cards/EntityCard/EntityCard';
 import Confirm from '@/components/Confirmation/Confirmation';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -48,25 +46,14 @@ const DraftComparisons = () => {
     };
 
     const renderListItem = (comparison: Comparison) => (
-        <ShortRecord key={comparison.id} header={comparison.title} href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 text-muted">
-                    <span className="flex items-center gap-1">
-                        <FontAwesomeIcon size="sm" icon={faCalendar} />
-                        {comparison.created_at ? dayjs(comparison.created_at).format('DD MMMM YYYY') : ''}
-                    </span>
-                    {comparison.created_at && (
-                        <span className="flex items-center gap-1">
-                            <FontAwesomeIcon size="sm" icon={faClock} />
-                            {dayjs(comparison.created_at).format('H:mm')}
-                        </span>
-                    )}
-                </div>
-                <Button variant="ghost" size="sm" className="text-danger" onPress={() => handleDelete(comparison)}>
-                    <FontAwesomeIcon icon={faTrash} /> Delete
-                </Button>
-            </div>
-        </ShortRecord>
+        <EntityCard
+            key={comparison.id}
+            item={comparison}
+            label={comparison.title}
+            href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}
+            showCreatedBy={false}
+            menuActions={[{ key: 'delete', label: 'Delete', icon: faTrash, isDanger: true, onAction: () => handleDelete(comparison) }]}
+        />
     );
 
     if (!user) {

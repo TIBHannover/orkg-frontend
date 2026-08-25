@@ -1,17 +1,18 @@
 import { Cite } from '@citation-js/core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox, cn, Modal, toast, Tooltip } from '@heroui/react';
+import { Button, Checkbox, cn, Modal, Tooltip } from '@heroui/react';
 import dayjs from 'dayjs';
 import { clone } from 'lodash';
 // @ts-expect-error package doesn't support typescript
 import MakeLatex from 'make-latex';
 import { FC, useEffect, useState } from 'react';
-import { useCopyToClipboard } from 'react-use';
 
 import generateMatrix from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/helpers/generateMatrix';
 import useComparisonExport from '@/components/Comparison/ComparisonTable/hooks/useComparisonExport';
 import useComparison from '@/components/Comparison/hooks/useComparison';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -31,14 +32,8 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
     const [includeFootnote, setIncludeFootnote] = useState(true);
     const [latexTable, setLatexTable] = useState('');
     const [bibTexReferences, setBibTexReferences] = useState('');
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('Latex copied to clipboard');
-        }
-    }, [state.value]);
+    const { isCopied: isTableCopied, copy: copyTable } = useCopyWithFeedback();
+    const { isCopied: isReferencesCopied, copy: copyReferences } = useCopyWithFeedback();
 
     const { comparison, selectedPathsFlattened } = useComparison();
     const { table, columns } = useComparisonExport();
@@ -327,8 +322,9 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                                             </Checkbox.Content>
                                         </Checkbox>
                                     </div>
-                                    <Button variant="primary" size="sm" onPress={() => copyToClipboard(latexTable)}>
-                                        <FontAwesomeIcon icon={faClipboard} className="mr-1" /> Copy to clipboard
+                                    <Button variant="primary" size="sm" onPress={() => copyTable(latexTable)}>
+                                        <FontAwesomeIcon icon={isTableCopied ? faCheck : faClipboard} className="mr-1" />{' '}
+                                        {isTableCopied ? 'Copied!' : 'Copy to clipboard'}
                                     </Button>
                                 </div>
                             </>
@@ -343,8 +339,9 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
                                     rows={15}
                                 />
                                 <div className="flex justify-end mt-3">
-                                    <Button variant="primary" size="sm" onPress={() => copyToClipboard(bibTexReferences)}>
-                                        <FontAwesomeIcon icon={faClipboard} className="mr-1" /> Copy to clipboard
+                                    <Button variant="primary" size="sm" onPress={() => copyReferences(bibTexReferences)}>
+                                        <FontAwesomeIcon icon={isReferencesCopied ? faCheck : faClipboard} className="mr-1" />{' '}
+                                        {isReferencesCopied ? 'Copied!' : 'Copy to clipboard'}
                                     </Button>
                                 </div>
                             </>

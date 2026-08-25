@@ -1,18 +1,18 @@
 'use client';
 
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Button, Dropdown, InputGroup, Label, Modal, Separator, Skeleton, TextField, toast } from '@heroui/react';
+import { Alert, Button, Dropdown, InputGroup, Label, Modal, Separator, Skeleton, TextField } from '@heroui/react';
 import { buttonVariants } from '@heroui/styles';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useCopyToClipboard } from 'react-use';
 
 import ExportCitation from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/Export/ExportCitation';
 import NotFound from '@/app/not-found';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import Coins from '@/components/Coins/Coins';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import ShareLinkMarker from '@/components/ShareLinkMarker/ShareLinkMarker';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
@@ -31,14 +31,8 @@ const ViewPaperVersion = () => {
     const { paper, dataCiteDoi, originalPaperId, isLoading: isLoadingPaper } = useViewPaper({ paperId: resourceId });
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('Paper link copied!');
-        }
-    }, [state.value]);
+    const { isCopied: isLinkCopied, copy: copyLink } = useCopyWithFeedback();
+    const { isCopied: isDoiCopied, copy: copyDoi } = useCopyWithFeedback();
 
     useEffect(() => {
         if (paper && !isLoadingPaper) {
@@ -160,9 +154,12 @@ const ViewPaperVersion = () => {
                                                     size="sm"
                                                     variant="ghost"
                                                     aria-label="Copy paper link"
-                                                    onPress={() => copyToClipboard(`${window.location.href}`)}
+                                                    onPress={() => copyLink(`${window.location.href}`)}
                                                 >
-                                                    <FontAwesomeIcon icon={faClipboard} />
+                                                    <FontAwesomeIcon
+                                                        icon={isLinkCopied ? faCheck : faClipboard}
+                                                        className={isLinkCopied ? 'text-success' : undefined}
+                                                    />
                                                 </Button>
                                             </InputGroup.Suffix>
                                         </InputGroup>
@@ -177,9 +174,12 @@ const ViewPaperVersion = () => {
                                                     size="sm"
                                                     variant="ghost"
                                                     aria-label="Copy DOI link"
-                                                    onPress={() => copyToClipboard(`https://doi.org/${dataCiteDoi}`)}
+                                                    onPress={() => copyDoi(`https://doi.org/${dataCiteDoi}`)}
                                                 >
-                                                    <FontAwesomeIcon icon={faClipboard} />
+                                                    <FontAwesomeIcon
+                                                        icon={isDoiCopied ? faCheck : faClipboard}
+                                                        className={isDoiCopied ? 'text-success' : undefined}
+                                                    />
                                                 </Button>
                                             </InputGroup.Suffix>
                                         </InputGroup>

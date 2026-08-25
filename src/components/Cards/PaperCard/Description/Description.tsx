@@ -29,7 +29,7 @@ const Description = ({ description, isEditable, handleUpdate }: DescriptionProps
             <p className="mb-0 mt-1 min-h-[28px] w-full whitespace-pre-line pt-0 leading-[1.2]">
                 {!isEditingDescription ? (
                     <>
-                        <small className="text-muted">{description || <em>No description</em>}</small>
+                        <span className="text-sm text-muted">{description || <em>No description</em>}</span>
                         {isEditable && (
                             <span className="ml-2">
                                 <ActionButtonView icon={faPen} action={() => setIsEditingDescription(true)} isDisabled={false} title="Edit" />

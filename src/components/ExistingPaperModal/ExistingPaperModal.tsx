@@ -36,7 +36,7 @@ const ExistingPaperModal: FC<ExistingPaperModalProps> = ({ paper, toggle }) => (
                     <div>
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-default-500">Existing paper</p>
                         <div className="rounded border border-default-200">
-                            <PaperCard paper={paper} showAddToComparison={false} />
+                            <PaperCard paper={paper} showAddToComparison={false} isListGroupItem={false} />
                         </div>
                     </div>
                 </Modal.Body>

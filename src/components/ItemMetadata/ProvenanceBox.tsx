@@ -7,23 +7,21 @@ import { useState } from 'react';
 import ActionButton from '@/components/ActionButton/ActionButton';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import useProvenance from '@/components/ItemMetadata/hooks/useProvenance';
+import { ProvenanceItem } from '@/components/ItemMetadata/types';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { Thing } from '@/services/backend/things';
 
 type ProvenanceBoxProps = {
-    item: Thing & { version_id?: string; observatories?: string[]; organizations?: string[]; observatory_id?: string; organization_id?: string };
+    item: ProvenanceItem;
     editMode: boolean;
     updateCallBack?: (observatoryId?: string, organizationId?: string) => void;
 };
 
 function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBoxProps) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const _observatoryId =
-        'observatories' in item && item.observatories && item.observatories?.length > 0 ? item.observatories[0] : item.observatory_id;
-    const _organizationId =
-        'observatories' in item && item.organizations && item.organizations?.length > 0 ? item.organizations[0] : item.organization_id;
+    const _observatoryId = item.observatories && item.observatories.length > 0 ? item.observatories[0] : item.observatory_id;
+    const _organizationId = item.organizations && item.organizations.length > 0 ? item.organizations[0] : item.organization_id;
     const { observatory, organization } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
     const { isCurationAllowed } = useAuthentication();
 
@@ -59,7 +57,7 @@ function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBox
                 observatory={observatory}
                 organization={organization}
                 // rosetta statement require the version_id to be updated
-                resourceId={item.version_id ?? item.id}
+                resourceId={(item.version_id ?? item.id) as string}
                 toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </>
