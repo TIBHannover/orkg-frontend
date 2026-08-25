@@ -1,10 +1,11 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Modal, Tabs, TextArea, toast } from '@heroui/react';
+import { Button, Modal, Tabs, TextArea } from '@heroui/react';
 import { zipObject } from 'lodash';
 import { FC, useEffect, useState } from 'react';
-import { useCopyToClipboard } from 'react-use';
 
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import { getCitationByDOI } from '@/services/datacite/index';
 
 const CITATION_STYLES = [
@@ -23,14 +24,7 @@ type ExportCitationProps = {
 const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
     const [selectedTab, setSelectedTab] = useState('APA');
     const [citations, setCitations] = useState<{ [key: string]: string }>({});
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('Citation copied to clipboard');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     useEffect(() => {
         let cancelled = false;
@@ -83,8 +77,8 @@ const ExportCitation: FC<ExportCitationProps> = ({ toggle, DOI }) => {
                                     <Tabs.Panel key={style.styleTabID} id={style.styleTabID}>
                                         <TextArea fullWidth readOnly value={displayValue} rows={10} className="font-mono text-sm" />
                                         <div className="mt-3 flex justify-end">
-                                            <Button size="sm" variant="primary" isDisabled={!value} onPress={() => value && copyToClipboard(value)}>
-                                                <FontAwesomeIcon icon={faClipboard} /> Copy to clipboard
+                                            <Button size="sm" variant="primary" isDisabled={!value} onPress={() => value && copy(value)}>
+                                                <FontAwesomeIcon icon={isCopied ? faCheck : faClipboard} /> {isCopied ? 'Copied!' : 'Copy to clipboard'}
                                             </Button>
                                         </div>
                                     </Tabs.Panel>

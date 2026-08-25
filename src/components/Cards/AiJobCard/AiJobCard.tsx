@@ -13,6 +13,7 @@ import useAiJobActions from '@/components/AiJobs/hooks/useAiJobActions';
 import useAiJobPlan, { getAiJobLabel } from '@/components/AiJobs/hooks/useAiJobPlan';
 import { isJobActive } from '@/components/AiJobs/hooks/useAiJobs';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import CardShell from '@/components/Cards/CardShell/CardShell';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -42,7 +43,9 @@ const AiJobCard: FC<AiJobCardProps> = ({ job }) => {
     };
 
     return (
-        <li className="list-group-item px-6 py-4">
+        <CardShell>
+            {/* buttons live in the body row, not the shell's actions slot: they are wide enough
+                that on narrow screens they must wrap below the title instead of squeezing it */}
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                     <Link href={jobUrl} className="font-medium">
@@ -61,7 +64,7 @@ const AiJobCard: FC<AiJobCardProps> = ({ job }) => {
                     </div>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     {job.status === 'completed' && (
                         <>
                             <Button
@@ -129,7 +132,7 @@ const AiJobCard: FC<AiJobCardProps> = ({ job }) => {
             {/* Progress stays fresh through the parent list's polling (useAiJobs
                 refreshes every 10s while a job is active) — no stream is opened here. */}
             {isJobActive(job) && (
-                <div className="mt-3">
+                <div>
                     <ProgressBar
                         aria-label="Job progress"
                         size="sm"
@@ -147,11 +150,11 @@ const AiJobCard: FC<AiJobCardProps> = ({ job }) => {
             )}
 
             {job.status === 'failed' && job.error && (
-                <p className="mb-0 mt-2 line-clamp-2 text-sm text-red-600" title={job.error}>
+                <p className="mb-0 line-clamp-2 text-sm text-red-600" title={job.error}>
                     {job.error}
                 </p>
             )}
-        </li>
+        </CardShell>
     );
 };
 

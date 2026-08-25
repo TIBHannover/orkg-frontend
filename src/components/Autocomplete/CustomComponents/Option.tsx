@@ -1,16 +1,15 @@
-import { faArrowRight, faCircleExclamation, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCheck, faCircleExclamation, faClipboard, faExternalLink, faStar, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Chip, toast } from '@heroui/react';
+import { Chip } from '@heroui/react';
 import { truncate } from 'lodash';
 import pluralize from 'pluralize';
-import { useEffect } from 'react';
 import type { GroupBase } from 'react-select';
 import { components, OptionProps } from 'react-select';
-import { useCopyToClipboard } from 'react-use';
 
 import InfoBox from '@/components/Autocomplete/CustomComponents/InfoBox';
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import { ENTITIES } from '@/constants/graphSettings';
 import { getLinkByEntityType } from '@/utils';
 
@@ -25,14 +24,7 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
     const truncatedDescription = truncate(data.description ? data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
     const iconClassName = !isFocused ? 'text-muted' : 'text-secondary';
     const textClassName = !isFocused && !isSelected ? 'text-muted' : '';
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('ID copied to clipboard');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
@@ -96,10 +88,10 @@ export const Option = <OptionT extends OptionType, Group extends GroupBase<Optio
                                         onMouseDown={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();
-                                            copyToClipboard(data.id);
+                                            copy(data.id);
                                         }}
                                     >
-                                        <FontAwesomeIcon icon={faClipboard} className="text-dark" size="xs" />
+                                        <FontAwesomeIcon icon={isCopied ? faCheck : faClipboard} className={isCopied ? 'text-success' : 'text-dark'} size="xs" />
                                     </button>
                                 </div>
                             }

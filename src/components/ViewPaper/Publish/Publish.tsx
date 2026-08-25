@@ -1,14 +1,14 @@
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Modal, toast, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { MouseEvent, useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
-import { useCopyToClipboard } from 'react-use';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import AuthorsInput from '@/components/Input/AuthorsInput/AuthorsInput';
 import ResearchFieldInput from '@/components/Input/ResearchFieldInput/ResearchFieldInput';
 import useParams from '@/components/useParams/useParams';
@@ -54,14 +54,7 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
     const { title } = viewPaper || {};
-    const [state, copyToClipboard] = useCopyToClipboard();
-
-    useEffect(() => {
-        if (state.value) {
-            toast.clear();
-            toast.success('DOI link copied!');
-        }
-    }, [state.value]);
+    const { isCopied, copy } = useCopyWithFeedback();
 
     const isPublishable = !!(title && title.trim() !== '' && description && description.trim() !== '' && researchField && creators?.length > 0);
 
@@ -166,9 +159,9 @@ const Publish = ({ showDialog, toggle }: PublishProps) => {
                                             variant="primary"
                                             aria-label="Copy DOI link"
                                             className="!h-10 !rounded-s-none -ms-px px-4"
-                                            onPress={() => copyToClipboard(`https://doi.org/${dataCiteDoi}`)}
+                                            onPress={() => copy(`https://doi.org/${dataCiteDoi}`)}
                                         >
-                                            <FontAwesomeIcon icon={faClipboard} />
+                                            <FontAwesomeIcon icon={isCopied ? faCheck : faClipboard} className={isCopied ? 'text-success' : undefined} />
                                         </Button>
                                     </div>
                                 </div>

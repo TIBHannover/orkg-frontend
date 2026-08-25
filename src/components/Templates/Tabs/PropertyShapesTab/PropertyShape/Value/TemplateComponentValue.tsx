@@ -1,6 +1,6 @@
-import { faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Input, Label, ListBox, Select, TextArea, TextField, toast, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, Input, Label, ListBox, Select, TextArea, TextField, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { FC, Key, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { ActionMeta, SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import ValidationRulesNumber from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesNumber';
 import ValidationRulesString from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/ValidationRules/ValidationRulesString';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
@@ -43,6 +44,7 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
     };
     const [cardinality, setCardinality] = useState<string>(mapOptions[strCardinality] || 'range');
     const { isEditMode } = useIsEditMode();
+    const { isCopied, copy } = useCopyWithFeedback();
 
     const dispatch = useDispatch();
     const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
@@ -89,9 +91,8 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
     const rangeLink = hasRange ? getLinkByEntityType(range?._class || 'class', range!.id) : '#';
 
     const handleCopyRangeId = () => {
-        if (range?.id && navigator.clipboard) {
-            navigator.clipboard.writeText(range.id);
-            toast.success('ID copied to clipboard');
+        if (range?.id) {
+            copy(range.id);
         }
     };
 
@@ -128,9 +129,12 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                     >
                         <Tooltip delay={0}>
                             <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyRangeId} variant="tertiary">
-                                <FontAwesomeIcon icon={faClipboard} className="size-3.5 text-muted" />
+                                <FontAwesomeIcon
+                                    icon={isCopied ? faCheck : faClipboard}
+                                    className={`size-3.5 ${isCopied ? 'text-success' : 'text-muted'}`}
+                                />
                             </Button>
-                            <Tooltip.Content>Copy ID to clipboard</Tooltip.Content>
+                            <Tooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</Tooltip.Content>
                         </Tooltip>
                         <Tooltip delay={0}>
                             <Button

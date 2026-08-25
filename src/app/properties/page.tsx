@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@heroui/react';
 import { useEffect } from 'react';
 
+import EntityCard from '@/components/Cards/EntityCard/EntityCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getPredicates, predicatesUrl } from '@/services/backend/predicates';
@@ -19,9 +19,7 @@ const Properties = () => {
     });
 
     const renderListItem = (property: Predicate) => (
-        <ShortRecord key={property.id} header={property.label} href={reverse(ROUTES.PROPERTY, { id: property.id })}>
-            {property.id}
-        </ShortRecord>
+        <EntityCard key={property.id} item={property} href={reverse(ROUTES.PROPERTY, { id: property.id })} />
     );
 
     const buttons = (

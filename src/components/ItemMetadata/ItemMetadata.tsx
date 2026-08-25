@@ -1,18 +1,18 @@
-import { faArrowRight, faCalendar, faSearch, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCalendar, faGaugeSimpleHigh, faSearch, faTags, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Key } from '@heroui/react';
 import { Chip, ListBox, Select, toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import pluralize from 'pluralize';
-import { FC, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 
 import CopyId from '@/components/CopyId/CopyId';
 import ProvenanceBox from '@/components/ItemMetadata/ProvenanceBox';
+import { ProvenanceItem } from '@/components/ItemMetadata/types';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS, getExtractionMethodLabel } from '@/constants/misc';
 import { updateResource } from '@/services/backend/resources';
-import { Thing } from '@/services/backend/things';
 import { ExtractionMethod } from '@/services/backend/types';
 
 type ItemMetadataProps = {
@@ -21,70 +21,73 @@ type ItemMetadataProps = {
     showDataType?: boolean;
     showCreatedAt?: boolean;
     showCreatedBy?: boolean;
+    showCertainty?: boolean;
     showProvenance?: boolean;
     showExtractionMethod?: boolean;
-    item: Thing;
+    /** Render the copyable ID pill */
+    showId?: boolean;
+    item: ProvenanceItem;
     handleUrl?: string;
     updateCallBack?: (observatoryId?: string, organizationId?: string) => void;
+    /** Extra chips appended to the metadata row */
+    children?: ReactNode;
 };
 
+/**
+ * Roomy, editable provenance row for entity page headers: it can edit the extraction method, assign an
+ * observatory and show the handle. Cards and list rows use {@link CompactItemMetadata} instead, which is
+ * read-only and drops the labels a dense row cannot afford.
+ */
 const ItemMetadata: FC<ItemMetadataProps> = ({
     editMode = false,
     showClasses = false,
     showDataType = false,
     showCreatedAt = false,
     showCreatedBy = false,
+    showCertainty = false,
     showProvenance = false,
     showExtractionMethod = false,
+    showId = true,
     handleUrl,
     item,
     updateCallBack,
+    children,
 }) => {
-    const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(
-        'extraction_method' in item ? item.extraction_method : EXTRACTION_METHODS.UNKNOWN,
-    );
+    const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(item.extraction_method ?? EXTRACTION_METHODS.UNKNOWN);
 
     const handleSave = async (selectedOption: ExtractionMethod) => {
         setExtractionMethod(selectedOption);
         // rosetta statement require the version_id to be updated
-        if ('version_id' in item) {
-            await updateResource(item.version_id as string, {
-                label: item?.label,
-                classes: 'classes' in item ? item.classes : undefined,
-                extractionMethod: selectedOption,
-            });
-        } else {
-            await updateResource(item.id as string, {
-                label: item?.label,
-                classes: 'classes' in item ? item.classes : undefined,
-                extractionMethod: selectedOption,
-            });
-        }
+        await updateResource((item.version_id ?? item.id) as string, {
+            label: item?.label,
+            classes: item.classes,
+            extractionMethod: selectedOption,
+        });
         toast.success('Resource extraction method updated successfully');
     };
 
     useEffect(() => {
-        if ('extraction_method' in item) {
+        if (item.extraction_method) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setExtractionMethod(item.extraction_method);
         }
     }, [item]);
 
     // TODO: remove snake case handling after finishing services migration
-    const createdBy = 'created_by' in item ? item.created_by : item.createdBy;
-    const createdAt = 'created_at' in item ? item.created_at : item.createdAt;
+    const createdBy = item.created_by ?? item.createdBy;
+    const createdAt = item.created_at ?? item.createdAt;
 
     return (
         <>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                 <div className="grow flex flex-wrap items-center gap-2 min-w-0">
-                    {showCreatedAt && (
+                    {showCreatedAt && createdAt && (
                         <Chip color="default" className="max-w-full">
                             <FontAwesomeIcon size="sm" icon={faCalendar} className="mr-1 text-muted" />{' '}
                             {dayjs(createdAt).format('DD MMMM YYYY - H:mm')}
                         </Chip>
                     )}
-                    {'shared' in item && item.shared > 0 && (
+                    {item.shared !== undefined && item.shared > 0 && (
                         <Chip color="default">
                             <span>
                                 <FontAwesomeIcon icon={faArrowRight} className="text-muted" />
@@ -92,13 +95,13 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                             {` Referred ${pluralize('time', item.shared, true)}`}
                         </Chip>
                     )}
-                    {showDataType && 'datatype' in item && item.datatype !== null && (
+                    {showDataType && item.datatype !== null && item.datatype !== undefined && (
                         <Chip color="default">
                             <span>{' Datatype: '}</span>
                             {item.datatype}
                         </Chip>
                     )}
-                    {showClasses && 'classes' in item && item.classes?.length > 0 && (
+                    {showClasses && item.classes && item.classes.length > 0 && (
                         <Chip color="default" className="max-w-full">
                             <span>
                                 <FontAwesomeIcon icon={faTags} className="text-muted" /> {' Instance of '}
@@ -106,12 +109,17 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                             <span className="truncate">{item.classes.join(', ')}</span>
                         </Chip>
                     )}
-                    {showCreatedBy && createdBy !== MISC.UNKNOWN_ID && (
+                    {showCreatedBy && createdBy && createdBy !== MISC.UNKNOWN_ID && (
                         <Chip color="default" className="max-w-full">
                             <FontAwesomeIcon icon={faUser} className="text-muted" /> Created by{' '}
                             <span className="ml-1 inline-block" style={{ marginTop: -30, marginBottom: -30 }}>
                                 <UserAvatar size={20} userId={createdBy} showDisplayName />
                             </span>
+                        </Chip>
+                    )}
+                    {showCertainty && item.certainty && (
+                        <Chip color="default">
+                            <FontAwesomeIcon icon={faGaugeSimpleHigh} className="text-muted" /> Degree of certainty: {item.certainty}
                         </Chip>
                     )}
                     {showExtractionMethod && (
@@ -151,8 +159,10 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                     )}
 
                     {showProvenance && <ProvenanceBox item={item} editMode={editMode} updateCallBack={updateCallBack} />}
+
+                    {children}
                 </div>
-                {item.id && (
+                {showId && item.id && (
                     <div className="flex shrink-0 sm:items-end">
                         <CopyId id={item.id} />
                     </div>

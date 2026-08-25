@@ -1,6 +1,6 @@
 'use client';
 
-import { faClipboard, faExternalLinkAlt, faSitemap } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClipboard, faExternalLinkAlt, faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, ButtonGroup, Card, Description, Form, Input, Label, TextField, toast, Tooltip } from '@heroui/react';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ import TreeSelector from '@/components/Autocomplete/ValueButtons/TreeSelector';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import { ENTITIES } from '@/constants/graphSettings';
@@ -32,6 +33,7 @@ const CreateClassPage = () => {
     const [parentClass, setParentClass] = useState<SingleValue<OptionType>>(null);
     const parentClassAutocompleteRef = useRef<SelectInstance<OptionType | null>>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const { isCopied, copy } = useCopyWithFeedback();
     const router = useRouter();
 
     const { isCurationAllowed } = useAuthentication();
@@ -89,9 +91,8 @@ const CreateClassPage = () => {
     };
 
     const handleCopyParentId = () => {
-        if (parentClass?.id && navigator.clipboard) {
-            navigator.clipboard.writeText(parentClass.id);
-            toast.success('ID copied to clipboard');
+        if (parentClass?.id) {
+            copy(parentClass.id);
         }
     };
 
@@ -201,9 +202,12 @@ const CreateClassPage = () => {
                                             <Tooltip delay={0}>
                                                 <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyParentId} variant="tertiary">
                                                     <ButtonGroup.Separator />
-                                                    <FontAwesomeIcon icon={faClipboard} className="size-3.5" />
+                                                    <FontAwesomeIcon
+                                                        icon={isCopied ? faCheck : faClipboard}
+                                                        className={`size-3.5 ${isCopied ? 'text-success' : ''}`}
+                                                    />
                                                 </Button>
-                                                <Tooltip.Content>Copy ID to clipboard</Tooltip.Content>
+                                                <Tooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</Tooltip.Content>
                                             </Tooltip>
                                             <Tooltip delay={0}>
                                                 <Button

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { FC } from 'react';
 
 import Item from '@/app/search/components/Item/Item';
+import CardBadge from '@/components/Cards/CardBadge/CardBadge';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
-import { CardBadge } from '@/components/styled';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { Thing } from '@/services/backend/things';
@@ -48,7 +48,7 @@ const Results: FC<ResultsProps> = ({
                     <li key="result-searchTerm" className="py-6 px-4" style={{ overflowWrap: 'anywhere' }}>
                         <div className="flex items-center gap-2">
                             <Link href={reverse(ROUTES.AUTHOR_LITERAL, { authorString: query })}>{query}</Link>
-                            <CardBadge color="primary">Author</CardBadge>
+                            <CardBadge>Author</CardBadge>
                         </div>
                     </li>
                 )}

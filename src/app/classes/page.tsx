@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@heroui/react';
 import { useEffect } from 'react';
 
+import EntityCard from '@/components/Cards/EntityCard/EntityCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
-import ShortRecord from '@/components/ShortRecord/ShortRecord';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { classesUrl, getClasses } from '@/services/backend/classes';
@@ -19,9 +19,7 @@ const Classes = () => {
     });
 
     const renderListItem = (classItem: Class) => (
-        <ShortRecord key={classItem.id} header={classItem.label} href={reverse(ROUTES.CLASS, { id: classItem.id })}>
-            {classItem.id}
-        </ShortRecord>
+        <EntityCard key={classItem.id} item={classItem} href={reverse(ROUTES.CLASS, { id: classItem.id })} />
     );
 
     const buttons = (

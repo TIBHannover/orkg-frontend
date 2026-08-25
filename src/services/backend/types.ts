@@ -520,7 +520,7 @@ export type Comparison = {
     references: string[];
     observatories: string[];
     organizations: string[];
-    extraction_method: string;
+    extraction_method: ExtractionMethod;
     created_at: string;
     created_by: string;
     previous_version: string;

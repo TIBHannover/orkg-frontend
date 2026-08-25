@@ -1,6 +1,6 @@
 'use client';
 
-import { faClipboard, faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClipboard, faExternalLinkAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, ButtonGroup, Description, Input, Label, Separator, TextField, toast, Tooltip as HeroTooltip } from '@heroui/react';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import useMembership from '@/components/hooks/useMembership';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
@@ -30,6 +31,7 @@ const TemplateNew = () => {
     const [label, setLabel] = useState('');
     const [targetClass, setTargetClass] = useState<SingleValue<OptionType> | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const { isCopied, copy } = useCopyWithFeedback();
     const searchParams = useSearchParams();
     const router = useRouter();
     const { user } = useAuthentication();
@@ -113,9 +115,8 @@ const TemplateNew = () => {
     };
 
     const handleCopyTargetId = () => {
-        if (targetClass?.id && navigator.clipboard) {
-            navigator.clipboard.writeText(targetClass.id);
-            toast.success('ID copied to clipboard');
+        if (targetClass?.id) {
+            copy(targetClass.id);
         }
     };
 
@@ -186,9 +187,12 @@ const TemplateNew = () => {
                                     >
                                         <HeroTooltip delay={0}>
                                             <Button isIconOnly aria-label="Copy ID to clipboard" onPress={handleCopyTargetId} variant="tertiary">
-                                                <FontAwesomeIcon icon={faClipboard} className="size-3.5 text-muted" />
+                                                <FontAwesomeIcon
+                                                    icon={isCopied ? faCheck : faClipboard}
+                                                    className={`size-3.5 ${isCopied ? 'text-success' : 'text-muted'}`}
+                                                />
                                             </Button>
-                                            <HeroTooltip.Content>Copy ID to clipboard</HeroTooltip.Content>
+                                            <HeroTooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</HeroTooltip.Content>
                                         </HeroTooltip>
                                         <HeroTooltip delay={0}>
                                             <Button

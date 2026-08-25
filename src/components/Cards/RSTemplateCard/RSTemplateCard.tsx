@@ -1,13 +1,16 @@
 import { faCalendar, faShapes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Chip } from '@heroui/react';
 import dayjs from 'dayjs';
 import { toInteger } from 'lodash';
 import Link from 'next/link';
+import pluralize from 'pluralize';
 import { FC } from 'react';
 import ReactStringReplace from 'react-string-replace';
 
-import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import CardBadge from '@/components/Cards/CardBadge/CardBadge';
+import CardColumns from '@/components/Cards/CardShell/CardColumns';
+import CardShell from '@/components/Cards/CardShell/CardShell';
+import MetadataRow from '@/components/Cards/CardShell/MetadataRow';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { RosettaStoneTemplate } from '@/services/backend/types';
@@ -30,40 +33,43 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }
     );
 
     return (
-        <div className="list-group-item flex py-4 pr-6 pl-6">
-            <div className="flex w-full p-0 md:w-9/12 md:shrink-0 md:grow-0 md:basis-9/12 md:max-w-9/12">
-                <div className="flex grow flex-col">
-                    <div className="mb-2">
-                        <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
-                        {showBadge && (
-                            <span className="ml-2 inline-block align-middle">
-                                <Chip color="accent" variant="primary" size="sm">
-                                    Statement template
-                                </Chip>
-                            </span>
-                        )}
-                    </div>
-                    <div className="text-sm text-muted">{formattedLabelWithPlaceholders}</div>
-                    {template.description && (
-                        <div>
-                            <small className="text-muted">{template.description}</small>
-                        </div>
+        <CardShell>
+            <CardColumns createdBy={template.created_by}>
+                <div className="mb-2">
+                    <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
+                    {showBadge && (
+                        <span className="ml-2 inline-block align-middle">
+                            <CardBadge>Statement template</CardBadge>
+                        </span>
                     )}
-                    <div className="mb-1">
-                        <small>
-                            <FontAwesomeIcon size="sm" icon={faShapes} className="mr-1 text-muted" /> {template.properties?.length} Positions
-                            <FontAwesomeIcon size="sm" icon={faCalendar} className="ml-2 mr-1 text-muted" />{' '}
-                            {dayjs(template.created_at).format('DD-MM-YYYY')}
-                        </small>
-                    </div>
                 </div>
-            </div>
-            <div className="flex w-full flex-col items-end p-0 md:w-3/12 md:shrink-0 md:grow-0 md:basis-3/12 md:max-w-3/12">
-                <div className="mt-1 hidden items-end justify-end md:flex">
-                    <UserAvatar userId={template.created_by} />
-                </div>
-            </div>
-        </div>
+                <div className="text-sm text-muted">{formattedLabelWithPlaceholders}</div>
+                {template.description && <div className="text-sm text-muted">{template.description}</div>}
+                <MetadataRow
+                    className="mb-1"
+                    items={[
+                        {
+                            key: 'positions',
+                            node: (
+                                <span className="inline-flex items-center">
+                                    <FontAwesomeIcon size="sm" icon={faShapes} className="me-1 text-muted" />
+                                    {pluralize('position', template.properties?.length ?? 0, true)}
+                                </span>
+                            ),
+                        },
+                        !!template.created_at && {
+                            key: 'created-at',
+                            node: (
+                                <span className="inline-flex items-center" title={`Created ${dayjs(template.created_at).format('DD MMMM YYYY')}`}>
+                                    <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
+                                    {dayjs(template.created_at).format('DD MMM YYYY')}
+                                </span>
+                            ),
+                        },
+                    ]}
+                />
+            </CardColumns>
+        </CardShell>
     );
 };
 

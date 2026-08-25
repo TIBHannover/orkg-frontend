@@ -3,8 +3,8 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import useSWR from 'swr';
 
 import DEFAULT_FILTERS from '@/app/search/components/searchDefaultFilters';
-import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
-import { CardBadge } from '@/components/styled';
+import CardBadge from '@/components/Cards/CardBadge/CardBadge';
+import CompactItemMetadata from '@/components/ItemMetadata/CompactItemMetadata';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Thing } from '@/services/backend/things';
@@ -94,7 +94,7 @@ const Item: FC<{
                 </Checkbox>
                 {!!badge && (
                     <div className="shrink-0">
-                        <CardBadge color="primary">{badge.label}</CardBadge>
+                        <CardBadge>{badge.label}</CardBadge>
                     </div>
                 )}
             </div>
@@ -125,7 +125,7 @@ const Item: FC<{
                     {error && <div>Error: {error.message}</div>}
                 </div>
             )}
-            <ItemMetadata
+            <CompactItemMetadata
                 item={item}
                 showClasses={!badge}
                 showDataType
