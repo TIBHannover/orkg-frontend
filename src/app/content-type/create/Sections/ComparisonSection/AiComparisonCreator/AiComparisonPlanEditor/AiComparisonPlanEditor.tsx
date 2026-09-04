@@ -4,16 +4,15 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Chip, Disclosure, Input, Label, TextArea, TextField } from '@heroui/react';
 import type { ExtractionColumn, ExtractionPlan } from '@orkg/agentic-loop-client';
+import { reorderList, useAutoScroll, useSortableList } from '@orkg/pragmatic-dnd-hooks';
 import { uniqueId } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import EditablePropertyItem, {
     type EditableProperty,
-    isPropertyDragData,
 } from '@/app/content-type/create/Sections/ComparisonSection/AiComparisonCreator/AiComparisonPlanEditor/EditablePropertyItem/EditablePropertyItem';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import Confirm from '@/components/Confirmation/Confirmation';
-import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 
 type AiComparisonPlanEditorProps = {
     plan: ExtractionPlan;
@@ -31,7 +30,6 @@ const toEditable = (property: ExtractionColumn): EditableProperty => ({
 });
 
 const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiComparisonPlanEditorProps) => {
-    const [instanceId] = useState(() => createInstanceId('ai-comparison-plan-properties'));
     const [title, setTitle] = useState(plan.title);
     const [description, setDescription] = useState(plan.description);
     const [stepsText, setStepsText] = useState(plan.steps.join('\n'));
@@ -52,50 +50,14 @@ const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiC
         setProperties((prev) => prev.filter((property) => property._id !== id));
     };
 
-    const moveProperty = useCallback((index: number, direction: -1 | 1) => {
-        setProperties((prev) => {
-            const targetIndex = index + direction;
-            if (targetIndex < 0 || targetIndex >= prev.length) {
-                return prev;
-            }
+    // rows are drag-inert while submitting, so no reorder can arrive then
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: properties.length,
+        onReorder: (event) => setProperties((prev) => reorderList(prev, event)),
+    });
 
-            const next = [...prev];
-            [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
-            return next;
-        });
-    }, []);
-
-    const reorderProperties = useCallback(({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-        setProperties((prev) => {
-            const reorderedProperties = performReorder({
-                items: prev,
-                startIndex,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: 'vertical',
-            });
-
-            return reorderedProperties === prev ? prev : reorderedProperties;
-        });
-    }, []);
-
-    useEffect(() => {
-        if (isSubmitting) {
-            return undefined;
-        }
-
-        const cleanup = createListMonitor({
-            instanceId,
-            items: properties,
-            isDragData: isPropertyDragData,
-            onReorder: reorderProperties,
-            getItemId: (property) => property._id,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, isSubmitting, properties, reorderProperties]);
+    // the list scrolls with the page, so only the window needs to scroll while dragging
+    useAutoScroll({ instanceId, includeWindow: true });
 
     const addProperty = () => {
         setProperties((prev) => [
@@ -184,7 +146,7 @@ const AiComparisonPlanEditor = ({ plan, isSubmitting, onExecute, onCancel }: AiC
                             isSubmitting={isSubmitting}
                             updateProperty={updateProperty}
                             removeProperty={removeProperty}
-                            moveProperty={moveProperty}
+                            moveItem={moveItem}
                         />
                     ))}
                 </div>

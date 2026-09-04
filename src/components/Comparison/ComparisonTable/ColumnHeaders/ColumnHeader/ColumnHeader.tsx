@@ -1,36 +1,17 @@
-import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faFile, faTags, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@heroui/react';
+import { DropIndicator, useSortableItem } from '@orkg/pragmatic-dnd-hooks';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
 
 import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
 import useColumnWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useColumnWidth';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import PaperTitle from '@/components/PaperTitle/PaperTitle';
-import {
-    createDragDataFactory,
-    createDragDataKey,
-    createDragDataValidator,
-    createDraggableItem,
-    createEdgeChangeHandler,
-    createInstanceId,
-} from '@/components/shared/dnd/dragAndDropUtils';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { ComparisonTableColumn } from '@/services/backend/types';
-
-export const columnHeaderKey = createDragDataKey('columnHeader');
-export const instanceId = createInstanceId('comparison-table-header');
-
-export const createColumnHeaderData = createDragDataFactory(columnHeaderKey);
-export const isColumnHeaderData = createDragDataValidator(columnHeaderKey);
-export const isDragData = (data: Record<string | symbol, unknown>): data is { item: ComparisonTableColumn; index: number; instanceId: symbol } => {
-    return data[columnHeaderKey] === true;
-};
 
 type HeaderTextProps = {
     link: string;
@@ -56,10 +37,11 @@ const HeaderText = ({ link, column }: HeaderTextProps) => (
 type ColumnHeaderProps = {
     column: ComparisonTableColumn;
     index: number;
+    instanceId: symbol;
     isLast?: boolean;
 };
 
-const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
+const ColumnHeader = ({ index, column, instanceId, isLast }: ColumnHeaderProps) => {
     const { comparison, mutateComparisonContents, comparisonContents, updateComparison, isEditMode } = useComparison();
     // This column's r=1 (parent-level) dialog is rendered by the shared
     // ComparisonDialogs controller from the URL entry — the header only
@@ -84,44 +66,12 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
         mutateComparisonContents(comparisonContents, { revalidate: true });
     };
 
-    const [isDragging, setIsDragging] = useState(false);
-    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const ref = useRef(null);
-
-    useEffect(() => {
-        const element = ref.current;
-        if (!element || !isEditMode) {
-            return undefined;
-        }
-
-        const onEdgeChange = createEdgeChangeHandler({
-            targetElement: element,
-            sourceIndex: index,
-            targetIndex: index,
-            setClosestEdge,
-        });
-
-        return createDraggableItem({
-            element,
-            item: column,
-            index,
-            instanceId,
-            createDragData: createColumnHeaderData,
-            isDragData: isColumnHeaderData,
-            allowedEdges: ['left', 'right'],
-            onDragStart: () => {
-                setIsDragging(true);
-                setClosestEdge(null);
-            },
-            onDrop: () => {
-                setIsDragging(false);
-                setClosestEdge(null);
-            },
-            onEdgeChange,
-            onDragEnter: onEdgeChange,
-            onDragLeave: () => setClosestEdge(null),
-        });
-    }, [column, index, isEditMode]);
+    // no drag handle: the whole header cell drags (edit mode only); the axis is inferred from the list
+    const { elementRef, isDragging, closestEdge } = useSortableItem({
+        instanceId,
+        index,
+        isDisabled: !isEditMode,
+    });
 
     const link = reverse(ROUTES.RESOURCE, {
         id: column.subtitle?.id ?? column.title.id,
@@ -134,7 +84,7 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                 cursor: isEditMode ? 'move' : 'default',
                 minWidth: `${columnWidth}px`,
             }}
-            ref={ref}
+            ref={elementRef}
             className={`font-medium th p-0 w-[2px] grow-[2] shrink-0 basis-auto relative text-left ${isDragging ? 'shadow' : ''}`}
         >
             <div className={`h-full bg-accent px-2 pt-1 pb-2 text-white relative ${isLast ? 'rounded-tr-md' : ''}`}>
@@ -169,7 +119,11 @@ const ColumnHeader = ({ index, column, isLast }: ColumnHeaderProps) => {
                     </Button>
                 )}
             </div>
-            {closestEdge && isEditMode && <DropIndicator edge={closestEdge} />}
+            {closestEdge && isEditMode && (
+                // the thead clips on both axes (overflow-x-scroll) and the first column is sticky at
+                // z-20, so anything bleeding outside the cell is invisible at the table edges
+                <DropIndicator edge={closestEdge} gap="0px" terminal="no-bleed" className="text-white" style={{ zIndex: 30 }} />
+            )}
         </th>
     );
 };

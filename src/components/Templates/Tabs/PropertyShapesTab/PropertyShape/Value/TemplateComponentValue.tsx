@@ -1,6 +1,6 @@
 import { faCheck, faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Input, Label, ListBox, Select, TextArea, TextField, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, buttonVariants, cn, Input, Label, ListBox, Select, TextArea, TextField, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { FC, Key, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -137,16 +137,17 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                             <Tooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</Tooltip.Content>
                         </Tooltip>
                         <Tooltip delay={0}>
-                            <Button
-                                variant="tertiary"
-                                isIconOnly
+                            <Link
+                                href={rangeLink}
+                                target="_blank"
+                                rel="noreferrer"
                                 aria-label="Open class page"
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                render={(props: any) => <Link {...props} href={rangeLink} target="_blank" rel="noreferrer" />}
+                                data-slot="button"
+                                className={cn(buttonVariants({ variant: 'tertiary', isIconOnly: true }))}
                             >
                                 <ButtonGroup.Separator />
                                 <FontAwesomeIcon icon={faExternalLinkAlt} className="size-3.5 text-muted" />
-                            </Button>
+                            </Link>
                             <Tooltip.Content>Open class page</Tooltip.Content>
                         </Tooltip>
                     </ButtonGroup>

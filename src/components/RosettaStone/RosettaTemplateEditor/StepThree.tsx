@@ -1,24 +1,21 @@
-import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
-import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Accordion, Button, Label, Separator, TextArea, TextField, toast } from '@heroui/react';
-import { useCallback, useEffect, useState } from 'react';
+import { reorderList, useAutoScroll, useSortableList } from '@orkg/pragmatic-dnd-hooks';
+import { useState } from 'react';
 
 import HelpIcon from '@/components/RosettaStone/RosettaTemplateEditor/HelpIcon/HelpIcon';
-import PositionItem, { isPositionData } from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
+import PositionItem from '@/components/RosettaStone/RosettaTemplateEditor/PositionItem/PositionItem';
 import StatementPlaceholder from '@/components/RosettaStone/RosettaTemplateEditor/StatementPlaceholder';
 import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import { createInstanceId, createListMonitor, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { guid } from '@/utils';
 
 function StepThree() {
     const { examples, lockedExamples, numberLockedProperties, properties } = useRosettaTemplateEditorState();
     const dispatch = useRosettaTemplateEditorDispatch();
-    const [instanceId] = useState(() => createInstanceId('rosetta-positions'));
 
     const [open, setOpen] = useState(properties?.length > 0 ? (properties[0].id ?? '') : '');
 
@@ -28,45 +25,20 @@ function StepThree() {
         setOpen(newId);
     };
 
-    const reorderPositions = useCallback(
-        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-            // Don't allow reordering of locked positions (subject and verb)
-            if (startIndex === 0 || startIndex === 1 || indexOfTarget === 0 || indexOfTarget === 1) {
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: properties.length,
+        onReorder: (event) => {
+            // subject, verb and locked positions must stay in place
+            const minUnlockedIndex = Math.max(2, numberLockedProperties || 0);
+            if (event.startIndex < minUnlockedIndex || event.finishIndex < minUnlockedIndex) {
                 return;
             }
-
-            const finishIndex = getReorderDestinationIndex({
-                startIndex,
-                closestEdgeOfTarget,
-                indexOfTarget,
-                axis: 'vertical',
-            });
-
-            if (finishIndex !== startIndex) {
-                const reorderedProperties = reorder({
-                    list: properties,
-                    startIndex,
-                    finishIndex,
-                });
-                dispatch({ type: 'reorderProperties', payload: reorderedProperties });
-            }
+            dispatch({ type: 'reorderProperties', payload: reorderList(properties, event) });
         },
-        [dispatch, properties],
-    );
+    });
 
-    useEffect(() => {
-        const cleanup = createListMonitor({
-            instanceId,
-            items: properties,
-            isDragData: isPositionData,
-            onReorder: reorderPositions,
-            getItemId: (property) => property.id || '',
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, properties, reorderPositions]);
+    // the list scrolls with the page, so only the window needs to scroll while dragging
+    useAutoScroll({ instanceId, includeWindow: true });
 
     const handleExamplesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (numberLockedProperties > 0) {
@@ -117,7 +89,7 @@ function StepThree() {
                     className="flex flex-col gap-2"
                 >
                     {properties.map((property, i) => (
-                        <PositionItem property={property} i={i} key={property?.id} instanceId={instanceId} totalItems={properties.length} />
+                        <PositionItem property={property} i={i} key={property?.id} instanceId={instanceId} moveItem={moveItem} />
                     ))}
                 </Accordion>
                 <div>

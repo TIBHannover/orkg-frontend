@@ -37,7 +37,7 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
                                 ref={theadRef}
                                 onScroll={syncScroll}
                             >
-                                <ColumnHeaders columns={visibleColumns} />
+                                <ColumnHeaders columns={visibleColumns} scrollContainer={theadRef} />
                             </thead>
                             <tbody className="overflow-x-scroll [scrollbar-width:none] w-full flex flex-col" ref={tbodyRef} onScroll={syncScroll}>
                                 <AnimatePresence initial={false}>

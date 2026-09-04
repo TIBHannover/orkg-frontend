@@ -1,8 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from '@heroui/react';
+import { buttonVariants, cn } from '@heroui/react';
 import Link from 'next/link';
-import { AnchorHTMLAttributes, FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -89,20 +89,14 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
     return (
         <div>
             <div className="text-right mb-1 px-4">
-                <Button
-                    size="sm"
-                    variant="outline"
-                    className="button--orkg-secondary"
-                    render={(props) => (
-                        <Link
-                            {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
-                            href="https://orkg.org/help-center/article/59/Statements"
-                            target="_blank"
-                        />
-                    )}
+                <Link
+                    href="https://orkg.org/help-center/article/59/Statements"
+                    target="_blank"
+                    data-slot="button"
+                    className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'button--orkg-secondary')}
                 >
                     <FontAwesomeIcon icon={faQuestionCircle} /> Help
-                </Button>
+                </Link>
             </div>
             <ListPaginatedContent<RosettaStoneStatement>
                 renderListItem={renderListItem}

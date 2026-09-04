@@ -1,15 +1,13 @@
-import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faSquareMinus, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Button, Checkbox, Chip, Tooltip } from '@heroui/react';
+import { DropIndicator, type MoveItem, useSortableItem } from '@orkg/pragmatic-dnd-hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import pluralize from 'pluralize';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
-import { createDraggableItem, createEdgeChangeHandler, DragData } from '@/components/shared/dnd/dragAndDropUtils';
 
 type PathListItemProps = {
     index: number;
@@ -17,8 +15,7 @@ type PathListItemProps = {
     handleToggleExpandPath: (path: string[]) => void;
     handleSelectPath: (path: string[]) => void;
     instanceId: symbol;
-    createDragData: ({ item, index, instanceId }: { item: PathWithSettings; index: number; instanceId: symbol }) => DragData<PathWithSettings>;
-    isDragData: (data: Record<string | symbol, unknown>) => data is DragData<PathWithSettings>;
+    moveItem: MoveItem;
     parentPathIds?: string[];
     nestedItems?: React.ReactNode;
 };
@@ -29,49 +26,24 @@ const PathListItem: FC<PathListItemProps> = ({
     handleToggleExpandPath,
     handleSelectPath,
     instanceId,
-    createDragData,
-    isDragData,
+    moveItem,
     parentPathIds = [],
     nestedItems,
 }) => {
-    const [isDragging, setIsDragging] = useState(false);
-    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
-    const ref = useRef<HTMLLIElement>(null);
-
     const hasChildren = currentPath.children && currentPath.children.length > 0;
     const { isExpanded, isSelected } = currentPath;
 
-    useEffect(() => {
-        const element = ref.current;
-        if (!element) return undefined;
-
-        const edgeChangeHandler = createEdgeChangeHandler({
-            targetElement: element,
-            sourceIndex: index,
-            targetIndex: index,
-            setClosestEdge,
-        });
-
-        return createDraggableItem({
-            element,
-            item: currentPath,
-            index,
-            dragHandle: dragHandleElement || undefined,
-            instanceId,
-            createDragData,
-            isDragData,
-            onDragStart: () => setIsDragging(true),
-            onDrop: () => setIsDragging(false),
-            onEdgeChange: edgeChangeHandler,
-            onDragLeave: () => setClosestEdge(null),
-        });
-    }, [currentPath, index, instanceId, createDragData, isDragData, dragHandleElement]);
+    const { elementRef, dragHandleRef, dragHandleProps, isDragging, closestEdge } = useSortableItem({
+        instanceId,
+        index,
+        moveItem,
+        dragHandleLabel: 'Drag to reorder property',
+    });
 
     const fullPath = [...parentPathIds, currentPath.id];
 
     return (
-        <li ref={ref} style={{ opacity: isDragging ? 0.4 : 1 }} className="relative">
+        <li ref={elementRef} style={{ opacity: isDragging ? 0.4 : 1 }} className="relative">
             <div className="flex mr-2 items-center">
                 <Button
                     isIconOnly
@@ -86,7 +58,7 @@ const PathListItem: FC<PathListItemProps> = ({
                 </Button>
 
                 <div className="border border-border rounded py-2 px-3 my-[2px] ml-3 grow flex items-center gap-3">
-                    <span className="cursor-move opacity-50" ref={setDragHandleElement}>
+                    <span className="cursor-move opacity-50" ref={dragHandleRef} {...dragHandleProps}>
                         <Icon className="text-secondary" icon={faGripVertical} size="lg" />
                     </span>
                     <Checkbox isSelected={!!isSelected} onChange={() => handleSelectPath(fullPath)}>
@@ -127,7 +99,7 @@ const PathListItem: FC<PathListItemProps> = ({
                     </motion.div>
                 )}
             </AnimatePresence>
-            {closestEdge && <DropIndicator edge={closestEdge} />}
+            {closestEdge && <DropIndicator edge={closestEdge} gap="0px" terminal className="text-primary" />}
         </li>
     );
 };

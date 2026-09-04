@@ -2,7 +2,7 @@
 
 import { faPen, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Chip, toast, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, buttonVariants, Chip, cn, toast, Tooltip } from '@heroui/react';
 import { toInteger } from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -137,15 +137,14 @@ const RSTemplatePage = () => {
                                 )}
                                 <Tooltip isDisabled={canEditTemplate}>
                                     {canEditTemplate ? (
-                                        <Button
-                                            size="sm"
-                                            className="button--orkg-secondary"
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                            render={(props: any) => <Link {...props} href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })} />}
+                                        <Link
+                                            href={reverse(ROUTES.RS_TEMPLATE_EDIT, { id })}
+                                            data-slot="button"
+                                            className={cn(buttonVariants({ size: 'sm' }), 'button--orkg-secondary')}
                                         >
                                             <ButtonGroup.Separator />
                                             <FontAwesomeIcon icon={faPen} /> Edit statement template
-                                        </Button>
+                                        </Link>
                                     ) : (
                                         <Button size="sm" className="button--orkg-secondary" isDisabled>
                                             <ButtonGroup.Separator />

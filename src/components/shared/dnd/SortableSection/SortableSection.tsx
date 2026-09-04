@@ -1,19 +1,26 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Tooltip } from '@heroui/react';
+import { type DragHandleProps } from '@orkg/pragmatic-dnd-hooks';
 import { FC, useState } from 'react';
-
-import { defaultDragHandleProps } from '@/components/shared/dnd/dragAndDropUtils';
 
 export type SortableSectionProps = {
     handleDelete: () => void;
     handleSort: (direction: 'up' | 'down') => void;
     children: React.ReactNode;
     dragHandleRef?: (element: HTMLElement | null) => void;
+    dragHandleProps?: DragHandleProps;
     className?: string;
 };
 
-const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, children, dragHandleRef, className = 'box rounded' }) => {
+const SortableSection: FC<SortableSectionProps> = ({
+    handleDelete,
+    handleSort,
+    children,
+    dragHandleRef,
+    dragHandleProps,
+    className = 'box rounded',
+}) => {
     const [isHovering, setIsHovering] = useState(false);
 
     return (
@@ -39,8 +46,7 @@ const SortableSection: FC<SortableSectionProps> = ({ handleDelete, handleSort, c
             )}
             <div
                 ref={dragHandleRef}
-                {...defaultDragHandleProps}
-                aria-label="Drag to reorder section"
+                {...dragHandleProps}
                 className={`absolute left-0 top-0 z-0 flex h-full w-[25px] cursor-move items-center justify-center rounded-l-md ${
                     isHovering ? 'bg-secondary-solid text-white' : 'text-muted'
                 }`}

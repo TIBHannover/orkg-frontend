@@ -1,6 +1,6 @@
 import { faCheck, faClipboard, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Label, TextArea, TextField, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, buttonVariants, cn, Label, TextArea, TextField, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
@@ -101,16 +101,17 @@ const GeneralSettings = () => {
                                 <Tooltip.Content>{isCopied ? 'Copied!' : 'Copy ID to clipboard'}</Tooltip.Content>
                             </Tooltip>
                             <Tooltip delay={0}>
-                                <Button
-                                    variant="tertiary"
-                                    isIconOnly
+                                <Link
+                                    href={targetClassLink}
+                                    target="_blank"
+                                    rel="noreferrer"
                                     aria-label="Open class page"
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    render={(props: any) => <Link {...props} href={targetClassLink} target="_blank" rel="noreferrer" />}
+                                    data-slot="button"
+                                    className={cn(buttonVariants({ variant: 'tertiary', isIconOnly: true }))}
                                 >
                                     <ButtonGroup.Separator />
                                     <FontAwesomeIcon icon={faExternalLinkAlt} className="size-3.5 text-muted" />
-                                </Button>
+                                </Link>
                                 <Tooltip.Content>Open class page</Tooltip.Content>
                             </Tooltip>
                         </ButtonGroup>

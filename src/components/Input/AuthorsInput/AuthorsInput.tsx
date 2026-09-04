@@ -2,14 +2,14 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Label, Modal, toast } from '@heroui/react';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { reorderList, useSortableList } from '@orkg/pragmatic-dnd-hooks';
+import { FC, useState } from 'react';
 import { SingleValue } from 'react-select';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
-import SortableAuthorItem, { isAuthorData } from '@/components/Input/AuthorsInput/SortableAuthorItem';
-import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import SortableAuthorItem from '@/components/Input/AuthorsInput/SortableAuthorItem';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import REGEX from '@/constants/regex';
 import { getStatements } from '@/services/backend/statements';
@@ -30,7 +30,11 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
     const [authorNameLoading, setAuthorNameLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editIndex, setEditIndex] = useState(0);
-    const [instanceId] = useState(() => createInstanceId('authors-input'));
+
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: value.length,
+        onReorder: (event) => handler(reorderList(value, event)),
+    });
 
     const handleChange = (selected: SingleValue<OptionType>) => {
         setAuthorInput(selected);
@@ -109,39 +113,6 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
         setShowAuthorForm((v) => !v);
     };
 
-    const reorderAuthors = useCallback(
-        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-            const reorderedAuthors = performReorder({
-                items: value,
-                startIndex,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: 'vertical',
-            });
-
-            if (reorderedAuthors !== value) {
-                handler(reorderedAuthors);
-            }
-        },
-        [value, handler],
-    );
-
-    useEffect(() => {
-        if (isDisabled) return undefined;
-
-        const cleanup = createListMonitor({
-            instanceId,
-            items: value,
-            isDragData: isAuthorData,
-            onReorder: reorderAuthors,
-            getItemId: (author) => author.id || author.name,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, value, reorderAuthors, isDisabled]);
-
     const handleOpenChange = (open: boolean) => {
         if (!open) {
             setShowAuthorForm(false);
@@ -151,7 +122,8 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
     return (
         <div className="flow-root">
             {value.length > 0 && (
-                <div className="flex flex-col relative overflow-hidden">
+                // no overflow-hidden: it would clip the drop indicator's terminal ring
+                <div className="flex flex-col relative">
                     {value.map((author, index) => (
                         <SortableAuthorItem
                             key={`author-${author.id || author.name}-${index}`}
@@ -161,7 +133,7 @@ const AuthorsInput: FC<AuthorInputProps> = ({ itemLabel = 'author', buttonId = u
                             editAuthor={editAuthor}
                             removeAuthor={removeAuthor}
                             instanceId={instanceId}
-                            totalItems={value.length}
+                            moveItem={moveItem}
                             isDisabled={isDisabled ?? false}
                         />
                     ))}
