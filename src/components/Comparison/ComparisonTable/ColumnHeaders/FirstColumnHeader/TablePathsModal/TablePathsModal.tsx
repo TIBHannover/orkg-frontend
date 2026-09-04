@@ -1,4 +1,5 @@
 import { Alert, Button, Modal } from '@heroui/react';
+import { type NestedListAccessors, type NestedReorderEvent, reorderNestedList, useAutoScroll } from '@orkg/pragmatic-dnd-hooks';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
@@ -83,29 +84,10 @@ const mergeSelectedPathsWithTablePaths = (selectedPaths: ComparisonPath[], table
     return Array.from(map.values());
 };
 
-const updateChildrenOrder = ({
-    paths,
-    newPathOrder,
-    parentPathIds,
-}: {
-    paths: PathWithSettings[];
-    newPathOrder: PathWithSettings[];
-    parentPathIds: string[];
-}): PathWithSettings[] => {
-    return paths.map((path) => {
-        if (path.id === parentPathIds[0]) {
-            if (parentPathIds.length === 1) {
-                return { ...path, children: newPathOrder };
-            }
-            if (path.children) {
-                return {
-                    ...path,
-                    children: updateChildrenOrder({ paths: path.children, newPathOrder, parentPathIds: parentPathIds.slice(1) }),
-                };
-            }
-        }
-        return path;
-    });
+const pathAccessors: NestedListAccessors<PathWithSettings> = {
+    getId: (path) => path.id,
+    getChildren: (path) => path.children,
+    setChildren: (path, children) => ({ ...path, children }),
 };
 
 const prepareUpdatePaths = (paths: PathWithSettings[]): ComparisonUpdateSelectedPath[] => {
@@ -123,6 +105,9 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
     const [pathsNew, setPathsNew] = useState<PathWithSettings[]>([]);
 
     const { comparison, comparisonContents, mutateComparisonContents } = useComparison();
+
+    // keep the path list scrolling while a row is dragged near the modal body's edges
+    const { scrollContainerRef } = useAutoScroll();
 
     const { data: tablePaths, isLoading: isLoadingTablePaths } = useSWR(
         comparison?.id ? [comparison?.id, comparisonUrl, 'getComparisonTablePaths'] : null,
@@ -151,13 +136,8 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
         setPathsNew(toggleSelectPath(pathsNew, propertyPath));
     };
 
-    const handleReorder = ({ newPathOrder, parentPathIds }: { newPathOrder: PathWithSettings[]; parentPathIds: string[] }) => {
-        setPathsNew((prevPaths) => {
-            if (parentPathIds.length === 0) {
-                return newPathOrder;
-            }
-            return updateChildrenOrder({ paths: prevPaths, newPathOrder, parentPathIds });
-        });
+    const handleReorder = (event: NestedReorderEvent) => {
+        setPathsNew((prevPaths) => reorderNestedList(prevPaths, event, pathAccessors));
     };
 
     const handleSelect = async () => {
@@ -188,7 +168,7 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
                     <Modal.Header className="flex-row items-center justify-between gap-3">
                         <Modal.Heading>Select properties</Modal.Heading>
                     </Modal.Header>
-                    <Modal.Body className="pt-4 pb-2 px-1">
+                    <Modal.Body ref={scrollContainerRef} className="pt-4 pb-2 px-1">
                         <p className="text-sm mb-4">
                             The following properties reflect the full path of nested resources across the comparison sources, up to 10 levels deep.
                         </p>

@@ -1,14 +1,12 @@
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Modal } from '@heroui/react';
+import { reorderList, useSortableList } from '@orkg/pragmatic-dnd-hooks';
 import { uniqueId } from 'lodash';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
-import ReferenceItem, {
-    isReferenceData,
-} from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/ReferencesModal/ReferencesItem/ReferenceItem';
+import ReferenceItem from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/ReferencesModal/ReferencesItem/ReferenceItem';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 
 type ReferencesModalProps = {
     toggle: () => void;
@@ -16,8 +14,12 @@ type ReferencesModalProps = {
 
 const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
     const [references, setReferences] = useState<{ text: string; id: string }[]>([]);
-    const [instanceId] = useState(() => createInstanceId('references-modal'));
     const { comparison, updateComparison } = useComparison();
+
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: references.length,
+        onReorder: (event) => setReferences((_references) => reorderList(_references, event)),
+    });
 
     useEffect(() => {
         if (comparison?.references) {
@@ -30,37 +32,6 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
             );
         }
     }, [comparison]);
-
-    const reorderReferences = useCallback(
-        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-            const reorderedReferences = performReorder({
-                items: references,
-                startIndex,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: 'vertical',
-            });
-
-            if (reorderedReferences !== references) {
-                setReferences(reorderedReferences);
-            }
-        },
-        [references],
-    );
-
-    useEffect(() => {
-        const cleanup = createListMonitor({
-            instanceId,
-            items: references,
-            isDragData: isReferenceData,
-            onReorder: reorderReferences,
-            getItemId: (reference) => reference.id,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, references, reorderReferences]);
 
     const handleDelete = (id: string) => {
         setReferences((_references) => _references.filter((reference) => reference.id !== id));
@@ -111,9 +82,9 @@ const ReferencesModal: FC<ReferencesModalProps> = ({ toggle }) => {
                                 reference={reference}
                                 index={index}
                                 instanceId={instanceId}
+                                moveItem={moveItem}
                                 onDelete={handleDelete}
                                 onChange={handleChange}
-                                totalItems={references.length}
                             />
                         ))}
                         <Button variant="secondary" size="sm" className="mt-2 self-start" onPress={handleAdd}>

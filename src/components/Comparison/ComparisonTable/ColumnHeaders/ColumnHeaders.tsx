@@ -1,80 +1,66 @@
-import { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { useCallback, useEffect } from 'react';
+import { type ReorderEvent, reorderList, useAutoScroll, useSortableList } from '@orkg/pragmatic-dnd-hooks';
+import { type RefObject, useEffect } from 'react';
 
-import ColumnHeader, { instanceId, isDragData } from '@/components/Comparison/ComparisonTable/ColumnHeaders/ColumnHeader/ColumnHeader';
+import ColumnHeader from '@/components/Comparison/ComparisonTable/ColumnHeaders/ColumnHeader/ColumnHeader';
 import FirstColumnHeader from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/FirstColumnHeader';
 import useComparison from '@/components/Comparison/hooks/useComparison';
-import { createListMonitor, performReorder, ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { ComparisonTableColumn, SelectedPathValues } from '@/services/backend/types';
 
-type ReorderConfig = { startIndex: number; indexOfTarget: number; closestEdgeOfTarget: Edge | null };
-
-function reorderRowColumns(rows: SelectedPathValues[], config: ReorderConfig): SelectedPathValues[] {
+function reorderRowColumns(rows: SelectedPathValues[], event: ReorderEvent): SelectedPathValues[] {
     return rows.map((row) => {
         const reorderedChildren: Record<string, SelectedPathValues[]> = {};
         for (const [childPathId, childRows] of Object.entries(row.children)) {
-            reorderedChildren[childPathId] = reorderRowColumns(childRows, config);
+            reorderedChildren[childPathId] = reorderRowColumns(childRows, event);
         }
         return {
             ...row,
-            values: performReorder({ items: row.values, ...config, axis: 'horizontal' }),
+            values: reorderList(row.values, event),
             children: reorderedChildren,
         };
     });
 }
 
-const ColumnHeaders = ({ columns }: { columns?: ComparisonTableColumn[] }) => {
+type ColumnHeadersProps = {
+    columns?: ComparisonTableColumn[];
+    /** The scrolling `<thead>` this row lives in — dragging a column near its edges scrolls it. */
+    scrollContainer: RefObject<HTMLTableSectionElement | null>;
+};
+
+const ColumnHeaders = ({ columns, scrollContainer }: ColumnHeadersProps) => {
     const { comparison, updateComparison, comparisonContents, mutateComparisonContents } = useComparison();
 
-    const reorderItems = useCallback(
-        async ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
+    const { instanceId } = useSortableList({
+        itemCount: columns?.length ?? 0,
+        axis: 'horizontal',
+        onReorder: (event) => {
             if (!comparison || !comparisonContents) return;
 
-            const config: ReorderConfig = { startIndex, indexOfTarget, closestEdgeOfTarget };
-
-            const reorderedSources = performReorder({
-                items: comparison.sources,
-                ...config,
-                axis: 'horizontal',
+            updateComparison({
+                sources: reorderList(comparison.sources, event),
             });
-
-            if (reorderedSources !== comparison.sources) {
-                updateComparison({
-                    sources: reorderedSources,
-                });
-                const reorderedValues: typeof comparisonContents.values = {};
-                for (const [pathId, pathNodes] of Object.entries(comparisonContents.values)) {
-                    reorderedValues[pathId] = reorderRowColumns(pathNodes, config);
-                }
-                const updatedData = {
-                    ...comparisonContents,
-                    titles: performReorder({ items: comparisonContents.titles, ...config, axis: 'horizontal' }),
-                    subtitles: performReorder({ items: comparisonContents.subtitles, ...config, axis: 'horizontal' }),
-                    values: reorderedValues,
-                };
-
-                mutateComparisonContents(updatedData, {
-                    optimisticData: updatedData,
-                    revalidate: false, // do not revalidate, otherwise we need to await updateComparison to prevent a race condition
-                });
+            const reorderedValues: typeof comparisonContents.values = {};
+            for (const [pathId, pathNodes] of Object.entries(comparisonContents.values)) {
+                reorderedValues[pathId] = reorderRowColumns(pathNodes, event);
             }
+            const updatedData = {
+                ...comparisonContents,
+                titles: reorderList(comparisonContents.titles, event),
+                subtitles: reorderList(comparisonContents.subtitles, event),
+                values: reorderedValues,
+            };
+
+            mutateComparisonContents(updatedData, {
+                optimisticData: updatedData,
+                revalidate: false, // do not revalidate, otherwise we need to await updateComparison to prevent a race condition
+            });
         },
-        [comparison, comparisonContents, mutateComparisonContents, updateComparison],
-    );
+    });
 
+    const { scrollContainerRef } = useAutoScroll({ instanceId });
+    // the scrollable element is the <thead> owned by ComparisonTable, not a node this row renders
     useEffect(() => {
-        const cleanup = createListMonitor<ComparisonTableColumn>({
-            instanceId,
-            items: columns ?? [],
-            isDragData,
-            onReorder: reorderItems,
-            getItemId: (item) => item?.subtitle?.id ?? item?.title?.id,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [columns, reorderItems]);
+        scrollContainerRef(scrollContainer.current);
+    }, [scrollContainerRef, scrollContainer]);
 
     return (
         <tr className="flex items-stretch flex-grow">
@@ -85,7 +71,7 @@ const ColumnHeaders = ({ columns }: { columns?: ComparisonTableColumn[] }) => {
                 <FirstColumnHeader />
             </th>
             {columns?.map((column, index) => (
-                <ColumnHeader key={index} index={index} column={column} isLast={index === (columns?.length ?? 0) - 1} />
+                <ColumnHeader key={index} index={index} column={column} instanceId={instanceId} isLast={index === (columns?.length ?? 0) - 1} />
             ))}
         </tr>
     );

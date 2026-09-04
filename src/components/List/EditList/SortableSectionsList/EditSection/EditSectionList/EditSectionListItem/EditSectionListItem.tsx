@@ -1,21 +1,15 @@
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import { draggable, dropTargetForElements, type ElementDropTargetEventBasePayload } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
-import { attachClosestEdge, type Edge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@heroui/react';
+import { DropIndicator, type MoveItem, useSortableItem } from '@orkg/pragmatic-dnd-hooks';
 import Link from 'next/link';
-import { FC, useEffect, useRef, useState } from 'react';
-import invariant from 'tiny-invariant';
+import { FC, useState } from 'react';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import Confirm from '@/components/Confirmation/Confirmation';
 import { additionalContentTypes } from '@/components/ContentType/types';
 import useList from '@/components/List/hooks/useList';
 import EditPaperModal from '@/components/PaperForm/EditPaperModal';
-import { defaultDragHandleProps, type DragData, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
@@ -26,105 +20,33 @@ type EditSectionListItemProps = {
     section: LiteratureListSectionList;
     index: number;
     instanceId: symbol;
-    createDragData: (params: { item: LiteratureListSectionListEntry; index: number; instanceId: symbol }) => DragData<LiteratureListSectionListEntry>;
-    isDragData: (data: Record<string | symbol, unknown>) => data is DragData<LiteratureListSectionListEntry>;
-    onReorder: (params: ReorderParams) => void;
+    moveItem: MoveItem;
 };
 
-const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, index, instanceId, createDragData, isDragData, onReorder }) => {
+const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, index, instanceId, moveItem }) => {
     const { updateSection, getPaperById, mutatePapers } = useList();
     const [isHovering, setIsHovering] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
-    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const ref = useRef<HTMLDivElement>(null);
-    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
 
     const isPaper = entry.value?.classes?.includes(CLASSES.PAPER);
     const contentTypeClass = entry.value?.classes?.filter((classId) => additionalContentTypes.find((c) => c.id === classId))?.[0];
 
-    useEffect(() => {
-        const element = ref.current;
-
-        // Don't setup drag and drop if element is not available yet
-        if (!element) {
-            return undefined;
-        }
-
-        const data = createDragData({ item: entry, index, instanceId });
-
-        function onChange({ source, self }: ElementDropTargetEventBasePayload) {
-            const isSource = source.element === element;
-            if (isSource) {
-                setClosestEdge(null);
-                return;
-            }
-
-            const currentClosestEdge = extractClosestEdge(self.data);
-            const sourceIndex = source.data.index;
-            invariant(typeof sourceIndex === 'number');
-
-            const isItemBeforeSource = index === sourceIndex - 1;
-            const isItemAfterSource = index === sourceIndex + 1;
-
-            const isDropIndicatorHidden =
-                (isItemBeforeSource && currentClosestEdge === 'bottom') || (isItemAfterSource && currentClosestEdge === 'top');
-
-            if (isDropIndicatorHidden) {
-                setClosestEdge(null);
-                return;
-            }
-
-            setClosestEdge(currentClosestEdge);
-        }
-
-        return combine(
-            draggable({
-                element,
-                dragHandle: dragHandleElement || undefined,
-                getInitialData: () => data,
-                onGenerateDragPreview({ nativeSetDragImage }) {
-                    setCustomNativeDragPreview({
-                        nativeSetDragImage,
-                        render: ({ container }) => {
-                            const preview = document.createElement('div');
-                            preview.className =
-                                'inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
-                            preview.textContent = entry.value?.label ?? 'List item';
-                            container.appendChild(preview);
-                        },
-                    });
-                },
-                onDragStart() {
-                    setIsDragging(true);
-                },
-                onDrop() {
-                    setIsDragging(false);
-                },
-            }),
-            dropTargetForElements({
-                element,
-                canDrop({ source }) {
-                    return isDragData(source.data) && source.data.instanceId === instanceId;
-                },
-                getData({ input }) {
-                    return attachClosestEdge(data, {
-                        element,
-                        input,
-                        allowedEdges: ['top', 'bottom'],
-                    });
-                },
-                onDragEnter: onChange,
-                onDrag: onChange,
-                onDragLeave() {
-                    setClosestEdge(null);
-                },
-                onDrop() {
-                    setClosestEdge(null);
-                },
-            }),
-        );
-    }, [entry, index, instanceId, onReorder, dragHandleElement, createDragData, isDragData]);
+    // the handle lives in the hover toolbar; rows must stay drop targets while
+    // it is unmounted, so no `requireDragHandle` here
+    const { elementRef, dragHandleRef, dragHandleProps, isDragging, closestEdge } = useSortableItem({
+        instanceId,
+        index,
+        moveItem,
+        dragHandleLabel: 'Drag to reorder list item',
+        previewOffset: 'preserve-offset-on-source',
+        renderDragPreview: ({ container }) => {
+            const preview = document.createElement('div');
+            preview.className =
+                'inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
+            preview.textContent = entry.value?.label ?? 'List item';
+            container.appendChild(preview);
+        },
+    });
 
     const handleDelete = async () => {
         const confirm = await Confirm({
@@ -163,9 +85,8 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
     };
 
     return (
-        <li className="block w-full min-w-0 bg-surface p-3 text-foreground" style={{ opacity: isDragging ? 0.4 : 1 }}>
+        <li ref={elementRef} className="relative block w-full min-w-0 bg-surface p-3 text-foreground" style={{ opacity: isDragging ? 0.4 : 1 }}>
             <div
-                ref={ref}
                 tabIndex={0}
                 onFocus={() => {
                     setIsHovering(true);
@@ -191,13 +112,9 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                             <FontAwesomeIcon icon={faTimes} />
                         </Button>
                         <div
-                            ref={(el) => {
-                                if (el) {
-                                    setDragHandleElement(el);
-                                }
-                            }}
+                            ref={dragHandleRef}
+                            {...dragHandleProps}
                             className="flex grow cursor-move items-center justify-center text-white [&_.sortable-handle]:w-full [&_.sortable-handle]:cursor-move"
-                            {...defaultDragHandleProps}
                         >
                             <FontAwesomeIcon icon={faBars} className="sortable-handle" />
                         </div>
@@ -237,8 +154,16 @@ const EditSectionListItem: FC<EditSectionListItemProps> = ({ entry, section, ind
                     handleUpdateDescription={handleUpdateDescription}
                     route={!isPaper ? reverse(ROUTES.CONTENT_TYPE, { id: entry.value?.id, type: contentTypeClass }) : undefined}
                 />
-                {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
             </div>
+            {closestEdge && (
+                <DropIndicator
+                    edge={closestEdge}
+                    gap="0px"
+                    terminal="no-bleed"
+                    className="text-primary"
+                    style={closestEdge === 'bottom' ? { bottom: -2 } : undefined}
+                />
+            )}
             {isOpenEditModal && (
                 <EditPaperModal
                     paperData={getPaperById(entry.value?.id) ?? null}

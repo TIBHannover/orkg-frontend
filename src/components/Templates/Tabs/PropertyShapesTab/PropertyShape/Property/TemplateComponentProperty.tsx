@@ -1,5 +1,6 @@
 import { faCheck, faGripVertical, faPen, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { type DragHandleProps } from '@orkg/pragmatic-dnd-hooks';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -18,6 +19,7 @@ import { RootStore } from '@/slices/types';
 type TemplateComponentPropertyProps = {
     id: number;
     onDragHandleRef: (element: HTMLElement | null) => void;
+    dragHandleProps?: DragHandleProps;
     handleDeletePropertyShape: (_index: number) => void;
     handlePropertiesSelect: (_selected: SingleValue<OptionType>, _action: ActionMeta<OptionType>, _index: number) => void;
 };
@@ -25,6 +27,7 @@ type TemplateComponentPropertyProps = {
 const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({
     id,
     onDragHandleRef,
+    dragHandleProps,
     handleDeletePropertyShape,
     handlePropertiesSelect,
 }) => {
@@ -35,13 +38,7 @@ const TemplateComponentProperty: FC<TemplateComponentPropertyProps> = ({
     return (
         <div className="basis-full md:basis-5/12 max-md:rounded-t-sm md:rounded-l-sm bg-surface-secondary p-3 flex items-start gap-2 break-words">
             {isEditMode && (
-                <div
-                    ref={onDragHandleRef}
-                    role="button"
-                    tabIndex={0}
-                    aria-label="Drag to reorder property"
-                    className="text-muted cursor-move px-1 pt-1"
-                >
+                <div ref={onDragHandleRef} {...dragHandleProps} className="text-muted cursor-move px-1 pt-1">
                     <FontAwesomeIcon icon={faGripVertical} />
                 </div>
             )}

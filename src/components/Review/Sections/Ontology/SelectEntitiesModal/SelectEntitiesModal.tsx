@@ -1,16 +1,16 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Modal, Spinner, toast } from '@heroui/react';
+import { reorderList, useSortableList } from '@orkg/pragmatic-dnd-hooks';
 import capitalize from 'capitalize';
 import { uniqBy } from 'lodash';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import useReview from '@/components/Review/hooks/useReview';
-import EntityListItem, { isEntityData } from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
-import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
+import EntityListItem from '@/components/Review/Sections/Ontology/SelectEntitiesModal/EntityListItem';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { comparisonUrl, getComparison, getComparisonContents } from '@/services/backend/comparisons';
 import { getPredicate } from '@/services/backend/predicates';
@@ -44,7 +44,6 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
         }[]
     >([]);
     const [suggestionProperties, setSuggestionProperties] = useState<Omit<ReviewSectionData, 'classes'>[]>([]);
-    const [instanceId] = useState(() => createInstanceId('select-entities-modal'));
     const [autocompleteKey, setAutocompleteKey] = useState(0);
     const [selectionMessage, setSelectionMessage] = useState<string | null>(null);
 
@@ -137,36 +136,10 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
 
     const handleAddAllEntities = (entities: Entity[]) => entities.forEach((entity) => handleSelectEntity(entity.id, { label: entity.label }));
 
-    const reorderEntities = useCallback(
-        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-            const reorderedEntities = performReorder({
-                items: selectedEntities,
-                startIndex,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: 'vertical',
-            });
-
-            if (reorderedEntities !== selectedEntities) {
-                setSelectedEntities(reorderedEntities);
-            }
-        },
-        [selectedEntities],
-    );
-
-    useEffect(() => {
-        const cleanup = createListMonitor({
-            instanceId,
-            items: selectedEntities,
-            isDragData: isEntityData,
-            onReorder: reorderEntities,
-            getItemId: (entity) => entity.id,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, selectedEntities, reorderEntities]);
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: selectedEntities.length,
+        onReorder: (event) => setSelectedEntities((_entities) => reorderList(_entities, event)),
+    });
 
     const handleSave = () => {
         updateSection(section.id, {
@@ -200,7 +173,7 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                                     index={index}
                                     instanceId={instanceId}
                                     onRemove={handleRemoveEntity}
-                                    totalItems={selectedEntities.length}
+                                    moveItem={moveItem}
                                 />
                             ))}
                             {pendingEntityIds.length > 0 && (

@@ -1,10 +1,9 @@
-import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
 import { faCheck, faGripVertical, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Accordion } from '@heroui/react';
+import { DropIndicator, type MoveItem, useSortableItem } from '@orkg/pragmatic-dnd-hooks';
 import { parseInt } from 'lodash';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import SlotForms from '@/components/RosettaStone/RosettaTemplateEditor/SlotForms/SlotForms';
@@ -12,35 +11,21 @@ import {
     useRosettaTemplateEditorDispatch,
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
-import {
-    createDragDataFactory,
-    createDragDataKey,
-    createDragDataValidator,
-    createDraggableItem,
-    createEdgeChangeHandler,
-} from '@/components/shared/dnd/dragAndDropUtils';
 import { RSPropertyShape } from '@/services/backend/types';
-
-// Create shared symbols and functions for position drag and drop
-export const positionKey = createDragDataKey('rosettaPosition');
-export const createPositionData = createDragDataFactory<RSPropertyShape>(positionKey);
-export const isPositionData = createDragDataValidator<RSPropertyShape>(positionKey);
 
 type PositionItemProps = {
     i: number;
     property: RSPropertyShape;
     instanceId: symbol;
-    totalItems: number;
+    moveItem: MoveItem;
 };
 
-const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalItems }) => {
+const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, moveItem }) => {
     const { numberLockedProperties } = useRosettaTemplateEditorState();
-    const [isDragging, setIsDragging] = useState(false);
-    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const ref = useRef<HTMLButtonElement>(null);
-    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
 
     const isLocked = !!numberLockedProperties && numberLockedProperties >= i + 1;
+    // subject (0) and verb (1) are always locked; locked rows are neither drag sources nor drop targets
+    const isLockedPosition = i === 0 || i === 1 || isLocked;
 
     const dispatch = useRosettaTemplateEditorDispatch();
 
@@ -50,49 +35,13 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalIte
         dispatch({ type: 'deleteObjectPosition', payload: index });
     };
 
-    useEffect(() => {
-        const element = ref.current;
-        if (!element) return undefined;
-
-        const onEdgeChange = createEdgeChangeHandler({
-            targetElement: element,
-            sourceIndex: i,
-            targetIndex: i,
-            setClosestEdge: (edge) => {
-                // Don't show drop indicator for locked positions
-                if (i === 0 || i === 1 || isLocked) {
-                    setClosestEdge(null);
-                } else {
-                    setClosestEdge(edge);
-                }
-            },
-        });
-
-        return createDraggableItem({
-            element,
-            dragHandle: dragHandleElement || undefined,
-            item: property,
-            index: i,
-            instanceId,
-            createDragData: createPositionData,
-            isDragData: isPositionData,
-            onDragStart: () => {
-                setIsDragging(true);
-                setClosestEdge(null);
-            },
-            onDrop: () => {
-                setIsDragging(false);
-                setClosestEdge(null);
-            },
-            onEdgeChange,
-            onDragEnter: onEdgeChange,
-            onDragLeave: () => setClosestEdge(null),
-            canDrop: ({ target }) => {
-                // Don't allow drops on locked positions (subject and verb)
-                return target.index !== 0 && target.index !== 1;
-            },
-        });
-    }, [property, i, instanceId, totalItems, dragHandleElement, isLocked]);
+    const { elementRef, dragHandleRef, dragHandleProps, isDragging, closestEdge } = useSortableItem({
+        instanceId,
+        index: i,
+        isDisabled: isLockedPosition,
+        moveItem,
+        dragHandleLabel: 'Drag to reorder position',
+    });
 
     const deleteButtonMessage = isLocked ? 'This position cannot be deleted because it is locked' : 'Delete object position';
 
@@ -104,18 +53,11 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalIte
         >
             <Accordion.Heading className="relative">
                 <Accordion.Trigger
-                    ref={ref}
+                    ref={elementRef}
                     className="flex w-full items-center gap-2 rounded-t bg-surface-secondary px-3 py-2.5 pe-16 text-surface-secondary-foreground hover:bg-surface-tertiary aria-expanded:bg-surface-tertiary aria-expanded:rounded-b-none [&:not([aria-expanded='true'])]:rounded-b"
                 >
-                    {i !== 0 && i !== 1 && !isLocked && (
-                        <div
-                            ref={setDragHandleElement}
-                            className="-ml-1 flex flex-col text-muted"
-                            style={{ cursor: 'move' }}
-                            role="button"
-                            tabIndex={0}
-                            aria-label="Drag to reorder position"
-                        >
+                    {!isLockedPosition && (
+                        <div ref={dragHandleRef} {...dragHandleProps} className="-ml-1 flex flex-col text-muted" style={{ cursor: 'move' }}>
                             <FontAwesomeIcon icon={faGripVertical} />
                             <FontAwesomeIcon icon={faGripVertical} style={{ marginTop: '-1.4px' }} />
                         </div>
@@ -159,7 +101,7 @@ const PositionItem: FC<PositionItemProps> = ({ i, property, instanceId, totalIte
                     <SlotForms index={i} isLocked={isLocked} />
                 </Accordion.Body>
             </Accordion.Panel>
-            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
+            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" terminal className="text-primary" />}
         </Accordion.Item>
     );
 };

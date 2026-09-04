@@ -1,6 +1,5 @@
-import { type Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { DropIndicator } from '@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box';
-import { ChangeEvent, FC, FocusEvent, useEffect, useRef, useState } from 'react';
+import { DropIndicator, type MoveItem, useSortableItem } from '@orkg/pragmatic-dnd-hooks';
+import { ChangeEvent, FC, FocusEvent, useState } from 'react';
 
 import MarkdownEditor from '@/components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
 import { EditableTitle } from '@/components/ArticleBuilder/styled';
@@ -13,7 +12,6 @@ import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLin
 import SectionOntology from '@/components/Review/Sections/Ontology/SectionOntology';
 import EditSectionResourceProperty from '@/components/Review/Sections/ResourceProperty/EditSectionResourceProperty/EditSectionResourceProperty';
 import EditSectionVisualization from '@/components/Review/Sections/Visualization/EditSectionVisualization/EditSectionVisualization';
-import { createDraggableItem, createEdgeChangeHandler, type DragData } from '@/components/shared/dnd/dragAndDropUtils';
 import SortableSection from '@/components/shared/dnd/SortableSection/SortableSection';
 import { ReviewSection } from '@/services/backend/types';
 
@@ -24,51 +22,30 @@ type SectionProps = {
     index: number;
     atIndex: number;
     instanceId: symbol;
-    createDragData: (params: { item: ReviewSection; index: number; instanceId: symbol }) => DragData<ReviewSection>;
-    isDragData: (data: Record<string | symbol, unknown>) => data is DragData<ReviewSection>;
-
+    moveItem: MoveItem;
     handleManualSort: HandleManualSort;
 };
 
-const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, createDragData, isDragData, handleManualSort }) => {
+const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, moveItem, handleManualSort }) => {
     const { deleteSection, updateSection, parsedReferences } = useReview();
     const [title, setTitle] = useState(section.heading);
-    const [isDragging, setIsDragging] = useState(false);
-    const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-    const ref = useRef<HTMLElement>(null);
-    const [dragHandleElement, setDragHandleElement] = useState<HTMLElement | null>(null);
+
+    const { elementRef, dragHandleRef, dragHandleProps, isDragging, closestEdge } = useSortableItem({
+        instanceId,
+        index,
+        moveItem,
+        dragHandleLabel: 'Drag to reorder section',
+        previewOffset: 'preserve-offset-on-source',
+        renderDragPreview: ({ container }) => {
+            const preview = document.createElement('div');
+            preview.className =
+                'inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm shadow-md max-w-xs truncate font-medium';
+            preview.textContent = title || 'Untitled section';
+            container.appendChild(preview);
+        },
+    });
 
     const isContentLinkSection = ['resource', 'property', 'visualization', 'comparison', 'visualization'].includes(section.type);
-
-    useEffect(() => {
-        const element = ref.current;
-
-        if (!element) {
-            return undefined;
-        }
-
-        const edgeChangeHandler = createEdgeChangeHandler({
-            targetElement: element,
-            sourceIndex: index,
-            targetIndex: index,
-            setClosestEdge,
-        });
-
-        return createDraggableItem({
-            element,
-            dragHandle: dragHandleElement,
-            item: section,
-            index,
-            instanceId,
-            createDragData,
-            isDragData,
-            onDragStart: () => setIsDragging(true),
-            onDrop: () => setIsDragging(false),
-            allowedEdges: ['top', 'bottom'],
-            onEdgeChange: edgeChangeHandler,
-            onDragLeave: () => setClosestEdge(null),
-        });
-    }, [section, index, instanceId, createDragData, isDragData, dragHandleElement]);
 
     const handleBlurTitle = (e: FocusEvent<HTMLInputElement>) => {
         if (e.target.value !== section.heading) {
@@ -111,11 +88,12 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, create
     const isTypeSelectionDisabled = isContentLinkSection || section.type === 'ontology';
 
     return (
-        <section ref={ref} style={{ opacity: isDragging ? 0.7 : 1, position: 'relative' }}>
+        <section ref={elementRef} style={{ opacity: isDragging ? 0.7 : 1, position: 'relative' }}>
             <SortableSection
                 handleDelete={handleDelete}
                 handleSort={(direction: 'up' | 'down') => handleManualSort({ id: section.id, direction })}
-                dragHandleRef={setDragHandleElement}
+                dragHandleRef={dragHandleRef}
+                dragHandleProps={dragHandleProps}
             >
                 <SectionType
                     type={isTypeSelectionDisabled ? section.type : section.classes?.[0]}
@@ -145,7 +123,7 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, create
                 )}
             </SortableSection>
             <AddSection index={atIndex} />
-            {closestEdge && <DropIndicator edge={closestEdge} gap="1px" />}
+            {closestEdge && <DropIndicator edge={closestEdge} gap="0px" terminal className="text-primary" />}
         </section>
     );
 };

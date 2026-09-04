@@ -1,14 +1,14 @@
 import { Alert, Switch } from '@heroui/react';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { reorderList, useAutoScroll, useSortableList } from '@orkg/pragmatic-dnd-hooks';
+import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActionMeta, SingleValue } from 'react-select';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
-import { createInstanceId, createListMonitor, performReorder, type ReorderParams } from '@/components/shared/dnd/dragAndDropUtils';
 import AddPropertyView from '@/components/Templates/Tabs/PropertyShapesTab/AddProperty/AddPropertyView';
-import PropertyShape, { isPropertyShapeData } from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
+import PropertyShape from '@/components/Templates/Tabs/PropertyShapesTab/PropertyShape/PropertyShape';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PropertyShape as PropertyShapeType, PropertyShapeLiteralType, PropertyShapeResourceType } from '@/services/backend/types';
 import { updateIsClosed, updatePropertyShapes } from '@/slices/templateEditorSlice';
@@ -16,7 +16,6 @@ import { RootStore } from '@/slices/types';
 
 const PropertyShapesTab: FC = () => {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const [instanceId] = useState(() => createInstanceId('property-shapes-tab'));
     const dispatch = useDispatch();
     const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
@@ -25,36 +24,13 @@ const PropertyShapesTab: FC = () => {
     const [propertyLabel, setPropertyLabel] = useState('');
     const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
 
-    const reorderPropertyShapes = useCallback(
-        ({ startIndex, indexOfTarget, closestEdgeOfTarget }: ReorderParams) => {
-            const reorderedShapes = performReorder({
-                items: propertyShapes,
-                startIndex,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: 'vertical',
-            });
+    const { instanceId, moveItem } = useSortableList({
+        itemCount: propertyShapes.length,
+        onReorder: (event) => dispatch(updatePropertyShapes(reorderList(propertyShapes, event))),
+    });
 
-            if (reorderedShapes !== propertyShapes) {
-                dispatch(updatePropertyShapes(reorderedShapes));
-            }
-        },
-        [propertyShapes, dispatch],
-    );
-
-    useEffect(() => {
-        const cleanup = createListMonitor({
-            instanceId,
-            items: propertyShapes,
-            isDragData: isPropertyShapeData,
-            onReorder: reorderPropertyShapes,
-            getItemId: (shape) => shape.path?.id || `shape-${propertyShapes.indexOf(shape)}`,
-        });
-
-        return () => {
-            cleanup?.();
-        };
-    }, [instanceId, propertyShapes, reorderPropertyShapes]);
+    // the list scrolls with the page, so only the window needs to scroll while dragging
+    useAutoScroll({ instanceId, includeWindow: true });
 
     const handleDeletePropertyShape = (index: number) => {
         dispatch(updatePropertyShapes(propertyShapes.filter((_item, j: number) => index !== j)));
@@ -181,6 +157,7 @@ const PropertyShapesTab: FC = () => {
                             id={index}
                             key={`tc${templateProperty.path?.id || index}`}
                             instanceId={instanceId}
+                            moveItem={moveItem}
                             propertyShape={templateProperty}
                             handleDeletePropertyShape={handleDeletePropertyShape}
                             handlePropertiesSelect={handlePropertiesSelect}

@@ -75,10 +75,7 @@ const Header = () => {
 
     const innerClass = 'mx-auto flex h-[72px] w-full max-w-container items-center gap-3 px-3';
     const desktopOnlyRow = 'hidden md:flex md:flex-1 md:items-center md:justify-between md:gap-4';
-    const mobilePanelClass = cn(
-        'flex max-h-[calc(100dvh-72px)] flex-col gap-3 overflow-y-auto border-t border-separator py-3 md:hidden',
-        isOpenNavBar ? 'flex' : 'hidden',
-    );
+    const mobilePanelClass = 'flex max-h-[calc(100dvh-72px)] flex-col gap-3 overflow-y-auto border-t border-separator py-3 md:hidden';
 
     const askLinkClass = cn(
         'navlink-ask inline-flex items-center gap-1 whitespace-nowrap rounded-md px-2 py-1.5 text-sm font-medium max-[1200px]:hidden',
@@ -184,83 +181,85 @@ const Header = () => {
                     </div>
                 </div>
 
-                <div
-                    className={cn(mobilePanelClass, isTransparentNavbar && 'bg-(--graph-banner-bg)')}
-                    onClickCapture={(e) => {
-                        if ((e.target as HTMLElement).closest('a[href]')) {
-                            closeMenu();
-                        }
-                    }}
-                >
-                    <div className="flex flex-col gap-1 px-4">
-                        <ViewDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
-                        <ToolsDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
-                        <AboutDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
-                        <a
-                            href="https://ask.orkg.org"
-                            target="_blank"
-                            rel="noreferrer"
-                            className={cn(
-                                'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium min-[1201px]:hidden',
-                                isTransparentNavbar ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-default/40',
-                            )}
-                        >
-                            ORKG Ask
-                            <FontAwesomeIcon className="size-3 opacity-80" icon={faExternalLinkAlt} />
-                        </a>
-                        <Nfdi4dsButton />
-                        <div
-                            className={cn(
-                                'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium',
-                                isTransparentNavbar ? 'text-white' : 'text-foreground',
-                            )}
-                        >
-                            <ThemeSwitcher isTransparentNavbar={isTransparentNavbar} />
-                            <span>Toggle theme</span>
-                        </div>
-                    </div>
-                    <div className="mt-2 flex flex-col gap-2 border-t border-separator px-4 pt-3">
-                        <SearchForm placeholder="Search..." onSearch={closeMenu} />
-                        <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
-                        {status === 'authenticated' && user && (
+                {isOpenNavBar && (
+                    <div
+                        className={cn(mobilePanelClass, isTransparentNavbar && 'bg-(--graph-banner-bg)')}
+                        onClickCapture={(e) => {
+                            if ((e.target as HTMLElement).closest('a[href]')) {
+                                closeMenu();
+                            }
+                        }}
+                    >
+                        <div className="flex flex-col gap-1 px-4">
+                            <ViewDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
+                            <ToolsDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
+                            <AboutDropdown isTransparentNavbar={isTransparentNavbar} fullWidthMobile />
+                            <a
+                                href="https://ask.orkg.org"
+                                target="_blank"
+                                rel="noreferrer"
+                                className={cn(
+                                    'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium min-[1201px]:hidden',
+                                    isTransparentNavbar ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-default/40',
+                                )}
+                            >
+                                ORKG Ask
+                                <FontAwesomeIcon className="size-3 opacity-80" icon={faExternalLinkAlt} />
+                            </a>
+                            <Nfdi4dsButton />
                             <div
                                 className={cn(
                                     'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium',
                                     isTransparentNavbar ? 'text-white' : 'text-foreground',
                                 )}
                             >
-                                <NotificationsBell isTransparentNavbar={isTransparentNavbar} />
-                                <span>Notifications</span>
+                                <ThemeSwitcher isTransparentNavbar={isTransparentNavbar} />
+                                <span>Toggle theme</span>
                             </div>
-                        )}
-                        {status === 'authenticated' && user && <UserTooltip />}
-                        {status === 'unauthenticated' && (
-                            <Button
-                                id="sign-in-mobile"
-                                className={cn(
-                                    'sign-in w-full',
-                                    isTransparentNavbar &&
-                                        'border-[#32303b] bg-[#32303b] text-white hover:border-[#100f13] hover:bg-[#100f13] hover:text-white',
-                                )}
-                                variant={isTransparentNavbar ? 'primary' : 'secondary'}
-                                onPress={() => signIn('keycloak')}
-                            >
-                                <FontAwesomeIcon className="mr-1" icon={faUser} />
-                                Sign in
-                            </Button>
-                        )}
-                        {status === 'loading' && (
-                            <div className="flex justify-center py-2">
-                                <FontAwesomeIcon
-                                    className="text-xl"
-                                    style={isTransparentNavbar ? { color: 'white' } : undefined}
-                                    icon={faSpinner}
-                                    spin
-                                />
-                            </div>
-                        )}
+                        </div>
+                        <div className="mt-2 flex flex-col gap-2 border-t border-separator px-4 pt-3">
+                            <SearchForm placeholder="Search..." onSearch={closeMenu} />
+                            <AddNew isHomePageStyle={isTransparentNavbar} onAdd={closeMenu} />
+                            {status === 'authenticated' && user && (
+                                <div
+                                    className={cn(
+                                        'inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium',
+                                        isTransparentNavbar ? 'text-white' : 'text-foreground',
+                                    )}
+                                >
+                                    <NotificationsBell isTransparentNavbar={isTransparentNavbar} />
+                                    <span>Notifications</span>
+                                </div>
+                            )}
+                            {status === 'authenticated' && user && <UserTooltip />}
+                            {status === 'unauthenticated' && (
+                                <Button
+                                    id="sign-in-mobile"
+                                    className={cn(
+                                        'sign-in w-full',
+                                        isTransparentNavbar &&
+                                            'border-[#32303b] bg-[#32303b] text-white hover:border-[#100f13] hover:bg-[#100f13] hover:text-white',
+                                    )}
+                                    variant={isTransparentNavbar ? 'primary' : 'secondary'}
+                                    onPress={() => signIn('keycloak')}
+                                >
+                                    <FontAwesomeIcon className="mr-1" icon={faUser} />
+                                    Sign in
+                                </Button>
+                            )}
+                            {status === 'loading' && (
+                                <div className="flex justify-center py-2">
+                                    <FontAwesomeIcon
+                                        className="text-xl"
+                                        style={isTransparentNavbar ? { color: 'white' } : undefined}
+                                        icon={faSpinner}
+                                        spin
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </nav>
 
             {isHomePage && <Jumbotron />}

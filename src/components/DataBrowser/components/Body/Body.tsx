@@ -1,12 +1,13 @@
 import { Skeleton } from '@heroui/react';
 import { groupBy, uniqBy } from 'lodash';
-import { Fragment, ReactElement } from 'react';
+import { Fragment, ReactElement, useMemo } from 'react';
 
 import AddStatement from '@/components/DataBrowser/components/Body/AddStatement/AddStatement';
 import NoData from '@/components/DataBrowser/components/Body/NoData/NoData';
 import SingleStatement from '@/components/DataBrowser/components/Body/Statement/Statement';
 import ValuePreviewFactory from '@/components/DataBrowser/components/Body/ValuePreviewFactory/ValuePreviewFactory';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
+import { ListOrderingContext } from '@/components/DataBrowser/context/ListOrderingContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useComparisonRecommendations from '@/components/DataBrowser/hooks/useComparisonRecommendations';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
@@ -40,12 +41,13 @@ const Body = () => {
 
     const { canEdit } = useCanEdit();
 
-    useListOrdering({
+    const { instanceId, moveItem } = useListOrdering({
         statements,
         entity,
         isEditMode,
         mutateStatements,
     });
+    const listOrderingValue = useMemo(() => ({ instanceId, moveItem }), [instanceId, moveItem]);
 
     if (error) {
         return null;
@@ -63,45 +65,48 @@ const Body = () => {
     const valueWrapper = (children: ReactElement) => <ValuePreviewFactory value={entity as Resource}>{children}</ValuePreviewFactory>;
 
     return (
-        <div>
-            {/* for resource entity show only description property if in edit mode and can edit */}
-            {((entity?._class === ENTITIES.RESOURCE && isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE) &&
-                config.showFooter &&
-                requiredProperties
-                    // Show only description property
-                    .filter((p) => p.id === PREDICATES.DESCRIPTION)
-                    .map((p) => <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />)}
-            <ConditionalWrapper condition={entity && !config.valuesAsLinks && 'classes' in entity} wrapper={valueWrapper}>
-                {statementsOrdered.map((g) => (
-                    <Fragment key={g.predicate.id}>
-                        {entity &&
-                            g.statements.map((s: Statement) => (
-                                <SingleStatement
-                                    level={0}
-                                    key={s.id}
-                                    statement={s}
-                                    path={[entity.id]}
-                                    isHiddenInComparison={!visibleProperties.find((predicateId) => predicateId === g.predicate.id)}
-                                />
-                            ))}
-                        {canEdit && isEditMode && <AddStatement predicate={g.predicate} canDelete={false} showDeleteButton={false} />}
-                    </Fragment>
-                ))}
-            </ConditionalWrapper>
-            {requiredProperties
-                // Show all properties except description
-                .filter((p) => p.id !== PREDICATES.DESCRIPTION)
-                .map((p) => (
-                    <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />
-                ))}
+        <ListOrderingContext.Provider value={listOrderingValue}>
+            <div>
+                {/* for resource entity show only description property if in edit mode and can edit */}
+                {((entity?._class === ENTITIES.RESOURCE && isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE) &&
+                    config.showFooter &&
+                    requiredProperties
+                        // Show only description property
+                        .filter((p) => p.id === PREDICATES.DESCRIPTION)
+                        .map((p) => <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />)}
+                <ConditionalWrapper condition={entity && !config.valuesAsLinks && 'classes' in entity} wrapper={valueWrapper}>
+                    {statementsOrdered.map((g) => (
+                        <Fragment key={g.predicate.id}>
+                            {entity &&
+                                g.statements.map((s: Statement) => (
+                                    <SingleStatement
+                                        level={0}
+                                        key={s.id}
+                                        statement={s}
+                                        path={[entity.id]}
+                                        isHiddenInComparison={!visibleProperties.find((predicateId) => predicateId === g.predicate.id)}
+                                    />
+                                ))}
+                            {canEdit && isEditMode && <AddStatement predicate={g.predicate} canDelete={false} showDeleteButton={false} />}
+                        </Fragment>
+                    ))}
+                </ConditionalWrapper>
+                {requiredProperties
+                    // Show all properties except description
+                    .filter((p) => p.id !== PREDICATES.DESCRIPTION)
+                    .map((p) => (
+                        <AddStatement key={p.id} predicate={p as Predicate} canDelete={false} />
+                    ))}
 
-            {canEdit && _newProperties.map((p) => <AddStatement key={p.id} predicate={p} canDelete />)}
+                {canEdit && _newProperties.map((p) => <AddStatement key={p.id} predicate={p} canDelete />)}
 
-            {statementsOrdered.length === 0 &&
-                requiredProperties.filter((p) => p.id !== PREDICATES.DESCRIPTION || (isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE)
-                    .length === 0 &&
-                scopedNewProperties.length === 0 && <NoData />}
-        </div>
+                {statementsOrdered.length === 0 &&
+                    requiredProperties.filter(
+                        (p) => p.id !== PREDICATES.DESCRIPTION || (isEditMode && canEdit) || entity?._class !== ENTITIES.RESOURCE,
+                    ).length === 0 &&
+                    scopedNewProperties.length === 0 && <NoData />}
+            </div>
+        </ListOrderingContext.Provider>
     );
 };
 
