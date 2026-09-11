@@ -43,7 +43,7 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
             // dirty hack: the timeout is required to ensure that the node is rendered before centering
             setTimeout(() => {
                 if (graphRef?.current?.getGraph()?.hasNode(foundNodeId)) {
-                    setSelections(foundNodeId);
+                    setSelections([foundNodeId]);
                     graphRef.current?.centerGraph([foundNodeId]);
                     setFoundNodeId(false);
                 }
@@ -63,6 +63,7 @@ const GraphSearch = ({ nodes, edges, setSelections, collapsed, setCollapsed, gra
                 menu: (provided) => ({ ...provided, zIndex: 2 }),
             }}
             menuPosition="fixed"
+            size="sm"
             isClearable
             getOptionValue={({ id }) => id}
             getOptionLabel={({ label }) => label}
