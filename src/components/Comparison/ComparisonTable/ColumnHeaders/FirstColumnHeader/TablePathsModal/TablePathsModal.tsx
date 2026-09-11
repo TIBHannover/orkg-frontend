@@ -3,16 +3,13 @@ import { type NestedListAccessors, type NestedReorderEvent, reorderNestedList, u
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
+import useManagePropertiesModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/hooks/useManagePropertiesModal';
 import PathList from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/PathList/PathList';
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
 import useComparison from '@/components/Comparison/hooks/useComparison';
 import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 import { comparisonUrl, getComparisonTablePaths, updateComparisonContents } from '@/services/backend/comparisons';
 import { ComparisonPath, ComparisonUpdateSelectedPath } from '@/services/backend/types';
-
-type TablePathsModalProps = {
-    toggle: () => void;
-};
 
 const toggleExpandPath = (paths: PathWithSettings[], targetPath: string[]): PathWithSettings[] => {
     return paths.map((path) => {
@@ -100,9 +97,10 @@ const prepareUpdatePaths = (paths: PathWithSettings[]): ComparisonUpdateSelected
         }));
 };
 
-const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
+const TablePathsModal = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [pathsNew, setPathsNew] = useState<PathWithSettings[]>([]);
+    const { closeManageProperties } = useManagePropertiesModal();
 
     const { comparison, comparisonContents, mutateComparisonContents } = useComparison();
 
@@ -148,14 +146,14 @@ const TablePathsModal = ({ toggle }: TablePathsModalProps) => {
             selected_paths: items,
         });
         await mutateComparisonContents();
-        toggle();
+        closeManageProperties();
     };
 
     const isBusy = isLoadingTablePaths || isLoading;
 
     const handleOpenChange = (open: boolean) => {
         if (!open && !isBusy) {
-            toggle();
+            closeManageProperties();
         }
     };
 
