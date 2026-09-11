@@ -2,7 +2,7 @@
 
 import { faDharmachakra, faHome, faProjectDiagram, faSitemap, faSpinner, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Label, Modal as HeroUIModal } from '@heroui/react';
+import { Button, Dropdown, Label, Modal, NumberField, Popover } from '@heroui/react';
 import dynamic from 'next/dynamic';
 import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
@@ -10,27 +10,28 @@ import { lightTheme, useSelection } from 'reagraph';
 
 // import RobotoFont from '@/components/GraphView/roboto-medium-webfont.woff';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
-import Popover from '@/components/FloatingUI/Popover';
 import ContextMenu from '@/components/GraphView/ContextMenu';
+import GraphLoadingIndicator from '@/components/GraphView/GraphLoadingIndicator';
 import GraphSearch from '@/components/GraphView/GraphSearch';
+import GraphViewModalShell from '@/components/GraphView/GraphViewModalShell';
 import useGraphView from '@/components/GraphView/hooks/useGraphView';
 import Node from '@/components/GraphView/Node';
 import SelectedEdgeBox from '@/components/GraphView/SelectedEdgeBox';
 import SelectedNodeBox from '@/components/GraphView/SelectedNodeBox';
-import Dropdown from '@/components/Ui/Dropdown/Dropdown';
-import DropdownItem from '@/components/Ui/Dropdown/DropdownItem';
-import DropdownMenu from '@/components/Ui/Dropdown/DropdownMenu';
-import DropdownToggle from '@/components/Ui/Dropdown/DropdownToggle';
-import Input from '@/components/Ui/Input/Input';
-import Modal from '@/components/Ui/Modal/Modal';
-import ModalBody from '@/components/Ui/Modal/ModalBody';
 import { ENTITIES } from '@/constants/graphSettings';
 
 const GraphCanvas = dynamic(() => import('reagraph').then((mod) => mod.GraphCanvas), { ssr: false });
 
+const LAYOUTS = [
+    { id: 'forceDirected2d', label: 'Force directed', icon: faProjectDiagram },
+    { id: 'treeLr2d', label: 'Horizontal tree', icon: faSitemap, rotation: 270 },
+    { id: 'treeTd2d', label: 'Vertical tree', icon: faSitemap },
+    { id: 'radialOut2d', label: 'Radial out', icon: faDharmachakra },
+    { id: 'circular2d', label: 'Circular', icon: faSpinner },
+];
+
 const LazyGraphViewModal = ({ toggle, resourceId }) => {
     const [layoutType, setLayoutType] = useState('forceDirected2d');
-    const [layoutSelectionOpen, setLayoutSelectionOpen] = useState(false);
     const [selectedEdge, setSelectedEdge] = useState(null);
     const [blackListClassesPopoverOpen, setBlackListClassesPopoverOpen] = useState(false);
     const classSelectorId = useId();
@@ -43,6 +44,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
         depth,
         fetchIncomingStatements,
         isLoadingStatements,
+        hasLoadedStatements,
         collapsed,
         setCollapsed,
         graphRef,
@@ -50,10 +52,6 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
         setBlackListClasses,
         blackListClasses,
     } = useGraphView({ resourceId });
-
-    const handleLayoutChange = (newLayoutType) => {
-        setLayoutType(newLayoutType);
-    };
 
     const { onNodePointerOver, onNodePointerOut, selections, actives, onNodeClick, onCanvasClick, setSelections } = useSelection({
         ref: graphRef,
@@ -71,13 +69,8 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
             ? 'Expand'
             : 'Collapse';
 
-    const layoutIcons = {
-        forceDirected2d: faProjectDiagram,
-        radialOut2d: faDharmachakra,
-        circular2d: faSpinner,
-    };
+    const activeLayout = LAYOUTS.find((layout) => layout.id === layoutType);
 
-    const layoutIcon = layoutIcons[layoutType] || faSitemap;
     const onEdgeButtonClick = (edge) => {
         setSelectedEdge(edge);
         setSelections([]);
@@ -89,115 +82,107 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
     };
 
     return (
-        <Modal size="lg" isOpen toggle={toggle} className="h-[calc(100vh-80px)]" style={{ maxWidth: '90%', marginBottom: 0 }}>
-            <HeroUIModal.Header className="relative z-10 shrink-0">
-                <HeroUIModal.CloseTrigger />
-                <div className="flex w-full items-center">
-                    <HeroUIModal.Heading>View graph</HeroUIModal.Heading>
-                    <div className="flex ml-4 items-center grow">
-                        <Button variant="secondary" className="mr-2" size="sm" onPress={() => graphRef.current?.centerGraph()}>
-                            <FontAwesomeIcon icon={faHome} className="mr-1" /> Center graph
+        <GraphViewModalShell toggle={toggle}>
+            <Modal.CloseTrigger />
+            {/* relative anchors the absolutely-positioned close trigger to the header */}
+            <Modal.Header className="relative z-10 shrink-0 gap-2 border-b border-border px-6 pt-4 pb-3">
+                <div className="flex items-center gap-3 pe-10">
+                    <Modal.Heading>View graph</Modal.Heading>
+                    {hasLoadedStatements && (
+                        <span className="text-xs text-muted">
+                            {nodes.length} nodes · {edges.length} connections
+                        </span>
+                    )}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                    <Button variant="secondary" size="sm" onPress={() => graphRef.current?.centerGraph()}>
+                        <FontAwesomeIcon icon={faHome} className="me-1 text-muted" /> Center graph
+                    </Button>
+                    <Dropdown>
+                        <Button variant="secondary" size="sm" aria-label="Change graph layout">
+                            <FontAwesomeIcon icon={activeLayout.icon} rotation={activeLayout.rotation} className="me-1 text-muted" />
+                            {activeLayout.label}
                         </Button>
-                        <Dropdown
-                            color="secondary"
-                            size="sm"
-                            isOpen={layoutSelectionOpen}
-                            toggle={() => {
-                                setLayoutSelectionOpen(!layoutSelectionOpen);
-                            }}
-                        >
-                            <DropdownToggle caret color="secondary" className="mr-2">
-                                Layout:
-                                <FontAwesomeIcon icon={layoutIcon} rotation={layoutType === 'treeLr2d' ? 270 : undefined} className="mx-2" />
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={() => handleLayoutChange('forceDirected2d')}>
-                                    <FontAwesomeIcon icon={faProjectDiagram} className="mx-2" />
-                                    Force directed
-                                </DropdownItem>
-                                <DropdownItem onClick={() => handleLayoutChange('treeLr2d')}>
-                                    <FontAwesomeIcon icon={faSitemap} rotation={270} className="mx-2" />
-                                    Horizontal tree
-                                </DropdownItem>
-                                <DropdownItem onClick={() => handleLayoutChange('treeTd2d')}>
-                                    <FontAwesomeIcon icon={faSitemap} className="mx-2" />
-                                    Vertical tree
-                                </DropdownItem>
-                                <DropdownItem onClick={() => handleLayoutChange('radialOut2d')}>
-                                    <FontAwesomeIcon icon={faDharmachakra} className="mx-2" />
-                                    RadialOut
-                                </DropdownItem>
-                                <DropdownItem onClick={() => handleLayoutChange('circular2d')}>
-                                    <FontAwesomeIcon icon={faSpinner} className="mx-2" />
-                                    Circular
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                        <div className="flex mr-2 items-center">
-                            <Popover
-                                contentStyle={{
-                                    zIndex: 9999,
-                                }}
-                                open={blackListClassesPopoverOpen}
-                                onOpenChange={setBlackListClassesPopoverOpen}
-                                content={
-                                    <div className="p-1" style={{ minWidth: 300 }}>
-                                        <Label htmlFor={classSelectorId}>Blacklisted classes</Label>
-                                        <div>
-                                            <Autocomplete
-                                                entityType={ENTITIES.CLASS}
-                                                isMulti
-                                                placeholder="Select a class"
-                                                onChange={(selected) => {
-                                                    setBlackListClasses(!selected ? [] : selected);
-                                                }}
-                                                value={blackListClasses}
-                                                openMenuOnFocus
-                                                isClearable={false}
-                                                inputId={classSelectorId}
-                                                size="sm"
-                                                enableExternalSources={false}
-                                            />
-                                        </div>
-                                    </div>
-                                }
+                        <Dropdown.Popover placement="bottom start" className="min-w-[220px]">
+                            <Dropdown.Menu
+                                aria-label="Graph layout"
+                                disallowEmptySelection
+                                selectionMode="single"
+                                selectedKeys={[layoutType]}
+                                onSelectionChange={(keys) => setLayoutType([...keys][0])}
                             >
-                                <span>
-                                    <Button variant="secondary" className="px-4" size="sm" onPress={() => setBlackListClassesPopoverOpen(true)}>
-                                        <FontAwesomeIcon icon={faWrench} />
-                                    </Button>
-                                </span>
-                            </Popover>
-                        </div>
-                        <div className="flex mr-4 items-center">
-                            <Label htmlFor={depthId} className="m-0">
-                                Depth
-                            </Label>
-                            <Input
-                                type="number"
-                                id={depthId}
-                                min="1"
-                                bsSize="sm"
-                                className="ml-2"
-                                style={{ width: '60px' }}
-                                value={depth}
-                                onChange={(e) => setDepth(e.target.value)}
-                            />
-                        </div>
-                        <div className="ms-auto mr-4 w-full" style={{ maxWidth: 300 }}>
-                            <GraphSearch
-                                nodes={nodes}
-                                edges={edges}
-                                setSelections={setSelections}
-                                collapsed={collapsed}
-                                setCollapsed={setCollapsed}
-                                graphRef={graphRef}
-                            />
-                        </div>
+                                {LAYOUTS.map((layout) => (
+                                    <Dropdown.Item key={layout.id} id={layout.id} textValue={layout.label}>
+                                        <Dropdown.ItemIndicator />
+                                        <Label>
+                                            <FontAwesomeIcon icon={layout.icon} rotation={layout.rotation} className="me-2 text-muted" />
+                                            {layout.label}
+                                        </Label>
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown.Popover>
+                    </Dropdown>
+                    <Popover isOpen={blackListClassesPopoverOpen} onOpenChange={setBlackListClassesPopoverOpen}>
+                        <Button variant="secondary" size="sm" isIconOnly aria-label="Graph settings">
+                            <FontAwesomeIcon icon={faWrench} className="text-muted" />
+                        </Button>
+                        <Popover.Content className="w-[320px]">
+                            <Popover.Dialog>
+                                <Label htmlFor={classSelectorId}>Blacklisted classes</Label>
+                                <div className="mt-2">
+                                    <Autocomplete
+                                        entityType={ENTITIES.CLASS}
+                                        isMulti
+                                        placeholder="Select a class"
+                                        onChange={(selected) => {
+                                            setBlackListClasses(!selected ? [] : selected);
+                                        }}
+                                        value={blackListClasses}
+                                        openMenuOnFocus
+                                        isClearable={false}
+                                        inputId={classSelectorId}
+                                        size="sm"
+                                        enableExternalSources={false}
+                                    />
+                                </div>
+                            </Popover.Dialog>
+                        </Popover.Content>
+                    </Popover>
+                    <NumberField
+                        className="flex-row items-center gap-2"
+                        id={depthId}
+                        minValue={1}
+                        value={depth}
+                        onChange={(value) => {
+                            if (value !== undefined && !Number.isNaN(value)) {
+                                setDepth(value);
+                            }
+                        }}
+                    >
+                        <Label className="m-0 text-sm text-muted">Depth</Label>
+                        {/* the group is a `40px 1fr 40px` grid: sizing the children instead of the tracks
+                            pins them to the start of their cell */}
+                        <NumberField.Group className="h-8 grid-cols-[32px_1fr_32px] rounded-full">
+                            <NumberField.DecrementButton className="!h-8 w-full border-0" />
+                            <NumberField.Input className="w-10 px-0 text-center" />
+                            <NumberField.IncrementButton className="!h-8 w-full border-0" />
+                        </NumberField.Group>
+                    </NumberField>
+                    {/* grid, not block: react-select's container doesn't stretch through a plain wrapper */}
+                    <div className="ms-auto grid h-8 w-full max-w-[280px]">
+                        <GraphSearch
+                            nodes={nodes}
+                            edges={edges}
+                            setSelections={setSelections}
+                            collapsed={collapsed}
+                            setCollapsed={setCollapsed}
+                            graphRef={graphRef}
+                        />
                     </div>
                 </div>
-            </HeroUIModal.Header>
-            <ModalBody className="p-0 mb-2 min-h-[100px] flex-1 overflow-hidden">
+            </Modal.Header>
+            <Modal.Body className="relative mt-0 min-h-0 flex-1 overflow-hidden p-0">
                 {selectedNode && (
                     <SelectedNodeBox
                         nodes={nodes}
@@ -209,7 +194,7 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                 )}
                 {selectedEdge && !selectedNode && <SelectedEdgeBox selectedEdge={selectedEdge} />}
 
-                {!isLoadingStatements && (
+                {hasLoadedStatements && (
                     <GraphCanvas
                         ref={graphRef}
                         theme={{
@@ -262,16 +247,10 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
                     />
                 )}
                 {isLoadingStatements && (
-                    <div className="text-center text-accent mt-6 mb-6">
-                        <span style={{ fontSize: '200%' }}>
-                            <FontAwesomeIcon icon={faSpinner} spin />
-                        </span>
-                        <br />
-                        <h2 className="text-xl">Loading graph...</h2>
-                    </div>
+                    <GraphLoadingIndicator isOverlay={hasLoadedStatements} message={hasLoadedStatements ? 'Updating graph...' : 'Loading graph...'} />
                 )}
-            </ModalBody>
-        </Modal>
+            </Modal.Body>
+        </GraphViewModalShell>
     );
 };
 

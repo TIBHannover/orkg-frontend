@@ -38,6 +38,7 @@ const useGraphView = ({ resourceId }) => {
     const [depth, setDepth] = useState(2);
     const [collapsed, setCollapsed] = useState([]);
     const [isLoadingStatements, setIsLoadingStatements] = useState(true);
+    const [hasLoadedStatements, setHasLoadedStatements] = useState(false);
     const [blackListClasses, setBlackListClasses] = useState([{ label: 'ResearchField', id: CLASSES.RESEARCH_FIELD }]);
 
     const graphRef = useRef(null);
@@ -188,9 +189,14 @@ const useGraphView = ({ resourceId }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchStatements({ nodeId: resourceId, blackList: blackListClasses, shouldAddSubject: true, resetNodes: true });
-            setCollapsed([]);
-            setIsLoadingStatements(false);
+            setIsLoadingStatements(true);
+            try {
+                await fetchStatements({ nodeId: resourceId, blackList: blackListClasses, shouldAddSubject: true, resetNodes: true });
+                setCollapsed([]);
+            } finally {
+                setIsLoadingStatements(false);
+                setHasLoadedStatements(true);
+            }
         };
         fetchData();
     }, [depth, resourceId, fetchStatements, blackListClasses]);
@@ -206,6 +212,7 @@ const useGraphView = ({ resourceId }) => {
         depth,
         fetchIncomingStatements,
         isLoadingStatements,
+        hasLoadedStatements,
         collapsed,
         setCollapsed,
         graphRef,
