@@ -2,6 +2,17 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.190.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.189.0...v0.190.0) - 2026-09-14
+
+### Changes
+
+- feat(comparison): enhance UX by adding alert for unselected properties [`#1707`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1707)
+- feat(graph-view): add loading indicators and redesign modal header and update nextjs [`#1758`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1758)
+- refactor: replace dragAndDropUtils with @orkg/pragmatic-dnd-hooks [`#1745`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1745)
+- feat(cards): show provenance metadata on entity cards [`#1746`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1746)
+- feat(drafts): add delete for draft comparisons [`#1749`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1749)
+
+---
 ## [v0.189.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.188.0...v0.189.0) - 2026-08-18
 
 ### Changes
