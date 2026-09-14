@@ -2,9 +2,18 @@ import { useQueryState } from 'nuqs';
 import { FC, useEffect } from 'react';
 
 import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
+import enqueueToggle from '@/components/Comparison/ComparisonTable/ComparisonDialogs/toggleQueue';
 import useComparison from '@/components/Comparison/hooks/useComparison';
+import { deselectPath, SelectablePath, selectPath, toSelectableTree, toUpdatePaths } from '@/components/Comparison/utils/pathTree';
 import DataBrowserDialog from '@/components/DataBrowser/DataBrowserDialog';
 import { computeUpdatedHistory, entryPrefix, historyParams, matchesEntry } from '@/components/DataBrowser/hooks/useHistory';
+import errorHandler from '@/helpers/errorHandler';
+import { getComparisonContents, updateComparisonContents } from '@/services/backend/comparisons';
+import { ComparisonContents } from '@/services/backend/types';
+
+// Hardcodes type: 'PREDICATE' — safe because callers only toggle level-0 rows in TriplePredicate
+// (statement.predicate is a real Predicate). Revisit if Rosetta Stone rows ever expose the toggle.
+const createPredicateNode = (id: string): SelectablePath => ({ id, type: 'PREDICATE', isSelected: true, children: [] });
 
 type ComparisonDialogProps = {
     /** The dialog's fixed root prefix (its identity); the last element is the entity it is rooted at. */
@@ -14,9 +23,40 @@ type ComparisonDialogProps = {
 
 const ComparisonDialog: FC<ComparisonDialogProps> = ({ historyPrefix, onClose }) => {
     const { scopeKey } = useComparisonState();
-    const { selectedPathsFlattened, comparisonContents, mutateComparisonContents, isEditMode } = useComparison();
+    const { comparison, selectedPathsFlattened, comparisonContents, mutateComparisonContents, isEditMode } = useComparison();
 
     const rootId = historyPrefix[historyPrefix.length - 1];
+
+    const comparisonId = comparison?.id;
+    const comparisonSelectedPaths = selectedPathsFlattened.map((selectedPath) => [...(selectedPath.path ?? []), selectedPath.id]);
+    const handleToggleComparisonPropertyVisibility = async (predicatePath: string[], show: boolean) => {
+        if (!comparisonId) {
+            return;
+        }
+        await enqueueToggle(comparisonId, async () => {
+            await mutateComparisonContents(
+                async (current: ComparisonContents | undefined) => {
+                    const base = current ?? (await getComparisonContents(comparisonId));
+                    const currentPaths = toSelectableTree(base.selected_paths);
+                    const updatedPaths = toUpdatePaths(
+                        show ? selectPath(currentPaths, predicatePath, createPredicateNode) : deselectPath(currentPaths, predicatePath),
+                    );
+                    try {
+                        await updateComparisonContents({ id: comparisonId, selected_paths: updatedPaths });
+                    } catch (error) {
+                        errorHandler({ error, shouldShowToast: true });
+                    }
+                    return undefined;
+                },
+                // `revalidate: true` here would fire the refetch without awaiting it, so the next
+                // queued toggle would still read the pre-PUT cache and overwrite this change.
+                { revalidate: false, populateCache: false },
+            );
+            // Bare mutate() resolves only once the refetch has landed, so the next queued
+            // toggle (and the caller's loading state) sees the updated selected_paths.
+            await mutateComparisonContents();
+        });
+    };
 
     return (
         <DataBrowserDialog
@@ -26,7 +66,8 @@ const ComparisonDialog: FC<ComparisonDialogProps> = ({ historyPrefix, onClose })
                 onClose();
             }}
             id={rootId}
-            comparisonSelectedPaths={selectedPathsFlattened.map((selectedPath) => [...(selectedPath.path ?? []), selectedPath.id])}
+            comparisonSelectedPaths={comparisonSelectedPaths}
+            onToggleComparisonPropertyVisibility={handleToggleComparisonPropertyVisibility}
             isEditMode={isEditMode}
             historyPrefix={historyPrefix}
             scopeKey={scopeKey}

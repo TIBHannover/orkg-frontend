@@ -131,6 +131,12 @@ export type DataBrowserConfig = {
      * Paths selected in the comparison view, used to show predicates for non-existing values in the data browser.
      */
     comparisonSelectedPaths?: string[][];
+    /**
+     * Called when the user toggles the visibility of a property inside the comparison.
+     * `predicatePath` is the full predicate path from the comparison source (a contribution or any other resource),
+     * in the same shape as `comparisonSelectedPaths`; `show` is the requested visibility.
+     */
+    onToggleComparisonPropertyVisibility?: (predicatePath: string[], show: boolean) => Promise<void>;
 };
 
 export type DataBrowserPreferences = {

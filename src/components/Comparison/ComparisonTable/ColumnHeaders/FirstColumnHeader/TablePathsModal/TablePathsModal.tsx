@@ -7,59 +7,13 @@ import useManagePropertiesModal from '@/app/comparisons/[comparisonId]/Compariso
 import PathList from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/PathList/PathList';
 import { PathWithSettings } from '@/components/Comparison/ComparisonTable/ColumnHeaders/FirstColumnHeader/TablePathsModal/types';
 import useComparison from '@/components/Comparison/hooks/useComparison';
+import { toggleSelectPath, toUpdatePaths, updatePathNode } from '@/components/Comparison/utils/pathTree';
 import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 import { comparisonUrl, getComparisonTablePaths, updateComparisonContents } from '@/services/backend/comparisons';
-import { ComparisonPath, ComparisonUpdateSelectedPath } from '@/services/backend/types';
+import { ComparisonPath } from '@/services/backend/types';
 
-const toggleExpandPath = (paths: PathWithSettings[], targetPath: string[]): PathWithSettings[] => {
-    return paths.map((path) => {
-        if (path.id === targetPath[0]) {
-            if (targetPath.length === 1) {
-                return { ...path, isExpanded: !path.isExpanded };
-            }
-            if (path.children) {
-                return { ...path, children: toggleExpandPath(path.children, targetPath.slice(1)) };
-            }
-        }
-        return path;
-    });
-};
-
-const deselectChildren = (paths: PathWithSettings[]): PathWithSettings[] => {
-    return paths.map((path) => ({
-        ...path,
-        isSelected: false,
-        children: path.children ? deselectChildren(path.children) : path.children,
-    }));
-};
-
-const toggleSelectPath = (paths: PathWithSettings[], targetPath: string[]): PathWithSettings[] => {
-    return paths.map((path) => {
-        if (path.id !== targetPath[0]) {
-            return path;
-        }
-
-        if (targetPath.length === 1) {
-            return {
-                ...path,
-                isSelected: !path.isSelected,
-                children: path.isSelected && path.children ? deselectChildren(path.children) : path.children,
-            };
-        }
-
-        if (path.children) {
-            const updatedChildren = toggleSelectPath(path.children, targetPath.slice(1));
-            const isAnyChildSelected = updatedChildren.some((child) => child.isSelected);
-            return {
-                ...path,
-                isSelected: isAnyChildSelected || path.isSelected,
-                children: updatedChildren,
-            };
-        }
-
-        return path;
-    });
-};
+const toggleExpandPath = (paths: PathWithSettings[], targetPath: string[]): PathWithSettings[] =>
+    updatePathNode(paths, targetPath, (path) => ({ ...path, isExpanded: !path.isExpanded }));
 
 const mergeSelectedPathsWithTablePaths = (selectedPaths: ComparisonPath[], tablePaths: ComparisonPath[]): PathWithSettings[] => {
     const map = new Map<string, PathWithSettings>();
@@ -85,16 +39,6 @@ const pathAccessors: NestedListAccessors<PathWithSettings> = {
     getId: (path) => path.id,
     getChildren: (path) => path.children,
     setChildren: (path, children) => ({ ...path, children }),
-};
-
-const prepareUpdatePaths = (paths: PathWithSettings[]): ComparisonUpdateSelectedPath[] => {
-    return paths
-        .filter((path) => path.isSelected)
-        .map(({ id, type, children }) => ({
-            id,
-            type,
-            children: children && children.length > 0 ? prepareUpdatePaths(children) : [],
-        }));
 };
 
 const TablePathsModal = () => {
@@ -140,7 +84,7 @@ const TablePathsModal = () => {
 
     const handleSelect = async () => {
         setIsLoading(true);
-        const items = prepareUpdatePaths(pathsNew);
+        const items = toUpdatePaths(pathsNew);
         await updateComparisonContents({
             id: comparison.id,
             selected_paths: items,

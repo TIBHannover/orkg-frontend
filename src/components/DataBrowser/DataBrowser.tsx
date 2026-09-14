@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+// eslint-disable-next-line import/no-cycle
 import Body from '@/components/DataBrowser/components/Body/Body';
 import Footer from '@/components/DataBrowser/components/Footer/Footer';
 import Header from '@/components/DataBrowser/components/Header/Header';
@@ -7,6 +8,17 @@ import DataBrowserProvider from '@/components/DataBrowser/context/DataBrowserCon
 import { DataBrowserProps } from '@/components/DataBrowser/types/DataBrowserTypes';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import { CLASSES } from '@/constants/graphSettings';
+
+// Classes whose resources start collapsed instead of expanding their sub-level inline
+const DEFAULT_COLLAPSED_CLASSES = [
+    '',
+    CLASSES.RESEARCH_FIELD,
+    CLASSES.PAPER,
+    CLASSES.CONTRIBUTION,
+    CLASSES.CSVW_TABLE,
+    CLASSES.CSVW_ROW,
+    CLASSES.CSVW_COLUMN,
+];
 
 const DataBrowser: FC<DataBrowserProps> = ({
     id,
@@ -21,13 +33,14 @@ const DataBrowser: FC<DataBrowserProps> = ({
     showExternalDescriptions = true,
     showHeader = true,
     showFooter = true,
-    collapsedClasses = ['', CLASSES.RESEARCH_FIELD, CLASSES.PAPER, CLASSES.CONTRIBUTION, CLASSES.CSVW_TABLE, CLASSES.CSVW_ROW, CLASSES.CSVW_COLUMN],
+    collapsedClasses = DEFAULT_COLLAPSED_CLASSES,
     researchField,
     title,
     abstract,
     statementsSnapshot,
     snapshotCreatedAt,
     comparisonSelectedPaths,
+    onToggleComparisonPropertyVisibility,
     renderAboveHeader,
 }) => {
     const config = {
@@ -46,6 +59,7 @@ const DataBrowser: FC<DataBrowserProps> = ({
         snapshotCreatedAt,
         showFooter,
         comparisonSelectedPaths,
+        onToggleComparisonPropertyVisibility,
     };
     const context = { researchField, title, abstract, snapshotCreatedAt };
     return (
