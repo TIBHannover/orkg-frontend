@@ -11,8 +11,8 @@ const GraphViewModal = ({ toggle, resourceId }) => (
     <Suspense
         fallback={
             <GraphViewModalShell toggle={toggle}>
-                <Modal.CloseTrigger />
                 <Modal.Header className="relative shrink-0 border-b border-border px-6 pt-4 pb-3">
+                    <Modal.CloseTrigger />
                     <Modal.Heading className="pe-10">View graph</Modal.Heading>
                 </Modal.Header>
                 <Modal.Body className="relative mt-0 min-h-0 flex-1 overflow-hidden p-0">

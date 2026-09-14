@@ -12,6 +12,7 @@ type DataBrowserDialogProps = {
     onCloseModal?: () => void;
     showFooter?: boolean;
     comparisonSelectedPaths?: string[][];
+    onToggleComparisonPropertyVisibility?: (predicatePath: string[], show: boolean) => Promise<void>;
     historyPrefix?: string[];
     scopeKey?: string;
 };
@@ -24,6 +25,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
     onCloseModal,
     showFooter = true,
     comparisonSelectedPaths,
+    onToggleComparisonPropertyVisibility,
     historyPrefix,
     scopeKey,
 }) => {
@@ -47,6 +49,7 @@ const DataBrowserDialog: FC<DataBrowserDialogProps> = ({
                                 id={id}
                                 canEditSharedRootLevel
                                 showFooter={showFooter}
+                                onToggleComparisonPropertyVisibility={onToggleComparisonPropertyVisibility}
                                 comparisonSelectedPaths={comparisonSelectedPaths}
                                 historyPrefix={historyPrefix}
                                 scopeKey={scopeKey}

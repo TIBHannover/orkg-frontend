@@ -35,13 +35,21 @@ const ComparisonPage = () => {
     const { id: comparisonId } = useComparisonState();
     const { openManageProperties, isManagePropertiesOpen } = useManagePropertiesModal();
     const { comparison, comparisonContents, error, errorComparisonContents, isLoadingComparisonContents, isEditMode } = useComparison();
+
+    // Show the skeleton only when there is nothing to render yet — not on every fetch.
+    // SWR reports isLoading (not just isValidating) during a revalidation whenever the
+    // cache is empty, and server-side `fallback` data never populates the cache — so the
+    // first mutate-triggered revalidation (e.g. toggling property visibility in a cell
+    // dialog) would otherwise unmount the whole table and flash the skeleton.
+    const showContentsSkeleton = isLoadingComparisonContents && !comparisonContents;
+
     const sourceAmount = comparison?.sources.length ?? 0;
     const { isFullWidth } = useFullWidth({ sourceAmount });
     const containerStyle = isFullWidth ? { maxWidth: 'calc(100% - clamp(20px, 3vw, 100px))' } : {};
 
     const showServerError = errorComparisonContents && errorComparisonContents.statusCode >= 500;
     const showManagePropertiesAlert =
-        isEditMode && !isLoadingComparisonContents && sourceAmount >= 2 && comparisonContents?.selected_paths?.length === 0;
+        isEditMode && !showContentsSkeleton && sourceAmount >= 2 && comparisonContents?.selected_paths?.length === 0;
 
     if (error) {
         return <NotFound />;
@@ -70,7 +78,7 @@ const ComparisonPage = () => {
                     </Container>
                 </>
             )}
-            {!isLoadingComparisonContents && sourceAmount > 1 && <ComparisonCarousel />}
+            {!showContentsSkeleton && sourceAmount > 1 && <ComparisonCarousel />}
             <NewComparisonsAlert />
             <PropertySelectionInfoAlert />
             <Container className="transition-[max-width] duration-500" style={containerStyle}>
@@ -92,8 +100,8 @@ const ComparisonPage = () => {
                     <ServerErrorAlert />
                 ) : (
                     <div className="box p-0 relative">
-                        {!isLoadingComparisonContents && sourceAmount >= 2 && <ComparisonTable id={comparisonId} />}
-                        {!isLoadingComparisonContents && sourceAmount <= 1 && (
+                        {!showContentsSkeleton && sourceAmount >= 2 && <ComparisonTable id={comparisonId} />}
+                        {!showContentsSkeleton && sourceAmount <= 1 && (
                             <Alert status="warning" className="border-0">
                                 <Alert.Indicator />
                                 <Alert.Content>
@@ -112,7 +120,7 @@ const ComparisonPage = () => {
                                 </Alert.Content>
                             </Alert>
                         )}
-                        {isLoadingComparisonContents && <ComparisonLoading />}
+                        {showContentsSkeleton && <ComparisonLoading />}
                     </div>
                 )}
             </Container>

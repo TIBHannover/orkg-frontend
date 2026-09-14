@@ -83,9 +83,9 @@ const LazyGraphViewModal = ({ toggle, resourceId }) => {
 
     return (
         <GraphViewModalShell toggle={toggle}>
-            <Modal.CloseTrigger />
-            {/* relative anchors the absolutely-positioned close trigger to the header */}
+            {/* the close trigger sits inside the header: as a preceding sibling, the positioned header would cover it and swallow its clicks */}
             <Modal.Header className="relative z-10 shrink-0 gap-2 border-b border-border px-6 pt-4 pb-3">
+                <Modal.CloseTrigger />
                 <div className="flex items-center gap-3 pe-10">
                     <Modal.Heading>View graph</Modal.Heading>
                     {hasLoadedStatements && (

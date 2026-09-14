@@ -1,26 +1,28 @@
 'use client';
 
 import { useCookies } from 'next-client-cookies';
-import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
+import { createContext, Dispatch, FC, ReactNode, use, useReducer } from 'react';
 
 import { DataBrowserConfig, DataBrowserPreferences, DataBrowserResourceContext, History } from '@/components/DataBrowser/types/DataBrowserTypes';
 import { parseBooleanPreferenceCookie } from '@/lib/cookieHelpers';
 import { Predicate } from '@/services/backend/types';
 
-type DataBrowserState = {
+type ReducedState = {
     rootId: string;
     newProperties: Record<string, Predicate[]>;
-    config: DataBrowserConfig;
     preferences: DataBrowserPreferences;
     context: DataBrowserResourceContext;
     loadedResources: Record<string, string[]>; // key is the resource id, value is the path to the resource
     localHistory: History; // navigation history when config.historyStorage === 'local' (see useHistory)
 };
 
+type DataBrowserState = ReducedState & {
+    config: DataBrowserConfig;
+};
+
 type DataBrowserAction =
     | { type: 'ADD_PROPERTY'; payload: { predicate: Predicate; id: string } }
     | { type: 'DELETE_PROPERTY'; payload: { id: string; predicateId: string } }
-    | { type: 'SET_IS_EDIT_MODE'; payload: boolean }
     | { type: 'UPDATE_PREFERENCES'; payload: Partial<DataBrowserPreferences> }
     | { type: 'ADD_LOADED_RESOURCES'; payload: Record<string, string[]> }
     | { type: 'SET_LOADED_RESOURCES'; payload: Record<string, string[]> }
@@ -28,7 +30,7 @@ type DataBrowserAction =
     // true previous value — same contract as the nuqs functional setter
     | { type: 'SET_LOCAL_HISTORY'; payload: (prev: History) => History };
 
-const initialState = {
+const initialState: DataBrowserState = {
     rootId: '',
     newProperties: {},
     config: {},
@@ -44,7 +46,7 @@ const initialState = {
 export const DataBrowserContext = createContext<DataBrowserState>(initialState);
 export const DataBrowserDispatchContext = createContext<Dispatch<DataBrowserAction>>(() => {});
 
-export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserAction) => {
+export const dataBrowserReducer = (state: ReducedState, action: DataBrowserAction): ReducedState => {
     switch (action.type) {
         case 'ADD_PROPERTY': {
             return {
@@ -63,9 +65,6 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
                     [action.payload.id]: state.newProperties[action.payload.id].filter((p) => p.id !== action.payload.predicateId),
                 },
             };
-        }
-        case 'SET_IS_EDIT_MODE': {
-            return { ...state, config: { ...state.config, isEditMode: action.payload } };
         }
         case 'UPDATE_PREFERENCES': {
             return {
@@ -89,11 +88,11 @@ export const dataBrowserReducer = (state: DataBrowserState, action: DataBrowserA
 };
 
 export function useDataBrowserState() {
-    return useContext(DataBrowserContext);
+    return use(DataBrowserContext);
 }
 
 export function useDataBrowserDispatch() {
-    return useContext(DataBrowserDispatchContext);
+    return use(DataBrowserDispatchContext);
 }
 
 type DataBrowserProviderProps = {
@@ -105,31 +104,29 @@ type DataBrowserProviderProps = {
 
 const DataBrowserProvider: FC<DataBrowserProviderProps> = ({ children, rootId, config, context }) => {
     const cookies = useCookies();
-    const [dataBrowserState, dispatch] = useReducer(
+    // config is passed through the context value (not the reducer): it is the caller's
+    // prop and must reflect prop updates without a dispatch round-trip.
+    const [reducedState, dispatch] = useReducer(
         dataBrowserReducer,
-        { rootId, config, context, cookies },
-        ({ rootId: rid, config: cfg, context: ctx, cookies: c }) => ({
-            rootId: rid,
+        undefined,
+        (): ReducedState => ({
+            rootId,
             newProperties: {},
-            config: cfg,
             preferences: {
-                showInlineDataTypes: parseBooleanPreferenceCookie(c.get('preferences.showInlineDataTypes')) ?? true,
-                expandValuesByDefault: parseBooleanPreferenceCookie(c.get('preferences.expandValuesByDefault')) ?? true,
+                showInlineDataTypes: parseBooleanPreferenceCookie(cookies.get('preferences.showInlineDataTypes')) ?? true,
+                expandValuesByDefault: parseBooleanPreferenceCookie(cookies.get('preferences.expandValuesByDefault')) ?? true,
             },
-            context: ctx,
+            context,
             loadedResources: {},
             localHistory: [],
         }),
     );
-
-    useEffect(() => {
-        dispatch({ type: 'SET_IS_EDIT_MODE', payload: !!config.isEditMode });
-    }, [config.isEditMode]);
+    const value: DataBrowserState = { ...reducedState, config };
 
     return (
-        <DataBrowserContext.Provider value={dataBrowserState}>
-            <DataBrowserDispatchContext.Provider value={dispatch}>{children}</DataBrowserDispatchContext.Provider>
-        </DataBrowserContext.Provider>
+        <DataBrowserContext value={value}>
+            <DataBrowserDispatchContext value={dispatch}>{children}</DataBrowserDispatchContext>
+        </DataBrowserContext>
     );
 };
 
