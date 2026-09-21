@@ -17,7 +17,7 @@ import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { updateResource } from '@/services/backend/resources';
 import { Thing } from '@/services/backend/things';
-import { PaginatedResponse, ResourceThingReference } from '@/services/backend/types';
+import { Pagination, ResourceThingReference } from '@/services/backend/types';
 
 type AddEntityProps = {
     showDialog: boolean;
@@ -118,7 +118,7 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
         const classesNeedToApply = difference(oldCommonClasses, newCommonClasses);
         const resourcesCount = newEntities.filter((e) => e._class === ENTITIES.RESOURCE).length;
         if (resourcesCount > 0 && classesNeedToApply.length > 0) {
-            const templatesNeedToApply = templates?.filter((t) => classesNeedToApply.includes(t.target_class.id)) ?? [];
+            const templatesNeedToApply = templates?.filter((t) => classesNeedToApply.includes(t.targetClass.id)) ?? [];
             if (templatesNeedToApply.length > 0) {
                 const isConfirmed = await Confirm({
                     title: 'Apply templates',
@@ -158,12 +158,12 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
         <Item showContributions item={item} key={item.id} selectedEntities={selectedEntities} setSelectedEntities={setSelectedEntities} />
     );
 
-    let results: PaginatedResponse<Thing> | undefined = _results;
+    let results: Pagination<Thing> | undefined = _results;
     if (filteredItemsIds.length > 0) {
         results = {
             ..._results,
             content: _results?.content?.filter((item) => filteredItemsIds.includes(item.id)),
-        } as PaginatedResponse<Thing>;
+        } as Pagination<Thing>;
     }
 
     const handleOpenChange = (open: boolean) => {
@@ -197,7 +197,7 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
                                     <div className="md:col-span-4">
                                         <Filters
                                             defaultFilters={DEFAULT_FILTERS}
-                                            results={results ?? { content: [], page: { number: 0, size: 0, total_elements: 0, total_pages: 0 } }}
+                                            results={results ?? { content: [], page: { number: 0, size: 0, totalElements: 0, totalPages: 0 } }}
                                             countResults={countResults}
                                             typeData={typeData}
                                             isLoading={isLoading}
@@ -231,9 +231,9 @@ const SelectEntities: FC<AddEntityProps> = ({ showDialog, toggle, allowCreate = 
                                                     setPage={setPage}
                                                     hasNextPage={hasNextPage}
                                                     setPageSize={setPageSize}
-                                                    totalElements={results.page.total_elements}
+                                                    totalElements={results.page.totalElements}
                                                     error={null}
-                                                    totalPages={results.page.total_pages}
+                                                    totalPages={results.page.totalPages}
                                                     flush={false}
                                                     boxShadow={false}
                                                 />

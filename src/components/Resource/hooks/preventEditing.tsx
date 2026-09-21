@@ -18,7 +18,7 @@ export type PreventEditCase = {
 
 const PREVENT_EDIT_CASES: PreventEditCase[] = [
     {
-        condition: (resource: Resource) => env('NEXT_PUBLIC_PWC_USER_ID') === resource.created_by,
+        condition: (resource: Resource) => env('NEXT_PUBLIC_PWC_USER_ID') === resource.createdBy,
         preventModalProps: (resource: Resource) => ({
             header: 'We are working on it!',
             content: (

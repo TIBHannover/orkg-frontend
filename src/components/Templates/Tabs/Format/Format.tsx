@@ -11,7 +11,7 @@ const Format = () => {
 
     const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const hasLabelFormat = useSelector((state: RootStore) => state.templateEditor.hasLabelFormat);
-    const formattedLabel = useSelector((state: RootStore) => state.templateEditor.formatted_label);
+    const formattedLabel = useSelector((state: RootStore) => state.templateEditor.formattedLabel);
     const { isEditMode } = useIsEditMode();
 
     const handleChangeLabelFormat = (value: string) => {

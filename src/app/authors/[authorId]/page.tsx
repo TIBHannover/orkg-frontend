@@ -55,8 +55,8 @@ const AuthorPage = () => {
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            ...(authorId ? { author_id: authorId } : {}),
-            ...(authorString ? { author_name: authorString } : {}),
+            ...(authorId ? { authorId } : {}),
+            ...(authorString ? { authorName: authorString } : {}),
             visibility: sort,
             contentType,
         },

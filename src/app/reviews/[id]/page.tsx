@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         };
     }
 
-    const version = review.versions.published.find((_version) => _version.id === review.id);
+    const version = review.versions?.published.find((_version) => _version.id === review.id);
 
     return {
         title: `${review.title ?? ''} - Review - ORKG`,
@@ -46,8 +46,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         return <PageClient />;
     }
 
-    const version = review.versions.published.find((_version) => _version.id === review.id);
-    const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY') : null;
+    const version = review.versions?.published.find((_version) => _version.id === review.id);
+    const publicationDate = version ? dayjs(version.createdAt).format('DD MMMM YYYY') : null;
 
     const ldJson = {
         mainEntity: {
@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 '@type': 'Person',
             })),
             datePublished: publicationDate,
-            about: review?.research_fields?.[0]?.label,
+            about: review?.researchFields?.[0]?.label,
             license: LICENSE_URL,
             '@type': 'ScholarlyArticle',
         },

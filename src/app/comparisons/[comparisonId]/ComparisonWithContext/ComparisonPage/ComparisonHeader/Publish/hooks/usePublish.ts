@@ -28,7 +28,7 @@ function usePublish() {
         comparison.title.trim() !== '' &&
         comparison.description &&
         comparison.description.trim() !== '' &&
-        comparison.research_fields?.[0]?.id &&
+        comparison.researchFields?.[0]?.id &&
         comparison.authors?.length > 0 &&
         comparison.sources?.length > 1;
 
@@ -46,23 +46,23 @@ function usePublish() {
                 comparison.title.trim() !== '' &&
                 comparison.description &&
                 comparison.description.trim() !== '' &&
-                comparison.research_fields?.[0]?.id &&
+                comparison.researchFields?.[0]?.id &&
                 comparison.authors?.length > 0
             ) {
                 // Remove the rejected statements first, so they are not part of the published version.
                 await Promise.all(rejectedStatementIds.map((id) => deleteStatementById(id)));
 
                 const publishedComparisonId = await publishComparison(comparison.id, {
-                    subject: comparison.research_fields?.[0]?.label,
+                    subject: comparison.researchFields?.[0]?.label,
                     description: comparison.description,
                     authors: comparison.authors,
-                    assign_doi: shouldAssignDoi,
+                    assignDoi: shouldAssignDoi,
                 });
 
                 // Mark the remaining AI-generated statements as manually reviewed so the warning icon
                 // no longer appears for this comparison.
                 const remainingAiStatements = (statements ?? []).filter(
-                    (statement) => !rejectedStatementIds.includes(statement.id) && statement.extraction_method === EXTRACTION_METHODS.AI_GENERATED,
+                    (statement) => !rejectedStatementIds.includes(statement.id) && statement.extractionMethod === EXTRACTION_METHODS.AI_GENERATED,
                 );
                 await setStatementsExtractionMethod(
                     remainingAiStatements.map((statement) => statement.id),

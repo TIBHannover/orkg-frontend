@@ -28,7 +28,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
             <Tooltip>
                 <Tooltip.Trigger className="inline-flex">
                     <Link href={reverse(ROUTES.COMPARISON, { comparisonId: version.id })}>
-                        Version {dayjs(version.created_at).format('DD MMM YYYY')}
+                        Version {dayjs(version.createdAt).format('DD MMM YYYY')}
                     </Link>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
@@ -51,7 +51,7 @@ const VersionTooltip: FC<VersionTooltipProps> = ({ version }) => {
                         )}
                         {isLoading && <div className="grow">Loading...</div>}
                         <div>
-                            <UserAvatar userId={version.created_by} />
+                            <UserAvatar userId={version.createdBy} />
                         </div>
                     </div>
                 </Tooltip.Content>

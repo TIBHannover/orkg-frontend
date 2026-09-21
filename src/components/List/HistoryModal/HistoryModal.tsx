@@ -13,8 +13,11 @@ type HistoryModalProps = {
 const HistoryModal: FC<HistoryModalProps> = ({ id, toggle }) => {
     const { list } = useList();
 
-    const versions = list?.versions.published.map((version) => ({
-        ...version,
+    const versions = list?.versions?.published.map((version) => ({
+        id: version.id,
+        created_at: version.createdAt,
+        created_by: version.createdBy,
+        changelog: version.changelog,
         isSelected: id === version.id,
         link: reverse(ROUTES.LIST, { id: version.id }),
     }));

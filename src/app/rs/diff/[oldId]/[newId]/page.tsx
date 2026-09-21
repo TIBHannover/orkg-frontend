@@ -22,8 +22,8 @@ const StatementDiff = () => {
     const { data: oldStatement, isLoading: isLoadingOldStatement, error: oldStatementError } = useRosettaStatements({ id: oldId });
     const { data: newStatement, isLoading: isLoadingNewStatement, error: newStatementError } = useRosettaStatements({ id: newId });
 
-    const { data: oldTemplate } = useRosettaTemplate({ id: oldStatement?.template_id ?? '' });
-    const { data: newTemplate } = useRosettaTemplate({ id: newStatement?.template_id ?? '' });
+    const { data: oldTemplate } = useRosettaTemplate({ id: oldStatement?.templateId ?? '' });
+    const { data: newTemplate } = useRosettaTemplate({ id: newStatement?.templateId ?? '' });
 
     const { data: versions, isLoading: isLoadingVersions } = useRosettaStatementVersions({ id: oldId });
 
@@ -57,20 +57,20 @@ const StatementDiff = () => {
         return `${formattedValue}\n`;
     };
 
-    const oldDynamicLabel = reactStringReplace(removeEmptySegments(oldTemplate?.formatted_label ?? '', oldStatement), /{(.*?)}/, (match, i, offset) =>
+    const oldDynamicLabel = reactStringReplace(removeEmptySegments(oldTemplate?.formattedLabel ?? '', oldStatement), /{(.*?)}/, (match, i, offset) =>
         replacementFunction(match, i, offset, oldStatement, oldTemplate),
     );
 
-    const newDynamicLabel = reactStringReplace(removeEmptySegments(newTemplate?.formatted_label ?? '', newStatement), /{(.*?)}/, (match, i, offset) =>
+    const newDynamicLabel = reactStringReplace(removeEmptySegments(newTemplate?.formattedLabel ?? '', newStatement), /{(.*?)}/, (match, i, offset) =>
         replacementFunction(match, i, offset, newStatement, newTemplate),
     );
 
     const getTitleData = (version: RosettaStoneStatement) => {
         const versionNumber = versions && versions.length ? versions.findIndex((v) => v.id === version.id) + 1 : null;
-        const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY - HH:mm:ss') : null;
+        const publicationDate = version ? dayjs(version.createdAt).format('DD MMMM YYYY - HH:mm:ss') : null;
 
         return {
-            creator: version?.created_by,
+            creator: version?.createdBy,
             route: reverse(ROUTES.RS_STATEMENT, { id: version.id }),
             headerText: version && (
                 <span>

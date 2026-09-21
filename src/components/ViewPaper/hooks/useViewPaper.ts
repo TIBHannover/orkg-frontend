@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { PREDICATES } from '@/constants/graphSettings';
-import { getOriginalPaperId, getPaper, papersUrl } from '@/services/backend/papers';
+import { getPaper, papersUrl } from '@/services/backend/papers';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Resource } from '@/services/backend/types';
 
@@ -22,15 +22,10 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
         mutate: mutatePaper,
     } = useSWR(paperId ? [paperId, papersUrl, 'getPaper'] : null, ([params]) => getPaper(params));
 
-    // a snapshot's representation doesn't carry its own history (versions.head points to itself),
-    // so the head paper is resolved through the incoming hasPublishedVersion statement
-    const { data: originalPaperId } = useSWR(paper?.published ? [paperId, papersUrl, 'getOriginalPaperId'] : null, async ([params]) =>
-        getOriginalPaperId(params),
-    );
+    // a snapshot carries the same history as its head, with versions.head pointing at the editable paper
+    const originalPaperId = paper?.published ? paper.versions?.head?.id : undefined;
 
-    const { data: headPaper } = useSWR(originalPaperId ? [originalPaperId, papersUrl, 'getPaper'] : null, ([params]) => getPaper(params));
-
-    const publishedVersions = (paper?.published ? headPaper?.versions?.published : paper?.versions?.published) ?? [];
+    const publishedVersions = paper?.versions?.published ?? [];
     const [version] = publishedVersions;
 
     const {

@@ -52,9 +52,9 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
 
     const isLoadingInline = isLoading || isValidating;
 
-    const version = review?.versions.published.find((_version) => _version.id === review?.id);
-    const publicationDate = version ? dayjs(version.created_at)?.format('DD MMMM YYYY') : null;
-    const versionNumber = review?.versions.published.length
+    const version = review?.versions?.published.find((_version) => _version.id === review?.id);
+    const publicationDate = version ? dayjs(version.createdAt)?.format('DD MMMM YYYY') : null;
+    const versionNumber = review?.versions?.published.length
         ? review.versions.published.length - review.versions.published.findIndex((_version) => _version.id === review?.id)
         : null;
 
@@ -75,7 +75,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
             });
 
             if (isConfirmed) {
-                router.push(reverse(ROUTES.REVIEW, { id: review.versions.head.id }));
+                router.push(reverse(ROUTES.REVIEW, { id: review.versions?.head.id ?? review.id }));
             }
         } else {
             toggleIsEditMode();
@@ -93,7 +93,7 @@ const TitleBar: FC<TitleBarProps> = ({ isOpenHistoryModal, setIsOpenHistoryModal
                     publicationDate && (
                         <Tooltip content={`Update message: "${version?.changelog}"`}>
                             <SubTitle className=" mt-1">
-                                Published on <time dateTime={version?.created_at}>{publicationDate}</time> - Version {versionNumber}
+                                Published on <time dateTime={version?.createdAt}>{publicationDate}</time> - Version {versionNumber}
                             </SubTitle>
                         </Tooltip>
                     )

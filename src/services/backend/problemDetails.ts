@@ -60,14 +60,15 @@ const PROBLEM_KEYS: (keyof RawProblem)[] = ['type', 'title', 'status', 'detail',
 
 /**
  * Convert an RFC 6901 JSON Pointer (e.g. `/items/0/name`) into a react-hook-form
- * dotted field path (e.g. `items.0.name`).
+ * dotted field path (e.g. `items.0.name`). The backend sends the URI-fragment form
+ * (`#/description`), so a leading `#` is dropped as well.
  */
 export const pointerToFieldPath = (pointer: string): string => {
     if (!pointer) {
         return '';
     }
     return pointer
-        .replace(/^\//, '')
+        .replace(/^#?\//, '')
         .split('/')
         .map((token) => token.replace(/~1/g, '/').replace(/~0/g, '~'))
         .join('.');
@@ -122,6 +123,25 @@ const readResponseBody = async (response: Response): Promise<unknown> => {
     } catch {
         return null;
     }
+};
+
+/**
+ * Read the HTTP status of a thrown value from any of the app's transports: the generated
+ * client's `ResponseError` and ky's `HTTPError` both carry it on `.response.status`, while the
+ * legacy ky GET shape exposed `.statusCode` directly. Returns `undefined` for anything else
+ * (e.g. a network error), so a 404 check simply fails.
+ */
+export const getStatusCode = (error: unknown): number | undefined => {
+    if (!error || typeof error !== 'object') {
+        return undefined;
+    }
+    if ('response' in error && isResponse((error as { response: unknown }).response)) {
+        return (error as { response: Response }).response.status;
+    }
+    if ('statusCode' in error && typeof (error as { statusCode: unknown }).statusCode === 'number') {
+        return (error as { statusCode: number }).statusCode;
+    }
+    return undefined;
 };
 
 /**

@@ -43,7 +43,7 @@ const FeaturedComparisonsPageClient = () => {
         [
             {
                 include: [CLASSES.FEATURED_COMPARISON_CATEGORY],
-                sortBy: [{ property: 'created_at', direction: 'asc' as const }],
+                sortBy: [{ property: 'createdAt', direction: 'asc' as const }],
                 returnContent: true,
             },
             resourcesUrl,
@@ -56,7 +56,7 @@ const FeaturedComparisonsPageClient = () => {
         [
             {
                 include: [CLASSES.FEATURED_COMPARISON],
-                sortBy: [{ property: 'created_at', direction: 'asc' as const }],
+                sortBy: [{ property: 'createdAt', direction: 'asc' as const }],
                 returnContent: true,
             },
             resourcesUrl,

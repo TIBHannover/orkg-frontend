@@ -86,7 +86,7 @@ const ViewVisualizationModal: FC<ViewVisualizationModalProps> = ({ isOpen, toggl
                         <div className="mt-2">
                             <Chip color="default" className="mr-2 mb-2">
                                 <FontAwesomeIcon icon={faCalendar} className="text-accent" />{' '}
-                                {visualization.created_at ? dayjs(visualization.created_at).format('DD MMMM YYYY') : ''}
+                                {visualization.createdAt ? dayjs(visualization.createdAt).format('DD MMMM YYYY') : ''}
                             </Chip>
                             <AuthorBadges authors={visualization.authors} />
                         </div>

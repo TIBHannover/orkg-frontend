@@ -25,7 +25,7 @@ const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, i
         }
         setIsSaving(true);
         try {
-            await updateResource(problem.id, { observatory_id: id, organization_id: MISC.UNKNOWN_ID });
+            await updateResource(problem.id, { observatoryId: id, organizationId: MISC.UNKNOWN_ID });
             toast.success('Research problem added successfully');
             afterSubmit();
             toggle();

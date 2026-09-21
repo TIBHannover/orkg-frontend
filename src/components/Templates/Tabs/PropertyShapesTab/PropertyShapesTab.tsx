@@ -1,4 +1,7 @@
-import { Alert, Switch } from '@heroui/react';
+import { faShapes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Switch } from '@heroui/react';
+import { ClassReferenceRepresentation } from '@orkg/orkg-client';
 import { reorderList, useAutoScroll, useSortableList } from '@orkg/pragmatic-dnd-hooks';
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +22,7 @@ const PropertyShapesTab: FC = () => {
     const dispatch = useDispatch();
     const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
-    const isClosedTemplate = useSelector((state: RootStore) => state.templateEditor.is_closed);
+    const isClosedTemplate = useSelector((state: RootStore) => state.templateEditor.isClosed);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [propertyLabel, setPropertyLabel] = useState('');
     const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
@@ -73,8 +76,8 @@ const PropertyShapesTab: FC = () => {
                     path: { id, label: propertyLabel },
                     placeholder: '',
                     description: '',
-                    min_count: '0',
-                },
+                    minCount: 0,
+                } as PropertyShapeType,
             ];
             setShowAddProperty(false);
         }
@@ -97,15 +100,16 @@ const PropertyShapesTab: FC = () => {
         const templatePropertyShapes = propertyShapes.map((item, j: number) => {
             const _item = { ...item };
             if (j === index) {
+                // the generated client escapes the wire field 'class' as '_class'
                 if (resolved && ['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(resolved?.id)) {
-                    if ('class' in _item) delete (_item as PropertyShapeResourceType).class;
-                    (_item as PropertyShapeLiteralType).datatype = resolved;
+                    if ('_class' in _item) delete (_item as Partial<PropertyShapeResourceType>)._class;
+                    (_item as PropertyShapeLiteralType).datatype = resolved as ClassReferenceRepresentation;
                 } else if (resolved) {
-                    (_item as PropertyShapeResourceType).class = resolved;
-                    if ('datatype' in _item) delete (_item as PropertyShapeLiteralType).datatype;
+                    (_item as PropertyShapeResourceType)._class = resolved;
+                    if ('datatype' in _item) delete (_item as Partial<PropertyShapeLiteralType>).datatype;
                 } else {
-                    if ('datatype' in _item) delete (_item as PropertyShapeLiteralType).datatype;
-                    if ('class' in _item) delete (_item as PropertyShapeResourceType).class;
+                    if ('datatype' in _item) delete (_item as Partial<PropertyShapeLiteralType>).datatype;
+                    if ('_class' in _item) delete (_item as Partial<PropertyShapeResourceType>)._class;
                 }
             }
             return _item;
@@ -117,7 +121,7 @@ const PropertyShapesTab: FC = () => {
     const handleSelectNewProperty = ({ id, label }: { id: string; label: string }) => {
         const templatePropertyShapes: PropertyShapeType[] = [
             ...propertyShapes,
-            { path: { id, label }, placeholder: '', description: '', min_count: '0' },
+            { path: { id, label }, placeholder: '', description: '', minCount: 0 } as PropertyShapeType,
         ];
         dispatch(updatePropertyShapes(templatePropertyShapes));
         setShowAddProperty(false);
@@ -165,12 +169,15 @@ const PropertyShapesTab: FC = () => {
                         />
                     ))}
                 {propertyShapes && propertyShapes.length === 0 && (
-                    <Alert status="default">
-                        <Alert.Indicator />
-                        <Alert.Content>
-                            <Alert.Title>No properties specified.</Alert.Title>
-                        </Alert.Content>
-                    </Alert>
+                    <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-separator px-4 py-10 text-center">
+                        <FontAwesomeIcon icon={faShapes} className="text-3xl text-muted" />
+                        <span className="font-medium">No properties yet</span>
+                        <span className="text-sm text-muted">
+                            {isEditMode
+                                ? 'Properties define which data this template describes. Add the first one below.'
+                                : 'Properties define which data this template describes. Use the Edit button to add the first one.'}
+                        </span>
+                    </div>
                 )}
                 {isEditMode && (
                     <AddPropertyView

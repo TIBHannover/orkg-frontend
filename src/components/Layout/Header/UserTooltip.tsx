@@ -19,20 +19,16 @@ import { federatedLogout, visitAccountUrl } from '@/services/keycloak';
 const UserTooltip = () => {
     const { user: _user } = useAuthentication();
 
-    const {
-        data: user,
-        isLoading,
-        error,
-    } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
+    const { data: user, isLoading, error } = useSWR(_user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
 
     // Keycloak session can outlive a missing ORKG contributor. Settings and Sign out work without
     // the backend, so keep the menu; Profile and drafts need a contributor id, so they stay hidden.
     const hasBackendUser = !!user;
     // 404 means not synced yet; other failures are transient and shouldn't blame account setup.
-    const isNotSyncedYet = error?.statusCode === 404;
+    const isNotSyncedYet = error?.response?.status === 404;
 
     const email = user?.email ?? _user?.email ?? 'example@example.com';
-    const displayName = user?.display_name ?? _user?.name ?? 'there';
+    const displayName = user?.displayName ?? _user?.name ?? 'there';
 
     const { data: hashedEmail, isLoading: isHashedEmailLoading } = useSWR(_user && email ? [email, 'sha256Hex'] : null, ([params]) =>
         sha256Hex(params),

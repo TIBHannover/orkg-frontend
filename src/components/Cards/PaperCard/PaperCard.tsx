@@ -23,12 +23,13 @@ import PaperTitle from '@/components/PaperTitle/PaperTitle';
 import { VISIBILITY } from '@/constants/contentTypes';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { Paper, Resource } from '@/services/backend/types';
+import { Thing } from '@/services/backend/things';
+import { Paper } from '@/services/backend/types';
 
 type PaperCardType = {
     paper: Partial<Paper>;
     onSelect?: (event: ChangeEvent<HTMLInputElement>) => void;
-    paths?: Resource[][];
+    paths?: Thing[][];
     selectable?: boolean;
     linkTarget?: string;
     selected?: boolean;

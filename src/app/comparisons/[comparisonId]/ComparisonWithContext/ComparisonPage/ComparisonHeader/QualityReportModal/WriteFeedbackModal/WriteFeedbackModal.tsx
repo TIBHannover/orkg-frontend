@@ -37,7 +37,7 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
         return null;
     }
 
-    const isOwnComparison = comparison.created_by === userId;
+    const isOwnComparison = comparison.createdBy === userId;
     const isDisabled = isOwnComparison;
 
     const handleChange = (name: string, value: string) => {

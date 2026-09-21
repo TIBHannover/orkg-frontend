@@ -15,10 +15,10 @@ import { getLinkByEntityType } from '@/utils';
 
 function StatementCard({ statement }: { statement: Statement }) {
     const subjectLink = getLinkByEntityType(statement.subject._class, statement.subject.id);
-    const subjectLabel = ('formatted_label' in statement.subject && statement.subject.formatted_label) || statement.subject.label || (
+    const subjectLabel = ('formattedLabel' in statement.subject && statement.subject.formattedLabel) || statement.subject.label || (
         <i className="text-muted">No label</i>
     );
-    const objectLabel = ('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || (
+    const objectLabel = ('formattedLabel' in statement.object && statement.object.formattedLabel) || statement.object.label || (
         <i className="text-muted">No label</i>
     );
 
@@ -26,7 +26,11 @@ function StatementCard({ statement }: { statement: Statement }) {
         <div className="group">
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-x-4 gap-y-2 px-4 py-3 transition-colors group-hover:bg-surface-secondary/50">
                 <div className="min-w-0 break-words">
-                    <DescriptionTooltip classes={statement.subject.classes} id={statement.subject.id} _class={statement.subject._class}>
+                    <DescriptionTooltip
+                        classes={statement.subject._class === 'resource' ? statement.subject.classes : undefined}
+                        id={statement.subject.id}
+                        _class={statement.subject._class}
+                    >
                         {subjectLink ? <Link href={subjectLink}>{subjectLabel}</Link> : subjectLabel}
                     </DescriptionTooltip>
                 </div>
@@ -51,15 +55,15 @@ function StatementCard({ statement }: { statement: Statement }) {
                             <div className="flex flex-col gap-1 p-1">
                                 <div>
                                     Created:{' '}
-                                    <span title={statement.created_at}>
-                                        <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
+                                    <span title={statement.createdAt}>
+                                        <FontAwesomeIcon icon={faClock} /> {dayjs(statement.createdAt).fromNow()}
                                     </span>
                                 </div>
-                                {statement.created_by && (
+                                {statement.createdBy && (
                                     <div>
                                         Created by:{' '}
-                                        {statement.created_by !== MISC.UNKNOWN_ID ? (
-                                            <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.created_by} />
+                                        {statement.createdBy !== MISC.UNKNOWN_ID ? (
+                                            <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.createdBy} />
                                         ) : (
                                             'Unknown'
                                         )}

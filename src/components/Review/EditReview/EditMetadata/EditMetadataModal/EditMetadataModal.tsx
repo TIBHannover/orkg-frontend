@@ -23,7 +23,7 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
         if (review) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(review.title);
-            setResearchField(review.research_fields[0]);
+            setResearchField(review.researchFields[0]);
             setAuthors(review.authors);
         }
     }, [review]);
@@ -36,7 +36,7 @@ const EditMetadataModal: FC<EditMetadataModalProps> = ({ toggle }) => {
         event.preventDefault();
         updateReview({
             title,
-            ...(researchField ? { research_fields: [researchField] } : {}),
+            ...(researchField ? { researchFields: [researchField] } : {}),
             authors,
         });
         toggle();

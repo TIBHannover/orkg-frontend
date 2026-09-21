@@ -22,9 +22,9 @@ export const prioritizeDescriptionStatements = (_statements: Record<string, Stat
 
 export const getListPropertiesFromTemplate = (template: Template, required = false) => {
     if (required) {
-        return template.properties.filter((ps) => ps.min_count && (ps.min_count as number) > 0).map((ps) => ps.path);
+        return template.properties.filter((ps) => ps.minCount && ps.minCount > 0).map((ps) => ps.path);
     }
-    return template.properties.filter((ps) => !ps.min_count || ps.min_count === 0).map((ps) => ps.path);
+    return template.properties.filter((ps) => !ps.minCount || ps.minCount === 0).map((ps) => ps.path);
 };
 
 export const getPropertyShapesByPredicateID = (template: Template, predicateId: string) => {
@@ -107,29 +107,29 @@ export const getStatementsBySubjectId = (id: string, statements: Statement[]) =>
 export const convertPropertyShapeToSchema = (propertyShape: PropertyShape) => {
     // Start with base schema based on the first validation rule
     let baseSchema: ZodType;
-    if ('min_inclusive' in propertyShape && 'max_inclusive' in propertyShape && propertyShape.min_inclusive && propertyShape.max_inclusive) {
+    if ('minInclusive' in propertyShape && 'maxInclusive' in propertyShape && propertyShape.minInclusive && propertyShape.maxInclusive) {
         baseSchema = z.preprocess(
             preprocessNumber,
             z
                 .number()
-                .gte(propertyShape.min_inclusive)
-                .lte(propertyShape.max_inclusive)
+                .gte(propertyShape.minInclusive)
+                .lte(propertyShape.maxInclusive)
                 .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
         );
-    } else if ('min_inclusive' in propertyShape && propertyShape.min_inclusive) {
+    } else if ('minInclusive' in propertyShape && propertyShape.minInclusive) {
         baseSchema = z.preprocess(
             preprocessNumber,
             z
                 .number()
-                .gte(propertyShape.min_inclusive)
+                .gte(propertyShape.minInclusive)
                 .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
         );
-    } else if ('max_inclusive' in propertyShape && propertyShape.max_inclusive) {
+    } else if ('maxInclusive' in propertyShape && propertyShape.maxInclusive) {
         baseSchema = z.preprocess(
             preprocessNumber,
             z
                 .number()
-                .lte(propertyShape.max_inclusive)
+                .lte(propertyShape.maxInclusive)
                 .refine((value) => !Number.isNaN(value), { message: 'Invalid input: must be a valid number' }),
         );
     } else if ('pattern' in propertyShape && propertyShape.pattern) {

@@ -7,10 +7,10 @@ import useReview from '@/components/Review/hooks/useReview';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
-import { ReviewSection } from '@/services/backend/types';
+import { ReviewSection, Statement } from '@/services/backend/types';
 
 type SectionResourcePropertyProps = {
-    section: ReviewSection;
+    section: Extract<ReviewSection, { type: 'resource' | 'property' }>;
 };
 
 const SectionResourceProperty: FC<SectionResourcePropertyProps> = ({ section }) => {
@@ -30,6 +30,11 @@ const SectionResourceProperty: FC<SectionResourcePropertyProps> = ({ section }) 
         return <DataBrowser id={id} showHeader={false} />;
     }
 
+    // the published-contents endpoint delivers comparisons, visualizations or statement lists;
+    // resource/property sections read the statement list. Snapshot consumers only read
+    // id/subject/predicate/object/label/classes, which are identical in both shapes
+    const statements = publishedContents?._class === 'statement_list' ? (publishedContents.statements as unknown as Statement[]) : undefined;
+
     return (
         <>
             <div className="mt-4 mb-2">
@@ -48,12 +53,12 @@ const SectionResourceProperty: FC<SectionResourcePropertyProps> = ({ section }) 
                     {section.type === 'resource' ? section.resource?.label : section.predicate?.label}
                 </Link>
             </div>
-            {publishedContents?.statements && (
+            {statements && (
                 <DataBrowser
                     isEditMode={false}
                     id={id}
-                    statementsSnapshot={publishedContents.statements}
-                    snapshotCreatedAt={review.created_at}
+                    statementsSnapshot={statements}
+                    snapshotCreatedAt={review.createdAt}
                     propertiesAsLinks
                     valuesAsLinks
                     showHeader={false}

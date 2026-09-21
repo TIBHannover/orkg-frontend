@@ -18,8 +18,10 @@ import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { getSnapshot, resourcesUrl } from '@/services/backend/resources';
 import { getTemplate, templatesUrl } from '@/services/backend/templates';
+import { Thing } from '@/services/backend/things';
 
 const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id: string; snapshotId: string }) => {
     const [isOpenPublishHistoryModal, setIsOpenPublishHistoryModal] = useState(false);
@@ -30,7 +32,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
         error,
     } = useSWR(id ? [{ id, snapshotId }, resourcesUrl, 'getSnapshots'] : null, ([params]) => getSnapshot(params));
 
-    const { data: template } = useSWR(snapshot?.template_id ? [snapshot?.template_id, templatesUrl, 'getTemplate'] : null, ([params]) =>
+    const { data: template } = useSWR(snapshot?.templateId ? [snapshot?.templateId, templatesUrl, 'getTemplate'] : null, ([params]) =>
         getTemplate(params),
     );
 
@@ -44,12 +46,13 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
 
                   return {
                       id: index.toString(), // we don't have access to the id of the statement, so use the index instead
-                      subject: snapshot?.data.root,
+                      subject: snapshot?.data.root as Thing,
                       predicate: snapshot?.data?.predicates?.[predicateId],
                       object: data?.thing,
-                      extraction_method: 'UNKNOWN' as const,
-                      created_by: data?.created_by,
-                      created_at: data?.created_at,
+                      extractionMethod: 'UNKNOWN' as const,
+                      createdBy: data?.createdBy,
+                      createdAt: data?.createdAt,
+                      modifiable: false,
                   };
               })
               .filter(Boolean)
@@ -62,7 +65,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && error && (getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && resource && (
                 <>
                     <TitleBar
@@ -114,7 +117,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                             </h3>
 
                             <ItemMetadata
-                                item={resource}
+                                item={resource as Thing}
                                 handleUrl={snapshot.handle ? `http://handle.tib.eu/${snapshot.handle}` : undefined}
                                 showCreatedAt
                                 showCreatedBy
@@ -134,7 +137,7 @@ const SnapshotPage = ({ contentType, id, snapshotId }: { contentType: string; id
                                         valuesAsLinks
                                         propertiesAsLinks
                                         statementsSnapshot={snapshotStatements}
-                                        snapshotCreatedAt={snapshot.created_at}
+                                        snapshotCreatedAt={snapshot.createdAt}
                                     />
                                 </div>
                             </div>

@@ -25,8 +25,8 @@ export const getRestrictingTemplate = (templates: Template[], statement: Stateme
 export const getCanAddValueCount = (template: Template, statement: Statement, currentPathStatements: Statement[]) => {
     const propertyShapes = template ? getPropertyShapesByPredicateID(template, statement.predicate.id) : [];
     let canAddValue: number | undefined;
-    if (propertyShapes.find((p) => p.max_count)) {
-        const maxCount = propertyShapes.find((p) => p.max_count)?.max_count as number;
+    if (propertyShapes.find((p) => p.maxCount)) {
+        const maxCount = propertyShapes.find((p) => p.maxCount)?.maxCount as number;
         const currentCount = (currentPathStatements || [])?.filter((s) => s.predicate.id === statement.predicate.id).length;
         canAddValue = maxCount - currentCount;
     }
@@ -70,6 +70,7 @@ export const validateValue = (template: Template | undefined, value: Item, predi
 
 export const getRange = (template: Template, statement: Statement) => {
     const propertyShapes = template ? getPropertyShapesByPredicateID(template, statement.predicate.id) : [];
-    const ranges = compact(propertyShapes.map((ps) => ('class' in ps && ps.class) || ('datatype' in ps && ps.datatype)));
+    // the generated client escapes the wire field 'class' as '_class'
+    const ranges = compact(propertyShapes.map((ps) => (ps.type === 'resource' && ps._class) || ('datatype' in ps && ps.datatype)));
     return ranges?.[0];
 };

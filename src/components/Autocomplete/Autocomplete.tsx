@@ -213,7 +213,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                                 onChange(uniqBy(newValue as OptionType[], 'id') as unknown as OnChangeValue<OptionType, IsMulti>, actionMeta);
                                 return;
                             } catch (e) {
-                                errorHandler({ error: e, shouldShowToast: true });
+                                await errorHandler({ error: e, shouldShowToast: true });
                                 onFailure?.(e as Error);
                                 return;
                             }
@@ -224,7 +224,7 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                                 onChange(v as OnChangeValue<OptionType, IsMulti>, actionMeta);
                                 return;
                             } catch (e) {
-                                errorHandler({ error: e, shouldShowToast: true });
+                                await errorHandler({ error: e, shouldShowToast: true });
                                 onFailure?.(e as Error);
                                 return;
                             }

@@ -26,14 +26,14 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const [isSaving, setIsSaving] = useState(false);
     const { entity, mutateEntity } = useEntity();
 
-    const isApplied = entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id);
+    const isApplied = entity && 'classes' in entity && entity?.classes?.includes(template.targetClass.id);
     const addMode = !isApplied || isDisabled;
 
     const handleClick = async () => {
         if (!entity) return;
         setIsSaving(true);
         const existing = (entity as Resource).classes ?? [];
-        const next = addMode ? [...existing, template.target_class.id] : existing.filter((c) => c !== template.target_class.id);
+        const next = addMode ? [...existing, template.targetClass.id] : existing.filter((c) => c !== template.targetClass.id);
         await updateResource(entity.id, { classes: next });
         mutateEntity();
         setIsSaving(false);

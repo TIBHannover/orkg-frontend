@@ -1,206 +1,97 @@
-import qs from 'qs';
+import {
+    CreateRosettaStoneTemplateRequest,
+    RosettaStoneStatementsApi,
+    RosettaStoneStatementsApiFindAllRequest,
+    RosettaStoneTemplatesApi,
+    RosettaStoneTemplatesApiFindAllRequest,
+    UpdateRosettaStoneTemplateRequest,
+} from '@orkg/orkg-client';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { toTemplatePropertyRequest } from '@/services/backend/mapTemplateProperty';
 import {
-    CreatedByParam,
     CreateRosettaStoneStatementParams,
     CreateRosettaStoneTemplateParams,
-    ObservatoryIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    RosettaStoneStatement,
-    RosettaStoneTemplate,
     UpdateRosettaStoneStatementParams,
     UpdateRosettaStoneTemplateParams,
     VisibilityParam,
+    WithPaginationParams,
 } from '@/services/backend/types';
 
-export const rosettaStoneUrl = `${url}rosetta-stone/`;
-export const rosettaStoneApi = backendApi.extend(() => ({ prefixUrl: rosettaStoneUrl }));
-const ROSETTA_STONE_TEMPLATE_CONTENT_TYPE = 'application/vnd.orkg.rosetta-stone-template.v1+json';
-const ROSETTA_STONE_STATEMENT_CONTENT_TYPE = 'application/vnd.orkg.rosetta-stone-statement.v1+json';
+export const rosettaStoneUrl = `${urlNoTrailingSlash}/rosetta-stone`;
 
-export const getRSTemplate = (id: string) =>
-    rosettaStoneApi
-        .get<RosettaStoneTemplate>(`templates/${id}`, {
-            headers: {
-                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
+const rosettaStoneTemplatesApi = new RosettaStoneTemplatesApi(configuration);
+const rosettaStoneStatementsApi = new RosettaStoneStatementsApi(configuration);
 
-export type GetTemplatesParams = {
-    q?: string | null;
-    exact?: boolean;
-    createdBy?: string | null;
-} & PaginationParams &
-    VisibilityParam &
-    CreatedByParam &
-    ObservatoryIdParam;
+export const getRSTemplate = (id: string) => rosettaStoneTemplatesApi.findById({ id });
 
 export const getRSTemplates = ({
-    q = null,
-    exact = false,
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by,
-    observatory_id,
-}: GetTemplatesParams) => {
-    const searchParams = qs.stringify(
-        {
-            page,
-            size,
-            sort: sortBy?.map((p) => `${p.property},${p.direction}`),
-            ...(q ? { q, exact } : {}),
-            visibility,
-            created_by,
-            observatory_id,
-        },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
+    ...params
+}: Omit<WithPaginationParams<RosettaStoneTemplatesApiFindAllRequest>, 'visibility'> & VisibilityParam) =>
+    rosettaStoneTemplatesApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as RosettaStoneTemplatesApiFindAllRequest['visibility'],
+        }),
     );
 
-    return rosettaStoneApi
-        .get<PaginatedResponse<RosettaStoneTemplate>>(`templates`, {
-            searchParams,
-            headers: {
-                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const deleteRSTemplate = (id: string) => rosettaStoneTemplatesApi.deleteById({ id });
+
+export const toCreateRosettaStoneTemplateRequest = (data: CreateRosettaStoneTemplateParams): CreateRosettaStoneTemplateRequest => ({
+    label: data.label,
+    description: data.description,
+    exampleUsage: data.exampleUsage,
+    formattedLabel: data.formattedLabel,
+    observatories: data.observatories,
+    organizations: data.organizations,
+    properties: data.properties.map(toTemplatePropertyRequest),
+});
+
+export const toUpdateRosettaStoneTemplateRequest = (data: UpdateRosettaStoneTemplateParams): UpdateRosettaStoneTemplateRequest => ({
+    label: data.label,
+    exampleUsage: data.exampleUsage,
+    ...(data.description !== undefined ? { description: data.description } : {}),
+    ...(data.formattedLabel !== undefined ? { formattedLabel: data.formattedLabel } : {}),
+    ...(data.observatories !== undefined ? { observatories: data.observatories } : {}),
+    ...(data.organizations !== undefined ? { organizations: data.organizations } : {}),
+    ...(data.properties ? { properties: data.properties.map(toTemplatePropertyRequest) } : {}),
+});
 
 export const createRSTemplate = (data: CreateRosettaStoneTemplateParams) =>
-    rosettaStoneApi
-        .post<void>(`templates`, {
-            json: data,
-            headers: {
-                'Content-Type': ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    rosettaStoneTemplatesApi.createRaw({ createRosettaStoneTemplateRequest: toCreateRosettaStoneTemplateRequest(data) }).then(getCreatedId);
 
 export const updateRSTemplate = (id: string, data: UpdateRosettaStoneTemplateParams) =>
-    rosettaStoneApi
-        .put<void>(`templates/${id}`, {
-            json: data,
-            headers: {
-                'Content-Type': ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    rosettaStoneTemplatesApi.update({ id, updateRosettaStoneTemplateRequest: toUpdateRosettaStoneTemplateRequest(data) });
 
-export const deleteRSTemplate = (id: string) =>
-    rosettaStoneApi
-        .delete<void>(`templates/${id}`, {
-            headers: {
-                Accept: ROSETTA_STONE_TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
-
-export const getRSStatement = (id: string): Promise<RosettaStoneStatement> =>
-    rosettaStoneApi
-        .get<RosettaStoneStatement>(`statements/${id}`, {
-            headers: {
-                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-            },
-        })
-        .json();
-
-export type GetStatementsParams = {
-    context?: string;
-    template_id?: string;
-    createdBy?: string | null;
-} & PaginationParams &
-    VisibilityParam &
-    ObservatoryIdParam;
+export const getRSStatement = (id: string) => rosettaStoneStatementsApi.findById({ id });
 
 export const getRSStatements = ({
-    context,
-    template_id,
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'asc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    observatory_id,
-}: GetStatementsParams) => {
-    const searchParams = qs.stringify(
-        {
-            page,
-            size,
-            sort: sortBy?.map((p) => `${p.property},${p.direction}`),
-            visibility,
-            context,
-            template_id,
-            observatory_id,
-        },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
+    sortBy = [{ property: 'createdAt', direction: 'asc' }],
+    ...params
+}: Omit<WithPaginationParams<RosettaStoneStatementsApiFindAllRequest>, 'visibility'> & VisibilityParam) =>
+    rosettaStoneStatementsApi.findAll(
+        transformPaginationParams({
+            ...params,
+            sortBy,
+            visibility: visibility as RosettaStoneStatementsApiFindAllRequest['visibility'],
+        }),
     );
 
-    return rosettaStoneApi
-        .get<PaginatedResponse<RosettaStoneStatement>>('statements', {
-            searchParams,
-            headers: {
-                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export const getRSStatementVersions = ({ id }: { id: string }) => {
-    return rosettaStoneApi
-        .get<RosettaStoneStatement[]>(`statements/${id}/versions`, {
-            headers: {
-                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const getRSStatementVersions = ({ id }: { id: string }) => rosettaStoneStatementsApi.findAllVersionsById({ id });
 
 export const createRSStatement = (data: CreateRosettaStoneStatementParams) =>
-    rosettaStoneApi
-        .post<RosettaStoneStatement>(`statements`, {
-            json: data,
-            headers: {
-                'Content-Type': ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    rosettaStoneStatementsApi.createRaw({ createRosettaStoneStatementRequest: data }).then(getCreatedId);
 
+// updating creates a new version; the id of that version comes back in the Location header
 export const updateRSStatement = (id: string, data: UpdateRosettaStoneStatementParams) =>
-    rosettaStoneApi
-        .post<void>(`statements/${id}`, {
-            json: data,
-            headers: {
-                'Content-Type': ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-                Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    rosettaStoneStatementsApi.updateRaw({ id, updateRosettaStoneStatementRequest: data }).then(getCreatedId);
 
-export const deleteRSStatement = (id: string) =>
-    rosettaStoneApi.delete<void>(`statements/${id}`, {
-        headers: {
-            Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-        },
-    });
+export const deleteRSStatement = (id: string) => rosettaStoneStatementsApi.deleteLatestVersionById({ id });
 
-export const fullyDeleteRSStatement = (id: string) =>
-    rosettaStoneApi.delete<void>(`statements/${id}/versions`, {
-        headers: {
-            Accept: ROSETTA_STONE_STATEMENT_CONTENT_TYPE,
-        },
-    });
+export const fullyDeleteRSStatement = (id: string) => rosettaStoneStatementsApi.deleteAllVersionsById({ id });

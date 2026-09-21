@@ -117,7 +117,7 @@ const PublishVisualization: FC<PublishVisualizationProps> = ({ showDialog, toggl
                 authors,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                extraction_method: 'MANUAL',
+                extractionMethod: 'MANUAL',
             });
             await createResourceStatement(comparisonId, PREDICATES.HAS_VISUALIZATION, backendReferenceResource);
             const reconstructionModel = createReconstructionModel(backendReferenceResource);

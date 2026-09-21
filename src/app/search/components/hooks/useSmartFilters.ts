@@ -5,10 +5,10 @@ import useSWR from 'swr';
 
 import { CLASS_PARSERS } from '@/app/search/components/hooks/helpers';
 import { Thing } from '@/services/backend/things';
-import { PaginatedResponse } from '@/services/backend/types';
+import { Pagination } from '@/services/backend/types';
 import { getSmartFilters, smartFiltersUrl } from '@/services/smartFilters/index';
 
-const useSmartFilters = (searchTerm: string, results: PaginatedResponse<Thing> | undefined) => {
+const useSmartFilters = (searchTerm: string, results: Pagination<Thing> | undefined) => {
     const [itemsIds, setItemsIds] = useState<string[]>([]);
     const [itemsAbstracts, setItemsAbstracts] = useState<string[]>([]);
     const [smartFiltersVisible, setSmartFiltersVisible] = useState(false);

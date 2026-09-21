@@ -28,7 +28,7 @@ const linkButtonClasses = '!bg-transparent !p-0 !min-w-0 h-auto min-h-0 text-lef
 
 const HeaderCell = ({ entity }: HeaderCellParams) => {
     const { templates, isLoading: isLoadingUsedTemplates } = useTemplates();
-    const usedTemplates = templates.filter((t) => entity && 'classes' in entity && entity.classes?.includes(t.target_class.id));
+    const usedTemplates = templates.filter((t) => entity && 'classes' in entity && entity.classes?.includes(t.targetClass.id));
     const { entityIds, setEntityIds } = useEntities();
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [isOpenEditEntityModal, setIsOpenEditEntityModal] = useState(false);

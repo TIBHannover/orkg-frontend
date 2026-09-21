@@ -1,199 +1,67 @@
-import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { prepareParams } from '@/services/backend/misc';
 import {
-    CreatedByParam,
-    ObservatoryIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    PublishedParam,
-    ResearchFieldIdParams,
-    Review,
-    ReviewPublishedContents,
-    ReviewSectionComparisonPayload,
-    ReviewSectionOntologyPayload,
-    ReviewSectionPredicatePayload,
-    ReviewSectionResourcePayload,
-    ReviewSectionTextPayload,
-    ReviewSectionVisualizationPayload,
-    SdgParam,
-    VerifiedParam,
-    VisibilityParam,
-} from '@/services/backend/types';
+    CreateSmartReviewRequest,
+    PublishSmartReviewRequest,
+    SmartReviewsApi,
+    SmartReviewsApiFindAllRequest,
+    SmartReviewsUpdateSectionRequest,
+    UpdateSmartReviewRequest,
+} from '@orkg/orkg-client';
 
-export const reviewUrl = `${url}smart-reviews/`;
-export const reviewApi = backendApi.extend(() => ({ prefixUrl: reviewUrl }));
-const REVIEWS_CONTENT_TYPE = 'application/vnd.orkg.smart-review.v1+json';
-const REVIEWS_SECTION_CONTENT_TYPE = 'application/vnd.orkg.smart-review-section.v1+json';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { toAuthorRequest } from '@/services/backend/mapAuthor';
+import { PublishedParam, UpdateAuthor, VisibilityParam, WithPaginationParams } from '@/services/backend/types';
+
+export const reviewUrl = `${urlNoTrailingSlash}/smart-reviews`;
+
+const smartReviewsApi = new SmartReviewsApi(configuration);
 
 export const getReviews = ({
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by,
-    observatory_id,
-    research_field,
-    include_subfields,
-    sdg,
     published,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & PublishedParam & SdgParam & ObservatoryIdParam & ResearchFieldIdParams) => {
-    const searchParams = prepareParams({
-        page,
-        size,
-        sortBy,
-        verified,
-        visibility,
-        created_by,
-        observatory_id,
-        sdg,
-        published,
-        research_field,
-        include_subfields,
-    });
-    return reviewApi
-        .get<PaginatedResponse<Review>>('', {
-            searchParams,
-            headers: {
-                Accept: REVIEWS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    ...params
+}: Omit<WithPaginationParams<SmartReviewsApiFindAllRequest>, 'visibility' | 'published'> & VisibilityParam & PublishedParam) =>
+    smartReviewsApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as SmartReviewsApiFindAllRequest['visibility'],
+            published: published ?? undefined,
+        }),
+    );
+
+export const getReview = (id: string) => smartReviewsApi.findById({ id });
+
+export const getReviewPublishedContents = ({ reviewId, entityId }: { reviewId: string; entityId: string }) =>
+    smartReviewsApi.findPublishedContentById({ id: reviewId, contentId: entityId });
+
+// section payloads must always carry the variant's full field set: the request unions are
+// structural, and a payload matching no variant would serialize as {} (see the vendored issue
+// reports on the request unions)
+export type UpdateSectionPayload = SmartReviewsUpdateSectionRequest;
+
+export type UpdateReviewParams = Omit<UpdateSmartReviewRequest, 'authors'> & {
+    authors?: UpdateAuthor[];
 };
 
-export const getReview = (id: string) => {
-    return reviewApi
-        .get<Review>(id, {
-            headers: {
-                Accept: REVIEWS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const updateReview = (id: string, data: UpdateReviewParams) =>
+    smartReviewsApi.update({ id, updateSmartReviewRequest: { ...data, authors: data.authors?.map(toAuthorRequest) } as UpdateSmartReviewRequest });
 
-export const getReviewPublishedContents = ({ reviewId, entityId }: { reviewId: string; entityId: string }) => {
-    return reviewApi.get<ReviewPublishedContents>(`${reviewId}/published-contents/${entityId}`).json();
-};
+export const createReviewSection = ({ reviewId, index, data }: { reviewId: string; index: number; data: UpdateSectionPayload }) =>
+    smartReviewsApi.createSectionAtIndexRaw({ id: reviewId, index, smartReviewsCreateSectionAtIndexRequest: data }).then(getCreatedId);
 
-export type UpdateSectionPayload = Partial<
-    | ReviewSectionComparisonPayload
-    | ReviewSectionVisualizationPayload
-    | ReviewSectionResourcePayload
-    | ReviewSectionPredicatePayload
-    | ReviewSectionOntologyPayload
-    | ReviewSectionTextPayload
->;
+export const updateReviewSection = ({ reviewId, sectionId, data }: { reviewId: string; sectionId: string; data: UpdateSectionPayload }) =>
+    smartReviewsApi.updateSection({ id: reviewId, sectionId, smartReviewsUpdateSectionRequest: data });
 
-export type UpdateReviewParams = Partial<
-    Omit<Review, 'id' | 'research_fields' | 'sdgs' | 'sections'> & { research_fields: string[] } & { sdgs: string[] } & {
-        sections: UpdateSectionPayload[];
-    }
->;
+export const deleteReviewSection = ({ reviewId, sectionId }: { reviewId: string; sectionId: string }) =>
+    smartReviewsApi.deleteSection({ id: reviewId, sectionId });
 
-export const updateReview = (id: string, data: UpdateReviewParams) => {
-    return reviewApi
-        .put<void>(id, {
-            json: data,
-            headers: {
-                'Content-Type': REVIEWS_CONTENT_TYPE,
-                Accept: REVIEWS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const publishReview = (reviewId: string, data: PublishSmartReviewRequest) =>
+    smartReviewsApi.publishRaw({ id: reviewId, publishSmartReviewRequest: data }).then(getCreatedId);
 
-export const createReviewSection = ({
-    reviewId,
-    index,
-    data,
-}: {
-    reviewId: string;
-    index: number;
-    data:
-        | ReviewSectionComparisonPayload
-        | ReviewSectionVisualizationPayload
-        | ReviewSectionResourcePayload
-        | ReviewSectionPredicatePayload
-        | ReviewSectionOntologyPayload
-        | ReviewSectionTextPayload;
-}) => {
-    return reviewApi
-        .post<void>(`${reviewId}/sections/${index}`, {
-            json: data,
-            headers: {
-                'Content-Type': REVIEWS_SECTION_CONTENT_TYPE,
-                Accept: REVIEWS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
-
-export const updateReviewSection = ({
-    reviewId,
-    sectionId,
-    data,
-}: {
-    reviewId: string;
-    sectionId: string;
-    data: Partial<
-        | ReviewSectionComparisonPayload
-        | ReviewSectionVisualizationPayload
-        | ReviewSectionResourcePayload
-        | ReviewSectionPredicatePayload
-        | ReviewSectionOntologyPayload
-        | ReviewSectionTextPayload
-    >;
-}) => {
-    return reviewApi
-        .put<void>(`${reviewId}/sections/${sectionId}`, {
-            json: data,
-            headers: {
-                'Content-Type': REVIEWS_SECTION_CONTENT_TYPE,
-                Accept: REVIEWS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export const deleteReviewSection = ({ reviewId, sectionId }: { reviewId: string; sectionId: string }) => {
-    return reviewApi
-        .delete<void>(`${reviewId}/sections/${sectionId}`, {
-            headers: {
-                Accept: REVIEWS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export const publishReview = (
-    reviewId: string,
-    data: {
-        changelog: string;
-        assign_doi: boolean;
-        description?: string;
-    },
-) => {
-    return reviewApi
-        .post<void>(`${reviewId}/publish`, {
-            json: data,
-            headers: {
-                'Content-Type': REVIEWS_CONTENT_TYPE,
-                Accept: REVIEWS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
-
-export const createReview = (data: Partial<Omit<Review, 'research_fields'> & { research_fields: string[] }>) => {
-    return reviewApi
-        .post<void>('', {
-            json: data,
-            headers: {
-                'Content-Type': REVIEWS_CONTENT_TYPE,
-                Accept: REVIEWS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
+export const createReview = (data: Omit<CreateSmartReviewRequest, 'authors'> & { authors?: UpdateAuthor[] }) =>
+    smartReviewsApi
+        .createRaw({ createSmartReviewRequest: { ...data, authors: (data.authors ?? []).map(toAuthorRequest) } as CreateSmartReviewRequest })
+        .then(getCreatedId);

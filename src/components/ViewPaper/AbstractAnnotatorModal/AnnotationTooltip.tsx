@@ -33,7 +33,7 @@ const AnnotationTooltip: FC<AnnotationTooltipProps> = ({ range, lettersNode, get
             const predicateId: string = await createPredicate(selectedOption.label);
             const predicate = await getPredicate(predicateId);
             dispatch(updateAnnotationPredicate({ range, selectedOption: predicate }));
-            setDefaultOptions([...defaultOptions, predicate]);
+            setDefaultOptions([...defaultOptions, { ...predicate, _class: 'predicate' }]);
         } else if (action === 'clear') {
             dispatch(removeAnnotation(range));
         }

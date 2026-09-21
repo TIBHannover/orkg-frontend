@@ -34,7 +34,7 @@ const CARDINALITY_OPTIONS: { id: string; label: string }[] = [
 
 const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleClassOfPropertySelect }) => {
     const propertyShape = useSelector((state: RootStore) => state.templateEditor.properties[id]);
-    const strCardinality = `${propertyShape.min_count || '*'},${propertyShape.max_count || '*'}`;
+    const strCardinality = `${propertyShape.minCount || '*'},${propertyShape.maxCount || '*'}`;
     const mapOptions: { [key: string]: string } = {
         '*,*': '0,*',
         '0,*': '0,*',
@@ -70,8 +70,8 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
             const templatePropertyShapes = propertyShapes.map((item, j) => {
                 const _item = { ...item };
                 if (j === id) {
-                    _item.min_count = parseInt(minCount, 10);
-                    _item.max_count = maxCount !== '*' ? parseInt(maxCount, 10) : undefined;
+                    _item.minCount = parseInt(minCount, 10);
+                    _item.maxCount = maxCount !== '*' ? parseInt(maxCount, 10) : undefined;
                 }
                 return _item;
             });
@@ -81,8 +81,9 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
 
     let range: OptionType | null | undefined = null;
 
-    if ('class' in propertyShape && propertyShape.class !== undefined) {
-        range = propertyShape.class as OptionType;
+    // the generated client escapes the wire field 'class' as '_class'
+    if ('_class' in propertyShape && propertyShape._class !== undefined) {
+        range = propertyShape._class as OptionType;
     } else if ('datatype' in propertyShape && propertyShape.datatype !== undefined) {
         range = propertyShape.datatype as OptionType;
     }
@@ -193,10 +194,8 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         <div className="col-span-12 md:col-span-9">
                             <TextField
                                 fullWidth
-                                value={
-                                    propertyShape.min_count !== undefined && propertyShape.min_count !== null ? String(propertyShape.min_count) : ''
-                                }
-                                onChange={(value) => updateField('min_count', value)}
+                                value={propertyShape.minCount !== undefined && propertyShape.minCount !== null ? String(propertyShape.minCount) : ''}
+                                onChange={(value) => updateField('minCount', value)}
                                 isDisabled={!isEditMode}
                                 aria-label="Minimum occurrence"
                             >
@@ -218,10 +217,8 @@ const TemplateComponentValue: FC<TemplateComponentValueProps> = ({ id, handleCla
                         <div className="col-span-12 md:col-span-9">
                             <TextField
                                 fullWidth
-                                value={
-                                    propertyShape.max_count !== undefined && propertyShape.max_count !== null ? String(propertyShape.max_count) : ''
-                                }
-                                onChange={(value) => updateField('max_count', value)}
+                                value={propertyShape.maxCount !== undefined && propertyShape.maxCount !== null ? String(propertyShape.maxCount) : ''}
+                                onChange={(value) => updateField('maxCount', value)}
                                 isDisabled={!isEditMode}
                                 aria-label="Maximum occurrence"
                             >

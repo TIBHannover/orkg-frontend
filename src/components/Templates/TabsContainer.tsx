@@ -26,7 +26,7 @@ type TabsContainerProps = {
 const TabsContainer: FC<TabsContainerProps> = ({ id }) => {
     const { activeTab } = useParams();
     const countPropertyShapes = useSelector((state: RootStore) => state.templateEditor.properties.length ?? 0);
-    const targetClassId = useSelector((state: RootStore) => state.templateEditor.target_class?.id);
+    const targetClassId = useSelector((state: RootStore) => state.templateEditor.targetClass?.id);
     const isSaving = useSelector((state: RootStore) => state.templateEditor.isSaving);
     const isLoading = useSelector((state: RootStore) => state.templateEditor.isLoading);
     const { isEditMode } = useIsEditMode();

@@ -39,20 +39,20 @@ export type TemplateEditor = {
     hasFailedSaving?: boolean;
     label: string;
     description: string;
-    target_class: OptionType | null;
+    targetClass: OptionType | null;
     relations: {
-        research_fields?: OptionType[];
-        research_problems?: OptionType[];
+        researchFields?: OptionType[];
+        researchProblems?: OptionType[];
     };
-    is_closed: boolean;
+    isClosed: boolean;
     hasLabelFormat: boolean;
-    formatted_label: string;
+    formattedLabel: string;
     properties: PropertyShape[];
     templateFlow: unknown;
     error: unknown;
-    created_by: string | null;
-    created_at: string | null;
-    extraction_method: ExtractionMethod;
+    createdBy: string | null;
+    createdAt: string | null;
+    extractionMethod: ExtractionMethod;
     observatories: string[];
     organizations: string[];
 };

@@ -32,8 +32,8 @@ const Members = ({ organizationsId }: MembersProps) => {
             {!isLoadingMembers && members && members.length > 0 && (
                 <ContributorsAvatars>
                     {members.slice(0, 18).map((member) => {
-                        const displayName = member.displayName ?? (member as unknown as { display_name?: string }).display_name;
-                        const gravatarId = member.gravatarId ?? (member as unknown as { gravatar_id?: string }).gravatar_id ?? '';
+                        const { displayName } = member;
+                        const gravatarId = member.gravatarId ?? '';
                         return (
                             <div key={`contributor${member.id}`}>
                                 <Tooltip>

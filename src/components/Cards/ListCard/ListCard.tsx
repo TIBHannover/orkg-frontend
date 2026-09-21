@@ -44,8 +44,8 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                         </>
                     )
                 }
-                researchField={list.research_fields?.[0]}
-                createdBy={list?.created_by}
+                researchField={list.researchFields?.[0]}
+                createdBy={list?.createdBy}
             >
                 {renderCoins && <Coins item={list} />}
                 <div className="mb-2">
@@ -60,18 +60,18 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                     className="mb-1"
                     items={[
                         !!list.authors?.length && { key: 'authors', node: <Authors authors={list.authors} /> },
-                        !!list.created_at && {
+                        !!list.createdAt && {
                             key: 'created-at',
                             node: (
-                                <span className="inline-flex items-center" title={`Created ${dayjs(list.created_at).format('DD MMMM YYYY')}`}>
+                                <span className="inline-flex items-center" title={`Created ${dayjs(list.createdAt).format('DD MMMM YYYY')}`}>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                    {dayjs(list.created_at).format('DD MMM YYYY')}
+                                    {dayjs(list.createdAt).format('DD MMM YYYY')}
                                 </span>
                             ),
                         },
                     ]}
                 />
-                {list.versions?.published?.length > 1 && (
+                {(list.versions?.published?.length ?? 0) > 1 && (
                     <div className="mt-2 text-sm">
                         All versions:{' '}
                         {list.versions?.published.map((version, index) => (
@@ -79,12 +79,12 @@ const ListCard: FC<ListCardProps> = ({ list, showBadge = false, showCurationFlag
                                 <Tooltip>
                                     <Tooltip.Trigger className="inline">
                                         <Link href={reverse(ROUTES.LIST, { id: version.id })}>
-                                            Version {(list.versions.published?.length ?? 0) - index}
+                                            Version {(list.versions?.published?.length ?? 0) - index}
                                         </Link>
                                     </Tooltip.Trigger>
                                     <Tooltip.Content>{version.changelog ? version.changelog : 'No changelog title'}</Tooltip.Content>
                                 </Tooltip>{' '}
-                                {index < list.versions.published.length - 1 && ' • '}
+                                {index < (list.versions?.published?.length ?? 0) - 1 && ' • '}
                             </span>
                         ))}
                     </div>

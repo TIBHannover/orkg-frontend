@@ -60,11 +60,11 @@ const TablePathsModal = () => {
     );
 
     useEffect(() => {
-        if (tablePaths && comparisonContents?.selected_paths) {
+        if (tablePaths && comparisonContents?.selectedPaths) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setPathsNew(mergeSelectedPathsWithTablePaths(comparisonContents?.selected_paths, tablePaths));
+            setPathsNew(mergeSelectedPathsWithTablePaths(comparisonContents?.selectedPaths, tablePaths));
         }
-    }, [comparisonContents?.selected_paths, tablePaths]);
+    }, [comparisonContents?.selectedPaths, tablePaths]);
 
     if (!comparison) {
         return null;
@@ -87,7 +87,7 @@ const TablePathsModal = () => {
         const items = toUpdatePaths(pathsNew);
         await updateComparisonContents({
             id: comparison.id,
-            selected_paths: items,
+            selectedPaths: items,
         });
         await mutateComparisonContents();
         closeManageProperties();

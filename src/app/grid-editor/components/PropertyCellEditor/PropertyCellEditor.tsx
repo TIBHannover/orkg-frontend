@@ -44,7 +44,7 @@ const PropertyCellEditor: FC<PropertyCellEditorProps> = ({ initialValue, value: 
                     .map((statement) => statement?.id)
                     .filter((id) => id !== undefined);
 
-                await Promise.all(statementIds.map((id) => updateStatement(id, { predicate_id: p.id })));
+                await Promise.all(statementIds.map((id) => updateStatement(id, { predicateId: p.id })));
                 updateStatementsPredicate(statementIds, p);
                 // Call onValueChange to update the grid
                 onValueChange(p);

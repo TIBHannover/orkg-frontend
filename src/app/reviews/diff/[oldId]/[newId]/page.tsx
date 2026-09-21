@@ -18,18 +18,18 @@ const ReviewDiff = () => {
     const { review: newReview } = useReview(newId);
 
     const getTitleData = ({ versions, id }: Review) => {
-        const version = versions.published.find((_version) => _version.id === id);
-        if (!version) {
+        const version = versions?.published.find((_version) => _version.id === id);
+        if (!versions || !version) {
             return null;
         }
 
         const versionNumber = versions.published.length
             ? versions.published.length - versions.published.findIndex((_version) => _version.id === id)
             : null;
-        const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY - H:m:s') : null;
+        const publicationDate = version ? dayjs(version.createdAt).format('DD MMMM YYYY - H:m:s') : null;
 
         return {
-            creator: version.created_by,
+            creator: version.createdBy,
             route: reverse(ROUTES.REVIEW, { id: version.id }),
             headerText: version && (
                 <Tooltip content={`Update message: ${version.changelog}`}>
@@ -47,7 +47,7 @@ const ReviewDiff = () => {
             // Data still loading from SWR — stay in loading state until the next render provides a resolved getData.
             return new Promise<never>(() => {});
         }
-        if (oldReview.versions.head?.id !== newReview.versions.head?.id) {
+        if (oldReview.versions?.head?.id !== newReview.versions?.head?.id) {
             throw new Error('Reviews not found');
         }
         return {

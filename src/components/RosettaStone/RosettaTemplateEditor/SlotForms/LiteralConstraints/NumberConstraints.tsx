@@ -6,7 +6,7 @@ import {
     useRosettaTemplateEditorState,
 } from '@/components/RosettaStone/RosettaTemplateEditorContext/RosettaTemplateEditorContext';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
-import { PropertyShapeNumberType } from '@/services/backend/types';
+import { RSPropertyShapeNumberType } from '@/services/backend/types';
 
 type ValidationRulesNumberProps = {
     index: number;
@@ -15,7 +15,7 @@ type ValidationRulesNumberProps = {
 
 const NumberConstraints: FC<ValidationRulesNumberProps> = ({ index, isLocked }) => {
     const { properties } = useRosettaTemplateEditorState();
-    const slot = (properties[index] as PropertyShapeNumberType) ?? {};
+    const slot = (properties[index] as RSPropertyShapeNumberType) ?? {};
     const dispatch = useRosettaTemplateEditorDispatch();
 
     return (

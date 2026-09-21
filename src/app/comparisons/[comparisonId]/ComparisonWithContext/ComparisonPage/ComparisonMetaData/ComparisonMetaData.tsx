@@ -48,14 +48,14 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                                         )}
                                     </h2>
                                     <div className="mb-2">
-                                        {isPublished && comparison.created_at && (
+                                        {isPublished && comparison.createdAt && (
                                             <Chip color="default" className="mr-2 mb-2">
-                                                <FontAwesomeIcon icon={faCalendar} /> {dayjs(comparison.created_at).format('MMMM')}{' '}
-                                                {dayjs(comparison.created_at).format('YYYY')}
+                                                <FontAwesomeIcon icon={faCalendar} /> {dayjs(comparison.createdAt).format('MMMM')}{' '}
+                                                {dayjs(comparison.createdAt).format('YYYY')}
                                             </Chip>
                                         )}
                                         {isPublished && <PublishedBadge />}
-                                        {comparison.research_fields?.[0] && <ResearchFieldBadge researchField={comparison.research_fields?.[0]} />}
+                                        {comparison.researchFields?.[0] && <ResearchFieldBadge researchField={comparison.researchFields?.[0]} />}
                                         {comparison.authors?.length > 0 && !isAnonymized && <AuthorBadges authors={comparison.authors} />}
                                         {isAnonymized && (
                                             <Tooltip content="The authors are hidden because the comparison is anonymized">
@@ -95,11 +95,11 @@ const ComparisonMetaData: FC<{ comparisonId: string }> = ({ comparisonId }) => {
                         </div>
 
                         <div className="flex flex-col items-start md:items-end gap-2 mt-2 md:border-l md:border-default md:pl-4 w-full md:w-auto shrink-0">
-                            {!isAnonymized && comparison.created_by !== MISC.UNKNOWN_ID && (
+                            {!isAnonymized && comparison.createdBy !== MISC.UNKNOWN_ID && (
                                 <Chip color="default">
                                     <FontAwesomeIcon icon={faUser} /> Created by{' '}
                                     <span className="ml-1 inline-block md:-my-8">
-                                        <UserAvatar size={20} userId={comparison.created_by} showDisplayName />
+                                        <UserAvatar size={20} userId={comparison.createdBy} showDisplayName />
                                     </span>
                                 </Chip>
                             )}

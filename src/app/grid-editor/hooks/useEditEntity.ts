@@ -72,7 +72,7 @@ const useEditEntity = (entity: Thing) => {
     };
 
     useEffect(() => {
-        setDraftClasses(classes ?? []);
+        setDraftClasses((classes ?? []) as OptionType[]);
     }, [classes]);
 
     return { draftClasses, label, isLoading, isSaving, handleChangeClasses, setLabel, setIsSaving, handleSave };

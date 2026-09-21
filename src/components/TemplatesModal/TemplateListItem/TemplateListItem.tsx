@@ -32,7 +32,7 @@ const TemplateListItem: FC<TemplateListItemProps> = ({ template, isApplied, acti
                         Applied
                     </Chip>
                 )}
-                {template.is_closed && (
+                {template.isClosed && (
                     <Chip size="sm" className="bg-secondary/15 text-secondary-darker h-5 dark:text-secondary">
                         <FontAwesomeIcon icon={faLock} size="sm" className="mr-1" />
                         Closed
@@ -43,15 +43,15 @@ const TemplateListItem: FC<TemplateListItemProps> = ({ template, isApplied, acti
             <div className="flex items-center gap-3 mt-1.5 text-xs text-muted flex-wrap">
                 <span>
                     Target:{' '}
-                    <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class.id })} className="text-accent hover:underline">
-                        {template.target_class.label}
+                    <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.targetClass.id })} className="text-accent hover:underline">
+                        {template.targetClass.label}
                     </Link>
                 </span>
                 <span className="inline-flex items-center gap-1">
                     <FontAwesomeIcon icon={faShapes} size="sm" />
                     {template.properties?.length ?? 0} {template.properties?.length === 1 ? 'property' : 'properties'}
                 </span>
-                <span>{dayjs(template.created_at).format('DD MMM YYYY')}</span>
+                <span>{dayjs(template.createdAt).format('DD MMM YYYY')}</span>
             </div>
         </div>
         <div className="shrink-0">{action}</div>

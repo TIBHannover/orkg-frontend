@@ -51,8 +51,8 @@ function ResearchFieldTabsContainer({ id, boxShadow = true }: { id: string; boxS
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            research_field: id,
-            include_subfields: includeSubFields,
+            researchField: id,
+            includeSubfields: includeSubFields,
             visibility: sort,
             contentType,
             published: RESEARCH_FIELD_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,

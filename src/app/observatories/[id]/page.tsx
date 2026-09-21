@@ -26,6 +26,7 @@ import useParams from '@/components/useParams/useParams';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
+import { getStatusCode } from '@/services/backend/problemDetails';
 
 const Observatory = () => {
     const { id } = useParams<{ id: string }>();
@@ -54,7 +55,7 @@ const Observatory = () => {
     }, [observatory?.name]);
 
     if (!isLoading && error) {
-        return error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />;
+        return getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />;
     }
 
     if (isLoading || !observatory) {

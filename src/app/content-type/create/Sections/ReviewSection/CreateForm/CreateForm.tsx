@@ -30,7 +30,7 @@ const CreateForm = () => {
         }
         setIsLoading(true);
         try {
-            const id = await createReview({ title, research_fields: ['R11'] });
+            const id = await createReview({ title, researchFields: ['R11'] });
             router.push(`${reverse(ROUTES.REVIEW, { id })}?isEditMode=true`);
         } catch (error: unknown) {
             toast.danger('An error occurred while creating the review');

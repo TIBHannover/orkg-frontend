@@ -13,7 +13,7 @@ import Col from '@/components/Ui/Structure/Col';
 import Container from '@/components/Ui/Structure/Container';
 import Row from '@/components/Ui/Structure/Row';
 import { Thing } from '@/services/backend/things';
-import { PaginatedResponse } from '@/services/backend/types';
+import { Pagination } from '@/services/backend/types';
 
 export default function Search() {
     const {
@@ -47,12 +47,12 @@ export default function Search() {
         document.title = `Search ${searchTerm} - ORKG`;
     }, [searchTerm]);
 
-    let results: PaginatedResponse<Thing> | undefined = _results;
+    let results: Pagination<Thing> | undefined = _results;
     if (filteredItemsIds.length > 0) {
         results = {
             ..._results,
             content: _results?.content?.filter((item) => filteredItemsIds.includes(item.id)),
-        } as PaginatedResponse<Thing>;
+        } as Pagination<Thing>;
     }
 
     return (
@@ -63,7 +63,7 @@ export default function Search() {
                     <Col md="4">
                         <div className="box rounded p-6 h-full">
                             <Filters
-                                results={results as PaginatedResponse<Thing>}
+                                results={results as Pagination<Thing>}
                                 countResults={countResults}
                                 typeData={typeData}
                                 isLoading={isLoading}
@@ -97,11 +97,11 @@ export default function Search() {
                                         items={results.content || []}
                                         page={page}
                                         setPage={setPage}
-                                        totalPages={results.page.total_pages}
+                                        totalPages={results.page.totalPages}
                                         pageSize={pageSize}
                                         setPageSize={setPageSize}
                                         isLoading={isLoading}
-                                        totalElements={results.page.total_elements}
+                                        totalElements={results.page.totalElements}
                                         isAuthorExists={isAuthorExists}
                                     />
                                 </div>

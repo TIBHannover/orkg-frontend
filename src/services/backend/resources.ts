@@ -1,239 +1,103 @@
+import {
+    ResourcesApi,
+    ResourcesApiFindAllRequest,
+    TemplateBasedResourceSnapshotsApi,
+    TemplateBasedResourceSnapshotsApiFindAllRequest,
+    UpdateResourceRequest,
+} from '@orkg/orkg-client';
 import { uniqBy } from 'lodash';
-import qs from 'qs';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { MISC } from '@/constants/graphSettings';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, FORMATTED_LABELS_ACCEPT, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
 import { getContributorById } from '@/services/backend/contributors';
-import {
-    Contributor,
-    CreatedByParam,
-    ExtractionMethod,
-    FilterConfig,
-    ObservatoryIdParam,
-    OrganizationIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    Resource,
-    SdgParam,
-    Snapshot,
-    VerifiedParam,
-    Visibility,
-    VisibilityParam,
-} from '@/services/backend/types';
+import { FilterConfig, Pagination, Resource, SdgParam, VerifiedParam, VisibilityParam, WithPaginationParams } from '@/services/backend/types';
 
-export const resourcesUrl = `${url}resources/`;
-export const resourcesApi = backendApi.extend(() => ({ prefixUrl: resourcesUrl }));
+export const resourcesUrl = `${urlNoTrailingSlash}/resources`;
 
-export const updateResource = (
-    id: string,
-    {
-        label,
-        classes,
-        extractionMethod,
-        visibility,
-        organization_id,
-        observatory_id,
-    }: {
-        label?: string;
-        classes?: string[];
-        extractionMethod?: ExtractionMethod;
-        visibility?: Visibility;
-    } & OrganizationIdParam &
-        ObservatoryIdParam,
-) =>
-    resourcesApi
-        .put<Resource>(id, {
-            json: {
-                ...(label && { label }),
-                ...(classes && { classes }),
-                ...(extractionMethod && { extraction_method: extractionMethod }),
-                ...(visibility && { visibility }),
-                ...(organization_id && { organization_id }),
-                ...(observatory_id && { observatory_id }),
-            },
-        })
-        .json();
+const resourcesApi = new ResourcesApi(configuration);
+const snapshotsApi = new TemplateBasedResourceSnapshotsApi(configuration);
+
+export const updateResource = (id: string, data: UpdateResourceRequest) => resourcesApi.update({ id, updateResourceRequest: data });
 
 export const createResource = ({ label, classes, id }: { label: string; classes: string[]; id?: string }) =>
-    resourcesApi.post<Resource>('', { json: { label, classes, id } }).then(({ headers }) => getCreatedIdFromHeaders(headers));
+    resourcesApi.createRaw({ createResourceRequest: { label, classes, id } }).then(getCreatedId);
 
-export const getResource = (id: string) => resourcesApi.get<Resource>(id).json();
+export const getResource = (id: string) => resourcesApi.findById({ id });
 
 export const getResourcesByIds = (ids: string[]): Promise<Resource[]> => Promise.all(ids.map((id) => getResource(id)));
 
-export const deleteResource = (id: string) => resourcesApi.delete<void>(id).json();
+export const deleteResource = (id: string) => resourcesApi.deleteById({ id });
 
-export type GetResourcesParams<T extends boolean = false> = {
-    q?: string | null;
-    exact?: boolean;
-    filters?: FilterConfig[];
-    published?: boolean;
-    createdAtStart?: string | null;
-    createdAtEnd?: string | null;
-    include?: string[];
-    exclude?: string[];
-    baseClass?: string | null;
-    returnContent?: T;
-    returnFormattedLabels?: boolean;
-} & PaginationParams &
+export type GetResourcesParams<T extends boolean = false> = Omit<WithPaginationParams<ResourcesApiFindAllRequest>, 'visibility' | 'accept'> &
     VisibilityParam &
     VerifiedParam &
-    CreatedByParam &
-    SdgParam &
-    ObservatoryIdParam &
-    OrganizationIdParam;
+    SdgParam & {
+        // accepted for signature-compatibility with the other content-type listings, but /resources
+        // has no corresponding filters, so they are never sent
+        filters?: FilterConfig[];
+        published?: boolean;
+        returnContent?: T;
+        returnFormattedLabels?: boolean;
+    };
 
-/**
- * Fetches resources based on various filter and sorting criteria.
- *
- * @param {Object} params - The parameters for the function.
- * @param {string|null} [params.q=null] - Query string for searching resources.
- * @param {boolean} [params.exact=false] - Flag for exact match in search.
- * @param {string|null} [params.createdAtStart=null] - Start date for creation date filter. eg: 2023-11-30T08:25:14.049085776+01:00
- * @param {string|null} [params.createdAtEnd=null] - End date for creation date filter. eg: 2023-11-30T10:25:14.049085776+01:00
- * @param {string[]} [params.include=[]] - Filter for a set of classes that the resource must have.
- * @param {string[]} [params.exclude=[]] - Filter for a set of classes that the resource must not have.
- * @param {boolean} [params.returnContent=false] - Flag to return only content field in response.
- * @returns {Promise<PaginatedResponse<Resource> | Resource[]>} A promise to the resource data.
- */
 export const getResources = <T extends boolean = false>({
-    q = null,
-    exact = false,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by = undefined,
-    createdAtStart = null,
-    createdAtEnd = null,
-    include = [],
-    exclude = [],
-    observatory_id = undefined,
-    organization_id = undefined,
-    page = 0,
-    size = 9999,
-    sortBy = [
-        {
-            property: 'created_at',
-            direction: 'desc',
-        },
-    ],
-    baseClass = null,
+    filters,
+    published,
+    verified,
+    sdg,
     returnContent = false as T,
     returnFormattedLabels = false,
-}: GetResourcesParams<T>): Promise<T extends true ? Resource[] : PaginatedResponse<Resource>> => {
-    let headers;
-    if (returnFormattedLabels) {
-        headers = {
-            'Content-Type': 'application/json;charset=utf-8',
-            Accept: 'application/json;formatted-labels=V1',
-        };
-    }
-    const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
-    const searchParams = qs.stringify(
-        {
-            page,
-            size,
-            ...(q ? { q, exact } : { sort }),
-            visibility,
-            created_by,
-            created_at_start: createdAtStart,
-            created_at_end: createdAtEnd,
-            ...(baseClass ? { base_class: baseClass } : {}),
-            ...(include?.length ? { include: include.join(',') } : {}),
-            ...(exclude?.length ? { exclude: exclude.join(',') } : {}),
-            observatory_id,
-            organization_id,
-        },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
-    );
-    return resourcesApi
-        .get<PaginatedResponse<Resource>>('', {
-            searchParams,
-            headers,
-        })
-        .json()
-        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Resource[] : PaginatedResponse<Resource>>;
-};
-
-export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
-    const searchParams = qs.stringify(
-        { page, size },
-        {
-            skipNulls: true,
-        },
-    );
-    return resourcesApi
-        .get<
-            PaginatedResponse<{
-                created_by: string;
-                created_at: string;
-            }>
-        >(`${encodeURIComponent(id)}/timeline`, {
-            searchParams,
-        })
-        .json()
-        .then(async (contributors) => {
-            const uniqContributors = uniqBy(contributors.content, 'created_by');
-            const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
-                contributor.created_by === MISC.UNKNOWN_ID
-                    ? { id: MISC.UNKNOWN_ID, displayName: 'Unknown' }
-                    : getContributorById(contributor.created_by).catch(() => ({
-                          id: contributor.created_by,
-                          displayName: 'User not found',
-                      })),
-            );
-            const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
-            return {
-                ...contributors,
-                content: contributors.content.map((u) => ({ ...u, created_by: uniqContributorsInfos.find((i) => u.created_by === i.id) })),
-            };
-        }) as Promise<PaginatedResponse<{ created_by: Contributor; created_at: string }>>;
-};
-
-export const createSnapshot = ({ id, template_id, register_handle }: { id: string; template_id: string; register_handle: boolean }) =>
+    ...params
+}: GetResourcesParams<T>): Promise<T extends true ? Resource[] : Pagination<Resource>> =>
     resourcesApi
-        .post<void>(`${id}/snapshots`, {
-            json: {
-                template_id,
-                register_handle,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+        .findAll(
+            transformPaginationParams({
+                ...params,
+                // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+                // into FEATURED + NON_FEATURED before it can reach here
+                visibility: visibility as ResourcesApiFindAllRequest['visibility'],
+                accept: returnFormattedLabels ? FORMATTED_LABELS_ACCEPT : undefined,
+            }),
+        )
+        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Resource[] : Pagination<Resource>>;
+
+export const getTimelineByResourceId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) =>
+    resourcesApi.findTimelineById({ id, page, size }).then(async (timeline) => {
+        const uniqContributors = uniqBy(timeline.content, 'createdBy');
+        const uniqContributorsInfosRequests = uniqContributors.map((contributor) =>
+            contributor.createdBy === MISC.UNKNOWN_ID
+                ? { id: MISC.UNKNOWN_ID, displayName: 'Unknown' }
+                : getContributorById(contributor.createdBy).catch(() => ({
+                      id: contributor.createdBy,
+                      displayName: 'User not found',
+                  })),
+        );
+        const uniqContributorsInfos = await Promise.all(uniqContributorsInfosRequests);
+        return {
+            ...timeline,
+            content: timeline.content.map((u) => ({ ...u, createdBy: uniqContributorsInfos.find((i) => u.createdBy === i.id) })),
+        };
+    });
+
+export const createSnapshot = ({ id, templateId, registerHandle }: { id: string; templateId: string; registerHandle: boolean }) =>
+    snapshotsApi.createRaw({ id, createTemplateBasedResourceSnapshotRequest: { templateId, registerHandle } }).then(getCreatedId);
 
 export const getSnapshots = ({
-    id,
-    template_id,
-    sortBy = [
-        {
-            property: 'createdAt',
-            direction: 'desc',
-        },
-    ],
-    page = 0,
-    size = 9999,
-}: { id: string; template_id?: string } & PaginationParams) => {
-    const searchParams = qs.stringify(
-        {
-            ...(template_id ? { template_id } : {}),
-            sort: sortBy?.map((p) => `${p.property},${p.direction}`),
-            page,
-            size,
-        },
-        {
-            skipNulls: true,
-        },
-    );
+    sortBy = [{ property: 'createdAt', direction: 'desc' }],
+    ...params
+}: WithPaginationParams<TemplateBasedResourceSnapshotsApiFindAllRequest>) =>
+    snapshotsApi.findAll({
+        ...transformPaginationParams(params),
+        // unlike the older endpoints, snapshots resolves camelCase sort properties and 400s
+        // on snake_case; the transform aliases even a pre-formatted `sort` to snake, so the
+        // camelCase sort must be applied after it
+        sort: sortBy.map(({ property, direction }) => `${property},${direction}`),
+    });
 
-    return resourcesApi
-        .get<PaginatedResponse<Snapshot>>(`${id}/snapshots`, {
-            searchParams,
-        })
-        .json();
-};
-
-export const getSnapshot = ({ id, snapshotId }: { id: string; snapshotId: string }) => {
-    return resourcesApi.get<Snapshot>(`${id}/snapshots/${snapshotId}`).json();
-};
+export const getSnapshot = ({ id, snapshotId }: { id: string; snapshotId: string }) =>
+    // a snapshot URL doubles as a PID landing page: without exactly `Accept: application/json`
+    // the backend 308-redirects to the frontend view, whose HTML would fail JSON parsing
+    snapshotsApi.findById({ id, snapshotId, accept: 'application/json' });

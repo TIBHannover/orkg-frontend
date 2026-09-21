@@ -48,8 +48,7 @@ const ComparisonPage = () => {
     const containerStyle = isFullWidth ? { maxWidth: 'calc(100% - clamp(20px, 3vw, 100px))' } : {};
 
     const showServerError = errorComparisonContents && errorComparisonContents.statusCode >= 500;
-    const showManagePropertiesAlert =
-        isEditMode && !showContentsSkeleton && sourceAmount >= 2 && comparisonContents?.selected_paths?.length === 0;
+    const showManagePropertiesAlert = isEditMode && !showContentsSkeleton && sourceAmount >= 2 && comparisonContents?.selectedPaths?.length === 0;
 
     if (error) {
         return <NotFound />;

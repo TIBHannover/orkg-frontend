@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { SuggestionsBox } from '@/components/ViewPaper/SmartSuggestions/styled';
 import { CLASSES } from '@/constants/graphSettings';
 import { getResources } from '@/services/backend/resources';
-import { Node, PaginatedResponse, Resource } from '@/services/backend/types';
+import { Node } from '@/services/backend/types';
 import { classifyPaper, nlpServiceUrl } from '@/services/orkgNlp';
 
 type SmartSuggestionsFieldsProps = {
@@ -24,7 +24,7 @@ const SmartSuggestionsFields: FC<SmartSuggestionsFieldsProps> = ({ handleFieldSe
     const fields = classifiedPaper?.payload.annotations ?? [];
 
     const handleFieldLabelSelect = async (fieldLabel: string) => {
-        const fieldResources = (await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD] })) as PaginatedResponse<Resource>;
+        const fieldResources = await getResources({ q: fieldLabel, include: [CLASSES.RESEARCH_FIELD] });
 
         if (fieldResources.content.length === 0) {
             toast.danger('The selected research field does not exist in the ORKG. Please select a different field');

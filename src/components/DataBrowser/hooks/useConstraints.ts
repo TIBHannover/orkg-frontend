@@ -13,11 +13,7 @@ const useConstraints = (predicateId: string) => {
 
     let canAddValue = true;
 
-    if (
-        propertyShapes.find(
-            (p) => p.max_count && statements && statements?.filter((s) => s.predicate.id === predicateId).length >= (p.max_count as number),
-        )
-    ) {
+    if (propertyShapes.find((p) => p.maxCount && statements && statements?.filter((s) => s.predicate.id === predicateId).length >= p.maxCount)) {
         canAddValue = false;
     }
 
@@ -27,7 +23,8 @@ const useConstraints = (predicateId: string) => {
         canAddValue,
         isLiteralField,
         propertyShapes,
-        ranges: compact(propertyShapes.map((ps) => ('class' in ps && ps.class) || ('datatype' in ps && ps.datatype))),
+        // the generated client escapes the wire field 'class' as '_class'
+        ranges: compact(propertyShapes.map((ps) => (ps.type === 'resource' && ps._class) || ('datatype' in ps && ps.datatype))),
     };
 };
 

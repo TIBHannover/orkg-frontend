@@ -5,6 +5,23 @@ import { MISC } from '@/constants/graphSettings';
 import { Class, Literal, Predicate, Resource, Statement } from '@/services/backend/types';
 import db from '@/services/mocks/db';
 
+export type CapturedRequest = { url: URL; method: string; headers: Headers; body?: unknown };
+
+/**
+ * Snapshot a request inside a per-test handler override, e.g.:
+ *   const captured: CapturedRequest[] = [];
+ *   server.use(http.put(url, async ({ request }) => {
+ *       captured.push(await recordRequest(request));
+ *       return new HttpResponse(null, { status: 204 });
+ *   }));
+ */
+export const recordRequest = async (request: Request): Promise<CapturedRequest> => ({
+    url: new URL(request.url),
+    method: request.method,
+    headers: request.headers,
+    body: request.method !== 'GET' && request.method !== 'DELETE' ? await request.clone().json() : undefined,
+});
+
 export const findEntityById = (id: string) => {
     const tables = [db.resources, db.literals, db.classes, db.lists];
     for (const table of tables) {
@@ -18,7 +35,7 @@ export const findEntityById = (id: string) => {
     return null;
 };
 
-export const createMSWResource = (data: Partial<Resource>) => {
+export const createMSWResource = (data: Partial<SnakeCasedProperties<Resource>>) => {
     const id = `R${faker.number.int()}`;
     const { classes, ...rest } = data;
     return db.resources.create({
@@ -39,7 +56,7 @@ export const createMSWResource = (data: Partial<Resource>) => {
     });
 };
 
-export const createMSWPredicate = (data: Partial<Predicate>) => {
+export const createMSWPredicate = (data: Partial<SnakeCasedProperties<Predicate>>) => {
     const id = `R${faker.number.int()}`;
     return db.predicates.create({
         id: data.id ?? `P${faker.number.int()}`,
@@ -76,7 +93,7 @@ export const createMSWClass = (data: Partial<Class>) => {
 };
 
 export const createMSWStatement = (
-    data: Partial<Omit<Statement, 'subject' | 'predicate' | 'object'>> & { subject: string; predicate: string; object: string },
+    data: Partial<SnakeCasedProperties<Omit<Statement, 'subject' | 'predicate' | 'object'>>> & { subject: string; predicate: string; object: string },
 ) => {
     const { subject, predicate, object, ...rest } = data;
     return db.statements.create({

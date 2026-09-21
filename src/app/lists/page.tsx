@@ -15,7 +15,7 @@ import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { getLiteratureLists, listsUrl } from '@/services/backend/literatureLists';
+import { getLiteratureLists, literatureListsUrl } from '@/services/backend/literatureLists';
 import { LiteratureList, VisibilityOptions } from '@/services/backend/types';
 
 const Lists = () => {
@@ -68,7 +68,7 @@ const Lists = () => {
             renderListItem={renderListItem}
             fetchFunction={getLiteratureLists}
             fetchFunctionName="getLiteratureLists"
-            fetchUrl={listsUrl}
+            fetchUrl={literatureListsUrl}
             fetchExtraParams={{ published: true, visibility }}
             buttons={buttons}
             infoContainerText={infoContainerText}

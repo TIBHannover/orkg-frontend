@@ -25,7 +25,7 @@ import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { getResearchFields, newResearchFieldUrl as researchFieldUrl } from '@/services/backend/researchFields';
+import { getResearchFields, researchFieldUrl } from '@/services/backend/researchFields';
 import { Resource } from '@/services/backend/types';
 import { reverseWithSlug } from '@/utilsTyped';
 

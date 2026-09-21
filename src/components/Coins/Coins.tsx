@@ -27,8 +27,8 @@ const Coins: FC<CoinsProps> = ({ item, genre = 'article' }) => {
         let date = '';
         if ('publicationInfo' in item) {
             date = item.publicationInfo?.publishedYear?.toString() ?? '';
-        } else if ('created_at' in item) {
-            date = item.created_at ?? '';
+        } else if ('createdAt' in item) {
+            date = item.createdAt ?? '';
         }
         const coinsData: Record<string, string | number | undefined | string[]> = {
             'rft.genre': genre,

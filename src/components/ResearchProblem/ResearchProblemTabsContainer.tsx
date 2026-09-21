@@ -1,9 +1,13 @@
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
 import { CLASSES } from '@/constants/graphSettings';
-import { getPaper, papersUrl } from '@/services/backend/papers';
-import { getPapersLinkedToResource } from '@/services/backend/paths';
-import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
+import { getLinkedPapersWithPaths, pathsUrl } from '@/services/backend/paths';
+import { Paper } from '@/services/backend/types';
+
+// A paper states its research problem on a contribution: paper -> contribution -> problem, two
+// hops exactly. A third hop adds no real match, but where a resource is both Problem and
+// ResearchField it reaches papers via the field hierarchy — R100 goes from 3 papers to 45.
+const MAX_HOPS = 2;
 
 export const RESEARCH_PROBLEM_CONTENT_TABS = [
     { id: CLASSES.PAPER, label: 'Papers' },
@@ -14,37 +18,22 @@ export const RESEARCH_PROBLEM_CONTENT_TABS = [
 ];
 
 function ResearchProblemTabsContainer({ id }: { id: string }) {
-    const renderListItem = (object: Paper & { path: Resource[][] }) => {
+    // no breadcrumb here: every path is the same paper -> contribution -> problem shape, so it
+    // would repeat the same three crumbs on every card. Resource usage varies, and shows them.
+    const renderListItem = (object: Paper) => {
         return <PaperCard paper={object} key={object.id} />;
     };
 
-    const fetchItems = async (
-        params: {
-            id: string;
-            returnContent?: boolean;
-        } & PaginationParams,
-    ) => {
-        const result = await getPapersLinkedToResource(params);
-        const papers = await Promise.all((result as PaginatedResponse<Resource & { path: Resource[][] }>).content.map((p) => getPaper(p.id)));
-        return {
-            ...result,
-            content: papers.map((p) => ({
-                ...p,
-                path: (result as PaginatedResponse<Resource & { path: Resource[][] }>).content.find((rp) => rp.id === p.id)?.path,
-            })),
-        };
-    };
     return (
         <ListPage
             label="papers"
             boxShadow
             renderListItem={renderListItem}
-            // @ts-ignore
-            fetchFunction={fetchItems}
-            fetchUrl={papersUrl}
-            fetchExtraParams={{ id, returnContent: false }}
+            fetchFunction={getLinkedPapersWithPaths}
+            fetchFunctionName="getLinkedPapersWithPaths"
+            fetchUrl={pathsUrl}
+            fetchExtraParams={{ id, maxHops: MAX_HOPS }}
             disableSearch
-            defaultSortBy="paper.created_at"
             flush
         />
     );

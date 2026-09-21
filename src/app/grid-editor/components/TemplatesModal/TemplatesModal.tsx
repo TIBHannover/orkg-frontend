@@ -43,7 +43,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const { user } = useAuthentication();
     const isCurationAllowed = user?.isCurationAllowed ?? false;
     const { templates: _usedTemplates } = useTemplates();
-    const usedTemplates = _usedTemplates?.filter((t) => commonClasses.includes(t.target_class.id));
+    const usedTemplates = _usedTemplates?.filter((t) => commonClasses.includes(t.targetClass.id));
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
@@ -55,8 +55,8 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const renderListItem = (template: Template) => (
         <TemplateListItem
             isDisabled={
-                ENTITY_CLASSES.includes(template.target_class.id) ||
-                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed)
+                ENTITY_CLASSES.includes(template.targetClass.id) ||
+                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.targetClass.id) && !isCurationAllowed)
             }
             template={template}
             key={`tr${template.id}`}
@@ -84,9 +84,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                         <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
                                         {usedTemplates?.map((template) => (
                                             <TemplateButton
-                                                isDisabled={
-                                                    CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed
-                                                }
+                                                isDisabled={CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.targetClass.id) && !isCurationAllowed}
                                                 template={template}
                                                 key={`tr${template.id}`}
                                             />

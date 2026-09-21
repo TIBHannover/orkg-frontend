@@ -32,10 +32,10 @@ const AddEditRelatedResourceModal: FC<AddEditRelatedResourceModalProps> = ({ tog
         }
 
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setImage(relatedResource?.image);
+        setImage(relatedResource?.image ?? '');
         setLabel(relatedResource?.label);
-        setUrl(relatedResource?.url);
-        setDescription(relatedResource?.description);
+        setUrl(relatedResource?.url ?? '');
+        setDescription(relatedResource?.description ?? '');
     }, [relatedResourceId, relatedResources]);
 
     const handleSave = (e: FormEvent<HTMLFormElement>) => {

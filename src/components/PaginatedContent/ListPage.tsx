@@ -7,15 +7,15 @@ import HeaderSearchButton from '@/components/HeaderSearchButton/HeaderSearchButt
 import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
 import ListPaginatedContent from '@/components/PaginatedContent/ListPaginatedContent';
 import TitleBar from '@/components/TitleBar/TitleBar';
-import { PaginatedResponse, Pagination } from '@/services/backend/types';
+import { Pagination } from '@/services/backend/types';
 
 type ListPageProps<ItemType, FetchFunctionParams> = {
     label: string;
-    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType> | Pagination<ItemType>>;
+    fetchFunction: (params: FetchFunctionParams) => Promise<Pagination<ItemType>>;
     fetchFunctionName: string;
     fetchUrl: string;
     fetchExtraParams: FetchFunctionParams;
-    renderListItem: (item: ItemType) => React.ReactNode;
+    renderListItem: (item: ItemType, lastItem?: boolean, index?: number) => React.ReactNode;
     defaultPageSize?: number;
     resourceClass?: string;
     buttons?: React.ReactNode;
@@ -42,7 +42,7 @@ const ListPage = <ItemType, FetchFunctionParams>({
     hideTitleBar = false,
     boxShadow = true,
     flush = false,
-    defaultSortBy = 'created_at',
+    defaultSortBy = 'createdAt',
 }: ListPageProps<ItemType, FetchFunctionParams>) => {
     const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(defaultPageSize));
 

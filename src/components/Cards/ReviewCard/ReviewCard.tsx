@@ -44,8 +44,8 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                         </>
                     )
                 }
-                researchField={review.research_fields?.[0]}
-                createdBy={review.created_by}
+                researchField={review.researchFields?.[0]}
+                createdBy={review.createdBy}
             >
                 {renderCoins && <Coins item={review} />}
                 <div className="mb-2">
@@ -60,32 +60,32 @@ const ReviewCard: FC<ReviewCardProps> = ({ review, showCurationFlags = true, sho
                     className="mb-1"
                     items={[
                         review.authors.length > 0 && { key: 'authors', node: <Authors authors={review.authors} /> },
-                        !!review.created_at && {
+                        !!review.createdAt && {
                             key: 'created-at',
                             node: (
-                                <span className="inline-flex items-center" title={`Created ${dayjs(review.created_at).format('DD MMMM YYYY')}`}>
+                                <span className="inline-flex items-center" title={`Created ${dayjs(review.createdAt).format('DD MMMM YYYY')}`}>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                    {dayjs(review.created_at).format('DD MMM YYYY')}
+                                    {dayjs(review.createdAt).format('DD MMM YYYY')}
                                 </span>
                             ),
                         },
                     ]}
                 />
 
-                {review.versions?.published?.length > 1 && (
+                {(review.versions?.published?.length ?? 0) > 1 && (
                     <div className="mt-2 text-sm">
                         All versions:{' '}
-                        {review.versions.published.map((version, index) => (
+                        {review.versions?.published?.map((version, index) => (
                             <span key={version?.id}>
                                 <Tooltip>
                                     <Tooltip.Trigger className="inline">
                                         <Link href={reverse(ROUTES.REVIEW, { id: version?.id })}>
-                                            Version {(review.versions.published?.length ?? 0) - index}
+                                            Version {(review.versions?.published?.length ?? 0) - index}
                                         </Link>
                                     </Tooltip.Trigger>
                                     <Tooltip.Content>{version?.changelog || 'no description'}</Tooltip.Content>
                                 </Tooltip>{' '}
-                                {index < review.versions.published.length - 1 && ' • '}
+                                {index < (review.versions?.published?.length ?? 0) - 1 && ' • '}
                             </span>
                         ))}
                     </div>

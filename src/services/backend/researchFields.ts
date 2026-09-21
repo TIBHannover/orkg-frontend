@@ -1,42 +1,33 @@
-import { ResearchFieldsApi, ResearchFieldsApiFindAllRequest } from '@orkg/orkg-client';
+import { ResearchFieldsApi, ResearchFieldsApiFindAllRequest, ResearchFieldWithChildCountRepresentation } from '@orkg/orkg-client';
 
-import { url, urlNoTrailingSlash } from '@/constants/misc';
-import backendApi, { configuration } from '@/services/backend/backendApi';
-import { PaginatedResponse, Resource } from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration } from '@/services/backend/backendApi';
+import { Resource } from '@/services/backend/types';
 
-export const researchFieldUrl = `${url}research-fields/`;
-export const researchFieldApi = backendApi.extend(() => ({ prefixUrl: researchFieldUrl }));
+export const researchFieldUrl = `${urlNoTrailingSlash}/research-fields`;
 
-export const newResearchFieldUrl = `${urlNoTrailingSlash}/research-fields`;
-const newResearchFieldApi = new ResearchFieldsApi(configuration);
+const researchFieldsApi = new ResearchFieldsApi(configuration);
 
-export const getResearchFields = (params: ResearchFieldsApiFindAllRequest) => newResearchFieldApi.findAll(params);
+export const getResearchFields = (params: ResearchFieldsApiFindAllRequest) => researchFieldsApi.findAll(params);
 
-export type FieldChildren = {
-    child_count: number;
-    resource: Resource;
-};
+export const getFieldChildren = ({ fieldId }: { fieldId: string }): Promise<ResearchFieldWithChildCountRepresentation[]> =>
+    researchFieldsApi.findAllChildrenByParentId({ id: fieldId, page: 0, size: 9999 }).then((res) => res.content);
 
-export const getFieldChildren = ({ fieldId }: { fieldId: string }) =>
-    researchFieldApi
-        .get<PaginatedResponse<FieldChildren>>(`${fieldId}/children?page=0&size=9999`)
-        .json()
-        .then((res) => res.content);
-
+// the hierarchy endpoint returns the whole ancestor closure in one request; walking parentIds
+// locally reproduces the previous one-request-per-level chain (first parent, bottom-up, self
+// excluded) without the N round trips
 export const getFieldParents = async ({ fieldId }: { fieldId: string }): Promise<Resource[]> => {
+    const hierarchy = await researchFieldsApi.findResearchFieldHierarchyByResearchFieldId({ id: fieldId, size: 9999 });
+    const entriesById = new Map(hierarchy.content.map((entry) => [entry.resource.id, entry]));
     const parents: Resource[] = [];
-
-    const fetchParents = async (currentFieldId: string): Promise<void> => {
-        const response = await researchFieldApi.get<any>(`${currentFieldId}/parents`).json();
-        const parentFields = response.content;
-
-        if (parentFields?.length) {
-            parents.push(parentFields[0]);
-            await fetchParents(parentFields[0].id);
+    let current = entriesById.get(fieldId);
+    while (current && current.parentIds.length > 0) {
+        const parent = entriesById.get(current.parentIds[0]);
+        if (!parent || parents.some((p) => p.id === parent.resource.id)) {
+            break;
         }
-    };
-
-    await fetchParents(fieldId);
-
+        parents.push(parent.resource);
+        current = parent;
+    }
     return parents;
 };

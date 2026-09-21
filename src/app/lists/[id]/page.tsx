@@ -40,9 +40,9 @@ const List = () => {
     const router = useRouter();
 
     const isLoadingInline = isLoading || isValidating;
-    const version = list?.versions.published.find((_version) => _version.id === id);
-    const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY') : null;
-    const versionNumber = list?.versions.published.length
+    const version = list?.versions?.published.find((_version) => _version.id === id);
+    const publicationDate = version ? dayjs(version.createdAt).format('DD MMMM YYYY') : null;
+    const versionNumber = list?.versions?.published.length
         ? list.versions.published.length - list.versions.published.findIndex((_version) => _version.id === id)
         : null;
 
@@ -76,7 +76,7 @@ const List = () => {
             });
 
             if (isConfirmed) {
-                router.push(reverse(ROUTES.LIST, { id: list.versions.head.id }));
+                router.push(reverse(ROUTES.LIST, { id: list.versions?.head.id ?? id }));
             }
         } else {
             toggleIsEditMode();
@@ -85,13 +85,13 @@ const List = () => {
 
     return (
         <div>
-            {list.research_fields?.[0] && <Breadcrumbs researchFieldId={list.research_fields?.[0]?.id} />}
+            {list.researchFields?.[0] && <Breadcrumbs researchFieldId={list.researchFields?.[0]?.id} />}
             <TitleBar
                 titleAddition={
                     publicationDate && (
                         <Tooltip content={`Update message: "${version?.changelog}"`}>
                             <SubTitle className=" mt-1">
-                                Published on <time dateTime={version?.created_at}>{publicationDate}</time> - Version {versionNumber}
+                                Published on <time dateTime={version?.createdAt}>{publicationDate}</time> - Version {versionNumber}
                             </SubTitle>
                         </Tooltip>
                     )

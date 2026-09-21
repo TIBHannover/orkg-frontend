@@ -44,7 +44,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
         featured: comparison?.visibility === VISIBILITY.FEATURED,
     });
 
-    const attachmentCount = (comparison.related_resources?.length ?? 0) + (comparison.related_figures?.length ?? 0);
+    const attachmentCount = (comparison.relatedResources?.length ?? 0) + (comparison.relatedFigures?.length ?? 0);
 
     return (
         <CardShell>
@@ -57,9 +57,9 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                         </>
                     )
                 }
-                researchField={showBreadcrumbs ? comparison.research_fields?.[0] : undefined}
-                createdBy={comparison.created_by}
-                aside={<Thumbnail figures={comparison.related_figures} visualizations={comparison.visualizations} id={comparison.id} />}
+                researchField={showBreadcrumbs ? comparison.researchFields?.[0] : undefined}
+                createdBy={comparison.createdBy}
+                aside={<Thumbnail figures={comparison.relatedFigures} visualizations={comparison.visualizations} id={comparison.id} />}
             >
                 {renderCoins && <Coins item={comparison} />}
                 <div className="mb-2">
@@ -102,12 +102,12 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                                 </span>
                             ),
                         },
-                        !!comparison.created_at && {
+                        !!comparison.createdAt && {
                             key: 'created-at',
                             node: (
-                                <span className="inline-flex items-center" title={`Created ${dayjs(comparison.created_at).format('DD MMMM YYYY')}`}>
+                                <span className="inline-flex items-center" title={`Created ${dayjs(comparison.createdAt).format('DD MMMM YYYY')}`}>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                    {dayjs(comparison.created_at).format('DD MMM YYYY')}
+                                    {dayjs(comparison.createdAt).format('DD MMM YYYY')}
                                 </span>
                             ),
                         },
@@ -115,7 +115,7 @@ const ComparisonCard: FC<ComparisonCardProps> = ({
                 />
 
                 {comparison.description && <div className="text-sm text-muted">{truncate(comparison.description, { length: 200 })}</div>}
-                {showHistory && comparison.versions?.published?.length > 1 && <Versions versions={comparison.versions.published} />}
+                {showHistory && (comparison.versions?.published?.length ?? 0) > 1 && <Versions versions={comparison.versions!.published} />}
             </CardColumns>
         </CardShell>
     );

@@ -1,3 +1,4 @@
+import { CreateComparisonRelatedFigureRequest } from '@orkg/orkg-client';
 import { uniqueId } from 'lodash';
 import useSWR from 'swr';
 
@@ -20,7 +21,7 @@ const useRelatedFigures = () => {
         isLoading: isLoadingRelatedFigures,
     } = useSWR(
         [
-            comparison?.related_figures && comparison?.related_figures.length > 0 ? comparison?.related_figures.map(({ id: _id }) => _id) : [],
+            comparison?.relatedFigures && comparison?.relatedFigures.length > 0 ? comparison?.relatedFigures.map(({ id: _id }) => _id) : [],
             comparisonUrl,
             'getComparisonRelatedFigure',
         ],
@@ -46,7 +47,7 @@ const useRelatedFigures = () => {
                         data: updatedData,
                     });
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                 }
                 return newData;
             },
@@ -58,7 +59,7 @@ const useRelatedFigures = () => {
         );
     };
 
-    const createRelatedFigure = (data: Partial<ComparisonRelatedFigure>) => {
+    const createRelatedFigure = (data: CreateComparisonRelatedFigureRequest) => {
         if (!comparison) {
             return null;
         }
@@ -73,8 +74,8 @@ const useRelatedFigures = () => {
                     });
                     mutate(() => ({
                         ...comparison,
-                        related_figures: [
-                            ...comparison.related_figures,
+                        relatedFigures: [
+                            ...comparison.relatedFigures,
                             {
                                 id: _id,
                                 label: data.label ?? '',
@@ -82,16 +83,13 @@ const useRelatedFigures = () => {
                         ],
                     }));
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                     console.error(e);
                 }
-                return [...(relatedFigures ?? []), { created_at: '', created_by: '', description: '', image: '', label: '', id: _id, ...data }];
+                return [...(relatedFigures ?? []), { createdAt: '', createdBy: '', description: '', image: '', id: _id, ...data }];
             },
             {
-                optimisticData: [
-                    ...(relatedFigures ?? []),
-                    { created_at: '', created_by: '', description: '', image: '', label: '', id: uniqueId(), ...data },
-                ],
+                optimisticData: [...(relatedFigures ?? []), { createdAt: '', createdBy: '', description: '', image: '', id: uniqueId(), ...data }],
                 rollbackOnError: true,
                 throwOnError: false,
             },
@@ -111,18 +109,18 @@ const useRelatedFigures = () => {
                     });
                     mutateRelatedFigures();
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                     console.error(e);
                 }
                 return {
                     ...comparison,
-                    related_figures: comparison.related_figures.filter((relatedFigure) => relatedFigure.id !== relatedFigureId),
+                    relatedFigures: comparison.relatedFigures.filter((relatedFigure) => relatedFigure.id !== relatedFigureId),
                 };
             },
             {
                 optimisticData: {
                     ...comparison,
-                    related_figures: comparison.related_figures.filter((relatedFigure) => relatedFigure.id !== relatedFigureId),
+                    relatedFigures: comparison.relatedFigures.filter((relatedFigure) => relatedFigure.id !== relatedFigureId),
                 },
                 rollbackOnError: true,
                 throwOnError: false,

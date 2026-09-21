@@ -1,4 +1,3 @@
-import { PaperRepresentationFromJSON } from '@orkg/orkg-client';
 import { uniqueId } from 'lodash';
 import useSWR from 'swr';
 import { PublicConfiguration, useSWRConfig } from 'swr/_internal';
@@ -11,7 +10,7 @@ import {
     deleteLiteratureListSection,
     getLiteratureList,
     getLiteratureListPublishedContentById,
-    listsUrl,
+    literatureListsUrl,
     updateLiteratureList,
     updateLiteratureListSection,
     UpdateLiteratureListSectionList,
@@ -27,6 +26,7 @@ import {
     LiteratureListSectionType,
     Organization,
     Paper,
+    UpdateAuthor,
 } from '@/services/backend/types';
 
 const useList = (listId?: string) => {
@@ -41,7 +41,7 @@ const useList = (listId?: string) => {
         error,
         mutate,
         isValidating,
-    } = useSWR(id ? [id, listsUrl, 'getLiteratureList'] : null, ([params]) => getLiteratureList(params));
+    } = useSWR(id ? [id, literatureListsUrl, 'getLiteratureList'] : null, ([params]) => getLiteratureList(params));
 
     const mutateListOptimistic = ({
         updateFunction,
@@ -55,7 +55,7 @@ const useList = (listId?: string) => {
                 try {
                     await updateFunction();
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                     throw e; // already thrown in errorHandler above, but added to be sure. Error needs to be thrown, otherwise the optimistic update won't be rolled back
                 }
                 return optimisticData;
@@ -67,15 +67,16 @@ const useList = (listId?: string) => {
             },
         );
 
-    const updateList = (updatedData: Partial<LiteratureList>) => {
+    // authors come from edit forms, which produce explicit null ids the representation type forbids
+    const updateList = (updatedData: Partial<Omit<LiteratureList, 'authors'>> & { authors?: UpdateAuthor[] }) => {
         if (!list) {
             return null;
         }
         return mutateListOptimistic({
             updateFunction: () =>
                 updateLiteratureList(list.id, {
-                    ...(updatedData.research_fields &&
-                        updatedData.research_fields.length > 0 && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
+                    ...(updatedData.researchFields &&
+                        updatedData.researchFields.length > 0 && { researchFields: updatedData.researchFields.map((rf) => rf.id) }),
                     ...(updatedData.sdgs && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
                     ...(updatedData.sections &&
                         updatedData.sections.length > 0 && {
@@ -85,7 +86,7 @@ const useList = (listId?: string) => {
                                     return {
                                         entries: section.entries.map((entry) => ({
                                             id: entry.value.id,
-                                            description: entry.description,
+                                            description: entry.description ?? null,
                                         })),
                                     };
                                 }
@@ -95,9 +96,9 @@ const useList = (listId?: string) => {
                             }),
                         }),
                     // remaining data without previously set fields
-                    ...(({ research_fields, sdgs, sections, ...o }) => o)(updatedData),
+                    ...(({ researchFields, sdgs, sections, ...o }) => o)(updatedData),
                 }),
-            optimisticData: { ...list, ...updatedData },
+            optimisticData: { ...list, ...updatedData } as LiteratureList,
         });
     };
 
@@ -111,13 +112,17 @@ const useList = (listId?: string) => {
                 ? {
                       text: '',
                       heading: '',
-                      heading_size: 1,
+                      headingSize: 1,
                   }
                 : {
                       entries: [],
                   };
 
-        const sections = [...list.sections.slice(0, atIndex), { ...newSection, id: uniqueId(), type: sectionType }, ...list.sections.slice(atIndex)];
+        const sections = [
+            ...list.sections.slice(0, atIndex),
+            { ...newSection, id: uniqueId(), type: sectionType },
+            ...list.sections.slice(atIndex),
+        ] as LiteratureList['sections'];
 
         return mutateListOptimistic({
             updateFunction: () => createLiteratureListSection({ listId: list.id, index: atIndex, data: newSection }),
@@ -129,15 +134,17 @@ const useList = (listId?: string) => {
         if (!list) {
             return null;
         }
-        const sections = list?.sections.map((section) => (section.id === sectionId ? { ...section, ...updatedData } : section));
+        const sections = list?.sections.map((section) =>
+            section.id === sectionId ? { ...section, ...updatedData } : section,
+        ) as LiteratureList['sections'];
 
-        const updatePayload: Partial<UpdateLiteratureListSectionList | UpdateLiteratureListSectionText> =
+        const updatePayload: UpdateLiteratureListSectionList | UpdateLiteratureListSectionText =
             'entries' in updatedData
                 ? {
                       entries:
                           updatedData.entries!.map((entry) => ({
                               id: entry.value.id,
-                              description: entry.description,
+                              description: entry.description ?? null,
                           })) ?? [],
                   }
                 : (({ id, type, ...rest }) => rest)(updatedData as LiteratureListSectionText);
@@ -173,12 +180,9 @@ const useList = (listId?: string) => {
     const { data: papersPublished } = useSWR(
         list && list.published && paperIds && paperIds.length > 0 ? [paperIds, list, 'getLiteratureListPublishedContentById'] : null,
         ([_paperIds]) => {
-            // only papers are returned; the endpoint is not migrated to the generated client yet,
-            // so normalize the wire format (snake_case) to the camelCase Paper type
-            return Promise.all(
-                _paperIds.map((_id) =>
-                    getLiteratureListPublishedContentById(list!.id, _id).then((paper) => PaperRepresentationFromJSON(paper) as Paper),
-                ),
+            // the snapshot delivers papers and resources; only papers are requested here
+            return Promise.all(_paperIds.map((_id) => getLiteratureListPublishedContentById(list!.id, _id))).then((contents) =>
+                contents.filter((content): content is Paper & { _class: 'paper' } => content._class === 'paper'),
             );
         },
     );

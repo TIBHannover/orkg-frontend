@@ -48,7 +48,7 @@ const TemplateNew = () => {
             const targetClassID = searchParams.get('classID');
             if (targetClassID) {
                 getClassById(targetClassID).then((classesData) => {
-                    setTargetClass(classesData);
+                    setTargetClass(classesData as OptionType);
                 });
             }
         };
@@ -75,12 +75,12 @@ const TemplateNew = () => {
             }
             const data = {
                 label,
-                target_class: targetClassId,
-                relations: { research_fields: [], research_problems: [] },
+                targetClass: targetClassId,
+                relations: { researchFields: [], researchProblems: [] },
                 properties: [],
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                is_closed: false,
+                isClosed: false,
             };
             const templateResource = await createTemplate(data);
             if (templateResource) {

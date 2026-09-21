@@ -28,6 +28,7 @@ import {
     ReviewSectionTextPayload,
     ReviewSectionType,
     ReviewSectionVisualizationPayload,
+    UpdateAuthor,
 } from '@/services/backend/types';
 
 const useReview = (reviewId?: string) => {
@@ -50,7 +51,7 @@ const useReview = (reviewId?: string) => {
                 try {
                     await updateFunction();
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                 }
                 return optimisticData;
             },
@@ -61,39 +62,48 @@ const useReview = (reviewId?: string) => {
             },
         );
 
-    const updateReview = (updatedData: Partial<Review>) => {
+    // authors come from edit forms, which produce explicit null ids the representation type forbids
+    const updateReview = (updatedData: Partial<Omit<Review, 'authors'>> & { authors?: UpdateAuthor[] }) => {
         if (!review) {
             return null;
         }
         return mutateReviewOptimistic({
             updateFunction: () =>
                 updateReviewBackend(review.id, {
-                    ...(updatedData.research_fields &&
-                        updatedData.research_fields.length > 0 && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
+                    ...(updatedData.researchFields &&
+                        updatedData.researchFields.length > 0 && { researchFields: updatedData.researchFields.map((rf) => rf.id) }),
                     ...(updatedData.sdgs && updatedData.sdgs.length > 0 && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
                     ...(updatedData.sections &&
                         updatedData.sections.length > 0 && {
-                            sections: updatedData.sections.map((section) => ({
-                                ...('heading' in section && { heading: section.heading }),
-                                ...('text' in section && { text: section.text }),
-                                ...('class' in section && { class: section.class }),
-                                ...('comparison' in section && { comparison: section.comparison?.id ?? null }),
-                                ...('visualization' in section && {
-                                    visualization: section.visualization?.id ?? null,
-                                }),
-                                ...('resource' in section && { resource: section.resource?.id ?? null }),
-                                ...('predicate' in section && { predicate: section.predicate?.id ?? null }),
-                                ...('entities' in section && {
-                                    entities: section.entities?.map((entity) => entity.id) ?? [],
-                                }),
-                                ...('predicates' in section && {
-                                    predicates: section.predicates?.map((entity) => entity.id) ?? [],
-                                }),
-                            })),
+                            // each section must carry its variant's full field set — the request
+                            // unions dispatch structurally, and an incomplete payload serializes as {}
+                            sections: updatedData.sections.map((section): UpdateSectionPayload => {
+                                switch (section.type) {
+                                    case 'text':
+                                        // the representation exposes the class in `classes`, the request expects `_class`
+                                        return { heading: section.heading, text: section.text ?? '', _class: section.classes?.[0] ?? null };
+                                    case 'ontology':
+                                        return {
+                                            heading: section.heading,
+                                            entities: section.entities?.map((entity) => entity.id).filter((id): id is string => !!id) ?? [],
+                                            predicates: section.predicates?.map((predicate) => predicate.id) ?? [],
+                                        };
+                                    case 'comparison':
+                                        return { heading: section.heading, comparison: section.comparison?.id ?? null };
+                                    case 'visualization':
+                                        return { heading: section.heading, visualization: section.visualization?.id ?? null };
+                                    case 'resource':
+                                        return { heading: section.heading, resource: section.resource?.id ?? null };
+                                    case 'property':
+                                        return { heading: section.heading, predicate: section.predicate?.id ?? null };
+                                    default:
+                                        return section satisfies never;
+                                }
+                            }),
                         }),
-                    ...(({ research_fields, sdgs, sections, ...o }) => o)(updatedData),
+                    ...(({ researchFields, sdgs, sections, ...o }) => o)(updatedData),
                 }),
-            optimisticData: { ...review, ...updatedData },
+            optimisticData: { ...review, ...updatedData } as Review,
         });
     };
 
@@ -134,7 +144,7 @@ const useReview = (reviewId?: string) => {
             text: {
                 heading: '',
                 text: '',
-                class: null,
+                _class: null,
             },
         };
         const newSection = sectionContent[sectionType];
@@ -143,11 +153,11 @@ const useReview = (reviewId?: string) => {
             ...review.sections.slice(0, atIndex),
             { ...newSection, id: uniqueId(), type: sectionType },
             ...review.sections.slice(atIndex),
-        ];
+        ] as Review['sections'];
 
         return mutateReviewOptimistic({
             updateFunction: () => createReviewSection({ reviewId: review.id, index: atIndex, data: newSection }),
-            optimisticData: { ...review, ...sections },
+            optimisticData: { ...review, sections },
         });
     };
 
@@ -163,30 +173,29 @@ const useReview = (reviewId?: string) => {
             _class: '',
         });
 
-        const sections = {
-            sections: review?.sections.map((section) =>
-                section.id === sectionId
-                    ? {
-                          ...section,
-                          ...('heading' in updatedData && { heading: updatedData.heading }),
-                          ...('text' in updatedData && { text: updatedData.text }),
-                          ...('class' in updatedData && { class: updatedData.class }),
-                          ...('comparison' in updatedData && { comparison: generateOptimisticSectionContent(updatedData.comparison) }),
-                          ...('visualization' in updatedData && { visualization: generateOptimisticSectionContent(updatedData.visualization) }),
-                          ...('resource' in updatedData && { resource: generateOptimisticSectionContent(updatedData.resource) }),
-                          ...('predicate' in updatedData && { predicate: generateOptimisticSectionContent(updatedData.predicate) }),
-                          ...('entities' in updatedData && { entities: updatedData.entities?.map((id) => generateOptimisticSectionContent(id)) }),
-                          ...('predicates' in updatedData && {
-                              predicates: updatedData.predicates?.map((id) => generateOptimisticSectionContent(id)),
-                          }),
-                      }
-                    : section,
-            ),
-        };
+        const sections = review?.sections.map((section) =>
+            section.id === sectionId
+                ? {
+                      ...section,
+                      ...('heading' in updatedData && { heading: updatedData.heading }),
+                      ...('text' in updatedData && { text: updatedData.text }),
+                      // the request carries the class in `_class`, the representation in `classes`
+                      ...('_class' in updatedData && { classes: updatedData._class ? [updatedData._class] : [] }),
+                      ...('comparison' in updatedData && { comparison: generateOptimisticSectionContent(updatedData.comparison) }),
+                      ...('visualization' in updatedData && { visualization: generateOptimisticSectionContent(updatedData.visualization) }),
+                      ...('resource' in updatedData && { resource: generateOptimisticSectionContent(updatedData.resource) }),
+                      ...('predicate' in updatedData && { predicate: generateOptimisticSectionContent(updatedData.predicate) }),
+                      ...('entities' in updatedData && { entities: updatedData.entities?.map((id) => generateOptimisticSectionContent(id)) }),
+                      ...('predicates' in updatedData && {
+                          predicates: updatedData.predicates?.map((id) => generateOptimisticSectionContent(id)),
+                      }),
+                  }
+                : section,
+        ) as Review['sections'];
 
         return mutateReviewOptimistic({
             updateFunction: () => updateReviewSection({ reviewId: review.id, sectionId, data: updatedData }),
-            optimisticData: { ...review, ...sections },
+            optimisticData: { ...review, sections },
         });
     };
 
@@ -197,7 +206,7 @@ const useReview = (reviewId?: string) => {
         const sections = review.sections.filter((s) => s.id !== sectionId);
         return mutateReviewOptimistic({
             updateFunction: () => deleteReviewSection({ reviewId: review.id, sectionId }),
-            optimisticData: { ...review, ...sections },
+            optimisticData: { ...review, sections },
         });
     };
 

@@ -8,10 +8,7 @@ import { Certainty, ExtractionMethod } from '@/services/backend/types';
 export type ProvenanceItem = {
     id?: string;
     label?: string;
-    // TODO: remove snake case handling after finishing services migration
-    created_at?: string;
     createdAt?: string;
-    created_by?: string;
     createdBy?: string;
     classes?: string[];
     datatype?: string | null;
@@ -19,10 +16,10 @@ export type ProvenanceItem = {
     uri?: string | null;
     certainty?: Certainty;
     shared?: number;
-    extraction_method?: ExtractionMethod;
-    version_id?: string;
-    observatory_id?: string;
-    organization_id?: string;
+    extractionMethod?: ExtractionMethod;
+    versionId?: string;
+    observatoryId?: string;
+    organizationId?: string;
     observatories?: string[];
     organizations?: string[];
 };

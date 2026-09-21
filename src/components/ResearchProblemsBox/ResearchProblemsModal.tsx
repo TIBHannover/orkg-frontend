@@ -59,7 +59,7 @@ const ResearchProblemsModal: FC<ResearchProblemsModalProps> = ({ id, by = 'Resea
 
     const deleteResearchProblem = async (researchProblem: ResourceRepresentation) => {
         try {
-            await updateResource(researchProblem.id, { observatory_id: MISC.UNKNOWN_ID, organization_id: MISC.UNKNOWN_ID });
+            await updateResource(researchProblem.id, { observatoryId: MISC.UNKNOWN_ID, organizationId: MISC.UNKNOWN_ID });
             mutate();
             toast.success('Research problem deleted successfully');
         } catch {

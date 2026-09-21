@@ -33,7 +33,7 @@ const AddProperty = () => {
                 setIsLoading(false);
                 router.push(`${reverse(ROUTES.PROPERTY, { id: newPropertyId })}?isEditMode=true`);
             } catch (error) {
-                errorHandler({ error, shouldShowToast: true });
+                await errorHandler({ error, shouldShowToast: true });
                 setIsLoading(false);
             }
         } else {

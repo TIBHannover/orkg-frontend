@@ -37,14 +37,14 @@ const ComparisonDialog: FC<ComparisonDialogProps> = ({ historyPrefix, onClose })
             await mutateComparisonContents(
                 async (current: ComparisonContents | undefined) => {
                     const base = current ?? (await getComparisonContents(comparisonId));
-                    const currentPaths = toSelectableTree(base.selected_paths);
+                    const currentPaths = toSelectableTree(base.selectedPaths);
                     const updatedPaths = toUpdatePaths(
                         show ? selectPath(currentPaths, predicatePath, createPredicateNode) : deselectPath(currentPaths, predicatePath),
                     );
                     try {
-                        await updateComparisonContents({ id: comparisonId, selected_paths: updatedPaths });
+                        await updateComparisonContents({ id: comparisonId, selectedPaths: updatedPaths });
                     } catch (error) {
-                        errorHandler({ error, shouldShowToast: true });
+                        await errorHandler({ error, shouldShowToast: true });
                     }
                     return undefined;
                 },

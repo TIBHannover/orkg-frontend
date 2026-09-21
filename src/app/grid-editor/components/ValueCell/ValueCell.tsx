@@ -59,7 +59,7 @@ const ValueCell = (params: ValueCellParams) => {
         );
     }
 
-    const label = ('formatted_label' in value.object && value.object.formatted_label) || value.object.label;
+    const label = ('formattedLabel' in value.object && value.object.formattedLabel) || value.object.label;
 
     return (
         <div
@@ -90,7 +90,7 @@ const ValueCell = (params: ValueCellParams) => {
                     id={value.object.id}
                     isEditMode={
                         !(
-                            env('NEXT_PUBLIC_PWC_USER_ID') === value.object.created_by ||
+                            env('NEXT_PUBLIC_PWC_USER_ID') === value.object.createdBy ||
                             (value.object.classes.includes(CLASSES.RESEARCH_FIELD) && !isCurationAllowed)
                         )
                     }

@@ -15,14 +15,16 @@ const ContributionRedirectPage = async ({ params }: { params: Promise<{ id: stri
     }
 
     const paperStatement = statements.find(
-        (_statement) => _statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_REVIEW),
+        (_statement) =>
+            'classes' in _statement.subject &&
+            (_statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_REVIEW)),
     );
 
     if (!paperStatement) {
         notFound();
     }
 
-    const isReview = statements.some((_statement) => _statement.subject.classes.includes(CLASSES.SMART_REVIEW));
+    const isReview = statements.some((_statement) => 'classes' in _statement.subject && _statement.subject.classes.includes(CLASSES.SMART_REVIEW));
     const paperId = paperStatement.subject.id;
 
     if (isReview) {

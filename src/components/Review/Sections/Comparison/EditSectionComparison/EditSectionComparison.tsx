@@ -12,10 +12,10 @@ import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { getComparison } from '@/services/backend/comparisons';
 import { getPaper } from '@/services/backend/papers';
 import { getStatements } from '@/services/backend/statements';
-import { ReviewSection, Statement } from '@/services/backend/types';
+import { ReviewSectionComparison, Statement } from '@/services/backend/types';
 
 type EditSectionComparisonProps = {
-    section: ReviewSection;
+    section: ReviewSectionComparison;
     index: number;
 };
 

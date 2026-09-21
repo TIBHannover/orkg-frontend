@@ -61,9 +61,10 @@ const ShaclFlowModal = () => {
                 const _edges: Edge[] = [];
                 flattenNodes.map((cn) => {
                     cn.properties
-                        .filter((ps: PropertyShapeResourceType) => ps.class)
+                        // the generated client escapes the wire field 'class' as '_class'
+                        .filter((ps: PropertyShapeResourceType) => ps._class)
                         .map((ps: PropertyShapeResourceType) => {
-                            const targetNode = flattenNodes.find((c) => ps.class && c.target_class.id === ps.class.id);
+                            const targetNode = flattenNodes.find((c) => ps._class && c.targetClass.id === ps._class.id);
                             if (targetNode) {
                                 _edges.push({
                                     type: 'custom',

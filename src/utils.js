@@ -64,10 +64,10 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
         result = statementsArray.filter((statement) => statement.object.classes && statement.object.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
-        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at }; // TODO, check if statementId and s_created_at are needed
+        return { ...result[0].object, statementId: result[0].id };
     }
     if (result.length > 0 && !isUnique) {
-        return result.map((s) => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
+        return result.map((s) => ({ ...s.object, statementId: s.id }));
     }
     return isUnique ? null : [];
 };
@@ -197,10 +197,10 @@ export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, pr
         result = statementsArray.filter((statement) => statement.subject.classes && statement.subject.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
-        return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
+        return { ...result[0].subject, statementId: result[0].id };
     }
     if (result.length > 0 && !isUnique) {
-        return result.map((s) => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
+        return result.map((s) => ({ ...s.subject, statementId: s.id }));
     }
     return isUnique ? null : [];
 };

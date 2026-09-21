@@ -23,6 +23,7 @@ import { ORGANIZATIONS_MISC, ORGANIZATIONS_TYPES } from '@/constants/organizatio
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getOrganization, getOrganizationLogoUrl, organizationsUrl } from '@/services/backend/organizations';
+import { getStatusCode } from '@/services/backend/problemDetails';
 
 type OrganizationError = Error & { statusCode?: number };
 
@@ -80,7 +81,7 @@ const Organization = () => {
     }
 
     if (error) {
-        return error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />;
+        return getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />;
     }
 
     if (!organization) {

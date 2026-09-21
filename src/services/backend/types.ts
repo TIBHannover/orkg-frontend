@@ -1,22 +1,56 @@
 import {
     AuthorIdentifierMap,
     ClassRepresentation,
+    ComparisonDataSource,
+    ComparisonRelatedFigureRepresentation,
+    ComparisonRelatedResourceRepresentation,
+    ComparisonRepresentation,
+    ComparisonTableRepresentation,
+    ComparisonTableRowRepresentation,
     ContributionRequestPart,
     Contributor as ContributorType,
     CreateContributionRequest,
     CreatePaperRequest,
+    CreateRosettaStoneStatementRequest,
+    CreateVisualizationRequest,
+    EntryRepresentation,
+    HeadVersionRepresentation,
+    LabeledComparisonPathRepresentation,
     LiteralRepresentation,
+    LiteratureListRepresentation,
+    LiteratureListSectionRepresentation,
     Organization as OrganizationRepresentation,
     PageOfAuthorRecordRepresentationsPage,
     PaperRepresentation,
+    PredicateRepresentation,
+    PublishedSmartReviewContentRepresentation,
     ResourceReferenceRepresentation,
+    ResourceRepresentation,
     ResourceRepresentationExtractionMethodEnum,
+    RosettaStoneStatementRepresentation,
+    RosettaStoneTemplateRepresentation,
+    SimpleComparisonPath,
+    SmartReviewComparisonSectionRequest,
+    SmartReviewOntologySectionRequest,
+    SmartReviewPredicateSectionRequest,
+    SmartReviewRepresentation,
+    SmartReviewResourceSectionRequest,
+    SmartReviewSectionRepresentation,
+    SmartReviewTextSectionRequest,
+    SmartReviewVisualizationSectionRequest,
+    StatementRepresentation,
+    TemplateBasedResourceSnapshotRepresentation,
+    TemplatePropertyRepresentation,
+    TemplateRepresentation,
+    ThingReferenceRepresentation,
     UpdatePaperRequest,
+    UpdateRosettaStoneStatementRequest,
+    VisualizationRepresentation,
 } from '@orkg/orkg-client';
 
 export type EntityType = string;
 
-export type SortByOptions = 'id' | 'label' | 'created_at' | 'created_by' | 'visibility' | 'name';
+export type SortByOptions = 'id' | 'label' | 'createdAt' | 'createdBy' | 'visibility' | 'name';
 
 export type SortDirectionOptions = 'asc' | 'desc';
 
@@ -72,31 +106,9 @@ export type NewClass = {
     uri: string;
 };
 
-export type Resource = {
-    id: string;
-    label: string;
-    classes: string[];
-    shared: number;
-    featured: boolean;
-    unlisted: boolean;
-    verified: boolean;
-    extraction_method: ExtractionMethod;
-    _class: 'resource';
-    created_at: string;
-    created_by: string;
-    observatory_id: string;
-    organization_id: string;
-    formatted_label: string;
-};
+export type Resource = ResourceRepresentation;
 
-export type Predicate = {
-    id: string;
-    label: string;
-    description: string;
-    _class: 'predicate';
-    created_at: string;
-    created_by: string;
-};
+export type Predicate = PredicateRepresentation;
 
 export type Literal = LiteralRepresentation;
 export type Contributor = ContributorType;
@@ -140,34 +152,9 @@ export type Observatory = {
 
 export type Organization = OrganizationRepresentation;
 
-export type Statement = {
-    id: string;
-    subject: Resource;
-    predicate: Predicate;
-    object: Resource | Literal;
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-};
+export type Statement = StatementRepresentation;
 
-export type User = {
-    id: string;
-    email: string;
-    display_name: string;
-    created_at: string;
-    organization_id: string | null;
-    observatory_id: string | null;
-    is_curation_allowed: boolean;
-};
-
-// Bridges the generated AuthorIdentifierMap (camelCase keys) with the snake_case keys
-// still delivered by un-migrated endpoints (comparisons, reviews, lists)
-export type AuthorIdentifiers = AuthorIdentifierMap & {
-    google_scholar?: string[];
-    research_gate?: string[];
-    linked_in?: string[];
-    web_of_science?: string[];
-};
+export type AuthorIdentifiers = AuthorIdentifierMap;
 
 export type Author = {
     id?: string | null;
@@ -221,53 +208,32 @@ export type RSPropertyShapeUntypedType = {
     postposition?: string;
 };
 
-export type PropertyShapeUntypedType = {
-    id?: string;
-    label?: string;
-    placeholder: string;
-    description: string;
-    min_count?: number | string;
-    max_count?: number | string;
-    path: Node;
-    created_at?: string;
-    created_by?: string;
-    preposition?: string;
-    postposition?: string;
-};
+export type PropertyShapeUntypedType = Extract<TemplatePropertyRepresentation, { type: 'untyped' }>;
 
 export type RSPropertyShapeLiteralType = RSPropertyShapeUntypedType & {
     datatype?: Node;
 };
 
-export type PropertyShapeLiteralType = PropertyShapeUntypedType & {
-    datatype?: Node;
-};
+export type PropertyShapeLiteralType = Extract<TemplatePropertyRepresentation, { type: 'other_literal' }>;
 
 export type RSPropertyShapeStringType = RSPropertyShapeLiteralType & {
     pattern: string;
 };
 
-export type PropertyShapeStringType = PropertyShapeLiteralType & {
-    pattern: string;
-};
+export type PropertyShapeStringType = Extract<TemplatePropertyRepresentation, { type: 'string_literal' }>;
 
 export type RSPropertyShapeNumberType = RSPropertyShapeLiteralType & {
     min_inclusive: number;
     max_inclusive: number;
 };
 
-export type PropertyShapeNumberType = PropertyShapeLiteralType & {
-    min_inclusive: number;
-    max_inclusive: number;
-};
+export type PropertyShapeNumberType = Extract<TemplatePropertyRepresentation, { type: 'number_literal' }>;
 
 export type RSPropertyShapeResourceType = RSPropertyShapeUntypedType & {
     class?: Node;
 };
 
-export type PropertyShapeResourceType = PropertyShapeUntypedType & {
-    class?: Node;
-};
+export type PropertyShapeResourceType = Extract<TemplatePropertyRepresentation, { type: 'resource' }>;
 
 export type RSPropertyShape =
     | RSPropertyShapeUntypedType
@@ -283,142 +249,70 @@ export type PropertyShape =
     | PropertyShapeNumberType
     | PropertyShapeResourceType;
 
-export type Template = {
-    id: string;
-    label: string;
-    description: string;
-    formatted_label: string;
-    target_class: Node & { uri?: string | null };
-    relations: { research_fields: Node[]; research_problems: Node[] };
-    properties: PropertyShape[];
-    is_closed: boolean;
-    organizations: string[];
-    observatories: string[];
-    created_at: string;
-    created_by: string;
-    visibility: Visibility;
-    unlisted_by?: string;
-};
+export type Template = TemplateRepresentation;
 
-export type PropertyShapeCreateParams = Omit<PropertyShape, 'path'> & { path: string };
+// relaxed flavor of the generated template requests: the editor produces explicit nulls to
+// clear optional fields, and counts may arrive as strings from form inputs —
+// toTemplatePropertyRequest maps onto the generated union before serialization
+export type PropertyShapeCreateParams = {
+    label?: string;
+    placeholder?: string;
+    description?: string;
+    minCount?: number | string | null;
+    maxCount?: number | string | null;
+    path: string;
+    datatype?: string;
+    // the generated client escapes the wire field 'class' as '_class'
+    _class?: string;
+    pattern?: string | null;
+    minInclusive?: number | string | null;
+    maxInclusive?: number | string | null;
+};
 
 export type CreateTemplateParams = {
     label: string;
-    target_class: string;
-    relations: { research_fields: string[]; research_problems: string[] };
+    description?: string | null;
+    formattedLabel?: string | null;
+    targetClass: string;
+    relations: { researchFields: string[]; researchProblems: string[] };
     properties: PropertyShapeCreateParams[];
-    organizations: string[];
-    observatories: string[];
-    is_closed: boolean;
+    organizations?: string[];
+    observatories?: string[];
+    isClosed: boolean;
 };
 
-export type RosettaStoneTemplate = {
+export type RosettaStoneTemplate = RosettaStoneTemplateRepresentation & {
+    // set client-side by the statement-type autocomplete when offering to create a new type
     __isNew__?: boolean;
-    id: string;
-    label: string;
-    description: string;
-    formatted_label: string;
-    example_usage: string;
-    target_class: string;
-    properties: RSPropertyShape[];
-    organizations: string[];
-    observatories: string[];
-    created_at: string;
-    created_by: string;
-    visibility: Visibility;
-    unlisted_by: string;
 };
 
-export type RosettaStoneStatement = {
-    id: string;
-    label?: string;
-    formatted_label?: string;
-    template_id: string;
-    latest_version_id?: string;
-    version_id?: string;
-    is_latest_version: boolean;
-    context: string;
-    subjects: Node[];
-    objects: Node[][];
-    created_at: string;
-    created_by: string;
-    certainty: Certainty;
-    negated: boolean;
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-    visibility: Visibility;
-    unlisted_by?: string;
-    modifiable: boolean;
+// latestVersionId is required on every persisted statement; it is optional here because the UI
+// mints client-side drafts, and an absent latestVersionId marks a statement as an unsaved draft
+export type RosettaStoneStatement = Omit<RosettaStoneStatementRepresentation, 'latestVersionId'> & {
+    latestVersionId?: string;
 };
 
+// relaxed flavor of the generated rosetta stone template requests — see PropertyShapeCreateParams
 export type CreateRosettaStoneTemplateParams = {
     label: string;
     description: string;
-    example_usage: string;
-    formatted_label: string;
-    properties: (Omit<RSPropertyShape, 'path'> & { path: string })[];
+    exampleUsage: string;
+    formattedLabel: string;
+    properties: PropertyShapeCreateParams[];
     organizations: string[];
     observatories: string[];
 };
 
-export type UpdateRosettaStoneTemplateParams = {
-    label?: string;
-    description?: string;
-    example_usage?: string;
-    formatted_label?: string;
-    properties?: (Omit<PropertyShape, 'path'> & { path: string })[];
-    organizations?: string[];
-    observatories?: string[];
-};
+// label and exampleUsage are required by the generated update request, so a partial payload
+// must still carry them — otherwise the mapper would have to invent blank values
+export type UpdateRosettaStoneTemplateParams = Partial<CreateRosettaStoneTemplateParams> &
+    Pick<CreateRosettaStoneTemplateParams, 'label' | 'exampleUsage'>;
 
-export type CreateRosettaStoneStatementParams = {
-    template_id: string;
-    context: string;
-    subjects: string[];
-    objects: string[][] | string[];
-    certainty: Certainty;
-    resources: {
-        [key: string]: NewResource;
-    };
-    literals: {
-        [key: string]: NewLiteral;
-    };
-    lists: {
-        [key: string]: Node;
-    };
-    classes: {
-        [key: string]: Node;
-    };
-    negated: boolean;
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-};
+export type CreateRosettaStoneStatementParams = CreateRosettaStoneStatementRequest;
 
-export type UpdateRosettaStoneStatementParams = {
-    subjects: string[];
-    objects: string[][] | string[];
-    certainty: Certainty;
-    resources: {
-        [key: string]: NewResource;
-    };
-    literals: {
-        [key: string]: NewLiteral;
-    };
-    lists: {
-        [key: string]: Node;
-    };
-    classes: {
-        [key: string]: Node;
-    };
-    negated: boolean;
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-};
+export type UpdateRosettaStoneStatementParams = UpdateRosettaStoneStatementRequest;
 
-export type UpdateTemplateParams = Partial<Omit<Template, 'id' | 'created_at' | 'created_by' | 'visibility' | 'unlisted_by'>>;
+export type UpdateTemplateParams = Partial<CreateTemplateParams>;
 
 export type ContributionContentsStatements = {
     [key: string]: {
@@ -456,118 +350,31 @@ export type UpdatePaperParams = Omit<UpdatePaperRequest, 'authors' | 'publicatio
     publicationInfo?: PaperPublicationInfoData;
 };
 
-export type Visualization = {
-    id: string;
-    title: string;
-    authors: Author[];
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    visibility: Visibility;
-    description: string;
-    unlisted_by: string;
+export type Visualization = VisualizationRepresentation;
+
+// The generated author request forbids the explicit null id the author forms produce
+export type CreateVisualizationParams = Omit<CreateVisualizationRequest, 'authors'> & {
+    authors: UpdateAuthor[];
 };
 
-export type CreateVisualizationParams = Omit<Visualization, 'id' | 'created_at' | 'created_by' | 'visibility' | 'unlisted_by'>;
+export type ComparisonVersion = HeadVersionRepresentation;
 
-export type ComparisonVersion = {
-    created_at: string;
-    created_by: string;
-    id: string;
-    label: string;
-};
+export type ComparisonRelatedFigure = ComparisonRelatedFigureRepresentation;
+export type ComparisonRelatedResource = ComparisonRelatedResourceRepresentation;
 
-export type ComparisonRelatedFigure = {
-    created_at: string;
-    created_by: string;
-    description: string;
-    id: string;
-    image: string;
-    label: string;
-};
-export type ComparisonRelatedResource = {
-    created_at: string;
-    created_by: string;
-    description: string;
-    id: string;
-    image: string;
-    label: string;
-    url: string;
-};
+export type ComparisonSourceType = ComparisonDataSource['type'];
 
-export type ComparisonSourceType = 'THING' | 'ROSETTA_STONE_STATEMENT';
+export type Comparison = ComparisonRepresentation;
 
-export type Comparison = {
-    id: string;
-    title: string;
-    description: string;
-    research_fields: Node[];
-    identifiers: {
-        doi?: string[];
-    };
-    publication_info: {
-        published_month: number;
-        published_year: number;
-        published_in: string | null;
-        url: string | null;
-    };
-    authors: Author[];
-    visualizations: Node[];
-    related_figures: Node[];
-    related_resources: Node[];
-    references: string[];
-    observatories: string[];
-    organizations: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    previous_version: string;
-    is_anonymized: boolean;
-    visibility: string;
-    versions: {
-        head: ComparisonVersion;
-        published: ComparisonVersion[];
-    };
-    sdgs: Node[];
-    sources: {
-        id: string;
-        type: ComparisonSourceType;
-    }[];
-};
+export type ThingReference = ThingReferenceRepresentation;
 
-export type ResourceThingReference = {
-    _class: 'resource_ref';
-    id: string;
-    label: string;
-    classes: string[];
-};
+export type ResourceThingReference = Extract<ThingReferenceRepresentation, { _class: 'resource_ref' }>;
 
-export type PredicateThingReference = {
-    _class: 'predicate_ref';
-    id: string;
-    label: string;
-};
+export type LiteralThingReference = Extract<ThingReferenceRepresentation, { _class: 'literal_ref' }>;
 
-export type LiteralThingReference = {
-    _class: 'literal_ref';
-    id: string | null;
-    label: string;
-    datatype: string;
-};
+export type SelectedPathValues = ComparisonTableRowRepresentation;
 
-export type ClassThingReference = {
-    _class: 'class_ref';
-    id: string;
-    label: string;
-    uri: string;
-};
-
-export type ThingReference = ResourceThingReference | PredicateThingReference | LiteralThingReference | ClassThingReference;
-
-export type ComparisonPathType = 'PREDICATE' | 'ROSETTA_STONE_STATEMENT' | 'ROSETTA_STONE_STATEMENT_VALUE';
-
+// derived client-side when the contents are pivoted into table columns
 export type ComparisonTableValue = {
     value: ThingReference;
     children: {
@@ -576,55 +383,28 @@ export type ComparisonTableValue = {
 };
 
 export type ComparisonTableColumn = {
-    title: ResourceThingReference;
-    subtitle: ResourceThingReference | null;
+    title: ThingReference;
+    subtitle: ThingReference | null;
     values: {
         [pathId: string]: ComparisonTableValue[];
     };
 };
 
-export type ComparisonPath = {
-    id: string;
-    label: string;
-    description: string | null;
-    type: ComparisonPathType;
-    children: ComparisonPath[];
-    sources?: number | null;
-};
+export type ComparisonPathType = LabeledComparisonPathRepresentation['type'];
+
+export type ComparisonPath = LabeledComparisonPathRepresentation;
 
 export type ComparisonSelectedPathFlattened = ComparisonPath & {
     path?: string[];
 };
 
-export type ComparisonUpdateSelectedPath = {
-    id: string;
-    type: ComparisonPathType;
-    children: ComparisonUpdateSelectedPath[];
-};
+export type ComparisonUpdateSelectedPath = SimpleComparisonPath;
 
 export type ComparisonTablePaths = ComparisonPath[];
 
-export type SelectedPathValues = {
-    values: ThingReference[];
-    children: {
-        [pathId: string]: SelectedPathValues[];
-    };
-};
+export type ComparisonContents = ComparisonTableRepresentation;
 
-export type ComparisonContents = {
-    selected_paths: ComparisonPath[];
-    titles: ResourceThingReference[];
-    subtitles: ResourceThingReference[];
-    values: {
-        [pathId: string]: SelectedPathValues[];
-    };
-};
-
-export type ComparisonUpdateSelectedPathsParams = {
-    id: string;
-    selected_paths: ComparisonUpdateSelectedPath[];
-};
-
+// used for optimistic section content entries created before the backend responds
 export type ReviewSectionData = {
     id: string;
     label: string;
@@ -632,162 +412,42 @@ export type ReviewSectionData = {
     _class: string;
 };
 
-export type ReviewSectionType = 'text' | 'resource' | 'property' | 'comparison' | 'visualization' | 'ontology';
+export type ReviewSectionType = SmartReviewSectionRepresentation['type'];
 
-export type ReviewSection = {
-    id: string;
-    heading: string;
-    classes: string[];
-    class?: string | null;
-    text?: string;
-    type: ReviewSectionType;
-    comparison?: ReviewSectionData;
-    visualization?: ReviewSectionData;
-    resource?: ReviewSectionData;
-    predicate?: Omit<ReviewSectionData, 'classes'>;
-    predicates?: Omit<ReviewSectionData, 'classes'>[];
-    entities?: ReviewSectionData[];
-};
+export type ReviewSection = SmartReviewSectionRepresentation;
 
-export type ReviewSectionComparisonPayload = {
-    heading: string;
-    comparison: string | null;
-};
+export type ReviewSectionOntology = Extract<ReviewSection, { type: 'ontology' }>;
 
-export type ReviewSectionVisualizationPayload = {
-    heading: string;
-    visualization: string | null;
-};
+export type ReviewSectionContentLink = Extract<ReviewSection, { type: 'resource' | 'property' | 'visualization' }>;
 
-export type ReviewSectionResourcePayload = {
-    heading: string;
-    resource: string | null;
-};
+export type ReviewSectionComparison = Extract<ReviewSection, { type: 'comparison' }>;
 
-export type ReviewSectionPredicatePayload = {
-    heading: string;
-    predicate: string | null;
-};
+export type ReviewSectionComparisonPayload = SmartReviewComparisonSectionRequest;
 
-export type ReviewSectionOntologyPayload = {
-    heading: string;
-    entities: string[];
-    predicates: string[];
-};
+export type ReviewSectionVisualizationPayload = SmartReviewVisualizationSectionRequest;
 
-export type ReviewSectionTextPayload = {
-    heading: string;
-    text: string;
-    class: string | null;
-};
+export type ReviewSectionResourcePayload = SmartReviewResourceSectionRequest;
 
-export type ReviewPublishedContents = {
-    _class: string;
-    statements: Statement[];
-};
+export type ReviewSectionPredicatePayload = SmartReviewPredicateSectionRequest;
 
-export type Review = {
-    id: string;
-    title: string;
-    research_fields: Node[];
-    authors: Author[];
-    versions: {
-        head: {
-            id: string;
-            label: string;
-            created_at: string;
-        };
-        published: {
-            id: string;
-            label: string;
-            created_at: string;
-            created_by: string;
-            changelog: string;
-        }[];
-    };
-    identifiers: {
-        doi: string[];
-    };
-    sdgs: Node[];
-    observatories: string[];
-    organizations: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    observatory_id: string;
-    visibility: Visibility;
-    published: boolean;
-    sections: ReviewSection[];
-    references: string[];
-    acknowledgements: {
-        [contributorId: string]: number;
-    };
-};
+export type ReviewSectionOntologyPayload = SmartReviewOntologySectionRequest;
 
-export type LiteratureListSectionListEntry = {
-    description: string;
-    value: {
-        id: string;
-        label: string;
-        classes: string[];
-    };
-};
+export type ReviewSectionTextPayload = SmartReviewTextSectionRequest;
 
-export type LiteratureListSectionType = 'text' | 'list';
+export type ReviewPublishedContents = PublishedSmartReviewContentRepresentation;
 
-export type LiteratureListSectionBase = {
-    id: string;
-    type: LiteratureListSectionType;
-};
+export type Review = SmartReviewRepresentation;
 
-export type LiteratureListSectionText = LiteratureListSectionBase & {
-    text: string;
-    heading: string;
-    heading_size: number;
-};
-export type LiteratureListSectionList = LiteratureListSectionBase & {
-    entries: LiteratureListSectionListEntry[];
-};
+export type LiteratureListSectionListEntry = EntryRepresentation;
 
-export type LiteratureListSection = LiteratureListSectionText | LiteratureListSectionList;
+export type LiteratureListSectionType = LiteratureListSectionRepresentation['type'];
 
-export type LiteratureList = {
-    id: string;
-    title: string;
-    research_fields: Node[];
-    authors: Author[];
-    versions: {
-        head: {
-            id: string;
-            label: string;
-            created_at: string;
-            created_by: string;
-        };
-        published: {
-            id: string;
-            label: string;
-            created_at: string;
-            created_by: string;
-            changelog: string;
-        }[];
-    };
-    sdgs: Node[];
-    observatories: string[];
-    organizations: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    observatory_id: string;
-    visibility: Visibility;
-    published: boolean;
-    identifiers: {
-        doi: string[];
-    };
-    sections: LiteratureListSection[];
-    acknowledgements: {
-        [contributorId: string]: number;
-    };
-};
+export type LiteratureListSectionText = Extract<LiteratureListSectionRepresentation, { type: 'text' }>;
+export type LiteratureListSectionList = Extract<LiteratureListSectionRepresentation, { type: 'list' }>;
+
+export type LiteratureListSection = LiteratureListSectionRepresentation;
+
+export type LiteratureList = LiteratureListRepresentation;
 
 export type Verified = boolean | null;
 
@@ -808,31 +468,6 @@ export type VerifiedParam = {
 
 export type VisibilityParam = {
     visibility?: VisibilityFilter;
-};
-
-export type CreatedByParam = {
-    created_by?: string;
-};
-
-export type ObservatoryIdParam = {
-    observatory_id?: string;
-};
-
-export type OrganizationIdParam = {
-    organization_id?: string;
-};
-
-export type AuthorIdParam = {
-    author_id?: string;
-};
-
-export type AuthorNameParam = {
-    author_name?: string;
-};
-
-export type ResearchFieldIdParams = {
-    research_field?: string;
-    include_subfields?: boolean;
 };
 
 export type VenueIdParam = {
@@ -869,25 +504,6 @@ export type Item = {
     _class: string;
 } & (ContentType | Resource | RosettaStoneStatement);
 
-export type Snapshot = {
-    created_at: string;
-    created_by: string;
-    id: string;
-    handle: string | null;
-    resource_id: string;
-    template_id: string;
-    data: {
-        root: Resource;
-        predicates: { [predicateId: string]: Predicate };
-        statements: {
-            [predicateId: string]: {
-                thing: Resource | Literal;
-                created_at: string;
-                created_by: string;
-                statements: object;
-            }[];
-        };
-    };
-};
+export type Snapshot = TemplateBasedResourceSnapshotRepresentation;
 
 export type PaperSections = 'contributions' | 'statements' | 'mentions';

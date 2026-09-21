@@ -8,13 +8,13 @@ import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionToolt
 import StatementTypeModal from '@/components/RosettaStone/AddStatement/StatementTypeModal';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { ENTITIES } from '@/constants/graphSettings';
-import { RosettaStoneTemplate, RSPropertyShape } from '@/services/backend/types';
+import { PropertyShape, RosettaStoneTemplate } from '@/services/backend/types';
 import { getLinkByEntityType } from '@/utils';
 
 type StatementValueProps = {
     template: RosettaStoneTemplate;
     value: OptionType[];
-    propertyShape: RSPropertyShape;
+    propertyShape: PropertyShape;
     isEditMode?: boolean;
     showQuickActionButtons?: boolean;
     handleAddStatement?: (templateId: string, subjects: OptionType[]) => void;
@@ -39,10 +39,11 @@ const StatementValue: FC<StatementValueProps> = ({
 
     const subjectPropertyShape = template?.properties[0];
 
+    // the generated client escapes the wire field 'class' as '_class'
     const canBeUsedAsSubject =
         subjectPropertyShape &&
-        (('class' in propertyShape && 'class' in subjectPropertyShape && subjectPropertyShape.class?.id === propertyShape.class?.id) ||
-            !('class' in subjectPropertyShape));
+        (('_class' in propertyShape && '_class' in subjectPropertyShape && subjectPropertyShape._class?.id === propertyShape._class?.id) ||
+            !('_class' in subjectPropertyShape));
 
     return (
         <span>

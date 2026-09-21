@@ -1,33 +1,50 @@
+import {
+    ComparisonRelatedFiguresApi,
+    ComparisonRelatedResourcesApi,
+    ComparisonsApi,
+    ComparisonsApiFindAllRequest,
+    ComparisonTablesApi,
+    CreateComparisonRelatedFigureRequest,
+    CreateComparisonRelatedResourceRequest,
+    CreateComparisonRequest,
+    PublishComparisonRequest,
+    UpdateComparisonRelatedFigureRequest,
+    UpdateComparisonRelatedResourceRequest,
+    UpdateComparisonRequest,
+} from '@orkg/orkg-client';
 import qs from 'qs';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { prepareParams } from '@/services/backend/misc';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import backendApi, { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { toAuthorRequest } from '@/services/backend/mapAuthor';
+import { toCamelPage } from '@/services/backend/misc';
 import {
-    Author,
-    Comparison,
-    ComparisonContents,
-    ComparisonRelatedFigure,
-    ComparisonRelatedResource,
-    ComparisonTablePaths,
-    ComparisonUpdateSelectedPathsParams,
-    CreatedByParam,
-    ObservatoryIdParam,
-    OrganizationIdParam,
+    ComparisonUpdateSelectedPath,
     PaginatedResponse,
-    PaginationParams,
     PublishedParam,
-    ResearchFieldIdParams,
-    SdgParam,
-    VerifiedParam,
+    UpdateAuthor,
     VisibilityParam,
+    WithPaginationParams,
 } from '@/services/backend/types';
 
-export const comparisonUrl = `${url}comparisons/`;
-export const comparisonsApi = backendApi.extend(() => ({ prefixUrl: comparisonUrl }));
-const COMPARISONS_CONTENT_TYPE = 'application/vnd.orkg.comparison.v3+json';
+export const comparisonUrl = `${urlNoTrailingSlash}/comparisons`;
 
+// unlike every other content type, /comparisons has no default representation: the backend
+// answers 406 to any Accept header (even */*) other than exactly this media type, so the
+// generated read operations need it passed explicitly
+const COMPARISON_MEDIA_TYPE = 'application/vnd.orkg.comparison.v3+json';
+
+const comparisonsApi = new ComparisonsApi(configuration);
+const comparisonTablesApi = new ComparisonTablesApi(configuration);
+const comparisonRelatedFiguresApi = new ComparisonRelatedFiguresApi(configuration);
+const comparisonRelatedResourcesApi = new ComparisonRelatedResourcesApi(configuration);
+
+// GET /comparisons/{id}/authors has no generated client operation yet, so it stays on ky
+const comparisonsKyApi = backendApi.extend(() => ({ prefixUrl: `${comparisonUrl}/` }));
+
+// wire format (snake_case): the endpoint is only reachable through ky.
+// AuthorCard.tsx declares the same info shape — keep them in sync
 export type ComparisonTopAuthor = {
     author: {
         value: string;
@@ -41,61 +58,34 @@ export type ComparisonTopAuthor = {
 
 export const getAuthorsByComparisonId = ({ id, page = 0, size = 9999 }: { id: string; page?: number; size?: number }) => {
     const searchParams = qs.stringify({ page, size });
-    return comparisonsApi
-        .get<PaginatedResponse<ComparisonTopAuthor>>(`${encodeURIComponent(id)}/authors`, {
-            searchParams,
-        })
-        .json();
+    return (
+        comparisonsKyApi
+            .get<PaginatedResponse<ComparisonTopAuthor>>(`${encodeURIComponent(id)}/authors`, {
+                searchParams,
+            })
+            .json()
+            // the endpoint stays on ky pending its rework; normalize the page so pagination
+            // consumers only ever see the camelCase shape
+            .then(toCamelPage)
+    );
 };
 
-export const getComparison = (id: string): Promise<Comparison> =>
-    comparisonsApi
-        .get<Comparison>(encodeURIComponent(id), {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const getComparison = (id: string) => comparisonsApi.findById({ id, accept: COMPARISON_MEDIA_TYPE });
 
-export const getComparisonContents = (id: string): Promise<ComparisonContents> =>
-    comparisonsApi
-        .get<ComparisonContents>(`${encodeURIComponent(id)}/contents`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const getComparisonContents = (id: string) => comparisonTablesApi.findTableByComparisonId({ id });
 
-export const updateComparisonContents = ({ id, selected_paths }: ComparisonUpdateSelectedPathsParams): Promise<void> =>
-    comparisonsApi
-        .put(`${encodeURIComponent(id)}/contents`, {
-            json: { selected_paths },
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const updateComparisonContents = ({ id, selectedPaths }: { id: string; selectedPaths: ComparisonUpdateSelectedPath[] }) =>
+    comparisonTablesApi.updateTable({ id, updateComparisonTableRequest: { selectedPaths } });
 
-export const getComparisonTablePaths = (id: string): Promise<ComparisonTablePaths> =>
-    comparisonsApi
-        .get<ComparisonTablePaths>(`${encodeURIComponent(id)}/table-paths`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const getComparisonTablePaths = (id: string) => comparisonTablesApi.findAllPathsByComparisonId({ id });
+
+export const getComparisonTableCsv = (id: string, { transposed = false }: { transposed?: boolean } = {}): Promise<string> =>
+    comparisonTablesApi.findTableByComparisonIdAsCsv({ id }, transposed);
 
 export const getComparisonRelatedFigure = ({ comparisonId, relatedFigureId }: { comparisonId: string; relatedFigureId: string }) =>
-    comparisonsApi
-        .get<ComparisonRelatedFigure>(`${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    comparisonRelatedFiguresApi.findByIdAndComparisonId({ id: comparisonId, comparisonRelatedFigureId: relatedFigureId });
 
-export type UpdateComparisonRelatedFigureParams = Partial<Omit<ComparisonRelatedFigure, 'id'>>;
+export type UpdateComparisonRelatedFigureParams = UpdateComparisonRelatedFigureRequest;
 
 export const updateComparisonRelatedFigure = ({
     comparisonId,
@@ -105,51 +95,23 @@ export const updateComparisonRelatedFigure = ({
     comparisonId: string;
     relatedFigureId: string;
     data: UpdateComparisonRelatedFigureParams;
-}) => {
-    return comparisonsApi
-        .put<void>(`${encodeURIComponent(comparisonId)}/related-figures/${encodeURIComponent(relatedFigureId)}`, {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+}) =>
+    comparisonRelatedFiguresApi.update({
+        id: comparisonId,
+        comparisonRelatedFigureId: relatedFigureId,
+        updateComparisonRelatedFigureRequest: data,
+    });
 
-export const createComparisonRelatedFigure = ({ comparisonId, data }: { comparisonId: string; data: UpdateComparisonRelatedFigureParams }) => {
-    return comparisonsApi
-        .post<void>(`${encodeURIComponent(comparisonId)}/related-figures`, {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
+export const createComparisonRelatedFigure = ({ comparisonId, data }: { comparisonId: string; data: CreateComparisonRelatedFigureRequest }) =>
+    comparisonRelatedFiguresApi.createRaw({ id: comparisonId, createComparisonRelatedFigureRequest: data }).then(getCreatedId);
 
-export const deleteComparisonRelatedFigure = ({ comparisonId, relatedFigureId }: { comparisonId: string; relatedFigureId: string }) => {
-    return comparisonsApi
-        .delete<void>(`${encodeURIComponent(comparisonId)}/related-figures/${relatedFigureId}`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const deleteComparisonRelatedFigure = ({ comparisonId, relatedFigureId }: { comparisonId: string; relatedFigureId: string }) =>
+    comparisonRelatedFiguresApi.deleteByIdAndComparisonId({ id: comparisonId, comparisonRelatedFigureId: relatedFigureId });
 
 export const getComparisonRelatedResource = ({ comparisonId, relatedResourceId }: { comparisonId: string; relatedResourceId: string }) =>
-    comparisonsApi
-        .get<ComparisonRelatedResource>(`${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    comparisonRelatedResourcesApi.findByIdAndComparisonId({ id: comparisonId, comparisonRelatedResourceId: relatedResourceId });
 
-export type UpdateComparisonRelatedResourceParams = Partial<Omit<ComparisonRelatedResource, 'id'>>;
+export type UpdateComparisonRelatedResourceParams = UpdateComparisonRelatedResourceRequest;
 
 export const updateComparisonRelatedResource = ({
     comparisonId,
@@ -159,158 +121,94 @@ export const updateComparisonRelatedResource = ({
     comparisonId: string;
     relatedResourceId: string;
     data: UpdateComparisonRelatedResourceParams;
-}) => {
-    return comparisonsApi
-        .put<void>(`${encodeURIComponent(comparisonId)}/related-resources/${encodeURIComponent(relatedResourceId)}`, {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+}) =>
+    comparisonRelatedResourcesApi.update({
+        id: comparisonId,
+        comparisonRelatedResourceId: relatedResourceId,
+        updateComparisonRelatedResourceRequest: data,
+    });
 
 export const createComparisonRelatedResource = ({
     comparisonId,
     data,
 }: {
     comparisonId: string;
-    data: UpdateComparisonRelatedResourceParams;
-}): Promise<string> => {
-    return comparisonsApi
-        .post<void>(`${encodeURIComponent(comparisonId)}/related-resources`, {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    data: CreateComparisonRelatedResourceRequest;
+}): Promise<string> => comparisonRelatedResourcesApi.createRaw({ id: comparisonId, createComparisonRelatedResourceRequest: data }).then(getCreatedId);
+
+export const deleteComparisonRelatedResource = ({ comparisonId, relatedResourceId }: { comparisonId: string; relatedResourceId: string }) =>
+    comparisonRelatedResourcesApi.deleteByIdAndComparisonId({ id: comparisonId, comparisonRelatedResourceId: relatedResourceId });
+
+// authors come from edit forms, which produce explicit null ids the generated request forbids
+export type UpdateComparisonParams = Omit<UpdateComparisonRequest, 'authors'> & {
+    authors?: UpdateAuthor[];
 };
 
-export const deleteComparisonRelatedResource = ({ comparisonId, relatedResourceId }: { comparisonId: string; relatedResourceId: string }) => {
-    return comparisonsApi
-        .delete<void>(`${encodeURIComponent(comparisonId)}/related-resources/${relatedResourceId}`, {
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const toUpdateComparisonRequest = (data: UpdateComparisonParams): UpdateComparisonRequest => ({
+    ...data,
+    authors: data.authors?.map(toAuthorRequest),
+});
 
-export type UpdateComparisonParams = Partial<
-    Omit<Comparison, 'id' | 'research_fields' | 'sdgs' | 'contributions'> & { research_fields: string[] } & {
-        sdgs: string[];
-        contributions: string[];
-    }
->;
+export const updateComparison = (id: string, data: UpdateComparisonParams) =>
+    comparisonsApi.update({ id, updateComparisonRequest: toUpdateComparisonRequest(data) });
 
-export const updateComparison = (id: string, data: UpdateComparisonParams) => {
-    return comparisonsApi
-        .put<void>(`${encodeURIComponent(id)}`, {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export const deleteComparison = (comparisonId: string) =>
-    comparisonsApi
-        .delete<void>(encodeURIComponent(comparisonId), {
-            headers: {
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
-
-export type GetComparisonParams = PaginationParams &
-    VerifiedParam &
-    VisibilityParam &
-    CreatedByParam &
-    SdgParam &
-    ObservatoryIdParam &
-    OrganizationIdParam &
-    ResearchFieldIdParams &
-    PublishedParam;
+// the endpoint rejects the request with a 415 unless the comparison v3 media type is sent as
+// Content-Type — even though a DELETE carries no body — and the spec doesn't declare that,
+// so the generated operation needs it passed explicitly (reported)
+export const deleteComparison = (id: string) => comparisonsApi.deleteById({ id, contentType: COMPARISON_MEDIA_TYPE });
 
 export const getComparisons = ({
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by,
-    observatory_id,
-    organization_id,
-    research_field,
-    include_subfields,
-    sdg,
     published,
-}: GetComparisonParams): Promise<PaginatedResponse<Comparison>> => {
-    const searchParams = prepareParams({
-        page,
-        size,
-        sortBy,
-        verified,
-        visibility,
-        created_by,
-        observatory_id,
-        organization_id,
-        sdg,
-        research_field,
-        include_subfields,
-        published,
-    });
-    return comparisonsApi
-        .get<PaginatedResponse<Comparison>>('', {
-            searchParams,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .json();
+    ...params
+}: Omit<WithPaginationParams<ComparisonsApiFindAllRequest>, 'visibility' | 'published'> & VisibilityParam & PublishedParam) =>
+    comparisonsApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as ComparisonsApiFindAllRequest['visibility'],
+            published: published ?? undefined,
+            accept: COMPARISON_MEDIA_TYPE,
+        }),
+    );
+
+// title stays required so a caller can't silently create an untitled comparison
+export type CreateComparisonParams = Partial<Omit<CreateComparisonRequest, 'authors' | 'title'>> &
+    Pick<CreateComparisonRequest, 'title'> & {
+        authors?: UpdateAuthor[];
+    };
+
+export const toCreateComparisonRequest = (data: CreateComparisonParams): CreateComparisonRequest => ({
+    title: data.title,
+    description: data.description ?? '',
+    extractionMethod: data.extractionMethod ?? 'UNKNOWN',
+    isAnonymized: data.isAnonymized ?? false,
+    observatories: data.observatories ?? [],
+    organizations: data.organizations ?? [],
+    references: data.references ?? [],
+    researchFields: data.researchFields ?? [],
+    sources: data.sources ?? [],
+    visualizations: data.visualizations ?? [],
+    authors: (data.authors ?? []).map(toAuthorRequest),
+    ...(data.sdgs !== undefined ? { sdgs: data.sdgs } : {}),
+    ...(data.searchProtocol !== undefined ? { searchProtocol: data.searchProtocol } : {}),
+    ...(data.type !== undefined ? { type: data.type } : {}),
+});
+
+export const createComparison = (data: CreateComparisonParams) =>
+    comparisonsApi.createRaw({ createComparisonRequest: toCreateComparisonRequest(data) }).then(getCreatedId);
+
+export type PublishComparisonParams = Omit<PublishComparisonRequest, 'authors'> & {
+    authors: UpdateAuthor[];
 };
 
-export const createComparison = (
-    data: Partial<
-        Omit<Comparison, 'contributions'> & {
-            contributions: string[];
-        }
-    >,
-) =>
-    comparisonsApi
-        .post<string>('', {
-            json: data,
-            headers: {
-                Accept: COMPARISONS_CONTENT_TYPE,
-                'Content-Type': COMPARISONS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-
-type PublishComparisonParams = {
-    subject: string;
-    description: string;
-    authors: Author[];
-    assign_doi: boolean;
-};
-
-export const getComparisonTableCsv = (id: string, { transposed = false }: { transposed?: boolean } = {}): Promise<string> =>
-    comparisonsApi
-        .get(`${encodeURIComponent(id)}/contents`, {
-            headers: {
-                Accept: `text/csv${transposed ? ';transposed=true' : ''}`,
-            },
-        })
-        .text();
+export const toPublishComparisonRequest = (data: PublishComparisonParams): PublishComparisonRequest => ({
+    assignDoi: data.assignDoi,
+    description: data.description,
+    subject: data.subject,
+    authors: data.authors.map(toAuthorRequest),
+});
 
 export const publishComparison = (comparisonId: string, data: PublishComparisonParams) =>
-    comparisonsApi
-        .post<string>(`${encodeURIComponent(comparisonId)}/publish`, {
-            json: data,
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    comparisonsApi.publishRaw({ id: comparisonId, publishComparisonRequest: toPublishComparisonRequest(data) }).then(getCreatedId);

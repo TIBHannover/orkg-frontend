@@ -136,7 +136,8 @@ const EditorComponent = () => {
                     autoFocus
                     size="sm"
                     onFailure={(e) => {
-                        errorHandler({ error: e, shouldShowToast: true });
+                        // toast only: the editor closes regardless, so the rethrow has nowhere to go
+                        errorHandler({ error: e, shouldShowToast: true }).catch(() => undefined);
                         finishEditing();
                     }}
                 />
@@ -183,7 +184,8 @@ const EditorComponent = () => {
                         }
                     }}
                     onFailure={(e) => {
-                        errorHandler({ error: e, shouldShowToast: true });
+                        // toast only: the editor closes regardless, so the rethrow has nowhere to go
+                        errorHandler({ error: e, shouldShowToast: true }).catch(() => undefined);
                         finishEditing();
                     }}
                 />

@@ -70,12 +70,12 @@ function ObservatoryTabsContainer({ id }: { id: string }) {
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            observatory_id: id,
+            observatoryId: id,
             visibility: sort,
             contentType,
             published: OBSERVATORY_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,
             // ignore the label while requesting the result from the backend
-            filter_config: filterConfig?.map(({ label, ...restConfig }) => restConfig),
+            filterConfig: filterConfig?.map(({ label, ...restConfig }) => restConfig),
         },
     });
 

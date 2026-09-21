@@ -13,9 +13,9 @@ const ComparisonDiff = () => {
     const { comparisonToPlainText } = useDiff();
 
     const getTitleData = (comparison: Comparison) => ({
-        creator: comparison.created_by,
+        creator: comparison.createdBy,
         route: reverse(ROUTES.COMPARISON, { comparisonId: comparison.id }),
-        headerText: <span>Published on {comparison ? dayjs(comparison.created_at).format('DD MMMM YYYY - H:m:s') : null}</span>,
+        headerText: <span>Published on {comparison ? dayjs(comparison.createdAt).format('DD MMMM YYYY - H:m:s') : null}</span>,
         buttonText: 'View comparison',
     });
 

@@ -23,9 +23,9 @@ const GeneralSettings = () => {
 
     const dispatch = useDispatch();
     const description = useSelector((state: RootStore) => state.templateEditor.description);
-    const targetClass = useSelector((state: RootStore) => state.templateEditor.target_class);
-    const researchFields = useSelector((state: RootStore) => state.templateEditor.relations.research_fields);
-    const researchProblems = useSelector((state: RootStore) => state.templateEditor.relations.research_problems);
+    const targetClass = useSelector((state: RootStore) => state.templateEditor.targetClass);
+    const researchFields = useSelector((state: RootStore) => state.templateEditor.relations.researchFields);
+    const researchProblems = useSelector((state: RootStore) => state.templateEditor.relations.researchProblems);
 
     const handleChangeDescription = (value: string) => {
         dispatch(updateDescription(value));

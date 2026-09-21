@@ -15,12 +15,12 @@ const Node: FC<NodeProps> = ({ data }) => {
         <div className="bg-background border-2 border-secondary rounded-md shadow">
             <NodeHeader label={data.label} id={data.id} />
             <div className="flex flex-col">
-                <TargetClass data={data.target_class} nodeId={data.id} />
+                <TargetClass data={data.targetClass} nodeId={data.id} />
                 {data.properties.map((ps) => (
                     <PropertyShape key={ps.id} data={ps} nodeId={data.id} />
                 ))}
             </div>
-            <NodeFooter isClosed={data.is_closed} targetClass={data.target_class} />
+            <NodeFooter isClosed={data.isClosed} targetClass={data.targetClass} />
         </div>
     );
 };

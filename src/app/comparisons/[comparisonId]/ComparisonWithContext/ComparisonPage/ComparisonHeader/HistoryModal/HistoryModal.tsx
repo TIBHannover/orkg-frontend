@@ -19,8 +19,10 @@ const HistoryModal: FC<HistoryModalProps> = ({ comparedComparisonId, toggle, sho
         return null;
     }
 
-    const versions = comparison.versions.published.map((version) => ({
-        ...version,
+    const versions = (comparison.versions?.published ?? []).map((version) => ({
+        id: version.id,
+        created_at: version.createdAt,
+        created_by: version.createdBy,
         isSelected: comparisonId === version.id || comparedComparisonId === version.id,
         link: reverse(ROUTES.COMPARISON, { comparisonId: version.id }),
         changelog: version.label,

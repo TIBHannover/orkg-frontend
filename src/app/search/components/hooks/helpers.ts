@@ -37,7 +37,7 @@ export const parseSmartReview = async (item: Thing): Promise<string> => {
 
             // Extract Introduction Text
             const introSection = sections.find((section) => section.heading === 'Introduction');
-            if (introSection) {
+            if (introSection?.type === 'text') {
                 introductionText = introSection.text || '';
             }
 

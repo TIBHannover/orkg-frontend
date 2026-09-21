@@ -165,7 +165,7 @@ const renderTable = ({
 
 const generatePdfText = async ({ mode, comparisonId, comparisonContents, columns, activeColumns, columnWidth, title }: GeneratePdfTextParams) => {
     const table = buildPdfTable({
-        paths: comparisonContents.selected_paths,
+        paths: comparisonContents.selectedPaths,
         values: comparisonContents.values,
         columns,
         activeColumns,

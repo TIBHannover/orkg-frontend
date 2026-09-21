@@ -26,6 +26,8 @@ import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getPredicate, predicatesUrl } from '@/services/backend/predicates';
+import { getStatusCode } from '@/services/backend/problemDetails';
+import { Thing } from '@/services/backend/things';
 
 const Property = () => {
     const { id: propertyId, activeTab } = useParams();
@@ -62,7 +64,7 @@ const Property = () => {
         mutate();
     };
 
-    const isUserIsCreator = property?.created_by === user?.id;
+    const isUserIsCreator = property?.createdBy === user?.id;
     const isDeletionAllowed = isUserIsCreator || isCurationAllowed;
 
     return (
@@ -72,8 +74,8 @@ const Property = () => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && error.statusCode === 404 && <NotFound />}
-            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
+            {!isLoading && error && getStatusCode(error) === 404 && <NotFound />}
+            {!isLoading && error && getStatusCode(error) !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && property && (
                 <>
                     <TitleBar
@@ -129,7 +131,7 @@ const Property = () => {
                                     </div>
                                 )}
                             </div>
-                            <ItemMetadata item={property} showCreatedAt showCreatedBy />
+                            <ItemMetadata item={property as Thing} showCreatedAt showCreatedBy />
                         </div>
                     </Container>
 

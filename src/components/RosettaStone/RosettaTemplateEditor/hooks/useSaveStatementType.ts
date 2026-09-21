@@ -37,17 +37,17 @@ const useSaveStatementType = () => {
             const data = {
                 label,
                 description,
-                example_usage: examples,
-                formatted_label: getFormattedLabel(),
+                exampleUsage: examples,
+                formattedLabel: getFormattedLabel(),
                 properties: properties
                     // ignore verb
                     .filter((p, index) => index !== 1)
                     .map((p, index) => ({
                         description: p.description,
                         label: p.placeholder ?? 'Object',
-                        max_count: p.max_count !== '*' ? p.max_count : undefined,
+                        maxCount: p.max_count !== '*' ? p.max_count : undefined,
                         // subject position cardinality. Minimum cardinality must be at least one.
-                        min_count: index === 0 && !p.min_count ? 1 : p.min_count,
+                        minCount: index === 0 && !p.min_count ? 1 : p.min_count,
                         path: index === 0 ? 'hasSubjectPosition' : 'hasObjectPosition',
                         placeholder: p.placeholder,
                         ...('datatype' in p && p.datatype?.id && { datatype: p.datatype?.id }),
@@ -55,15 +55,22 @@ const useSaveStatementType = () => {
                         ...('datatype' in p &&
                             'max_inclusive' in p &&
                             [CLASSES.INTEGER, CLASSES.DECIMAL].includes(p.datatype?.id ?? '') && {
-                                max_inclusive: p.max_inclusive,
-                                min_inclusive: p.min_inclusive,
+                                maxInclusive: p.max_inclusive,
+                                minInclusive: p.min_inclusive,
                             }),
-                        ...('class' in p && p.class?.id && { class: p.class?.id }),
+                        // the generated client escapes the wire field 'class' as '_class'
+                        ...('class' in p && p.class?.id && { _class: p.class?.id }),
                     })),
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
             };
-            const savedTemplate = await (id ? updateRSTemplate(id, data) : createRSTemplate(data));
+            let savedTemplate: string | undefined;
+            if (id) {
+                await updateRSTemplate(id, data);
+                savedTemplate = id;
+            } else {
+                savedTemplate = await createRSTemplate(data);
+            }
             if (id) {
                 // revalidate cache
                 mutate([id, rosettaStoneUrl, 'getRSTemplate']);
@@ -71,7 +78,7 @@ const useSaveStatementType = () => {
             toast.success(`Template ${id ? 'updated' : 'created'} successfully`);
             return savedTemplate;
         } catch (e: unknown) {
-            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
+            await errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
         } finally {
             dispatch({ type: 'setIsSaving', payload: false });
         }

@@ -12,7 +12,7 @@ const PropertySelectionInfoAlert = () => {
     const { comparison, isEditMode, isPublished } = useComparison();
     const { user } = useAuthentication();
 
-    const isCreator = !!user?.id && comparison?.created_by === user.id;
+    const isCreator = !!user?.id && comparison?.createdBy === user.id;
 
     if (!isEditMode || isPublished || !isCreator || cookies.get(COOKIE_NAME)) {
         return null;

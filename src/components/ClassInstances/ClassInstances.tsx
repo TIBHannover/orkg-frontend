@@ -11,7 +11,7 @@ import ListGroup from '@/components/Ui/List/ListGroup';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { getResources, resourcesUrl } from '@/services/backend/resources';
+import { getResources, GetResourcesParams, resourcesUrl } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';
 
 type ClassInstancesProps = {
@@ -38,7 +38,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
             <div className="col-span-6">
                 <DescriptionTooltip id={item.id} _class={item._class} classes={item.classes}>
                     <Link href={`${reverse(ROUTES.RESOURCE, { id: item.id })}?noRedirect`}>
-                        {isFormattedLabelEnabled && item.formatted_label ? item.formatted_label : item.label}
+                        {isFormattedLabelEnabled && item.formattedLabel ? item.formattedLabel : item.label}
                     </Link>
                 </DescriptionTooltip>
             </div>
@@ -59,7 +59,7 @@ const ClassInstances = ({ title = 'class', classId }: ClassInstancesProps) => {
         setPageSize,
         error,
         totalPages,
-    } = usePaginate({
+    } = usePaginate<Resource, GetResourcesParams>({
         fetchFunction: getResources,
         fetchFunctionName: 'getResources',
         fetchUrl: resourcesUrl,

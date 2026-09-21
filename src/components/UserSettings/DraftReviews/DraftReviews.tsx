@@ -40,7 +40,7 @@ const DraftReviews = () => {
                 fetchFunction={getReviews}
                 fetchFunctionName="getReviews"
                 fetchUrl={reviewUrl}
-                fetchExtraParams={{ created_by: user.id, published: false }}
+                fetchExtraParams={{ createdBy: user.id, published: false }}
                 disableSearch
                 hideTitleBar
             />

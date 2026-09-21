@@ -64,10 +64,10 @@ const useSaveValue = (
         if (editMode && entityType === ENTITIES.LITERAL && value.id) {
             apiCall = commitChangeLabel(value.id, entityType, inputValue, 'datatype' in v ? v.datatype : dataType);
         } else if (existingValue && editMode && value.id && 'id' in v && statement?.id) {
-            apiCall = updateStatement(statement?.id, { object_id: v.id });
+            apiCall = updateStatement(statement?.id, { objectId: v.id });
         } else if (!existingValue && editMode && statement?.id) {
             const newObject = await createValue(entityType, { ...v, ...(range?.id && range.id !== CLASSES.RESOURCE && { classes: [range.id] }) });
-            apiCall = updateStatement(statement?.id, { object_id: newObject.id });
+            apiCall = updateStatement(statement?.id, { objectId: newObject.id });
         } else if (!existingValue) {
             const newObject = await createValue(entityType, { ...v, ...(range?.id && range.id !== CLASSES.RESOURCE && { classes: [range.id] }) });
             apiCall = createStatement(entity?.id, predicate?.id, newObject.id).then(async (response) => {

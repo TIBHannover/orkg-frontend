@@ -56,19 +56,19 @@ const useAiJobActions = (jobId: string) => {
             const comparisonId = await createComparison({
                 title: comparisonTitle,
                 description: comparisonDescription,
-                research_fields: [],
+                researchFields: [],
                 authors: [],
                 sources: contributionIds.map((id) => ({ id, type: 'THING' })),
                 references: [],
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                is_anonymized: false,
+                isAnonymized: false,
             });
 
             await clearActiveAiJobId(jobId);
             router.push(`${reverse(ROUTES.COMPARISON, { comparisonId })}?isEditMode=true`);
         } catch (error) {
-            errorHandler({ error, shouldShowToast: true });
+            await errorHandler({ error, shouldShowToast: true });
         } finally {
             setIsCreatingComparison(false);
         }
@@ -86,7 +86,7 @@ const useAiJobActions = (jobId: string) => {
             link.click();
             URL.revokeObjectURL(url);
         } catch (error) {
-            errorHandler({ error, shouldShowToast: true });
+            await errorHandler({ error, shouldShowToast: true });
         }
     };
 

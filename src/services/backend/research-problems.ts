@@ -8,7 +8,7 @@ import {
 } from '@orkg/orkg-client';
 
 import { urlNoTrailingSlash } from '@/constants/misc';
-import { configuration } from '@/services/backend/backendApi';
+import { configuration, transformPaginationParams } from '@/services/backend/backendApi';
 
 // remove the trailing slash, can be removed when the .env file is updated to remove the trailing slash
 export const researchProblemsUrl = `${urlNoTrailingSlash}/research-problems`;
@@ -25,4 +25,4 @@ export const getAuthorStatisticsByResearchProblemId = (params: AuthorStatisticsA
 export const getContributorsByResearchProblemId = (params: ContributorStatisticsApiFindAllByResearchProblemIdRequest) =>
     contributorsApi.findAllByResearchProblemId(params);
 
-export const getResearchProblems = (params: ResearchProblemsApiFindAllRequest) => researchProblemsApi.findAll(params);
+export const getResearchProblems = (params: ResearchProblemsApiFindAllRequest) => researchProblemsApi.findAll(transformPaginationParams(params));

@@ -19,7 +19,7 @@ import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { getConfigByType } from '@/constants/DataTypes';
 import { ENTITIES, MISC } from '@/constants/graphSettings';
 import { updateLiteral } from '@/services/backend/literals';
-import { updateCell, updateRow } from '@/services/backend/tables';
+import { TableCell, updateCell, updateRow } from '@/services/backend/tables';
 import { getThing } from '@/services/backend/things';
 import { EntityType, Node } from '@/services/backend/types';
 
@@ -99,17 +99,16 @@ const Column: Partial<ColumnDef<TableRow>> = {
                     predicates: {},
                     lists: {},
                     classes: {},
-                    row: { label: _value || null, data: dataArray },
+                    row: { label: _value || undefined, data: dataArray },
                 });
                 setFormFeedback(null);
                 setIsEditing(false);
                 if (!isUsingSnapshot) {
                     table.options.meta?.updateData(index + 1, -1, {
-                        id: null,
                         label: _value as string,
                         datatype: MISC.DEFAULT_LITERAL_DATATYPE,
                         _class: ENTITIES.LITERAL,
-                    });
+                    } as TableCell);
                 }
                 return;
             }
@@ -155,7 +154,7 @@ const Column: Partial<ColumnDef<TableRow>> = {
                     label: thing.label,
                     datatype: 'datatype' in thing && thing.datatype ? thing.datatype : '',
                     _class: thing._class,
-                });
+                } as TableCell);
             }
             setFormFeedback(null);
             setIsEditing(false);

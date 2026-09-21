@@ -41,7 +41,7 @@ const Templates = () => {
         fetchFunctionName: 'getRSTemplates',
         fetchExtraParams: { q: searchTerm },
         defaultPageSize: pageSize,
-        defaultSortBy: 'created_at',
+        defaultSortBy: 'createdAt',
     });
 
     useEffect(() => {

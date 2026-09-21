@@ -2,8 +2,9 @@ import qs from 'qs';
 
 import { url as baseUrl } from '@/constants/misc';
 import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { toCamelPage } from '@/services/backend/misc';
 import { getResource } from '@/services/backend/resources';
-import { Contributor, FilterConfig, Observatory, PaginatedResponse, PaginationParams } from '@/services/backend/types';
+import { Contributor, FilterConfig, Observatory, PaginatedResponse, Pagination, PaginationParams } from '@/services/backend/types';
 
 export const observatoriesUrl = `${baseUrl}observatories/`;
 export const observatoriesApi = backendApi.extend(() => ({ prefixUrl: observatoriesUrl }));
@@ -25,7 +26,7 @@ export const getObservatories = ({
 }: {
     researchFieldId?: string | null;
     q?: string | null;
-} & PaginationParams): Promise<PaginatedResponse<Observatory>> => {
+} & PaginationParams): Promise<Pagination<Observatory>> => {
     const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
     const searchParams = qs.stringify(
         { research_field: researchFieldId ? encodeURIComponent(researchFieldId) : null, q, page, size, sort },
@@ -33,11 +34,16 @@ export const getObservatories = ({
             skipNulls: true,
         },
     );
-    return observatoriesApi
-        .get<PaginatedResponse<Observatory>>('', {
-            searchParams,
-        })
-        .json();
+    return (
+        observatoriesApi
+            .get<PaginatedResponse<Observatory>>('', {
+                searchParams,
+            })
+            .json()
+            // the observatories endpoints stay on ky pending their rework; normalize the page so
+            // pagination consumers only ever see the camelCase shape
+            .then(toCamelPage)
+    );
 };
 
 export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }: { page?: number; size?: number }) => {
@@ -51,7 +57,8 @@ export const getResearchFieldOfObservatories = ({ page = 0, size = 9999 }: { pag
         .get<PaginatedResponse<{ id: string; label: string }>>('research-fields', {
             searchParams,
         })
-        .json();
+        .json()
+        .then(toCamelPage);
 };
 
 export const getObservatoryById = async (id: string) => {
@@ -131,7 +138,8 @@ export const getUsersByObservatoryId = ({ id, page = 0, size = 9999 }: { id: str
                     avatarUrl: c.avatar_url,
                 })),
             };
-        });
+        })
+        .then(toCamelPage);
 };
 
 export const createObservatory = ({

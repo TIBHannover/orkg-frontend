@@ -17,11 +17,14 @@ function useTimeline(id: string) {
             setIsNextPageLoading(true);
             getTimelineByResourceId({ id, page: p, size: pageSize })
                 .then((result) => {
-                    setContributors((prevContributors) => [...prevContributors, ...result.content]);
+                    setContributors((prevContributors) => [
+                        ...prevContributors,
+                        ...result.content.map((item) => ({ created_at: item.createdAt, created_by: item.createdBy as Contributor })),
+                    ]);
                     setIsNextPageLoading(false);
-                    setHasNextPage(result.page.number < result.page.total_pages - 1);
-                    setIsLastPageReached(result.page.number === result.page.total_pages - 1);
-                    setTotalElements(result.page.total_elements);
+                    setHasNextPage(result.page.number < result.page.totalPages - 1);
+                    setIsLastPageReached(result.page.number === result.page.totalPages - 1);
+                    setTotalElements(result.page.totalElements);
                     setPage(p + 1);
                 })
                 .catch(() => {

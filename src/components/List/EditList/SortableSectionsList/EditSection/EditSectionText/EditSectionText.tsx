@@ -22,7 +22,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
         if (e.target.value !== section.heading) {
             updateSection(section.id, {
                 heading: e.target.value,
-                heading_size: section.heading_size,
+                headingSize: section.headingSize,
                 text: section.text,
             });
         }
@@ -31,7 +31,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
     const handleUpdateMarkdown = (markdown: string) => {
         updateSection(section.id, {
             heading: section.heading,
-            heading_size: section.heading_size,
+            headingSize: section.headingSize,
             text: markdown,
         });
     };
@@ -39,7 +39,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
     const handleUpdateHeadingLevel = (level: string) => {
         updateSection(section.id, {
             heading: section.heading,
-            heading_size: parseInt(level, 10),
+            headingSize: parseInt(level, 10),
             text: section.text,
         });
     };
@@ -50,7 +50,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
                 <Select
                     aria-label="Select heading level"
                     className="mr-2 w-20 shrink-0"
-                    value={String(section.heading_size)}
+                    value={String(section.headingSize)}
                     onChange={(key) => handleUpdateHeadingLevel(String(key))}
                 >
                     <Label className="sr-only">Heading level</Label>
@@ -81,7 +81,7 @@ const EditSectionText: FC<EditSectionTextProps> = ({ section }) => {
                         </ListBox>
                     </Select.Popover>
                 </Select>
-                <h2 id={`section-${section.id}`} className={`h${section.heading_size} grow m-0`}>
+                <h2 id={`section-${section.id}`} className={`h${section.headingSize} grow m-0`}>
                     <EditableTitle
                         value={title}
                         className="focus-primary"

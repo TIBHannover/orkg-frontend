@@ -27,14 +27,14 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }
     };
 
     const formattedLabelWithPlaceholders = ReactStringReplace(
-        template.formatted_label?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
+        template.formattedLabel?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
         /{(.*?)}/,
         replacementFunction,
     );
 
     return (
         <CardShell>
-            <CardColumns createdBy={template.created_by}>
+            <CardColumns createdBy={template.createdBy}>
                 <div className="mb-2">
                     <Link href={reverse(ROUTES.RS_TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                     {showBadge && (
@@ -57,12 +57,12 @@ const RSTemplateCard: FC<RSTemplateCardProps> = ({ template, showBadge = false }
                                 </span>
                             ),
                         },
-                        !!template.created_at && {
+                        !!template.createdAt && {
                             key: 'created-at',
                             node: (
-                                <span className="inline-flex items-center" title={`Created ${dayjs(template.created_at).format('DD MMMM YYYY')}`}>
+                                <span className="inline-flex items-center" title={`Created ${dayjs(template.createdAt).format('DD MMMM YYYY')}`}>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                    {dayjs(template.created_at).format('DD MMM YYYY')}
+                                    {dayjs(template.createdAt).format('DD MMM YYYY')}
                                 </span>
                             ),
                         },

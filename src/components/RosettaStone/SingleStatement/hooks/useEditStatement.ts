@@ -1,3 +1,4 @@
+import { CreateLiteralRequestPart, CreateResourceRequestPart } from '@orkg/orkg-client';
 import { differenceWith, toInteger } from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
@@ -9,7 +10,7 @@ import { ENTITIES } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import errorHandler from '@/helpers/errorHandler';
 import { createRSStatement, deleteRSStatement, fullyDeleteRSStatement, updateRSStatement } from '@/services/backend/rosettaStone';
-import { NewLiteral, NewResource, Node, RosettaStoneStatement } from '@/services/backend/types';
+import { Node, RosettaStoneStatement, ThingReference } from '@/services/backend/types';
 import { guid } from '@/utils';
 
 type UseEditStatementProps = {
@@ -23,13 +24,13 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
 
     const initialLocalValues = useCallback(() => {
         return {
-            '0': statement.subjects,
+            '0': statement.subjects as unknown as OptionType[],
             ...Object.fromEntries(statement.objects.map((o, i) => [i + 1, o])),
         };
     }, [statement.objects, statement.subjects]);
 
     const [isSaving, setIsSaving] = useState(false);
-    const [isEditing, setIsEditing] = useState(!statement.latest_version_id);
+    const [isEditing, setIsEditing] = useState(!statement.latestVersionId);
     // Statements values
     const [localValues, setLocalValues] = useState<{ [key: string]: OptionType[] }>(initialLocalValues());
     // Statement metadata
@@ -37,7 +38,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     const [certainty, setCertainty] = useState(statement.certainty);
 
     // Template
-    const { data: template } = useRosettaTemplate({ id: statement.template_id ?? '' });
+    const { data: template } = useRosettaTemplate({ id: statement.templateId ?? '' });
 
     useEffect(() => {
         setLocalValues(initialLocalValues());
@@ -47,7 +48,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
         setLocalValues((prev) => ({ ...prev, [index]: value }));
     };
 
-    const isUnchangedValues = (oldValue: OptionType[], newValue: OptionType[]) => {
+    const isUnchangedValues = (oldValue: OptionType[], newValue: ThingReference[]) => {
         return (
             oldValue.length === newValue.length &&
             differenceWith(oldValue, newValue, (objValue, othValue) => objValue?.label === othValue?.label).length === 0
@@ -55,7 +56,7 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
     };
 
     const handleDeleteStatement = async () => {
-        if (statement.latest_version_id) {
+        if (statement.latestVersionId) {
             await deleteRSStatement(statement.id);
             reloadStatements?.();
         } else if (setNewStatements) {
@@ -77,23 +78,24 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
         const objects: string[][] = [];
         const lists = {};
         const classes = {};
-        const resources: { [key: string]: NewResource } = {};
-        const literals: { [key: string]: NewLiteral } = {};
+        const resources: { [key: string]: CreateResourceRequestPart } = {};
+        const literals: { [key: string]: CreateLiteralRequestPart } = {};
         for (let key = 0; key < template.properties.length; key += 1) {
             if (key.toString() in localValues) {
                 const value = localValues[key.toString()];
                 let range: Node | undefined;
                 const i = toInteger(key);
                 const propertyShape = template.properties[i];
-                if ('class' in propertyShape && propertyShape.class) {
-                    range = propertyShape.class;
+                // the generated client escapes the wire field 'class' as '_class'
+                if ('_class' in propertyShape && propertyShape._class) {
+                    range = propertyShape._class;
                 } else if ('datatype' in propertyShape && propertyShape.datatype) {
                     range = propertyShape.datatype;
                 }
                 if (key === 0) {
                     // subject
                     if (isUnchangedValues(value, statement.subjects)) {
-                        subjects = statement.subjects.map((s) => s.id);
+                        subjects = statement.subjects.map((s) => s.id).filter((id) => id !== undefined);
                     } else {
                         const values: string[] = [];
                         for (const v of value) {
@@ -120,12 +122,12 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
                             // the label should not be empty
                             const tempID = `#${guid()}`;
                             values.push(tempID);
-                            literals[tempID] = { label: v.label, data_type: getConfigByClassId(range?.id ?? '').type };
+                            literals[tempID] = { label: v.label, dataType: getConfigByClassId(range?.id ?? '').type };
                         }
                     }
                     objects.push(values);
                 } else if (isUnchangedValues(value, statement.objects?.[i - 1] ?? [])) {
-                    objects.push((statement.objects?.[i - 1] ?? []).map((s) => s.id));
+                    objects.push((statement.objects?.[i - 1] ?? []).map((s) => s.id).filter((id) => id !== undefined));
                 } else {
                     // Resource
                     const values: string[] = [];
@@ -156,19 +158,19 @@ const useEditStatement = ({ statement, setNewStatements, reloadStatements }: Use
             certainty,
             observatories: observatoryId ? [observatoryId] : [],
             organizations: organizationId ? [organizationId] : [],
-            extraction_method: EXTRACTION_METHODS.MANUAL,
+            extractionMethod: EXTRACTION_METHODS.MANUAL,
         };
         try {
-            if (statement.latest_version_id) {
+            if (statement.latestVersionId) {
                 await updateRSStatement(statement.id, data);
             } else {
-                await createRSStatement({ ...data, template_id: template.id, context: statement.context });
+                await createRSStatement({ ...data, templateId: template.id, context: statement.context });
                 handleDeleteStatement();
             }
             setIsEditing(false);
             reloadStatements?.();
         } catch (e: unknown) {
-            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
+            await errorHandler({ error: e, shouldShowToast: true, fieldLabels: { label: 'Label', example_usage: 'Example sentences' } });
         } finally {
             setIsSaving(false);
         }

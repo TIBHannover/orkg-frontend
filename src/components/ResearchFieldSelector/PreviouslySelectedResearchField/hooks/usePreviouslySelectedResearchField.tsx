@@ -15,7 +15,7 @@ const usePreviouslySelectedResearchField = () => {
                   {
                       page: 0,
                       size: 8,
-                      sortBy: [{ property: 'created_at', direction: 'desc' as SortDirectionOptions }],
+                      sortBy: [{ property: 'createdAt', direction: 'desc' as SortDirectionOptions }],
                       createdBy: userId,
                       published: false,
                   },

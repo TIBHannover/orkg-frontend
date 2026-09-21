@@ -14,7 +14,7 @@ type EditNodeProps = {
     setIsEditNodeModalOpen: () => void;
     saveNode: (value: OptionTypeWithLinked | undefined) => void;
     addNode: (value: OptionTypeWithLinked | undefined) => void;
-    node: Node<Resource> | undefined;
+    node: Node<Resource & Record<string, unknown>> | undefined;
 };
 
 const EditNode: FC<EditNodeProps> = ({ isEditNodeModalOpen, setIsEditNodeModalOpen, saveNode, addNode, node }) => {

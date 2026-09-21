@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
 import ContentLink from '@/components/Review/Sections/ContentLink/ContentLink';
-import { ReviewSection } from '@/services/backend/types';
+import { ReviewSectionContentLink } from '@/services/backend/types';
 
 type EditSectionResourcePropertyProps = {
-    section: ReviewSection;
+    section: ReviewSectionContentLink;
 };
 
 const EditSectionResourceProperty: FC<EditSectionResourcePropertyProps> = ({ section }) => {

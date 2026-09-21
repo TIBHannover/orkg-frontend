@@ -79,7 +79,7 @@ export const mapPredicate = async (g: Store, predicateNode: Quad_Object | null) 
     if (labelNode) {
         // Search for a predicate with the exact label
         const fetchedPredicate = await getPredicates({ q: labelNode?.value, exact: true });
-        if (fetchedPredicate && 'page' in fetchedPredicate && fetchedPredicate.page.total_elements) {
+        if (fetchedPredicate && 'page' in fetchedPredicate && fetchedPredicate.page.totalElements) {
             [result] = fetchedPredicate.content;
         } else {
             return {

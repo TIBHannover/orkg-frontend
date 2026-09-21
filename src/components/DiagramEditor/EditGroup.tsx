@@ -9,7 +9,7 @@ type EditGroupProps = {
     setIsEditGroupModalOpen: () => void;
     saveGroup: (value: string) => void;
     addGroup: (value: string) => void;
-    currentGroup: Node<Resource> | undefined;
+    currentGroup: Node<Resource & Record<string, unknown>> | undefined;
 };
 
 const EditGroup: FC<EditGroupProps> = ({ isEditGroupModalOpen, setIsEditGroupModalOpen, saveGroup, addGroup, currentGroup }) => {

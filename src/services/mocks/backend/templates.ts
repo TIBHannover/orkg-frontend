@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
 import { templatesUrl } from '@/services/backend/templates';
-import { Template } from '@/services/backend/types';
 import {
     strictTemplate,
     templateR0TemplateR40006,
@@ -12,12 +11,13 @@ import {
 } from '@/services/mocks/backend/__mocks__/Templates';
 
 const templates = [
-    http.get(`${templatesUrl}:id`, ({ params }) => {
+    http.get(`${templatesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         if (!id) {
             throw new Error();
         }
-        const MAPPING: Record<string, Template> = {
+        // the generated client deserializes responses, so handlers answer with the wire format (snake_case)
+        const MAPPING: Record<string, unknown> = {
             R48000: templateR48000,
             R35087: templateR35087,
             R35077: templateR35077,
@@ -36,7 +36,7 @@ const templates = [
     http.get(templatesUrl, ({ request }) => {
         const url = new URL(request.url);
         const targetClass = url.searchParams.get('target_class') as string | null;
-        const MAPPING: Record<string, Template> = {
+        const MAPPING: Record<string, unknown> = {
             C4000: templateR0TemplateR40006,
             Problem: templateR48000,
             C2005: templateR35087,

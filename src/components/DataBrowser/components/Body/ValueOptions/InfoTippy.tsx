@@ -21,15 +21,15 @@ const InfoTippy: FC<InfoTippyProps> = ({ statement }) => {
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
                         <li className="mb-1">
                             Created:{' '}
-                            <span title={statement.created_at}>
-                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
+                            <span title={statement.createdAt}>
+                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.createdAt).fromNow()}
                             </span>
                         </li>
-                        {statement.created_by && (
+                        {statement.createdBy && (
                             <li>
                                 Created by:{' '}
-                                {statement.created_by !== MISC.UNKNOWN_ID ? (
-                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.created_by} />
+                                {statement.createdBy !== MISC.UNKNOWN_ID ? (
+                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.createdBy} />
                                 ) : (
                                     'Unknown'
                                 )}

@@ -26,7 +26,7 @@ const predicates = [
             },
         });
     }),
-    http.get(`${predicatesUrl}:id`, ({ params }: { params: { id: string } }) => {
+    http.get(`${predicatesUrl}/:id`, ({ params }: { params: { id: string } }) => {
         const { id } = params;
         const predicate = db.predicates.findFirst({
             where: {
@@ -58,7 +58,7 @@ const predicates = [
         });
         return new HttpResponse(null, {
             headers: {
-                Location: `${predicatesUrl}${newPredicate?.id}`,
+                Location: `${predicatesUrl}/${newPredicate?.id}`,
             },
         });
     }),

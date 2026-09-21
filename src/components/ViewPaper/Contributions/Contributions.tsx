@@ -139,10 +139,10 @@ const Contributions: FC<ContributionsProps> = ({ enableEdit }) => {
                                                             <div
                                                                 className={cn(
                                                                     'p-6',
-                                                                    contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && 'bg-smart/10',
+                                                                    contribution.extractionMethod === EXTRACTION_METHODS.AUTOMATIC && 'bg-smart/10',
                                                                 )}
                                                             >
-                                                                {contribution.extraction_method === EXTRACTION_METHODS.AUTOMATIC && (
+                                                                {contribution.extractionMethod === EXTRACTION_METHODS.AUTOMATIC && (
                                                                     <AutomaticContributionWarning
                                                                         contribution={contribution}
                                                                         onVerifyHandler={handleAutomaticContributionVerification}

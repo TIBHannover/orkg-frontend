@@ -17,7 +17,11 @@ const EmbeddedComparison: FC<EmbeddedComparisonProps> = ({ id, updateReferences,
 
     useEffect(() => {
         if (!isLoadingComparisonContents && comparisonContents) {
-            updateReferences(comparisonContents.titles.filter((title) => title.classes.includes(CLASSES.PAPER)).map((title) => title.id));
+            updateReferences(
+                comparisonContents.titles.flatMap((title) =>
+                    title._class === 'resource_ref' && title.classes.includes(CLASSES.PAPER) ? [title.id] : [],
+                ),
+            );
         }
     }, [comparisonContents, isLoadingComparisonContents, updateReferences]);
 

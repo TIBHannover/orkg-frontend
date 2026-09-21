@@ -15,7 +15,7 @@ const getValuesByPath = (values: Record<string, SelectedPathValues[]> | undefine
     if (path.length === 0) {
         const nodes = values[query.id];
         if (!nodes) return [];
-        return nodes.flatMap((node) => node.values).filter(Boolean);
+        return nodes.flatMap((node) => node.values).filter((value): value is ThingReference => value !== null);
     }
 
     let currentNodes: SelectedPathValues[] = values[path[0]] ?? [];
@@ -24,7 +24,7 @@ const getValuesByPath = (values: Record<string, SelectedPathValues[]> | undefine
     }
 
     const targetNodes = currentNodes.flatMap((node) => node.children?.[query.id] ?? []);
-    return targetNodes.flatMap((node) => node.values).filter(Boolean);
+    return targetNodes.flatMap((node) => node.values).filter((value): value is ThingReference => value !== null);
 };
 
 const EMPTY_FILTER: ComparisonFilter = {};

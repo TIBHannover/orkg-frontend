@@ -3,7 +3,10 @@ import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendA
 import { ConferenceSeries, PaginatedResponse } from '@/services/backend/types';
 
 export const conferenceSeriesUrl = `${url}conference-series/`;
-export const conferenceSeriesApi = backendApi.extend(() => ({ prefixUrl: conferenceSeriesUrl }));
+// the entire /conference-series resource is absent from the generated client (reported spec
+// gap), so this service stays on ky until the spec covers it. Note the wire mixes cases:
+// organizationId is camelCase while display_id and metadata.* are snake_case.
+const conferenceSeriesApi = backendApi.extend(() => ({ prefixUrl: conferenceSeriesUrl }));
 
 export const createConference = (
     organization_id: string,

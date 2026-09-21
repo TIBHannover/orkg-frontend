@@ -6,7 +6,7 @@ import { FC, Fragment, useState } from 'react';
 
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
-import { Resource } from '@/services/backend/types';
+import { Thing } from '@/services/backend/things';
 import { getLinkByEntityType } from '@/utils';
 
 const MAX_ITEMS = 3;
@@ -15,11 +15,11 @@ const TYPE_CIRCLE_CLASS =
     'inline-block size-[18px] rounded-full border border-secondary-darker bg-secondary-solid text-center text-[9px] font-bold leading-[15px] text-white group-hover:bg-accent';
 
 type PathsProps = {
-    paths: Resource[][];
+    paths: Thing[][];
 };
 
 const Paths: FC<PathsProps> = ({ paths }) => {
-    const [data, setData] = useState<Resource[][]>(paths.slice(0, MAX_ITEMS));
+    const [data, setData] = useState<Thing[][]>(paths.slice(0, MAX_ITEMS));
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleExpand = () => {
@@ -41,7 +41,7 @@ const Paths: FC<PathsProps> = ({ paths }) => {
                         Path: Paper <FontAwesomeIcon icon={faAnglesRight} className="mr-1 text-muted" />
                         {path.slice(1).map((entity, i) => (
                             <Fragment key={i}>
-                                <DescriptionTooltip classes={entity.classes} id={entity.id} _class={entity._class}>
+                                <DescriptionTooltip classes={'classes' in entity ? entity.classes : undefined} id={entity.id} _class={entity._class}>
                                     <Link
                                         href={getLinkByEntityType(entity._class, entity.id)}
                                         className={`group ${entity._class === ENTITIES.PREDICATE ? 'relative pl-1' : 'relative'}`}

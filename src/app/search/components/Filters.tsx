@@ -18,13 +18,13 @@ import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { getAllOrganizations, organizationsUrl } from '@/services/backend/organizations';
 import { Thing } from '@/services/backend/things';
-import { Organization, PaginatedResponse } from '@/services/backend/types';
+import { Organization, Pagination } from '@/services/backend/types';
 import { FacetValuePair } from '@/services/smartFilters';
 
 type FiltersProps = {
-    results: PaginatedResponse<Thing>;
+    results: Pagination<Thing>;
     defaultFilters?: { id: string; label: string }[];
-    countResults: Record<string, PaginatedResponse<Thing>>;
+    countResults: Record<string, Pagination<Thing>>;
     typeData: { label: string; id: string } | undefined;
     isLoading: boolean;
     selectedSmartFilter?: string[];
@@ -216,7 +216,7 @@ const Filters: FC<FiltersProps> = ({
                             <Button onPress={() => setType('')} size="sm" variant="primary" className="rounded-full px-4">
                                 {typeData.label}{' '}
                                 <Chip size="sm" className="rounded-full px-2">
-                                    {!isLoadingResults && results?.page?.total_elements}
+                                    {!isLoadingResults && results?.page?.totalElements}
                                     {isLoadingResults && <FontAwesomeIcon icon={faSpinner} spin />}
                                 </Chip>
                             </Button>
@@ -231,7 +231,7 @@ const Filters: FC<FiltersProps> = ({
                             >
                                 {filter.label}{' '}
                                 <Chip size="sm" className="rounded-full px-2">
-                                    {!isLoadingResults && countResults[filter.id]?.page?.total_elements}
+                                    {!isLoadingResults && countResults[filter.id]?.page?.totalElements}
                                     {isLoadingResults && <FontAwesomeIcon icon={faSpinner} spin />}
                                 </Chip>
                             </Button>

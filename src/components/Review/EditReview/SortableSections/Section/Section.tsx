@@ -8,7 +8,6 @@ import AddSection from '@/components/Review/EditReview/AddSection/AddSection';
 import SectionType from '@/components/Review/EditReview/SortableSections/Section/SectionType/SectionType';
 import useReview from '@/components/Review/hooks/useReview';
 import EditSectionComparison from '@/components/Review/Sections/Comparison/EditSectionComparison/EditSectionComparison';
-import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLink/ContentLink';
 import SectionOntology from '@/components/Review/Sections/Ontology/SectionOntology';
 import EditSectionResourceProperty from '@/components/Review/Sections/ResourceProperty/EditSectionResourceProperty/EditSectionResourceProperty';
 import EditSectionVisualization from '@/components/Review/Sections/Visualization/EditSectionVisualization/EditSectionVisualization';
@@ -49,28 +48,46 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, moveIt
 
     const handleBlurTitle = (e: FocusEvent<HTMLInputElement>) => {
         if (e.target.value !== section.heading) {
-            const sectionType: SectionContentLinkTypes =
-                section.type !== 'property' ? (section.type as SectionContentLinkTypes) : ('predicate' as SectionContentLinkTypes);
-
-            updateSection(section.id, {
-                heading: e.target.value,
-                ...(section.type === 'ontology' && {
-                    entities: section.entities?.map(({ id }) => id),
-                    predicates: section.predicates?.map(({ id }) => id),
-                }),
-                ...(section.type === 'text' && { text: section.text, class: section.classes?.[0] }),
-                ...(isContentLinkSection && {
-                    [sectionType]: section[sectionType]?.id ?? null,
-                }),
-            });
+            const heading = e.target.value;
+            // each variant must send its full field set — an incomplete payload matches no
+            // request-union variant and would serialize as {}
+            switch (section.type) {
+                case 'ontology':
+                    updateSection(section.id, {
+                        heading,
+                        entities: section.entities?.map(({ id }) => id).filter((id): id is string => !!id) ?? [],
+                        predicates: section.predicates?.map(({ id }) => id) ?? [],
+                    });
+                    break;
+                case 'text':
+                    updateSection(section.id, { heading, text: section.text ?? '', _class: section.classes?.[0] ?? null });
+                    break;
+                case 'comparison':
+                    updateSection(section.id, { heading, comparison: section.comparison?.id ?? null });
+                    break;
+                case 'visualization':
+                    updateSection(section.id, { heading, visualization: section.visualization?.id ?? null });
+                    break;
+                case 'resource':
+                    updateSection(section.id, { heading, resource: section.resource?.id ?? null });
+                    break;
+                case 'property':
+                    updateSection(section.id, { heading, predicate: section.predicate?.id ?? null });
+                    break;
+                default:
+                    break;
+            }
         }
     };
 
     const handleUpdateMarkdown = (markdown: string) => {
+        if (section.type !== 'text') {
+            return;
+        }
         updateSection(section.id, {
             heading: section.heading,
             text: markdown,
-            class: section.classes?.[0],
+            _class: section.classes?.[0] ?? null,
         });
     };
 
@@ -96,7 +113,7 @@ const Section: FC<SectionProps> = ({ section, index, atIndex, instanceId, moveIt
                 dragHandleProps={dragHandleProps}
             >
                 <SectionType
-                    type={isTypeSelectionDisabled ? section.type : section.classes?.[0]}
+                    type={section.type !== 'text' ? section.type : section.classes?.[0]}
                     isDisabled={isTypeSelectionDisabled}
                     section={section}
                 />

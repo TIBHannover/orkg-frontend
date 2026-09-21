@@ -61,7 +61,7 @@ export const searchEntity = async ({
                     !!result.aliases?.find((alias: string) => alias?.toLowerCase() === value?.toLowerCase()));
 
             const item: OptionType = {
-                _class: isResource(claimsMap.get(result.id) ?? []) ? ENTITIES.RESOURCE : ENTITIES.CLASS,
+                _class: (isResource(claimsMap.get(result.id) ?? []) ? ENTITIES.RESOURCE : ENTITIES.CLASS) as OptionType['_class'],
                 id: result.id,
                 label: result.label,
                 description: result.description,

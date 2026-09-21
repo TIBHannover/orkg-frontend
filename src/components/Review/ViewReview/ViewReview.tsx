@@ -114,7 +114,7 @@ const ViewReview: FC<ViewReviewProps> = ({ setIsOpenHistoryModal }) => {
                                     </Alert.Content>
                                 </Alert>
                                 {review.published && <PublishedBadge />}
-                                <ResearchFieldBadge researchField={review.research_fields?.[0]} />
+                                <ResearchFieldBadge researchField={review.researchFields?.[0]} />
                                 <AuthorBadges authors={review.authors} />{' '}
                                 {review.identifiers.doi?.[0] && (
                                     <div className="mb-1">

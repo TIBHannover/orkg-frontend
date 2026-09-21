@@ -19,6 +19,7 @@ import VisibilityFilter from '@/components/VisibilityFilter/VisibilityFilter';
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
 import { comparisonUrl, getComparisons } from '@/services/backend/comparisons';
 import { conferenceSeriesUrl, getConferenceById } from '@/services/backend/conferences-series';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { Comparison, VisibilityOptions } from '@/services/backend/types';
 
 const ConferenceDetails = () => {
@@ -53,7 +54,7 @@ const ConferenceDetails = () => {
         fetchUrl: comparisonUrl,
         fetchFunctionName: 'getComparisons',
         fetchExtraParams: {
-            organization_id: conference?.id,
+            organizationId: conference?.id,
             visibility,
         },
         isReadyToLoad: !!conference?.id,
@@ -72,7 +73,7 @@ const ConferenceDetails = () => {
             )}
             {!isLoadingConference &&
                 errorConference &&
-                (errorConference.statusCode === 404 ? <NotFound /> : <InternalServerError error={errorConference} />)}
+                (getStatusCode(errorConference) === 404 ? <NotFound /> : <InternalServerError error={errorConference} />)}
             {!isLoadingConference && !errorConference && conference && (
                 <>
                     <TitleBar titleAddition={<SubTitle>Conference event</SubTitle>} wrap={false}>

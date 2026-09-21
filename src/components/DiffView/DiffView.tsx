@@ -45,7 +45,7 @@ const DiffView: FC<DiffViewProps> = ({ type, diffRoute, getData }) => {
     const switchedVersions = searchParams.get('switchedVersions');
 
     useEffect(() => {
-        if (!isOldResourceLoading && !isNewResourceLoading && oldResource && newResource && oldResource.created_at > newResource.created_at) {
+        if (!isOldResourceLoading && !isNewResourceLoading && oldResource && newResource && oldResource.createdAt > newResource.createdAt) {
             router.push(`${reverse(diffRoute, { oldId: newId, newId: oldId })}?switchedVersions=true`);
         }
     }, [isOldResourceLoading, isNewResourceLoading, oldResource, newResource, oldId, newId, diffRoute, router]);

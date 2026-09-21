@@ -93,7 +93,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                                 </div>
                                 <div className="my-4">
                                     {list.published && <PublishedBadge />}
-                                    <ResearchFieldBadge researchField={list.research_fields?.[0]} />
+                                    <ResearchFieldBadge researchField={list.researchFields?.[0]} />
                                     <ListEntryAmount />
                                     <AuthorBadges authors={list.authors} />
                                     {list.identifiers?.doi?.[0] && (
@@ -123,7 +123,7 @@ const ViewList: FC<ListProps> = ({ setIsOpenHistoryModal }) => {
                         if (isTextSection(section)) {
                             return (
                                 <section key={section.id}>
-                                    <h2 className={`h${section?.heading_size} mt-6`}>{section.heading}</h2>
+                                    <h2 className={`h${section?.headingSize} mt-6`}>{section.heading}</h2>
                                     <MarkdownRenderer text={section.text} />
                                 </section>
                             );

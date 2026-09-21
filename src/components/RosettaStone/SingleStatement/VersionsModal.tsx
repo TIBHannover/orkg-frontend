@@ -20,6 +20,9 @@ const VersionsModal: FC<VersionsModalProps> = ({ id, show, toggle }) => {
     const versionsWithLink = _versions
         ? [..._versions].reverse().map((version) => ({
               ...version,
+              // HistoryModal is shared with services that still use the snake_case wire format
+              created_at: version.createdAt,
+              created_by: version.createdBy,
               link: reverse(ROUTES.RESOURCE, { id: version.id }),
           }))
         : [];

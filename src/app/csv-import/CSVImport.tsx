@@ -19,6 +19,7 @@ import MapProperties from '@/app/csv-import/steps/MapProperties';
 import MapTypes from '@/app/csv-import/steps/MapTypes';
 import UploadForm from '@/app/csv-import/steps/UploadForm';
 import { validateColumns, validateCsvStructure, validateRequiredFields, validateValueOfCell } from '@/app/csv-import/steps/validation';
+import { OptionType } from '@/components/Autocomplete/types';
 import ConfirmBulkImport from '@/components/ConfirmBulkImport/ConfirmBulkImport';
 import Tooltip from '@/components/FloatingUI/Tooltip';
 import StepContainer from '@/components/StepContainer';
@@ -100,7 +101,7 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
     const mapPropertyToExistingByLabel = async (propertyLabel: string) => {
         try {
             const fetchedPredicate = await getPredicates({ q: propertyLabel, exact: true });
-            if (fetchedPredicate.page.total_elements) {
+            if (fetchedPredicate.page.totalElements) {
                 return fetchedPredicate.content[0];
             }
         } catch (error) {
@@ -166,7 +167,7 @@ const CsvImport = ({ data, setData, onFinish, showUploadForm = true }: CsvImport
                 }
 
                 return {
-                    predicate: matchedProperty ?? null,
+                    predicate: (matchedProperty ?? null) as OptionType | null,
                     inputValue: label,
                     type: types[colIndex],
                 };

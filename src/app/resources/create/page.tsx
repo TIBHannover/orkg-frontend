@@ -160,7 +160,7 @@ const CreateResourcePage = () => {
                                         handleClassSelect(selected, action);
                                     }}
                                     placeholder="Select or type to enter a class"
-                                    value={classesData}
+                                    value={classesData as OptionType[] | undefined}
                                     openMenuOnFocus
                                     allowCreate
                                     isClearable

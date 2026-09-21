@@ -12,7 +12,7 @@ import { classesUrl, getClassById } from '@/services/backend/classes';
 import { getPaperByDoi, papersUrl } from '@/services/backend/papers';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { getThing, getThings, Thing, thingsUrl } from '@/services/backend/things';
-import { PaginatedResponse, Statement } from '@/services/backend/types';
+import { Pagination, Statement } from '@/services/backend/types';
 
 export const IGNORED_CLASSES = [CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED, CLASSES.COMPARISON_DRAFT, CLASSES.COMPARISON_DELETED];
 
@@ -73,9 +73,9 @@ const useSearch = ({
                 page,
                 size: pageSize,
                 q: searchTerm,
-                created_by: !isEmpty(createdBy) ? createdBy : undefined,
-                observatory_id: !isEmpty(observatoryId) ? observatoryId : undefined,
-                organization_id: !isEmpty(organizationId) ? organizationId : undefined,
+                createdBy: !isEmpty(createdBy) ? createdBy : undefined,
+                observatoryId: !isEmpty(observatoryId) ? observatoryId : undefined,
+                organizationId: !isEmpty(organizationId) ? organizationId : undefined,
                 createdAtStart: toStartOfDayIso(createdAtStart),
                 createdAtEnd: toEndOfDayIso(createdAtEnd),
                 exclude: excludeType ? [...ignoredClasses, excludeType] : ignoredClasses,
@@ -84,7 +84,7 @@ const useSearch = ({
             thingsUrl,
             'getThings',
         ],
-        ([params]) => getThings(params) as Promise<PaginatedResponse<Thing>>,
+        ([params]) => getThings(params),
     );
 
     const { data: _countResults, isLoading: isLoadingCountResults } = useSWR(
@@ -98,9 +98,9 @@ const useSearch = ({
                         q: params.searchTerm,
                         include: [f.id],
                         exclude: params.excludeType ? [...ignoredClasses, params.excludeType] : ignoredClasses,
-                        created_by: !isEmpty(params.createdBy) ? params.createdBy : undefined,
-                        observatory_id: !isEmpty(params.observatoryId) ? params.observatoryId : undefined,
-                        organization_id: !isEmpty(params.organizationId) ? params.organizationId : undefined,
+                        createdBy: !isEmpty(params.createdBy) ? params.createdBy : undefined,
+                        observatoryId: !isEmpty(params.observatoryId) ? params.observatoryId : undefined,
+                        organizationId: !isEmpty(params.organizationId) ? params.organizationId : undefined,
                         createdAtStart: toStartOfDayIso(params.createdAtStart),
                         createdAtEnd: toEndOfDayIso(params.createdAtEnd),
                     });
@@ -108,10 +108,7 @@ const useSearch = ({
             ),
     );
 
-    const countResults = Object.fromEntries(defaultFilters.map((f, index) => [f.id, _countResults?.[index]])) as Record<
-        string,
-        PaginatedResponse<Thing>
-    >;
+    const countResults = Object.fromEntries(defaultFilters.map((f, index) => [f.id, _countResults?.[index]])) as Record<string, Pagination<Thing>>;
 
     // for papers, try to find a DOI
     const doi = searchTerm.startsWith('http') ? searchTerm.trim().substring(searchTerm.trim().indexOf('10.')) : searchTerm;
@@ -144,7 +141,7 @@ const useSearch = ({
     );
     const isAuthorExists = (authors && authors.length > 0 && !!authors.find((s) => s.predicate.id === PREDICATES.HAS_AUTHORS)) ?? false;
 
-    const hasNextPage = !!(results?.page.total_pages && results?.page.total_pages > page + 1);
+    const hasNextPage = !!(results?.page.totalPages && results?.page.totalPages > page + 1);
     return {
         typeData,
         setType,
