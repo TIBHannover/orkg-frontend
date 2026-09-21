@@ -33,11 +33,11 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: _versions, isLoading } = useSWR(
-        isOpen && statement.latest_version_id ? [{ id: statement.latest_version_id }, rosettaStoneUrl, 'getRSStatementVersions'] : null,
+        isOpen && statement.latestVersionId ? [{ id: statement.latestVersionId }, rosettaStoneUrl, 'getRSStatementVersions'] : null,
         ([params]) => getRSStatementVersions(params),
     );
 
-    const { data: statementClass } = useSWR(template.target_class ? [template.target_class, classesUrl, 'getClassById'] : null, ([params]) =>
+    const { data: statementClass } = useSWR(template.targetClass ? [template.targetClass, classesUrl, 'getClassById'] : null, ([params]) =>
         getClassById(params),
     );
 
@@ -62,7 +62,7 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
             <Popover.Content className="max-w-[400px]">
                 <Popover.Dialog>
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
-                        {statement.latest_version_id && statement.id && (
+                        {statement.latestVersionId && statement.id && (
                             <div className="flex items-center gap-2 my-1 min-w-0">
                                 <div className="flex-1 min-w-0">
                                     <CopyId text="Statement ID" id={statement.id} fullWidth />
@@ -84,28 +84,28 @@ const InfoBox: FC<InfoBoxProps> = ({ statement, template, certainty, setCertaint
                         <li className="mb-1">
                             Statement type:{' '}
                             <DescriptionTooltip id={statementClass?.id} _class={ENTITIES.CLASS}>
-                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class })}>
+                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.targetClass })}>
                                     {statementClass?.label}
                                 </Link>
                             </DescriptionTooltip>
                         </li>
                         <li className="mb-1">
                             Created:{' '}
-                            <span title={statement.created_at}>
-                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.created_at).fromNow()}
+                            <span title={statement.createdAt}>
+                                <FontAwesomeIcon icon={faClock} /> {dayjs(statement.createdAt).fromNow()}
                             </span>
                         </li>
-                        {statement.created_by && (
+                        {statement.createdBy && (
                             <li className="mb-1">
                                 {versions && versions?.length > 1 ? 'Updated by:' : 'Created by:'}{' '}
-                                {statement.created_by !== MISC.UNKNOWN_ID ? (
-                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.created_by} />
+                                {statement.createdBy !== MISC.UNKNOWN_ID ? (
+                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName userId={statement.createdBy} />
                                 ) : (
                                     'Unknown'
                                 )}
                             </li>
                         )}
-                        {statement.latest_version_id && (
+                        {statement.latestVersionId && (
                             <li className="mb-1">
                                 Versions:{' '}
                                 <span

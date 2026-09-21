@@ -1,16 +1,18 @@
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Skeleton } from '@heroui/react';
+import { ResearchFieldWithChildCountRepresentation } from '@orkg/orkg-client';
 import { find, sortBy, uniq } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
 import FieldStatistics from '@/components/ResearchFieldSelector/FieldStatistics';
 import PreviouslySelectedResearchField from '@/components/ResearchFieldSelector/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import SmartSuggestionsFields from '@/components/ResearchFieldSelector/SmartSuggestionsFields/SmartSuggestionsFields';
 import { CLASSES, ENTITIES, RESOURCES } from '@/constants/graphSettings';
-import { FieldChildren, getFieldChildren, getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
+import { getFieldChildren, getFieldParents, researchFieldUrl } from '@/services/backend/researchFields';
 import { getResource, resourcesUrl } from '@/services/backend/resources';
 import { Node } from '@/services/backend/types';
 
@@ -80,7 +82,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                             label: child.resource.label,
                             id: child.resource.id,
                             parent: field.parent,
-                            hasChildren: child.child_count > 0,
+                            hasChildren: child.childCount > 0,
                             isExpanded: true,
                         });
                         return;
@@ -89,7 +91,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                         label: child.resource.label,
                         id: child.resource.id,
                         parent: field.parent,
-                        hasChildren: child.child_count > 0,
+                        hasChildren: child.childCount > 0,
                         isExpanded: false,
                     });
                 });
@@ -123,7 +125,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
             // load subfields
             const hasChildren = researchFields.find((f) => f.id === field.id)?.hasChildren;
             const subFields = researchFields.filter((f) => f.parent === field.id);
-            let loadedSubFields: FieldChildren[] = [];
+            let loadedSubFields: ResearchFieldWithChildCountRepresentation[] = [];
             if (hasChildren && subFields.length === 0) {
                 setLoadingSubFieldsId(field.id);
                 loadedSubFields = await getFieldChildren({ fieldId: field.id });
@@ -135,7 +137,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                     label: f.resource.label,
                     id: f.resource.id,
                     parent: field.id,
-                    hasChildren: f.child_count > 0,
+                    hasChildren: f.childCount > 0,
                     isExpanded: false,
                 })),
             ]);
@@ -219,7 +221,7 @@ const ResearchFieldSelector: FC<ResearchFieldSelectorProps> = ({
                             });
                         }
                     }}
-                    value={selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
+                    value={selectedResearchFieldId !== RESOURCES.RESEARCH_FIELD_MAIN ? (selectedResearchField as OptionType | undefined) : null}
                     enableExternalSources={false}
                     allowCreate={false}
                     aria-label="Search research fields"

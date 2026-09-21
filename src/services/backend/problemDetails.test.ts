@@ -7,6 +7,12 @@ describe('pointerToFieldPath', () => {
         expect(pointerToFieldPath('/name')).toBe('name');
     });
 
+    // the backend sends the URI-fragment form of the pointer
+    it('strips the fragment prefix the backend sends', () => {
+        expect(pointerToFieldPath('#/description')).toBe('description');
+        expect(pointerToFieldPath('#/items/0/name')).toBe('items.0.name');
+    });
+
     it('converts a nested pointer into a dotted react-hook-form path', () => {
         expect(pointerToFieldPath('/items/0/name')).toBe('items.0.name');
     });

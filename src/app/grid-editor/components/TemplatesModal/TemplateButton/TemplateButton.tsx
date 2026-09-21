@@ -20,7 +20,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const [isSaving, setIsSaving] = useState(false);
     const { entities, key, commonClasses } = useEntities();
 
-    const addMode = !commonClasses.includes(template.target_class.id) || isDisabled;
+    const addMode = !commonClasses.includes(template.targetClass.id) || isDisabled;
 
     const handleClick = async () => {
         setIsSaving(true);
@@ -28,7 +28,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
             entities?.map(async (entity) => {
                 if (entity && 'classes' in entity) {
                     const existing = (entity as Resource).classes ?? [];
-                    const next = addMode ? [...existing, template.target_class.id] : existing.filter((c) => c !== template.target_class.id);
+                    const next = addMode ? [...existing, template.targetClass.id] : existing.filter((c) => c !== template.targetClass.id);
                     await updateResource(entity.id, { classes: next });
                 }
             }) ?? [],

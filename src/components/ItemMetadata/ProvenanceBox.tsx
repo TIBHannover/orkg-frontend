@@ -20,8 +20,8 @@ type ProvenanceBoxProps = {
 
 function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBoxProps) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const _observatoryId = item.observatories && item.observatories.length > 0 ? item.observatories[0] : item.observatory_id;
-    const _organizationId = item.organizations && item.organizations.length > 0 ? item.organizations[0] : item.organization_id;
+    const _observatoryId = item.observatories && item.observatories.length > 0 ? item.observatories[0] : item.observatoryId;
+    const _organizationId = item.organizations && item.organizations.length > 0 ? item.organizations[0] : item.organizationId;
     const { observatory, organization } = useProvenance({ orgId: _organizationId, obsId: _observatoryId });
     const { isCurationAllowed } = useAuthentication();
 
@@ -56,8 +56,8 @@ function ProvenanceBox({ item, editMode = false, updateCallBack }: ProvenanceBox
                 showDialog={showAssignObservatory}
                 observatory={observatory}
                 organization={organization}
-                // rosetta statement require the version_id to be updated
-                resourceId={(item.version_id ?? item.id) as string}
+                // rosetta statement require the versionId to be updated
+                resourceId={(item.versionId ?? item.id) as string}
                 toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </>

@@ -32,7 +32,7 @@ const Review = () => {
 
     return (
         <div>
-            {review.research_fields?.[0] && <Breadcrumbs researchFieldId={review.research_fields?.[0]?.id} />}
+            {review.researchFields?.[0] && <Breadcrumbs researchFieldId={review.researchFields?.[0]?.id} />}
 
             <TitleBar isOpenHistoryModal={isOpenHistoryModal} setIsOpenHistoryModal={setIsOpenHistoryModal} />
 

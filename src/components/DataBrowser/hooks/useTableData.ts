@@ -67,7 +67,7 @@ const useTableData = ({ id, skipAutoResetPageIndex }: { id: string; skipAutoRese
                     i === index
                         ? {
                               ...row,
-                              label: columnIndex === -1 ? cell?.label ?? null : row.label,
+                              label: columnIndex === -1 ? (cell?.label ?? undefined) : row.label,
                               data: row.data.map((c, j) => (j === columnIndex ? cell : c)),
                           }
                         : row,
@@ -85,7 +85,7 @@ const useTableData = ({ id, skipAutoResetPageIndex }: { id: string; skipAutoRese
             const dataColumnsCount = tableData.rows[0].data.length;
             await createTableRow(id, index + 1, {
                 row: {
-                    label: null,
+                    label: undefined,
                     data: Array(dataColumnsCount).fill(null),
                 },
                 literals: {},
@@ -98,7 +98,7 @@ const useTableData = ({ id, skipAutoResetPageIndex }: { id: string; skipAutoRese
                 ...tableData,
                 rows: [
                     ...tableData.rows.slice(0, index + 1),
-                    { label: null, data: Array(dataColumnsCount).fill(null) },
+                    { label: undefined, data: Array(dataColumnsCount).fill(null) },
                     ...tableData.rows.slice(index + 1),
                 ],
             };
@@ -140,7 +140,7 @@ const useTableData = ({ id, skipAutoResetPageIndex }: { id: string; skipAutoRese
                 ...tableData,
                 rows: tableData.rows.map((row, i) => ({
                     ...row,
-                    data: [...row.data.slice(0, index), i === 0 ? newLiteral : null, ...row.data.slice(index)],
+                    data: [...row.data.slice(0, index), i === 0 ? (newLiteral as TableCell) : null, ...row.data.slice(index)],
                 })),
             };
             mutateTable(newTableData, { revalidate: false });
@@ -170,12 +170,12 @@ const useTableData = ({ id, skipAutoResetPageIndex }: { id: string; skipAutoRese
                 predicates: {},
                 lists: {},
                 classes: {},
-                row: { label: null, data: tableData.rows[0].data.map((cell, i) => (i === index ? literalId : cell?.id ?? null)) },
+                row: { label: undefined, data: tableData.rows[0].data.map((cell, i) => (i === index ? literalId : (cell?.id ?? null))) },
             });
             const newTableData: Table = {
                 ...tableData,
                 rows: tableData.rows.map((row, i) =>
-                    i === 0 ? { ...row, data: row.data.map((cell, j) => (j === index ? newLiteral : cell)) } : row,
+                    i === 0 ? { ...row, data: row.data.map((cell, j) => (j === index ? (newLiteral as TableCell) : cell)) } : row,
                 ),
             };
             mutateTable(newTableData, { revalidate: false });

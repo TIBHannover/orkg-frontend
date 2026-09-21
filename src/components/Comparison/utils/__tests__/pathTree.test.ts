@@ -15,7 +15,6 @@ import { ComparisonPath, ComparisonUpdateSelectedPath } from '@/services/backend
 const path = (id: string, children: ComparisonPath[] = []): ComparisonPath => ({
     id,
     label: id,
-    description: null,
     type: 'PREDICATE',
     children,
 });
@@ -50,7 +49,10 @@ describe('findPathNode', () => {
 describe('updatePathNode', () => {
     it('applies the update to the target only, preserving extra node fields', () => {
         type Node = SelectablePath & { isExpanded?: boolean; children: Node[] };
-        const tree: Node[] = [{ ...on('A'), children: [{ ...off('B'), children: [] }] }, { ...off('C'), children: [] }];
+        const tree: Node[] = [
+            { ...on('A'), children: [{ ...off('B'), children: [] }] },
+            { ...off('C'), children: [] },
+        ];
         const result = updatePathNode(tree, ['A', 'B'], (n) => ({ ...n, isExpanded: true }));
         expect(result[0].children[0].isExpanded).toBe(true);
         expect(result[0].isExpanded).toBeUndefined();

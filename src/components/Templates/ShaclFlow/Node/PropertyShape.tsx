@@ -15,8 +15,9 @@ type PropertyShapeProps = {
 const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
     let initialType;
     let range;
-    if ('class' in data) {
-        range = data.class;
+    // the generated client escapes the wire field 'class' as '_class'
+    if (data.type === 'resource') {
+        range = data._class;
     } else if ('datatype' in data) {
         range = data.datatype;
     }
@@ -57,7 +58,7 @@ const PropertyShapeComponent: FC<PropertyShapeProps> = ({ data, nodeId }) => {
                     >
                         <span className="truncate inline-block mr-1 max-w-[300px]">{data.path.label}</span>
                     </DescriptionPopover>{' '}
-                    [{data.min_count}..{data.max_count ?? '*'}]
+                    [{data.minCount}..{data.maxCount ?? '*'}]
                 </div>
                 {initialType && range && (
                     <DescriptionPopover id={range.id} _class={ENTITIES.CLASS} showURL>

@@ -22,7 +22,7 @@ const Templates = () => {
     const { isEditMode } = config;
     const { entity } = useEntity();
     const { templates: _templates, isLoading } = useTemplates();
-    const templates = _templates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
+    const templates = _templates?.filter((t) => t.targetClass.id !== CLASSES.RESOURCE);
     const { canEdit } = useCanEdit();
     const [isOpen, setIsOpen] = useState(false);
 

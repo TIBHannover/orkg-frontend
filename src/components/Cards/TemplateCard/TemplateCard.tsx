@@ -20,7 +20,7 @@ type TemplateCardProps = {
 
 const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) => (
     <CardShell>
-        <CardColumns researchField={template.relations.research_fields?.[0]} createdBy={template.created_by}>
+        <CardColumns researchField={template.relations.researchFields?.[0]} createdBy={template.createdBy}>
             <div className="mb-2">
                 <Link href={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label ? template.label : <em>No title</em>}</Link>
                 {showBadge && (
@@ -41,7 +41,7 @@ const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) =>
                             </span>
                         ),
                     },
-                    template.is_closed && {
+                    template.isClosed && {
                         key: 'closed',
                         node: (
                             <span className="inline-flex items-center" title="Closed template: no other properties can be added">
@@ -56,18 +56,18 @@ const TemplateCard: FC<TemplateCardProps> = ({ template, showBadge = false }) =>
                             <span className="inline-flex min-w-0 items-center">
                                 <FontAwesomeIcon size="sm" icon={faBullseye} className="me-1 text-muted" />
                                 <span className="sr-only">Target class </span>
-                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class.id })} className="truncate">
-                                    {template.target_class.label}
+                                <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.targetClass.id })} className="truncate">
+                                    {template.targetClass.label}
                                 </Link>
                             </span>
                         ),
                     },
-                    !!template.created_at && {
+                    !!template.createdAt && {
                         key: 'created-at',
                         node: (
-                            <span className="inline-flex items-center" title={`Created ${dayjs(template.created_at).format('DD MMMM YYYY')}`}>
+                            <span className="inline-flex items-center" title={`Created ${dayjs(template.createdAt).format('DD MMMM YYYY')}`}>
                                 <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                {dayjs(template.created_at).format('DD MMM YYYY')}
+                                {dayjs(template.createdAt).format('DD MMM YYYY')}
                             </span>
                         ),
                     },

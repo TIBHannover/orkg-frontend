@@ -6,11 +6,11 @@ import EmbeddedComparison from '@/components/Comparison/EmbeddedComparison/Embed
 import { reviewContext } from '@/components/Review/context/ReviewContext';
 import useReview from '@/components/Review/hooks/useReview';
 import PrintView from '@/components/Review/Sections/Comparison/PrintView/PrintView';
-import { ReviewSection } from '@/services/backend/types';
+import { ReviewSectionComparison } from '@/services/backend/types';
 import { setupStore } from '@/store';
 
 type SectionComparisonProps = {
-    section: ReviewSection;
+    section: ReviewSectionComparison;
 };
 
 const SectionComparison: FC<SectionComparisonProps> = ({ section }) => {

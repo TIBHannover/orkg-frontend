@@ -5,7 +5,9 @@ import backendApi, { configuration, getCreatedIdFromHeaders } from '@/services/b
 import { Contributor, Observatory, Organization } from '@/services/backend/types';
 
 export const organizationsUrl = `${backendURL}organizations/`;
-export const organizationsApi = backendApi.extend(() => ({ prefixUrl: organizationsUrl }));
+// POST /organizations, /{id}/observatories, /{id}/users and /conferences have no generated
+// client operation yet (reported spec gaps), so part of this service stays on ky
+const organizationsApi = backendApi.extend(() => ({ prefixUrl: organizationsUrl }));
 
 const organizationsApiClient = new OrganizationsApi(configuration);
 
@@ -33,7 +35,26 @@ export const updateOrganization = (params: OrganizationsApiUpdateRequest): Promi
 export const getAllObservatoriesByOrganizationId = (id: string) =>
     organizationsApi.get<Observatory[]>(`${encodeURIComponent(id)}/observatories`).json();
 
-export const getUsersByOrganizationId = (id: string) => organizationsApi.get<Contributor[]>(`${encodeURIComponent(id)}/users`).json();
+export const getUsersByOrganizationId = (id: string): Promise<Contributor[]> =>
+    organizationsApi
+        .get<Record<string, string>[]>(`${encodeURIComponent(id)}/users`)
+        .json()
+        // the endpoint answers in wire format (snake_case); map onto the generated Contributor
+        // shape so consumers don't need dual-shape fallbacks
+        .then((members) =>
+            members.map(
+                (member) =>
+                    ({
+                        id: member.id,
+                        displayName: member.display_name,
+                        joinedAt: member.joined_at,
+                        organizationId: member.organization_id,
+                        observatoryId: member.observatory_id,
+                        gravatarId: member.gravatar_id,
+                        avatarUrl: member.avatar_url,
+                    }) as Contributor,
+            ),
+        );
 
 export const getConferences = (): Promise<Organization[]> =>
     organizationsApi

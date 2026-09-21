@@ -32,7 +32,7 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
         }
         try {
             setIsLoadingPublishing(true);
-            const snapshotId = await createSnapshot({ id: resource.id, template_id: selectedTemplateId, register_handle: isAssignHandleSelected });
+            const snapshotId = await createSnapshot({ id: resource.id, templateId: selectedTemplateId, registerHandle: isAssignHandleSelected });
             mutate([resource.id, resourcesUrl, 'getSnapshots']);
             const snapshotUrl = reverse(ROUTES.RESOURCE_SNAPSHOT, { id: resource.id, snapshotId });
             router.push(snapshotUrl);

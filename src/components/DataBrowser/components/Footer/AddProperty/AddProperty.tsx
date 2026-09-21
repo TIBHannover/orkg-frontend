@@ -5,6 +5,7 @@ import { uniq } from 'lodash';
 import { ReactElement, useState } from 'react';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
@@ -101,7 +102,7 @@ const AddProperty = () => {
                                 }}
                                 allowCreate
                                 autoFocus
-                                defaultOptions={defaultProperties ?? []}
+                                defaultOptions={(defaultProperties ?? []) as OptionType[]}
                                 inputId="addProperty"
                                 onInputChange={(newValue, actionMeta) => {
                                     if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {

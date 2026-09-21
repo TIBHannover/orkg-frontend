@@ -27,7 +27,7 @@ const useGridEditor = () => {
                     returnContent: true,
                     returnFormattedLabels: true,
                     // Sort ascending to keep the order of the statements when creating new ones at the end to avoid flickering of the grid
-                    sortBy: [{ property: 'created_at', direction: 'asc' }],
+                    sortBy: [{ property: 'createdAt', direction: 'asc' }],
                 }),
             ) ?? [],
         ),

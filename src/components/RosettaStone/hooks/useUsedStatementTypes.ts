@@ -5,7 +5,7 @@ import { getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone'
 
 const useUsedStatementTypes = ({ context }: { context: string }) => {
     const { statements } = useStatements({ context });
-    const templateIds = statements?.content?.map((s) => s.template_id) ?? [];
+    const templateIds = statements?.content?.map((s) => s.templateId) ?? [];
 
     const { data: templates } = useSWR(templateIds.length > 0 ? [templateIds, rosettaStoneUrl, 'getRSTemplate'] : null, ([params]) =>
         Promise.all(params.map((p) => getRSTemplate(p))),

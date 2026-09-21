@@ -50,7 +50,7 @@ const CreateForm = ({ isDisabled = false }: CreateFormProps) => {
             const comparisonId = await createComparison({
                 title,
                 description: '',
-                research_fields: [],
+                researchFields: [],
                 authors: [],
                 sources:
                     sourceIds && sourceIds.length > 0
@@ -62,11 +62,11 @@ const CreateForm = ({ isDisabled = false }: CreateFormProps) => {
                 references: [],
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                is_anonymized: false,
+                isAnonymized: false,
             });
             router.push(`${reverse(ROUTES.COMPARISON, { comparisonId })}?isEditMode=true`);
         } catch (error) {
-            errorHandler({ error, shouldShowToast: true });
+            await errorHandler({ error, shouldShowToast: true });
         } finally {
             setIsSaving(false);
         }

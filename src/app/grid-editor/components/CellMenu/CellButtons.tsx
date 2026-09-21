@@ -82,7 +82,7 @@ const CellButtons = ({ value, api, node, colDef, onClose }: TableCellButtonsProp
     };
 
     const isLiteral = value.object._class === ENTITIES.LITERAL;
-    const isFormatted = 'formatted_label' in value.object && Boolean((value.object as Resource).formatted_label);
+    const isFormatted = 'formattedLabel' in value.object && Boolean((value.object as Resource).formattedLabel);
     const isEmptyObject = value.object.id === 'empty';
     const isNonDefaultDatatype = isLiteral && (value.object as Literal).datatype !== MISC.DEFAULT_LITERAL_DATATYPE;
     const isDisabledSemantify = isNonDefaultDatatype || isFormatted || isEmptyObject;

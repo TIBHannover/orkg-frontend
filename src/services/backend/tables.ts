@@ -1,175 +1,56 @@
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { ExtractionMethod, NewClass, NewList, NewLiteral, NewPredicate, NewResource, Visibility } from '@/services/backend/types';
+import {
+    CreateTableRequest,
+    CreateTableRowRequest,
+    TableColumnRequest,
+    TableRepresentation,
+    TablesApi,
+    ThingReferenceRepresentation,
+    UpdateTableRequest,
+    UpdateTableRowRequest,
+} from '@orkg/orkg-client';
 
-export const tablesUrl = `${url}tables/`;
-export const tablesApi = backendApi.extend(() => ({ prefixUrl: tablesUrl }));
-const TABLES_CONTENT_TYPE = 'application/vnd.orkg.table.v1+json';
-const TABLE_COLUMN_CONTENT_TYPE = 'application/vnd.orkg.table.column.v1+json';
-const TABLE_ROW_CONTENT_TYPE = 'application/vnd.orkg.table.row.v1+json';
-const TABLE_CELL_CONTENT_TYPE = 'application/vnd.orkg.table.cell.v1+json';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId } from '@/services/backend/backendApi';
 
-export type TableCell = {
-    id: string | null;
-    _class: string;
-    datatype: string;
-    label: string;
-} | null;
+export const tablesUrl = `${urlNoTrailingSlash}/tables`;
 
-export type Table = {
-    id: string;
-    label: string;
-    rows: {
-        data: TableCell[];
-        label: string | null;
-    }[];
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-    created_at: string;
-    created_by: string;
-    visibility: Visibility;
-    modifiable: boolean;
-    unlisted_by: string | null;
-};
+// The row and column deletes carry no body, so the spec declares no request media type and the
+// generated operations send no Content-Type — but the endpoints answer 415 without one. (The
+// error text points at the Accept header; Content-Type is what it actually wants.) Every
+// body-carrying operation already gets its media type from the spec.
+const TABLE_ROW_MEDIA_TYPE = 'application/vnd.orkg.table.row.v1+json';
+const TABLE_COLUMN_MEDIA_TYPE = 'application/vnd.orkg.table.column.v1+json';
 
-export type TempIds = {
-    resources: {
-        [key: string]: NewResource;
-    };
-    literals: {
-        [key: string]: NewLiteral;
-    };
-    predicates: {
-        [key: string]: NewPredicate;
-    };
-    lists: {
-        [key: string]: NewList;
-    };
-    classes: {
-        [key: string]: NewClass;
-    };
-};
+const tablesApi = new TablesApi(configuration);
 
-export type CreateTableParams = {
-    label: string;
-    rows: {
-        data: (string | null)[];
-        label: string | null;
-    }[];
-    organizations: string[];
-    observatories: string[];
-    extraction_method: ExtractionMethod;
-} & TempIds;
+export type TableCell = ThingReferenceRepresentation | null;
 
-type UpdateTableParams = Partial<CreateTableParams>;
+export type Table = TableRepresentation;
 
-export const getTable = (id: string) => {
-    return tablesApi
-        .get<Table>(id, {
-            headers: {
-                'Content-Type': TABLES_CONTENT_TYPE,
-                Accept: TABLES_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export type CreateTableParams = CreateTableRequest;
 
-export const createTable = (data: CreateTableParams): Promise<string> =>
-    tablesApi
-        .post<Table>('', {
-            json: data,
-            headers: {
-                'Content-Type': TABLES_CONTENT_TYPE,
-                Accept: TABLES_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+type UpdateTableParams = UpdateTableRequest;
 
-export const updateTable = (id: string, data: UpdateTableParams) =>
-    tablesApi
-        .put<Table>(id, {
-            json: data,
-            headers: {
-                'Content-Type': TABLES_CONTENT_TYPE,
-                Accept: TABLES_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const getTable = (id: string) => tablesApi.findById({ id });
+
+export const createTable = (data: CreateTableParams): Promise<string> => tablesApi.createRaw({ createTableRequest: data }).then(getCreatedId);
+
+export const updateTable = (id: string, data: UpdateTableParams) => tablesApi.update({ id, updateTableRequest: data });
 
 export const updateCell = (id: string, row: number, column: number, cellId: string | null) =>
-    tablesApi
-        .put<Table>(`${id}/cells/${row}/${column}`, {
-            json: {
-                id: cellId,
-            },
-            headers: {
-                'Content-Type': `${TABLE_CELL_CONTENT_TYPE};charset=UTF-8`,
-                Accept: TABLE_CELL_CONTENT_TYPE,
-            },
-        })
-        .json();
+    tablesApi.updateCell({ id, row: row.toString(), column: column.toString(), updateTableCellRequest: { id: cellId ?? undefined } });
 
-export const updateTableColumn = (id: string, index: number, data: TempIds & { column: (string | null)[] }) =>
-    tablesApi
-        .put<Table>(`${id}/columns/${index}`, {
-            json: data,
-            headers: {
-                'Content-Type': `${TABLE_COLUMN_CONTENT_TYPE};charset=UTF-8`,
-                Accept: TABLE_COLUMN_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const updateTableColumn = (id: string, index: number, data: TableColumnRequest) =>
+    tablesApi.updateColumn({ id, index, tableColumnRequest: data });
 
-export const createTableColumn = (id: string, index: number, data: TempIds & { column: (string | null)[] }) =>
-    tablesApi
-        .post<Table>(`${id}/columns/${index}`, {
-            json: data,
-            headers: {
-                'Content-Type': `${TABLE_COLUMN_CONTENT_TYPE};charset=UTF-8`,
-                Accept: TABLE_COLUMN_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const createTableColumn = (id: string, index: number, data: TableColumnRequest) =>
+    tablesApi.createColumnAtIndex({ id, index, tableColumnRequest: data });
 
-export const deleteTableColumn = (id: string, index: number) =>
-    tablesApi
-        .delete<Table>(`${id}/columns/${index}`, {
-            headers: {
-                'Content-Type': `${TABLE_COLUMN_CONTENT_TYPE};charset=UTF-8`,
-                Accept: TABLE_COLUMN_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const deleteTableColumn = (id: string, index: number) => tablesApi.deleteColumn({ id, index, contentType: TABLE_COLUMN_MEDIA_TYPE });
 
-export const updateRow = (
-    id: string,
-    index: number,
-    data: TempIds & {
-        row: { label: string | null; data: (string | null)[] };
-    },
-) =>
-    tablesApi
-        .put<Table>(`${id}/rows/${index}`, {
-            json: data,
-            headers: {
-                'Content-Type': `${TABLE_ROW_CONTENT_TYPE};charset=UTF-8`,
-                Accept: TABLE_ROW_CONTENT_TYPE,
-            },
-        })
-        .json();
+export const updateRow = (id: string, index: number, data: UpdateTableRowRequest) => tablesApi.updateRow({ id, index, updateTableRowRequest: data });
 
-export const createTableRow = (id: string, index: number, data: TempIds & { row: { label: string | null; data: (string | null)[] } }) =>
-    tablesApi
-        .post<Table>(`${id}/rows/${index}`, {
-            json: data,
-            headers: { 'Content-Type': `${TABLE_ROW_CONTENT_TYPE};charset=UTF-8`, Accept: TABLE_ROW_CONTENT_TYPE },
-        })
-        .json();
+export const createTableRow = (id: string, index: number, data: CreateTableRowRequest) =>
+    tablesApi.createRowAtIndex({ id, index, createTableRowRequest: data });
 
-export const deleteTableRow = (id: string, index: number) =>
-    tablesApi
-        .delete<Table>(`${id}/rows/${index}`, {
-            headers: { 'Content-Type': `${TABLE_ROW_CONTENT_TYPE};charset=UTF-8`, Accept: TABLE_ROW_CONTENT_TYPE },
-        })
-        .json();
+export const deleteTableRow = (id: string, index: number) => tablesApi.deleteRow({ id, index, contentType: TABLE_ROW_MEDIA_TYPE });

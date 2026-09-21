@@ -38,7 +38,7 @@ const resources = [
             },
         });
     }),
-    http.get(`${resourcesUrl}:id`, ({ params }) => {
+    http.get(`${resourcesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         const resource = db.resources.findFirst({
             where: {
@@ -71,11 +71,11 @@ const resources = [
         });
         return new HttpResponse(null, {
             headers: {
-                Location: `${resourcesUrl}${newResource.id}`,
+                Location: `${resourcesUrl}/${newResource.id}`,
             },
         });
     }),
-    http.put(`${resourcesUrl}:id`, async ({ request, params }: { request: Request; params: { id?: string } }) => {
+    http.put(`${resourcesUrl}/:id`, async ({ request, params }: { request: Request; params: { id?: string } }) => {
         const { label, classes } = await request.json();
         const { id } = params;
         const updatedResource = db.resources.update({
@@ -91,7 +91,7 @@ const resources = [
         });
         return new HttpResponse(null, {
             headers: {
-                Location: `${resourcesUrl}${updatedResource?.id}`,
+                Location: `${resourcesUrl}/${updatedResource?.id}`,
             },
         });
     }),

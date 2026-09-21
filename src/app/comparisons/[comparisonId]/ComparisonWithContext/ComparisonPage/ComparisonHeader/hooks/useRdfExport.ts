@@ -44,8 +44,8 @@ const useRdfExport = () => {
         // Metadata
         store.addQuad(quad(ds, dcterms('title'), literal(comparison.title ? comparison.title : 'Comparison - ORKG')));
         store.addQuad(quad(ds, dcterms('description'), literal(comparison.description ? comparison.description : 'Description')));
-        store.addQuad(quad(ds, dcterms('creator'), literal(comparison.created_by ? comparison.created_by : 'Creator')));
-        store.addQuad(quad(ds, dcterms('date'), literal(comparison.created_at ? comparison.created_at : 'Date')));
+        store.addQuad(quad(ds, dcterms('creator'), literal(comparison.createdBy ? comparison.createdBy : 'Creator')));
+        store.addQuad(quad(ds, dcterms('date'), literal(comparison.createdAt ? comparison.createdAt : 'Date')));
         store.addQuad(quad(ds, dcterms('license'), namedNode(LICENSE_URL)));
         store.addQuad(quad(ds, rdfsns('label'), literal('Comparison - ORKG')));
         store.addQuad(quad(ds, cubens('structure'), dsd));
@@ -64,7 +64,7 @@ const useRdfExport = () => {
         const columnsWithProps = [{ title: { id: 'Properties', label: 'Properties' }, subtitle: null }, ...columns];
 
         columnsWithProps.forEach((column, index) => {
-            const id = column.subtitle?.id ?? column.title.id;
+            const id = column.subtitle?.id ?? column.title.id ?? '';
 
             if (id === 'Properties') {
                 cs.Properties = blankNode();
@@ -104,9 +104,9 @@ const useRdfExport = () => {
                         const value = row.values[colIndex];
 
                         if (value?._class === 'resource_ref') {
-                            store.addQuad(quad(bno, dt[column.subtitle?.id ?? column.title.id], orkgResource(`${value.id}`)));
+                            store.addQuad(quad(bno, dt[column.subtitle?.id ?? column.title.id ?? ''], orkgResource(`${value.id}`)));
                         } else if (value?._class === 'literal_ref') {
-                            store.addQuad(quad(bno, dt[column.subtitle?.id ?? column.title.id], literal(`${value.label ? value.label : ''}`)));
+                            store.addQuad(quad(bno, dt[column.subtitle?.id ?? column.title.id ?? ''], literal(`${value.label ? value.label : ''}`)));
                         }
                     });
             });

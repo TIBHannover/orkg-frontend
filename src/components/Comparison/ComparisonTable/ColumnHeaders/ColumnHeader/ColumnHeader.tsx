@@ -28,7 +28,7 @@ const HeaderText = ({ link, column }: HeaderTextProps) => (
             <small className="italic border-t border-[rgb(215,80,80)] mt-0.5 pt-0.5 block">{column.subtitle?.label}</small>
         ) : (
             <small className="italic border-t border-[rgb(215,80,80)] mt-0.5 pt-0.5 block">
-                <FontAwesomeIcon icon={faTags} /> Instance of: {column.title.classes.join(', ')}
+                <FontAwesomeIcon icon={faTags} /> Instance of: {(column.title._class === 'resource_ref' ? column.title.classes : []).join(', ')}
             </small>
         )}
     </div>
@@ -101,7 +101,7 @@ const ColumnHeader = ({ index, column, instanceId, isLast }: ColumnHeaderProps) 
                     {isEditMode && (
                         <Button
                             size="sm"
-                            onPress={() => openDialogEntry([mainSource.id])}
+                            onPress={() => mainSource.id && openDialogEntry([mainSource.id])}
                             className="bg-accent-darker text-white hover:bg-accent-darker/90"
                         >
                             Edit data

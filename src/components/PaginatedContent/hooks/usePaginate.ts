@@ -1,16 +1,19 @@
-import { parseAsInteger, parseAsString, useQueryState } from 'nuqs';
+import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs';
 import useSWR from 'swr';
 
-import { PaginatedResponse, Pagination } from '@/services/backend/types';
+import { Pagination, SortDirectionOptions } from '@/services/backend/types';
 
 type UsePaginateProps<ItemType, FetchFunctionParams> = {
-    fetchFunction: (params: FetchFunctionParams) => Promise<PaginatedResponse<ItemType> | Pagination<ItemType>>;
+    fetchFunction: (params: FetchFunctionParams) => Promise<Pagination<ItemType>>;
     fetchUrl: string;
     fetchFunctionName: string;
-    fetchExtraParams: FetchFunctionParams;
+    // NoInfer: the params type comes from fetchFunction alone, so a key the service does not
+    // declare (e.g. a snake_case leftover like organization_id) is an excess-property error
+    // instead of silently being dropped by the generated client
+    fetchExtraParams: NoInfer<Partial<FetchFunctionParams>>;
     defaultPageSize?: number;
     defaultSortBy?: string;
-    defaultSortDirection?: string;
+    defaultSortDirection?: SortDirectionOptions;
     prefixParams?: string;
     isReadyToLoad?: boolean;
 };
@@ -21,15 +24,19 @@ const usePaginate = <ItemType, FetchFunctionParams>({
     fetchFunctionName,
     fetchExtraParams,
     defaultPageSize = 30,
-    defaultSortBy = 'created_at',
-    defaultSortDirection = 'desc',
+    defaultSortBy = 'createdAt',
+    defaultSortDirection = 'desc' as SortDirectionOptions,
     prefixParams = '',
     isReadyToLoad = true,
 }: UsePaginateProps<ItemType, FetchFunctionParams>) => {
     const [pageSize, setPageSize] = useQueryState(`${prefixParams}pageSize`, parseAsInteger.withDefault(defaultPageSize));
     const [page, setPage] = useQueryState(`${prefixParams}page`, parseAsInteger.withDefault(0));
     const [sortBy] = useQueryState(`${prefixParams}sortBy`, parseAsString.withDefault(defaultSortBy));
-    const [sortDirection] = useQueryState(`${prefixParams}sortDirection`, parseAsString.withDefault(defaultSortDirection));
+    // the direction reaches the wire verbatim, so reject anything a URL might carry beyond asc/desc
+    const [sortDirection] = useQueryState(
+        `${prefixParams}sortDirection`,
+        parseAsStringLiteral(['asc', 'desc'] as const).withDefault(defaultSortDirection),
+    );
 
     const { data, isLoading, error, mutate } = useSWR(
         isReadyToLoad
@@ -44,22 +51,20 @@ const usePaginate = <ItemType, FetchFunctionParams>({
                   fetchFunctionName,
               ]
             : null,
-        ([params]) => fetchFunction(params),
+        // the hook supplies page/size/sortBy; the cast closes the Partial back into the full params type
+        ([params]) => fetchFunction(params as FetchFunctionParams),
     );
 
     const { page: pageObject } = data || {};
 
-    // TODO: remove snake case handling after finishing services migration
-    const hasNextPage = pageObject ? pageObject.number < ('total_pages' in pageObject ? pageObject.total_pages : pageObject.totalPages) - 1 : false;
+    const hasNextPage = pageObject ? (pageObject.number ?? 0) < (pageObject.totalPages ?? 0) - 1 : false;
 
     return {
         data: data?.content,
         isLoading,
         hasNextPage,
-        // TODO: remove snake case handling after finishing services migration
-        totalElements: pageObject ? ('total_elements' in pageObject ? pageObject.total_elements : pageObject.totalElements) : undefined,
-        // TODO: remove snake case handling after finishing services migration
-        totalPages: pageObject ? ('total_pages' in pageObject ? pageObject.total_pages : pageObject.totalPages) : undefined,
+        totalElements: pageObject?.totalElements,
+        totalPages: pageObject?.totalPages,
         page,
         pageSize,
         error,

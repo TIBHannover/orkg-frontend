@@ -24,8 +24,8 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId, openModal, s
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getGenericContentTypes',
         fetchExtraParams: {
-            research_field: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : researchFieldId,
-            include_subfields: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : true,
+            researchField: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : researchFieldId,
+            includeSubfields: researchFieldId === RESOURCES.RESEARCH_FIELD_MAIN ? undefined : true,
         },
     });
 
@@ -43,14 +43,9 @@ const LastUpdatesBox: FC<LastUpdatesBoxProps> = ({ researchFieldId, openModal, s
                                 activities &&
                                 activities.map((activity, index) => (
                                     <ActivityItem key={`sss${activity.id}`} isLast={index === activities.length - 1}>
-                                        <div className="mb-1 text-[95%] text-muted">
-                                            {dayjs('created_at' in activity ? activity.created_at : activity.createdAt).fromNow()}
-                                        </div>
+                                        <div className="mb-1 text-[95%] text-muted">{dayjs(activity.createdAt).fromNow()}</div>
                                         <div className="flex items-center flex-wrap gap-x-1 text-[15px] text-foreground">
-                                            <UserAvatar
-                                                userId={'created_by' in activity ? activity.created_by : activity.createdBy}
-                                                showDisplayName
-                                            />
+                                            <UserAvatar userId={activity.createdBy} showDisplayName />
                                             <span>
                                                 {`added a ${activity._class} `}
                                                 <Link

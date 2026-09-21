@@ -154,7 +154,7 @@ export const buildPdfTable = ({
         ...visibleColumns.map((column) => {
             const title = column.title.label;
             const subtitle = column.subtitle?.label;
-            const resourceId = column.subtitle?.id ?? column.title.id;
+            const resourceId = column.subtitle?.id ?? column.title.id ?? '';
             return {
                 content: subtitle ? `${title}\n${subtitle}` : title,
                 url: buildEntityUrl(ROUTES.RESOURCE, { id: resourceId }),

@@ -37,7 +37,7 @@ const formatResourceResponse = (thing: any) => ({
 });
 
 const things = [
-    http.get(`${thingsUrl}:id`, ({ params }) => {
+    http.get(`${thingsUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
 
         const resource = findResource(id);

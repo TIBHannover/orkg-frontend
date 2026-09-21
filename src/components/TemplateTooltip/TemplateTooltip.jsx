@@ -91,26 +91,26 @@ const TemplateTooltip = ({ children, id, extraContent = undefined, disabled = fa
                                     </p>
                                 </div>
                             )}
-                            {template.target_class?.id && (
+                            {template.targetClass?.id && (
                                 <div>
                                     <b>Target class:</b>
                                     <p>
-                                        <LinkStyled target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class?.id })}>
+                                        <LinkStyled target="_blank" href={reverse(ROUTES.CLASS, { id: template.targetClass?.id })}>
                                             <i>
-                                                <span className="typeCircle">C</span> {template.target_class?.label}
+                                                <span className="typeCircle">C</span> {template.targetClass?.label}
                                             </i>
                                         </LinkStyled>
                                     </p>
                                 </div>
                             )}
-                            {template.formatted_label && (
+                            {template.formattedLabel && (
                                 <div>
                                     <b>Has formatted label:</b>
                                     <p>
                                         <i>
                                             {template.properties?.length > 0 &&
                                                 format(
-                                                    template.formatted_label,
+                                                    template.formattedLabel,
                                                     Object.assign(
                                                         {},
                                                         ...template.properties.map((propertyShape) => ({

@@ -28,7 +28,7 @@ export const processTableStatements = (_tableStatements: Statement[], id: string
     let isTitlesColumnsExist = false;
 
     const filteredTableStatements = _tableStatements.filter((st) => st.subject.id === id);
-    tableResource = filteredTableStatements[0]?.subject ?? null;
+    tableResource = (filteredTableStatements[0]?.subject as Resource) ?? null;
     const columnsObjects = filteredTableStatements
         .filter((st) => 'classes' in st.object && st.object.classes.includes(CLASSES.CSVW_COLUMN))
         .map((item) => item.object);

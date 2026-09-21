@@ -24,7 +24,9 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { getResource, getSnapshots, resourcesUrl } from '@/services/backend/resources';
+import { Thing } from '@/services/backend/things';
 
 type ResourcePageProps = {
     contentType: string;
@@ -50,10 +52,10 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
     const { data: resource, isLoading, error, mutate } = useSWR(id ? [id, resourcesUrl, 'getResource'] : null, ([params]) => getResource(params));
 
     const isShared = !!(resource && resource?.shared > 0);
-    const isUserIsCreator = resource?.created_by === user?.id;
+    const isUserIsCreator = resource?.createdBy === user?.id;
     const isCurationAllowed = !!(
         user &&
-        (user.isCurationAllowed || (user.id === resource?.created_by && resource?.classes?.includes(CLASSES.COMPARISON)))
+        (user.isCurationAllowed || (user.id === resource?.createdBy && resource?.classes?.includes(CLASSES.COMPARISON)))
     );
     const isDeletionAllowed = !isShared && (isUserIsCreator || isCurationAllowed);
 
@@ -73,7 +75,7 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && error && (getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && resource && !error && (
                 <>
                     <TitleBar
@@ -104,7 +106,7 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                                             href={
                                                 contentType === 'Resource'
                                                     ? reverse(ROUTES.RESOURCE_SNAPSHOT, {
-                                                          id: snapshots?.content?.[0].resource_id,
+                                                          id: snapshots?.content?.[0].resourceId,
                                                           snapshotId: snapshots?.content?.[0].id,
                                                       })
                                                     : `${reverse(ROUTES.CONTENT_TYPE_SNAPSHOT, {
@@ -133,7 +135,7 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                             <Label id={id} resource={resource} isShared={isShared} mutate={mutate} isDeletionAllowed={isDeletionAllowed} />
 
                             <ItemMetadata
-                                item={resource}
+                                item={resource as Thing}
                                 showCreatedAt
                                 showCreatedBy
                                 showProvenance

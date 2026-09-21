@@ -2,30 +2,13 @@ import { Alert } from '@heroui/react';
 
 import PaperCard from '@/components/Cards/PaperCard/PaperCard';
 import ListPage from '@/components/PaginatedContent/ListPage';
-import { getPaper, papersUrl } from '@/services/backend/papers';
-import { getPapersLinkedToResource } from '@/services/backend/paths';
-import { PaginatedResponse, PaginationParams, Paper, Resource } from '@/services/backend/types';
+import { getLinkedPapersWithPaths, pathsUrl } from '@/services/backend/paths';
+import { Thing } from '@/services/backend/things';
+import { Paper } from '@/services/backend/types';
 
 function ResourceUsage({ id }: { id: string }) {
-    const renderListItem = (object: Paper & { path: Resource[][] }) => {
+    const renderListItem = (object: Paper & { path?: Thing[][] }) => {
         return <PaperCard paper={object} paths={object.path} key={object.id} />;
-    };
-
-    const fetchItems = async (
-        params: {
-            id: string;
-            returnContent?: boolean;
-        } & PaginationParams,
-    ) => {
-        const result = await getPapersLinkedToResource(params);
-        const papers = await Promise.all((result as PaginatedResponse<Resource & { path: Resource[][] }>).content.map((p) => getPaper(p.id)));
-        return {
-            ...result,
-            content: papers.map((p) => ({
-                ...p,
-                path: (result as PaginatedResponse<Resource & { path: Resource[][] }>).content.find((rp) => rp.id === p.id)?.path,
-            })),
-        };
     };
 
     return (
@@ -42,12 +25,11 @@ function ResourceUsage({ id }: { id: string }) {
                 boxShadow={false}
                 hideTitleBar
                 renderListItem={renderListItem}
-                // @ts-ignore
-                fetchFunction={fetchItems}
-                fetchUrl={papersUrl}
-                fetchExtraParams={{ id, returnContent: false }}
+                fetchFunction={getLinkedPapersWithPaths}
+                fetchFunctionName="getLinkedPapersWithPaths"
+                fetchUrl={pathsUrl}
+                fetchExtraParams={{ id }}
                 disableSearch
-                defaultSortBy="paper.created_at"
                 flush
             />
         </div>

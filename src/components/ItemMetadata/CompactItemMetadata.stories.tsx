@@ -13,8 +13,8 @@ const resource = {
     id: 'R100',
     label: 'Example label',
     classes: ['Dataset'],
-    created_at: '2026-08-06T14:03:00Z',
-    created_by: '00000000-0000-0000-0000-000000000000',
+    createdAt: '2026-08-06T14:03:00Z',
+    createdBy: '00000000-0000-0000-0000-000000000000',
 };
 
 const Template: StoryFn<typeof CompactItemMetadata> = (args) => (
@@ -40,7 +40,7 @@ AllItems.args = {
         ...resource,
         classes: ['Dataset', 'Comparison'],
         certainty: CERTAINTY.MODERATE,
-        extraction_method: EXTRACTION_METHODS.MANUAL,
+        extractionMethod: EXTRACTION_METHODS.MANUAL,
         shared: 12,
     },
     showCreatedAt: true,
@@ -90,7 +90,7 @@ ClassWithoutUri.args = {
 export const UnknownExtractionMethod = Template.bind({});
 
 UnknownExtractionMethod.args = {
-    item: { ...resource, extraction_method: EXTRACTION_METHODS.UNKNOWN },
+    item: { ...resource, extractionMethod: EXTRACTION_METHODS.UNKNOWN },
     showCreatedAt: true,
     showExtractionMethod: true,
 };

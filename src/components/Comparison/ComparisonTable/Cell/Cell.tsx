@@ -32,7 +32,7 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
     const history = dataBrowserHistory ?? [];
     const predicateId = history[history.length - 2];
     const subjectId = history[history.length - 3];
-    const aiStatement = value && subjectId && predicateId ? getCellStatement(subjectId, predicateId, value.id, value.label) : undefined;
+    const aiStatement = value && subjectId && predicateId ? getCellStatement(subjectId, predicateId, value.id ?? null, value.label) : undefined;
     const showAiReview =
         !!subjectId &&
         isAiSource(subjectId) &&

@@ -50,7 +50,7 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                     )
                 }
                 researchField={researchField}
-                createdBy={visualization.created_by}
+                createdBy={visualization.createdBy}
                 aside={<Thumbnail visualization={visualization} />}
             >
                 {renderCoins && <Coins item={visualization} genre="unknown" />}
@@ -68,15 +68,15 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                     className="mb-1"
                     items={[
                         !!visualization.authors?.length && { key: 'authors', node: <Authors authors={visualization.authors} /> },
-                        !!visualization.created_at && {
+                        !!visualization.createdAt && {
                             key: 'created-at',
                             node: (
                                 <span
                                     className="inline-flex items-center"
-                                    title={`Created ${dayjs(visualization.created_at).format('DD MMMM YYYY')}`}
+                                    title={`Created ${dayjs(visualization.createdAt).format('DD MMMM YYYY')}`}
                                 >
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
-                                    {dayjs(visualization.created_at).format('DD MMM YYYY')}
+                                    {dayjs(visualization.createdAt).format('DD MMM YYYY')}
                                 </span>
                             ),
                         },

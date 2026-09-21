@@ -6,6 +6,7 @@ import NotFound from '@/app/not-found';
 import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import ListGroup from '@/components/Ui/List/ListGroup';
 import Container from '@/components/Ui/Structure/Container';
+import { getStatusCode } from '@/services/backend/problemDetails';
 
 type ListPaginatedContentProps<ItemType> = {
     label: string;
@@ -75,8 +76,8 @@ const ListPaginatedContent = <ItemType,>({
     return (
         <Container className="px-0">
             {isLoading && loadingComponent}
-            {!isLoading && error && error.statusCode === 404 && <NotFound />}
-            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
+            {!isLoading && error && getStatusCode(error) === 404 && <NotFound />}
+            {!isLoading && error && getStatusCode(error) !== 404 && <InternalServerError error={error} />}
             {!isLoading && items && items.length > 0 && (
                 <ListGroupComponent {...componentProps} className={`${boxShadow ? 'box' : ''} rounded`} style={{ clear: 'both' }}>
                     {items?.map((item, index) => renderListItem(item, index === items.length - 1, page * pageSize + index))}

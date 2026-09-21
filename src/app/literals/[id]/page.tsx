@@ -11,6 +11,8 @@ import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
 import { getLiteral, literalsUrl } from '@/services/backend/literals';
+import { getStatusCode } from '@/services/backend/problemDetails';
+import { Thing } from '@/services/backend/things';
 
 const Literal = () => {
     const { id: literalId } = useParams();
@@ -28,8 +30,8 @@ const Literal = () => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && error.statusCode === 404 && <NotFound />}
-            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
+            {!isLoading && error && getStatusCode(error) === 404 && <NotFound />}
+            {!isLoading && error && getStatusCode(error) !== 404 && <InternalServerError error={error} />}
             {!isLoading && !error && literal && (
                 <>
                     <TitleBar>Literal</TitleBar>
@@ -47,7 +49,7 @@ const Literal = () => {
                                     </span>
                                 </h2>
                             </div>
-                            <ItemMetadata item={literal} showDataType showCreatedAt showCreatedBy showProvenance showExtractionMethod />
+                            <ItemMetadata item={literal as Thing} showDataType showCreatedAt showCreatedBy showProvenance showExtractionMethod />
                         </div>
                     </Container>
 

@@ -16,7 +16,8 @@ import useTemplates from '@/components/DataBrowser/hooks/useTemplates';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
-import { Predicate, Resource, Statement } from '@/services/backend/types';
+import { Thing } from '@/services/backend/things';
+import { Predicate, Statement } from '@/services/backend/types';
 
 const Body = () => {
     const { error, entity, statements, isLoadingStatements, mutateStatements } = useEntity();
@@ -62,7 +63,7 @@ const Body = () => {
         );
     }
 
-    const valueWrapper = (children: ReactElement) => <ValuePreviewFactory value={entity as Resource}>{children}</ValuePreviewFactory>;
+    const valueWrapper = (children: ReactElement) => <ValuePreviewFactory value={entity as Thing}>{children}</ValuePreviewFactory>;
 
     return (
         <ListOrderingContext.Provider value={listOrderingValue}>

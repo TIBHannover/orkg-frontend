@@ -25,6 +25,7 @@ import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { classesUrl, getClassById } from '@/services/backend/classes';
 import { getPaper, papersUrl } from '@/services/backend/papers';
+import { getStatusCode } from '@/services/backend/problemDetails';
 
 const RSStatementPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -32,10 +33,10 @@ const RSStatementPage = () => {
 
     const { data: statement, isLoading, error, mutate: reloadStatement } = useRosettaStatements({ id });
 
-    const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement?.template_id ?? '' });
+    const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement?.templateId ?? '' });
 
     const { data: statementClass, isLoading: isLoadingClass } = useSWR(
-        template?.target_class ? [template.target_class, classesUrl, 'getClassById'] : null,
+        template?.targetClass ? [template.targetClass, classesUrl, 'getClassById'] : null,
         ([params]) => getClassById(params),
     );
 
@@ -55,7 +56,7 @@ const RSStatementPage = () => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && error && (getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && statement && (
                 <>
                     <TitleBar
@@ -116,7 +117,7 @@ const RSStatementPage = () => {
                                     <span>{' Statement type: '}</span> {(isLoadingClass || isLoadingTemplate) && <>Loading...</>}
                                     {!isLoadingClass && !isLoadingTemplate && template && (
                                         <DescriptionTooltip id={statementClass?.id} _class={ENTITIES.CLASS}>
-                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.target_class })}>
+                                            <Link target="_blank" href={reverse(ROUTES.CLASS, { id: template.targetClass })}>
                                                 {statementClass?.label}
                                             </Link>
                                         </DescriptionTooltip>

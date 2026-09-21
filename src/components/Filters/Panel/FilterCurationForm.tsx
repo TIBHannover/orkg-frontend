@@ -59,8 +59,8 @@ const FilterCurationForm: FC<FilterCurationFormProps> = ({ isSaving, isOpen, tog
             setIsLoadingEntities(true);
             const _path = await getPredicatesByIds(filter.path);
             const _range = await getClassById(filter.range);
-            setPath(_path);
-            setRange(_range);
+            setPath(_path as OptionType[]);
+            setRange(_range as OptionType);
             setIsLoadingEntities(false);
         };
         if (filter) {

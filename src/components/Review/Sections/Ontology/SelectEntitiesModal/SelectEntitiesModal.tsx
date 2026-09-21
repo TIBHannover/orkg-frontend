@@ -16,11 +16,11 @@ import { comparisonUrl, getComparison, getComparisonContents } from '@/services/
 import { getPredicate } from '@/services/backend/predicates';
 import { getStatements } from '@/services/backend/statements';
 import { getThing } from '@/services/backend/things';
-import { ReviewSection, ReviewSectionData } from '@/services/backend/types';
+import { ReviewSectionData, ReviewSectionOntology } from '@/services/backend/types';
 
 type SelectEntitiesModalProps = {
     toggle: () => void;
-    section: ReviewSection;
+    section: ReviewSectionOntology;
     type: 'entities' | 'properties' | null;
 };
 
@@ -48,9 +48,9 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
     const [selectionMessage, setSelectionMessage] = useState<string | null>(null);
 
     const { review, updateSection } = useReview();
-    const comparisonIds = review?.sections
-        .filter((_section) => _section.type === 'comparison' && _section.comparison?.id)
-        .map((_section) => _section.comparison!.id);
+    const comparisonIds = review?.sections.flatMap((_section) =>
+        _section.type === 'comparison' && _section.comparison?.id ? [_section.comparison.id] : [],
+    );
 
     const { data: comparisons } = useSWR(
         comparisonIds && comparisonIds.length > 0 ? [comparisonIds, comparisonUrl, 'getComparison'] : null,
@@ -78,7 +78,7 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                         comparisons.map((comparison, index) => ({
                             title: comparison.title ?? 'Nameless comparison',
                             properties: uniqBy(
-                                flattenPaths(comparisonContents?.[index].selected_paths ?? []).map((path) => ({
+                                flattenPaths(comparisonContents?.[index].selectedPaths ?? []).map((path) => ({
                                     label: path.label,
                                     id: path.id,
                                     type: 'property',
@@ -88,11 +88,11 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
                         })),
                     );
                 }
-                setSelectedEntities(uniqBy(section.entities ?? [], 'id'));
+                setSelectedEntities(uniqBy(section.entities ?? [], 'id') as ReviewSectionData[]);
                 setSuggestionProperties([]);
             } else if (type === 'properties') {
                 setSuggestionEntities([]);
-                setSelectedEntities(uniqBy(section.predicates ?? [], 'id'));
+                setSelectedEntities(uniqBy(section.predicates ?? [], 'id') as ReviewSectionData[]);
                 setSuggestionProperties(uniqBy([await getPredicate(PREDICATES.DESCRIPTION), await getPredicate(PREDICATES.SAME_AS)], 'id'));
             }
         };
@@ -143,8 +143,11 @@ const SelectEntitiesModal: FC<SelectEntitiesModalProps> = ({ toggle, section, ty
 
     const handleSave = () => {
         updateSection(section.id, {
-            entities: type === 'entities' ? selectedEntities.map((entity) => entity.id) : section.entities?.map(({ id }) => id),
-            predicates: type === 'properties' ? selectedEntities.map((entity) => entity.id) : section.predicates?.map(({ id }) => id),
+            entities:
+                type === 'entities'
+                    ? selectedEntities.map((entity) => entity.id)
+                    : (section.entities?.map(({ id }) => id).filter((id): id is string => !!id) ?? []),
+            predicates: type === 'properties' ? selectedEntities.map((entity) => entity.id) : (section.predicates?.map(({ id }) => id) ?? []),
             heading: section.heading,
         });
         toggle();

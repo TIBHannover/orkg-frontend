@@ -40,7 +40,7 @@ const useComparisonExport = () => {
     const visibleColumns = useMemo(() => columns.filter((_, i) => activeColumns[i]), [columns, activeColumns]);
 
     const table = useMemo(
-        () => (comparisonContents ? buildFlatTable(comparisonContents.selected_paths, comparisonContents.values, activeColumns) : []),
+        () => (comparisonContents ? buildFlatTable(comparisonContents.selectedPaths, comparisonContents.values, activeColumns) : []),
         [comparisonContents, activeColumns],
     );
 

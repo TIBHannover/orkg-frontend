@@ -1,4 +1,5 @@
 import { Button, Input, Label, Modal, TextField, toast } from '@heroui/react';
+import { CreateLiteralRequestPart } from '@orkg/orkg-client';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,7 +9,7 @@ import useMembership from '@/components/hooks/useMembership';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
 import { createTable } from '@/services/backend/tables';
-import { NewLiteral, NewResource } from '@/services/backend/types';
+import { NewResource } from '@/services/backend/types';
 import { setAnnotationTableSaved, setAnnotationView } from '@/slices/pdfAnnotationSlice';
 import { RootStore } from '@/slices/types';
 import { guid } from '@/utils';
@@ -21,7 +22,7 @@ type SaveTableResourceModalProps = {
 
 const prepareTableData = (tableData: string[][]) => {
     const newResources: { [key: string]: NewResource } = {};
-    const newLiterals: { [key: string]: NewLiteral } = {};
+    const newLiterals: { [key: string]: CreateLiteralRequestPart } = {};
     const hasTitleColumn = tableData[0][0]?.trim() !== '';
     const rows = tableData.map((row) => {
         const data = row.map((cell) => {
@@ -40,17 +41,17 @@ const prepareTableData = (tableData: string[][]) => {
             if (hasTypeInfo) {
                 const _id = `#${guid()}`;
                 const typeObj = findTypeByIdOrName(typeStr || '');
-                newLiterals[_id] = { label, data_type: typeObj?.type || MISC.DEFAULT_LITERAL_DATATYPE };
+                newLiterals[_id] = { label, dataType: typeObj?.type || MISC.DEFAULT_LITERAL_DATATYPE };
                 return _id;
             }
             const _id = `#${guid()}`;
-            newLiterals[_id] = { label, data_type: MISC.DEFAULT_LITERAL_DATATYPE };
+            newLiterals[_id] = { label, dataType: MISC.DEFAULT_LITERAL_DATATYPE };
             return _id;
         });
         if (hasTitleColumn) {
-            return { data: data.slice(1), label: newLiterals[data[0] as string]?.label ?? null };
+            return { data: data.slice(1), label: newLiterals[data[0] as string]?.label ?? undefined };
         }
-        return { data, label: null };
+        return { data, label: undefined };
     });
     return { rows, literals: newLiterals, resources: newResources, predicates: {}, lists: {}, classes: {} };
 };
@@ -70,7 +71,7 @@ const SaveTableResourceModal = ({ isOpen, toggle, id }: SaveTableResourceModalPr
                 ...prepareTableData(tableData),
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                extraction_method: EXTRACTION_METHODS.MANUAL,
+                extractionMethod: EXTRACTION_METHODS.MANUAL,
             });
             toast.success('Table saved successfully');
             dispatch(setAnnotationTableSaved({ id, tableId, tableLabel: resourceLabel }));

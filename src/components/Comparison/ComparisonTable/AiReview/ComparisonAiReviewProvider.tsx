@@ -63,7 +63,7 @@ const ComparisonAiReviewProvider: FC<ComparisonAiReviewProviderProps> = ({ compa
     const lookup = useMemo(() => {
         const map = new Map<string, CellStatement>();
         for (const statement of statements ?? []) {
-            const entry: CellStatement = { statementId: statement.id, extractionMethod: statement.extraction_method };
+            const entry: CellStatement = { statementId: statement.id, extractionMethod: statement.extractionMethod };
             map.set(idKey(statement.subject.id, statement.predicate.id, statement.object.id), entry);
             map.set(labelKey(statement.subject.id, statement.predicate.id, statement.object.label), entry);
         }
@@ -80,7 +80,7 @@ const ComparisonAiReviewProvider: FC<ComparisonAiReviewProviderProps> = ({ compa
     const aiSourceIds = useMemo(() => {
         const ids = new Set<string>();
         for (const statement of statements ?? []) {
-            if (statement.subject.extraction_method === EXTRACTION_METHODS.AI_GENERATED) {
+            if (statement.subject.extractionMethod === EXTRACTION_METHODS.AI_GENERATED) {
                 ids.add(statement.subject.id);
             }
         }
@@ -99,19 +99,19 @@ const ComparisonAiReviewProvider: FC<ComparisonAiReviewProviderProps> = ({ compa
             try {
                 await mutate(
                     async () => {
-                        await Promise.all([...ids].map((id) => updateStatement(id, { extraction_method: method })));
+                        await Promise.all([...ids].map((id) => updateStatement(id, { extractionMethod: method })));
                         return undefined;
                     },
                     {
                         optimisticData: (current?: Statement[]) =>
-                            (current ?? []).map((statement) => (ids.has(statement.id) ? { ...statement, extraction_method: method } : statement)),
+                            (current ?? []).map((statement) => (ids.has(statement.id) ? { ...statement, extractionMethod: method } : statement)),
                         populateCache: false,
                         revalidate: false,
                         rollbackOnError: true,
                     },
                 );
             } catch (error: unknown) {
-                errorHandler({ error, shouldShowToast: true });
+                await errorHandler({ error, shouldShowToast: true });
             }
         },
         [mutate],
@@ -153,10 +153,10 @@ const ComparisonAiReviewProvider: FC<ComparisonAiReviewProviderProps> = ({ compa
         let pending = 0;
         let total = 0;
         for (const statement of statements ?? []) {
-            if (statement.extraction_method === EXTRACTION_METHODS.AI_GENERATED) {
+            if (statement.extractionMethod === EXTRACTION_METHODS.AI_GENERATED) {
                 pending += 1;
                 total += 1;
-            } else if (statement.extraction_method === EXTRACTION_METHODS.AI_GENERATED_WITH_MANUAL_REVIEW) {
+            } else if (statement.extractionMethod === EXTRACTION_METHODS.AI_GENERATED_WITH_MANUAL_REVIEW) {
                 total += 1;
             }
         }
@@ -165,7 +165,7 @@ const ComparisonAiReviewProvider: FC<ComparisonAiReviewProviderProps> = ({ compa
 
     const acceptAll = useCallback(() => {
         const pendingIds = (statements ?? [])
-            .filter((statement) => statement.extraction_method === EXTRACTION_METHODS.AI_GENERATED)
+            .filter((statement) => statement.extractionMethod === EXTRACTION_METHODS.AI_GENERATED)
             .map((statement) => statement.id);
         return applyExtractionMethod(pendingIds, EXTRACTION_METHODS.AI_GENERATED_WITH_MANUAL_REVIEW);
     }, [statements, applyExtractionMethod]);

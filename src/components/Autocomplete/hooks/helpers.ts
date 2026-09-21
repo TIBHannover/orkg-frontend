@@ -13,7 +13,7 @@ import { getEntities } from '@/services/backend/misc';
 import { getResources } from '@/services/backend/resources';
 import { createLiteralStatement } from '@/services/backend/statements';
 import { getThing, Thing } from '@/services/backend/things';
-import { Class, EntityType, PaginatedResponse } from '@/services/backend/types';
+import { EntityType, Pagination } from '@/services/backend/types';
 import getGeoNames from '@/services/geoNames';
 import { EntityPath, getOntologyEntities, selectEntities } from '@/services/ols';
 import { searchEntity } from '@/services/wikidata';
@@ -33,7 +33,7 @@ export const orkgLookup = async ({
     value: string;
     page: number;
     pageSize: number;
-} & OptionsSettings): Promise<PaginatedResponse<Thing>> => {
+} & OptionsSettings): Promise<Pagination<Thing>> => {
     const exact = !!(value.startsWith('"') && value.endsWith('"') && value.length > 2);
     const isURI = new RegExp(REGEX.URL).test(value.trim());
     let localValue = value;
@@ -51,35 +51,22 @@ export const orkgLookup = async ({
             page,
             size: pageSize,
             exact,
-        });
+        }).then((res) => ({
+            ...res,
+            content: res.content as Thing[],
+        }));
     } else if (entityType === ENTITIES.CLASS && isURI) {
         // Lookup a class by uri
         try {
-            const r = await getClasses({
+            responseJson = (await getClasses({
                 page,
                 size: pageSize,
                 exact,
                 uri: localValue.trim(),
-            }).then((res) => ({
-                // TODO: remove snake case handling after finishing services migration
-                content: res.content,
-                page: {
-                    total_elements: res.page.totalElements,
-                    total_pages: res.page.totalPages,
-                    size: res.page.size,
-                    number: res.page.number,
-                },
-            }));
-            if (r && !('page' in r) && !('content' in r)) {
-                responseJson = { content: [r], page: { total_elements: 1, total_pages: 1, size: 0, number: 0 } };
-            } else if (!('page' in r) && !('content' in r)) {
-                responseJson = { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
-            } else {
-                responseJson = r as unknown as PaginatedResponse<Class>;
-            }
+            })) as Pagination<Thing>;
         } catch (error) {
             // No matching class
-            return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
+            return { content: [], page: { totalElements: 0, totalPages: 0, size: 0, number: 0 } };
         }
     } else {
         // Predicate or Class or Thing
@@ -90,20 +77,14 @@ export const orkgLookup = async ({
             exact,
             exclude: excludeClasses,
         }).then((res) => ({
-            // TODO: remove snake case handling after finishing services migration
-            content: res.content,
-            page: {
-                total_elements: 'totalElements' in res.page ? res.page.totalElements : res.page.total_elements,
-                total_pages: 'totalPages' in res.page ? res.page.totalPages : res.page.total_pages,
-                size: res.page.size,
-                number: res.page.number,
-            },
+            ...res,
+            content: res.content as Thing[],
         }));
     }
 
     // If no response, return empty results
     if (!responseJson) {
-        return { content: [], page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
+        return { content: [], page: { totalElements: 0, totalPages: 0, size: 0, number: 0 } };
     }
 
     return responseJson;
@@ -254,11 +235,11 @@ export const importExternalSelectedOption = async (entityType: EntityType, value
 
         // Import the option
         if (resolvedEntityType === ENTITIES.RESOURCE && value.ontology && value.uri) {
-            importedValue = await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+            importedValue = (await importResourceByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri })) as OptionType;
         } else if (resolvedEntityType === ENTITIES.PREDICATE && value.ontology && value.uri) {
-            importedValue = await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+            importedValue = (await importPredicateByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri })) as OptionType;
         } else if (resolvedEntityType === ENTITIES.CLASS && value.ontology && value.uri) {
-            importedValue = await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri });
+            importedValue = (await importClassByURI({ ontology: value.ontology.toLowerCase(), uri: value.uri })) as OptionType;
         } else if (entityType === ENTITIES.THING) {
             throw new Error('Cannot import a THING option without a concrete entity type.');
         } else {

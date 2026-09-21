@@ -30,8 +30,10 @@ import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { classesUrl, getClassById } from '@/services/backend/classes';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { deleteRSTemplate, getRSStatements, getRSTemplate, rosettaStoneUrl } from '@/services/backend/rosettaStone';
 import { Thing } from '@/services/backend/things';
+import { RosettaStoneTemplate, RSPropertyShape } from '@/services/backend/types';
 
 const RSTemplatePage = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
@@ -44,11 +46,11 @@ const RSTemplatePage = () => {
         isLoading: isLoadingStatements,
 
         mutate: reloadStatements,
-    } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements({ template_id: params }));
+    } = useSWR(id ? [id, rosettaStoneUrl, 'getRSStatements'] : null, ([params]) => getRSStatements({ templateId: params }));
     const router = useRouter();
 
     const { data: targetClass, isLoading: isLoadingTargetClass } = useSWR(
-        template?.target_class ? [template.target_class, classesUrl, 'getClassById'] : null,
+        template?.targetClass ? [template.targetClass, classesUrl, 'getClassById'] : null,
         ([params]) => getClassById(params),
     );
 
@@ -61,12 +63,29 @@ const RSTemplatePage = () => {
     const preventDeletionTooltipText = 'You cannot delete this statement template because it has some instances or you are not the creator';
     const preventEditTooltipText = 'You cannot edit this statement template because it has some instances or you are not the creator';
 
+    // SlotTooltip still consumes the legacy snake_case property shape, so the camelCase representation is mapped back to it
+    const toSlotShape = (p: RosettaStoneTemplate['properties'][number]): RSPropertyShape => ({
+        id: p.id,
+        label: p.label,
+        placeholder: p.placeholder ?? '',
+        description: p.description ?? '',
+        min_count: p.minCount,
+        max_count: p.maxCount,
+        path: p.path,
+        ...(p.type === 'string_literal' || p.type === 'number_literal' || p.type === 'other_literal' ? { datatype: p.datatype } : {}),
+        ...(p.type === 'string_literal' ? { pattern: p.pattern ?? '' } : {}),
+        ...(p.type === 'number_literal' ? { min_inclusive: p.minInclusive, max_inclusive: p.maxInclusive } : {}),
+        // the generated client escapes the wire field 'class' as '_class'
+        ...(p.type === 'resource' ? { class: p._class } : {}),
+    });
+
     const replacementFunction = (match: string) => {
         const i = toInteger(match);
-        if (template?.properties[i]) {
+        const property = template?.properties[i];
+        if (property) {
             return (
-                <SlotTooltip key={i} slot={template?.properties[i]}>
-                    <i style={{ textDecoration: 'underline' }}>{template?.properties[i].placeholder}</i>
+                <SlotTooltip key={i} slot={toSlotShape(property)}>
+                    <i style={{ textDecoration: 'underline' }}>{property.placeholder}</i>
                 </SlotTooltip>
             );
         }
@@ -93,19 +112,14 @@ const RSTemplatePage = () => {
     };
 
     const formattedLabelWithPlaceholders = ReactStringReplace(
-        template?.formatted_label?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
+        template?.formattedLabel?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
         /{(.*?)}/,
         replacementFunction,
     );
 
-    const { page } = statements ?? { page: { total_elements: 0, total_pages: 0, size: 0, number: 0 } };
+    const { page } = statements ?? { page: { totalElements: 0, totalPages: 0, size: 0, number: 0 } };
 
-    const canDeleteTemplate = !!(
-        user &&
-        !isLoadingStatements &&
-        page.total_elements === 0 &&
-        (isCurationAllowed || user?.id === template?.created_by)
-    );
+    const canDeleteTemplate = !!(user && !isLoadingStatements && page.totalElements === 0 && (isCurationAllowed || user?.id === template?.createdBy));
     const canEditTemplate = !!user;
 
     return (
@@ -115,7 +129,7 @@ const RSTemplatePage = () => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && error && (getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && template && (
                 <>
                     <TitleBar
@@ -187,8 +201,8 @@ const RSTemplatePage = () => {
                                 item={
                                     {
                                         ...template,
-                                        observatory_id: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
-                                        organization_id: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
+                                        observatoryId: template.observatories?.[0] ?? MISC.UNKNOWN_ID,
+                                        organizationId: template.organizations?.[0] ?? MISC.UNKNOWN_ID,
                                     } as unknown as Thing
                                 }
                                 showCreatedAt
@@ -240,21 +254,21 @@ const RSTemplatePage = () => {
                                             {isLoadingStatements ? (
                                                 <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />
                                             ) : (
-                                                <Chip size="sm">{page.total_elements}</Chip>
+                                                <Chip size="sm">{page.totalElements}</Chip>
                                             )}
                                         </>
                                     ),
                                     key: 'instances',
                                     children: (
                                         <div className="">
-                                            {page.total_elements > 0 && (
+                                            {page.totalElements > 0 && (
                                                 <ListGroup flush tag="div" className="mb-2">
                                                     {statements?.content?.map((s) => (
                                                         <SingleStatement showContext key={s.id} statement={s} reloadStatements={reloadStatements} />
                                                     ))}
                                                 </ListGroup>
                                             )}
-                                            {page.total_elements === 0 && <div className="text-center m-6">No instances</div>}
+                                            {page.totalElements === 0 && <div className="text-center m-6">No instances</div>}
                                         </div>
                                     ),
                                 },

@@ -57,7 +57,7 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
                 page,
             });
             const items = result.content;
-            const hasMore = result.page.number < result.page.total_pages - 1;
+            const hasMore = (result.page.number ?? 0) < (result.page.totalPages ?? 0) - 1;
             return {
                 options: items,
                 hasMore,

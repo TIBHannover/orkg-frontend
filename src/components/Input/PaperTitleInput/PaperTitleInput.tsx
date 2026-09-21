@@ -85,7 +85,7 @@ const PaperTitleInput = ({
                 );
                 for (const resp of await Promise.all(promises)) {
                     options = [...options, ...resp.content.map((result) => ({ ...result, isOrkgResource: true }) as OptionType)];
-                    hasMore = hasMore || resp.page.number < resp.page.total_pages - 1;
+                    hasMore = hasMore || resp.page.number < resp.page.totalPages - 1;
                 }
             }
         } catch (err) {

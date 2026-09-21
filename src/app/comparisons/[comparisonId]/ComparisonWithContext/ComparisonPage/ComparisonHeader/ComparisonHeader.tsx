@@ -35,6 +35,7 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getComparisonTableCsv } from '@/services/backend/comparisons';
+import { ResourceThingReference } from '@/services/backend/types';
 
 const ComparisonHeader = () => {
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
@@ -56,7 +57,10 @@ const ComparisonHeader = () => {
     const { generateRdfDataVocabularyFile } = useRdfExport();
     const numberOfSources = comparison?.sources.length ?? 0;
     const selectEntitiesInitial = useMemo(
-        () => comparisonContents?.titles.map((title, i) => comparisonContents.subtitles[i] ?? title),
+        () =>
+            comparisonContents?.titles
+                .map((title, i) => comparisonContents.subtitles[i] ?? title)
+                .filter((entity): entity is ResourceThingReference => entity._class === 'resource_ref'),
         [comparisonContents],
     );
     const { isFullWidth, toggleIsFullWidth } = useFullWidth({ sourceAmount: numberOfSources });
@@ -152,7 +156,7 @@ const ComparisonHeader = () => {
             });
 
             if (isConfirmed) {
-                router.push(reverse(ROUTES.COMPARISON, { comparisonId: comparison?.versions.head.id }));
+                router.push(reverse(ROUTES.COMPARISON, { comparisonId: comparison?.versions?.head.id ?? comparison?.id }));
             }
         } else {
             toggleIsEditMode();
@@ -165,7 +169,7 @@ const ComparisonHeader = () => {
 
     return (
         <>
-            <Breadcrumbs researchFieldId={comparison.research_fields?.[0] ? comparison.research_fields?.[0]?.id : null} />
+            <Breadcrumbs researchFieldId={comparison.researchFields?.[0] ? comparison.researchFields?.[0]?.id : null} />
             <TitleBar
                 buttonGroup={
                     <>
@@ -231,7 +235,7 @@ const ComparisonHeader = () => {
                                     }}
                                     disabledKeys={[
                                         ...(!isEditMode ? ['grid-editor'] : []),
-                                        ...(comparison.versions.published.length < 1 ? ['history'] : []),
+                                        ...((comparison.versions?.published.length ?? 0) < 1 ? ['history'] : []),
                                     ]}
                                 >
                                     <Dropdown.SubmenuTrigger>
@@ -373,7 +377,7 @@ const ComparisonHeader = () => {
                                         <Header>Tools</Header>
                                         <Dropdown.Item id="history" textValue="History">
                                             <Tooltip
-                                                disabled={comparison.versions.published.length > 0}
+                                                disabled={(comparison.versions?.published.length ?? 0) > 0}
                                                 content="There is no history available for this comparison"
                                             >
                                                 <Label>History</Label>
@@ -408,7 +412,7 @@ const ComparisonHeader = () => {
             >
                 Comparison
             </TitleBar>
-            {isPublished && comparison.id !== comparison.versions.published[0]?.id && (
+            {isPublished && comparison.id !== comparison.versions?.published[0]?.id && (
                 <Container className="mb-2">
                     <Alert status="warning" className="shadow">
                         <Alert.Indicator />
@@ -423,7 +427,7 @@ const ComparisonHeader = () => {
                                 render={(props) => (
                                     <Link
                                         {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-                                        href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.versions.published[0]?.id })}
+                                        href={reverse(ROUTES.COMPARISON, { comparisonId: comparison.versions?.published[0]?.id })}
                                     />
                                 )}
                             >
@@ -437,7 +441,7 @@ const ComparisonHeader = () => {
                                         {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
                                         href={reverse(ROUTES.COMPARISON_DIFF, {
                                             oldId: comparison.id,
-                                            newId: comparison.versions.published[0]?.id,
+                                            newId: comparison.versions?.published[0]?.id,
                                         })}
                                     />
                                 )}

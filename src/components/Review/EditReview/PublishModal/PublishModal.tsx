@@ -39,7 +39,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
         try {
             const newId = await publishReview(review.id, {
                 changelog: updateMessage,
-                assign_doi: shouldAssignDoi,
+                assignDoi: shouldAssignDoi,
                 ...(description && { description }),
             });
 
@@ -49,7 +49,7 @@ const PublishModal: FC<PublishModalProps> = ({ toggle }) => {
             setPublishedId(newId);
             setIsLoading(false);
         } catch (e) {
-            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
+            await errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
             console.error(e);
         } finally {
             setIsLoading(false);

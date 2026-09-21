@@ -32,7 +32,7 @@ const useConstraints = () => {
         } else if (entity?._class === ENTITIES.RESOURCE) {
             classes = [CLASSES.RESOURCE, ...classes];
         }
-        return templates?.filter((t) => classes.includes(t.target_class.id));
+        return templates?.filter((t) => classes.includes(t.targetClass.id));
     };
 
     const getScopedStatements = (subjectId: string) => {
@@ -51,11 +51,7 @@ const useConstraints = () => {
 
         let result = true;
 
-        if (
-            propertyShapes.find(
-                (p) => p.max_count && scoppedStatements?.filter((s) => s.predicate.id === predicateId).length >= (p.max_count as number),
-            )
-        ) {
+        if (propertyShapes.find((p) => p.maxCount && scoppedStatements?.filter((s) => s.predicate.id === predicateId).length >= p.maxCount)) {
             result = false;
         }
 
@@ -64,7 +60,8 @@ const useConstraints = () => {
 
     const getRanges = (predicateId: string, subjectId: string) => {
         const propertyShapes = getPropertyShapes(predicateId, subjectId);
-        return compact(propertyShapes.map((ps) => ('class' in ps && ps.class) || ('datatype' in ps && ps.datatype)));
+        // the generated client escapes the wire field 'class' as '_class'
+        return compact(propertyShapes.map((ps) => (ps.type === 'resource' && ps._class) || ('datatype' in ps && ps.datatype)));
     };
 
     const isLiteralField = (predicateId: string, subjectId: string) => {

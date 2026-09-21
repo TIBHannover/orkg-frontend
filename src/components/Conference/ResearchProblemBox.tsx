@@ -8,6 +8,7 @@ import InternalServerError from '@/app/error';
 import NotFound from '@/app/not-found';
 import ResearchProblemsModal from '@/components/Conference/ResearchProblemsModal';
 import ROUTES from '@/constants/routes';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { getResearchProblems, researchProblemsUrl } from '@/services/backend/research-problems';
 import { reverseWithSlug } from '@/utilsTyped';
 
@@ -22,8 +23,8 @@ const ResearchProblemBox = ({ id }: { id: string }) => {
 
     return (
         <div className="box rounded-lg p-4 grow flex flex-col">
-            {!isLoading && error && error.statusCode === 404 && <NotFound />}
-            {!isLoading && error && error.statusCode !== 404 && <InternalServerError error={error} />}
+            {!isLoading && error && getStatusCode(error) === 404 && <NotFound />}
+            {!isLoading && error && getStatusCode(error) !== 404 && <InternalServerError error={error} />}
             <h5>Research problems</h5>
             {!isLoading && problems.length > 0 && (
                 <ul className="pl-4 pt-2">

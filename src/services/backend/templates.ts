@@ -1,120 +1,30 @@
+import { CreateTemplateRequest, TemplatesApi, TemplatesApiFindAllRequest, UpdateTemplateRequest } from '@orkg/orkg-client';
 import { uniqBy } from 'lodash';
-import qs from 'qs';
 
 import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import {
-    CreatedByParam,
-    CreateTemplateParams,
-    ObservatoryIdParam,
-    OrganizationIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    ResearchFieldIdParams,
-    Template,
-    UpdateTemplateParams,
-    VisibilityParam,
-} from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { toTemplatePropertyRequest } from '@/services/backend/mapTemplateProperty';
+import { CreateTemplateParams, Template, UpdateTemplateParams, VisibilityParam, WithPaginationParams } from '@/services/backend/types';
 
-export const templatesUrl = `${url}templates/`;
-export const templatesApi = backendApi.extend(() => ({ prefixUrl: templatesUrl }));
-const TEMPLATE_CONTENT_TYPE = 'application/vnd.orkg.template.v1+json';
+export const templatesUrl = `${urlNoTrailingSlash}/templates`;
 
-export const getTemplate = (id: string) =>
-    templatesApi
-        .get<Template>(id, {
-            headers: {
-                Accept: TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
+const templatesApi = new TemplatesApi(configuration);
 
-export const createTemplate = (data: CreateTemplateParams) =>
-    templatesApi
-        .post<Template>('', {
-            json: data,
-            headers: {
-                'Content-Type': TEMPLATE_CONTENT_TYPE,
-                Accept: TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-
-export const updateTemplate = (id: string, data: UpdateTemplateParams) =>
-    templatesApi
-        .put<Template>(id, {
-            json: data,
-            headers: {
-                'Content-Type': TEMPLATE_CONTENT_TYPE,
-                Accept: TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
-
-export type getTemplatesParams = {
-    q?: string | null;
-    exact?: boolean;
-    researchProblem?: string | null;
-    targetClass?: string | null;
-    createdAtStart?: string | null;
-    createdAtEnd?: string | null;
-} & PaginationParams &
-    VisibilityParam &
-    CreatedByParam &
-    ResearchFieldIdParams &
-    ObservatoryIdParam &
-    OrganizationIdParam;
+export const getTemplate = (id: string) => templatesApi.findById({ id });
 
 export const getTemplates = ({
-    q = null,
-    exact = false,
-    created_by = undefined,
-    research_field = undefined,
-    include_subfields = undefined,
-    researchProblem = null,
-    targetClass = null,
-    createdAtStart = null,
-    createdAtEnd = null,
-    observatory_id = undefined,
-    organization_id = undefined,
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-}: getTemplatesParams) => {
-    const searchParams = qs.stringify(
-        {
-            page,
-            size,
-            sort: sortBy?.map((p) => `${p.property},${p.direction}`),
-            ...(q ? { q, exact } : {}),
-            visibility,
-            created_by,
-            research_field,
-            include_subfields,
-            research_problem: researchProblem,
-            target_class: targetClass,
-            created_at_start: createdAtStart,
-            created_at_end: createdAtEnd,
-            observatory_id,
-            organization_id,
-        },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
+    ...params
+}: Omit<WithPaginationParams<TemplatesApiFindAllRequest>, 'visibility'> & VisibilityParam) =>
+    templatesApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as TemplatesApiFindAllRequest['visibility'],
+        }),
     );
-
-    return templatesApi
-        .get<PaginatedResponse<Template>>('', {
-            searchParams,
-            headers: {
-                Accept: TEMPLATE_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
 
 export const getFeaturedTemplates = async ({
     researchFields = [],
@@ -125,19 +35,19 @@ export const getFeaturedTemplates = async ({
 }): Promise<Template[]> => {
     const researchFieldTemplates =
         researchFields?.length > 0
-            ? researchFields.map((rf) =>
+            ? researchFields.map((researchField) =>
                   getTemplates({
-                      research_field: rf,
-                      include_subfields: false,
+                      researchField,
+                      includeSubfields: false,
                   }),
               )
             : [];
 
     const researchProblemsTemplates =
         researchProblems?.length > 0
-            ? researchProblems.map((rp) =>
+            ? researchProblems.map((researchProblem) =>
                   getTemplates({
-                      researchProblem: rp,
+                      researchProblem,
                   }),
               )
             : [];
@@ -152,3 +62,39 @@ export const getFeaturedTemplates = async ({
         ),
     );
 };
+
+export const toCreateTemplateRequest = (data: CreateTemplateParams): CreateTemplateRequest => ({
+    label: data.label,
+    targetClass: data.targetClass,
+    isClosed: data.isClosed,
+    relations: data.relations,
+    properties: data.properties.map(toTemplatePropertyRequest),
+    observatories: data.observatories ?? [],
+    organizations: data.organizations ?? [],
+    ...(data.description != null ? { description: data.description } : {}),
+    ...(data.formattedLabel != null ? { formattedLabel: data.formattedLabel } : {}),
+});
+
+export const toUpdateTemplateRequest = (data: UpdateTemplateParams): UpdateTemplateRequest => ({
+    ...(data.label !== undefined ? { label: data.label } : {}),
+    ...(data.targetClass !== undefined ? { targetClass: data.targetClass } : {}),
+    ...(data.isClosed !== undefined ? { isClosed: data.isClosed } : {}),
+    ...(data.relations !== undefined ? { relations: data.relations } : {}),
+    ...(data.observatories !== undefined ? { observatories: data.observatories } : {}),
+    ...(data.organizations !== undefined ? { organizations: data.organizations } : {}),
+    // the editor sends null to clear these, and null is what the backend wants: it rejects ""
+    // with "must not be blank" and only nulls the field for an explicit null. The generated type
+    // admits string | undefined only, hence the cast.
+    ...(data.description !== undefined ? { description: data.description as string } : {}),
+    ...(data.formattedLabel !== undefined ? { formattedLabel: data.formattedLabel as string } : {}),
+    ...(data.properties ? { properties: data.properties.map(toTemplatePropertyRequest) } : {}),
+});
+
+export const createTemplate = (data: CreateTemplateParams) =>
+    templatesApi.createRaw({ createTemplateRequest: toCreateTemplateRequest(data) }).then(getCreatedId);
+
+export const updateTemplate = (id: string, data: UpdateTemplateParams) =>
+    templatesApi.update({
+        id,
+        updateTemplateRequest: toUpdateTemplateRequest(data),
+    });

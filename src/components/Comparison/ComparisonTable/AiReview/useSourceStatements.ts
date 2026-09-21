@@ -29,7 +29,7 @@ const useSourceStatements = (comparisonId?: string) => {
     const { comparisonContents, isEditMode } = useComparison(comparisonId);
 
     const sourceIds = useMemo(
-        () => (comparisonContents ? comparisonContents.titles.map((title, i) => comparisonContents.subtitles[i]?.id ?? title.id) : []),
+        () => (comparisonContents ? comparisonContents.titles.map((title, i) => comparisonContents.subtitles[i]?.id ?? title.id ?? '') : []),
         [comparisonContents],
     );
 

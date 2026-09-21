@@ -79,7 +79,7 @@ const ClassesInput: FC<ClassesInputProps> = ({ setIsEditing }) => {
                     entityType={ENTITIES.CLASS}
                     onChange={handleUpdateClasses}
                     placeholder="Specify the classes of the resource"
-                    value={localClasses}
+                    value={localClasses as OptionType[]}
                     allowCreate
                     isMulti
                     enableExternalSources

@@ -44,8 +44,8 @@ const ObservatoryModal: FC<ObservatoryModalProps> = ({
 
     const handleSubmit = async () => {
         await updateResource(resourceId, {
-            observatory_id: observatory?.id ?? MISC.UNKNOWN_ID,
-            organization_id: organization?.id ?? MISC.UNKNOWN_ID,
+            observatoryId: observatory?.id ?? MISC.UNKNOWN_ID,
+            organizationId: organization?.id ?? MISC.UNKNOWN_ID,
         });
         toast.success('Observatory assigned to resource successfully');
         if (callBack) {

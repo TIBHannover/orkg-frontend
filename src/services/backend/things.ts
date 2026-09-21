@@ -1,87 +1,33 @@
-import qs from 'qs';
+import { ThingRepresentation, ThingsApi, ThingsApiFindAllRequest, VisibilityFilter } from '@orkg/orkg-client';
 
-import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url as baseUrl } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
-import {
-    Class,
-    CreatedByParam,
-    Literal,
-    ObservatoryIdParam,
-    OrganizationIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    Predicate,
-    Resource,
-    SdgParam,
-    VerifiedParam,
-    VisibilityParam,
-} from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, transformPaginationParams } from '@/services/backend/backendApi';
+import { VisibilityParam, WithPaginationParams } from '@/services/backend/types';
 
-export const thingsUrl = `${baseUrl}things/`;
-export const thingsApi = backendApi.extend(() => ({ prefixUrl: thingsUrl }));
+export const thingsUrl = `${urlNoTrailingSlash}/things`;
 
-export type Thing = Resource | Predicate | Class | Literal;
+const thingsApi = new ThingsApi(configuration);
 
-export const getThing = (id: string) => thingsApi.get<Thing>(id).json();
+export type Thing = ThingRepresentation;
 
-export const getThings = ({
-    q = null,
-    exact = false,
-    visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by = undefined,
-    createdAtStart = null,
-    createdAtEnd = null,
-    include = [],
-    exclude = [],
-    observatory_id = undefined,
-    organization_id = undefined,
-    page = 0,
-    size = 9999,
-    sortBy = [
-        {
-            property: 'created_at',
-            direction: 'desc',
-        },
-    ],
-}: {
-    q?: string | null;
-    exact?: boolean;
-    createdAtStart?: string | null;
-    createdAtEnd?: string | null;
-    include?: string[];
-    exclude?: string[];
-} & PaginationParams &
-    VisibilityParam &
-    VerifiedParam &
-    CreatedByParam &
-    SdgParam &
-    ObservatoryIdParam &
-    OrganizationIdParam) => {
-    const sort = sortBy?.map((p) => `${p.property},${p.direction}`);
-    const searchParams = qs.stringify(
-        {
-            page,
-            size,
-            ...(q ? { q, exact } : { sort }),
-            ...(!['Literal', 'Predicate', 'Class'].includes(visibility) ? { type: visibility } : {}),
-            created_by,
-            created_at_start: createdAtStart,
-            created_at_end: createdAtEnd,
-            ...(include?.length ? { include: include.join(',') } : {}),
-            ...(exclude?.length ? { exclude: exclude.join(',') } : {}),
-            observatory_id,
-            organization_id,
-        },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
-    );
+export const getThing = (id: string) => thingsApi.findById({ id });
 
-    return thingsApi
-        .get<PaginatedResponse<Thing>>('', {
-            searchParams,
-        })
-        .json();
-};
+/**
+ * `GET /things` historically read the visibility filter from a `type` query parameter while the
+ * spec named it `visibility`. The backend has since aligned with the spec on every deployment
+ * (`visibility` is honored, `type` is ignored), so the generated operation is used as-is.
+ *
+ * No default visibility: on this mixed endpoint the filter only ever matches resources (literals,
+ * predicates and classes have no visibility), so even `ALL_LISTED` empties those types — the search
+ * page lost every literal/class/predicate when it was sent by default. The legacy `type=ALL_LISTED`
+ * was a no-op for the same reason. A visibility is forwarded only when a caller explicitly asks for one.
+ */
+export const getThings = ({ visibility, ...params }: Omit<WithPaginationParams<ThingsApiFindAllRequest>, 'visibility'> & VisibilityParam) =>
+    thingsApi.findAll({
+        ...transformPaginationParams(params),
+        // `visibility` doubles as an entity-type filter for some callers: entity classes and the
+        // pseudo-visibility 'combined' are not wire visibilities, so they are simply not sent
+        ...(visibility && Object.values(VisibilityFilter).includes(visibility as VisibilityFilter)
+            ? { visibility: visibility as VisibilityFilter }
+            : {}),
+    });

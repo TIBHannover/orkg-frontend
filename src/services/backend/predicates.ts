@@ -1,59 +1,29 @@
-import qs from 'qs';
+import { PredicatesApi, PredicatesApiFindAllRequest } from '@orkg/orkg-client';
 
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { CreatedByParam, PaginatedResponse, PaginationParams, Predicate } from '@/services/backend/types';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { Pagination, Predicate, WithPaginationParams } from '@/services/backend/types';
 
-export const predicatesUrl = `${url}predicates/`;
-export const predicatesApi = backendApi.extend(() => ({ prefixUrl: predicatesUrl }));
+export const predicatesUrl = `${urlNoTrailingSlash}/predicates`;
 
-export const getPredicate = (id: string) => predicatesApi.get<Predicate>(encodeURIComponent(id)).json();
+const predicatesApi = new PredicatesApi(configuration);
+
+export const getPredicate = (id: string) => predicatesApi.findById({ id });
 
 export const getPredicatesByIds = (ids: string[]): Promise<Predicate[]> => Promise.all(ids.map((id) => getPredicate(id)));
 
 export const createPredicate = (label: string, id: string | undefined = undefined) =>
-    predicatesApi
-        .post<Predicate>('', {
-            json: {
-                label,
-                id,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    predicatesApi.createRaw({ createPredicateRequest: { label, id } }).then(getCreatedId);
 
-export const updatePredicate = (id: string, label: string) => predicatesApi.put<Predicate>(encodeURIComponent(id), { json: { label } }).json();
+export const updatePredicate = (id: string, label: string) => predicatesApi.update({ id, updatePredicateRequest: { label } });
 
-export const deletePredicate = (id: string) => predicatesApi.delete<void>(id);
+export const deletePredicate = (id: string) => predicatesApi.deleteById({ id });
 
-export type GetPredicatesParams<T extends boolean = false> = {
-    q?: string | null;
-    exact?: boolean;
+export type GetPredicatesParams<T extends boolean = false> = WithPaginationParams<PredicatesApiFindAllRequest> & {
     returnContent?: T;
-} & PaginationParams &
-    CreatedByParam;
-
-export const getPredicates = <T extends boolean = false>({
-    page = 0,
-    size = 9999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    q = null,
-    exact = false,
-    returnContent = false as T,
-    created_by = undefined,
-}: GetPredicatesParams<T>) => {
-    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
-    const searchParams = qs.stringify(
-        { page, size, exact, created_by, ...(q ? { q } : { sort }) },
-        {
-            skipNulls: true,
-            arrayFormat: 'repeat',
-        },
-    );
-
-    return predicatesApi
-        .get<PaginatedResponse<Predicate>>('', {
-            searchParams,
-        })
-        .json()
-        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Predicate[] : PaginatedResponse<Predicate>>;
 };
+
+export const getPredicates = <T extends boolean = false>({ returnContent = false as T, ...params }: GetPredicatesParams<T>) =>
+    predicatesApi.findAll(transformPaginationParams(params)).then((res) => (returnContent ? res.content : res)) as Promise<
+        T extends true ? Predicate[] : Pagination<Predicate>
+    >;

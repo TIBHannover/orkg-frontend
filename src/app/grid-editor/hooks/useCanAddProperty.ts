@@ -5,7 +5,7 @@ const useCanAddProperty = () => {
 
     let canAddProperty = true;
 
-    if (templates.find((t) => t.is_closed)) {
+    if (templates.find((t) => t.isClosed)) {
         canAddProperty = false;
     }
 

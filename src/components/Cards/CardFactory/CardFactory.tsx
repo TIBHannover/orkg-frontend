@@ -62,7 +62,9 @@ const CardFactory: FC<CardFactoryProps> = ({ item, showBadge, showCurationFlags,
     if ('context' in item) {
         return <SingleStatement showContext showMetadata key={item.id} statement={item as RosettaStoneStatement} />;
     }
-    if ('example_usage' in item) {
+    // rosetta stone representations carry no _class discriminator; the generated model exposes
+    // camelCase keys, so the guard must match exampleUsage (example_usage was the ky wire shape)
+    if ('exampleUsage' in item) {
         return <RSTemplateCard template={item as RosettaStoneTemplate} showBadge={showBadge} />;
     }
     return null;

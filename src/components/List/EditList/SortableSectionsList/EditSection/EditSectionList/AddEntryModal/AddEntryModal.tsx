@@ -97,6 +97,7 @@ const AddEntryModal: FC<AddEntryModalProps> = ({ section, toggle }) => {
                     id: _entity.id,
                     label: '',
                     classes: [],
+                    _class: 'resource_ref' as const,
                 },
             });
         }

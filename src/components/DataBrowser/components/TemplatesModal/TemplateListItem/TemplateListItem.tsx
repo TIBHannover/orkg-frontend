@@ -12,7 +12,7 @@ type TemplateListItemProps = {
 
 const TemplateListItem: FC<TemplateListItemProps> = ({ template, isDisabled }) => {
     const { entity } = useEntity();
-    const isApplied = Boolean(entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id));
+    const isApplied = Boolean(entity && 'classes' in entity && entity?.classes?.includes(template.targetClass.id));
 
     return (
         <SharedTemplateListItem

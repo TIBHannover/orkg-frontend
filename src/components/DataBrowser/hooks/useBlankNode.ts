@@ -13,8 +13,8 @@ const useBlankNode = (ranges: Node[]) => {
     );
 
     const templates = data?.map((c) => c.content).flat() ?? [];
-    const isBlankNode = (templates && templates?.filter((t) => t.formatted_label).length > 0) ?? false;
-    const blankNodeLabel = (templates && templates?.filter((t) => t.formatted_label).map((t) => t.label)?.[0]) ?? null;
+    const isBlankNode = (templates && templates?.filter((t) => t.formattedLabel).length > 0) ?? false;
+    const blankNodeLabel = (templates && templates?.filter((t) => t.formattedLabel).map((t) => t.label)?.[0]) ?? null;
 
     const createBlankNode = async () => {
         const newResourceId = await createResource({ label: blankNodeLabel, classes: ranges.map((r) => r.id) });

@@ -147,7 +147,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                     const cleanedProperty = cleanLabelProperty(property);
                     // eslint-disable-next-line no-await-in-loop
                     const fetchedPredicate = await getPredicates({ q: cleanedProperty, exact: true });
-                    if (fetchedPredicate.page.total_elements) {
+                    if (fetchedPredicate.page.totalElements) {
                         propertyId = fetchedPredicate.content[0].id;
                         _idToLabel[propertyId] = cleanedProperty;
                         valueToId[property] = propertyId;
@@ -214,7 +214,7 @@ const useImportBulkData = ({ data, onFinish }: ImportBulkDataProps) => {
                             // eslint-disable-next-line no-await-in-loop
                             fetchedResource = await getResources({ include: [CLASSES.PROBLEM], q: cleanNewResource(value), exact: true });
                         }
-                        if (fetchedResource?.page?.total_elements) {
+                        if (fetchedResource?.page?.totalElements) {
                             valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
                             _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
                             valueObject = {

@@ -38,9 +38,9 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setTitle(comparison.title);
             setDescription(comparison.description);
-            setResearchField(comparison.research_fields[0]);
+            setResearchField(comparison.researchFields[0]);
             setAuthors(comparison.authors);
-            setIsAnonymized(comparison.is_anonymized);
+            setIsAnonymized(comparison.isAnonymized);
             const conference = conferences.find(({ id }) => comparison?.organizations.includes(id));
             if (conference) {
                 setSelectedConference(conference);
@@ -51,10 +51,10 @@ const EditMetadataModal: FC<{ toggle: () => void; comparisonId: string }> = ({ t
     const handleSave = () => {
         updateComparison({
             title,
-            ...(researchField ? { research_fields: [researchField] } : {}),
+            ...(researchField ? { researchFields: [researchField] } : {}),
             authors,
             description,
-            is_anonymized: isAnonymized,
+            isAnonymized,
             organizations: selectedConference?.id ? [selectedConference.id] : [],
         });
         toggle();

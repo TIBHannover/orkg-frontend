@@ -44,13 +44,13 @@ const useTemplateGallery = ({ pageSize = 25 }: { pageSize?: number }) => {
         fetchFunctionName: 'getTemplates',
         fetchExtraParams: {
             q: searchTerm,
-            ...(researchField ? { research_field: researchField } : {}),
-            ...(includeSubFields ? { include_subfields: includeSubFields } : {}),
+            ...(researchField ? { researchField } : {}),
+            ...(includeSubFields ? { includeSubfields: includeSubFields } : {}),
             ...(researchProblem ? { researchProblem } : {}),
             ...(targetClass ? { targetClass } : {}),
         },
         defaultPageSize: pageSize,
-        defaultSortBy: 'created_at',
+        defaultSortBy: 'createdAt',
     });
 
     const isFilterApplied = researchField || researchProblem || targetClass || searchTerm;

@@ -26,7 +26,7 @@ const EditMetadata = () => {
                 <div>
                     <h1 className="py-2 m-0">{list.title || <em>No title</em>}</h1>
 
-                    {list.research_fields?.[0] && <ResearchFieldBadge researchField={list.research_fields[0]} />}
+                    {list.researchFields?.[0] && <ResearchFieldBadge researchField={list.researchFields[0]} />}
 
                     <ListEntryAmount />
                     <AuthorBadges authors={list.authors} />

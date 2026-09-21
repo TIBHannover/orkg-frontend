@@ -12,6 +12,7 @@ import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowse
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useSnapshotStatement from '@/components/DataBrowser/hooks/useSnapshotStatement';
+import { getStatusCode } from '@/services/backend/problemDetails';
 
 const Header = () => {
     const { isUsingSnapshot } = useSnapshotStatement();
@@ -22,7 +23,7 @@ const Header = () => {
 
     const [preferencesPopover, setPreferencesPopover] = useState(false);
 
-    if (error && error.statusCode === 404) {
+    if (error && getStatusCode(error) === 404) {
         return <NotFound />;
     }
     if (error) {

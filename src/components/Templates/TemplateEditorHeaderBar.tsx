@@ -37,7 +37,7 @@ const TemplateEditorHeaderBar = () => {
                         {inEditMode ? (
                             <>
                                 {id ? 'Edit mode' : 'Create template'}
-                                <span className="text-sm text-white/70 pl-2 hidden sm:inline">Every change you make is automatically saved</span>
+                                <span className="text-sm text-white/70 pl-2 hidden sm:inline">Your changes are saved when you press Save</span>
                             </>
                         ) : (
                             `Template: ${label}`

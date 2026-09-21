@@ -80,10 +80,10 @@ const SaveDiagram: FC<SaveDiagramProps> = ({ isSaveDiagramModalOpen, setIsSaveDi
                                             <Link target="_blank" href={reverse(ROUTES.DIAGRAM, { id: diagramResource.id })}>
                                                 original diagram
                                             </Link>
-                                            {diagramResource.created_by !== MISC.UNKNOWN_ID && (
+                                            {diagramResource.createdBy !== MISC.UNKNOWN_ID && (
                                                 <>
                                                     {' created by '}
-                                                    <UserAvatar showDisplayName userId={diagramResource.created_by} />
+                                                    <UserAvatar showDisplayName userId={diagramResource.createdBy} />
                                                 </>
                                             )}
                                         </Alert.Description>

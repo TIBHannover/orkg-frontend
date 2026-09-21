@@ -12,7 +12,7 @@ import { comparisonUrl, getComparison, getComparisonContents, updateComparison a
 import { conferenceSeriesUrl, getConferenceById } from '@/services/backend/conferences-series';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
-import { Comparison, ComparisonSelectedPathFlattened, ConferenceSeries, Organization } from '@/services/backend/types';
+import { Comparison, ComparisonSelectedPathFlattened, ConferenceSeries, Organization, UpdateAuthor } from '@/services/backend/types';
 
 export const flattenPaths = (items: ComparisonSelectedPathFlattened[], parentPath: string[] = []): ComparisonSelectedPathFlattened[] => {
     let result: ComparisonSelectedPathFlattened[] = [];
@@ -49,7 +49,8 @@ const useComparison = (comparisonId?: string, isEmbeddedProp?: boolean) => {
         mutate: mutateComparisonContents,
     } = useSWR(id ? [id, comparisonUrl, 'getComparisonContents'] : null, ([params]) => getComparisonContents(params));
 
-    const updateComparison = (updatedData: Partial<Comparison>) => {
+    // authors come from edit forms, which produce explicit null ids the representation type forbids
+    const updateComparison = (updatedData: Partial<Omit<Comparison, 'authors'>> & { authors?: UpdateAuthor[] }) => {
         if (!comparison) {
             return null;
         }
@@ -57,24 +58,26 @@ const useComparison = (comparisonId?: string, isEmbeddedProp?: boolean) => {
             async () => {
                 try {
                     await updateComparisonBackend(comparison.id, {
-                        ...(updatedData.research_fields && { research_fields: updatedData.research_fields.map((rf) => rf.id) }),
+                        ...(updatedData.researchFields && { researchFields: updatedData.researchFields.map((rf) => rf.id) }),
                         ...(updatedData.sdgs && { sdgs: updatedData.sdgs.map((rf) => rf.id) }),
-                        ...(({ research_fields, sdgs, ...o }) => o)(updatedData),
+                        // searchProtocol and visualizations have representation shapes that differ from the
+                        // request and are never updated through this path
+                        ...(({ researchFields, sdgs, searchProtocol, visualizations, ...o }) => o)(updatedData),
                     });
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                 }
-                return { ...comparison, ...updatedData };
+                return { ...comparison, ...updatedData } as Comparison;
             },
             {
-                optimisticData: { ...comparison, ...updatedData },
+                optimisticData: { ...comparison, ...updatedData } as Comparison,
                 rollbackOnError: true,
                 throwOnError: false,
             },
         );
     };
 
-    const isPublished = comparison ? comparison.id !== comparison.versions.head.id : false;
+    const isPublished = comparison ? comparison.id !== comparison.versions?.head.id : false;
 
     const { onErrorRetry } = useSWRConfig();
 
@@ -121,9 +124,9 @@ const useComparison = (comparisonId?: string, isEmbeddedProp?: boolean) => {
         conferenceSeries?.metadata.review_process === CONFERENCE_REVIEW_MISC.DOUBLE_BLIND &&
         dayjs().format('YYYY-MM-DD') < conferenceSeries?.metadata?.start_date;
 
-    const isAnonymized = isConferenceDoubleBlind || comparison?.is_anonymized;
+    const isAnonymized = isConferenceDoubleBlind || comparison?.isAnonymized;
 
-    const selectedPathsFlattened = useMemo(() => (comparisonContents ? flattenPaths(comparisonContents.selected_paths) : []), [comparisonContents]);
+    const selectedPathsFlattened = useMemo(() => (comparisonContents ? flattenPaths(comparisonContents.selectedPaths) : []), [comparisonContents]);
 
     return {
         comparison,

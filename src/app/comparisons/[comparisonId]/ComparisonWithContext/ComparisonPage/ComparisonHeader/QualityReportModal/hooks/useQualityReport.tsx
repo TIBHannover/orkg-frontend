@@ -58,7 +58,7 @@ const useQualityReport = () => {
             try {
                 // get the feedbacks from all different comparison versions
                 const feedbackStatementsPromises =
-                    comparison.versions.published.map((version) =>
+                    (comparison.versions?.published ?? []).map((version) =>
                         getStatements({ subjectId: version.id, predicateId: PREDICATES.QUALITY_FEEDBACK }),
                     ) ?? [];
                 const feedbackIds = (await Promise.all(feedbackStatementsPromises)).flatMap((feedbackStatements) =>
@@ -92,11 +92,11 @@ const useQualityReport = () => {
                     info: 'When a comparison is published, the current state of the comparison is stored. This means others will see the comparison exactly as you created it. This benefits the integrity of the comparison and makes it suitable for making references from research articles.',
                     solution: 'Click the Publish comparison button.',
                     performEvaluation: () => {
-                        const passing = comparison.versions.published.length > 0;
+                        const passing = (comparison.versions?.published.length ?? 0) > 0;
                         return {
                             passing,
                             evaluation: passing
-                                ? `The comparison is last published on ${dayjs(comparison.versions.published?.[0]?.created_at)?.format(
+                                ? `The comparison is last published on ${dayjs(comparison.versions?.published?.[0]?.createdAt)?.format(
                                       'DD-MM-YYYY',
                                   )}.`
                                 : 'The comparison is not yet published.',
@@ -224,7 +224,7 @@ const useQualityReport = () => {
                         'If the comparison is suitable to be visualized, click the "Visualize" button on top of a comparison, and create a visualization or related figures.',
                     performEvaluation: () => {
                         const visualizationAmount = comparison.visualizations?.length;
-                        const figuresAmount = comparison.related_figures?.length;
+                        const figuresAmount = comparison.relatedFigures?.length;
                         const passing = visualizationAmount > 0 || figuresAmount > 0;
 
                         return {

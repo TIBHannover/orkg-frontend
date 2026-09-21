@@ -12,10 +12,10 @@ import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { getReviewPublishedContents, reviewUrl } from '@/services/backend/reviews';
 import { getStatements } from '@/services/backend/statements';
-import { ReviewSection, Statement } from '@/services/backend/types';
+import { ReviewSectionOntology, Statement } from '@/services/backend/types';
 
 type SectionOntologyProps = {
-    section: ReviewSection;
+    section: ReviewSectionOntology;
 };
 
 const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
@@ -25,7 +25,7 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
     const { isEditMode } = useIsEditMode();
     const tableSlots = tableVariants({ variant: 'primary' });
 
-    const entityIds = section?.entities?.map(({ id }) => id);
+    const entityIds = section?.entities?.map(({ id }) => id).filter((id): id is string => !!id);
 
     const {
         data: publishedContents,
@@ -57,7 +57,12 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
     const isLoading = isLoadingPublishedContents || isLoadingLiveContents || isValidatingPublishedContents || isValidatingLiveContents;
 
     const entityStatements = useMemo(() => {
-        const allStatements = review?.published ? (publishedContents?.flatMap(({ statements }) => statements) ?? []) : (liveContents?.flat() ?? []);
+        // snapshot consumers only read id/subject/predicate/object/label/classes/shared, which are
+        // identical in both shapes
+        const allStatements = review?.published
+            ? ((publishedContents?.flatMap((content) => (content._class === 'statement_list' ? content.statements : [])) ??
+                  []) as unknown as Statement[])
+            : (liveContents?.flat() ?? []);
         const properties = section.predicates ?? [];
         const propertyIds = properties.map((property) => property.id);
 
@@ -171,7 +176,9 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
                                             label={capitalize(entityStatement.subject?.label)}
                                             type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
                                             isEditable={
-                                                entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1
+                                                entityStatement.object?._class === 'resource' &&
+                                                entityStatement.subject?._class === 'resource' &&
+                                                entityStatement.subject.shared > 1
                                                     ? false
                                                     : isEditMode
                                             }
@@ -194,7 +201,9 @@ const SectionOntology: FC<SectionOntologyProps> = ({ section }) => {
                                             id={entityStatement.object?.id}
                                             label={entityStatement.object?.label}
                                             isEditable={
-                                                entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1
+                                                entityStatement.object?._class === 'resource' &&
+                                                entityStatement.subject?._class === 'resource' &&
+                                                entityStatement.subject.shared > 1
                                                     ? false
                                                     : isEditMode
                                             }

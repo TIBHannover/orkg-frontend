@@ -47,7 +47,7 @@ const ContributionComparisons = ({ contributionId }: { contributionId: string })
             objectId: contributionId,
             predicateId: PREDICATES.COMPARE_CONTRIBUTION,
             subjectClasses: [CLASSES.COMPARISON],
-            sortBy: [{ property: 'created_at', direction: 'desc' as const }],
+            sortBy: [{ property: 'createdAt', direction: 'desc' as const }],
         },
     });
 

@@ -57,7 +57,7 @@ const Item: FC<{
     } = useSWR(
         showContributions && isPaper
             ? [
-                  { subjectId: item.id, predicateId: PREDICATES.HAS_CONTRIBUTION, sortBy: [{ property: 'created_at', direction: 'asc' as const }] },
+                  { subjectId: item.id, predicateId: PREDICATES.HAS_CONTRIBUTION, sortBy: [{ property: 'createdAt', direction: 'asc' as const }] },
                   statementsUrl,
                   'getStatements',
               ]

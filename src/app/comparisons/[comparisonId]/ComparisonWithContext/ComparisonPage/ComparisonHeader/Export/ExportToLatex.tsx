@@ -166,7 +166,7 @@ const ExportToLatex: FC<ExportToLatexProps> = ({ toggle }) => {
 
     const generateBibTex = () => {
         setBibtexReferencesLoading(true);
-        const papers = columns.filter((column) => column.title.classes.includes(CLASSES.PAPER));
+        const papers = columns.filter((column) => column.title._class === 'resource_ref' && column.title.classes.includes(CLASSES.PAPER));
         if (papers.length === 0) {
             setBibTexReferences('');
             setBibtexReferencesLoading(false);

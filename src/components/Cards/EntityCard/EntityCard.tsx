@@ -44,7 +44,7 @@ const EntityCard: FC<EntityCardProps> = ({
     menuActions,
     children,
 }) => {
-    const createdBy = item?.created_by ?? item?.createdBy;
+    const createdBy = item?.createdBy;
     return (
         <CardShell
             menuActions={menuActions}

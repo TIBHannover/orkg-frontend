@@ -8,9 +8,9 @@ const useMembership = () => {
     const { data: membership } = useSWR(user ? [null, userUrl, 'getUserInformation'] : null, () => getUserInformation());
 
     return {
-        organizationId: membership?.organization_id,
-        observatoryId: membership?.observatory_id,
-        displayName: membership?.display_name,
+        organizationId: membership?.organizationId,
+        observatoryId: membership?.observatoryId,
+        displayName: membership?.displayName,
     };
 };
 

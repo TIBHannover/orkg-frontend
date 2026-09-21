@@ -15,7 +15,7 @@ type EditEdgeProps = {
     setIsEditEdgeModalOpen: () => void;
     saveEdge: (value: OptionTypeWithLinked | undefined) => void;
     addEdge: (value: OptionTypeWithLinked | undefined) => void;
-    edge: Edge<Predicate> | undefined;
+    edge: Edge<Predicate & Record<string, unknown>> | undefined;
 };
 
 const EditEdge: FC<EditEdgeProps> = ({ isEditEdgeModalOpen, setIsEditEdgeModalOpen, saveEdge, addEdge, edge }) => {

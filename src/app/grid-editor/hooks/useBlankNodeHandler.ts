@@ -28,8 +28,8 @@ const useBlankNodeHandler = () => {
                 const templatesData = await Promise.all(rangesNoLiterals.map((r) => getTemplates({ targetClass: r.id })));
 
                 const templates = templatesData.map((c) => c.content).flat() ?? [];
-                const isBlankNode = templates.filter((t) => t.formatted_label).length > 0;
-                const blankNodeLabel = templates.filter((t) => t.formatted_label).map((t) => t.label)?.[0] ?? null;
+                const isBlankNode = templates.filter((t) => t.formattedLabel).length > 0;
+                const blankNodeLabel = templates.filter((t) => t.formattedLabel).map((t) => t.label)?.[0] ?? null;
 
                 if (isBlankNode) {
                     const newResourceId = await createResource({

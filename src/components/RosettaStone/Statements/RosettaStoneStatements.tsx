@@ -54,25 +54,30 @@ const RosettaStoneStatements: FC<RosettaStoneStatementsProps> = ({ context }) =>
     const handleAddStatement = async (templateId: string, subjects: OptionType[] = []) => {
         setNewStatements((prev) => [
             ...prev,
+            // client-side unsaved draft: the missing latestVersionId marks it as such, and the
+            // subjects are autocomplete options rather than persisted thing references
             {
                 id: guid(),
-                template_id: templateId,
-                latest_version_id: undefined,
-                is_latest_version: true,
+                label: '',
+                formattedLabel: '',
+                classId: '',
+                versionId: '',
+                templateId,
+                latestVersionId: undefined,
                 context: context as string,
                 subjects,
                 objects: [],
-                created_at: new Date().toString(),
-                created_by: ((user && 'id' in user && user?.id) as string) ?? MISC.UNKNOWN_ID,
+                createdAt: new Date().toString(),
+                createdBy: ((user && 'id' in user && user?.id) as string) ?? MISC.UNKNOWN_ID,
                 certainty: CERTAINTY.MODERATE,
                 negated: false,
                 observatories: observatoryId ? [observatoryId] : [],
                 organizations: organizationId ? [organizationId] : [],
-                extraction_method: EXTRACTION_METHODS.MANUAL,
+                extractionMethod: EXTRACTION_METHODS.MANUAL,
                 visibility: VISIBILITY.DEFAULT,
-                unlisted_by: undefined,
+                unlistedBy: undefined,
                 modifiable: true,
-            },
+            } as unknown as RosettaStoneStatement,
         ]);
     };
 

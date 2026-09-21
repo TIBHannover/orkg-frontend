@@ -24,6 +24,8 @@ import { CONTENT_TYPES_WITH_SPECIAL_SCHEMA, CREATE_NEW_RESOURCE_CONTENT_TYPES } 
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { classesUrl, getClassById } from '@/services/backend/classes';
+import { getStatusCode } from '@/services/backend/problemDetails';
+import { Thing } from '@/services/backend/things';
 
 const ClassDetails = () => {
     const [keyInstances, setKeyInstances] = useState<number>(1);
@@ -54,7 +56,7 @@ const ClassDetails = () => {
                     <div className="box rounded pt-6 pb-6 pl-12 pr-12 flow-root">Loading ...</div>
                 </Container>
             )}
-            {!isLoading && error && (error.statusCode === 404 ? <NotFound /> : <InternalServerError error={error} />)}
+            {!isLoading && error && (getStatusCode(error) === 404 ? <NotFound /> : <InternalServerError error={error} />)}
             {!isLoading && !error && classObject && (
                 <>
                     <TitleBar
@@ -129,7 +131,7 @@ const ClassDetails = () => {
                                 )}
                             </div>
 
-                            <ItemMetadata item={classObject} showCreatedAt showCreatedBy editMode={isEditMode} />
+                            <ItemMetadata item={classObject as Thing} showCreatedAt showCreatedBy editMode={isEditMode} />
                         </div>
                     </Container>
                     <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} />

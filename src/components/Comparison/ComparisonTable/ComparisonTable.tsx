@@ -41,7 +41,7 @@ const ComparisonTable: FC<ComparisonTableProps> = ({ id }) => {
                             </thead>
                             <tbody className="overflow-x-scroll [scrollbar-width:none] w-full flex flex-col" ref={tbodyRef} onScroll={syncScroll}>
                                 <AnimatePresence initial={false}>
-                                    {comparisonContents?.selected_paths.map((pathNode) => (
+                                    {comparisonContents?.selectedPaths.map((pathNode) => (
                                         <SelectedPath key={pathNode.id} pathNode={pathNode} rows={comparisonContents.values[pathNode.id] ?? []} />
                                     ))}
                                 </AnimatePresence>

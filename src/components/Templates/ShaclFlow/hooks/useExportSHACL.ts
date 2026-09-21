@@ -9,24 +9,25 @@ import { convertTreeToFlat } from '@/utils';
 
 const { namedNode, literal, blankNode, quad } = DataFactory;
 
-// Type definitions
+// Type definitions — a flat, permissive view of the camelCase TemplateRepresentation coming out of
+// loadTemplateFlowByID (the generated union types would force narrowing on every optional access here)
 interface Template {
     id: string;
     label: string;
-    target_class: {
+    targetClass: {
         id: string;
         label: string;
         uri?: string;
     };
-    is_closed: boolean;
-    formatted_label?: string;
+    isClosed: boolean;
+    formattedLabel?: string;
     description?: string;
     relations: {
-        research_fields?: Array<{
+        researchFields?: Array<{
             id: string;
             label: string;
         }>;
-        research_problems?: Array<{
+        researchProblems?: Array<{
             id: string;
             label: string;
         }>;
@@ -36,11 +37,12 @@ interface Template {
             id: string;
             label: string;
         };
-        min_count?: number;
-        max_count?: number;
+        minCount?: number;
+        maxCount?: number;
         placeholder?: string;
         description?: string;
-        class?: {
+        // the generated client escapes the wire field 'class' as '_class'
+        _class?: {
             id: string;
             label: string;
             uri?: string;
@@ -52,8 +54,8 @@ interface Template {
         };
         pattern?: string;
         order?: number;
-        min_inclusive?: number;
-        max_inclusive?: number;
+        minInclusive?: number;
+        maxInclusive?: number;
     }>;
 }
 
@@ -98,28 +100,28 @@ const useExportSHACL = () => {
             // NodeShape
             store.addQuad(quad(orkgr(template.id), rdf('type'), shacl('NodeShape')));
             store.addQuad(quad(orkgr(template.id), rdfs('label'), literal(template.label)));
-            store.addQuad(quad(orkgr(template.id), shacl('targetClass'), orkgc(template.target_class.id.toString())));
-            store.addQuad(quad(orkgc(template.target_class.id.toString()), rdfs('label'), literal(template.target_class.label)));
-            if (template.target_class.uri) {
-                store.addQuad(quad(orkgc(template.target_class.id.toString()), owl('equivalentClass'), namedNode(template.target_class.uri)));
+            store.addQuad(quad(orkgr(template.id), shacl('targetClass'), orkgc(template.targetClass.id.toString())));
+            store.addQuad(quad(orkgc(template.targetClass.id.toString()), rdfs('label'), literal(template.targetClass.label)));
+            if (template.targetClass.uri) {
+                store.addQuad(quad(orkgc(template.targetClass.id.toString()), owl('equivalentClass'), namedNode(template.targetClass.uri)));
             }
-            store.addQuad(quad(orkgr(template.id), shacl('closed'), literal(template.is_closed.toString(), xsd('boolean'))));
-            if (template.formatted_label) {
-                store.addQuad(quad(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_LABEL_FORMAT), literal(template.formatted_label.toString())));
+            store.addQuad(quad(orkgr(template.id), shacl('closed'), literal(template.isClosed.toString(), xsd('boolean'))));
+            if (template.formattedLabel) {
+                store.addQuad(quad(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_LABEL_FORMAT), literal(template.formattedLabel.toString())));
             }
             if (template.description) {
                 store.addQuad(quad(orkgr(template.id), orkgp(PREDICATES.DESCRIPTION), literal(template.description.toString())));
             }
-            if (template.relations.research_fields && template.relations.research_fields.length > 0) {
-                template.relations.research_fields.map((researchField: { id: string; label: string }) => {
+            if (template.relations.researchFields && template.relations.researchFields.length > 0) {
+                template.relations.researchFields.map((researchField: { id: string; label: string }) => {
                     store.addQuad(quad(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_RESEARCH_FIELD), orkgr(researchField.id)));
                     store.addQuad(quad(orkgr(researchField.id), rdfs('label'), literal(researchField.label)));
                     store.addQuad(quad(orkgr(researchField.id), rdf('type'), orkgc(CLASSES.RESEARCH_FIELD)));
                     return null;
                 });
             }
-            if (template.relations.research_problems && template.relations.research_problems.length > 0) {
-                template.relations.research_problems.map((researchProblem: { id: string; label: string }) => {
+            if (template.relations.researchProblems && template.relations.researchProblems.length > 0) {
+                template.relations.researchProblems.map((researchProblem: { id: string; label: string }) => {
                     store.addQuad(quad(orkgr(template.id), orkgp(PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM), orkgr(researchProblem.id)));
                     store.addQuad(quad(orkgr(researchProblem.id), rdfs('label'), literal(researchProblem.label)));
                     store.addQuad(quad(orkgr(researchProblem.id), rdf('type'), orkgc(CLASSES.PROBLEM)));
@@ -134,12 +136,12 @@ const useExportSHACL = () => {
                 store.addQuad(quad(propertyShapeNode, shacl('path'), orkgp(propertyShape.path.id)));
                 store.addQuad(quad(orkgp(propertyShape.path.id), rdfs('label'), literal(propertyShape.path.label)));
 
-                if (propertyShape.min_count && !isEmpty(propertyShape.min_count.toString())) {
-                    store.addQuad(quad(propertyShapeNode, shacl('minCount'), literal(propertyShape.min_count.toString(), xsd('integer'))));
+                if (propertyShape.minCount && !isEmpty(propertyShape.minCount.toString())) {
+                    store.addQuad(quad(propertyShapeNode, shacl('minCount'), literal(propertyShape.minCount.toString(), xsd('integer'))));
                 }
 
-                if (propertyShape.max_count) {
-                    store.addQuad(quad(propertyShapeNode, shacl('maxCount'), literal(propertyShape.max_count.toString(), xsd('integer'))));
+                if (propertyShape.maxCount) {
+                    store.addQuad(quad(propertyShapeNode, shacl('maxCount'), literal(propertyShape.maxCount.toString(), xsd('integer'))));
                 }
 
                 if (propertyShape.placeholder) {
@@ -150,11 +152,11 @@ const useExportSHACL = () => {
                     store.addQuad(quad(propertyShapeNode, shacl('description'), literal(propertyShape.description)));
                 }
 
-                if (propertyShape.class?.id && !['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape.class.id)) {
-                    store.addQuad(quad(propertyShapeNode, shacl('class'), orkgc(propertyShape.class.id.toString())));
-                    store.addQuad(quad(orkgc(propertyShape.class.id.toString()), rdfs('label'), literal(propertyShape.class.label)));
-                    if (propertyShape.class.uri) {
-                        store.addQuad(quad(orkgc(propertyShape.class.id.toString()), owl('equivalentClass'), namedNode(propertyShape.class.uri)));
+                if (propertyShape._class?.id && !['Decimal', 'Integer', 'String', 'Boolean', 'Date', 'URI'].includes(propertyShape._class.id)) {
+                    store.addQuad(quad(propertyShapeNode, shacl('class'), orkgc(propertyShape._class.id.toString())));
+                    store.addQuad(quad(orkgc(propertyShape._class.id.toString()), rdfs('label'), literal(propertyShape._class.label)));
+                    if (propertyShape._class.uri) {
+                        store.addQuad(quad(orkgc(propertyShape._class.id.toString()), owl('equivalentClass'), namedNode(propertyShape._class.uri)));
                     }
                 }
 
@@ -174,11 +176,11 @@ const useExportSHACL = () => {
                 if (propertyShape.order) {
                     store.addQuad(quad(propertyShapeNode, shacl('order'), literal(propertyShape.order.toString(), xsd('integer'))));
                 }
-                if (propertyShape.min_inclusive && !isEmpty(propertyShape.min_inclusive.toString())) {
-                    store.addQuad(quad(propertyShapeNode, shacl('minInclusive'), literal(propertyShape.min_inclusive.toString(), xsd('integer'))));
+                if (propertyShape.minInclusive && !isEmpty(propertyShape.minInclusive.toString())) {
+                    store.addQuad(quad(propertyShapeNode, shacl('minInclusive'), literal(propertyShape.minInclusive.toString(), xsd('integer'))));
                 }
-                if (propertyShape.max_inclusive) {
-                    store.addQuad(quad(propertyShapeNode, shacl('maxInclusive'), literal(propertyShape.max_inclusive.toString(), xsd('integer'))));
+                if (propertyShape.maxInclusive) {
+                    store.addQuad(quad(propertyShapeNode, shacl('maxInclusive'), literal(propertyShape.maxInclusive.toString(), xsd('integer'))));
                 }
                 return null;
             });

@@ -72,11 +72,11 @@ const statements = [
 
         return new HttpResponse(null, {
             headers: {
-                Location: `${statementsUrl}${newStatement?.id}`,
+                Location: `${statementsUrl}/${newStatement?.id}`,
             },
         });
     }),
-    http.get(`${statementsUrl}:id`, ({ params }) => {
+    http.get(`${statementsUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         const statement = db.statements.findFirst({
             where: {
@@ -107,7 +107,7 @@ const statements = [
                 objectRef && 'classes' in objectRef ? { ...objectRef, classes: objectRef?.classes.split(',').filter((c) => c !== '') } : objectRef,
         });
     }),
-    http.put(`${statementsUrl}:id`, async ({ params, request }) => {
+    http.put(`${statementsUrl}/:id`, async ({ params, request }) => {
         const { id } = params as { id: string };
         const {
             subject_id: subjectId,
@@ -151,7 +151,7 @@ const statements = [
                 objectRef && 'classes' in objectRef ? { ...objectRef, classes: objectRef?.classes.split(',').filter((c) => c !== '') } : objectRef,
         });
     }),
-    http.delete(`${statementsUrl}:id`, ({ params }) => {
+    http.delete(`${statementsUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         db.statements.delete({
             where: {

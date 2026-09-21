@@ -106,7 +106,7 @@ const useComparisonTable = () => {
             subtitle: comparisonContents.subtitles[i] ?? null,
             values: {},
         }));
-        return { columns: cols, sourceIds: cols.map((c) => c.subtitle?.id ?? c.title.id) };
+        return { columns: cols, sourceIds: cols.map((c) => c.subtitle?.id ?? c.title.id ?? '') };
     }, [comparisonContents]);
 
     const activeColumns = useMemo(

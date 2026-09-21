@@ -6,15 +6,16 @@ import { LOCATION_CHANGE } from '@/components/ResetStoreOnNavigate/ResetStoreOnN
 import { CLASSES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import errorHandler from '@/helpers/errorHandler';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { getTemplatesByClass } from '@/services/backend/statements';
 import { getTemplate, updateTemplate } from '@/services/backend/templates';
 
 const initialState = {
     label: '',
     description: '',
-    created_by: null,
-    created_at: null,
-    extraction_method: 'UNKNOWN',
+    createdBy: null,
+    createdAt: null,
+    extractionMethod: 'UNKNOWN',
     observatories: [],
     organizations: [],
     diagramMode: false,
@@ -22,10 +23,10 @@ const initialState = {
         researchFields: [],
         researchProblems: [],
     },
-    target_class: null,
-    is_closed: false,
+    targetClass: null,
+    isClosed: false,
     hasLabelFormat: false,
-    formatted_label: '',
+    formattedLabel: '',
     error: null,
     properties: [],
     isLoading: false,
@@ -46,22 +47,22 @@ export const templateEditorSlice = createSlice({
             state.description = payload;
         },
         updateIsClosed: (state, { payload }) => {
-            state.is_closed = payload;
+            state.isClosed = payload;
         },
         updateHasLabelFormat: (state, { payload }) => {
             state.hasLabelFormat = payload;
         },
         updateLabelFormat: (state, { payload }) => {
-            state.formatted_label = payload;
+            state.formattedLabel = payload;
         },
         updateTargetClass: (state, { payload }) => {
-            state.target_class = payload;
+            state.targetClass = payload;
         },
         updateResearchProblems: (state, { payload }) => {
-            state.relations.research_problems = payload;
+            state.relations.researchProblems = payload;
         },
         updateResearchFields: (state, { payload }) => {
-            state.relations.research_fields = payload;
+            state.relations.researchFields = payload;
         },
         setDiagramMode: (state, { payload }) => {
             state.diagramMode = payload;
@@ -75,7 +76,7 @@ export const templateEditorSlice = createSlice({
         },
         initTemplate: (state, { payload }) => ({
             ...initialState,
-            hasLabelFormat: !!payload.formatted_label,
+            hasLabelFormat: !!payload.formattedLabel,
             ...payload,
         }),
         setIsLoading: (state, { payload }) => {
@@ -144,7 +145,7 @@ export const loadTemplate = (data) => (dispatch) => {
             dispatch(setIsLoading(false));
         })
         .catch((e) => {
-            dispatch(setFailureStatus(e.statusCode));
+            dispatch(setFailureStatus(getStatusCode(e)));
             dispatch(setIsLoading(false));
             dispatch(setHasFailed(true));
         });
@@ -162,7 +163,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         return null;
     }
 
-    if (!data.target_class) {
+    if (!data.targetClass) {
         // Make the template target class mandatory
         dispatch(setHasFailedSaving(true));
         dispatch(setIsSaving(false));
@@ -178,9 +179,9 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
         return null;
     }
 
-    if (data.target_class && data.target_class.id) {
+    if (data.targetClass && data.targetClass.id) {
         //  Check if the template of the class if already defined
-        const templates = await getTemplatesByClass(data.target_class.id);
+        const templates = await getTemplatesByClass(data.targetClass.id);
         if (templates.length > 0 && !templates.includes(data.id)) {
             dispatch(setHasFailedSaving(true));
             dispatch(setIsSaving(false));
@@ -191,25 +192,26 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
     const dataToSubmit = {
         label: data.label,
         description: data.description ? data.description : null,
-        formatted_label: data.hasLabelFormat && data.formatted_label ? data.formatted_label : null,
-        target_class: data.target_class.id,
+        formattedLabel: data.hasLabelFormat && data.formattedLabel ? data.formattedLabel : null,
+        targetClass: data.targetClass.id,
         relations: {
-            research_fields: data.relations.research_fields?.map((rf) => rf.id) || [],
-            research_problems: data.relations.research_problems?.map((rf) => rf.id) || [],
+            researchFields: data.relations.researchFields?.map((rf) => rf.id) || [],
+            researchProblems: data.relations.researchProblems?.map((rf) => rf.id) || [],
         },
         properties: data.properties.map((ps) => ({
             label: ps.label || 'Property shape',
             placeholder: ps.placeholder,
             description: ps.description,
-            min_count: ps.min_count,
-            max_count: ps.max_count,
+            minCount: ps.minCount,
+            maxCount: ps.maxCount,
             path: ps.path.id,
             ...(ps.datatype?.id && { datatype: ps.datatype?.id }),
             ...(ps.datatype?.id === CLASSES.STRING && { pattern: ps.pattern }),
-            ...([CLASSES.INTEGER, CLASSES.DECIMAL].includes(ps.datatype?.id) && { max_inclusive: ps.max_inclusive, min_inclusive: ps.min_inclusive }),
-            ...(ps.class?.id && { class: ps.class?.id }),
+            ...([CLASSES.INTEGER, CLASSES.DECIMAL].includes(ps.datatype?.id) && { maxInclusive: ps.maxInclusive, minInclusive: ps.minInclusive }),
+            // the generated client escapes the wire field 'class' as '_class'
+            ...(ps._class?.id && { _class: ps._class?.id }),
         })),
-        is_closed: data.is_closed,
+        isClosed: data.isClosed,
     };
     try {
         await updateTemplate(data.id, dataToSubmit);
@@ -218,7 +220,7 @@ export const saveTemplate = (toggleIsEditMode) => async (dispatch, getState) => 
     } catch (e) {
         dispatch(setHasFailedSaving(true));
         toggleIsEditMode(false);
-        errorHandler({ error: e, shouldShowToast: true });
+        await errorHandler({ error: e, shouldShowToast: true });
     } finally {
         dispatch(setIsSaving(false));
         toggleIsEditMode(false);

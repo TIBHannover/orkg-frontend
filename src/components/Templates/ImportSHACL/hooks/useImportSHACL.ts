@@ -302,9 +302,9 @@ const useImportSHACL = () => {
                 // Prepare the object for the import
                 const templateObject: CreateTemplateParams = {
                     label: nodesShape.label,
-                    target_class: targetClassId,
+                    targetClass: targetClassId,
                     ...(nodesShape.formatted_label && {
-                        formatted_label: format(
+                        formattedLabel: format(
                             nodesShape.formatted_label,
                             Object.assign({}, ...mappingPredicates.map((p) => p && 'id' in p && p.id && { [p.extractedId]: `{${p.id}}` })),
                         ),
@@ -312,18 +312,18 @@ const useImportSHACL = () => {
                     relations: {
                         ...((nodesShape.relations.research_fields || [])?.length > 0
                             ? {
-                                  research_fields: (nodesShape.relations.research_fields || [])
+                                  researchFields: (nodesShape.relations.research_fields || [])
                                       .filter((researchField) => hasId(researchField))
                                       .map((researchField) => researchField.id),
                               }
-                            : { research_fields: [] }),
+                            : { researchFields: [] }),
                         ...((nodesShape.relations.research_problems || [])?.length > 0
                             ? {
-                                  research_problems: (nodesShape.relations.research_problems || [])
+                                  researchProblems: (nodesShape.relations.research_problems || [])
                                       .filter((researchProblem) => hasId(researchProblem))
                                       .map((researchProblem) => researchProblem.id),
                               }
-                            : { research_problems: [] }),
+                            : { researchProblems: [] }),
                     },
                     properties: (nodesShape.properties || [])
                         .map((propertyShape, index) => {
@@ -338,10 +338,10 @@ const useImportSHACL = () => {
                                 description: propertyShape.description || '',
                                 path: mappingPredicates[index].id,
                                 ...(propertyShape.minCount && {
-                                    min_count: propertyShape.minCount,
+                                    minCount: propertyShape.minCount,
                                 }),
                                 ...(propertyShape.maxCount && {
-                                    max_count: propertyShape.maxCount,
+                                    maxCount: propertyShape.maxCount,
                                 }),
                                 ...(mappingRanges[index] &&
                                     'id' in mappingRanges[index] &&
@@ -357,19 +357,20 @@ const useImportSHACL = () => {
                                     ![CLASSES.DECIMAL, CLASSES.INTEGER, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.DATE, CLASSES.URI].includes(
                                         mappingRanges[index].id,
                                     ) && {
-                                        class: mappingRanges[index].id,
+                                        // the generated client escapes the wire field 'class' as '_class'
+                                        _class: mappingRanges[index].id,
                                     }),
                                 ...(mappingRanges[index] &&
                                     'id' in mappingRanges[index] &&
                                     mappingRanges[index].id &&
                                     [CLASSES.DECIMAL, CLASSES.INTEGER].includes(mappingRanges[index].id) && {
-                                        min_inclusive: propertyShape.min_inclusive,
-                                        max_inclusive: propertyShape.max_inclusive,
+                                        minInclusive: propertyShape.min_inclusive,
+                                        maxInclusive: propertyShape.max_inclusive,
                                     }),
                                 ...(mappingRanges[index] &&
                                     'id' in mappingRanges[index] &&
                                     mappingRanges[index].id &&
-                                    ![CLASSES.STRING].includes(mappingRanges[index].id) && {
+                                    [CLASSES.STRING].includes(mappingRanges[index].id) && {
                                         pattern: propertyShape.pattern,
                                     }),
                             };
@@ -377,7 +378,7 @@ const useImportSHACL = () => {
                         .filter((property) => property !== null),
                     observatories: observatoryId ? [observatoryId] : [],
                     organizations: organizationId ? [organizationId] : [],
-                    is_closed: 'is_closed' in nodesShape && nodesShape.is_closed !== undefined ? nodesShape.is_closed : false,
+                    isClosed: 'is_closed' in nodesShape && nodesShape.is_closed !== undefined ? nodesShape.is_closed : false,
                 };
 
                 const templateResource = await createTemplate(templateObject);

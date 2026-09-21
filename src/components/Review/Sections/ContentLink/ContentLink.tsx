@@ -8,23 +8,27 @@ import useReview from '@/components/Review/hooks/useReview';
 import SectionVisualization from '@/components/Review/Sections/Visualization/SectionVisualization';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { createResource } from '@/services/backend/resources';
-import { ReviewSection } from '@/services/backend/types';
+import { ReviewSectionContentLink } from '@/services/backend/types';
 
 type ContentLinkProps = {
-    section: ReviewSection;
+    section: ReviewSectionContentLink;
 };
 
 export type SectionContentLinkTypes = 'resource' | 'predicate' | 'visualization';
 
 const ContentLink: FC<ContentLinkProps> = ({ section }) => {
     const { review, updateSection } = useReview();
-    const sectionType: SectionContentLinkTypes =
-        section.type !== 'property' ? (section.type as SectionContentLinkTypes) : ('predicate' as SectionContentLinkTypes);
-
     const [selectedResource, setSelectedResource] = useState<OptionType | null>(null);
 
     useEffect(() => {
-        const sectionContent = section[sectionType];
+        let sectionContent;
+        if (section.type === 'resource') {
+            sectionContent = section.resource;
+        } else if (section.type === 'property') {
+            sectionContent = section.predicate;
+        } else {
+            sectionContent = section.visualization;
+        }
 
         // only run on mount
         if (!sectionContent || selectedResource) {
@@ -63,10 +67,15 @@ const ContentLink: FC<ContentLinkProps> = ({ section }) => {
         setSelectedResource({ id, label });
         setStatementBrowserKey((current) => current + 1);
 
-        updateSection(section.id, {
-            heading: section.heading,
-            [sectionType]: id,
-        });
+        // each variant must carry its reference field — an incomplete payload matches no
+        // request-union variant and would serialize as {}
+        if (section.type === 'resource') {
+            updateSection(section.id, { heading: section.heading, resource: id });
+        } else if (section.type === 'property') {
+            updateSection(section.id, { heading: section.heading, predicate: id });
+        } else {
+            updateSection(section.id, { heading: section.heading, visualization: id });
+        }
     };
 
     const entityType = section.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;

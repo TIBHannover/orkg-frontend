@@ -53,29 +53,33 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
     updateCallBack,
     children,
 }) => {
-    const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(item.extraction_method ?? EXTRACTION_METHODS.UNKNOWN);
+    const [extractionMethod, setExtractionMethod] = useState<ExtractionMethod>(item.extractionMethod ?? EXTRACTION_METHODS.UNKNOWN);
 
     const handleSave = async (selectedOption: ExtractionMethod) => {
         setExtractionMethod(selectedOption);
-        // rosetta statement require the version_id to be updated
-        await updateResource((item.version_id ?? item.id) as string, {
-            label: item?.label,
-            classes: item.classes,
-            extractionMethod: selectedOption,
-        });
+        // rosetta statement require the versionId to be updated
+        if ('versionId' in item) {
+            await updateResource(item.versionId as string, {
+                label: item?.label,
+                classes: 'classes' in item ? item.classes : undefined,
+                extractionMethod: selectedOption,
+            });
+        } else {
+            await updateResource(item.id as string, {
+                label: item?.label,
+                classes: 'classes' in item ? item.classes : undefined,
+                extractionMethod: selectedOption,
+            });
+        }
         toast.success('Resource extraction method updated successfully');
     };
 
     useEffect(() => {
-        if (item.extraction_method) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setExtractionMethod(item.extraction_method);
-        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setExtractionMethod(item.extractionMethod ?? EXTRACTION_METHODS.UNKNOWN);
     }, [item]);
 
-    // TODO: remove snake case handling after finishing services migration
-    const createdBy = item.created_by ?? item.createdBy;
-    const createdAt = item.created_at ?? item.createdAt;
+    const { createdBy, createdAt } = item;
 
     return (
         <>

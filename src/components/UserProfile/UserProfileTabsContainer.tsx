@@ -79,7 +79,7 @@ function UserProfileTabsContainer({ id, currentUserId }: { id: string; currentUs
         fetchUrl: contentTypesUrl,
         fetchFunctionName: 'getContentTypes',
         fetchExtraParams: {
-            created_by: id,
+            createdBy: id,
             visibility: sort,
             contentType,
             published: USER_PROFILE_CONTENT_TABS.find((tab) => tab.id === contentType)?.params?.published,

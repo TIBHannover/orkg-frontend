@@ -33,9 +33,8 @@ const MembersModal: FC<MembersModalProps> = ({ members, openModal, setOpenModal 
                     ) : (
                         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 list-none p-0 m-0">
                             {members.map((member) => {
-                                const displayName =
-                                    member.displayName ?? (member as unknown as { display_name?: string }).display_name ?? 'Unknown user';
-                                const gravatarId = member.gravatarId ?? (member as unknown as { gravatar_id?: string }).gravatar_id ?? '';
+                                const displayName = member.displayName ?? 'Unknown user';
+                                const gravatarId = member.gravatarId ?? '';
                                 return (
                                     <li key={member.id}>
                                         <Link

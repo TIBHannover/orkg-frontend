@@ -23,7 +23,7 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const addTemplate = async () => {
         setIsSaving(true);
         if (resource && 'classes' in resource) {
-            await updateResource(resourceId, { classes: [...(resource.classes ?? []), template.target_class.id] });
+            await updateResource(resourceId, { classes: [...(resource.classes ?? []), template.targetClass.id] });
             mutate();
         }
         setIsSaving(false);
@@ -32,13 +32,13 @@ const TemplateButton: FC<TemplateButtonProps> = ({ template, isSmart = false, is
     const deleteTemplate = async () => {
         setIsSaving(true);
         if (resource && 'classes' in resource) {
-            await updateResource(resourceId, { classes: [...(resource.classes.filter((c) => c !== template.target_class.id) ?? [])] });
+            await updateResource(resourceId, { classes: [...(resource.classes.filter((c) => c !== template.targetClass.id) ?? [])] });
             mutate();
         }
         setIsSaving(false);
     };
 
-    const addMode = (resource && 'classes' in resource && !resource?.classes?.includes(template.target_class.id)) || isDisabled;
+    const addMode = (resource && 'classes' in resource && !resource?.classes?.includes(template.targetClass.id)) || isDisabled;
 
     let variant: 'danger' | 'ghost' | 'outline' = 'danger';
     let buttonClassName = '';

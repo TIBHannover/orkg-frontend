@@ -46,7 +46,7 @@ const ObjectLabel: FC<{ statement: Statement }> = ({ statement }) => (
     <>
         {statement.object._class === ENTITIES.CLASS && <EntityTypeBadge>C</EntityTypeBadge>}
         {statement.object._class === ENTITIES.PREDICATE && <EntityTypeBadge>P</EntityTypeBadge>}
-        {('formatted_label' in statement.object && statement.object.formatted_label) || statement.object.label || <i>No label</i>}
+        {('formattedLabel' in statement.object && statement.object.formattedLabel) || statement.object.label || <i>No label</i>}
     </>
 );
 const TripleObject: FC<SingleStatementProps> = ({

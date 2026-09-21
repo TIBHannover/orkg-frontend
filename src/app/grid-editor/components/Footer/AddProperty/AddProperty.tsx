@@ -9,6 +9,7 @@ import useCanAddProperty from '@/app/grid-editor/hooks/useCanAddProperty';
 import useGridEditor from '@/app/grid-editor/hooks/useGridEditor';
 import useTemplates from '@/app/grid-editor/hooks/useTemplates';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmCreatePropertyModal from '@/components/DataBrowser/components/Footer/AddProperty/ConfirmCreatePropertyModal';
 import useDefaultProperties from '@/components/DataBrowser/hooks/useDefaultProperties';
@@ -101,7 +102,7 @@ const AddProperty = () => {
                                 }}
                                 allowCreate
                                 autoFocus
-                                defaultOptions={defaultProperties ?? []}
+                                defaultOptions={(defaultProperties ?? []) as OptionType[]}
                                 inputId="addProperty"
                                 onInputChange={(newValue, actionMeta) => {
                                     if (actionMeta.action !== 'menu-close' && actionMeta.action !== 'input-blur') {

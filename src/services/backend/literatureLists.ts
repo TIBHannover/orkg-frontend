@@ -1,113 +1,63 @@
-import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
-import { prepareParams } from '@/services/backend/misc';
 import {
-    CreatedByParam,
-    LiteratureList,
-    LiteratureListSectionText,
-    ObservatoryIdParam,
-    PaginatedResponse,
-    PaginationParams,
-    Paper,
-    PublishedParam,
-    ResearchFieldIdParams,
-    Resource,
-    SdgParam,
-    VerifiedParam,
-    VisibilityParam,
-} from '@/services/backend/types';
+    CreateLiteratureListRequest,
+    LiteratureListListSectionRequest,
+    LiteratureListsApi,
+    LiteratureListsApiFindAllRequest,
+    LiteratureListTextSectionRequest,
+    PublishLiteratureListRequest,
+    UpdateLiteratureListRequest,
+} from '@orkg/orkg-client';
 
-export const listsUrl = `${url}literature-lists/`;
-export const listsApi = backendApi.extend(() => ({ prefixUrl: listsUrl }));
-const LITERATURE_LISTS_CONTENT_TYPE = 'application/vnd.orkg.literature-list.v1+json';
-const LITERATURE_LISTS_SECTION_CONTENT_TYPE = 'application/vnd.orkg.literature-list-section.v1+json';
+import { VISIBILITY_FILTERS } from '@/constants/contentTypes';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
+import { toAuthorRequest } from '@/services/backend/mapAuthor';
+import { PublishedParam, UpdateAuthor, VisibilityParam, WithPaginationParams } from '@/services/backend/types';
+
+export const literatureListsUrl = `${urlNoTrailingSlash}/literature-lists`;
+
+const literatureListsApi = new LiteratureListsApi(configuration);
 
 export const getLiteratureLists = ({
-    page = 0,
-    size = 999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    verified = null,
     visibility = VISIBILITY_FILTERS.ALL_LISTED,
-    created_by,
-    research_field,
-    include_subfields,
-    observatory_id,
-    sdg,
     published,
-}: PaginationParams & VerifiedParam & VisibilityParam & CreatedByParam & SdgParam & PublishedParam & ObservatoryIdParam & ResearchFieldIdParams) => {
-    const searchParams = prepareParams({
-        page,
-        size,
-        sortBy,
-        verified,
-        visibility,
-        created_by,
-        observatory_id,
-        sdg,
-        published,
-        research_field,
-        include_subfields,
+    ...params
+}: Omit<WithPaginationParams<LiteratureListsApiFindAllRequest>, 'visibility' | 'published'> & VisibilityParam & PublishedParam) =>
+    literatureListsApi.findAll(
+        transformPaginationParams({
+            ...params,
+            // the app-level filter includes 'combined' (TOP_RECENT); getContentTypes splits it
+            // into FEATURED + NON_FEATURED before it can reach here
+            visibility: visibility as LiteratureListsApiFindAllRequest['visibility'],
+            published: published ?? undefined,
+        }),
+    );
+
+export const getLiteratureListPublishedContentById = (listId: string, contentId: string) =>
+    literatureListsApi.findPublishedContentById({ id: listId, contentId });
+
+export const getLiteratureList = (id: string) => literatureListsApi.findById({ id });
+
+export type UpdateLiteratureListSectionList = LiteratureListListSectionRequest;
+export type UpdateLiteratureListSectionText = LiteratureListTextSectionRequest;
+
+export type UpdateLiteratureListParams = Omit<UpdateLiteratureListRequest, 'authors'> & {
+    authors?: UpdateAuthor[];
+};
+
+export const createLiteratureList = (data: Omit<CreateLiteratureListRequest, 'authors'> & { authors: UpdateAuthor[] }) =>
+    literatureListsApi
+        .createRaw({ createLiteratureListRequest: { ...data, authors: data.authors.map(toAuthorRequest) } as CreateLiteratureListRequest })
+        .then(getCreatedId);
+
+export const updateLiteratureList = (id: string, data: UpdateLiteratureListParams) =>
+    literatureListsApi.update({
+        id,
+        updateLiteratureListRequest: { ...data, authors: data.authors?.map(toAuthorRequest) } as UpdateLiteratureListRequest,
     });
-    return listsApi
-        .get<PaginatedResponse<LiteratureList>>('', {
-            searchParams,
-            headers: {
-                Accept: LITERATURE_LISTS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
 
-export const getLiteratureListPublishedContentById = (listId: string, paperId: string) => {
-    return listsApi.get<Paper | Resource>(`${listId}/published-contents/${paperId}`).json();
-};
-
-export const getLiteratureList = (id: string) => {
-    return listsApi
-        .get<LiteratureList>(id, {
-            headers: {
-                Accept: LITERATURE_LISTS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export type UpdateLiteratureListSectionList = {
-    entries: {
-        id: string;
-        description: string;
-    }[];
-};
-export type UpdateLiteratureListSectionText = Omit<LiteratureListSectionText, 'id' | 'type'>;
-
-export type UpdateLiteratureListParams = Partial<
-    Omit<LiteratureList, 'id' | 'research_fields' | 'sdgs' | 'sections'> & { research_fields: string[] } & { sdgs: string[] } & {
-        sections: (UpdateLiteratureListSectionText | UpdateLiteratureListSectionList)[];
-    }
->;
-
-export const updateLiteratureList = (id: string, data: UpdateLiteratureListParams) => {
-    return listsApi
-        .put<void>(`${id}`, {
-            json: data,
-            headers: {
-                Accept: LITERATURE_LISTS_CONTENT_TYPE,
-                'Content-Type': LITERATURE_LISTS_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
-
-export const deleteLiteratureListSection = ({ listId, sectionId }: { listId: string; sectionId: string }) => {
-    return listsApi
-        .delete<void>(`${listId}/sections/${sectionId}`, {
-            headers: {
-                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+export const deleteLiteratureListSection = ({ listId, sectionId }: { listId: string; sectionId: string }) =>
+    literatureListsApi.deleteSection({ id: listId, sectionId });
 
 export const createLiteratureListSection = ({
     listId,
@@ -117,17 +67,7 @@ export const createLiteratureListSection = ({
     listId: string;
     index: number;
     data: UpdateLiteratureListSectionList | UpdateLiteratureListSectionText;
-}) => {
-    return listsApi
-        .post<void>(`${listId}/sections/${index}`, {
-            json: data,
-            headers: {
-                'Content-Type': LITERATURE_LISTS_SECTION_CONTENT_TYPE,
-                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
+}) => literatureListsApi.createSectionAtIndexRaw({ id: listId, index, literatureListsCreateSectionRequest: data }).then(getCreatedId);
 
 export const updateLiteratureListSection = ({
     listId,
@@ -136,34 +76,8 @@ export const updateLiteratureListSection = ({
 }: {
     listId: string;
     sectionId: string;
-    data: Partial<UpdateLiteratureListSectionList | UpdateLiteratureListSectionText>;
-}) => {
-    return listsApi
-        .put<void>(`${listId}/sections/${sectionId}`, {
-            json: data,
-            headers: {
-                'Content-Type': LITERATURE_LISTS_SECTION_CONTENT_TYPE,
-                Accept: LITERATURE_LISTS_SECTION_CONTENT_TYPE,
-            },
-        })
-        .json();
-};
+    data: UpdateLiteratureListSectionList | UpdateLiteratureListSectionText;
+}) => literatureListsApi.updateSection({ id: listId, sectionId, literatureListsUpdateSectionRequest: data });
 
-export const publishList = (
-    listId: string,
-    data: {
-        changelog: string;
-        assign_doi: boolean;
-        description?: string;
-    },
-) => {
-    return listsApi
-        .post<void>(`${listId}/publish`, {
-            json: data,
-            headers: {
-                'Content-Type': LITERATURE_LISTS_CONTENT_TYPE,
-                Accept: LITERATURE_LISTS_CONTENT_TYPE,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
-};
+export const publishList = (listId: string, data: PublishLiteratureListRequest) =>
+    literatureListsApi.publishRaw({ id: listId, publishLiteratureListRequest: data }).then(getCreatedId);

@@ -21,9 +21,9 @@ const PublishHistoryModal: FC<PublishHistoryModalProps> = ({ id, snapshotId, tog
 
     const versions = snapshots?.content ?? [];
 
-    const getVersionLink = (snapshot: { id: string; resource_id: string }) =>
+    const getVersionLink = (snapshot: { id: string; resourceId: string }) =>
         contentType === 'Resource'
-            ? reverse(ROUTES.RESOURCE_SNAPSHOT, { id: snapshot.resource_id, snapshotId: snapshot.id })
+            ? reverse(ROUTES.RESOURCE_SNAPSHOT, { id: snapshot.resourceId, snapshotId: snapshot.id })
             : reverse(ROUTES.CONTENT_TYPE_SNAPSHOT, { type: contentType, id, snapshotId: snapshot.id });
 
     return (
@@ -55,8 +55,8 @@ const PublishHistoryModal: FC<PublishHistoryModalProps> = ({ id, snapshotId, tog
                                                 }`}
                                             />
                                             <div className="flex items-center gap-2 text-sm text-muted">
-                                                {dayjs(snapshot.created_at).format('DD MMMM YYYY - HH:mm')}
-                                                <UserAvatar userId={snapshot.created_by} />
+                                                {dayjs(snapshot.createdAt).format('DD MMMM YYYY - HH:mm')}
+                                                <UserAvatar userId={snapshot.createdBy} />
                                             </div>
                                             <div className="mt-0.5 flex items-baseline gap-2">
                                                 <span className={`font-semibold ${isCurrent ? 'text-accent' : ''}`}>Version {versionNumber}</span>

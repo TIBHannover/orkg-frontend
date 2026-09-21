@@ -19,7 +19,7 @@ const usePaperSectionStats = ({ paperId }: { paperId: string }) => {
         count: {
             contributions: paper?.contributions.length,
             mentions: paper?.mentionings.length,
-            statements: statements?.page.total_elements,
+            statements: statements?.page.totalElements,
         },
         isLoading: isPaperLoading || isStatementsLoading,
         mutatePaper,

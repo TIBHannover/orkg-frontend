@@ -18,7 +18,7 @@ const ValidationRulesNumber: FC<ValidationRulesNumberProps> = ({ id }) => {
     const propertyShapes = useSelector((state: RootStore) => state.templateEditor.properties);
     const { isEditMode } = useIsEditMode();
 
-    const updateField = (name: 'min_inclusive' | 'max_inclusive', value: string) => {
+    const updateField = (name: 'minInclusive' | 'maxInclusive', value: string) => {
         const templatePropertyShapes = propertyShapes.map((item, j) => {
             if (j === id) {
                 return { ...item, [name]: value };
@@ -38,11 +38,9 @@ const ValidationRulesNumber: FC<ValidationRulesNumberProps> = ({ id }) => {
                     <TextField
                         fullWidth
                         value={
-                            propertyShape.min_inclusive !== undefined && propertyShape.min_inclusive !== null
-                                ? String(propertyShape.min_inclusive)
-                                : ''
+                            propertyShape.minInclusive !== undefined && propertyShape.minInclusive !== null ? String(propertyShape.minInclusive) : ''
                         }
-                        onChange={(value) => updateField('min_inclusive', value)}
+                        onChange={(value) => updateField('minInclusive', value)}
                         isDisabled={!isEditMode}
                         aria-label="Minimum value"
                     >
@@ -63,11 +61,9 @@ const ValidationRulesNumber: FC<ValidationRulesNumberProps> = ({ id }) => {
                     <TextField
                         fullWidth
                         value={
-                            propertyShape.max_inclusive !== undefined && propertyShape.max_inclusive !== null
-                                ? String(propertyShape.max_inclusive)
-                                : ''
+                            propertyShape.maxInclusive !== undefined && propertyShape.maxInclusive !== null ? String(propertyShape.maxInclusive) : ''
                         }
-                        onChange={(value) => updateField('max_inclusive', value)}
+                        onChange={(value) => updateField('maxInclusive', value)}
                         isDisabled={!isEditMode}
                         aria-label="Maximum value"
                     >

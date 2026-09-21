@@ -1,174 +1,66 @@
-import qs from 'qs';
+import { StatementsApi, StatementsApiFindAllRequest, SubgraphsApi, UpdateStatementRequest } from '@orkg/orkg-client';
 
 import { CLASSES, PREDICATES, RESOURCES } from '@/constants/graphSettings';
-import { url } from '@/constants/misc';
-import backendApi, { getCreatedIdFromHeaders } from '@/services/backend/backendApi';
+import { urlNoTrailingSlash } from '@/constants/misc';
+import { configuration, FORMATTED_LABELS_ACCEPT, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
 import { getTemplate } from '@/services/backend/templates';
-import { ExtractionMethod, PaginatedResponse, PaginationParams, PropertyShapeResourceType, Resource, Statement } from '@/services/backend/types';
+import { ExtractionMethod, Pagination, PropertyShapeResourceType, Resource, Statement, WithPaginationParams } from '@/services/backend/types';
 
-export const statementsUrl = `${url}statements/`;
-export const statementsApi = backendApi.extend(() => ({ prefixUrl: statementsUrl }));
+export const statementsUrl = `${urlNoTrailingSlash}/statements`;
 
-export const getStatement = (id: string) => statementsApi.get<Statement>(id).json();
+const statementsApi = new StatementsApi(configuration);
+const subgraphsApi = new SubgraphsApi(configuration);
 
-export type GetStatementsParams<T extends boolean = true> = {
-    subjectClasses?: string[];
-    subjectId?: string;
-    subjectLabel?: string;
-    predicateId?: string;
-    createdBy?: string;
-    createdAtStart?: string;
-    createdAtEnd?: string;
-    objectClasses?: string[];
-    objectId?: string;
-    objectLabel?: string;
+export const getStatement = (id: string) => statementsApi.findById({ id });
+
+export type GetStatementsParams<T extends boolean = true> = Omit<WithPaginationParams<StatementsApiFindAllRequest>, 'accept'> & {
     returnFormattedLabels?: boolean;
     returnContent?: T;
-} & PaginationParams;
-
-export const getStatements = <T extends boolean = true>({
-    subjectClasses = [],
-    subjectId = undefined,
-    subjectLabel = undefined,
-    predicateId = undefined,
-    createdBy = undefined,
-    createdAtStart = undefined,
-    createdAtEnd = undefined,
-    objectClasses = [],
-    objectId = undefined,
-    objectLabel = undefined,
-    page = 0,
-    size = 9999,
-    sortBy = [{ property: 'created_at', direction: 'desc' }],
-    returnContent = true as T,
-    returnFormattedLabels = false,
-}: GetStatementsParams<T>): Promise<T extends true ? Statement[] : PaginatedResponse<Statement>> => {
-    let headers;
-    if (returnFormattedLabels) {
-        headers = {
-            'Content-Type': 'application/json;charset=utf-8',
-            Accept: 'application/json;formatted-labels=V1',
-        };
-    }
-    const sort = sortBy.map(({ property, direction }) => `${property},${direction}`).join(',');
-    const searchParams = qs.stringify(
-        {
-            subject_classes: subjectClasses.length > 0 ? subjectClasses.join(',') : undefined,
-            subject_id: subjectId,
-            subject_label: subjectLabel,
-            predicate_id: predicateId,
-            created_by: createdBy,
-            created_at_start: createdAtStart,
-            created_at_end: createdAtEnd,
-            object_classes: objectClasses.length > 0 ? objectClasses.join(',') : undefined,
-            object_id: objectId,
-            object_label: objectLabel,
-            page,
-            size,
-            sort,
-        },
-        {
-            skipNulls: true,
-        },
-    );
-
-    return statementsApi
-        .get<PaginatedResponse<Statement>>('', {
-            searchParams,
-            headers,
-        })
-        .json()
-        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Statement[] : PaginatedResponse<Statement>>;
 };
 
-export const createStatement = (subjectId: string, predicateId: string, objectId: string) =>
+export const getStatements = <T extends boolean = true>({
+    returnContent = true as T,
+    returnFormattedLabels = false,
+    ...params
+}: GetStatementsParams<T>): Promise<T extends true ? Statement[] : Pagination<Statement>> =>
     statementsApi
-        .post<Statement>('', {
-            json: {
-                subject_id: subjectId,
-                predicate_id: predicateId,
-                object_id: objectId,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+        .findAll(
+            transformPaginationParams({
+                ...params,
+                accept: returnFormattedLabels ? FORMATTED_LABELS_ACCEPT : undefined,
+            }),
+        )
+        .then((res) => (returnContent ? res.content : res)) as Promise<T extends true ? Statement[] : Pagination<Statement>>;
+
+export const createStatement = (subjectId: string, predicateId: string, objectId: string) =>
+    statementsApi.createRaw({ createStatementRequest: { subjectId, predicateId, objectId } }).then(getCreatedId);
 
 export const createResourceStatement = (subjectId: string, predicateId: string, objectId: string) =>
-    statementsApi
-        .post<Statement>('', {
-            json: {
-                subject_id: subjectId,
-                predicate_id: predicateId,
-                object_id: objectId,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    createStatement(subjectId, predicateId, objectId);
 
 export const createLiteralStatement = (subjectId: string, predicateId: string, literalId: string) =>
-    statementsApi
-        .post<Statement>('', {
-            json: {
-                subject_id: subjectId,
-                predicate_id: predicateId,
-                object_id: literalId,
-            },
-        })
-        .then(({ headers }) => getCreatedIdFromHeaders(headers));
+    createStatement(subjectId, predicateId, literalId);
 
-export const updateStatement = (
-    id: string,
-    {
-        subject_id = null,
-        predicate_id = null,
-        object_id = null,
-        extraction_method = null,
-    }: {
-        subject_id?: string | null;
-        predicate_id?: string | null;
-        object_id?: string | null;
-        extraction_method?: ExtractionMethod | null;
-    },
-) =>
-    statementsApi
-        .put<Statement>(id, {
-            json: {
-                ...(subject_id ? { subject_id } : null),
-                ...(predicate_id ? { predicate_id } : null),
-                ...(object_id ? { object_id } : null),
-                ...(extraction_method ? { extraction_method } : null),
-            },
-        })
-        .json();
+export const updateStatement = (id: string, data: UpdateStatementRequest) => statementsApi.update({ id, updateStatementRequest: data });
 
 export const setStatementsExtractionMethod = (statementIds: string[], extractionMethod: ExtractionMethod) =>
-    Promise.all(statementIds.map((id) => updateStatement(id, { extraction_method: extractionMethod })));
+    Promise.all(statementIds.map((id) => updateStatement(id, { extractionMethod })));
 
-export const deleteStatementById = (id: string) => statementsApi.delete<void>(encodeURIComponent(id)).json();
+export const deleteStatementById = (id: string) => statementsApi.deleteById({ id });
 
 /**
- * Fetching statements for a thing as a bundle
- * A Bundle is a collection of statements that represents the sub-graph starting from a certain Thing in the KG.
+ * Fetching the sub-graph starting from a certain Thing in the KG.
+ *
+ * GET /statements/{id}/bundle is deprecated; the subgraph endpoint is its successor, and the
+ * result is adapted to the bundle shape ({ root, statements }) its consumer still expects.
  *
  * @param {String} id - Thing id
  * @param {String} maxLevel - The number of levels in the graph to fetch
  * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
  * @return {Promise} Promise object
  */
-export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }: { id: string; maxLevel?: number; blacklist?: string[] }) => {
-    const searchParams = qs.stringify(
-        { max_level: maxLevel, blacklist: blacklist?.join(',') },
-        {
-            skipNulls: true,
-        },
-    );
-    return statementsApi
-        .get<{
-            root: string;
-            statements: Statement[];
-        }>(`${encodeURIComponent(id)}/bundle`, {
-            searchParams,
-        })
-        .json();
-};
+export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }: { id: string; maxLevel?: number; blacklist?: string[] }) =>
+    subgraphsApi.findByRootId({ id, maxHops: maxLevel, denyClasses: blacklist, size: 9999 }).then((page) => ({ root: id, statements: page.content }));
 
 /**
  * Get Parents of research field
@@ -185,13 +77,15 @@ export const getParentResearchFields = (researchFieldId: string, parents: Resour
             featured: false,
             unlisted: false,
             verified: false,
-            extraction_method: 'UNKNOWN',
+            extractionMethod: 'UNKNOWN',
             _class: 'resource',
-            created_at: '',
-            created_by: '',
-            observatory_id: '',
-            organization_id: '',
-            formatted_label: '',
+            createdAt: '',
+            createdBy: '',
+            observatoryId: '',
+            organizationId: '',
+            formattedLabel: '',
+            modifiable: true,
+            visibility: 'DEFAULT',
         });
         return Promise.resolve(parents);
     }
@@ -211,30 +105,6 @@ export const getParentResearchFields = (researchFieldId: string, parents: Resour
 };
 
 /**
- * Get Parents of research problems
- *
- * @param {String} researchProblemId research problem Id
- */
-export const getParentResearchProblems = (researchProblemId: string, parents: Resource[] = []): Promise<Resource[]> => {
-    if (parents.length > 5) {
-        return Promise.resolve(parents);
-    }
-    return getStatements({
-        objectId: researchProblemId,
-        predicateId: PREDICATES.SUB_PROBLEM,
-    }).then((parentResearchProblem) => {
-        if (parentResearchProblem && Array.isArray(parentResearchProblem) && parentResearchProblem[0]) {
-            if (parents.length === 0) {
-                parents.push(parentResearchProblem[0].object as Resource);
-            }
-            parents.push(parentResearchProblem[0].subject);
-            return getParentResearchProblems(parentResearchProblem[0].subject.id, parents);
-        }
-        return Promise.resolve(parents);
-    });
-};
-
-/**
  * Get Template by Class
  *
  * @param {String} classID class ID
@@ -246,7 +116,7 @@ export const getTemplatesByClass = (classID: string): Promise<string[]> =>
     })
         .then((statements) =>
             (statements as Statement[])
-                .filter((statement: Statement) => statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
+                .filter((statement: Statement) => statement.subject._class === 'resource' && statement.subject.classes?.includes(CLASSES.NODE_SHAPE))
                 .map((st) => st.subject.id)
                 .filter((c) => c),
         )
@@ -264,9 +134,10 @@ export const loadTemplateFlowByID = (id: string, loadedNodes: Set<any>): Promise
         loadedNodes.add(id);
         return getTemplate(id).then((t) => {
             const promises: Promise<any>[] = t.properties
-                .filter((ps) => 'class' in ps && ps.class !== undefined)
+                // the generated client escapes the wire field 'class' as '_class'
+                .filter((ps) => ps.type === 'resource' && ps._class !== undefined)
                 .map((ps) =>
-                    getTemplatesByClass((ps as PropertyShapeResourceType).class?.id ?? '').then((templateIds) => {
+                    getTemplatesByClass((ps as PropertyShapeResourceType)._class?.id ?? '').then((templateIds) => {
                         if (templateIds.length) {
                             return loadTemplateFlowByID(templateIds[0], loadedNodes);
                         }

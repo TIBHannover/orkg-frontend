@@ -48,7 +48,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const isCurationAllowed = user?.isCurationAllowed ?? false;
     const { entity } = useEntity();
     const { templates: _usedTemplates } = useTemplates();
-    const usedTemplates = _usedTemplates?.filter((t) => t.target_class.id !== CLASSES.RESOURCE);
+    const usedTemplates = _usedTemplates?.filter((t) => t.targetClass.id !== CLASSES.RESOURCE);
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
@@ -60,8 +60,8 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
     const renderListItem = (template: Template) => (
         <TemplateListItem
             isDisabled={
-                ENTITY_CLASSES.includes(template.target_class.id) ||
-                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed)
+                ENTITY_CLASSES.includes(template.targetClass.id) ||
+                (CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.targetClass.id) && !isCurationAllowed)
             }
             template={template}
             key={`tr${template.id}`}
@@ -89,9 +89,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                         <p>Applied {pluralize('template', usedTemplates?.length ?? 0, false)}:</p>
                                         {usedTemplates?.map((template) => (
                                             <TemplateButton
-                                                isDisabled={
-                                                    CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.target_class.id) && !isCurationAllowed
-                                                }
+                                                isDisabled={CONTENT_TYPES_WITH_SPECIAL_SCHEMA.includes(template.targetClass.id) && !isCurationAllowed}
                                                 template={template}
                                                 key={`tr${template.id}`}
                                             />
@@ -121,7 +119,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                     <div>
                                         {recommendedTemplates.map((template) => (
                                             <TemplateButton
-                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.targetClass.id)}
                                                 template={template}
                                                 key={`tr${template.id}`}
                                                 isSmart
@@ -137,7 +135,7 @@ const TemplatesModal: FC<TemplatesModalProps> = ({ isOpen, toggle }) => {
                                     <div>
                                         {featuredTemplates.map((template) => (
                                             <TemplateButton
-                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.target_class.id)}
+                                                isDisabled={entity && 'classes' in entity && entity?.classes?.includes(template.targetClass.id)}
                                                 template={template}
                                                 key={`tr${template.id}`}
                                             />

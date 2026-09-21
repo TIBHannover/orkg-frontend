@@ -44,7 +44,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
             setPublishedId(
                 await publishList(list.id, {
                     changelog,
-                    assign_doi: shouldAssignDoi,
+                    assignDoi: shouldAssignDoi,
                     ...(description && { description }),
                 }),
             );
@@ -52,7 +52,7 @@ const PublishModal: FC<PublishModalProps> = ({ show, toggle }) => {
             sendEvent({ category: 'data-entry', action: 'publish-list' });
             toast.success('List published successfully');
         } catch (e) {
-            errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
+            await errorHandler({ error: e, shouldShowToast: true, fieldLabels: { changelog: 'Update message' } });
             console.error(e);
             return null;
         } finally {

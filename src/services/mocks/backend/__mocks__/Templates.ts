@@ -11,6 +11,7 @@ export const strictTemplate = {
     properties: [
         {
             id: 'R55266',
+            type: 'string_literal',
             label: 'Strict template property',
             placeholder: '',
             description: '',
@@ -48,6 +49,7 @@ export const templateR0TemplateR40006 = {
     properties: [
         {
             id: 'R206009',
+            type: 'resource',
             label: 'Component for template R40006',
             placeholder: '',
             description: '',
@@ -62,6 +64,7 @@ export const templateR0TemplateR40006 = {
         },
         {
             id: 'R206010',
+            type: 'resource',
             label: 'Component for template R40006',
             placeholder: '',
             description: '',
@@ -76,6 +79,7 @@ export const templateR0TemplateR40006 = {
         },
         {
             id: 'R206011',
+            type: 'resource',
             label: 'Component for template R40006',
             placeholder: '',
             description: '',
@@ -107,6 +111,7 @@ export const templateR44415 = {
     properties: [
         {
             id: 'R44635',
+            type: 'number_literal',
             label: 'Component for template R44415',
             placeholder: '',
             description: '',
@@ -121,6 +126,7 @@ export const templateR44415 = {
         },
         {
             id: 'R44636',
+            type: 'resource',
             label: 'Component for template R44415',
             placeholder: '',
             description: '',
@@ -152,6 +158,7 @@ export const templateR35077 = {
     properties: [
         {
             id: 'R48016',
+            type: 'number_literal',
             label: 'Component for template R35077',
             placeholder: '',
             description: '',
@@ -166,6 +173,7 @@ export const templateR35077 = {
         },
         {
             id: 'R48017',
+            type: 'number_literal',
             label: 'Component for template R35077',
             placeholder: '',
             description: '',
@@ -180,6 +188,7 @@ export const templateR35077 = {
         },
         {
             id: 'R48018',
+            type: 'resource',
             label: 'Component for template R35077',
             placeholder: '',
             description: '',
@@ -211,6 +220,7 @@ export const templateR35087 = {
     properties: [
         {
             id: 'R215825',
+            type: 'other_literal',
             label: 'Component for template R35087',
             placeholder: '',
             description: '',
@@ -225,6 +235,7 @@ export const templateR35087 = {
         },
         {
             id: 'R215826',
+            type: 'other_literal',
             label: 'Component for template R35087',
             placeholder: '',
             description: '',
@@ -256,6 +267,7 @@ export const templateR48000 = {
     properties: [
         {
             id: 'R576884',
+            type: 'string_literal',
             label: 'Component for template R48000',
             placeholder: '',
             description: '',
@@ -270,6 +282,7 @@ export const templateR48000 = {
         },
         {
             id: 'R576885',
+            type: 'string_literal',
             label: 'Component for template R48000',
             placeholder: '',
             description: '',
@@ -284,6 +297,7 @@ export const templateR48000 = {
         },
         {
             id: 'R576886',
+            type: 'resource',
             label: 'Component for template R48000',
             placeholder: '',
             description: '',

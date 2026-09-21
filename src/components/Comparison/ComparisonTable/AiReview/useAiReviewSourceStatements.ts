@@ -26,7 +26,7 @@ const useAiReviewSourceStatements = (comparisonId?: string): UseAiReviewSourceSt
         const list = statements ?? [];
         return {
             unverifiedCount: list.filter(
-                (statement) => statement.extraction_method === EXTRACTION_METHODS.AI_GENERATED && !incorrect.has(statement.id),
+                (statement) => statement.extractionMethod === EXTRACTION_METHODS.AI_GENERATED && !incorrect.has(statement.id),
             ).length,
             rejectedStatementIds: list.filter((statement) => incorrect.has(statement.id)).map((statement) => statement.id),
         };

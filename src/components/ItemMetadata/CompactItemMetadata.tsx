@@ -50,9 +50,7 @@ const CompactItemMetadata: FC<CompactItemMetadataProps> = ({
     children,
 }) => {
     // TODO: remove snake case handling after finishing services migration
-    const createdBy = item.created_by ?? item.createdBy;
-    const createdAt = item.created_at ?? item.createdAt;
-    const extractionMethod = item.extraction_method;
+    const { createdBy, createdAt, extractionMethod } = item;
     // the backend hands out the string 'null' for classes without a URI
     const uri = item.uri && item.uri !== 'null' ? item.uri : undefined;
 

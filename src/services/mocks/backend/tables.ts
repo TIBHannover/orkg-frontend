@@ -4,7 +4,7 @@ import { tablesUrl } from '@/services/backend/tables';
 import { tableResource } from '@/services/mocks/backend/__mocks__/Tables';
 
 const tables = [
-    http.get(`${tablesUrl}:id`, ({ params }) => {
+    http.get(`${tablesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
         if (!id) {
             throw new Error();

@@ -31,7 +31,7 @@ const EditMetadata = () => {
                 <div>
                     <h1 className="py-2 m-0 text-4xl">{review.title || <em>No title</em>}</h1>
 
-                    {review.research_fields?.[0] && <ResearchFieldBadge researchField={review.research_fields[0]} />}
+                    {review.researchFields?.[0] && <ResearchFieldBadge researchField={review.researchFields[0]} />}
                     <AuthorBadges authors={review.authors} />
                     <div>
                         <Button variant="secondary" size="sm" className="mt-2 mr-2" onPress={() => setIsOpenEditMetadataModal(true)}>

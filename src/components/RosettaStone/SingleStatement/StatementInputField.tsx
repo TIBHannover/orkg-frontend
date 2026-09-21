@@ -10,11 +10,11 @@ import TimeInput from '@/components/InputField/TimeInput/TimeInput';
 import ListInputField from '@/components/RosettaStone/SingleStatement/ListInputField';
 import { getConfigByClassId, InputType, StandardInputType } from '@/constants/DataTypes';
 import { CLASSES } from '@/constants/graphSettings';
-import { EntityType, Node, RSPropertyShape } from '@/services/backend/types';
+import { EntityType, Node, PropertyShape } from '@/services/backend/types';
 
 type StatementInputFieldProps = {
     value: Node[];
-    propertyShape: RSPropertyShape;
+    propertyShape: PropertyShape;
     updateValue: (value: Node[]) => void;
 };
 
@@ -22,8 +22,9 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
     const [isInputFieldModalOpen, setIsInputFieldModalOpen] = useState(false);
     let range: Node | undefined;
 
-    if ('class' in propertyShape && propertyShape.class) {
-        range = propertyShape.class;
+    // the generated client escapes the wire field 'class' as '_class'
+    if ('_class' in propertyShape && propertyShape._class) {
+        range = propertyShape._class;
     } else if ('datatype' in propertyShape && propertyShape.datatype) {
         range = propertyShape.datatype;
     }
@@ -38,7 +39,7 @@ const StatementInputField: FC<StatementInputFieldProps> = ({ propertyShape, valu
     }
 
     let isMulti = false;
-    if (!propertyShape.max_count || parseInt(propertyShape.max_count.toString(), 10) > 1) {
+    if (!propertyShape.maxCount || parseInt(propertyShape.maxCount.toString(), 10) > 1) {
         isMulti = true;
     }
 

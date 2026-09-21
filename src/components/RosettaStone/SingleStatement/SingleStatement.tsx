@@ -69,7 +69,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
         getPaper(params),
     );
 
-    const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement.template_id ?? '' });
+    const { data: template, isLoading: isLoadingTemplate } = useRosettaTemplate({ id: statement.templateId ?? '' });
 
     if (isLoadingTemplate) {
         return (
@@ -102,7 +102,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
                 key={index}
                 template={template}
                 propertyShape={template.properties[i]}
-                value={value}
+                value={value as unknown as OptionType[]}
                 isEditMode={isEditMode}
                 handleAddStatement={handleAddStatement}
                 context={statement.context}
@@ -113,8 +113,8 @@ const SingleStatement: FC<SingleStatementProps> = ({
 
     const formattedLabelWithInputs = ReactStringReplace(
         isEditing
-            ? template?.formatted_label.replaceAll(']', ' ').replaceAll('[', ' ')
-            : removeEmptySegments(template?.formatted_label ?? '', statement),
+            ? template?.formattedLabel.replaceAll(']', ' ').replaceAll('[', ' ')
+            : removeEmptySegments(template?.formattedLabel ?? '', statement),
         /{(.*?)}/,
         replacementFunction,
     );
@@ -134,7 +134,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
                 showMetadata &&
                 !isEditing && (
                     <CompactItemMetadata item={statement} showCreatedAt showCreatedBy showCertainty>
-                        {statement.latest_version_id && (
+                        {statement.latestVersionId && (
                             // the accent icon marks the button as interactive among the plain-text metadata items
                             <button
                                 type="button"
@@ -150,7 +150,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
             actions={
                 // -me-2 cancels the trailing margin ActionButton carries, so the last button sits on the padding edge
                 <div className="-me-2 flex items-center">
-                    {isEditMode && statement.latest_version_id && (
+                    {isEditMode && statement.latestVersionId && (
                         <ActionButton
                             title={editButtonTitle}
                             icon={isEditing ? faClose : faPen}
@@ -166,12 +166,12 @@ const SingleStatement: FC<SingleStatementProps> = ({
                             isDisabled={!statement.modifiable}
                             confirmationMessage="Are you sure to delete?"
                             confirmationButtons={[
-                                ...(statement.latest_version_id && isCurationAllowed
+                                ...(statement.latestVersionId && isCurationAllowed
                                     ? [{ title: 'Delete permanently', color: 'danger', icon: faCheck, action: handleDeleteStatementPermanently }]
                                     : []),
                                 {
                                     title: 'Delete',
-                                    color: statement.latest_version_id && isCurationAllowed ? 'warning' : 'danger',
+                                    color: statement.latestVersionId && isCurationAllowed ? 'warning' : 'danger',
                                     icon: faCheck,
                                     action: handleDeleteStatement,
                                 },
@@ -214,7 +214,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
                         <span className="truncate">{context.title}</span>
                     </Link>
                 )}
-                <VersionsModal show={isVersionsModalOpen} id={statement.version_id ?? statement.id} toggle={toggleVersionsModal} />
+                <VersionsModal show={isVersionsModalOpen} id={statement.versionId ?? statement.id} toggle={toggleVersionsModal} />
             </div>
             {isEditing && isEditMode && (
                 <div className="mt-2 flex items-center justify-between gap-3">
@@ -230,7 +230,7 @@ const SingleStatement: FC<SingleStatementProps> = ({
                         <Tooltip.Content>By activating this option the statement would be negated.</Tooltip.Content>
                     </Tooltip>
                     <ButtonWithLoading variant="primary" size="sm" onPress={onSave} isLoading={isSaving}>
-                        {!statement.latest_version_id ? 'Create' : 'Update'}
+                        {!statement.latestVersionId ? 'Create' : 'Update'}
                     </ButtonWithLoading>
                 </div>
             )}

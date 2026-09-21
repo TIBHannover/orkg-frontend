@@ -6,7 +6,7 @@ import ListPage from '@/components/PaginatedContent/ListPage';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { getLiteratureLists, listsUrl } from '@/services/backend/literatureLists';
+import { getLiteratureLists, literatureListsUrl } from '@/services/backend/literatureLists';
 import { LiteratureList } from '@/services/backend/types';
 
 const DraftLists = () => {
@@ -39,8 +39,8 @@ const DraftLists = () => {
                 renderListItem={renderListItem}
                 fetchFunction={getLiteratureLists}
                 fetchFunctionName="getLiteratureLists"
-                fetchUrl={listsUrl}
-                fetchExtraParams={{ created_by: user.id, published: false }}
+                fetchUrl={literatureListsUrl}
+                fetchExtraParams={{ createdBy: user.id, published: false }}
                 disableSearch
                 hideTitleBar
             />

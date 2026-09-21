@@ -10,14 +10,14 @@ import ListPage from '@/components/PaginatedContent/ListPage';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { comparisonUrl, deleteComparison, GetComparisonParams, getComparisons } from '@/services/backend/comparisons';
-import { Comparison, PaginatedResponse } from '@/services/backend/types';
+import { comparisonUrl, deleteComparison, getComparisons } from '@/services/backend/comparisons';
+import { Comparison, Pagination } from '@/services/backend/types';
 
-const getDraftComparisons = async (params: GetComparisonParams): Promise<PaginatedResponse<Comparison>> => {
+const getDraftComparisons = async (params: Parameters<typeof getComparisons>[0]): Promise<Pagination<Comparison>> => {
     const response = await getComparisons(params);
     return {
         ...response,
-        content: response.content.filter((c) => c.versions.published.length === 0),
+        content: response.content.filter((c) => (c.versions?.published.length ?? 0) === 0),
     };
 };
 
@@ -76,7 +76,7 @@ const DraftComparisons = () => {
                 fetchFunction={getDraftComparisons}
                 fetchFunctionName="getDraftComparisons"
                 fetchUrl={comparisonUrl}
-                fetchExtraParams={{ created_by: user.id, published: false }}
+                fetchExtraParams={{ createdBy: user.id, published: false }}
                 disableSearch
                 hideTitleBar
             />

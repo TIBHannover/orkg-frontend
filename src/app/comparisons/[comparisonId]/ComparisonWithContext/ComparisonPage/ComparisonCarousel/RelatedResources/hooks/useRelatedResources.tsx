@@ -1,3 +1,4 @@
+import { CreateComparisonRelatedResourceRequest } from '@orkg/orkg-client';
 import { uniqueId } from 'lodash';
 import useSWR from 'swr';
 
@@ -21,7 +22,7 @@ const useRelatedResources = () => {
         isLoading: isLoadingRelatedResources,
     } = useSWR(
         [
-            comparison?.related_resources && comparison?.related_resources.length > 0 ? comparison?.related_resources.map(({ id: _id }) => _id) : [],
+            comparison?.relatedResources && comparison?.relatedResources.length > 0 ? comparison?.relatedResources.map(({ id: _id }) => _id) : [],
             comparisonUrl,
             'getComparisonRelatedResource',
         ],
@@ -47,7 +48,7 @@ const useRelatedResources = () => {
                         data: updatedData,
                     });
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                 }
                 return newData;
             },
@@ -59,7 +60,7 @@ const useRelatedResources = () => {
         );
     };
 
-    const createRelatedResource = (data: Partial<ComparisonRelatedResource>) => {
+    const createRelatedResource = (data: CreateComparisonRelatedResourceRequest) => {
         if (!comparison) {
             return null;
         }
@@ -74,8 +75,8 @@ const useRelatedResources = () => {
                     });
                     mutate(() => ({
                         ...comparison,
-                        related_resources: [
-                            ...comparison.related_resources,
+                        relatedResources: [
+                            ...comparison.relatedResources,
                             {
                                 id: _id,
                                 label: data.label ?? '',
@@ -83,17 +84,14 @@ const useRelatedResources = () => {
                         ],
                     }));
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                 }
-                return [
-                    ...(relatedResources ?? []),
-                    { created_at: '', created_by: '', description: '', image: '', label: '', url: '', id: _id, ...data },
-                ];
+                return [...(relatedResources ?? []), { createdAt: '', createdBy: '', description: '', image: '', url: '', id: _id, ...data }];
             },
             {
                 optimisticData: [
                     ...(relatedResources ?? []),
-                    { created_at: '', created_by: '', description: '', image: '', label: '', url: '', id: uniqueId(), ...data },
+                    { createdAt: '', createdBy: '', description: '', image: '', url: '', id: uniqueId(), ...data },
                 ],
                 rollbackOnError: true,
                 throwOnError: false,
@@ -114,18 +112,18 @@ const useRelatedResources = () => {
                     });
                     mutateRelatedResources();
                 } catch (e: unknown) {
-                    errorHandler({ error: e, shouldShowToast: true });
+                    await errorHandler({ error: e, shouldShowToast: true });
                     console.error(e);
                 }
                 return {
                     ...comparison,
-                    related_resources: comparison.related_resources.filter((relatedResource) => relatedResource.id !== relatedResourceId),
+                    relatedResources: comparison.relatedResources.filter((relatedResource) => relatedResource.id !== relatedResourceId),
                 };
             },
             {
                 optimisticData: {
                     ...comparison,
-                    related_resources: comparison.related_resources.filter((relatedResource) => relatedResource.id !== relatedResourceId),
+                    relatedResources: comparison.relatedResources.filter((relatedResource) => relatedResource.id !== relatedResourceId),
                 },
                 rollbackOnError: true,
                 throwOnError: false,

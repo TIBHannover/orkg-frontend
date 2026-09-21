@@ -17,7 +17,7 @@ const SelectOption: FC<OptionProps<RosettaStoneTemplateOption, false>> = ({ chil
     };
 
     const formattedLabelWithPlaceholders = ReactStringReplace(
-        data.formatted_label?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
+        data.formattedLabel?.replaceAll(']', ' ').replaceAll('[', ' ') ?? '',
         /{(.*?)}/,
         replacementFunction,
     );

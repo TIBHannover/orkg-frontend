@@ -18,7 +18,7 @@ type Option = {
 };
 
 type SectionTypeProps = {
-    type: string;
+    type?: string;
     section: ReviewSection;
     isDisabled: boolean;
     disabledTooltip?: string;
@@ -54,14 +54,15 @@ const SectionType: FC<SectionTypeProps> = ({ section, type, isDisabled = false, 
 
     const handleChange = (key: Key | Key[] | null) => {
         const selectedKey = Array.isArray(key) ? key[0] : key;
-        if (selectedKey == null) {
+        // the class can only be changed on text sections
+        if (selectedKey == null || section.type !== 'text') {
             return;
         }
         const nextClass = selectedKey === SECTION_KEY ? null : (selectedKey as string);
         updateSection(section.id, {
             heading: section.heading,
-            text: section.text,
-            class: nextClass,
+            text: section.text ?? '',
+            _class: nextClass,
         });
     };
 

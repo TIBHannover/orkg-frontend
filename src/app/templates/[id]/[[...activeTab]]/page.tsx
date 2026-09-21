@@ -45,11 +45,11 @@ const Template = () => {
         hasFailed,
         label,
         id: loadedId,
-        created_by: createdBy,
-        created_at: createdAt,
+        createdBy,
+        createdAt,
         observatories,
         organizations,
-        extraction_method: extractionMethod,
+        extractionMethod,
     } = useSelector((state: RootStore) => state.templateEditor);
     const router = useRouter();
     const [showHeaderBar, setShowHeaderBar] = useState(false);
@@ -192,7 +192,15 @@ const Template = () => {
                 Template
             </TitleBar>
             <InView as="div" initialInView={false} onChange={(inView) => handleShowHeaderBar(inView)}>
-                <EditModeHeader isVisible={editMode || isSaving} />
+                {/* unlike the other editors, this one only writes when Save is pressed */}
+                <EditModeHeader
+                    isVisible={editMode || isSaving}
+                    message={
+                        <>
+                            Edit mode <span className="text-sm text-white/70 pl-2 hidden sm:inline">Your changes are saved when you press Save</span>
+                        </>
+                    }
+                />
                 <Container>
                     <div className={`box flow-root pt-6 pb-6 pl-6 pr-6 ${editMode || isSaving ? 'rounded-b' : 'rounded'}`}>
                         <div className="mb-6">
@@ -209,11 +217,11 @@ const Template = () => {
                                 {
                                     id,
                                     label,
-                                    created_by: createdBy,
-                                    created_at: createdAt,
+                                    createdBy,
+                                    createdAt,
                                     organizations,
                                     observatories,
-                                    extraction_method: extractionMethod,
+                                    extractionMethod,
                                 } as unknown as Thing
                             }
                             showCreatedAt

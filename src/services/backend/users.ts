@@ -1,24 +1,27 @@
-import { url } from '@/constants/misc';
-import backendApi from '@/services/backend/backendApi';
-import { Contributor, User } from '@/services/backend/types';
+import { UsersApi } from '@orkg/orkg-client';
 
-export const userUrl = `${url}user/`;
-export const userApi = backendApi.extend(() => ({ prefixUrl: userUrl }));
+import { url, urlNoTrailingSlash } from '@/constants/misc';
+import backendApi, { configuration } from '@/services/backend/backendApi';
 
-export const getUserInformation = () => userApi.get<User>('').json();
+export const userUrl = `${urlNoTrailingSlash}/user`;
 
-export const addUserToObservatory = (contributor_id: string, observatory_id: string, organization_id: string): Promise<Contributor> => {
-    const headers = { 'Content-Type': 'application/json' };
-    return userApi
-        .put<Contributor>(`observatory`, {
+const usersApi = new UsersApi(configuration);
+
+export const getUserInformation = () => usersApi.fetchUserData();
+
+// the observatory-membership endpoints have no generated client operation yet, so they stay
+// on ky (reported spec gaps: PUT /user/observatory, DELETE /user/{id}/observatory)
+const userKyApi = backendApi.extend(() => ({ prefixUrl: `${url}user/` }));
+
+export const addUserToObservatory = (contributor_id: string, observatory_id: string, organization_id: string): Promise<void> =>
+    userKyApi
+        .put<void>(`observatory`, {
             json: {
                 contributor_id,
                 observatory_id,
                 organization_id,
             },
-            headers,
         })
-        .json();
-};
+        .then(() => undefined);
 
-export const deleteUserFromObservatoryById = (id: string) => userApi.delete<void>(`${id}/observatory`).json();
+export const deleteUserFromObservatoryById = (id: string) => userKyApi.delete<void>(`${encodeURIComponent(id)}/observatory`).json();

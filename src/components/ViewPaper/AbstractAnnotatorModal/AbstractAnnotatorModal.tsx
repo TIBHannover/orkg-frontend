@@ -13,6 +13,7 @@ import AbstractInputView from '@/components/ViewPaper/AbstractAnnotatorModal/Abs
 import AbstractRangesList from '@/components/ViewPaper/AbstractAnnotatorModal/AbstractRangesList';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import LLM_TASK_NAMES from '@/constants/llmTasks';
+import { getStatusCode } from '@/services/backend/problemDetails';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement, statementsUrl } from '@/services/backend/statements';
 import { getLlmResponse, nlpServiceUrl } from '@/services/orkgNlp';
@@ -112,7 +113,7 @@ const AbstractAnnotatorModal: FC<AbstractAnnotatorModalProps> = ({ toggle, resou
     const isAnnotationFailedLoading = _annotationError !== undefined;
 
     let annotationError = '';
-    if (_annotationError && _annotationError.statusCode === 422) {
+    if (_annotationError && getStatusCode(_annotationError) === 422) {
         annotationError = 'Failed to annotate the abstract, please change the abstract and try again';
     }
 

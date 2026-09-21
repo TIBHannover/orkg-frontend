@@ -18,15 +18,15 @@ const ListDiff = () => {
     const { list: newList } = useList(newId);
 
     const getTitleData = ({ versions, id }: LiteratureList) => {
-        const version = versions.published.find((version) => version.id === id);
-        if (!version) {
+        const version = versions?.published.find((version) => version.id === id);
+        if (!versions || !version) {
             return null;
         }
 
         const versionNumber = versions.published.length
             ? versions.published.length - versions.published.findIndex((version) => version.id === id)
             : null;
-        const publicationDate = version ? dayjs(version.created_at).format('DD MMMM YYYY - H:m:s') : null;
+        const publicationDate = version ? dayjs(version.createdAt).format('DD MMMM YYYY - H:m:s') : null;
 
         return {
             creator: null, // TODO version.creator
@@ -47,7 +47,7 @@ const ListDiff = () => {
             // Data still loading from SWR — stay in loading state until the next render provides a resolved getData.
             return new Promise<never>(() => {});
         }
-        if (oldList.versions.head?.id !== newList.versions.head?.id) {
+        if (oldList.versions?.head?.id !== newList.versions?.head?.id) {
             throw new Error('Lists not found');
         }
 

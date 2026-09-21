@@ -44,10 +44,10 @@ const PrintView: FC<PrintViewProps> = ({ comparisonId }) => {
                             <td>{comparisonContents?.titles.length}</td>
                         </tr>
                     )}
-                    {comparisonContents?.selected_paths && (
+                    {comparisonContents?.selectedPaths && (
                         <tr>
                             <th className="font-semibold">Number of rows</th>
-                            <td>{comparisonContents.selected_paths.length}</td>
+                            <td>{comparisonContents.selectedPaths.length}</td>
                         </tr>
                     )}
                     {comparison?.identifiers.doi && comparison.identifiers.doi.length > 0 && (

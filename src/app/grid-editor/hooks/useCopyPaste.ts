@@ -83,7 +83,7 @@ const useCopyPaste = ({ gridRef }: UseCopyPasteProps) => {
 
                 if (editMode) {
                     // Update existing statement to point to new object (for literals) or same object (for resources)
-                    await updateStatement(currentStatement.id, { object_id: objectId });
+                    await updateStatement(currentStatement.id, { objectId });
                     statementId = currentStatement.id;
                 } else {
                     // Create a new statement

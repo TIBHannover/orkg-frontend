@@ -128,7 +128,7 @@ const PropertyMapping: FC<PropertyMappingProps> = ({
                                                     : undefined
                                             }
                                             value={column.predicate}
-                                            additionalOptions={DEFAULT_HEADERS}
+                                            additionalOptions={DEFAULT_HEADERS as OptionType[]}
                                             size="sm"
                                             allowCreate
                                             autoFocus

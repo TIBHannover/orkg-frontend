@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 
 import { flattenPaths } from '@/components/Comparison/hooks/useComparison';
 import { isListSection, isTextSection } from '@/components/List/helpers/typeGuards';
-import { SectionContentLinkTypes } from '@/components/Review/Sections/ContentLink/ContentLink';
 import { Comparison, ComparisonContents, LiteratureList, Review } from '@/services/backend/types';
 
 const useDiff = () => {
@@ -11,8 +10,8 @@ const useDiff = () => {
         let articleText = '';
         articleText += `Title: ${article.title}\n\n`;
 
-        if (article.research_fields?.[0]) {
-            articleText += `Research field: ${article.research_fields?.[0].label}\n\n`;
+        if (article.researchFields?.[0]) {
+            articleText += `Research field: ${article.researchFields?.[0].label}\n\n`;
         }
 
         for (const [index, author] of article.authors.entries()) {
@@ -27,11 +26,18 @@ const useDiff = () => {
             if (section.type === 'text' && section.text) {
                 articleText += `Content:\n${section.text}\n\n`;
             }
-            if (['resource', 'property', 'comparison', 'visualization'].includes(section.type)) {
-                const sectionType: SectionContentLinkTypes =
-                    section.type !== 'property' ? (section.type as SectionContentLinkTypes) : ('predicate' as SectionContentLinkTypes);
-
-                articleText += `Link to: ${section?.[sectionType]?.id} (${section?.[sectionType]?.label})\n\n`;
+            if (section.type === 'resource' || section.type === 'property' || section.type === 'comparison' || section.type === 'visualization') {
+                let content;
+                if (section.type === 'resource') {
+                    content = section.resource;
+                } else if (section.type === 'property') {
+                    content = section.predicate;
+                } else if (section.type === 'comparison') {
+                    content = section.comparison;
+                } else {
+                    content = section.visualization;
+                }
+                articleText += `Link to: ${content?.id} (${content?.label})\n\n`;
             }
         }
 
@@ -42,8 +48,8 @@ const useDiff = () => {
         let articleText = '';
         articleText += `Title: ${article.title}\n\n`;
 
-        if (article.research_fields?.[0]) {
-            articleText += `Research field: ${article.research_fields?.[0]?.label}\n\n`;
+        if (article.researchFields?.[0]) {
+            articleText += `Research field: ${article.researchFields?.[0]?.label}\n\n`;
         }
 
         for (const [index, author] of article.authors.entries()) {
@@ -74,12 +80,12 @@ const useDiff = () => {
 
     const comparisonToPlainText = useCallback(
         ({ comparison, comparisonContents }: { comparison: Comparison; comparisonContents: ComparisonContents }) => {
-            const predicates = uniqBy(flattenPaths(comparisonContents.selected_paths ?? []), 'id');
+            const predicates = uniqBy(flattenPaths(comparisonContents.selectedPaths ?? []), 'id');
             let comparisonText = '';
             comparisonText += `Title: ${comparison.title}\n\n`;
 
-            if (comparison.research_fields?.[0]) {
-                comparisonText += `Research field: ${comparison.research_fields?.[0]?.label}\n\n`;
+            if (comparison.researchFields?.[0]) {
+                comparisonText += `Research field: ${comparison.researchFields?.[0]?.label}\n\n`;
             }
 
             if (comparison.description) {
@@ -96,7 +102,7 @@ const useDiff = () => {
 
             const entities = comparisonContents.titles
                 .map((title, i) => ({ title, subtitle: comparisonContents.subtitles[i] ?? null }))
-                .sort((a, b) => (a.subtitle?.id ?? a.title.id).localeCompare(b.subtitle?.id ?? b.title.id));
+                .sort((a, b) => (a.subtitle?.id ?? a.title.id ?? '').localeCompare(b.subtitle?.id ?? b.title.id ?? ''));
             for (const [index, entity] of entities.entries()) {
                 comparisonText += `Entity ${index + 1}: ${entity.title.label} ${entity.subtitle?.label}\n`;
             }
