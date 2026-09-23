@@ -6,7 +6,8 @@ import ActionButton from '@/components/ActionButton/ActionButton';
 import InfoTippy from '@/components/DataBrowser/components/Body/ValueOptions/InfoTippy';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useCanEdit from '@/components/DataBrowser/hooks/useCanEdit';
-import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { hasValuePreview } from '@/components/DataBrowser/utils/dataBrowserUtils';
+import { ENTITIES } from '@/constants/graphSettings';
 import { Statement } from '@/services/backend/types';
 
 type ValueOptionsProps = {
@@ -14,12 +15,13 @@ type ValueOptionsProps = {
     statement: Statement;
     toggleEditValue?: () => void;
     showPreview: () => void;
+    isPreviewVisible: boolean;
     hasObjectStatements: boolean;
 };
 
-const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue, showPreview, hasObjectStatements }) => {
+const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue, showPreview, isPreviewVisible, hasObjectStatements }) => {
     const { config, loadedResources } = useDataBrowserState();
-    const { isEditMode } = config;
+    const { isEditMode, valuesAsLinks } = config;
     const { canEdit } = useCanEdit();
 
     const scrollToElement = useCallback(() => {
@@ -35,10 +37,14 @@ const ValueOptions: FC<ValueOptionsProps> = ({ path, statement, toggleEditValue,
 
     return (
         <div className="ml-2 inline-flex items-center gap-0.5 align-middle">
-            {'classes' in statement.object &&
-                (statement.object.classes?.includes(CLASSES.QB_DATASET_CLASS) || statement.object.classes?.includes(CLASSES.CSVW_TABLE)) && (
-                    <ActionButton title="Visualize data in tabular form" icon={faTable} action={() => showPreview()} />
-                )}
+            {!valuesAsLinks && hasValuePreview(statement.object) && (
+                <ActionButton
+                    title={isPreviewVisible ? 'Hide tabular form' : 'Visualize data in tabular form'}
+                    icon={faTable}
+                    isActive={isPreviewVisible}
+                    action={() => showPreview()}
+                />
+            )}
             {path.includes(statement.object.id) && !isEditMode && hasObjectStatements && (
                 <ActionButton title="Cycle" icon={faRotateLeft} action={scrollToElement} />
             )}
