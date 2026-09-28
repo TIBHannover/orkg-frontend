@@ -5,6 +5,9 @@ import { env } from 'next-runtime-env';
 
 import { SortByParam } from '@/services/backend/types';
 
+// identifies the ORKG frontend as the caller
+const CALLER_HEADER = { name: 'caller', value: 'ORKG' };
+
 let cachedToken: string | null = null;
 let tokenExpiryTime: number | null = null;
 let pendingTokenPromise: Promise<string | null> | null = null;
@@ -48,6 +51,7 @@ export const configuration = new Configuration({
     fetchApi: async (input: RequestInfo, init?: RequestInit) => {
         const token = await getAccessToken();
         const headers = new Headers(init?.headers);
+        headers.set(CALLER_HEADER.name, CALLER_HEADER.value);
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);
         }
@@ -65,6 +69,7 @@ const backendApi = ky.create({
     hooks: {
         beforeRequest: [
             async (request) => {
+                request.headers.set(CALLER_HEADER.name, CALLER_HEADER.value);
                 const token = await getAccessToken();
                 if (token) {
                     request.headers.set('Authorization', `Bearer ${token}`);
