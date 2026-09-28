@@ -231,6 +231,9 @@ export const mergeAlternate = (array1, array2) => {
     return result;
 };
 
+// Crossref titles can contain line breaks and indentation, which the backend rejects in labels
+const normalizeWhitespace = (value) => (value ?? '').replace(/\s+/g, ' ').trim();
+
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
 export const parseCiteResult = (paper) => {
     let paperTitle = '';
@@ -247,10 +250,10 @@ export const parseCiteResult = (paper) => {
         }
         const { title, subtitle, author, issued, DOI, URL, 'container-title': containerTitle } = paper.data[0];
 
-        paperTitle = title;
+        paperTitle = normalizeWhitespace(title);
         if (subtitle && subtitle.length > 0) {
             // include the subtitle
-            paperTitle = unescape(`${paperTitle}: ${subtitle[0]}`);
+            paperTitle = unescape(`${paperTitle}: ${normalizeWhitespace(subtitle[0])}`);
         }
         if (author) {
             paperAuthors = author.map((_author) => {
@@ -281,7 +284,7 @@ export const parseCiteResult = (paper) => {
         doi = DOI || '';
         url = URL || '';
         if (containerTitle && isString(containerTitle)) {
-            publishedIn = unescape(containerTitle);
+            publishedIn = unescape(normalizeWhitespace(containerTitle));
         }
     } catch (e) {
         console.log('Error setting paper data: ', e);
