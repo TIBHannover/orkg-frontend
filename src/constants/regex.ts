@@ -1,9 +1,12 @@
 const REGEX = {
     // eslint-disable-next-line
     URL: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/i,
-    // eslint-disable-next-line no-useless-escape
-    DOI_ID: /^\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'])\S)+)\b$/i, // source: https://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page#comment24134610_10324802
-    DOI_URL: /\b(https?:\/\/(?:dx\.)?doi\.org\/(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\\'])\S)+))\b/i,
+    // originally based on: https://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page#comment24134610_10324802
+    // aligned with the backend validation (VALID_DOI_REGEX / VALID_DOI_URI_REGEX):
+    // https://gitlab.com/TIBHannover/orkg/orkg-backend/-/blob/master/common/external-identifiers/src/main/kotlin/org/orkg/common/DOI.kt
+    DOI_ID: /^10(?:\.[1-9]\d*)+\/\S+$/,
+    // unanchored: finds a resolver URL inside a string (group 1: URL, group 2: DOI)
+    DOI_URL: /\b(https?:\/\/(?:dx\.|www\.)?doi\.org\/(10(?:\.[1-9]\d*)+\/\S+))/i,
     PERMALINK: /^[a-zA-Z0-9_]+$/, // used to validate the observatory and organization slug
     TIB_URL: /^(https?:)?\/\/av\.tib\.eu(\/(media|player)?(\?.*)?)\//,
     YOUTUBE_URL: /^(https?:)?\/\/(www.)?youtube\.com\/watch\?v=/,
