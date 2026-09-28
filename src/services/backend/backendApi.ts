@@ -7,6 +7,17 @@ import { SortByParam } from '@/services/backend/types';
 
 // identifies the ORKG frontend as the caller
 const CALLER_HEADER = { name: 'caller', value: 'ORKG' };
+// server-side requests also carry a versioned User-Agent (orkg-backend#653); in the browser Chrome
+// drops a scripted one and Firefox would send it in place of the real one, so it is server-only
+const USER_AGENT = `ORKG-Frontend/${process.env.version}`;
+
+/** Identify the frontend on every backend request, from both clients below. */
+const setClientHeaders = (headers: Headers) => {
+    headers.set(CALLER_HEADER.name, CALLER_HEADER.value);
+    if (typeof window === 'undefined') {
+        headers.set('User-Agent', USER_AGENT);
+    }
+};
 
 let cachedToken: string | null = null;
 let tokenExpiryTime: number | null = null;
@@ -51,7 +62,7 @@ export const configuration = new Configuration({
     fetchApi: async (input: RequestInfo, init?: RequestInit) => {
         const token = await getAccessToken();
         const headers = new Headers(init?.headers);
-        headers.set(CALLER_HEADER.name, CALLER_HEADER.value);
+        setClientHeaders(headers);
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);
         }
@@ -69,7 +80,7 @@ const backendApi = ky.create({
     hooks: {
         beforeRequest: [
             async (request) => {
-                request.headers.set(CALLER_HEADER.name, CALLER_HEADER.value);
+                setClientHeaders(request.headers);
                 const token = await getAccessToken();
                 if (token) {
                     request.headers.set('Authorization', `Bearer ${token}`);
