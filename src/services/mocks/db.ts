@@ -1,83 +1,97 @@
-import { factory, nullable, primaryKey } from '@mswjs/data';
+import { Collection } from '@msw/data';
+import { z } from 'zod';
 
 const thing = {
-    id: primaryKey(String),
-    modifiable: Boolean,
-    _class: String,
+    id: z.string(),
+    modifiable: z.boolean().default(false),
 };
 
 const provenanceCommon = {
-    created_at: Date,
-    created_by: String,
+    created_at: z.string().default(''),
+    created_by: z.string().default(''),
 };
 
 const provenanceObservatory = {
-    observatory_id: String,
-    extraction_method: String,
-    organization_id: String,
+    observatory_id: z.string().default(''),
+    extraction_method: z.string().default(''),
+    organization_id: z.string().default(''),
 };
 
 const contentType = {
-    featured: Boolean,
-    unlisted: Boolean,
-    verified: Boolean,
-    unlistedBy: String,
+    featured: z.boolean().default(false),
+    unlisted: z.boolean().default(false),
+    verified: z.boolean().default(false),
+    unlistedBy: z.string().default(''),
 };
 
-// Define user model
-const models = {
-    literals: {
-        ...thing,
-        ...provenanceCommon,
-        label: String,
-        datatype: String,
-        _class: () => 'literal',
-    },
-    classes: {
-        ...thing,
-        ...provenanceCommon,
-        label: String,
-        uri: nullable(String),
-        description: nullable(String),
-        _class: () => 'class',
-    },
-    predicates: {
-        ...thing,
-        ...provenanceCommon,
-        label: String,
-        created_at: Date,
-        created_by: String,
-        _class: () => 'predicate',
-    },
-    resources: {
-        ...thing,
-        ...provenanceCommon,
-        ...provenanceObservatory,
-        ...contentType,
-        label: String,
-        // it's a string because msw/data doesn't support querying data on arrays https://github.com/mswjs/data?tab=readme-ov-file#querying-data
-        classes: String,
-        shared: Number,
-        formatted_label: String,
-        _class: () => 'resource',
-    },
-    statements: {
-        ...provenanceCommon,
-        ...provenanceObservatory,
-        id: primaryKey(String),
-        subject: String,
-        predicate: String,
-        object: String,
-    },
-    lists: {
-        ...thing,
-        ...provenanceCommon,
-        label: String,
-        elements: Array,
-        _class: () => 'list',
-    },
+const literalSchema = z.object({
+    ...thing,
+    ...provenanceCommon,
+    label: z.string().default(''),
+    datatype: z.string().default(''),
+    _class: z.string().default('literal'),
+});
+
+const classSchema = z.object({
+    ...thing,
+    ...provenanceCommon,
+    label: z.string().default(''),
+    uri: z.string().nullable().default(null),
+    description: z.string().nullable().default(null),
+    _class: z.string().default('class'),
+});
+
+const predicateSchema = z.object({
+    ...thing,
+    ...provenanceCommon,
+    label: z.string().default(''),
+    _class: z.string().default('predicate'),
+});
+
+const resourceSchema = z.object({
+    ...thing,
+    ...provenanceCommon,
+    ...provenanceObservatory,
+    ...contentType,
+    label: z.string().default(''),
+    // it's a string because @msw/data queries values as-is, and comparing arrays is not supported
+    classes: z.string().default(''),
+    shared: z.number().default(0),
+    formatted_label: z.string().default(''),
+    _class: z.string().default('resource'),
+});
+
+const statementSchema = z.object({
+    ...provenanceCommon,
+    ...provenanceObservatory,
+    id: z.string(),
+    subject: z.string(),
+    predicate: z.string(),
+    object: z.string(),
+});
+
+const listSchema = z.object({
+    ...thing,
+    ...provenanceCommon,
+    label: z.string().default(''),
+    elements: z.array(z.string()).default([]),
+    _class: z.string().default('list'),
+});
+
+const db = {
+    literals: new Collection({ schema: literalSchema }),
+    classes: new Collection({ schema: classSchema }),
+    predicates: new Collection({ schema: predicateSchema }),
+    resources: new Collection({ schema: resourceSchema }),
+    statements: new Collection({ schema: statementSchema }),
+    lists: new Collection({ schema: listSchema }),
 };
 
-const db = factory(models);
+/** Removes every record from every collection (replaces `drop(db)` from `@mswjs/data`). */
+export const resetDb = () => {
+    for (const collection of Object.values(db)) {
+        collection.clear();
+    }
+};
 
 export default db;

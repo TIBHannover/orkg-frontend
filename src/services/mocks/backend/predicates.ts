@@ -6,12 +6,12 @@ import { createMSWPredicate } from '@/services/mocks/helpers';
 
 const predicates = [
     http.get(predicatesUrl, ({ request }: { request: Request }) => {
-        const allPredicates = db.predicates.getAll();
+        const allPredicates = db.predicates.all();
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page')) || 0;
         const size = Number(url.searchParams.get('size')) || 9999;
 
-        const currentPredicates = db.predicates.findMany({
+        const currentPredicates = db.predicates.findMany(undefined, {
             take: size ? Number(size) : undefined,
             skip: page ? Number(page) * 10 : undefined,
         });
@@ -28,13 +28,7 @@ const predicates = [
     }),
     http.get(`${predicatesUrl}/:id`, ({ params }: { params: { id: string } }) => {
         const { id } = params;
-        const predicate = db.predicates.findFirst({
-            where: {
-                id: {
-                    equals: id,
-                },
-            },
-        });
+        const predicate = db.predicates.findFirst((q) => q.where({ id }));
         if (!predicate) {
             return HttpResponse.json({
                 id,
@@ -53,7 +47,7 @@ const predicates = [
     }),
     http.post(`${predicatesUrl}`, async ({ request }: { request: Request }) => {
         const { label } = await request.json();
-        const newPredicate = createMSWPredicate({
+        const newPredicate = await createMSWPredicate({
             label,
         });
         return new HttpResponse(null, {

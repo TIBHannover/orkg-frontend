@@ -10,17 +10,8 @@ const resources = [
         const include = url.searchParams.get('include');
         const page = Number(url.searchParams.get('page')) || 0;
         const size = Number(url.searchParams.get('size')) || 9999;
-        const allResources = db.resources.getAll();
-        const currentResources = db.resources.findMany({
-            ...(include
-                ? {
-                      where: {
-                          classes: {
-                              contains: include,
-                          },
-                      },
-                  }
-                : {}),
+        const allResources = db.resources.all();
+        const currentResources = db.resources.findMany((q) => q.where(include ? { classes: (classes) => classes.includes(include) } : {}), {
             take: size ? Number(size) : undefined,
             skip: page ? Number(page) * 10 : undefined,
         });
@@ -40,13 +31,7 @@ const resources = [
     }),
     http.get(`${resourcesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
-        const resource = db.resources.findFirst({
-            where: {
-                id: {
-                    equals: id,
-                },
-            },
-        });
+        const resource = db.resources.findFirst((q) => q.where({ id }));
         if (!resource) {
             return HttpResponse.json({
                 id,
@@ -65,7 +50,7 @@ const resources = [
     }),
     http.post(resourcesUrl, async ({ request }: { request: Request }) => {
         const { label, classes } = await request.json();
-        const newResource = createMSWResource({
+        const newResource = await createMSWResource({
             label,
             classes,
         });
@@ -78,15 +63,10 @@ const resources = [
     http.put(`${resourcesUrl}/:id`, async ({ request, params }: { request: Request; params: { id?: string } }) => {
         const { label, classes } = await request.json();
         const { id } = params;
-        const updatedResource = db.resources.update({
-            where: {
-                id: {
-                    equals: id,
-                },
-            },
-            data: {
-                label,
-                classes: classes.join(','),
+        const updatedResource = await db.resources.update((q) => q.where({ id }), {
+            data(resource) {
+                resource.label = label;
+                resource.classes = classes.join(',');
             },
         });
         return new HttpResponse(null, {

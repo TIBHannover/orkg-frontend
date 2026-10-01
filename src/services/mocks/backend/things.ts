@@ -3,20 +3,11 @@ import { http, HttpResponse } from 'msw';
 import { thingsUrl } from '@/services/backend/things';
 import db from '@/services/mocks/db';
 
-const findResource = (id: string) =>
-    db.resources.findFirst({
-        where: { id: { equals: id } },
-    });
+const findResource = (id: string) => db.resources.findFirst((q) => q.where({ id }));
 
-const findClass = (id: string) =>
-    db.classes.findFirst({
-        where: { id: { equals: id } },
-    });
+const findClass = (id: string) => db.classes.findFirst((q) => q.where({ id }));
 
-const findPredicate = (id: string) =>
-    db.predicates.findFirst({
-        where: { id: { equals: id } },
-    });
+const findPredicate = (id: string) => db.predicates.findFirst((q) => q.where({ id }));
 
 const getDefaultResource = (id: string) => ({
     id,

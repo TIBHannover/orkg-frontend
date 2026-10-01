@@ -10,17 +10,8 @@ const resources = [
         const query = url.searchParams.get('q');
         const page = Number(url.searchParams.get('page')) || 0;
         const size = Number(url.searchParams.get('size')) || 9999;
-        const allClasses = db.classes.getAll();
-        const currentClasses = db.classes.findMany({
-            ...(query
-                ? {
-                      where: {
-                          label: {
-                              contains: query,
-                          },
-                      },
-                  }
-                : {}),
+        const allClasses = db.classes.all();
+        const currentClasses = db.classes.findMany((q) => q.where(query ? { label: (label) => label.includes(query) } : {}), {
             take: size ? Number(size) : undefined,
             skip: page ? Number(page) * 10 : undefined,
         });
@@ -36,13 +27,7 @@ const resources = [
     }),
     http.get(`${classesUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
-        const classItem = db.classes.findFirst({
-            where: {
-                id: {
-                    equals: id,
-                },
-            },
-        });
+        const classItem = db.classes.findFirst((q) => q.where({ id }));
         if (!classItem) {
             return HttpResponse.json({
                 id: `C${id}`,
@@ -58,7 +43,7 @@ const resources = [
     }),
     http.post(classesUrl, async ({ request }: { request: Request }) => {
         const { label, uri } = await request.json();
-        const newClass = createMSWClass({
+        const newClass = await createMSWClass({
             label,
             uri,
         });

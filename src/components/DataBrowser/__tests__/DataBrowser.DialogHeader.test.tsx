@@ -7,10 +7,10 @@ const CHILD_ID = 'RDialogHeaderChild';
 const PREDICATE_ID = 'PDialogHeaderLink';
 
 const setup = async () => {
-    createMSWResource({ id: PARENT_ID, label: 'parent resource' });
-    createMSWResource({ id: CHILD_ID, label: 'child resource' });
-    createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
-    createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
+    await createMSWResource({ id: PARENT_ID, label: 'parent resource' });
+    await createMSWResource({ id: CHILD_ID, label: 'child resource' });
+    await createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
+    await createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
     render(<DataBrowserDialog show toggleModal={() => {}} id={PARENT_ID} />);
     await waitFor(() => expect(screen.getByRole('link', { name: /child resource/i })).toBeInTheDocument());
 };
@@ -40,7 +40,7 @@ describe('DataBrowser.DialogHeader', () => {
     });
 
     it('should label a predicate as property in the heading and link', async () => {
-        createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
+        await createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
         render(<DataBrowserDialog show toggleModal={() => {}} id={PREDICATE_ID} />);
         await waitFor(() => expect(screen.getByRole('heading', { name: /view existing property: linked via/i })).toBeInTheDocument());
         const link = screen.getByRole('link', { name: /open property/i });

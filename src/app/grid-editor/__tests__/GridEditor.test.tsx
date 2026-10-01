@@ -10,8 +10,8 @@ import { fireEvent, render, screen, waitFor, within } from '@/testUtils';
 const setup = async ({ resourceIds }: { resourceIds?: string[] } = {}) => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
     // Use existing seed data to avoid MSW database issues
-    createMSWLiteral({ id: 'L1', label: 'test literal' });
-    createMSWStatement({
+    await createMSWLiteral({ id: 'L1', label: 'test literal' });
+    await createMSWStatement({
         subject: 'R44727', // Use existing resource from seed
         predicate: 'P32', // Use existing predicate from seed
         object: 'L1',

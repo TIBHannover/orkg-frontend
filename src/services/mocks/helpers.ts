@@ -22,20 +22,14 @@ export const recordRequest = async (request: Request): Promise<CapturedRequest> 
     body: request.method !== 'GET' && request.method !== 'DELETE' ? await request.clone().json() : undefined,
 });
 
-export const findEntityById = (id: string) => {
-    const tables = [db.resources, db.literals, db.classes, db.lists];
-    for (const table of tables) {
-        const entity = table.findFirst({
-            where: {
-                id: { equals: id },
-            },
-        });
-        if (entity) return entity;
-    }
-    return null;
-};
+export const findEntityById = (id: string) =>
+    db.resources.findFirst((q) => q.where({ id })) ??
+    db.literals.findFirst((q) => q.where({ id })) ??
+    db.classes.findFirst((q) => q.where({ id })) ??
+    db.lists.findFirst((q) => q.where({ id })) ??
+    null;
 
-export const createMSWResource = (data: Partial<SnakeCasedProperties<Resource>>) => {
+export const createMSWResource = async (data: Partial<SnakeCasedProperties<Resource>>) => {
     const id = `R${faker.number.int()}`;
     const { classes, ...rest } = data;
     return db.resources.create({
@@ -56,7 +50,7 @@ export const createMSWResource = (data: Partial<SnakeCasedProperties<Resource>>)
     });
 };
 
-export const createMSWPredicate = (data: Partial<SnakeCasedProperties<Predicate>>) => {
+export const createMSWPredicate = async (data: Partial<SnakeCasedProperties<Predicate>>) => {
     const id = `R${faker.number.int()}`;
     return db.predicates.create({
         id: data.id ?? `P${faker.number.int()}`,
@@ -67,7 +61,7 @@ export const createMSWPredicate = (data: Partial<SnakeCasedProperties<Predicate>
     });
 };
 
-export const createMSWLiteral = (data: Partial<SnakeCasedProperties<Literal>>) => {
+export const createMSWLiteral = async (data: Partial<SnakeCasedProperties<Literal>>) => {
     const id = `L${faker.number.int()}`;
 
     return db.literals.create({
@@ -80,7 +74,7 @@ export const createMSWLiteral = (data: Partial<SnakeCasedProperties<Literal>>) =
     });
 };
 
-export const createMSWClass = (data: Partial<Class>) => {
+export const createMSWClass = async (data: Partial<Class>) => {
     const id = `C${faker.number.int()}`;
     return db.classes.create({
         id: data.id ?? `C${faker.number.int()}`,
@@ -92,7 +86,7 @@ export const createMSWClass = (data: Partial<Class>) => {
     });
 };
 
-export const createMSWStatement = (
+export const createMSWStatement = async (
     data: Partial<SnakeCasedProperties<Omit<Statement, 'subject' | 'predicate' | 'object'>>> & { subject: string; predicate: string; object: string },
 ) => {
     const { subject, predicate, object, ...rest } = data;

@@ -12,7 +12,7 @@ const setup = async (
         isEditMode: true,
     },
 ) => {
-    createMSWResource({ id: props.id, label: 'Add value resource' });
+    await createMSWResource({ id: props.id, label: 'Add value resource' });
     render(<DataBrowser {...props} />);
     await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
     await userEvent.click(screen.getByRole('button', { name: 'Add property' }));

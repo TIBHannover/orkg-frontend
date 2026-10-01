@@ -1,10 +1,9 @@
 import '@testing-library/jest-dom/vitest';
 
-import { drop } from '@mswjs/data';
 import { useRouter } from 'next-router-mock';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 
-import db from '@/services/mocks/db';
+import { resetDb } from '@/services/mocks/db';
 import seed from '@/services/mocks/seed';
 import server from '@/services/mocks/server';
 
@@ -21,13 +20,13 @@ vi.mock('next-client-cookies', () => {
 beforeAll(async () => {
     server.listen();
     vi.setConfig({ testTimeout: 30000 });
-    seed();
+    await seed();
 });
 
-afterEach(() => {
+afterEach(async () => {
     server.resetHandlers();
-    drop(db);
-    seed();
+    resetDb();
+    await seed();
 });
 
 afterAll(() => {
