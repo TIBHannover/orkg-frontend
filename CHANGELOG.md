@@ -2,6 +2,17 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.191.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.190.0...v0.191.0) - 2026-10-01
+
+### Changes
+
+- chore(deps): bump next and next-auth [`#1764`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1764)
+- fix(csv-import): align DOI regex with backend validation [`#1759`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1759)
+- fix(services): adapt papers service to orkg-client 0.101.1 [`#1754`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1754)
+- chore(deps): bump pragmatic-dnd-hooks to 0.2.1 [`#1760`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1760)
+- feat(comparison): add visibility toggle for comparison properties with popover @quratulainaftab62 [`#1688`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1688)
+
+---
 ## [v0.190.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.189.0...v0.190.0) - 2026-09-14
 
 ### Changes
