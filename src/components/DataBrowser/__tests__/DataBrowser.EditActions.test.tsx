@@ -22,53 +22,53 @@ const setup = async (
         isEditMode: true,
     },
 ) => {
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.Date,
         label: '2021-11-12',
         datatype: 'xsd:date',
     });
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.Integer,
         label: '213',
         datatype: 'xsd:integer',
     });
 
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.Decimal,
         label: '3.14',
         datatype: 'xsd:decimal',
     });
 
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.Boolean,
         label: 'false',
         datatype: 'xsd:boolean',
     });
 
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.Text,
         label: 'Lorem ipsum',
         datatype: 'xsd:string',
     });
 
-    createMSWResource({
+    await createMSWResource({
         id: VALUE_IDS.Resource,
         label: 'Lorem ipsum Resource',
     });
 
-    createMSWLiteral({
+    await createMSWLiteral({
         id: VALUE_IDS.URL,
         label: 'http://www.orkg.org',
         datatype: 'xsd:anyURI',
     });
 
-    Object.values(VALUE_IDS).forEach((valueId) => {
-        createMSWStatement({
+    for (const valueId of Object.values(VALUE_IDS)) {
+        await createMSWStatement({
             subject: 'R1',
             predicate: 'P1',
             object: valueId,
         });
-    });
+    }
     render(<DataBrowser {...props} />);
     expect(await screen.findByText(/resource label 1/i)).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByText(/property 1/i)).toHaveLength(8));

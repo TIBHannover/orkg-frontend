@@ -7,18 +7,18 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@/testUtil
 
 MotionGlobalConfig.skipAnimations = true;
 
-const setup = (
+const setup = async (
     props: DataBrowserProps = {
         id: 'R0',
     },
 ) => {
-    createMSWResource({
+    await createMSWResource({
         id: 'TableResource',
         label: 'Fitted LMM with Aphid_incidence as the response variable, and Year and mead_250 as fixed effects',
         classes: ['Table'],
     });
 
-    createMSWStatement({
+    await createMSWStatement({
         subject: props.id,
         predicate: 'P1',
         object: 'TableResource',

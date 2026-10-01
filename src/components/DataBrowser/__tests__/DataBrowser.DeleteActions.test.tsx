@@ -9,11 +9,11 @@ const setup = async (
         isEditMode: true,
     },
 ) => {
-    createMSWResource({
+    await createMSWResource({
         id: 'R123',
         label: 'Lorem ipsum Resource',
     });
-    createMSWStatement({
+    await createMSWStatement({
         subject: 'R1',
         predicate: 'P1',
         object: 'R123',

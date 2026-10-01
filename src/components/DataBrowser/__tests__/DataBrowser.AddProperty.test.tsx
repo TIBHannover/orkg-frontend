@@ -56,11 +56,11 @@ describe('DataBrowser.AddProperty', () => {
             isEditMode: true,
         };
 
-        createMSWClass({
+        await createMSWClass({
             id: 'StrictTemplateClass',
             label: 'StrictTemplateClass',
         });
-        createMSWResource({
+        await createMSWResource({
             id: config.id,
             classes: ['StrictTemplateClass'],
         });

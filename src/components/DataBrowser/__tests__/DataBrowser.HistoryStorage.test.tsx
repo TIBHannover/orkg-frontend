@@ -13,10 +13,10 @@ const PREDICATE_ID = 'PHistoryLink';
 
 const setup = async (ui: ReactElement, searchParams = '?') => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    createMSWResource({ id: PARENT_ID, label: 'parent resource' });
-    createMSWResource({ id: CHILD_ID, label: 'child resource' });
-    createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
-    createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
+    await createMSWResource({ id: PARENT_ID, label: 'parent resource' });
+    await createMSWResource({ id: CHILD_ID, label: 'child resource' });
+    await createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
+    await createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
     render(ui, { nuqsOptions: { searchParams, onUrlUpdate } });
     await waitFor(() => expect(screen.getByRole('link', { name: /child resource/i })).toBeInTheDocument());
     return { onUrlUpdate };
@@ -58,10 +58,10 @@ describe('DataBrowser.HistoryStorage', () => {
     it('should drop only the invalid ?history= entry and restore the valid one', async () => {
         const malformed = encodeURIComponent(JSON.stringify([{ p: 'not-an-array' }, { p: [PARENT_ID, PREDICATE_ID, CHILD_ID] }]));
         const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-        createMSWResource({ id: PARENT_ID, label: 'parent resource' });
-        createMSWResource({ id: CHILD_ID, label: 'child resource' });
-        createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
-        createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
+        await createMSWResource({ id: PARENT_ID, label: 'parent resource' });
+        await createMSWResource({ id: CHILD_ID, label: 'child resource' });
+        await createMSWPredicate({ id: PREDICATE_ID, label: 'linked via' });
+        await createMSWStatement({ subject: PARENT_ID, predicate: PREDICATE_ID, object: CHILD_ID });
         render(<DataBrowser id={PARENT_ID} />, { nuqsOptions: { searchParams: `?history=${malformed}`, onUrlUpdate } });
         // the surviving valid entry restores the browser at depth: breadcrumbs + Back are visible
         await waitFor(() => expect(screen.getByRole('link', { name: /back/i })).toBeInTheDocument());

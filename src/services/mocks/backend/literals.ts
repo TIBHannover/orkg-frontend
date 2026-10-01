@@ -8,15 +8,10 @@ import { createMSWLiteral } from '@/services/mocks/helpers';
 const literalPut = async ({ request, params }: { request: Request; params: { id?: string } }) => {
     const { label, datatype = MISC.DEFAULT_LITERAL_DATATYPE } = await request.json();
     const { id } = params;
-    const updatedLiteral = db.literals.update({
-        where: {
-            id: {
-                equals: id,
-            },
-        },
-        data: {
-            label,
-            datatype,
+    const updatedLiteral = await db.literals.update((q) => q.where({ id }), {
+        data(literal) {
+            literal.label = label;
+            literal.datatype = datatype;
         },
     });
     return new HttpResponse(null, {
@@ -28,7 +23,7 @@ const literalPut = async ({ request, params }: { request: Request; params: { id?
 
 const literalPost = async ({ request }: { request: Request }) => {
     const { label, datatype = MISC.DEFAULT_LITERAL_DATATYPE } = await request.json();
-    const createdLiteral = createMSWLiteral({
+    const createdLiteral = await createMSWLiteral({
         label,
         datatype,
     });
@@ -42,13 +37,7 @@ const literalPost = async ({ request }: { request: Request }) => {
 const literals = [
     http.get(`${literalsUrl}/:id`, ({ params }) => {
         const { id } = params as { id: string };
-        const literalItem = db.literals.findFirst({
-            where: {
-                id: {
-                    equals: id,
-                },
-            },
-        });
+        const literalItem = db.literals.findFirst((q) => q.where({ id }));
         if (!literalItem) {
             return HttpResponse.json({
                 id: `L${id}`,
