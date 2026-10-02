@@ -10,6 +10,11 @@ let tokenExpiryTime: number | null = null;
 let pendingTokenPromise: Promise<string | null> | null = null;
 
 export const getAccessToken = async (): Promise<string | null> => {
+    // Server renders are anonymous: next-auth's getSession() fetches the app's own
+    // /auth/session with no cookie and always gets an empty session, so skip that wasted round trip.
+    if (typeof window === 'undefined') {
+        return null;
+    }
     const EXPIRY_BUFFER_TIME = 60 * 1000; // 60 seconds
     // Use cached token if it is still considered valid (with buffer)
     if (cachedToken && tokenExpiryTime && Date.now() < tokenExpiryTime) {
