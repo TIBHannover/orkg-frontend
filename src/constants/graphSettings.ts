@@ -91,6 +91,11 @@ export const PREDICATES: {
     RESULT: 'RESULT',
     MATERIAL: 'MATERIAL',
     SUSTAINABLE_DEVELOPMENT_GOAL: 'sustainableDevelopmentGoal',
+    // Quantity Value template (R166623) vocabulary
+    QUANTITY_VALUE: 'P45073',
+    HAS_QUANTITY_KIND: 'P45074',
+    QUANTITY_VALUE_NUMERIC_VALUE: 'P45075',
+    QUANTITY_VALUE_UNIT: 'P45076',
 };
 
 // https://gitlab.com/TIBHannover/orkg/orkg-backend/-/blob/master/rest-api-server/src/main/resources/data/classes.json

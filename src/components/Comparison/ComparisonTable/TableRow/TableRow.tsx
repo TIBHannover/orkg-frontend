@@ -3,19 +3,42 @@ import { FC } from 'react';
 
 import Cell from '@/components/Comparison/ComparisonTable/Cell/Cell';
 import RowHeader from '@/components/Comparison/ComparisonTable/RowHeader/RowHeader';
+import { FormattedMeasurement } from '@/components/Comparison/ComparisonTable/RowHeader/UnitCalculator/unitConversionUtils';
+import { isQuantityValueRow } from '@/components/Comparison/ComparisonTable/SelectedPath/selectedPathUtils';
 import { ComparisonPath, ComparisonTableColumn, ThingReference } from '@/services/backend/types';
 
 type TableRowProps = {
     pathNode: ComparisonPath;
     path: string[];
     values: (ThingReference | null)[];
+    cellValues?: (ThingReference | null)[];
     columns: ComparisonTableColumn[];
     activeColumns: boolean[];
     columnWidth: number;
     parentHistoryPerColumn?: string[][];
+    originalUnitMeasurements?: FormattedMeasurement[];
 };
 
-const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeColumns, columnWidth, parentHistoryPerColumn }) => {
+const TableRow: FC<TableRowProps> = ({
+    pathNode,
+    path,
+    values,
+    cellValues,
+    columns,
+    activeColumns,
+    columnWidth,
+    parentHistoryPerColumn,
+    originalUnitMeasurements,
+}) => {
+    const isRowConverted = cellValues?.some((cellValue, colIdx) => cellValue !== values[colIdx]) ?? false;
+
+    const columnValueIds = columns
+        .map((_, colIdx) => {
+            if (!activeColumns[colIdx]) return null;
+            return values[colIdx]?.id ?? '';
+        })
+        .filter((id): id is string => Boolean(id));
+
     return (
         <motion.tr
             initial={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -24,10 +47,19 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             className="p-0 flex items-stretch flex-grow min-w-fit"
         >
-            <RowHeader row={pathNode} path={path} />
+            <RowHeader
+                row={pathNode}
+                path={path}
+                columnValueIds={columnValueIds}
+                originalUnitMeasurements={originalUnitMeasurements}
+                showUnitCalculator={isQuantityValueRow(pathNode)}
+                isConverted={isRowConverted}
+            />
             {columns.map((column, colIdx) => {
                 if (!activeColumns[colIdx]) return null;
-                const value = values[colIdx];
+                const value = cellValues?.[colIdx] ?? values[colIdx];
+                const originalValue = values[colIdx];
+                const isCellConverted = cellValues?.[colIdx] !== undefined && cellValues[colIdx] !== values[colIdx];
                 const columnId = column.subtitle?.id ?? column.title.id ?? `col-${colIdx}`;
                 const historyPrefix = parentHistoryPerColumn?.[colIdx] ?? [columnId];
                 return (
@@ -37,13 +69,14 @@ const TableRow: FC<TableRowProps> = ({ pathNode, path, values, columns, activeCo
                         className="p-0 bg-inherit w-[2px] grow-[2] shrink-0 basis-auto"
                     >
                         <Cell
-                            value={value ?? undefined}
-                            path={path}
                             // no prefix for empty cells — a ''-terminated path must never enter entry
                             // matching. Literal values may have a null id but still need the path so the
                             // AI-review subject/predicate stay derivable; literals render no HistoryLink,
                             // so their '' terminal never reaches entry matching.
-                            dataBrowserHistory={value ? [...historyPrefix, pathNode.id, value.id ?? ''] : undefined}
+                            value={value ?? undefined}
+                            path={path}
+                            isConverted={isCellConverted}
+                            dataBrowserHistory={originalValue ? [...historyPrefix, pathNode.id, originalValue.id ?? ''] : undefined}
                         />
                     </td>
                 );
