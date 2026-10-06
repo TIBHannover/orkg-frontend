@@ -19,13 +19,14 @@ type CellProps = {
     value?: ThingReference;
     path?: string[];
     dataBrowserHistory?: string[];
+    isConverted?: boolean;
 };
 
 // Cells hold NO URL subscription: the ComparisonDialogs controller is the only
 // component in the table subscribed to the `history` param and renders this
 // cell's dialog from its URL entry. That keeps in-dialog navigation from
 // re-rendering hundreds of cells (memo below actually holds).
-const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
+const Cell = ({ value, path, dataBrowserHistory, isConverted = false }: CellProps) => {
     const { scopeKey, openDialogEntry } = useComparisonState();
     const { getCellStatement, isAiSource, isIncorrect } = useComparisonAiReview();
 
@@ -42,8 +43,12 @@ const Cell = ({ value, path, dataBrowserHistory }: CellProps) => {
 
     return (
         <div
-            className={cx('flex h-full border-b-border border-b bg-inherit border-r border-r-border break-words', incorrect && 'bg-danger/8!')}
-            style={{ background: incorrect ? undefined : getBackgroundColor(path?.length ? path.length - 1 : 0) }}
+            className={cx(
+                'flex h-full border-b-border border-b bg-inherit border-r border-r-border break-words',
+                incorrect && 'bg-danger/8!',
+                isConverted && !incorrect && 'bg-accent/8!',
+            )}
+            style={{ background: incorrect || isConverted ? undefined : getBackgroundColor(path?.length ? path.length - 1 : 0) }}
         >
             {value ? (
                 <div className="py-1 px-2 flex items-start gap-1 w-full">

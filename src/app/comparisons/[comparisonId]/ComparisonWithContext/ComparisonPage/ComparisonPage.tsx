@@ -4,6 +4,7 @@ import { Alert, Button } from '@heroui/react';
 import dynamic from 'next/dynamic';
 
 import { useComparisonState } from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonContextProvider/ComparisonContextProvider';
+import AppliedConversions from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/AppliedConversions/AppliedConversions';
 import AppliedFilters from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/AppliedFilters/AppliedFilters';
 import ComparisonHeader from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/ComparisonHeader';
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
@@ -73,6 +74,7 @@ const ComparisonPage = () => {
                             <ComparisonMetaData comparisonId={comparison.id} />
 
                             <AppliedFilters />
+                            <AppliedConversions />
                         </div>
                     </Container>
                 </>

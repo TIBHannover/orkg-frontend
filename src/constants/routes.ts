@@ -104,7 +104,9 @@ const routes = {
     DIAGRAM: '/diagrams/:id',
     NEW_DIAGRAM: '/diagrams/create',
     /* API */
-    CITATIONS: '/citations',
+    CITATIONS: '/services/citations',
+    QUDT_UNITS: '/services/qudt-units',
+    UCUM_TRANSFORM: '/services/ucum-transform',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
@@ -114,6 +116,7 @@ const routes = {
     SUSTAINABLE_DEVELOPMENT_GOALS: '/sustainable-development-goals',
     SUSTAINABLE_DEVELOPMENT_GOAL: '/sustainable-development-goals/:sdg',
 };
+
 /**
  * Legacy routes are used to redirect old URLs to new ones
  */
