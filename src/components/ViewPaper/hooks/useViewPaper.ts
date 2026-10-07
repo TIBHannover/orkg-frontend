@@ -1,9 +1,9 @@
-import { sortBy } from 'lodash';
 import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import useSWR from 'swr';
 
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
+import { sortPaperContributions } from '@/components/ViewPaper/helpers/paperContributions';
 import { PREDICATES } from '@/constants/graphSettings';
 import { getPaper, papersUrl } from '@/services/backend/papers';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
@@ -33,12 +33,11 @@ const useViewPaper = ({ paperId }: { paperId: string }) => {
         isLoading: isContributionsLoading,
         mutate: mutateContributions,
     } = useSWR(paperId ? [{ subjectId: paperId, predicateId: PREDICATES.HAS_CONTRIBUTION }, statementsUrl, 'getStatements'] : null, ([params]) =>
-        getStatements(params).then((s) => {
-            return sortBy(
-                s.map((statement) => ({ ...statement.object, statementId: statement.id }) as Resource & { statementId: string }),
-                'label',
-            );
-        }),
+        getStatements(params).then((statements) =>
+            sortPaperContributions(
+                statements.map((statement) => ({ ...statement.object, statementId: statement.id }) as Resource & { statementId: string }),
+            ),
+        ),
     );
 
     const dataCiteDoi = paper?.identifiers?.doi?.find((doi) => doi.startsWith(env('NEXT_PUBLIC_DATACITE_DOI_PREFIX') ?? ''));

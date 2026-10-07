@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 
 import NotFound from '@/app/not-found';
 import Coins from '@/components/Coins/Coins';
+import { getPaperCanonicalPath, sortPaperContributions } from '@/components/ViewPaper/helpers/paperContributions';
 import ViewPaper from '@/components/ViewPaper/Page/ViewPaper';
 import ViewPaperVersion from '@/components/ViewPaper/Page/ViewPaperVersion';
 import { CLASSES } from '@/constants/graphSettings';
@@ -23,16 +24,23 @@ const getDescription = (paper?: Paper) =>
         paper?.researchFields?.[0]?.label
     } • Authors: ${paper?.authors?.map((author) => author.name).join(', ')}`;
 
-export async function generateMetadata({ params }: { params: Promise<{ resourceId: string }> }): Promise<Metadata> {
-    const { resourceId } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ resourceId: string; contributionId?: string[] }> }): Promise<Metadata> {
+    const { resourceId, contributionId } = await params;
+    const segment = contributionId?.[0];
     let paper: Paper | undefined;
     try {
         paper = await getPaper(resourceId);
     } catch (e) {
         console.error(`Error getting paper metadata for ${resourceId}`);
     }
+    // Self-referencing canonical: the DataBrowser's ?history= param spans an unbounded URL space over this
+    // one document, and the default view is reachable as /papers/R1, /papers/R1/contributions and
+    // /papers/R1/<first contribution> — every variant must consolidate onto one path.
+    const alternates: Metadata['alternates'] = {
+        canonical: getPaperCanonicalPath(resourceId, segment, paper && sortPaperContributions(paper.contributions)[0]?.id),
+    };
     if (!paper) {
-        return {};
+        return { alternates };
     }
     const title = `${paper?.title ?? 'Paper'} - ORKG`;
     const description = getDescription(paper);
@@ -40,6 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ resourceI
     return {
         title,
         description,
+        alternates,
         openGraph: {
             title,
             type: 'article',
