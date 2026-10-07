@@ -13,6 +13,8 @@ src/npm-debug.log
 .idea/
 
 public/storybook
+public/widget.js
+widget/dist
 .next
 tsconfig.tsbuildinfo
 next-env.d.ts

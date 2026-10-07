@@ -8,7 +8,7 @@ import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
     {
-        ignores: ['next.config.js', '*.mjs', 'widget/**', 'public/widget.js', 'public/storybook', '.next/**'],
+        ignores: ['next.config.js', '*.mjs', 'widget/build.mjs', 'widget/dist/**', 'public/widget.js', 'public/storybook', '.next/**'],
     },
 
     js.configs.recommended,
@@ -152,6 +152,22 @@ export default [
         files: ['src/components/Ui/**/*'],
         rules: {
             'no-restricted-imports': 'off',
+        },
+    },
+
+    {
+        // the widget is a standalone bundle without the `@` alias
+        files: ['widget/**/*.ts'],
+        rules: {
+            'no-relative-import-paths/no-relative-import-paths': 'off',
+        },
+    },
+
+    {
+        // build-time constants injected by esbuild use the __DUNDER__ convention
+        files: ['widget/**/*.d.ts'],
+        rules: {
+            '@typescript-eslint/naming-convention': 'off',
         },
     },
 

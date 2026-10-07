@@ -26,7 +26,8 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./src/setupTests.ts'],
         include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-        exclude: [...configDefaults.exclude, '**/.claude/**'],
+        // the widget has its own standalone suite (npm run test:widget)
+        exclude: [...configDefaults.exclude, 'widget/**', '**/.claude/**'],
         env: loadEnv('', process.cwd(), ''),
     },
     resolve: {

@@ -7,4 +7,5 @@ export default {
     '*.{js,jsx,ts,tsx}': [buildEslintCommand],
     '*.{js,jsx,ts,tsx,json,css,scss}': ['prettier --write'],
     'src/**/*.{ts,tsx}': [() => 'tsc -p tsconfig.json --noEmit'],
+    'widget/src/**/*.ts': [() => 'tsc -p widget/tsconfig.json --noEmit'],
 };
