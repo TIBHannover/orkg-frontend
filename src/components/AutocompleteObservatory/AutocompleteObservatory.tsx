@@ -7,9 +7,11 @@ import useSWR from 'swr';
 
 import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import Option from '@/components/AutocompleteObservatory/CustomComponents/Option';
+import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import { conferenceSeriesUrl, getSeriesListByConferenceId } from '@/services/backend/conferences-series';
 import { getObservatories } from '@/services/backend/observatories';
 import { getConferences, getOrganization, organizationsUrl } from '@/services/backend/organizations';
-import { Observatory, Organization } from '@/services/backend/types';
+import { ConferenceSeries, Observatory, Organization } from '@/services/backend/types';
 
 const PAGE_SIZE = 10;
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
@@ -24,12 +26,31 @@ const CustomOptionObservatory = ({ data, isSelected, ...innerProps }: OptionProp
 type AutocompleteObservatoryProps = {
     onChangeObservatory: (observatory: Observatory | null) => void;
     onChangeOrganization: (organization: Organization | null) => void;
+    onChangeConferenceSeries?: (conferenceSeries: ConferenceSeries | null) => void;
     observatory?: Observatory;
     organization?: Organization;
+    conferenceSeries?: ConferenceSeries;
+    // the backend only accepts conference series events as organization on papers and comparisons
+    allowConferenceSeries?: boolean;
 };
 
-const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObservatory, onChangeOrganization, observatory, organization }) => {
+const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({
+    onChangeObservatory,
+    onChangeOrganization,
+    onChangeConferenceSeries,
+    observatory,
+    organization,
+    conferenceSeries,
+    allowConferenceSeries = false,
+}) => {
     const { data: conferences } = useSWR([null, organizationsUrl, 'getConferences'], () => getConferences(), { shouldRetryOnError: false });
+
+    const isConferenceSelected = allowConferenceSeries && organization?.type === ORGANIZATIONS_MISC.EVENT;
+    const { data: conferenceEvents } = useSWR(
+        isConferenceSelected ? [organization.id, conferenceSeriesUrl, 'getSeriesListByConferenceId'] : null,
+        ([params]) => getSeriesListByConferenceId(params),
+        { shouldRetryOnError: false },
+    );
 
     // The organizations of the selected observatory, or null when no observatory is selected
     // (in which case the conferences are offered instead).
@@ -72,6 +93,7 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
 
     const handleChangeObservatory = async (selected: Observatory | null) => {
         onChangeObservatory(selected ?? null);
+        onChangeConferenceSeries?.(null);
         const data = selected ? await Promise.all(selected?.organization_ids.map((o) => getOrganization(o))) : [];
         // Select the first organization
         onChangeOrganization(data?.[0] ?? null);
@@ -80,14 +102,18 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
 
     const handleChangeOrganization = (selected: SingleValue<Organization>) => {
         onChangeOrganization(selected ?? null);
+        onChangeConferenceSeries?.(null);
     };
 
     return (
         <>
-            <p className="text-sm text-gray-500 mb-2">Clear the observatory field to select a conference in the organization field.</p>
+            <p className="text-sm text-gray-500 mb-2">
+                Clear the observatory field to select a conference in the organization field.
+                {allowConferenceSeries && ' When a conference is selected, a specific event can optionally be picked.'}
+            </p>
             <div className="mb-3">
                 <Label htmlFor="select-observatory">Select an observatory</Label>
-                <AsyncPaginate
+                <AsyncPaginate<Observatory, GroupBase<Observatory>, { page: number }, false>
                     value={observatory}
                     components={{ Option: CustomOptionObservatory }}
                     additional={{
@@ -100,14 +126,16 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
                     inputId="select-observatory"
                     isClearable
                     classNamePrefix="react-select"
-                    classNames={customClassNames as any}
-                    styles={customStyles as any}
+                    // @ts-expect-error customClassNames is typed for OptionType but works with any option type
+                    classNames={customClassNames}
+                    // @ts-expect-error customStyles is typed for OptionType but works with any option type
+                    styles={customStyles}
                     menuPosition="fixed"
                 />
             </div>
             <div className="mb-3">
                 <Label htmlFor="select-organization">Select an organization</Label>
-                <Select
+                <Select<Organization, false, GroupBase<Organization>>
                     value={organization}
                     components={{ Option }}
                     options={optionsOrganizations}
@@ -117,12 +145,36 @@ const AutocompleteObservatory: FC<AutocompleteObservatoryProps> = ({ onChangeObs
                     inputId="select-organization"
                     isClearable
                     classNamePrefix="react-select"
-                    classNames={customClassNames as any}
-                    styles={customStyles as any}
+                    // @ts-expect-error customClassNames is typed for OptionType but works with any option type
+                    classNames={customClassNames}
+                    // @ts-expect-error customStyles is typed for OptionType but works with any option type
+                    styles={customStyles}
                     menuPosition="fixed"
                     isMulti={false}
                 />
             </div>
+            {isConferenceSelected && (
+                <div className="mb-3">
+                    <Label htmlFor="select-conference-event">Select an event (optional)</Label>
+                    <Select<ConferenceSeries, false, GroupBase<ConferenceSeries>>
+                        value={conferenceSeries ?? null}
+                        options={conferenceEvents?.content ?? []}
+                        onChange={(selected: SingleValue<ConferenceSeries>) => onChangeConferenceSeries?.(selected ?? null)}
+                        getOptionValue={({ id }) => id}
+                        getOptionLabel={({ name }) => name}
+                        inputId="select-conference-event"
+                        placeholder="Entire conference (no specific event)"
+                        isClearable
+                        classNamePrefix="react-select"
+                        // @ts-expect-error customClassNames is typed for OptionType but works with any option type
+                        classNames={customClassNames}
+                        // @ts-expect-error customStyles is typed for OptionType but works with any option type
+                        styles={customStyles}
+                        menuPosition="fixed"
+                        isMulti={false}
+                    />
+                </div>
+            )}
         </>
     );
 };

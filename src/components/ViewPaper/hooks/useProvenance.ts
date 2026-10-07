@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import useParams from '@/components/useParams/useParams';
 import useViewPaper from '@/components/ViewPaper/hooks/useViewPaper';
 import { MISC } from '@/constants/graphSettings';
+import { conferenceSeriesUrl, getConferenceById } from '@/services/backend/conferences-series';
 import { contributorsUrl, getContributorById } from '@/services/backend/contributors';
 import { getObservatoryById, observatoriesUrl } from '@/services/backend/observatories';
 import { getOrganization, organizationsUrl } from '@/services/backend/organizations';
@@ -19,16 +20,34 @@ function useProvenance() {
         ([params]) => getObservatoryById(params),
     );
 
-    const { data: organizationInfo, isLoading: isLoadingOrganization } = useSWR(
-        paper?.organizations?.[0] !== MISC.UNKNOWN_ID && paper?.organizations?.[0]
-            ? [paper?.organizations?.[0], organizationsUrl, 'getOrganization']
-            : null,
+    // the organizations attribute holds either an organization id or a conference series event id,
+    // so fetch both and let the 404 decide which one it is
+    const organizationId = paper?.organizations?.[0] !== MISC.UNKNOWN_ID ? paper?.organizations?.[0] : undefined;
+
+    const { data: organization, isLoading: isLoadingOrganization } = useSWR(
+        organizationId ? [organizationId, organizationsUrl, 'getOrganization'] : null,
+        ([params]) => getOrganization(params),
+        { shouldRetryOnError: false },
+    );
+
+    const { data: conferenceEvent, isLoading: isLoadingConferenceEvent } = useSWR(
+        organizationId ? [organizationId, conferenceSeriesUrl, 'getConferenceById'] : null,
+        ([params]) => getConferenceById(params),
+        { shouldRetryOnError: false },
+    );
+
+    // when assigned to an event, resolve the parent conference so its logo can be shown and the
+    // assignment modal opens with the conference preselected
+    const { data: parentOrganization } = useSWR(
+        conferenceEvent ? [conferenceEvent.organizationId, organizationsUrl, 'getOrganization'] : null,
         ([params]) => getOrganization(params),
     );
 
-    const isLoadingProvenance = isLoadingObservatory || isLoadingOrganization;
+    const organizationInfo = organization ?? parentOrganization;
 
-    const { data: createdBy, isLoading: isLoadingCreatedBy } = useSWR(
+    const isLoadingProvenance = isLoadingObservatory || isLoadingOrganization || isLoadingConferenceEvent;
+
+    const { data: createdBy } = useSWR(
         paper?.createdBy !== MISC.UNKNOWN_ID && paper?.createdBy ? [paper?.createdBy, contributorsUrl, 'getContributorById'] : null,
         ([params]) => getContributorById(params),
     );
@@ -52,6 +71,7 @@ function useProvenance() {
         isLoadingProvenance,
         observatoryInfo,
         organizationInfo,
+        conferenceEvent,
         createdBy,
         versions,
     };

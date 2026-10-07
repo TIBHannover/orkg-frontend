@@ -98,6 +98,7 @@ const getAPIFunction = async (cType: string, paramsObj: GetContentParams): Promi
                     visibility,
                     createdBy,
                     observatoryId,
+                    organizationId,
                     researchField,
                     includeSubfields,
                     sdg,

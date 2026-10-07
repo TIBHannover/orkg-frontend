@@ -11,9 +11,7 @@ const PreventModal = ({ isOpen, toggle, header, content }) => (
         <ModalHeader toggle={toggle}>{header}</ModalHeader>
         <ModalBody>{content}</ModalBody>
         <ModalFooter className="flex justify-center">
-            <Button onPress={toggle}>
-                Close
-            </Button>
+            <Button onPress={toggle}>Close</Button>
         </ModalFooter>
     </Modal>
 );

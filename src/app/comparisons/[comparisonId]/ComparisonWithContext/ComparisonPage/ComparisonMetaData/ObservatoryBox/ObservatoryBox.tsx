@@ -1,5 +1,4 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import capitalize from 'capitalize';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -10,7 +9,7 @@ import useComparison from '@/components/Comparison/hooks/useComparison';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import ObservatoryModal from '@/components/ObservatoryModal/ObservatoryModal';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
+import { ORGANIZATIONS_TYPES } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
@@ -37,11 +36,12 @@ const ObservatoryBox = () => {
         return null;
     }
 
+    const organizationType = ORGANIZATIONS_TYPES.find((t) => t.id === organization?.type)?.label;
     let route = '';
-    if (organization?.type === ORGANIZATIONS_MISC.EVENT) {
-        route = reverse(ROUTES.EVENT_SERIES, { id: observatory?.display_id });
-    } else if (organization?.type === ORGANIZATIONS_MISC.GENERAL) {
-        route = reverse(ROUTES.ORGANIZATION, { type: capitalize(ORGANIZATIONS_MISC.GENERAL), id: organization.id });
+    if (conferenceSeries) {
+        route = reverse(ROUTES.EVENT_SERIES, { id: conferenceSeries.display_id });
+    } else if (organization && organizationType) {
+        route = reverse(ROUTES.ORGANIZATION, { type: organizationType, id: organization.displayId });
     }
     const link = observatory?.id ? reverse(ROUTES.OBSERVATORY, { id: observatory.display_id }) : route;
 
@@ -60,7 +60,7 @@ const ObservatoryBox = () => {
                             <Image
                                 className="p-2"
                                 src={getOrganizationLogoUrl(conferenceSeries?.organizationId || organization?.id || '')}
-                                alt={`${organization?.name} logo`}
+                                alt={`${conferenceSeries?.name ?? organization?.name} logo`}
                                 layout="fill"
                                 objectFit="contain"
                                 unoptimized={!optimizedLogo}
@@ -88,6 +88,9 @@ const ObservatoryBox = () => {
                     resourceId={comparison.id}
                     observatory={observatory}
                     organization={organization}
+                    conferenceSeries={conferenceSeries}
+                    allowConferenceSeries
+                    resourceType="comparison"
                     toggle={() => setIsOpenObservatoryModal((v) => !v)}
                 />
             )}

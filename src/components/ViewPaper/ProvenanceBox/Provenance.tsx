@@ -15,7 +15,7 @@ import { ORGANIZATIONS_MISC } from '@/constants/organizationsTypes';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getOrganizationLogoUrl } from '@/services/backend/organizations';
-import { Contributor, Observatory, Organization, Paper } from '@/services/backend/types';
+import { ConferenceSeries, Contributor, Observatory, Organization, Paper } from '@/services/backend/types';
 
 type ProvenanceItemProps = {
     children: ReactNode;
@@ -28,6 +28,7 @@ const ProvenanceItem: FC<ProvenanceItemProps> = ({ children }) => (
 type ProvenanceProps = {
     observatoryInfo?: Observatory;
     organizationInfo?: Organization;
+    conferenceEvent?: ConferenceSeries;
     paperResource: Paper;
     contributors: { created_at: string; created_by: Contributor }[];
     createdBy?: Contributor;
@@ -38,6 +39,7 @@ type ProvenanceProps = {
 const Provenance: FC<ProvenanceProps> = ({
     observatoryInfo,
     organizationInfo,
+    conferenceEvent,
     paperResource,
     contributors,
     createdBy,
@@ -51,7 +53,7 @@ const Provenance: FC<ProvenanceProps> = ({
     return (
         <div>
             <ul className="list-none p-0 m-0 pt-2">
-                {!isLoadingProvenance && (observatoryInfo || organizationInfo) && (
+                {!isLoadingProvenance && (observatoryInfo || organizationInfo || conferenceEvent) && (
                     <ProvenanceItem>
                         {observatoryInfo && (
                             <>
@@ -70,7 +72,24 @@ const Provenance: FC<ProvenanceProps> = ({
                                 <br />
                             </>
                         )}
-                        {organizationInfo && (
+                        {conferenceEvent && (
+                            <>
+                                {!observatoryInfo && (
+                                    <div className="mb-2">
+                                        <b>Belongs to event</b>
+                                    </div>
+                                )}
+                                <Link href={reverse(ROUTES.EVENT_SERIES, { id: conferenceEvent.display_id })}>
+                                    <img
+                                        className="mx-auto block my-2 max-w-[80%] h-auto"
+                                        src={getOrganizationLogoUrl(conferenceEvent.organizationId)}
+                                        alt=""
+                                    />
+                                    <span className="block text-center">{conferenceEvent.name}</span>
+                                </Link>
+                            </>
+                        )}
+                        {!conferenceEvent && organizationInfo && (
                             <>
                                 {!observatoryInfo && (
                                     <div className="mb-2">
@@ -154,6 +173,9 @@ const Provenance: FC<ProvenanceProps> = ({
                 resourceId={paperResource.id}
                 observatory={observatoryInfo}
                 organization={organizationInfo}
+                conferenceSeries={conferenceEvent}
+                allowConferenceSeries
+                resourceType="paper"
                 toggle={() => setShowAssignObservatory((v) => !v)}
             />
         </div>
