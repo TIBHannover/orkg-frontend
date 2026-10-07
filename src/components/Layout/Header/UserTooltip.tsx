@@ -9,6 +9,7 @@ import useSWR from 'swr';
 
 import Gravatar from '@/components/Gravatar/Gravatar';
 import useAuthentication from '@/components/hooks/useAuthentication';
+import EditAvatarModal from '@/components/Layout/Header/UserTooltip/EditAvatarModal';
 import ROUTES from '@/constants/routes';
 import greetingTime from '@/lib/greetingTime';
 import sha256Hex from '@/lib/hash';
@@ -35,6 +36,7 @@ const UserTooltip = () => {
     );
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditAvatarOpen, setIsEditAvatarOpen] = useState(false);
     const greeting = greetingTime(new Date());
 
     const handleSignOut = async () => {
@@ -45,6 +47,11 @@ const UserTooltip = () => {
         } catch (signOutError) {
             console.error(signOutError);
         }
+    };
+
+    const handleChangeAvatar = () => {
+        setIsOpen(false);
+        setIsEditAvatarOpen(true);
     };
 
     if (isLoading || isHashedEmailLoading) {
@@ -116,6 +123,9 @@ const UserTooltip = () => {
                                         setIsOpen(false);
                                         visitAccountUrl(window.location.href);
                                         break;
+                                    case 'edit-avatar':
+                                        handleChangeAvatar();
+                                        break;
                                     case 'sign-out':
                                         handleSignOut();
                                         break;
@@ -133,6 +143,9 @@ const UserTooltip = () => {
                             <ListBox.Item id="settings" textValue="Settings">
                                 <Label>Settings</Label>
                             </ListBox.Item>
+                            <ListBox.Item id="edit-avatar" textValue="Edit avatar">
+                                <Label>Edit avatar</Label>
+                            </ListBox.Item>
                             {hasBackendUser && (
                                 <ListBox.Item textValue="My drafts" href={reverse(ROUTES.USER_SETTINGS_DEFAULT)}>
                                     <Label>My drafts</Label>
@@ -146,6 +159,7 @@ const UserTooltip = () => {
                     </Popover.Dialog>
                 </Popover.Content>
             </Popover>
+            {isEditAvatarOpen && <EditAvatarModal onOpenChange={setIsEditAvatarOpen} emailHashed={hashedEmail ?? ''} />}
         </div>
     );
 };
