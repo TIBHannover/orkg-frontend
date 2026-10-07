@@ -10,7 +10,6 @@ import ComparisonHeader from '@/app/comparisons/[comparisonId]/ComparisonWithCon
 import useFullWidth from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonHeader/hooks/useFullWidth';
 import ComparisonMetaData from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ComparisonMetaData/ComparisonMetaData';
 import useManagePropertiesModal from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/hooks/useManagePropertiesModal';
-import NewComparisonsAlert from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/NewComparisonsAlert/NewComparisonsAlert';
 import PropertySelectionInfoAlert from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/PropertySelectionInfoAlert/PropertySelectionInfoAlert';
 import References from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/References/References';
 import ServerErrorAlert from '@/app/comparisons/[comparisonId]/ComparisonWithContext/ComparisonPage/ServerErrorAlert/ServerErrorAlert';
@@ -80,7 +79,7 @@ const ComparisonPage = () => {
                 </>
             )}
             {!showContentsSkeleton && sourceAmount > 1 && <ComparisonCarousel />}
-            <NewComparisonsAlert />
+
             <PropertySelectionInfoAlert />
             <Container className="transition-[max-width] duration-500" style={containerStyle}>
                 {showManagePropertiesAlert && (
