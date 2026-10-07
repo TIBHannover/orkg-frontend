@@ -1,68 +1,107 @@
 stages:
-  - install
   - test
-  - containerize
-  - verify
+  - build
+  - package-build
+  - package-test
+  - publish
   - release
   - pages
 
 include:
-  - component: $CI_SERVER_FQDN/components/container-scanning/container-scanning@5.2.0
+  # Docker build / scan / publish: https://to-be-continuous.gitlab.io/doc/ref/docker/
+  - component: $CI_SERVER_FQDN/to-be-continuous/docker/gitlab-ci-docker@8.5.1
     inputs:
-      stage: verify
-      # Change image name to match our repository naming convention
-      cs_image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-      enable_mr_pipelines: false
+      build-tool: buildah # daemonless: no privileged dind runner needed
+      prod-publish-strategy: auto
+      healthcheck-disabled: true # the Dockerfile has no HEALTHCHECK
+      trivy-image: ghcr.io/aquasecurity/trivy:latest # avoid Docker Hub rate limits
   - component: $CI_SERVER_FQDN/components/dependency-scanning/main@2.0.0
     inputs:
-      stage: verify
+      stage: test
       job_name: dependency_scanning
       disabled_resolution_jobs: maven,gradle,python
   - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/pipeline-trigger-orkg@0.0.9
     inputs:
       component_name: orkg-frontend
       needs:
-        - job: docker-build
+        - job: docker-publish
           optional: true
-        - job: docker-build-default-branch
-          optional: true
-  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-build@0.0.9
-    inputs:
-      oci_image_vendor: $DOCKER_IMAGE_OCI_VENDOR
-  - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/docker-tag-release@0.0.9
 
-install:
+variables:
+  # forks only test and lint
+  CANONICAL_PROJECT_PATH: TIBHannover/orkg/orkg-frontend
+  # We run branch pipelines only, so TBC's adaptive rules would keep hadolint/trivy
+  # manual until the next push after an MR opens; run them on every push instead
+  ADAPTIVE_PIPELINE_DISABLED: 'true'
+
+# Branch pipelines only (no duplicate MR pipelines), and per-ref extra tags:
+# master -> :master + :latest, version tags -> :<tag> + :release (used by the deployment)
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    # Forks can't push to any registry: skip every job that touches one
+    - if: '$CI_PROJECT_PATH != $CANONICAL_PROJECT_PATH'
+      variables:
+        DOCKER_BUILD_TOOL: none # matches no build job -> no image build/push
+        DOCKER_TRIVY_DISABLED: 'true'
+        DOCKER_SBOM_DISABLED: 'true'
+        PUBLISH_ON_PROD: 'false'
+    - if: $CI_COMMIT_TAG
+      variables:
+        DOCKER_RELEASE_EXTRA_TAGS: release
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        DOCKER_RELEASE_EXTRA_TAGS_PATTERN: '^master$'
+        DOCKER_RELEASE_EXTRA_TAGS: latest
+    - when: always
+
+# Shared Node setup: cache npm's download cache (not node_modules — `npm ci` wipes it)
+.node:
   image: node:24-bookworm
-  stage: install
-  script:
-    - npm install
-  artifacts:
+  cache:
+    key:
+      files:
+        - package-lock.json
     paths:
-      - node_modules/
+      - .npm/
+  before_script:
+    - npm ci --cache .npm --prefer-offline --no-audit --no-fund
 
 vitest:
-  image: node:24-bookworm
+  extends: .node
   stage: test
   script:
     - cp default.env .env
     - npm run test:ci
   artifacts:
-      when: always
-      reports:
-        junit:
-          - junit.xml
+    when: always
+    reports:
+      junit:
+        - junit.xml
 
 dependency_scanning:
   needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
 
+# Keep the image scan informational (like the container-scanning component it replaces)
+docker-trivy:
+  allow_failure: true
+
 # deploy storybook to Gitlab pages
 pages:
-  image: node:24-bookworm
+  extends: .node
   stage: pages
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+    policy: pull # populated by vitest in an earlier stage
   script:
-    - rm -rf public # remove the currently existing 'public' folder that contains static files for running the frontend
+    - rm -rf public # drop the app's static files; only the storybook build is deployed
     - mkdir -p public/storybook
     - npm run build-storybook
   artifacts:
