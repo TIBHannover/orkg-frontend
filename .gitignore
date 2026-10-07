@@ -19,6 +19,8 @@ build/
 public/env.js
 public/__ENV.js
 public/storybook
+public/widget.js
+widget/dist
 .next
 tsconfig.tsbuildinfo
 next-env.d.ts

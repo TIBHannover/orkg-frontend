@@ -52,6 +52,13 @@ vitest:
         junit:
           - junit.xml
 
+widget:
+  image: node:24-bookworm
+  stage: test
+  script:
+    - npm run widget:build
+    - npm run test:widget
+
 dependency_scanning:
   needs: []
   rules:
