@@ -12,7 +12,7 @@ import Timeline from '@/components/ViewPaper/ProvenanceBox/Timeline';
 
 const ProvenanceBox = () => {
     const { resourceId } = useParams();
-    const { isLoadingProvenance, observatoryInfo, organizationInfo, createdBy, versions } = useProvenance();
+    const { isLoadingProvenance, observatoryInfo, organizationInfo, conferenceEvent, createdBy, versions } = useProvenance();
     const { paper: viewPaper } = useViewPaper({ paperId: resourceId });
     const {
         isNextPageLoading: isNextPageLoadingContributors,
@@ -55,6 +55,7 @@ const ProvenanceBox = () => {
                         <Provenance
                             observatoryInfo={observatoryInfo}
                             organizationInfo={organizationInfo}
+                            conferenceEvent={conferenceEvent}
                             paperResource={viewPaper}
                             contributors={uniqBy(contributors, 'created_by.id')}
                             createdBy={createdBy}

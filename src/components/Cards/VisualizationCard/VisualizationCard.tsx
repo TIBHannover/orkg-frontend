@@ -71,10 +71,7 @@ const VisualizationCard: FC<VisualizationCardProps> = ({ visualization, showBadg
                         !!visualization.createdAt && {
                             key: 'created-at',
                             node: (
-                                <span
-                                    className="inline-flex items-center"
-                                    title={`Created ${dayjs(visualization.createdAt).format('DD MMMM YYYY')}`}
-                                >
+                                <span className="inline-flex items-center" title={`Created ${dayjs(visualization.createdAt).format('DD MMMM YYYY')}`}>
                                     <FontAwesomeIcon size="sm" icon={faCalendar} className="me-1 text-muted" />
                                     {dayjs(visualization.createdAt).format('DD MMM YYYY')}
                                 </span>
