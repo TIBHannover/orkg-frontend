@@ -1,0 +1,30 @@
+# VCS
+.git
+.gitignore
+
+# Dependencies (installed inside the image)
+node_modules
+npm-debug.log
+
+# Standalone widget sub-project (built separately, has its own node_modules)
+widget
+
+# Build outputs, caches and reports
+.next
+public/storybook
+coverage
+junit.xml
+.npm
+
+# Local env files (env vars are injected at runtime, never baked into the image)
+.env*
+
+# Coding-agent and local working files (can grow very large)
+.vscode
+.claude
+.worktrees
+.playwright-cli
+screenshots
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md

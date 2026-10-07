@@ -1,0 +1,7 @@
+ignored:
+  # Alpine removes old package versions from its repositories, so pinned
+  # `apk add` versions break builds over time
+  - DL3018
+  # `USER nextjs` matches the official Next.js Docker example; the numeric-uid
+  # concern only applies to hosts that cannot resolve the container's /etc/passwd
+  - DL3066
