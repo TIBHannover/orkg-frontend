@@ -21,10 +21,9 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the embeddable widget (public/widget.js); it targets https://orkg.org/.
-RUN npm run widget:build
-
-RUN npm run build
+# Build the embeddable widget (public/widget.js, targets https://orkg.org/), then the app.
+RUN npm run widget:build \
+    && npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
