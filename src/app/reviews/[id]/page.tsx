@@ -3,10 +3,14 @@ import { Metadata } from 'next';
 
 import PageClient from '@/app/reviews/[id]/pageClient';
 import { LICENSE_URL } from '@/constants/misc';
+import ROUTES from '@/constants/routes';
+import { reverse } from '@/lib/namedRoute';
 import { getReview } from '@/services/backend/reviews';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
+    // Self-referencing canonical so ?history= (and other query) variants consolidate onto the clean path.
+    const alternates: Metadata['alternates'] = { canonical: reverse(ROUTES.REVIEW, { id }) };
     let review;
     try {
         review = await getReview(id);
@@ -17,6 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     if (!review) {
         return {
             title: 'Review not found - ORKG',
+            alternates,
         };
     }
 
@@ -25,6 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return {
         title: `${review.title ?? ''} - Review - ORKG`,
         description: version?.changelog,
+        alternates,
         openGraph: {
             title: `${review.title ?? ''} - Review - ORKG`,
             type: 'article',

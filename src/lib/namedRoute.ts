@@ -26,3 +26,19 @@ export function reverse(pattern: string, params: Record<string, unknown> = {}): 
         return pattern;
     }
 }
+
+/**
+ * Canonical path for a route with an optional tab catch-all (`[[...activeTab]]`). The default tab renders
+ * the same page as the bare route, so it collapses onto it; any other tab keeps its own path. Only the
+ * first segment counts, so junk deep paths collapse too.
+ */
+export function canonicalTabPath(
+    basePattern: string,
+    tabsPattern: string,
+    params: Record<string, unknown>,
+    activeTab: string[] | undefined,
+    defaultTab: string,
+): string {
+    const tab = activeTab?.[0];
+    return tab && tab !== defaultTab ? reverse(tabsPattern, { ...params, activeTab: tab }) : reverse(basePattern, params);
+}
