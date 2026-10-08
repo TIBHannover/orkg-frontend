@@ -25,6 +25,7 @@ export type ActionButtonProps = {
         action?: () => void;
     }[];
     isLoading?: boolean;
+    isActive?: boolean;
 };
 
 const ActionButton: FC<ActionButtonProps> = ({
@@ -42,6 +43,7 @@ const ActionButton: FC<ActionButtonProps> = ({
     confirmationMessage = 'Are you sure?',
     iconSize,
     isLoading = false,
+    isActive,
     setOpen: setControlledOpen,
     open: controlledOpen,
 }) => {
@@ -52,7 +54,10 @@ const ActionButton: FC<ActionButtonProps> = ({
     const showConfirmation = requireConfirmation && confirmationButtons?.length && !isDisabled;
 
     const trigger = (
+        // The spacing lives on the tooltip trigger below: a margin on the button wrapper would widen
+        // the element the tooltip and the confirmation popover anchor to, offsetting them to the right.
         <ActionButtonView
+            className="mr-0"
             title={title}
             icon={!isLoading ? icon : faSpinner}
             iconSpin={!isLoading ? iconSpin : true}
@@ -60,6 +65,7 @@ const ActionButton: FC<ActionButtonProps> = ({
             isDisabled={!isLoading ? isDisabled : true}
             size={iconSize}
             testId={testId}
+            isActive={isActive}
         />
     );
 
@@ -79,7 +85,7 @@ const ActionButton: FC<ActionButtonProps> = ({
 
     return (
         <Tooltip delay={0} isDisabled={open}>
-            <Tooltip.Trigger>{wrappedTrigger}</Tooltip.Trigger>
+            <Tooltip.Trigger className="mr-2">{wrappedTrigger}</Tooltip.Trigger>
             <Tooltip.Content showArrow>
                 <Tooltip.Arrow />
                 {title}

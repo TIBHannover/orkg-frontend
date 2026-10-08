@@ -12,6 +12,7 @@ import ValueOptions from '@/components/DataBrowser/components/Body/ValueOptions/
 import HistoryLink from '@/components/DataBrowser/components/HistoryLink/HistoryLink';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import useHistory from '@/components/DataBrowser/hooks/useHistory';
+import { hasValuePreview } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
@@ -67,9 +68,14 @@ const TripleObject: FC<SingleStatementProps> = ({
     const { getHistoryHref, navigateToPath } = useHistory();
     if (!isEditingValue) {
         const isNonLiteral = statement.object._class !== ENTITIES.LITERAL;
+        // A value with a preview (e.g. a CSVW table) replaces its nested statements with the rendered
+        // preview, so expanding it and toggling the preview are the same action. ValueOptions owns that
+        // toggle, the expand button is dropped to avoid two buttons doing the exact same thing.
+        const showsPreview = !valuesAsLinks && hasValuePreview(statement.object);
         const canExpand =
             !isEditMode &&
             isNonLiteral &&
+            !showsPreview &&
             isEqual(loadedResources[statement.object.id], path) &&
             !path.includes(statement.object.id) &&
             hasObjectStatements;
@@ -134,6 +140,7 @@ const TripleObject: FC<SingleStatementProps> = ({
                         )}
                         <ValueOptions
                             showPreview={() => setShowSubLevel((v) => !v)}
+                            isPreviewVisible={showsPreview && showSubLevel}
                             path={path}
                             statement={statement}
                             hasObjectStatements={hasObjectStatements}

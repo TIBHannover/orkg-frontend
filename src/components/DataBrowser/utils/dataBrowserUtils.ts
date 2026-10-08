@@ -141,4 +141,10 @@ export const convertPropertyShapeToSchema = (propertyShape: PropertyShape) => {
     return baseSchema;
 };
 
+/**
+ * A value whose own preview (see `ValuePreviewFactory`) is rendered instead of its nested statements
+ * when the statement is expanded.
+ */
+export const hasValuePreview = (value: Statement['object']) => 'classes' in value && !!value.classes?.includes(CLASSES.CSVW_TABLE);
+
 export default getListPropertiesFromTemplate;

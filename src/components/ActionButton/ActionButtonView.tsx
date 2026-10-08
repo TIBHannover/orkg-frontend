@@ -26,17 +26,22 @@ export type ActionButtonViewProps = {
     action?: (e: MouseEvent<HTMLButtonElement>) => void;
     isDisabled?: boolean;
     testId?: string;
+    /** Marks the button as a toggle and renders its on/off state. Leave unset for plain actions. */
+    isActive?: boolean;
+    /** Overrides the spacing of the wrapper element (defaults to `mr-2`). */
+    className?: string;
 };
 
 const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
-    ({ size = 'xs', iconSpin = false, isDisabled, action, title, icon, testId }, ref) => (
-        <span ref={ref} className="mr-2">
+    ({ size = 'xs', iconSpin = false, isDisabled, action, title, icon, testId, isActive, className }, ref) => (
+        <span ref={ref} className={cn('mr-2', className)}>
             <Button
                 isIconOnly
                 variant="ghost"
                 size={HERO_BUTTON_SIZE[size]}
                 isDisabled={isDisabled}
                 aria-label={isString(title) ? title : title?.toString()}
+                aria-pressed={isActive}
                 data-testid={testId}
                 className={cn(
                     'inline-flex shrink-0 items-center justify-center rounded-full border-0 p-0',
@@ -45,6 +50,7 @@ const ActionButtonView = forwardRef<HTMLSpanElement, ActionButtonViewProps>(
                     'aria-[disabled=true]:!bg-default aria-[disabled=true]:opacity-100',
                     'focus-visible:ring-2 focus-visible:ring-[rgba(203,206,209,0.5)]',
                     ACTION_BUTTON_SIZE_CLASSES[size],
+                    isActive && '!bg-secondary-solid !text-white',
                 )}
                 render={(props: ComponentProps<'button'>) => (
                     <button
