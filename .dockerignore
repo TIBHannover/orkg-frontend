@@ -6,8 +6,10 @@
 node_modules
 npm-debug.log
 
-# Standalone widget sub-project (built separately, has its own node_modules)
-widget
+# Widget sources are needed (the image runs `npm run widget:build`); only drop
+# local leftovers: the dev-server output and stale pre-esbuild node_modules
+widget/node_modules
+widget/dist
 
 # Build outputs, caches and reports
 .next

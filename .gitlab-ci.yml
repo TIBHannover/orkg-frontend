@@ -81,7 +81,7 @@ vitest:
         - junit.xml
 
 widget:
-  image: node:24-bookworm
+  extends: .node
   stage: test
   script:
     - npm run widget:build
