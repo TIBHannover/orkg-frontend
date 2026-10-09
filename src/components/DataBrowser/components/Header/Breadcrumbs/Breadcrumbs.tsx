@@ -7,6 +7,7 @@ import HistoryLink from '@/components/DataBrowser/components/HistoryLink/History
 import useBreadcrumbs from '@/components/DataBrowser/hooks/useBreadcrumbs';
 import useHistory from '@/components/DataBrowser/hooks/useHistory';
 import { ENTITIES } from '@/constants/graphSettings';
+import { getDisplayLabel, getMissingLabelText } from '@/helpers/labels';
 import { getLinkByEntityType } from '@/utils';
 
 // Collapsed pills expand on hover (max-width transition); the last pill is the
@@ -76,6 +77,13 @@ const Breadcrumbs = () => {
 
     const backPath = history.slice(0, history.length - 2);
 
+    // historyEntities is index-aligned with history, so the id falls back to the path entry
+    const entityLabelAt = (index: number) => {
+        const entity = historyEntities?.[index];
+        return entity ? getDisplayLabel(entity) : getMissingLabelText({ id: history[index] });
+    };
+    const rootLabel = entityLabelAt(0);
+
     return (
         <div className="grow flex shrink-0 w-full md:shrink-0 md:grow-0 md:w-10/12 md:basis-10/12 md:max-w-10/12">
             {(history.length > rootPrefix.length || canNavigateAboveRoot) && (
@@ -91,7 +99,7 @@ const Breadcrumbs = () => {
                 </HistoryLink>
             )}
             <ul className="list-unstyled p-0 flex w-3/4 m-0">
-                <li className={breadcrumbItemClasses}>{crumb(history.slice(0, 1), historyEntities?.[0]?.label, historyEntities?.[0]?.label)}</li>
+                <li className={breadcrumbItemClasses}>{crumb(history.slice(0, 1), rootLabel, rootLabel)}</li>
                 {history
                     .slice(1)
                     .filter((_, index) => index % 2 === 0)
@@ -100,8 +108,9 @@ const Breadcrumbs = () => {
                         // Looking the id up instead would collapse cyclic paths onto their first
                         // occurrence, rendering the same crumb twice.
                         const propertyIndex = 1 + index * 2;
-                        const propertyLabel = historyEntities?.[propertyIndex]?.label;
-                        const resourceLabel = historyEntities?.[propertyIndex + 1]?.label || 'No label';
+                        const propertyEntity = historyEntities?.[propertyIndex];
+                        const propertyLabel = propertyEntity ? getDisplayLabel(propertyEntity) : undefined;
+                        const resourceLabel = entityLabelAt(propertyIndex + 1);
                         return (
                             <li className={breadcrumbItemClasses} key={propertyIndex}>
                                 {crumb(

@@ -8,6 +8,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import { getListPropertiesFromTemplate } from '@/components/DataBrowser/utils/dataBrowserUtils';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
+import { getMissingLabelText } from '@/helpers/labels';
 import { Predicate, Template } from '@/services/backend/types';
 
 type SuggestionsListProps = {
@@ -51,7 +52,7 @@ const SuggestionsList: FC<SuggestionsListProps> = ({ template, search }) => {
                             className="block w-full px-4 py-2 text-left bg-transparent border-0 border-r border-b border-border rounded-none text-inherit hover:bg-default/40"
                             onClick={() => dispatch({ type: 'ADD_PROPERTY', payload: { predicate: p as Predicate, id: entity.id } })}
                         >
-                            <FontAwesomeIcon icon={faPlus} className="mr-1 text-muted" /> {p.label}
+                            <FontAwesomeIcon icon={faPlus} className="mr-1 text-muted" /> {p.label || <i>{getMissingLabelText(p)}</i>}
                         </button>
                     </DescriptionTooltip>
                 ))}

@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import ROUTES from '@/constants/routes';
+import { getMissingLabelText } from '@/helpers/labels';
 import { reverse } from '@/lib/namedRoute';
 import { Predicate } from '@/services/backend/types';
 
@@ -22,7 +23,7 @@ const PredicateView: FC<PredicateViewProps> = ({ predicate, isNewPredicate = fal
                 className={`${!config.propertiesAsLinks ? 'text-dark' : ''}  ${isNewPredicate ? 'italic font-normal opacity-75' : ''}`}
                 style={{ fontWeight: 500 }}
             >
-                {predicate.label}
+                {predicate.label || <i>{getMissingLabelText(predicate)}</i>}
             </Link>
         </DescriptionTooltip>
     );

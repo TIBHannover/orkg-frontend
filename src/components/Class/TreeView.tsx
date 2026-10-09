@@ -6,12 +6,14 @@ import AnimatedTree, { motion } from '@/components/Class/styled';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { getMissingLabelText } from '@/helpers/labels';
 import { reverse } from '@/lib/namedRoute';
 import { getChildrenByID, getHierarchyByID } from '@/services/backend/classes';
 
 export type TreeNode = {
     id: string;
     label: string;
+    uri?: string | null;
     parent_id: string | null;
     children: TreeNode[];
     child_count?: number;
@@ -187,9 +189,9 @@ const TreeView = ({ id, rootNodeId, reloadTree, ...props }: TreeViewProps) => {
     };
 
     // Customize tree node title render
-    const titleRender = (nodeData: { id: string; label: string }) => (
+    const titleRender = (nodeData: { id: string; label: string; uri?: string | null }) => (
         <DescriptionTooltip id={nodeData.id} _class={ENTITIES.CLASS}>
-            {nodeData.label}
+            {nodeData.label || <i>{getMissingLabelText(nodeData)}</i>}
         </DescriptionTooltip>
     );
 

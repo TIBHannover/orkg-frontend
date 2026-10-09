@@ -12,6 +12,7 @@ import Modal from '@/components/Ui/Modal/Modal';
 import ModalBody from '@/components/Ui/Modal/ModalBody';
 import ModalFooter from '@/components/Ui/Modal/ModalFooter';
 import ModalHeader from '@/components/Ui/Modal/ModalHeader';
+import { getMissingLabelText } from '@/helpers/labels';
 
 type TreeSelectorButtonProps = {
     value: SingleValue<OptionType>;
@@ -54,7 +55,13 @@ const TreeSelectorButton: FC<TreeSelectorButtonProps> = ({ value, isDisabled, on
             <Modal isOpen={showTree} toggle={toggleTree} size="lg">
                 <ModalHeader toggle={toggleTree}>Tree view</ModalHeader>
                 <ModalBody>
-                    {!isDisabled && <Alert color="info">Selected class: {valueFromTree?.label}</Alert>}
+                    {!isDisabled && (
+                        <Alert color="info">
+                            Selected class:{' '}
+                            {valueFromTree &&
+                                (valueFromTree.label || <i>{getMissingLabelText(valueFromTree)}</i>)}
+                        </Alert>
+                    )}
                     <TreeView
                         id={value?.id ?? ''}
                         onSelect={

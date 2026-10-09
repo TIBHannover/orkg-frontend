@@ -16,6 +16,7 @@ import { hasValuePreview } from '@/components/DataBrowser/utils/dataBrowserUtils
 import ConditionalWrapper from '@/components/Utils/ConditionalWrapper';
 import ValuePlugins from '@/components/ValuePlugins/ValuePlugins';
 import { CLASSES, ENTITIES, MISC, PREDICATES } from '@/constants/graphSettings';
+import { getMissingLabelText } from '@/helpers/labels';
 import { Statement } from '@/services/backend/types';
 import { getLinkByEntityType, getResourceLink } from '@/utils';
 
@@ -47,7 +48,9 @@ const ObjectLabel: FC<{ statement: Statement }> = ({ statement }) => (
     <>
         {statement.object._class === ENTITIES.CLASS && <EntityTypeBadge>C</EntityTypeBadge>}
         {statement.object._class === ENTITIES.PREDICATE && <EntityTypeBadge>P</EntityTypeBadge>}
-        {('formattedLabel' in statement.object && statement.object.formattedLabel) || statement.object.label || <i>No label</i>}
+        {('formattedLabel' in statement.object && statement.object.formattedLabel) || statement.object.label || (
+            <i>{getMissingLabelText(statement.object)}</i>
+        )}
     </>
 );
 const TripleObject: FC<SingleStatementProps> = ({

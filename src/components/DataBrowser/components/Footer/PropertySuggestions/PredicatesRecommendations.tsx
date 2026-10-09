@@ -9,6 +9,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import usePredicatesRecommendation from '@/components/DataBrowser/hooks/usePredicatesRecommendation';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
+import { getMissingLabelText } from '@/helpers/labels';
 import { Predicate } from '@/services/backend/types';
 import { saveFeedback, SERVICE_MAPPING } from '@/services/orkgNlp';
 
@@ -76,7 +77,7 @@ const PredicatesRecommendations = () => {
                                     <FontAwesomeIcon size="sm" icon={faPlus} />
                                 </span>
                                 <DescriptionTooltip id={p.id} _class={ENTITIES.PREDICATE} showURL>
-                                    {p.label}
+                                    {p.label || <i>{getMissingLabelText(p)}</i>}
                                 </DescriptionTooltip>
                             </button>
                         </motion.div>

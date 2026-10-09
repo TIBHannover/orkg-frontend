@@ -4,11 +4,7 @@ import { useQueryState } from 'nuqs';
 import { createContext, FC, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 import { computeConversionsForPath } from '@/components/Comparison/ComparisonTable/RowHeader/UnitCalculator/conversionResultsUtils';
-import {
-    ConversionEntry,
-    conversionsMapParser,
-    pathKey,
-} from '@/components/Comparison/ComparisonTable/RowHeader/UnitCalculator/unitConversionUtils';
+import { ConversionEntry, conversionsMapParser, pathKey } from '@/components/Comparison/ComparisonTable/RowHeader/UnitCalculator/unitConversionUtils';
 import useQudtUnits from '@/components/Comparison/ComparisonTable/RowHeader/UnitCalculator/useQudtUnits';
 import { ComparisonContents } from '@/services/backend/types';
 import { ConversionResult } from '@/services/qudt/types';
