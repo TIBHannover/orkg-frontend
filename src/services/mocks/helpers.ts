@@ -55,6 +55,7 @@ export const createMSWPredicate = async (data: Partial<SnakeCasedProperties<Pred
     return db.predicates.create({
         id: data.id ?? `P${faker.number.int()}`,
         label: data.label ?? `predicate ${id}`,
+        uri: data.uri ?? null,
         created_at: faker.date.recent().toISOString(),
         created_by: faker.string.uuid(),
         ...data,

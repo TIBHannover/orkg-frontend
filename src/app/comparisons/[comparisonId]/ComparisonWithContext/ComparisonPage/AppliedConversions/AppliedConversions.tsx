@@ -37,8 +37,7 @@ export default function AppliedConversions() {
                     const lastNode = pathLabels[pathLabels.length - 1];
                     // The quantityValue leaf (P45073) is a technical detail — the parent
                     // property is the name users recognize, so the leaf is dropped when it is that node.
-                    const displayedLabels =
-                        pathLabels.length > 1 && lastNode.id === PREDICATES.QUANTITY_VALUE ? pathLabels.slice(0, -1) : pathLabels;
+                    const displayedLabels = pathLabels.length > 1 && lastNode.id === PREDICATES.QUANTITY_VALUE ? pathLabels.slice(0, -1) : pathLabels;
                     const predicateLabel = displayedLabels.map((node) => node.label).join(' › ');
                     const unitLabel = qudtUnits.find((unit) => unit.id.endsWith(`/${entry.t}`))?.label ?? entry.t;
                     return (

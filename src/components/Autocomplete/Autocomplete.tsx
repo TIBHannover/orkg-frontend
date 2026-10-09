@@ -19,6 +19,7 @@ import OntologiesModal from '@/components/Autocomplete/OntologiesModal/Ontologie
 import { customClassNames, customStyles } from '@/components/Autocomplete/styles';
 import { AdditionalType, AutocompleteProps, OptionType } from '@/components/Autocomplete/types';
 import errorHandler from '@/helpers/errorHandler';
+import { getMissingLabelText } from '@/helpers/labels';
 import { getThing } from '@/services/backend/things';
 import type { EntityType } from '@/services/backend/types';
 
@@ -197,6 +198,8 @@ const Autocomplete = <IsMulti extends boolean = false>(props: AutocompleteCompon
                 }}
                 value={localValue}
                 getOptionValue={(option) => option.id}
+                // unlabelled things render as 'No label (uri or id)' in options, selected values and chips
+                getOptionLabel={props.getOptionLabel ?? ((option) => option.label || (option.__isNew__ ? '' : getMissingLabelText(option)))}
                 onChange={async (newValue: OnChangeValue<OptionType, IsMulti>, actionMeta: ActionMeta<OptionType>) => {
                     if (!onChange) return;
                     if (actionMeta.action === 'select-option') {

@@ -6,6 +6,8 @@ import useSWR from 'swr';
 
 import { OptionType } from '@/components/Autocomplete/types';
 import Tooltip from '@/components/FloatingUI/Tooltip';
+import { ENTITIES } from '@/constants/graphSettings';
+import { getDisplayLabel } from '@/helpers/labels';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 
 type InfoBoxProps = {
@@ -39,8 +41,8 @@ const InfoBox: FC<InfoBoxProps> = ({ data, isFocused }) => {
                                     <ul className="px-4 mb-0">
                                         {statements.slice(0, 5).map((s) => (
                                             <li key={s.id}>
-                                                {s.predicate.label}:{' '}
-                                                {truncate(s.object.label ? s.object.label : '', {
+                                                {getDisplayLabel(s.predicate)}:{' '}
+                                                {truncate(s.object._class === ENTITIES.LITERAL ? s.object.label : getDisplayLabel(s.object), {
                                                     length: MAXIMUM_DESCRIPTION_LENGTH,
                                                 })}
                                             </li>

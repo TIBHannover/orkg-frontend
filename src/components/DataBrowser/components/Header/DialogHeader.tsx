@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import { ENTITIES } from '@/constants/graphSettings';
+import { getDisplayLabel } from '@/helpers/labels';
 import { getLinkByEntityType } from '@/utils';
 
 /**
@@ -25,7 +26,7 @@ const DialogHeader = () => {
     return (
         <Modal.Header className="flex flex-row items-center justify-between gap-4 py-4 pr-8">
             <Modal.Heading>
-                View existing {typeLabel}: {entity.label || 'No label'}
+                View existing {typeLabel}: {getDisplayLabel(entity)}
             </Modal.Heading>
             {link && (
                 <Link

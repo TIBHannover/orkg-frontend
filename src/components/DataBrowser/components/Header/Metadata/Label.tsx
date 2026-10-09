@@ -14,6 +14,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import useHistory from '@/components/DataBrowser/hooks/useHistory';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { getMissingLabelText } from '@/helpers/labels';
 import { updateResource } from '@/services/backend/resources';
 import { statementsUrl } from '@/services/backend/statements';
 import { getLinkByEntityType } from '@/utils';
@@ -93,7 +94,7 @@ const Label = () => {
     return (
         <div className="mb-2 flex items-center min-h-9">
             <Link className="text-lg text-accent mr-1 mb-0" href={getLinkByEntityType(entity?._class ?? ENTITIES.RESOURCE, entity?.id ?? '')}>
-                {entity?.label || (!entity ? <Skeleton className="w-[100px] h-4 rounded" /> : <i>No label</i>)}
+                {entity?.label || (!entity ? <Skeleton className="w-[100px] h-4 rounded" /> : <i>{getMissingLabelText(entity)}</i>)}
             </Link>
             {canEdit && isEditMode && <ActionButton title="Edit" icon={faPen} action={() => setIsEditing(true)} />}
             {isValidating && <FontAwesomeIcon spin className="ml-2 text-accent" icon={faSpinner} />}

@@ -45,6 +45,7 @@ const predicateSchema = z.object({
     ...thing,
     ...provenanceCommon,
     label: z.string().default(''),
+    uri: z.string().nullable().default(null),
     _class: z.string().default('predicate'),
 });
 

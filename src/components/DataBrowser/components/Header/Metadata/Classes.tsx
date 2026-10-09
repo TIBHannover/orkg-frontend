@@ -14,6 +14,7 @@ import useEntity from '@/components/DataBrowser/hooks/useEntity';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
+import { getMissingLabelText } from '@/helpers/labels';
 import { reverse } from '@/lib/namedRoute';
 
 const Classes = () => {
@@ -40,7 +41,7 @@ const Classes = () => {
                                 <Fragment key={c.id}>
                                     <DescriptionTooltip id={c.id} _class={ENTITIES.CLASS} disabled={false}>
                                         <Link target="_blank" href={reverse(ROUTES.CLASS, { id: c.id })}>
-                                            {c.label}
+                                            {c.label || <i>{getMissingLabelText(c)}</i>}
                                         </Link>
                                     </DescriptionTooltip>
                                     {index + 1 !== classes.length && ', '}

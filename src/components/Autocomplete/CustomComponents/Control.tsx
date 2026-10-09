@@ -11,6 +11,7 @@ import { OptionType } from '@/components/Autocomplete/types';
 import TreeView from '@/components/Class/TreeView';
 import DescriptionTooltip from '@/components/DescriptionTooltip/DescriptionTooltip';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
+import { getMissingLabelText } from '@/helpers/labels';
 import { classesUrl, getClassById } from '@/services/backend/classes';
 
 const Control = ({ children, ...props }: ControlProps<OptionType, boolean, GroupBase<OptionType>>) => {
@@ -69,7 +70,12 @@ const Control = ({ children, ...props }: ControlProps<OptionType, boolean, Group
                                             <Alert.Description>
                                                 Selected class:{' '}
                                                 <DescriptionTooltip id={selectedClass ?? ''} _class={ENTITIES.CLASS} showURL>
-                                                    {classObject?.label ?? 'No label'}
+                                                    {classObject?.label ||
+                                                        (selectedClass ? (
+                                                            <i>{getMissingLabelText({ ...classObject, id: selectedClass })}</i>
+                                                        ) : (
+                                                            'No label'
+                                                        ))}
                                                 </DescriptionTooltip>
                                             </Alert.Description>
                                         </Alert.Content>
