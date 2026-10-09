@@ -11,6 +11,7 @@ import L3S_LOGO from '@/assets/img/poweredby/L3S.png';
 import LUH_LOGO from '@/assets/img/poweredby/LUH.png';
 import TIB_LOGO from '@/assets/img/poweredby/TIB_Logo_EN.png';
 import Logo from '@/assets/img/vertical_logo.svg';
+import ReportContentLink from '@/components/Layout/ReportContentLink';
 import ROUTES from '@/constants/routes';
 import ROUTES_CMS from '@/constants/routesCms';
 import { reverse } from '@/lib/namedRoute';
@@ -103,9 +104,7 @@ const Footer = () => (
                                 <Link href={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
                             </li>
                             <li>
-                                <a href="https://forms.gle/NK8Jzti8qGdRooDJ8" target="_blank" rel="noopener noreferrer">
-                                    Report abuse
-                                </a>
+                                <ReportContentLink />
                             </li>
                             <li>
                                 <i className="mr-4">Version</i>
