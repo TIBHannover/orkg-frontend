@@ -2,6 +2,27 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.192.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.191.0...v0.192.0) - 2026-10-13
+
+### Changes
+
+- feat: change form to report content and prefill with the current page [`#1776`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1776)
+- feat: implement missing label handling across components [`#1767`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1767)
+- fix(DataBrowser): remove duplicate table expand button and center action tooltips [`#1766`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1766)
+- fix(ci): install deps in widget job and include widget sources in docker build [`#1775`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1775)
+- feat(user-menu): add edit avatar modal [`#1761`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1761)
+- refactor(Widget): convert to TypeScript and esbuild, build in CI instead of committing the bundle [`#1725`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1725)
+- feat(EventSeries): add content type tabs and improve conference metadata box [`#1736`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1736)
+- chore(services): send user agent on server-side backend requests [`#1771`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1771)
+- feat(services): send caller header to ORKG backend [`#1770`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1770)
+- ci: migrate docker build to to-be-continuous component and add .dockerignore [`#1757`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1757)
+- fix(seo): self-referencing canonicals on all DataBrowser host pages [`#1751`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1751)
+- refactor(ComparisonPage): remove NewComparisonsAlert [`#1768`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1768)
+- feat: unit conversions in comparison views [`#1709`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1709)
+- chore: upgrade to Next.js 16.3.8 [`#1774`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1774)
+- perf(auth): skip session fetch in getAccessToken on the server [`#1772`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1772)
+
+---
 ## [v0.191.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.190.0...v0.191.0) - 2026-10-01
 
 ### Changes
