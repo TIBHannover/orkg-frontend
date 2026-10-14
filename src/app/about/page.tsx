@@ -11,8 +11,7 @@ const About = async () => {
     let pages: CmsResponsePaginated<HelpArticle> | void;
     try {
         pages = await getAboutPages();
-    } catch (e) {
-        console.error('Error getting about pages');
+    } catch {
         return notFound();
     }
     const id = pages?.data?.[0]?.id;

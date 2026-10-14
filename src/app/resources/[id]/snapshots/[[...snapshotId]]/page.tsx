@@ -22,8 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 const PublishedResource = async ({ params }: Props) => {
     const { id, snapshotId } = await params;
-    const snapshot = await getSnapshot({ id, snapshotId });
-    if (!snapshot) {
+    try {
+        await getSnapshot({ id, snapshotId });
+    } catch {
         return notFound();
     }
     return <SnapshotPage contentType="Resource" id={id} snapshotId={snapshotId} />;
