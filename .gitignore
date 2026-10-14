@@ -15,6 +15,7 @@ src/npm-debug.log
 public/storybook
 public/widget.js
 widget/dist
+widget/build
 .next
 tsconfig.tsbuildinfo
 next-env.d.ts

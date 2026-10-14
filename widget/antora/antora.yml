@@ -1,0 +1,5 @@
+name: orkg-widget
+title: Widget
+nav:
+  - modules/ROOT/nav.adoc
+version: ~

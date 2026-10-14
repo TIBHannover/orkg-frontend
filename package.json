@@ -135,6 +135,7 @@
         "type-check": "tsc --noEmit && tsc -p widget --noEmit",
         "widget:build": "node widget/build.mjs",
         "widget:dev": "node widget/build.mjs --dev",
+        "widget:documentation": "cd widget && npx --yes -p antora@3.2.0 -p @springio/antora-extensions@1.14.13 -p @springio/asciidoctor-extensions@1.0.0-alpha.18 antora --fetch antora-playbook.yml",
         "test:widget": "vitest run --config widget/vitest.config.mts",
         "postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\"",
         "prepare": "husky",

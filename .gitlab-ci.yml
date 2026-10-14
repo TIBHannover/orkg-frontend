@@ -108,9 +108,14 @@ pages:
       - .npm/
     policy: pull # populated by vitest in an earlier stage
   script:
-    - rm -rf public # drop the app's static files; only the storybook build is deployed
+    - rm -rf public # remove the currently existing 'public' folder that contains static files for running the frontend
+    # Build storybook
     - mkdir -p public/storybook
     - npm run build-storybook
+    # Build ORKG Widget documentation
+    - mkdir -p public/widget
+    - npm run widget:documentation
+    - cp -r widget/build/site/. public/widget
   artifacts:
     paths:
       - public

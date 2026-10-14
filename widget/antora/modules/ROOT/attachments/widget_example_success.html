@@ -1,0 +1,26 @@
+<style>
+  .orkg-widget-link {
+    color: white !important;
+  }
+  .orkg-widget {
+    padding-top: 1rem;
+    max-width: 300px;
+  }
+</style>
+<div class="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>
+<script>
+  (function (w, d, s, o, f, js, fjs) {
+    w['ORKG-Widget'] = o;
+    w[o] =
+      w[o] ||
+      function () {
+        (w[o].q = w[o].q || []).push(arguments);
+      };
+    ((js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]));
+    js.id = o;
+    js.src = f;
+    js.async = 1;
+    fjs.parentNode.insertBefore(js, fjs);
+  })(window, document, 'script', 'orkgw', 'https://orkg.org/widget.js');
+  orkgw('paper', { language: 'en' });
+</script>
