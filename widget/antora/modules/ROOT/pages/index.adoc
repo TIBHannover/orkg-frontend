@@ -1,0 +1,66 @@
+= ORKG Widget
+
+The ORKG widget is used to interlink papers or other publishable artifacts with ORKG by DOI.
+When the paper is found in ORKG, it will display the number of statements and link to the respective page in ORKG: +
+
+++++
+include::attachment$widget_example_success.html[]
+++++
+
+When the paper is not found in ORKG, it will display a button for adding the paper to ORKG instead: +
+
+++++
+include::attachment$widget_example_missing.html[]
+++++
+
+== How to use
+
+Place the following code on your website and set the parameter `data-doi`.
+
+[source,html]
+----
+<div class="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>
+<script>
+    (function (w, d, s, o, f, js, fjs) {
+        w['ORKG-Widget'] = o;
+        w[o] =
+            w[o] ||
+            function () {
+                (w[o].q = w[o].q || []).push(arguments);
+            };
+        ((js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]));
+        js.id = o;
+        js.src = f;
+        js.async = 1;
+        fjs.parentNode.insertBefore(js, fjs);
+    })(window, document, 'script', 'orkgw', 'https://orkg.org/widget.js');
+    orkgw('paper', { language: 'en' });
+</script>
+----
+
+== Languages
+
+The ORKG widget supports two languages:
+
+- `en` _(for English)_
+- `de` _(for German)_
+
+== CSS classes
+
+The ORKG widget renders the following HTML template, so its appearance can be adjusted per class:
+
+[source,html]
+----
+<div class="orkg-widget-box">
+    <a href="#" class="orkg-widget-link" target="_blank">
+        <span class="orkg-widget-label">
+            <img src="" alt="ORKG Logo" class="orkg-widget-icon"/>
+            <span class="orkg-widget-txt-link">Open in ORKG</span>
+        </span>
+    </a>
+    <div class="orkg-widget-description">
+        <span class="orkg-widget-text-statements">Number of statements</span>
+        <span class="orkg-widget-statements">0</span>
+    </div>
+</div>
+----

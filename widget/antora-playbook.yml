@@ -1,0 +1,36 @@
+site:
+  title: Open Research Knowledge Graph (ORKG) — Widget Documentation
+  url: https://tibhannover.gitlab.io/orkg/orkg-frontend/widget
+  start_page: orkg-widget::index.adoc
+content:
+  sources:
+  - url: ../
+    branches:
+      - HEAD
+    version: true
+    start_path: widget/antora
+    edit_url: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/edit/master/{path}
+ui:
+  bundle:
+    url: https://gitlab.com/TIBHannover/orkg/orkg-docs-theme/-/releases/0.5.10/downloads/ui-bundle.zip
+    snapshot: true
+antora:
+  extensions:
+    - require: '@springio/antora-extensions/override-navigation-builder-extension'
+    - require: '@springio/antora-extensions/root-component-extension'
+      root_component_name: 'orkg-widget'
+    - require: '@springio/antora-extensions/root-attachments-extension'
+asciidoc:
+  attributes:
+    page-related-doc-categories: integration
+    page-related-doc-projects: integration
+    hide-uri-scheme: '@'
+    tabs-sync-option: '@'
+  extensions:
+    - '@springio/asciidoctor-extensions'
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+runtime:
+  fetch: true
