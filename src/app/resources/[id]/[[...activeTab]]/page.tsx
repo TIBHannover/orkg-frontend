@@ -50,8 +50,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 const ResourceRoute = async ({ params }: Props) => {
     const { id: rawId } = await params;
     const id = decodeURIComponent(rawId);
-    const resource = await getResource(id);
-    if (!resource) {
+    try {
+        await getResource(id);
+    } catch {
         return notFound();
     }
     return <ResourcePage contentType="Resource" id={id} />;

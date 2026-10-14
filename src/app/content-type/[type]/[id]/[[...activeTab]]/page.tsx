@@ -37,8 +37,9 @@ export async function generateMetadata({ params }: ContentTypePageProps): Promis
 const ContentTypePage = async ({ params }: ContentTypePageProps) => {
     const { id: rawId, type } = await params;
     const id = decodeURIComponent(rawId);
-    const resource = await getResource(id);
-    if (!resource) {
+    try {
+        await getResource(id);
+    } catch {
         return notFound();
     }
     return <ResourcePage contentType={type} id={id} />;
