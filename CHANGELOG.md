@@ -2,6 +2,13 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.192.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.192.1...v0.192.2) - 2026-10-22
+
+### Changes
+
+- chore: upgrade node [`#1785`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1785)
+
+---
 ## [v0.192.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.192.0...v0.192.1) - 2026-10-15
 
 ### Changes
@@ -190,7 +197,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - ci: migrate to CI components [`#1678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1678)
 
 ---
-## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-21
+## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-19
 
 ### Changes
 
@@ -252,7 +259,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - feat: improve dataset/software content type view [`#1649`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1649)
 
 ---
-## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-14
+## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
 
 ### Changes
 
