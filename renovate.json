@@ -1,0 +1,44 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:best-practices", ":semanticCommits"],
+    "labels": ["dependencies"],
+    "internalChecksFilter": "strict",
+    "lockFileMaintenance": {
+        "enabled": false
+    },
+    "env": {
+        "npm_config_min_release_age": "0"
+    },
+    "packageRules": [
+        {
+            "description": "Only manage Next.js and Node.js for now; everything else is upgraded manually",
+            "matchPackageNames": ["*"],
+            "enabled": false
+        },
+        {
+            "description": "Replaces the min-release-age from .npmrc, which `env` disables for Renovate's npm runs",
+            "matchDatasources": ["npm"],
+            "minimumReleaseAge": "14 days"
+        },
+        {
+            "description": "Next.js (security) releases are raised immediately and pinned exactly, like npm install --save-exact",
+            "groupName": "Next.js",
+            "matchPackageNames": ["next", "eslint-config-next", "react", "react-dom", "@types/react", "@types/react-dom"],
+            "enabled": true,
+            "minimumReleaseAge": null,
+            "rangeStrategy": "pin"
+        },
+        {
+            "description": "Node.js across the Dockerfile, CI images, .mise.toml and package.json engines",
+            "groupName": "Node.js",
+            "matchDepNames": ["node", "npm"],
+            "enabled": true
+        },
+        {
+            "description": "Stay on the Node.js 24 LTS line, and raise its updates immediately",
+            "matchDepNames": ["node"],
+            "allowedVersions": "<25",
+            "minimumReleaseAge": "0 days"
+        }
+    ]
+}
