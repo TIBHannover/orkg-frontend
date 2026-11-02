@@ -20,6 +20,7 @@ include:
       stage: test
       job_name: dependency_scanning
       disabled_resolution_jobs: maven,gradle,python
+      include_dev_dependencies: false
   - component: $CI_SERVER_FQDN/TIBHannover/gitlab-ci-components/pipeline-trigger-orkg@0.0.9
     inputs:
       component_name: orkg-frontend
