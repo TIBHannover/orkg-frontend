@@ -1,8 +1,8 @@
-import type { ExtractionPlan, JobPlanRead, JobRead } from '@orkg/agentic-loop-client';
-import { JobReadFromJSON } from '@orkg/agentic-loop-client';
+import type { ExtractionPlan, JobPlanRead, JobRead, JobStatus } from '@orkg/agentic-loop-client';
+import { ResponseError } from '@orkg/agentic-loop-client';
 
 import { agenticLoopBaseUrl, jobsApi } from '@/services/agenticLoop/client';
-import { getAccessToken } from '@/services/backend/backendApi';
+import type { Pagination, SortDirectionOptions } from '@/services/backend/types';
 
 export type AgenticLoopResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -37,47 +37,55 @@ const errorMessage = (e: unknown, fallback: string): string => {
     return parts.join(' — ');
 };
 
-// JobsApi.createJob() is broken for real file uploads — it joins File objects
-// into a comma-separated string inside URLSearchParams. We POST directly with a
-// hand-built FormData containing the actual File blobs. The service derives the
-// owner from the bearer token, so no user id is sent.
+// The generated client throws a generic ResponseError; include the status and
+// body so callers can show what the service actually rejected.
+const httpErrorMessage = async (e: unknown, fallback: string): Promise<string> => {
+    if (e instanceof ResponseError) {
+        const text = await e.response.text().catch(() => '');
+        return `${fallback} (${e.response.status}): ${text || e.response.statusText}`;
+    }
+    return errorMessage(e, fallback);
+};
+
+// The service derives the owner from the bearer token, so no user id is sent.
 export async function createAiJob(files: File[]): Promise<AgenticLoopResult<JobRead>> {
+    if (files.length === 0) {
+        return { ok: false, error: 'No files provided' };
+    }
     try {
-        if (files.length === 0) {
-            return { ok: false, error: 'No files provided' };
-        }
-
-        const body = new FormData();
-        for (const file of files) {
-            body.append('files', file, file.name);
-        }
-
-        const token = await getAccessToken();
-        const response = await fetch(`${agenticLoopBaseUrl}/api/jobs/`, {
-            method: 'POST',
-            body,
-            cache: 'no-store',
-            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
-
-        if (!response.ok) {
-            const text = await response.text();
-            return { ok: false, error: `Upload failed (${response.status}): ${text || response.statusText}` };
-        }
-
-        const data = fixJobDates(JobReadFromJSON(await response.json()));
-        return { ok: true, data };
+        const data = await jobsApi.createJob({ files });
+        return { ok: true, data: fixJobDates(data) };
     } catch (e) {
-        return { ok: false, error: errorMessage(e, 'Upload failed') };
+        return { ok: false, error: await httpErrorMessage(e, 'Upload failed') };
     }
 }
 
-export async function listAiJobs(): Promise<AgenticLoopResult<JobRead[]>> {
+// SWR cache namespace for job listings; never used to fetch.
+export const aiJobsUrl = `${agenticLoopBaseUrl}/api/jobs/`;
+
+export type ListAiJobsPagedParams = {
+    page?: number;
+    size?: number;
+    sortBy?: { property: string; direction?: SortDirectionOptions }[];
+    status?: JobStatus[];
+};
+
+// The service sorts on snake_case names; unknown properties are rejected with a 400.
+const JOB_SORT_PROPERTIES: Record<string, string> = { createdAt: 'created_at', updatedAt: 'updated_at' };
+
+// Mapped to the ORKG Pagination shape so usePaginate can consume it. Throws on
+// failure, like the other paginated fetchers.
+export async function listAiJobsPaged({ page = 0, size = 20, sortBy, status = [] }: ListAiJobsPagedParams = {}): Promise<Pagination<JobRead>> {
     try {
-        const data = await jobsApi.listJobs();
-        return { ok: true, data: data.map(fixJobDates) };
+        const { content, page: pageInfo } = await jobsApi.listJobsPaged({
+            page,
+            size,
+            status: status.length > 0 ? status : undefined,
+            sort: sortBy?.map(({ property, direction = 'asc' }) => `${JOB_SORT_PROPERTIES[property] ?? property},${direction}`),
+        });
+        return { content: content.map(fixJobDates), page: pageInfo };
     } catch (e) {
-        return { ok: false, error: errorMessage(e, 'Failed to load AI comparison jobs') };
+        throw new Error(await httpErrorMessage(e, 'Failed to load AI comparison jobs'));
     }
 }
 

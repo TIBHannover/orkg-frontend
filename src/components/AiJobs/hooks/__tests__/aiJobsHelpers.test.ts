@@ -2,7 +2,7 @@ import type { ExtractionPlan, JobRead, JobStatus } from '@orkg/agentic-loop-clie
 
 import { getAiJobLabel } from '@/components/AiJobs/hooks/useAiJobPlan';
 import { computeTransitionToasts, isJobActive, isJobNotable } from '@/components/AiJobs/hooks/useAiJobs';
-import { buildSeenMap, isJobUnseen } from '@/components/AiJobs/hooks/useAiJobsUnseen';
+import { buildSeenMap, isJobUnseen, MAX_SEEN_ENTRIES } from '@/components/AiJobs/hooks/useAiJobsUnseen';
 
 const makeJob = (overrides: Partial<JobRead> = {}): JobRead => ({
     id: 'job-1',
@@ -67,9 +67,25 @@ describe('buildSeenMap / isJobUnseen', () => {
         expect(isJobUnseen(makeJob({ status: 'cancelled' }), {})).toBe(false);
     });
 
-    it('prunes jobs that are no longer listed', () => {
-        const remaining = makeJob({ id: 'kept', status: 'completed' });
-        expect(buildSeenMap([remaining])).toEqual({ kept: 'completed' });
+    it('keeps jobs that dropped out of the listed window, so they stay seen when they come back', () => {
+        const older = makeJob({ id: 'older', status: 'completed' });
+        const seenMap = buildSeenMap([makeJob({ id: 'newer', status: 'failed' })], buildSeenMap([older]));
+        expect(seenMap).toEqual({ older: 'completed', newer: 'failed' });
+        expect(isJobUnseen(older, seenMap)).toBe(false);
+    });
+
+    it('replaces the entry of a listed job, even once it is no longer notable', () => {
+        const previous = { job: 'awaiting_approval' as JobStatus };
+        expect(buildSeenMap([makeJob({ id: 'job', status: 'completed' })], previous)).toEqual({ job: 'completed' });
+        expect(buildSeenMap([makeJob({ id: 'job', status: 'executing' })], previous)).toEqual({});
+    });
+
+    it('drops the oldest entries beyond the cap', () => {
+        const previous = Object.fromEntries(Array.from({ length: MAX_SEEN_ENTRIES }, (_, i) => [`old-${i}`, 'completed' as JobStatus]));
+        const seenMap = buildSeenMap([makeJob({ id: 'new', status: 'completed' })], previous);
+        expect(Object.keys(seenMap)).toHaveLength(MAX_SEEN_ENTRIES);
+        expect(seenMap).not.toHaveProperty('old-0');
+        expect(seenMap).toHaveProperty('new', 'completed');
     });
 });
 
@@ -99,6 +115,17 @@ describe('computeTransitionToasts', () => {
 
     it('toasts for a job first seen in a notable state (created and finished between polls)', () => {
         expect(computeTransitionToasts(known({}), [makeJob({ id: 'new', status: 'completed' })])).toEqual([
+            { kind: 'success', message: 'Your AI comparison is ready' },
+        ]);
+    });
+
+    it('does not toast for an older job that moved into the listed window', () => {
+        const windowStart = new Date('2026-06-02T00:00:00Z');
+        const older = makeJob({ id: 'older', status: 'completed', createdAt: new Date('2026-06-01T00:00:00Z') });
+        const created = makeJob({ id: 'created', status: 'completed', createdAt: new Date('2026-06-03T00:00:00Z') });
+        expect(computeTransitionToasts(known({}), [older], windowStart)).toEqual([]);
+        expect(computeTransitionToasts(known({}), [created], windowStart)).toEqual([{ kind: 'success', message: 'Your AI comparison is ready' }]);
+        expect(computeTransitionToasts(known({ older: 'executing' }), [older], windowStart)).toEqual([
             { kind: 'success', message: 'Your AI comparison is ready' },
         ]);
     });
