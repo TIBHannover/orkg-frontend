@@ -1,44 +1,63 @@
 'use client';
 
-import { Form, Input, Label, TextField, toast } from '@heroui/react';
+import { Form, toast } from '@heroui/react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { z } from 'zod';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
+import ControlledTextField from '@/components/Form/ControlledTextField/ControlledTextField';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import useZodForm from '@/components/Form/hooks/useZodForm';
+import { uriSchema } from '@/components/Form/schemas/uriSchema';
+import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
-import errorHandler from '@/helpers/errorHandler';
 import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { createPredicate } from '@/services/backend/predicates';
 
+const createPropertySchema = z.object({
+    label: z.string().trim().min(1, 'Please enter a property label'),
+    uri: uriSchema,
+});
+
+type CreatePropertyFormValues = z.infer<typeof createPropertySchema>;
+
 const AddProperty = () => {
-    const [label, setLabel] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
+    const {
+        control,
+        handleSubmit,
+        setError,
+        formState: { isSubmitting, errors },
+    } = useZodForm({
+        schema: createPropertySchema,
+        defaultValues: { label: '', uri: '' },
+    });
 
     useEffect(() => {
         document.title = 'Add property - ORKG';
     }, []);
 
-    const handleAdd = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsLoading(true);
-        if (label.trim() !== '') {
-            try {
-                const newPropertyId = await createPredicate(label);
-                toast.success('Property created successfully');
-                setIsLoading(false);
-                router.push(`${reverse(ROUTES.PROPERTY, { id: newPropertyId })}?isEditMode=true`);
-            } catch (error) {
-                await errorHandler({ error, shouldShowToast: true });
-                setIsLoading(false);
+    const onSubmit = async (values: CreatePropertyFormValues) => {
+        toast.clear();
+
+        try {
+            const newPropertyId = await createPredicate(values.label, undefined, values.uri || undefined);
+            toast.success('Property created successfully');
+            router.push(`${reverse(ROUTES.PROPERTY, { id: newPropertyId })}?isEditMode=true`);
+        } catch (error) {
+            const handled = await applyServerErrorsToForm(error, {
+                setError,
+                knownFields: Object.keys(createPropertySchema.shape),
+            });
+            if (!handled) {
+                toast.warning('Something went wrong while creating the property');
             }
-        } else {
-            toast.danger('Please enter a property label');
-            setIsLoading(false);
         }
     };
 
@@ -47,19 +66,33 @@ const AddProperty = () => {
             <TitleBar>Create property</TitleBar>
             <Container>
                 <div className="box rounded pt-6 pb-6 pl-12 pr-12">
-                    <Form className="flex flex-col gap-6 pt-2" onSubmit={handleAdd}>
-                        <TextField fullWidth isDisabled={isLoading} name="value">
-                            <Label htmlFor="propertyLabel">Property label</Label>
-                            <Input
-                                id="propertyLabel"
-                                type="text"
-                                maxLength={MAX_LENGTH_INPUT}
-                                value={label}
-                                onChange={(e) => setLabel(e.target.value)}
-                            />
-                        </TextField>
+                    <Form className="flex flex-col gap-6 pt-2" onSubmit={handleSubmit(onSubmit)}>
+                        <FormRootError message={errors.root?.server?.message} />
 
-                        <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isLoading}>
+                        <ControlledTextField
+                            control={control}
+                            name="label"
+                            label="Property label"
+                            maxLength={MAX_LENGTH_INPUT}
+                            isDisabled={isSubmitting}
+                        />
+
+                        <ControlledTextField
+                            control={control}
+                            name="uri"
+                            type="url"
+                            label={
+                                <>
+                                    URI <span className="text-muted font-normal italic">(optional)</span>
+                                </>
+                            }
+                            placeholder="https://example.org/ontology#Term"
+                            maxLength={MAX_LENGTH_INPUT}
+                            isDisabled={isSubmitting}
+                            description="Please provide the URI if you are using a property defined in an external ontology"
+                        />
+
+                        <ButtonWithLoading type="submit" variant="primary" className="mt-2 w-fit" isLoading={isSubmitting}>
                             Create property
                         </ButtonWithLoading>
                     </Form>

@@ -46,9 +46,10 @@ const predicates = [
         return HttpResponse.json(predicate);
     }),
     http.post(`${predicatesUrl}`, async ({ request }: { request: Request }) => {
-        const { label } = await request.json();
+        const { label, uri } = await request.json();
         const newPredicate = await createMSWPredicate({
             label,
+            uri,
         });
         return new HttpResponse(null, {
             headers: {

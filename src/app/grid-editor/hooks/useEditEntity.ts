@@ -1,5 +1,5 @@
 import { toast } from '@heroui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ActionMeta, MultiValue } from 'react-select';
 import useSWR, { mutate } from 'swr';
 
@@ -17,7 +17,6 @@ import { Thing } from '@/services/backend/things';
 const useEditEntity = (entity: Thing) => {
     const [isSaving, setIsSaving] = useState(false);
     const [label, setLabel] = useState(entity.label);
-    const [draftClasses, setDraftClasses] = useState<OptionType[]>([]);
     const { key } = useEntities();
     const { user } = useAuthentication();
     const isCurationAllowed = user?.isCurationAllowed ?? false;
@@ -25,15 +24,22 @@ const useEditEntity = (entity: Thing) => {
         entity && 'classes' in entity && entity.classes.length > 0 ? [entity.classes, classesUrl, 'getClassById'] : null,
         ([params]) => Promise.all(params.map((id) => getClassById(id))),
     );
+
+    // User edits are stored together with the fetched classes they were based on. When the fetched
+    // classes change, the stale edits are ignored and the draft falls back to the fetched value.
+    const [editedClasses, setEditedClasses] = useState<{ base: typeof classes; value: OptionType[] } | null>(null);
+    const draftClasses = editedClasses && editedClasses.base === classes ? editedClasses.value : ((classes ?? []) as OptionType[]);
+    const setDraftClasses = (value: OptionType[]) => setEditedClasses({ base: classes, value });
+
     const handleSave = async () => {
         setIsSaving(true);
         try {
             if (entity._class === ENTITIES.RESOURCE) {
                 await updateResource(entity.id, { label, classes: draftClasses.map((c) => c.id) });
             } else if (entity._class === ENTITIES.CLASS) {
-                await updateClass(entity.id, label);
+                await updateClass(entity.id, { label });
             } else if (entity._class === ENTITIES.PREDICATE) {
-                await updatePredicate(entity.id, label);
+                await updatePredicate(entity.id, { label });
             } else {
                 throw new Error('Invalid entity class');
             }
@@ -70,10 +76,6 @@ const useEditEntity = (entity: Thing) => {
             }
         }
     };
-
-    useEffect(() => {
-        setDraftClasses((classes ?? []) as OptionType[]);
-    }, [classes]);
 
     return { draftClasses, label, isLoading, isSaving, handleChangeClasses, setLabel, setIsSaving, handleSave };
 };

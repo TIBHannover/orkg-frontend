@@ -16,6 +16,7 @@ import EditableHeader from '@/components/EditableHeader';
 import EditModeHeader from '@/components/EditModeHeader/EditModeHeader';
 import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import SetEntityUriButton from '@/components/SetEntityUri/SetEntityUriButton/SetEntityUriButton';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useParams from '@/components/useParams/useParams';
@@ -131,7 +132,15 @@ const ClassDetails = () => {
                                 )}
                             </div>
 
-                            <ItemMetadata item={classObject as Thing} showCreatedAt showCreatedBy editMode={isEditMode} />
+                            <ItemMetadata item={classObject as Thing} showCreatedAt showCreatedBy showUri editMode={isEditMode}>
+                                <SetEntityUriButton
+                                    entityId={id}
+                                    entityType={ENTITIES.CLASS}
+                                    uri={classObject.uri}
+                                    isEditMode={isEditMode}
+                                    onUpdated={() => mutate()}
+                                />
+                            </ItemMetadata>
                         </div>
                     </Container>
                     <TabsContainer id={id} editMode={isEditMode} classObject={classObject} label={label} key={keyInstances} />

@@ -21,8 +21,8 @@ const snapshotsApi = new TemplateBasedResourceSnapshotsApi(configuration);
 
 export const updateResource = (id: string, data: UpdateResourceRequest) => resourcesApi.update({ id, updateResourceRequest: data });
 
-export const createResource = ({ label, classes, id }: { label: string; classes: string[]; id?: string }) =>
-    resourcesApi.createRaw({ createResourceRequest: { label, classes, id } }).then(getCreatedId);
+export const createResource = ({ label, classes, id, uri }: { label: string; classes: string[]; id?: string; uri?: string }) =>
+    resourcesApi.createRaw({ createResourceRequest: { label, classes, id, uri } }).then(getCreatedId);
 
 export const getResource = (id: string) => resourcesApi.findById({ id });
 

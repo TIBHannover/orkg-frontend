@@ -1,4 +1,4 @@
-import { faArrowRight, faCalendar, faGaugeSimpleHigh, faLink, faSearch, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCalendar, faGaugeSimpleHigh, faSearch, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import pluralize from 'pluralize';
@@ -7,6 +7,7 @@ import { FC, ReactNode } from 'react';
 import MetadataRow, { MetadataRowItem } from '@/components/Cards/CardShell/MetadataRow';
 import CopyId from '@/components/CopyId/CopyId';
 import { ProvenanceItem } from '@/components/ItemMetadata/types';
+import UriLink from '@/components/UriLink/UriLink';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS, getExtractionMethodLabel } from '@/constants/misc';
@@ -17,7 +18,7 @@ type CompactItemMetadataProps = {
     showCreatedBy?: boolean;
     showClasses?: boolean;
     showDataType?: boolean;
-    /** Render the class URI as a link. Only classes carry one, so this is safe to leave on */
+    /** Render the entity URI as a link, when it has one */
     showUri?: boolean;
     showCertainty?: boolean;
     showExtractionMethod?: boolean;
@@ -105,16 +106,7 @@ const CompactItemMetadata: FC<CompactItemMetadataProps> = ({
     if (showUri && uri) {
         items.push({
             key: 'uri',
-            node: (
-                // the accent icon marks the link as interactive; the text inherits so it doesn't outrank the title
-                <span className="inline-flex min-w-0 items-center" title={uri}>
-                    <FontAwesomeIcon icon={faLink} size="sm" className="me-1 text-accent" />
-                    <span className="sr-only">URI </span>
-                    <a href={uri} target="_blank" rel="noreferrer" className="min-w-0 truncate text-inherit hover:underline">
-                        {uri}
-                    </a>
-                </span>
-            ),
+            node: <UriLink uri={uri} className="truncate text-inherit" iconClassName="text-accent" />,
         });
     }
     if (showCertainty && item.certainty) {

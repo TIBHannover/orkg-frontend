@@ -16,6 +16,7 @@ import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import useDeleteProperty from '@/components/Property/hooks/useDeleteProperty';
 import PropertyStatements from '@/components/Property/PropertyStatements/PropertyStatements';
 import RequireAuthentication from '@/components/RequireAuthentication/RequireAuthentication';
+import SetEntityUriButton from '@/components/SetEntityUri/SetEntityUriButton/SetEntityUriButton';
 import TabLabel from '@/components/Tabs/TabLabel';
 import Tabs from '@/components/Tabs/Tabs';
 import TitleBar from '@/components/TitleBar/TitleBar';
@@ -131,7 +132,15 @@ const Property = () => {
                                     </div>
                                 )}
                             </div>
-                            <ItemMetadata item={property as Thing} showCreatedAt showCreatedBy />
+                            <ItemMetadata item={property as Thing} showCreatedAt showCreatedBy showUri editMode={isEditMode}>
+                                <SetEntityUriButton
+                                    entityId={propertyId}
+                                    entityType={ENTITIES.PREDICATE}
+                                    uri={property?.uri}
+                                    isEditMode={isEditMode}
+                                    onUpdated={() => mutate()}
+                                />
+                            </ItemMetadata>
                         </div>
                     </Container>
 

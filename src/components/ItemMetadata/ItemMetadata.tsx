@@ -9,6 +9,7 @@ import { FC, ReactNode, useEffect, useState } from 'react';
 import CopyId from '@/components/CopyId/CopyId';
 import ProvenanceBox from '@/components/ItemMetadata/ProvenanceBox';
 import { ProvenanceItem } from '@/components/ItemMetadata/types';
+import UriLink from '@/components/UriLink/UriLink';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS, getExtractionMethodLabel } from '@/constants/misc';
@@ -24,6 +25,8 @@ type ItemMetadataProps = {
     showCertainty?: boolean;
     showProvenance?: boolean;
     showExtractionMethod?: boolean;
+    /** Render the entity URI as a link, when it has one */
+    showUri?: boolean;
     /** Render the copyable ID pill */
     showId?: boolean;
     item: ProvenanceItem;
@@ -47,6 +50,7 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
     showCertainty = false,
     showProvenance = false,
     showExtractionMethod = false,
+    showUri = false,
     showId = true,
     handleUrl,
     item,
@@ -159,6 +163,12 @@ const ItemMetadata: FC<ItemMetadataProps> = ({
                                     {getExtractionMethodLabel(extractionMethod)}
                                 </span>
                             )}
+                        </Chip>
+                    )}
+
+                    {showUri && item.uri && item.uri !== 'null' && (
+                        <Chip color="default" className="max-w-full">
+                            <UriLink uri={item.uri} />
                         </Chip>
                     )}
 
