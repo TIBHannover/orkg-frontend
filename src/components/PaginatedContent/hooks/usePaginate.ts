@@ -1,5 +1,5 @@
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs';
-import useSWR from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 
 import { Pagination, SortDirectionOptions } from '@/services/backend/types';
 
@@ -16,6 +16,7 @@ type UsePaginateProps<ItemType, FetchFunctionParams> = {
     defaultSortDirection?: SortDirectionOptions;
     prefixParams?: string;
     isReadyToLoad?: boolean;
+    swrOptions?: SWRConfiguration<Pagination<ItemType>>;
 };
 
 const usePaginate = <ItemType, FetchFunctionParams>({
@@ -28,6 +29,7 @@ const usePaginate = <ItemType, FetchFunctionParams>({
     defaultSortDirection = 'desc' as SortDirectionOptions,
     prefixParams = '',
     isReadyToLoad = true,
+    swrOptions,
 }: UsePaginateProps<ItemType, FetchFunctionParams>) => {
     const [pageSize, setPageSize] = useQueryState(`${prefixParams}pageSize`, parseAsInteger.withDefault(defaultPageSize));
     const [page, setPage] = useQueryState(`${prefixParams}page`, parseAsInteger.withDefault(0));
@@ -53,6 +55,7 @@ const usePaginate = <ItemType, FetchFunctionParams>({
             : null,
         // the hook supplies page/size/sortBy; the cast closes the Partial back into the full params type
         ([params]) => fetchFunction(params as FetchFunctionParams),
+        swrOptions,
     );
 
     const { page: pageObject } = data || {};

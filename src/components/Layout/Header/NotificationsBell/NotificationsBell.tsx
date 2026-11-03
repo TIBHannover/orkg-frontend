@@ -33,9 +33,7 @@ const NotificationsBell = ({ isTransparentNavbar }: NotificationsBellProps) => {
         return null;
     }
 
-    // Cancelled jobs are noise in a notification list — the drafts tab keeps
-    // the full history (there is no delete endpoint, so they never disappear).
-    const visibleJobs = jobs.filter((job) => job.status !== 'cancelled').slice(0, MAX_VISIBLE_JOBS);
+    const visibleJobs = jobs.slice(0, MAX_VISIBLE_JOBS);
 
     const handleOpenChange = (open: boolean) => {
         setIsOpen(open);

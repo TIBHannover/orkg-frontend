@@ -14,7 +14,7 @@ export type SeenStatusMap = Record<string, JobStatus>;
 const EMPTY_SEEN_MAP: SeenStatusMap = {};
 
 // Tiny external store around localStorage so every hook instance (desktop bell,
-// mobile bell, drafts tab) re-renders when one of them marks jobs as seen.
+// mobile bell) re-renders when one of them marks jobs as seen.
 let cachedSeenMap: SeenStatusMap | null = null;
 const listeners = new Set<() => void>();
 
@@ -49,9 +49,18 @@ const subscribe = (listener: () => void) => {
 
 export const isJobUnseen = (job: JobRead, seenMap: SeenStatusMap) => isJobNotable(job) && seenMap[job.id] !== job.status;
 
-// Marking all current notable jobs as seen doubles as pruning: ids no longer
-// returned by the service drop out of the map, bounding localStorage growth.
-export const buildSeenMap = (jobs: JobRead[]): SeenStatusMap => Object.fromEntries(jobs.filter(isJobNotable).map((job) => [job.id, job.status]));
+// Bounds localStorage growth; the entries recorded longest ago are dropped first.
+export const MAX_SEEN_ENTRIES = 200;
+
+// Only the most recent jobs are listed, and an older one moves back into that
+// window when a newer one is cancelled. Entries for unlisted jobs are therefore
+// kept, so such a job doesn't flag as unseen again.
+export const buildSeenMap = (jobs: JobRead[], previous: SeenStatusMap = {}): SeenStatusMap => {
+    const listedIds = new Set(jobs.map((job) => job.id));
+    const kept = Object.entries(previous).filter(([id]) => !listedIds.has(id));
+    const listed = jobs.filter(isJobNotable).map((job) => [job.id, job.status] as const);
+    return Object.fromEntries([...kept, ...listed].slice(-MAX_SEEN_ENTRIES));
+};
 
 const useAiJobsUnseen = () => {
     const { jobs } = useAiJobs();
@@ -62,7 +71,7 @@ const useAiJobsUnseen = () => {
     const isUnseen = useCallback((job: JobRead) => isJobUnseen(job, seenMap), [seenMap]);
 
     const markAllSeen = useCallback(() => {
-        writeSeenMap(buildSeenMap(jobs));
+        writeSeenMap(buildSeenMap(jobs, readSeenMap()));
     }, [jobs]);
 
     return { unseenCount, isUnseen, markAllSeen };

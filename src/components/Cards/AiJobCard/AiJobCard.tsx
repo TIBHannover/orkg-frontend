@@ -129,8 +129,8 @@ const AiJobCard: FC<AiJobCardProps> = ({ job }) => {
                 </div>
             </div>
 
-            {/* Progress stays fresh through the parent list's polling (useAiJobs
-                refreshes every 10s while a job is active) — no stream is opened here. */}
+            {/* Progress stays fresh through the parent list's polling (every 10s
+                while a listed job is active) — no stream is opened here. */}
             {isJobActive(job) && (
                 <div>
                     <ProgressBar

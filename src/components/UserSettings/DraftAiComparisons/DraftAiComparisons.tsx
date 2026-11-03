@@ -2,32 +2,68 @@
 
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Disclosure, Skeleton } from '@heroui/react';
+import { Alert, Button, Disclosure, Skeleton } from '@heroui/react';
+import type { JobRead, JobStatus } from '@orkg/agentic-loop-client';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
-import useAiJobs from '@/components/AiJobs/hooks/useAiJobs';
+import { AI_JOBS_POLL_INTERVAL, isJobActive, NON_CANCELLED_STATUSES } from '@/components/AiJobs/hooks/useAiJobs';
 import AiJobCard from '@/components/Cards/AiJobCard/AiJobCard';
+import useAuthentication from '@/components/hooks/useAuthentication';
+import usePaginate from '@/components/PaginatedContent/hooks/usePaginate';
+import PaginationControl from '@/components/PaginatedContent/PaginationControl';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { aiJobsUrl, listAiJobsPaged } from '@/services/agenticLoop/api';
+import type { Pagination } from '@/services/backend/types';
 
-// Boxed list container matching the other draft lists (ListGroup look without
-// the deprecated Ui wrapper): surface box with divider-separated rows.
+// ListGroup look without the deprecated Ui wrapper, matching the other draft lists.
 const listBoxClass = 'box m-0 flex w-full list-none flex-col divide-y divide-border overflow-hidden border border-border p-0';
 
-// Unlike the other draft tabs this doesn't use ListPage: GET /api/jobs/ returns
-// a plain unpaginated array, while ListPage is built around paginated fetchers.
+const CANCELLED_STATUSES: JobStatus[] = ['cancelled'];
+
+const DEFAULT_PAGE_SIZE = 15;
+
+// AiJobCard shows live progress for running jobs, so keep the page fresh while it lists one.
+const pollWhileActive = {
+    refreshInterval: (latest?: Pagination<JobRead>) => (latest?.content.some(isJobActive) ? AI_JOBS_POLL_INTERVAL : 0),
+};
+
+// Doesn't use ListPage: the empty state, the error alert and the collapsed
+// cancelled list don't fit its layout.
 const DraftAiComparisons = () => {
-    const { jobs, isLoading, error } = useAiJobs();
+    const { user } = useAuthentication();
+
+    // The service has no delete endpoint, so cancelled jobs accumulate forever;
+    // they are listed separately behind a disclosure instead of cluttering the list.
+    const jobs = usePaginate({
+        fetchFunction: listAiJobsPaged,
+        fetchUrl: aiJobsUrl,
+        fetchFunctionName: 'listAiJobsPaged',
+        fetchExtraParams: { status: NON_CANCELLED_STATUSES },
+        defaultPageSize: DEFAULT_PAGE_SIZE,
+        isReadyToLoad: !!user,
+        swrOptions: pollWhileActive,
+    });
+    const cancelledJobs = usePaginate({
+        fetchFunction: listAiJobsPaged,
+        fetchUrl: aiJobsUrl,
+        fetchFunctionName: 'listAiJobsPaged',
+        fetchExtraParams: { status: CANCELLED_STATUSES },
+        defaultPageSize: DEFAULT_PAGE_SIZE,
+        prefixParams: 'cancelled',
+        isReadyToLoad: !!user,
+        // the disclosure is gated on the total, so it must not collapse while another page loads
+        swrOptions: { keepPreviousData: true },
+    });
 
     useEffect(() => {
         document.title = 'Draft AI comparisons - ORKG';
     });
 
-    // The service has no delete endpoint, so cancelled jobs accumulate forever;
-    // they are collapsed behind a disclosure instead of cluttering the list.
-    const visibleJobs = jobs.filter((job) => job.status !== 'cancelled');
-    const cancelledJobs = jobs.filter((job) => job.status === 'cancelled');
+    const error = jobs.error as Error | undefined;
+    const isLoading = jobs.isLoading || !user;
+    const visibleJobs = jobs.data ?? [];
 
     return (
         <div>
@@ -72,7 +108,7 @@ const DraftAiComparisons = () => {
                     </div>
                 )}
 
-                {!error && visibleJobs.length > 0 && (
+                {!isLoading && !error && visibleJobs.length > 0 && (
                     <ul className={listBoxClass}>
                         {visibleJobs.map((job) => (
                             <AiJobCard key={job.id} job={job} />
@@ -80,21 +116,52 @@ const DraftAiComparisons = () => {
                     </ul>
                 )}
 
-                {!error && cancelledJobs.length > 0 && (
+                {!error && (jobs.totalPages ?? 0) > 1 && (
+                    <div className="mt-4">
+                        <PaginationControl
+                            page={jobs.page}
+                            setPage={jobs.setPage}
+                            totalPages={jobs.totalPages ?? 0}
+                            pageSize={jobs.pageSize}
+                            setPageSize={jobs.setPageSize}
+                            isLoading={jobs.isLoading}
+                            hasNextPage={jobs.hasNextPage}
+                            totalElements={jobs.totalElements ?? 0}
+                            boxShadow
+                        />
+                    </div>
+                )}
+
+                {!error && !!cancelledJobs.totalElements && (
                     <Disclosure className="mt-4">
                         <Disclosure.Heading>
-                            <Disclosure.Trigger className="inline-flex items-center gap-1.5 text-sm text-muted">
-                                Show cancelled ({cancelledJobs.length})
+                            <Button slot="trigger" size="sm" variant="tertiary">
+                                Show cancelled ({cancelledJobs.totalElements})
                                 <Disclosure.Indicator />
-                            </Disclosure.Trigger>
+                            </Button>
                         </Disclosure.Heading>
                         <Disclosure.Content>
                             <Disclosure.Body className="pt-3">
                                 <ul className={listBoxClass}>
-                                    {cancelledJobs.map((job) => (
+                                    {cancelledJobs.data?.map((job) => (
                                         <AiJobCard key={job.id} job={job} />
                                     ))}
                                 </ul>
+                                {(cancelledJobs.totalPages ?? 0) > 1 && (
+                                    <div className="mt-4">
+                                        <PaginationControl
+                                            prefixParams="cancelled"
+                                            page={cancelledJobs.page}
+                                            setPage={cancelledJobs.setPage}
+                                            totalPages={cancelledJobs.totalPages ?? 0}
+                                            pageSize={cancelledJobs.pageSize}
+                                            setPageSize={cancelledJobs.setPageSize}
+                                            isLoading={cancelledJobs.isLoading}
+                                            hasNextPage={cancelledJobs.hasNextPage}
+                                            totalElements={cancelledJobs.totalElements}
+                                        />
+                                    </div>
+                                )}
                             </Disclosure.Body>
                         </Disclosure.Content>
                     </Disclosure>
