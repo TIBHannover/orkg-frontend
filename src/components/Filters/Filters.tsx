@@ -1,6 +1,6 @@
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Label, Skeleton } from '@heroui/react';
+import { Button, Label, Skeleton, Tooltip } from '@heroui/react';
 import { motion } from 'motion/react';
 import { FC, Fragment, useState } from 'react';
 
@@ -91,9 +91,23 @@ const Filters: FC<FiltersProps> = ({ id }) => {
                         </motion.div>
                     )}
 
-                    <Button size="sm" variant="secondary" isIconOnly aria-label="Open all filters" onPress={() => setShowEditPanel((v) => !v)}>
-                        <FontAwesomeIcon icon={faFilter} />
-                    </Button>
+                    <Tooltip delay={0}>
+                        <Tooltip.Trigger>
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                isIconOnly
+                                aria-label="Open all filters"
+                                onPress={() => setShowEditPanel((v) => !v)}
+                            >
+                                <FontAwesomeIcon icon={faFilter} />
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content showArrow>
+                            <Tooltip.Arrow />
+                            All filters
+                        </Tooltip.Content>
+                    </Tooltip>
                 </div>
             </div>
 

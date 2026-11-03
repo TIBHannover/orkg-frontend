@@ -868,3 +868,9 @@ Example:
 .ril__image.ril-image-current:not(.ril-not-loaded) {
     background: #fff;
 }
+
+/* Idle drawer: drop translate/will-change so fixed menus use the viewport */
+.drawer__content:not([data-entering], [data-exiting]) .drawer__dialog {
+    translate: none;
+    will-change: auto;
+}
