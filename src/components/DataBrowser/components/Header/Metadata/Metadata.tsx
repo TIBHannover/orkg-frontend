@@ -1,4 +1,4 @@
-import { faArrowRight, faExternalLink, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { cn } from '@heroui/react';
 import pluralize from 'pluralize';
@@ -10,7 +10,7 @@ import Classes from '@/components/DataBrowser/components/Header/Metadata/Classes
 import Label from '@/components/DataBrowser/components/Header/Metadata/Label';
 import Templates from '@/components/DataBrowser/components/Header/Metadata/Templates';
 import useEntity from '@/components/DataBrowser/hooks/useEntity';
-import { ENTITIES } from '@/constants/graphSettings';
+import UriLink from '@/components/UriLink/UriLink';
 
 const Metadata = () => {
     const { entity } = useEntity();
@@ -38,18 +38,14 @@ const Metadata = () => {
             <div className="flex flex-wrap">
                 <Classes />
                 <Templates />
+                {entity && 'uri' in entity && entity.uri && entity.uri !== 'null' && (
+                    <BadgeTag>
+                        <UriLink uri={entity.uri} className="ml-1" />
+                    </BadgeTag>
+                )}
                 {entity && 'shared' in entity && entity.shared > 1 && (
                     <BadgeTag>
                         <FontAwesomeIcon icon={faArrowRight} className="mr-1" /> {`Referred: ${pluralize('time', entity.shared, true)}`}
-                    </BadgeTag>
-                )}
-                {entity && entity._class === ENTITIES.CLASS && 'uri' in entity && entity.uri !== null && (
-                    <BadgeTag>
-                        <FontAwesomeIcon icon={faHashtag} className="mr-1" />
-                        URI:{' '}
-                        <a href={entity.uri} target="_blank" rel="noopener noreferrer" className="ml-1">
-                            {entity.uri} <FontAwesomeIcon icon={faExternalLink} className="mr-1" />
-                        </a>
                     </BadgeTag>
                 )}
             </div>

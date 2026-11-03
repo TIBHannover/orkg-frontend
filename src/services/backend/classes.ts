@@ -6,6 +6,7 @@ import {
     ClassHierarchiesApi,
     ClassHierarchiesApiFindAllChildrenByAncestorIdRequest,
     ClassHierarchiesApiFindClassHierarchyRequest,
+    UpdateClassRequest,
 } from '@orkg/orkg-client';
 
 import { urlNoTrailingSlash } from '@/constants/misc';
@@ -22,7 +23,7 @@ export const getClassById = (id: string) => classesApi.findById({ id });
 export const createClass = (label: string, uri?: string, id?: string) =>
     classesApi.createRaw({ createClassRequest: { label, uri, id } }).then(getCreatedId);
 
-export const updateClass = (id: string, label: string) => classesApi.update({ id, updateClassRequest: { label } });
+export const updateClass = (id: string, data: UpdateClassRequest) => classesApi.update({ id, updateClassRequest: data });
 
 export const getClasses = (params: WithPaginationParams<ClassesApiFindAllRequest>) => classesApi.findAll(transformPaginationParams(params));
 

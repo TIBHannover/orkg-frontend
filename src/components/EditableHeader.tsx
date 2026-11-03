@@ -1,6 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input, Spinner, TextField, toast } from '@heroui/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
 import CuratorModal from '@/components/CuratorModal/CuratorModal';
@@ -21,6 +21,11 @@ type EditableHeaderProp = {
 
 const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, curatorsOnly = false, value }) => {
     const [label, setLabel] = useState<string>(value);
+    const [prevValue, setPrevValue] = useState(value);
+    if (value !== prevValue) {
+        setPrevValue(value);
+        setLabel(value);
+    }
     const [isLoading, setIsLoading] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [isOpenCuratorModal, setIsOpenCuratorModal] = useState(false);
@@ -34,9 +39,9 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
             if (entityType === ENTITIES.RESOURCE) {
                 await updateResource(id, { label });
             } else if (entityType === ENTITIES.PREDICATE) {
-                await updatePredicate(id, label);
+                await updatePredicate(id, { label });
             } else if (entityType === ENTITIES.CLASS) {
-                await updateClass(id, label);
+                await updateClass(id, { label });
             }
             toast.success('Label updated successfully');
             onChange(label);
@@ -49,10 +54,6 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        setLabel(value);
-    }, [value]);
 
     const handleCancelClick = () => {
         setIsEditMode(false);

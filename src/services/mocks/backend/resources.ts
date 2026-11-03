@@ -49,10 +49,11 @@ const resources = [
         return HttpResponse.json({ ...resource, classes: resource.classes.split(',').filter((c) => c !== '') });
     }),
     http.post(resourcesUrl, async ({ request }: { request: Request }) => {
-        const { label, classes } = await request.json();
+        const { label, classes, uri } = await request.json();
         const newResource = await createMSWResource({
             label,
             classes,
+            uri,
         });
         return new HttpResponse(null, {
             headers: {

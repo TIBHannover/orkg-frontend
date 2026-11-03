@@ -1,4 +1,4 @@
-import { PredicatesApi, PredicatesApiFindAllRequest } from '@orkg/orkg-client';
+import { PredicatesApi, PredicatesApiFindAllRequest, UpdatePredicateRequest } from '@orkg/orkg-client';
 
 import { urlNoTrailingSlash } from '@/constants/misc';
 import { configuration, getCreatedId, transformPaginationParams } from '@/services/backend/backendApi';
@@ -12,10 +12,10 @@ export const getPredicate = (id: string) => predicatesApi.findById({ id });
 
 export const getPredicatesByIds = (ids: string[]): Promise<Predicate[]> => Promise.all(ids.map((id) => getPredicate(id)));
 
-export const createPredicate = (label: string, id: string | undefined = undefined) =>
-    predicatesApi.createRaw({ createPredicateRequest: { label, id } }).then(getCreatedId);
+export const createPredicate = (label: string, id: string | undefined = undefined, uri: string | undefined = undefined) =>
+    predicatesApi.createRaw({ createPredicateRequest: { label, id, uri } }).then(getCreatedId);
 
-export const updatePredicate = (id: string, label: string) => predicatesApi.update({ id, updatePredicateRequest: { label } });
+export const updatePredicate = (id: string, data: UpdatePredicateRequest) => predicatesApi.update({ id, updatePredicateRequest: data });
 
 export const deletePredicate = (id: string) => predicatesApi.deleteById({ id });
 

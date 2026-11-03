@@ -55,6 +55,7 @@ const resourceSchema = z.object({
     ...provenanceObservatory,
     ...contentType,
     label: z.string().default(''),
+    uri: z.string().nullable().default(null),
     // it's a string because @msw/data queries values as-is, and comparing arrays is not supported
     classes: z.string().default(''),
     shared: z.number().default(0),

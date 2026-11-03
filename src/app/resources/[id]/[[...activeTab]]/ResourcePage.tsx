@@ -18,10 +18,11 @@ import ItemMetadata from '@/components/ItemMetadata/ItemMetadata';
 import getPreventEditCase, { PreventEditCase } from '@/components/Resource/hooks/preventEditing';
 import PreventModal from '@/components/Resource/PreventModal/PreventModal';
 import TabsContainer from '@/components/Resource/Tabs/TabsContainer';
+import SetEntityUriButton from '@/components/SetEntityUri/SetEntityUriButton/SetEntityUriButton';
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';
 import useIsEditMode from '@/components/Utils/hooks/useIsEditMode';
-import { CLASSES } from '@/constants/graphSettings';
+import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { getStatusCode } from '@/services/backend/problemDetails';
@@ -140,9 +141,18 @@ const ResourcePage: FC<ResourcePageProps> = ({ contentType, id }) => {
                                 showCreatedBy
                                 showProvenance
                                 showExtractionMethod
+                                showUri
                                 editMode={isEditMode}
                                 updateCallBack={() => mutate()}
-                            />
+                            >
+                                <SetEntityUriButton
+                                    entityId={id}
+                                    entityType={ENTITIES.RESOURCE}
+                                    uri={resource.uri}
+                                    isEditMode={isEditMode}
+                                    onUpdated={() => mutate()}
+                                />
+                            </ItemMetadata>
                         </div>
                     </Container>
                     <TabsContainer resource={resource} id={id} editMode={isEditMode} contentType={contentType} />
