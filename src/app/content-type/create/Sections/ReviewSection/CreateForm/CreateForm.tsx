@@ -9,6 +9,7 @@ import RequireAuthentication from '@/components/RequireAuthentication/RequireAut
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createReview } from '@/services/backend/reviews';
 
 const CreateForm = () => {
@@ -33,7 +34,7 @@ const CreateForm = () => {
             const id = await createReview({ title, researchFields: ['R11'] });
             router.push(`${reverse(ROUTES.REVIEW, { id })}?isEditMode=true`);
         } catch (error: unknown) {
-            toast.danger('An error occurred while creating the review');
+            toast.danger(`An error occurred while creating the review: ${await getBackendErrorMessage(error, 'please try again')}`);
         } finally {
             setIsLoading(false);
         }

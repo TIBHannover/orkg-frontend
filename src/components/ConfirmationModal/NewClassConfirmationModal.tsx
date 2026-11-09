@@ -5,6 +5,8 @@ import { ActionMeta, SingleValue } from 'react-select';
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import CopyIdButton from '@/components/Autocomplete/ValueButtons/CopyIdButton';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import { collectServerErrors } from '@/components/Form/utils/applyServerErrors';
 import { ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import REGEX from '@/constants/regex';
@@ -12,7 +14,8 @@ import { createClass, getClassById, setParentClassByID } from '@/services/backen
 import { createLiteral } from '@/services/backend/literals';
 import { createLiteralStatement } from '@/services/backend/statements';
 import { Class } from '@/services/backend/types';
-import { getErrorMessage } from '@/utils';
+
+const CREATE_CLASS_FALLBACK_ERROR = 'Something went wrong while creating the class, please try again';
 
 type NewClassConfirmationModalProps = {
     label: string;
@@ -26,7 +29,7 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
     const [uri, setUri] = useState(newUri || (isURI ? newLabel.trim() : ''));
     const [label, setLabel] = useState(isURI ? '' : newLabel.trim());
     const [parentClass, setParentClass] = useState<SingleValue<OptionType> | null>(null);
-    const [errors, setErrors] = useState<unknown>(null);
+    const [errors, setErrors] = useState<{ label?: string; uri?: string; root?: string } | null>(null);
     const [description, setDescription] = useState('');
 
     const handleConfirm = async () => {
@@ -43,7 +46,7 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
             const newClassId = await createClass(label, uri || undefined);
             if (description && description.trim() !== '') {
                 const descriptionLiteralId = await createLiteral(description);
-                createLiteralStatement(newClassId, PREDICATES.DESCRIPTION, descriptionLiteralId);
+                await createLiteralStatement(newClassId, PREDICATES.DESCRIPTION, descriptionLiteralId);
             }
             if (parentClass) {
                 await setParentClassByID(newClassId, parentClass.id);
@@ -52,7 +55,8 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
             onClose(newClass);
             setErrors(null);
         } catch (error) {
-            setErrors(error);
+            const { fields, root } = await collectServerErrors(error, ['label', 'uri'], CREATE_CLASS_FALLBACK_ERROR);
+            setErrors({ ...fields, root });
         }
     };
 
@@ -64,7 +68,8 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
         }
     };
 
-    const uriError = errors ? getErrorMessage(errors as object, 'uri') : null;
+    const labelError = errors?.label;
+    const uriError = errors?.uri;
 
     return (
         <Modal.Backdrop
@@ -90,9 +95,12 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
                                 Often there are existing classes that you can use as well. It is better to use existing classes than new ones.
                             </p>
 
+                            <FormRootError title="Could not create the class" message={errors?.root} />
+
                             <TextField
                                 fullWidth
                                 isDisabled={!isURI}
+                                isInvalid={Boolean(labelError)}
                                 value={label}
                                 onChange={setLabel}
                                 maxLength={MAX_LENGTH_INPUT}
@@ -100,6 +108,7 @@ const NewClassConfirmationModal = ({ label: newLabel, uri: newUri, onClose, show
                             >
                                 <Label htmlFor="labelInput">Label</Label>
                                 <Input id="labelInput" name="label" type="text" />
+                                {labelError && <FieldError>{labelError}</FieldError>}
                             </TextField>
 
                             <TextField fullWidth value={uri} onChange={setUri} isInvalid={Boolean(uriError)} className="flex flex-col gap-1">

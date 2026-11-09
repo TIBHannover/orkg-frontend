@@ -24,6 +24,7 @@ import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { createClass, getClassById } from '@/services/backend/classes';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createTemplate } from '@/services/backend/templates';
 import { getLinkByEntityType } from '@/utils';
 
@@ -67,8 +68,8 @@ const TemplateNew = () => {
                 try {
                     const newClassId = await createClass(`${label} [C]`);
                     targetClassId = newClassId;
-                } catch (e: any) {
-                    toast.danger(e.message);
+                } catch (e: unknown) {
+                    toast.danger(await getBackendErrorMessage(e, 'please try again'));
                     setIsSaving(false);
                     return;
                 }
@@ -88,8 +89,8 @@ const TemplateNew = () => {
             } else {
                 throw new Error('Failed to create template');
             }
-        } catch (e: any) {
-            toast.danger(e.message || 'Failed to create template');
+        } catch (e: unknown) {
+            toast.danger(await getBackendErrorMessage(e, 'Failed to create template'));
             setIsSaving(false);
         }
     };

@@ -1,12 +1,10 @@
-import capitalize from 'capitalize';
 import { unescape } from 'he';
-import { isNaN, isString, sortBy } from 'lodash';
+import { isNaN, isString } from 'lodash';
 import { env } from 'next-runtime-env';
 
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
-import { normalizeProblemDetails, pointerToFieldPath } from '@/services/backend/problemDetails';
 import { getStatements } from '@/services/backend/statements';
 
 export const guid = () => {
@@ -18,48 +16,19 @@ export const guid = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
 
-export const range = (start, end) => [...Array(1 + end - start).keys()].map((v) => start + v);
-
-/**
- * Parse an already-parsed error response body (RFC 9457 problem details, originating
- * from the server) by field name.
- *
- * Not specifying a `field` returns the occurrence-level message (`detail`/`title`,
- * with a fallback to the deprecated `message`). With a `field` it returns the matching
- * field error's message, matching on the `pointer`-derived path or the deprecated `field`.
- *
- * @param {Object} errors
- * @param {String} field
- */
-export const getErrorMessage = (errors, field = null) => {
-    if (!errors) {
-        return null;
-    }
-    const problem = normalizeProblemDetails(errors);
-    if (field === null) {
-        const message = problem?.detail ?? problem?.title ?? errors.message;
-        return message ? message?.replace?.('Predicate', 'Property') : null;
-    }
-    const fieldError = problem?.errors.find((e) => pointerToFieldPath(e.pointer) === field);
-    return fieldError?.detail ? capitalize(fieldError.detail).replace('Predicate', 'Property') : null;
-};
-
 /**
  * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
- * @param {String} classID Class ID
- * @param {String} subjectID Subject ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
+ * @param {String} classID Class ID
  */
-export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null, subjectID = null) => {
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
         return isUnique ? null : [];
     }
-    let result = statementsArray.filter(
-        (statement) => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
-    );
+    let result = statementsArray.filter((statement) => statement.predicate.id === predicateID);
     if (classID) {
         result = statementsArray.filter((statement) => statement.object.classes && statement.object.classes.includes(classID));
     }
@@ -70,31 +39,6 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
         return result.map((s) => ({ ...s.object, statementId: s.id }));
     }
     return isUnique ? null : [];
-};
-
-export const getAuthorsInList = ({ resourceId, statements }) => {
-    const sortedStatements = sortBy(statements ?? [], 'index');
-    const authorList = filterObjectOfStatementsByPredicateAndClass(
-        sortedStatements.filter((s) => s.subject.id === resourceId),
-        PREDICATES.HAS_AUTHORS,
-        false,
-    );
-    const authorListId = authorList?.[0]?.id;
-    if (!authorListId) {
-        return [];
-    }
-    const authors = filterObjectOfStatementsByPredicateAndClass(sortedStatements, PREDICATES.HAS_LIST_ELEMENT, false, null, authorListId);
-
-    const authorsArray = [];
-    for (const author of authors) {
-        const orcid = sortedStatements.find((s) => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
-        if (orcid) {
-            authorsArray.push({ ...author, orcid: orcid.object.label });
-        } else {
-            authorsArray.push({ ...author, orcid: '' });
-        }
-    }
-    return authorsArray ?? [];
 };
 
 export const getAuthorStatements = async (statements) => {
@@ -178,31 +122,6 @@ export const sortMethod = (a, b) => {
     }
     // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
     return 0;
-};
-
-/**
- * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
- *
- * @param {Array} statementsArray Array of statements
- * @param {String} predicateID Predicate ID
- * @param {Boolean} isUnique if this predicate is unique and has one value
- * @param {String} classID class ID
- */
-export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
-    if (!statementsArray) {
-        return isUnique ? null : [];
-    }
-    let result = statementsArray.filter((statement) => statement.predicate.id === predicateID);
-    if (classID) {
-        result = statementsArray.filter((statement) => statement.subject.classes && statement.subject.classes.includes(classID));
-    }
-    if (result.length > 0 && isUnique) {
-        return { ...result[0].subject, statementId: result[0].id };
-    }
-    if (result.length > 0 && !isUnique) {
-        return result.map((s) => ({ ...s.subject, statementId: s.id }));
-    }
-    return isUnique ? null : [];
 };
 
 export function convertTreeToFlat(treeStructure, childrenAttribute = 'versions') {

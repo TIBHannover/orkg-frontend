@@ -20,6 +20,7 @@ import REGEX from '@/constants/regex';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { createConference, getConferenceById } from '@/services/backend/conferences-series';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { getPublicUrl } from '@/utils';
 
 const AddConference = () => {
@@ -83,8 +84,7 @@ const AddConference = () => {
             navigateToConference(conference.display_id);
         } catch (error) {
             console.error(error);
-            const message = error instanceof Error ? error.message : 'Unknown error';
-            toast.danger(`Error creating conference series ${message}`);
+            toast.danger(`Error creating conference series ${await getBackendErrorMessage(error, 'Unknown error')}`);
         } finally {
             setIsLoading(false);
         }

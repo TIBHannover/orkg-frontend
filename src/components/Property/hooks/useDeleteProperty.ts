@@ -5,8 +5,17 @@ import { useState } from 'react';
 import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
 import { deletePredicate as deletePredicateNetwork } from '@/services/backend/predicates';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 
-function useDeleteProperty({ propertyId, redirect = false }) {
+type UseDeletePropertyParams = {
+    propertyId: string;
+    redirect?: boolean;
+};
+
+const useDeleteProperty = ({
+    propertyId,
+    redirect = false,
+}: UseDeletePropertyParams): { deleteProperty: () => Promise<void>; isLoading: boolean } => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +35,7 @@ function useDeleteProperty({ propertyId, redirect = false }) {
                     router.push(ROUTES.PROPERTIES);
                 }
             } catch (err) {
-                toast.danger(err.message);
+                toast.danger(await getBackendErrorMessage(err, 'Something went wrong while deleting the property'));
             }
 
             setIsLoading(false);
@@ -34,5 +43,5 @@ function useDeleteProperty({ propertyId, redirect = false }) {
     };
 
     return { deleteProperty, isLoading };
-}
+};
 export default useDeleteProperty;

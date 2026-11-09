@@ -1,6 +1,6 @@
 import { ResponseError } from '@orkg/orkg-client';
 
-import { normalizeProblemDetails, parseProblemDetails, pointerToFieldPath } from '@/services/backend/problemDetails';
+import { getBackendErrorMessage, normalizeProblemDetails, parseProblemDetails, pointerToFieldPath } from '@/services/backend/problemDetails';
 
 describe('pointerToFieldPath', () => {
     it('strips the leading slash for a top-level field', () => {
@@ -121,5 +121,51 @@ describe('parseProblemDetails', () => {
     it('returns null when the response body is not valid JSON', async () => {
         const error = new ResponseError(new Response('<html>oops</html>', { status: 500 }));
         await expect(parseProblemDetails(error)).resolves.toBeNull();
+    });
+});
+
+describe('getBackendErrorMessage', () => {
+    const responseError = (json: unknown) => new ResponseError(new Response(JSON.stringify(json), { status: 400 }));
+
+    it('reads field errors from an unread ResponseError', async () => {
+        const error = responseError({
+            title: 'Bad Request',
+            status: 400,
+            errors: [{ pointer: '#/label', detail: 'A label must not be blank or contain newlines.' }],
+        });
+        await expect(getBackendErrorMessage(error, 'fallback')).resolves.toBe('A label must not be blank or contain newlines.');
+    });
+
+    it('joins several field errors', async () => {
+        const error = responseError({
+            errors: [
+                { pointer: '#/label', detail: 'must not be blank' },
+                { pointer: '#/uri', detail: 'must be a valid URI' },
+            ],
+        });
+        await expect(getBackendErrorMessage(error, 'fallback')).resolves.toBe('must not be blank must be a valid URI');
+    });
+
+    it('falls back to the occurrence detail when there are no field errors', async () => {
+        const error = responseError({ type: 'orkg:problem:forbidden', title: 'Forbidden', status: 403, detail: 'Not allowed' });
+        await expect(getBackendErrorMessage(error, 'fallback')).resolves.toBe('Not allowed');
+    });
+
+    it('reads an already-parsed ky body', async () => {
+        await expect(getBackendErrorMessage({ title: 'Bad Request', detail: 'Name is taken' }, 'fallback')).resolves.toBe('Name is taken');
+    });
+
+    it('rewrites Predicate as Property', async () => {
+        await expect(getBackendErrorMessage({ detail: 'Predicate label already exists' }, 'fallback')).resolves.toBe('Property label already exists');
+    });
+
+    it('keeps a plain Error message', async () => {
+        await expect(getBackendErrorMessage(new Error('Please enter a title'), 'fallback')).resolves.toBe('Please enter a title');
+    });
+
+    it('uses the fallback for an unreadable ResponseError and for unknown values', async () => {
+        const error = new ResponseError(new Response('<html>oops</html>', { status: 500 }));
+        await expect(getBackendErrorMessage(error, 'please try again')).resolves.toBe('please try again');
+        await expect(getBackendErrorMessage('boom', 'please try again')).resolves.toBe('please try again');
     });
 });

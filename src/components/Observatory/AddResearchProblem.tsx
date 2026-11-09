@@ -5,6 +5,7 @@ import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import { OptionType } from '@/components/Autocomplete/types';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import { CLASSES, ENTITIES, MISC } from '@/constants/graphSettings';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { updateResource } from '@/services/backend/resources';
 
 type AddResearchProblemProps = {
@@ -32,7 +33,7 @@ const AddResearchProblem: FC<AddResearchProblemProps> = ({ showDialog, toggle, i
             setProblem(null);
         } catch (error: unknown) {
             console.error(error);
-            toast.danger(`Error updating an observatory ${error instanceof Error ? error.message : 'Unknown error'}`);
+            toast.danger(`Error updating an observatory ${await getBackendErrorMessage(error, 'Unknown error')}`);
         } finally {
             setIsSaving(false);
         }

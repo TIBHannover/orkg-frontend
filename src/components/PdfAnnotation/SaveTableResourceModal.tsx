@@ -8,6 +8,7 @@ import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading'
 import useMembership from '@/components/hooks/useMembership';
 import { MISC } from '@/constants/graphSettings';
 import { EXTRACTION_METHODS } from '@/constants/misc';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createTable } from '@/services/backend/tables';
 import { NewResource } from '@/services/backend/types';
 import { setAnnotationTableSaved, setAnnotationView } from '@/slices/pdfAnnotationSlice';
@@ -78,11 +79,7 @@ const SaveTableResourceModal = ({ isOpen, toggle, id }: SaveTableResourceModalPr
             dispatch(setAnnotationView({ id, view: 'done' }));
             toggle();
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                toast.danger(error.message);
-            } else {
-                toast.danger('An unknown error occurred');
-            }
+            toast.danger(await getBackendErrorMessage(error, 'An unknown error occurred'));
         } finally {
             setIsLoading(false);
         }

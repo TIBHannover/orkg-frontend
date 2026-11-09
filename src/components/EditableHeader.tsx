@@ -9,6 +9,7 @@ import { ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateClass } from '@/services/backend/classes';
 import { updatePredicate } from '@/services/backend/predicates';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { updateResource } from '@/services/backend/resources';
 
 type EditableHeaderProp = {
@@ -47,9 +48,7 @@ const EditableHeader: FC<EditableHeaderProp> = ({ entityType, id, onChange, cura
             onChange(label);
             setIsEditMode(false);
         } catch (error) {
-            if (error instanceof Error) {
-                toast.danger(`Error updating resource : ${error.message}`);
-            }
+            toast.danger(`Error updating resource : ${await getBackendErrorMessage(error, 'please try again')}`);
         } finally {
             setIsLoading(false);
         }

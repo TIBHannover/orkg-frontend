@@ -254,4 +254,4 @@ return (
 );
 ```
 
-The underlying parser (`parseProblemDetails` / `normalizeProblemDetails` in `@/services/backend/problemDetails`) normalizes the RFC 9457 body across both HTTP transports (the `@orkg/orkg-client` `ResponseError` and `ky`), reading the new fields with a fallback to the deprecated ones (`error`/`path`/`timestamp`/`errors[].field`). The shared `errorHandler` (`@/helpers/errorHandler`) and `getErrorMessage` (`@/utils`) helpers build on the same normalizer. `src/components/Organization/EditOrganization.tsx` is the reference implementation.
+The underlying parser (`parseProblemDetails` / `normalizeProblemDetails` in `@/services/backend/problemDetails`) normalizes the RFC 9457 body across both HTTP transports (the `@orkg/orkg-client` `ResponseError` and `ky`), reading the new fields with a fallback to the deprecated ones (`error`/`path`/`timestamp`/`errors[].field`). The shared `errorHandler` (`@/helpers/errorHandler`) and `getBackendErrorMessage` (`@/services/backend/problemDetails`) helpers build on the same normalizer. `src/components/Organization/EditOrganization.tsx` is the reference implementation.

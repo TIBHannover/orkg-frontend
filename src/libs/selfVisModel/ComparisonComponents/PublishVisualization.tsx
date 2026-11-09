@@ -12,6 +12,7 @@ import { PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
 import SelfVisDataModel from '@/libs/selfVisModel/SelfVisDataModel';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createResourceStatement } from '@/services/backend/statements';
 import { Author } from '@/services/backend/types';
 import { createVisualization } from '@/services/backend/visualizations';
@@ -87,7 +88,7 @@ const PublishVisualization: FC<PublishVisualizationProps> = ({ showDialog, toggl
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (createThing as any)({ thingType: THING_TYPES.VISUALIZATION, thingKey: resourceId, data: model });
         } catch (error) {
-            toast.danger(`Error publishing a visualization : ${(error as Error).message}`);
+            toast.danger(`Error publishing a visualization : ${await getBackendErrorMessage(error, 'please try again')}`);
         }
     };
 
@@ -125,7 +126,7 @@ const PublishVisualization: FC<PublishVisualizationProps> = ({ showDialog, toggl
             mutate();
             closeAllAndReloadVisualizations();
         } catch (error) {
-            toast.danger(`Error publishing a visualization : ${(error as Error).message}`);
+            toast.danger(`Error publishing a visualization : ${await getBackendErrorMessage(error, 'please try again')}`);
         } finally {
             setIsLoading(false);
         }
