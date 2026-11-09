@@ -2,7 +2,7 @@
 
 import { faCheck, faClipboard, faExternalLinkAlt, faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Card, Description, Form, Input, Label, TextField, toast, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, Card, Description, FieldError, Form, Input, Label, TextField, toast, Tooltip } from '@heroui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -13,6 +13,8 @@ import { OptionType } from '@/components/Autocomplete/types';
 import TreeSelector from '@/components/Autocomplete/ValueButtons/TreeSelector';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ConfirmClass from '@/components/ConfirmationModal/ConfirmationModal';
+import FormRootError from '@/components/Form/FormRootError/FormRootError';
+import { collectServerErrors } from '@/components/Form/utils/applyServerErrors';
 import useAuthentication from '@/components/hooks/useAuthentication';
 import useCopyWithFeedback from '@/components/hooks/useCopyWithFeedback';
 import TitleBar from '@/components/TitleBar/TitleBar';
@@ -24,7 +26,7 @@ import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { createClass, setParentClassByID } from '@/services/backend/classes';
-import { getErrorMessage, getLinkByEntityType } from '@/utils';
+import { getLinkByEntityType } from '@/utils';
 
 const CreateClassPage = () => {
     const isURI = new RegExp(REGEX.URL);
@@ -33,6 +35,7 @@ const CreateClassPage = () => {
     const [parentClass, setParentClass] = useState<SingleValue<OptionType>>(null);
     const parentClassAutocompleteRef = useRef<SelectInstance<OptionType | null>>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState<{ label?: string; uri?: string; root?: string }>({});
     const { isCopied, copy } = useCopyWithFeedback();
     const router = useRouter();
 
@@ -44,6 +47,7 @@ const CreateClassPage = () => {
 
     const submitCreateClass = async () => {
         setIsLoading(true);
+        setErrors({});
         if (label.trim() !== '') {
             if (uri && !isURI.test(uri.trim())) {
                 toast.danger('Please enter a valid URI of the class');
@@ -66,7 +70,12 @@ const CreateClassPage = () => {
             } catch (error) {
                 console.error(error);
                 setIsLoading(false);
-                toast.danger(`${getErrorMessage(error as object, 'uri')}`);
+                const { fields, root } = await collectServerErrors(
+                    error,
+                    ['label', 'uri'],
+                    'Something went wrong while creating the class, please try again',
+                );
+                setErrors({ ...fields, root });
             }
         } else {
             setIsLoading(false);
@@ -135,7 +144,9 @@ const CreateClassPage = () => {
                                 void submitCreateClass();
                             }}
                         >
-                            <TextField fullWidth isDisabled={isLoading} name="value">
+                            <FormRootError title="Could not create the class" message={errors.root} />
+
+                            <TextField fullWidth isDisabled={isLoading} isInvalid={Boolean(errors.label)} name="value">
                                 <Label htmlFor="classLabel">Class label</Label>
                                 <Input
                                     id="classLabel"
@@ -144,16 +155,21 @@ const CreateClassPage = () => {
                                     value={label}
                                     onChange={(ev) => setLabel(ev.target.value)}
                                 />
+                                {errors.label && <FieldError>{errors.label}</FieldError>}
                             </TextField>
 
-                            <TextField fullWidth name="uri">
+                            <TextField fullWidth isInvalid={Boolean(errors.uri)} name="uri">
                                 <Label htmlFor="URIInput">
                                     URI <span className="text-muted font-normal italic">(optional)</span>
                                 </Label>
                                 <Input id="URIInput" type="url" value={uri} onChange={(ev) => setUri(ev.target.value)} />
-                                <Description>
-                                    Please provide the URI of the class if you are using a class defined in an external ontology
-                                </Description>
+                                {errors.uri ? (
+                                    <FieldError>{errors.uri}</FieldError>
+                                ) : (
+                                    <Description>
+                                        Please provide the URI of the class if you are using a class defined in an external ontology
+                                    </Description>
+                                )}
                             </TextField>
 
                             <div className="flex flex-col gap-1">

@@ -7,9 +7,9 @@ import useMembership from '@/components/hooks/useMembership';
 import { Author, PublishedIn, ResearchField } from '@/components/PaperForm/types';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { createPaper } from '@/services/backend/papers';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement, getStatements } from '@/services/backend/statements';
-import { getErrorMessage } from '@/utils';
 
 type UseAddPaperArgs = {
     onCreate?: (args: { paperId: string; contributionId: string }) => void;
@@ -71,7 +71,7 @@ const useAddPaper = ({ onCreate }: UseAddPaperArgs = {}) => {
             onCreate?.({ paperId, contributionId: contributionId as string });
         } catch (e) {
             console.error(e);
-            toast.danger(`Something went wrong while saving this paper: ${getErrorMessage(e as object) ?? ''}`);
+            toast.danger(`Something went wrong while saving this paper: ${await getBackendErrorMessage(e, 'please try again')}`);
             setIsLoading(false);
         }
     };

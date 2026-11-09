@@ -7,6 +7,7 @@ import useUsedTemplates from '@/components/hooks/useUsedTemplates';
 import ModalWithLoading from '@/components/ModalWithLoading/ModalWithLoading';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createSnapshot, resourcesUrl } from '@/services/backend/resources';
 import { Resource } from '@/services/backend/types';
 
@@ -39,7 +40,7 @@ const PublishResourceModal: FC<PublishResourceModalProps> = ({ toggle, resource 
 
             toast.success('Resource published successfully');
         } catch (e) {
-            toast.danger('An error occurred while publishing the resource');
+            toast.danger(`An error occurred while publishing the resource: ${await getBackendErrorMessage(e, 'please try again')}`);
         } finally {
             setIsLoadingPublishing(false);
         }

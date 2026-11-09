@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Confirm from '@/components/Confirmation/Confirmation';
 import ROUTES from '@/constants/routes';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { deleteResource as deleteResourceNetwork } from '@/services/backend/resources';
 
 function useDeleteResource({ resourceId, redirect = false }: { resourceId: string; redirect?: boolean }) {
@@ -27,7 +28,7 @@ function useDeleteResource({ resourceId, redirect = false }: { resourceId: strin
                 }
             } catch (err) {
                 console.error(err);
-                toast.danger((err as Error).message);
+                toast.danger(await getBackendErrorMessage(err, 'Something went wrong while deleting the resource'));
             }
 
             setIsLoading(false);

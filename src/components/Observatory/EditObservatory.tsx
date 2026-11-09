@@ -8,6 +8,7 @@ import SdgBox from '@/components/SustainableDevelopmentGoals/SdgBox';
 import { CLASSES, ENTITIES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import { updateObservatory } from '@/services/backend/observatories';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { Node } from '@/services/backend/types';
 
 type EditObservatoryProps = {
@@ -66,11 +67,7 @@ const EditObservatory: FC<EditObservatoryProps> = ({
             });
         } catch (error: unknown) {
             console.error(error);
-            if (error instanceof Error) {
-                toast.danger(`Error updating an observatory: ${error.message}`);
-            } else {
-                toast.danger('Error updating an observatory');
-            }
+            toast.danger(`Error updating an observatory: ${await getBackendErrorMessage(error, 'please try again')}`);
         } finally {
             setIsLoading(false);
         }

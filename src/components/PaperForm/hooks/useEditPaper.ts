@@ -6,6 +6,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import { Author, PublishedIn, ResearchField } from '@/components/PaperForm/types';
 import REGEX from '@/constants/regex';
 import { getPaper, updatePaper } from '@/services/backend/papers';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { Paper, UpdatePaperParams } from '@/services/backend/types';
 
 type UseEditPaperArgs = {
@@ -91,7 +92,7 @@ const useEditPaper = ({ paperData, afterUpdate }: UseEditPaperArgs) => {
             }
         } catch (e) {
             console.error(e);
-            toast.danger('Something went wrong while saving the paper');
+            toast.danger(`Something went wrong while saving the paper: ${await getBackendErrorMessage(e, 'please try again')}`);
         } finally {
             setIsLoadingEdit(false);
         }

@@ -7,8 +7,9 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import { FILTER_SOURCE } from '@/constants/filters';
 import { FILTERS_LOCAL_STORAGE_KEY } from '@/constants/localStorageKeys';
 import { createFiltersInObservatory, deleteFilterOfObservatory, updateFiltersOfObservatory } from '@/services/backend/observatories';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { FilterConfig } from '@/services/backend/types';
-import { getErrorMessage, guid } from '@/utils';
+import { guid } from '@/utils';
 import { asyncLocalStorage } from '@/utilsTyped';
 
 const useCurateFilters = ({
@@ -36,13 +37,13 @@ const useCurateFilters = ({
         setIsSaving(true);
         if (isCurationAllowed && filter.persisted) {
             if (filterId) {
-                await updateFiltersOfObservatory(oId, filterId, filter).catch((e) => {
-                    toast.danger(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
+                await updateFiltersOfObservatory(oId, filterId, filter).catch(async (e) => {
+                    toast.danger(`Something went wrong while saving the filter! ${await getBackendErrorMessage(e, 'please try again')}`);
                     setIsSaving(false);
                 });
             } else {
-                await createFiltersInObservatory(oId, filter).catch((e) => {
-                    toast.danger(`Something went wrong while saving the filter! ${getErrorMessage(e) ?? e?.message}`);
+                await createFiltersInObservatory(oId, filter).catch(async (e) => {
+                    toast.danger(`Something went wrong while saving the filter! ${await getBackendErrorMessage(e, 'please try again')}`);
                     setIsSaving(false);
                 });
             }

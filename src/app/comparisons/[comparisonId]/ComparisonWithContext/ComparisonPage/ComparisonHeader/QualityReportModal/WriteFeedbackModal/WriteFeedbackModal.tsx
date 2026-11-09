@@ -9,6 +9,7 @@ import useAuthentication from '@/components/hooks/useAuthentication';
 import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import { MAX_LENGTH_INPUT } from '@/constants/misc';
 import THING_TYPES from '@/constants/thingTypes';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createResource } from '@/services/backend/resources';
 import { createResourceStatement } from '@/services/backend/statements';
 import { createThing } from '@/services/simcomp';
@@ -58,8 +59,8 @@ const WriteFeedbackModal: FC<WriteFeedbackModalProps> = ({ toggle }) => {
             createThing({ thingType: THING_TYPES.QUALITY_REVIEW, thingKey: feedbackResourceId, data });
             setIsSubmitted(true);
         } catch (e) {
-            toast.danger('Something went wrong');
-            console.log(e);
+            console.error(e);
+            toast.danger(`Something went wrong: ${await getBackendErrorMessage(e, 'please try again')}`);
         } finally {
             setIsLoading(false);
         }

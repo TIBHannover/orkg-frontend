@@ -10,8 +10,8 @@ import { EXTRACTION_METHODS } from '@/constants/misc';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { publishComparison } from '@/services/backend/comparisons';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { deleteStatementById, setStatementsExtractionMethod } from '@/services/backend/statements';
-import { getErrorMessage } from '@/utils';
 
 function usePublish() {
     const [shouldAssignDoi, setShouldAssignDoi] = useState(false);
@@ -80,7 +80,7 @@ function usePublish() {
             }
         } catch (error: unknown) {
             console.error(error);
-            toast.danger(`Error publishing a comparison : ${error instanceof Error ? getErrorMessage(error) : 'Unknown error'}`);
+            toast.danger(`Error publishing a comparison : ${await getBackendErrorMessage(error, 'Unknown error')}`);
             setIsLoading(false);
         }
     };

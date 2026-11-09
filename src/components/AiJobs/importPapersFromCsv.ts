@@ -12,7 +12,7 @@ import {
     startCsvImport,
     startCsvValidation,
 } from '@/services/backend/csvs';
-import { parseProblemDetails } from '@/services/backend/problemDetails';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { getStatements, setStatementsExtractionMethod } from '@/services/backend/statements';
 
 const POLL_INTERVAL_MS = 2000;
@@ -21,15 +21,6 @@ const POLL_INTERVAL_MS = 2000;
 const POLL_TIMEOUT_MS = 10 * 60 * 1000;
 
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-// Pulls a human-readable message out of a backend RFC 9457 problem+json error response.
-const extractProblemMessage = async (error: unknown, fallback: string): Promise<string> => {
-    const problem = await parseProblemDetails(error);
-    if (problem) {
-        return problem.detail ?? problem.title ?? fallback;
-    }
-    return error instanceof Error ? error.message : fallback;
-};
 
 // Polls a CSV job status endpoint until it reaches a terminal state (DONE/FAILED/STOPPED)
 // and returns that status. Throws only when the timeout elapses.
@@ -62,7 +53,7 @@ const getValidationErrorMessage = async (id: string): Promise<string> => {
         await getCsvValidationResults(id);
         return 'CSV validation failed';
     } catch (error) {
-        return extractProblemMessage(error, 'CSV validation failed');
+        return getBackendErrorMessage(error, 'CSV validation failed');
     }
 };
 

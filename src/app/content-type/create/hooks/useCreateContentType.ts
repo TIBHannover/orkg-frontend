@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react';
 import { CLASSES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createResource, getResource } from '@/services/backend/resources';
 
 const CLASS_ID_TO_CLASSES = {
@@ -28,7 +29,7 @@ const useCreateContentType = (classId: string) => {
         } catch (error) {
             console.error(error);
             setIsLoading(false);
-            toast.danger(`Error creating resource : ${(error as Error).message}`);
+            toast.danger(`Error creating resource : ${await getBackendErrorMessage(error, 'please try again')}`);
         }
     };
 

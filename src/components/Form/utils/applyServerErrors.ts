@@ -80,4 +80,39 @@ const applyServerErrorsToForm = async <T extends FieldValues>(
     return true;
 };
 
+export type CollectedServerErrors = {
+    /** Inline messages keyed by form field, for the fields listed in `knownFields`. */
+    fields: Partial<Record<string, string>>;
+    /** Form-level message (unmapped field errors, non-field problems, or `fallbackMessage`). */
+    root?: string;
+};
+
+/**
+ * Variant of {@link applyServerErrorsToForm} for components that keep their own state
+ * instead of react-hook-form. Same mapping rules, but the result is returned as a plain
+ * object. `root` is set to `fallbackMessage` when the error is not a backend problem
+ * response (e.g. a network failure).
+ */
+export const collectServerErrors = async (
+    error: unknown,
+    knownFields: readonly string[],
+    fallbackMessage: string,
+): Promise<CollectedServerErrors> => {
+    const result: CollectedServerErrors = { fields: {} };
+    const handled = await applyServerErrorsToForm<Record<string, string>>(error, {
+        setError: (name, fieldError) => {
+            if (name === 'root' || name.startsWith('root.')) {
+                result.root = fieldError.message;
+            } else {
+                result.fields[name] = fieldError.message;
+            }
+        },
+        knownFields,
+    });
+    if (!handled) {
+        result.root = fallbackMessage;
+    }
+    return result;
+};
+
 export default applyServerErrorsToForm;

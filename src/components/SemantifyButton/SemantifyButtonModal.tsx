@@ -17,6 +17,7 @@ import { ENTITIES, MISC } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { createLiteral } from '@/services/backend/literals';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { createResource } from '@/services/backend/resources';
 import { createStatement, deleteStatementById } from '@/services/backend/statements';
 import { Statement, Template } from '@/services/backend/types';
@@ -107,7 +108,7 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
             toast.success('Value semantified successfully');
         } catch (error) {
             console.error('Error saving entity:', error);
-            toast.danger('Error saving entity');
+            toast.danger(`Error saving entity: ${await getBackendErrorMessage(error, 'please try again')}`);
         } finally {
             onSave([statement.id], newStatementIds);
             toggleModal();

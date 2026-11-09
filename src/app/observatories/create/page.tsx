@@ -25,6 +25,7 @@ import { reverse } from '@/lib/namedRoute';
 import requireAuthentication from '@/requireAuthentication';
 import { createObservatory, getObservatoryById } from '@/services/backend/observatories';
 import { getAllOrganizations, getOrganization, organizationsUrl } from '@/services/backend/organizations';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { Organization } from '@/services/backend/types';
 import { getPublicUrl } from '@/utils';
 
@@ -98,7 +99,7 @@ const CreateObservatory = () => {
                 });
             } else {
                 console.error(error);
-                toast.danger(`Error creating an observatory: ${(error as Error).message}`);
+                toast.danger(`Error creating an observatory: ${await getBackendErrorMessage(error, 'please try again')}`);
             }
         }
     };

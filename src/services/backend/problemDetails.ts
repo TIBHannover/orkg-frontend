@@ -165,3 +165,27 @@ export const parseProblemDetails = async (error: unknown): Promise<ProblemDetail
     }
     return normalizeProblemDetails(error);
 };
+
+const toPropertyWording = (message: string) => message.replaceAll('Predicate', 'Property');
+
+/**
+ * A single human-readable message for a thrown backend error, for toasts.
+ *
+ * Reads the RFC 9457 body (field `errors[].detail`, then `detail`/`title`) from either transport.
+ * A plain `Error` that is not a `ResponseError` keeps its own message, so local validation errors
+ * still surface. Anything else (a network failure, an unreadable body) returns `fallback`.
+ */
+export const getBackendErrorMessage = async (error: unknown, fallback: string): Promise<string> => {
+    const problem = await parseProblemDetails(error);
+    if (problem) {
+        const fieldDetails = problem.errors.map((fieldError) => fieldError.detail).filter(Boolean);
+        const message = fieldDetails.length > 0 ? fieldDetails.join(' ') : (problem.detail ?? problem.title);
+        if (message) {
+            return toPropertyWording(message);
+        }
+    }
+    if (error instanceof Error && !(error instanceof ResponseError)) {
+        return error.message;
+    }
+    return fallback;
+};

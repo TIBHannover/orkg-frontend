@@ -14,9 +14,9 @@ import { CLASSES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';
 import { reverse } from '@/lib/namedRoute';
 import { classesUrl, deleteParentByID, getChildrenByID, getParentByID, setParentClassByID } from '@/services/backend/classes';
+import { getBackendErrorMessage } from '@/services/backend/problemDetails';
 import { getStatements, statementsUrl } from '@/services/backend/statements';
 import { Class } from '@/services/backend/types';
-import { getErrorMessage } from '@/utils';
 
 type InformationTabProps = {
     id: string;
@@ -97,20 +97,24 @@ const InformationTab: FC<InformationTabProps> = ({ id, classObject, editMode, ca
                         editMode={editMode}
                         $displayButtonOnHover={false}
                         onChange={async (_parent: Class) => {
-                            if (parent) {
-                                await deleteParentByID(id);
-                            }
                             try {
+                                if (parent) {
+                                    await deleteParentByID(id);
+                                }
                                 await setParentClassByID(id, _parent.id);
                                 mutateParent();
                             } catch (e) {
-                                toast.danger(`Error adding parent class! ${getErrorMessage(e as Error) ?? (e as Error)?.message}`);
+                                toast.danger(`Error adding parent class! ${await getBackendErrorMessage(e, 'please try again')}`);
                             }
                             callBackToReloadTree();
                         }}
                         onDelete={async () => {
-                            await deleteParentByID(id);
-                            mutateParent();
+                            try {
+                                await deleteParentByID(id);
+                                mutateParent();
+                            } catch (e) {
+                                toast.danger(`Error removing parent class! ${await getBackendErrorMessage(e, 'please try again')}`);
+                            }
                             callBackToReloadTree();
                         }}
                     />
@@ -131,7 +135,7 @@ const InformationTab: FC<InformationTabProps> = ({ id, classObject, editMode, ca
                                                 await deleteParentByID(child.id);
                                                 mutateChildren();
                                             } catch (e) {
-                                                toast.danger(`Error removing subclass! ${getErrorMessage(e as Error) ?? (e as Error)?.message}`);
+                                                toast.danger(`Error removing subclass! ${await getBackendErrorMessage(e, 'please try again')}`);
                                             }
                                             callBackToReloadTree();
                                         }}
@@ -161,7 +165,7 @@ const InformationTab: FC<InformationTabProps> = ({ id, classObject, editMode, ca
                                             await setParentClassByID(child.id, id);
                                             mutateChildren();
                                         } catch (e) {
-                                            toast.danger(`Error adding subclass! ${getErrorMessage(e as Error) ?? (e as Error)?.message}`);
+                                            toast.danger(`Error adding subclass! ${await getBackendErrorMessage(e, 'please try again')}`);
                                         }
                                         callBackToReloadTree();
                                     }}
