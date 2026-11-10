@@ -1,6 +1,6 @@
 'use client';
 
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 import Benefits from '@/components/Home/Benefits';
 import HelpTour from '@/components/Home/HelpTour';

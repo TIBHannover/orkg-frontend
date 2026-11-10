@@ -3,8 +3,8 @@ import { faDatabase, faDownload, faServer } from '@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon, type FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { Card } from '@heroui/react';
 import { buttonVariants } from '@heroui/styles';
+import { env } from '@orkg/runtime-env';
 import { Metadata } from 'next';
-import { env } from 'next-runtime-env';
 
 import TitleBar from '@/components/TitleBar/TitleBar';
 import Container from '@/components/Ui/Structure/Container';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Separator, Skeleton } from '@heroui/react';
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 import { InView } from 'react-intersection-observer';
 
 import NotFound from '@/app/not-found';

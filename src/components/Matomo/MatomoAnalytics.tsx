@@ -1,8 +1,8 @@
 'use client';
 
+import { env } from '@orkg/runtime-env';
 import { trackAppRouter } from '@socialgouv/matomo-next';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { env } from 'next-runtime-env';
 import { useEffect } from 'react';
 
 const MATOMO_URL = env('NEXT_PUBLIC_MATOMO_TRACKER_URL')!;

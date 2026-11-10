@@ -1,6 +1,6 @@
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
 import { upperFirst } from 'lodash';
-import { env } from 'next-runtime-env';
 
 export const unpaywallUrl = env('NEXT_PUBLIC_UNPAYWALL_URL');
 const unpaywallApi = ky.create({ prefixUrl: unpaywallUrl });

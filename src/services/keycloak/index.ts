@@ -1,6 +1,6 @@
+import { env } from '@orkg/runtime-env';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { signOut } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 
 export const ROLES = {
     ROLE_ADMIN: 'admin',

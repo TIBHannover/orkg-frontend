@@ -1,6 +1,6 @@
+import { env } from '@orkg/runtime-env';
 import { unescape } from 'he';
 import { isNaN, isString } from 'lodash';
-import { env } from 'next-runtime-env';
 
 import { CLASSES, ENTITIES, PREDICATES } from '@/constants/graphSettings';
 import ROUTES from '@/constants/routes';

@@ -1,8 +1,8 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Switch } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import { useCookies } from 'next-client-cookies';
-import { env } from 'next-runtime-env';
 import { FC } from 'react';
 
 import { useDataBrowserDispatch, useDataBrowserState } from '@/components/DataBrowser/context/DataBrowserContext';

@@ -7,7 +7,7 @@ const rootDir = path.resolve(widgetDir, '..');
 const isDev = process.argv.includes('--dev');
 
 // URLs are baked in at build time (the widget is a standalone script and cannot
-// use next-runtime-env, and the Docker image is built once and reused across
+// use @orkg/runtime-env, and the Docker image is built once and reused across
 // instances, so environment variables cannot reach this build anyway).
 const define = {
     __BACKEND_URL__: JSON.stringify(isDev ? 'http://localhost:8080/api/' : 'https://orkg.org/api/'),

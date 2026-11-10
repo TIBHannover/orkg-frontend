@@ -1,7 +1,7 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert } from '@heroui/react';
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 import Container from '@/components/Ui/Structure/Container';
 import { CLASSES } from '@/constants/graphSettings';

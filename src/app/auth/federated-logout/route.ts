@@ -1,6 +1,6 @@
+import { env } from '@orkg/runtime-env';
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken, JWT } from 'next-auth/jwt';
-import { env } from 'next-runtime-env';
 
 function logoutParams(token: JWT): Record<string, string> {
     return {

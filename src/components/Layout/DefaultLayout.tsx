@@ -1,10 +1,10 @@
 'use client';
 
 import { Alert, Button, cn, Toast } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import { detect } from 'detect-browser';
 import { usePathname } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
-import { env } from 'next-runtime-env';
 import { Suspense, useEffect, useState } from 'react';
 
 import ComparisonPopup from '@/components/ComparisonPopup/ComparisonPopup';

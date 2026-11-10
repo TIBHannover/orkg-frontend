@@ -1,5 +1,5 @@
 import { Configuration, JobsApi } from '@orkg/agentic-loop-client';
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 import { getAccessToken } from '@/services/backend/backendApi';
 

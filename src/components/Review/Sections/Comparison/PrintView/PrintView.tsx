@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 import pluralize from 'pluralize';
 import { FC } from 'react';
 

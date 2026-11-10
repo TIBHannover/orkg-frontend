@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import { useCookies } from 'next-client-cookies';
-import { env } from 'next-runtime-env';
 import { useSyncExternalStore } from 'react';
 
 const COOKIE_NAME = 'useFullWidthForComparisonTable';

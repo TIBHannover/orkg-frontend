@@ -1,7 +1,7 @@
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@heroui/react';
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 import { AnchorHTMLAttributes, FC } from 'react';
 
 import ROUTES from '@/constants/routes';

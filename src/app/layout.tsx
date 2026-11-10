@@ -6,9 +6,10 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { env } from '@orkg/runtime-env';
+import { PublicEnvScript } from '@orkg/runtime-env/server';
 import { Metadata } from 'next';
 import { CookiesProvider } from 'next-client-cookies/server';
-import { env, PublicEnvScript } from 'next-runtime-env';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { FC } from 'react';

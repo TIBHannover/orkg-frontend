@@ -1,8 +1,9 @@
+import { env } from '@orkg/runtime-env';
+import { serverEnv } from '@orkg/runtime-env/server';
 import ky from 'ky';
 import { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import KeycloakProvider from 'next-auth/providers/keycloak';
-import { env } from 'next-runtime-env';
 
 /**
  * Takes a token, and returns a new token with updated
@@ -15,7 +16,7 @@ export const refreshAccessToken = async (token: JWT): Promise<JWT> => {
 
         const formData = new URLSearchParams({
             client_id: env('NEXT_PUBLIC_KEYCLOAK_CLIENT_ID')!,
-            client_secret: env('KEYCLOAK_CLIENT_SECRET')!,
+            client_secret: serverEnv('KEYCLOAK_CLIENT_SECRET')!,
             grant_type: 'refresh_token',
             refresh_token: token.refresh_token as string,
         });
@@ -59,7 +60,7 @@ export const AuthOptions: NextAuthOptions = {
     providers: [
         KeycloakProvider({
             clientId: env('NEXT_PUBLIC_KEYCLOAK_CLIENT_ID')!,
-            clientSecret: env('KEYCLOAK_CLIENT_SECRET')!,
+            clientSecret: serverEnv('KEYCLOAK_CLIENT_SECRET')!,
             issuer: `${env('NEXT_PUBLIC_KEYCLOAK_URL')}/realms/${env('NEXT_PUBLIC_KEYCLOAK_REALM')}`,
             profile(profile) {
                 return {

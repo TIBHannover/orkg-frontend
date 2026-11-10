@@ -1,7 +1,7 @@
 import { Alert, Button } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { env } from 'next-runtime-env';
 
 import ActivityItem from '@/components/ActivityItem/ActivityItem';
 import { MISC } from '@/constants/graphSettings';

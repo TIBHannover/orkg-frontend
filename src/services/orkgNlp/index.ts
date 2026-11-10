@@ -3,9 +3,9 @@
  * https://gitlab.com/TIBHannover/orkg/nlp/orkg-nlp-api
  */
 
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
 import { keyBy, mapValues, uniq } from 'lodash';
-import { env } from 'next-runtime-env';
 
 import { PREDICATES } from '@/constants/graphSettings';
 import { AGRICULTURE_FIELDS_LIST, COMPUTER_SCIENCE_FIELDS_LIST } from '@/constants/nlpFieldLists';

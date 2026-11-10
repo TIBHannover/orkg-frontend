@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
-import { env } from 'next-runtime-env';
 
 type CitationResponse = { count: number }[];
 

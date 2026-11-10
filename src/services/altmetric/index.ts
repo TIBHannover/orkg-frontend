@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
-import { env } from 'next-runtime-env';
 
 const altmetricApi = ky.create({ prefixUrl: env('NEXT_PUBLIC_ALTMETRIC_URL') });
 

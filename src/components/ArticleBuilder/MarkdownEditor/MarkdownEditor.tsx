@@ -16,9 +16,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, toast, Tooltip } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 // @ts-expect-error library has no type definitions
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import { env } from 'next-runtime-env';
 import { FC, KeyboardEvent, MouseEvent, ReactNode, useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 

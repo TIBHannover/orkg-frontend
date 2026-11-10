@@ -2,7 +2,7 @@ import { faCheck, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button, Checkbox, Input, Label, Modal, TextField, toast, Tooltip } from '@heroui/react';
 import Link from 'next/link';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 import { SingleValue } from 'react-select';
 
 import ActionButton from '@/components/ActionButton/ActionButton';
@@ -31,43 +31,39 @@ type SemantifyButtonModalProps = {
     onSave: (deletedStatementIds: string[], newStatementIds: string[]) => void;
 };
 
+const getInitialItems = (currentCell: Statement['object'] | undefined): Item[] => {
+    if (!currentCell) {
+        return [];
+    }
+    let type = MISC.DEFAULT_LITERAL_DATATYPE;
+    if ('datatype' in currentCell) {
+        type = currentCell.datatype;
+    } else if ('_class' in currentCell) {
+        type = currentCell._class;
+    }
+    return [
+        {
+            value: currentCell.label,
+            resource: currentCell._class !== ENTITIES.LITERAL ? currentCell : null,
+            type: getConfigByType(type),
+            inputValue: currentCell.label,
+        },
+    ];
+};
+
 const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, toggleModal, statement, templates, currentPathStatements, onSave }) => {
-    const [items, setItems] = useState<Item[]>([]);
+    const currentCell = statement.object;
+    const [items, setItems] = useState<Item[]>(() => getInitialItems(currentCell));
     const [isCheckedSeparated, setIsCheckedSeparated] = useState(false);
     const [separator, setSeparator] = useState(',');
     const [isSaving, setIsSaving] = useState(false);
     const template = templates ? getRestrictingTemplate(templates, statement) : undefined;
     const range = template ? getRange(template, statement) : undefined;
     const canAddValue = template ? getCanAddValueCount(template, statement, currentPathStatements || []) : undefined;
-    const currentCell = statement.object;
     let optionsClasses: string[] = [];
     if (statement.object?._class === ENTITIES.RESOURCE && range) {
         optionsClasses = [range.id];
     }
-
-    const initialItems = useMemo(() => {
-        if (currentCell) {
-            let type = MISC.DEFAULT_LITERAL_DATATYPE;
-            if ('datatype' in currentCell) {
-                type = currentCell.datatype;
-            } else if ('_class' in currentCell) {
-                type = currentCell._class;
-            }
-            return [
-                {
-                    value: currentCell.label,
-                    resource: currentCell?._class !== ENTITIES.LITERAL ? currentCell : null,
-                    type: getConfigByType(type),
-                    inputValue: currentCell.label,
-                },
-            ];
-        }
-        return [];
-    }, [currentCell]);
-
-    useEffect(() => {
-        setItems(initialItems);
-    }, [currentCell, initialItems]);
 
     const handleResourceSelect = (index: number, resource: SingleValue<OptionType>) => {
         setItems((prevItems) => {
@@ -139,7 +135,7 @@ const SemantifyButtonModal: FC<SemantifyButtonModalProps> = ({ isModalOpen, togg
                     splitValueIntoEnumeration(currentCell.label, separator);
                 }
             } else if (currentCell) {
-                setItems(initialItems);
+                setItems(getInitialItems(currentCell));
             }
             return newChecked;
         });

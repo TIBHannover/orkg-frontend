@@ -3,8 +3,8 @@
  * https://gitlab.com/TIBHannover/orkg/orkg-simcomp/
  */
 
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
-import { env } from 'next-runtime-env';
 import qs from 'qs';
 
 export const simCompServiceUrl = env('NEXT_PUBLIC_SIMILARITY_SERVICE_URL');

@@ -1,7 +1,7 @@
 import { Configuration } from '@orkg/orkg-client';
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
 import { getSession, signOut } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 
 import { SortByParam } from '@/services/backend/types';
 

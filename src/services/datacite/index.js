@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';

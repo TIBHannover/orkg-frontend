@@ -1,8 +1,8 @@
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import Link from 'next/link';
-import { env } from 'next-runtime-env';
 import { FC } from 'react';
 
 import { SectionStyled } from '@/components/ArticleBuilder/styled';
