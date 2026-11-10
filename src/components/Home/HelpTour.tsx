@@ -4,9 +4,9 @@ import '@/components/Home/introjs-dark.css';
 
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { env } from '@orkg/runtime-env';
 import { Steps } from 'intro.js-react';
 import { useCookies } from 'next-client-cookies';
-import { env } from 'next-runtime-env';
 import { useState } from 'react';
 
 import Tooltip from '@/components/FloatingUI/Tooltip';

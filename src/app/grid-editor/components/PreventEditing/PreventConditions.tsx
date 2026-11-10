@@ -1,6 +1,6 @@
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 import { CLASSES } from '@/constants/graphSettings';
 import { Thing } from '@/services/backend/things';

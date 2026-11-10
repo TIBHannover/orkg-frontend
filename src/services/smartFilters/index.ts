@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import ky, { ResponsePromise } from 'ky';
-import { env } from 'next-runtime-env';
 
 export const smartFiltersUrl = env('NEXT_PUBLIC_SMART_FILTERS_URL');
 

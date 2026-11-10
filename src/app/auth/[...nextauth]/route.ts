@@ -1,6 +1,6 @@
+import { serverEnv } from '@orkg/runtime-env/server';
 import NextAuth, { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import { env } from 'next-runtime-env';
 
 import { AuthOptions, refreshAccessToken } from '@/lib/auth';
 
@@ -35,7 +35,7 @@ const handler = NextAuth({
         },
     },
     jwt: {
-        secret: env('NEXTAUTH_SECRET'),
+        secret: serverEnv('NEXTAUTH_SECRET'),
     },
     session: {
         strategy: 'jwt',

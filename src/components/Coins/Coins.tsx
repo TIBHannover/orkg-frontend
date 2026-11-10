@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 import { FC } from 'react';
 
 import ROUTES from '@/constants/routes';

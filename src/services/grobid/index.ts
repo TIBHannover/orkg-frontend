@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 const grobidUrl = env('NEXT_PUBLIC_GROBID_URL');
 

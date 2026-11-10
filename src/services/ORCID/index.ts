@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
-import { env } from 'next-runtime-env';
 
 const url = env('NEXT_PUBLIC_ORCID_API_URL');
 const orcidApi = ky.create({ prefixUrl: url });

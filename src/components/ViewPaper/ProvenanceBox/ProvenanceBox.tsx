@@ -1,6 +1,6 @@
 import { Tabs } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import { orderBy, uniqBy } from 'lodash';
-import { env } from 'next-runtime-env';
 
 import PWCProvenanceBox from '@/components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import useParams from '@/components/useParams/useParams';

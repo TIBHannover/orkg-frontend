@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 
 import { ExternalServiceResponse, OptionType } from '@/components/Autocomplete/types';
 import { AUTOCOMPLETE_SOURCE } from '@/constants/autocompleteSources';

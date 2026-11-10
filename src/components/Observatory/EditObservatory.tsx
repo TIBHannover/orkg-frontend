@@ -1,6 +1,6 @@
 import { Input, Label, Modal, TextArea, TextField, toast } from '@heroui/react';
 import { isEqual } from 'lodash';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import Autocomplete from '@/components/Autocomplete/Autocomplete';
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
@@ -37,41 +37,21 @@ const EditObservatory: FC<EditObservatoryProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [researchField, setResearchField] = useState(initialResearchField);
     const [sdgs, setSdgs] = useState(initialSdgs);
-
-    useEffect(() => {
+    const [prevInitial, setPrevInitial] = useState({
+        label: initialLabel,
+        description: initialDescription,
+        researchField: initialResearchField,
+    });
+    if (initialLabel !== prevInitial.label || initialDescription !== prevInitial.description || initialResearchField !== prevInitial.researchField) {
+        setPrevInitial({
+            label: initialLabel,
+            description: initialDescription,
+            researchField: initialResearchField,
+        });
         setLabel(initialLabel);
-    }, [initialLabel]);
-
-    useEffect(() => {
         setDescription(initialDescription);
-    }, [initialDescription]);
-
-    useEffect(() => {
         setResearchField(initialResearchField);
-    }, [initialResearchField]);
-
-    const updateObservatoryData = async (
-        observatoryId: string,
-        name: string,
-        observatoryDescription: string,
-        observatoryResearchField: Node | null,
-        observatorySdgs: Node[],
-    ) => {
-        setIsLoading(true);
-        try {
-            await updateObservatory(observatoryId, {
-                name,
-                description: observatoryDescription,
-                research_field: observatoryResearchField?.id,
-                sdgs: observatorySdgs.map((sdg: Node) => sdg?.id),
-            });
-        } catch (error: unknown) {
-            console.error(error);
-            toast.danger(`Error updating an observatory: ${await getBackendErrorMessage(error, 'please try again')}`);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }
 
     const handleSubmit = async () => {
         toast.clear();
@@ -89,10 +69,23 @@ const EditObservatory: FC<EditObservatoryProps> = ({
             return;
         }
 
-        await updateObservatoryData(id, label, description, researchField, sdgs);
-        toast.success('Observatory updated successfully');
-        updateObservatoryMetadata(label, description, researchField, sdgs);
-        toggle();
+        setIsLoading(true);
+        try {
+            await updateObservatory(id, {
+                name: label,
+                description,
+                research_field: researchField?.id,
+                sdgs: sdgs.map((sdg: Node) => sdg?.id),
+            });
+            toast.success('Observatory updated successfully');
+            updateObservatoryMetadata(label, description, researchField, sdgs);
+            toggle();
+        } catch (error: unknown) {
+            console.error(error);
+            toast.danger(`Error updating an observatory: ${await getBackendErrorMessage(error, 'please try again')}`);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (

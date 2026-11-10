@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import { groupBy, uniqBy } from 'lodash';
-import { env } from 'next-runtime-env';
 import { useDispatch } from 'react-redux';
 import useSWR from 'swr';
 

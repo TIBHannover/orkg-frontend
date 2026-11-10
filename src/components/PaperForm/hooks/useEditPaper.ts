@@ -1,5 +1,5 @@
 import { toast } from '@heroui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
@@ -35,10 +35,9 @@ const useEditPaper = ({ paperData, afterUpdate }: UseEditPaperArgs) => {
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
     const { user } = useAuthentication();
 
-    useEffect(() => {
-        if (!paperData) {
-            return;
-        }
+    const [syncedPaperData, setSyncedPaperData] = useState<Paper | null | undefined>(null);
+    if (paperData && paperData !== syncedPaperData) {
+        setSyncedPaperData(paperData);
         setTitle(paperData.title ?? '');
         const pubMonth = paperData.publicationInfo?.publishedMonth;
         const pubYear = paperData.publicationInfo?.publishedYear;
@@ -51,7 +50,7 @@ const useEditPaper = ({ paperData, afterUpdate }: UseEditPaperArgs) => {
         setResearchField(paperData.researchFields?.[0] ?? null);
         setUrl(paperData.publicationInfo?.url ?? '');
         setIsVerified(!!paperData.verified);
-    }, [paperData]);
+    }
 
     const handleSave = async () => {
         if (!paperData) return;

@@ -1,8 +1,8 @@
 /**
  * Services file for CMS service
  */
+import { env } from '@orkg/runtime-env';
 import ky from 'ky';
-import { env } from 'next-runtime-env';
 import qs from 'qs';
 
 import {

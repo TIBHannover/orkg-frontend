@@ -1,5 +1,5 @@
+import { env } from '@orkg/runtime-env';
 import { ICellRendererParams } from 'ag-grid-community';
-import { env } from 'next-runtime-env';
 import { useState } from 'react';
 
 import CellMenu from '@/app/grid-editor/components/CellMenu/CellMenu';

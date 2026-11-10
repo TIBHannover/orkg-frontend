@@ -42,6 +42,7 @@ const SemantifyModalProvider: FC<SemantifyModalProviderProps> = ({ children }) =
             {children}
             {args !== null && (
                 <SemantifyButtonModal
+                    key={args.statement.id}
                     isModalOpen
                     toggleModal={closeModal}
                     statement={args.statement}

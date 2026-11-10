@@ -1,10 +1,10 @@
 import { faMastodon } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, ScrollShadow } from '@heroui/react';
+import { env } from '@orkg/runtime-env';
 import dayjs from 'dayjs';
 import DOMPurify from 'isomorphic-dompurify';
 import { useCookies } from 'next-client-cookies';
-import { env } from 'next-runtime-env';
 import { useState } from 'react';
 import useSWR from 'swr';
 

@@ -1,6 +1,6 @@
+import { env } from '@orkg/runtime-env';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { env } from 'next-runtime-env';
 
 import useAuthentication from '@/components/hooks/useAuthentication';
 

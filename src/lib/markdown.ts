@@ -1,7 +1,7 @@
+import { env } from '@orkg/runtime-env';
 import DOMPurify from 'isomorphic-dompurify';
 import { marked as markedRaw } from 'marked';
 import markedFootnote from 'marked-footnote';
-import { env } from 'next-runtime-env';
 
 import { processVideoEmbeds } from '@/lib/videoPostProcessor';
 
@@ -21,7 +21,7 @@ function isFragmentOnlyHref(href: string): boolean {
 /** Allowed iframe hostnames for video embeds (YouTube, TIB AV) */
 const ALLOWED_VIDEO_EMBED_HOSTNAMES = ['www.youtube.com', 'youtube.com', 'www.youtube-nocookie.com', 'youtube-nocookie.com', 'av.tib.eu'];
 
-/** Read at call time, not module load: next-runtime-env values are runtime-provided. The tracker URL is usually protocol-relative (//host/path) in Matomo configs */
+/** Read at call time, not module load: @orkg/runtime-env values are runtime-provided. The tracker URL is usually protocol-relative (//host/path) in Matomo configs */
 function getMatomoTrackerHostname(): string | null {
     const raw = env('NEXT_PUBLIC_MATOMO_TRACKER_URL')?.trim();
     if (!raw) return null;

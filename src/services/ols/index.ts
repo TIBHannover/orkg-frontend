@@ -1,4 +1,4 @@
-import { env } from 'next-runtime-env';
+import { env } from '@orkg/runtime-env';
 import createClient from 'openapi-fetch';
 import type { GroupBase, OptionsOrGroups } from 'react-select';
 
