@@ -4,9 +4,11 @@ import { z } from 'zod';
 
 import ButtonWithLoading from '@/components/ButtonWithLoading/ButtonWithLoading';
 import ControlledTextArea from '@/components/Form/ControlledTextArea/ControlledTextArea';
+import ControlledTextField from '@/components/Form/ControlledTextField/ControlledTextField';
 import FormRootError from '@/components/Form/FormRootError/FormRootError';
 import useConfirmDiscardChanges from '@/components/Form/hooks/useConfirmDiscardChanges';
 import useZodForm from '@/components/Form/hooks/useZodForm';
+import { uriSchema } from '@/components/Form/schemas/uriSchema';
 import applyServerErrorsToForm from '@/components/Form/utils/applyServerErrors';
 import { SmartDescriptiveProperty } from '@/components/SmartSuggestions/DescriptivePropertySuggestions';
 import { PREDICATES } from '@/constants/graphSettings';
@@ -16,6 +18,7 @@ import { createPredicate } from '@/services/backend/predicates';
 import { createLiteralStatement } from '@/services/backend/statements';
 
 const createPropertySchema = z.object({
+    uri: uriSchema,
     description: z.string(),
 });
 
@@ -25,7 +28,7 @@ type ConfirmCreatePropertyModalProps = {
     label: string;
     isOpen: boolean;
     toggle: () => void;
-    onCreate?: (property: { description?: string; label?: string; id: string }) => void;
+    onCreate?: (property: { description?: string; label?: string; id: string; uri?: string }) => void;
 };
 
 const ConfirmCreatePropertyModal: FC<ConfirmCreatePropertyModalProps> = ({ label, isOpen, toggle, onCreate }) => {
@@ -37,19 +40,19 @@ const ConfirmCreatePropertyModal: FC<ConfirmCreatePropertyModalProps> = ({ label
         formState: { isSubmitting, isDirty, errors },
     } = useZodForm({
         schema: createPropertySchema,
-        defaultValues: { description: '' },
+        defaultValues: { uri: '', description: '' },
     });
 
     const { requestClose } = useConfirmDiscardChanges({ isDirty, onClose: toggle });
 
-    const onSubmit = async ({ description }: CreatePropertyFormValues) => {
+    const onSubmit = async ({ uri, description }: CreatePropertyFormValues) => {
         try {
-            const propertyId = await createPredicate(label);
+            const propertyId = await createPredicate(label, undefined, uri || undefined);
             if (description.trim() !== '') {
                 const descriptionLiteralId = await createLiteral(description);
                 await createLiteralStatement(propertyId, PREDICATES.DESCRIPTION, descriptionLiteralId);
             }
-            onCreate?.({ description, label, id: propertyId });
+            onCreate?.({ description, label, id: propertyId, uri: uri || undefined });
             toggle();
         } catch (error) {
             const handled = await applyServerErrorsToForm(error, {
@@ -88,6 +91,20 @@ const ConfirmCreatePropertyModal: FC<ConfirmCreatePropertyModalProps> = ({ label
                                 <Label>Label</Label>
                                 <Input name="label" type="text" />
                             </TextField>
+                            <ControlledTextField
+                                control={control}
+                                name="uri"
+                                type="url"
+                                label={
+                                    <>
+                                        URI <span className="text-muted font-normal italic">(optional)</span>
+                                    </>
+                                }
+                                description="Please provide the URI if you are using a property defined in an external ontology"
+                                placeholder="https://example.org/ontology#Term"
+                                maxLength={MAX_LENGTH_INPUT}
+                                isDisabled={isSubmitting}
+                            />
                             <ControlledTextArea
                                 control={control}
                                 name="description"
