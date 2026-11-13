@@ -28,6 +28,7 @@ junit.xml
 screenshots/
 CLAUDE.local.md
 .worktrees
+.claude/worktrees/
 .playwright-cli/
 
 # mise
