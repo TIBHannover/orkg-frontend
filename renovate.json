@@ -11,7 +11,7 @@
     },
     "packageRules": [
         {
-            "description": "Only manage Next.js and Node.js for now; everything else is upgraded manually",
+            "description": "Only manage Next.js, React, and Node.js for now; everything else is upgraded manually",
             "matchPackageNames": ["*"],
             "enabled": false
         },
@@ -21,12 +21,21 @@
             "minimumReleaseAge": "14 days"
         },
         {
-            "description": "Next.js (security) releases are raised immediately and pinned exactly, like npm install --save-exact",
-            "groupName": "Next.js",
+            "description": "Next.js, React, and their type packages are raised immediately and pinned exactly, like npm install --save-exact",
             "matchPackageNames": ["next", "eslint-config-next", "react", "react-dom", "@types/react", "@types/react-dom"],
             "enabled": true,
             "minimumReleaseAge": null,
             "rangeStrategy": "pin"
+        },
+        {
+            "description": "next and eslint-config-next share one version, so a grouped commit cites that version",
+            "groupName": "Next.js",
+            "matchPackageNames": ["next", "eslint-config-next"]
+        },
+        {
+            "description": "react and react-dom share one version. @types/react and @types/react-dom are left ungrouped because each has its own version",
+            "groupName": "React",
+            "matchPackageNames": ["react", "react-dom"]
         },
         {
             "description": "Node.js across the Dockerfile, CI images, .mise.toml and package.json engines",
@@ -39,6 +48,11 @@
             "matchDepNames": ["node"],
             "allowedVersions": "<25",
             "minimumReleaseAge": "0 days"
+        },
+        {
+            "description": "Stay on the npm 11 line",
+            "matchDepNames": ["npm"],
+            "allowedVersions": "<12"
         }
     ]
 }
