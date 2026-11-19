@@ -2,6 +2,29 @@ All notable changes to the ORKG will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [v0.193.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.192.2...v0.193.0) - 2026-11-19
+
+### Changes
+
+- fix(deps): update next.js to v16.4.6 [`#1800`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1800)
+- chore(deps): update node.js to v24.22.3 [`#1798`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1798)
+- feat: add optional URI field to the create property confirmation modal [`#1802`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1802)
+- chore: support Claude worktrees [`#1801`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1801)
+- fix: split Renovate Next.js and React update groups [`#1797`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1797)
+- refactor: replace next-runtime-env with @orkg/runtime-env [`#1788`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1788)
+- fix: display backend errors on class creation [`#1777`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1777)
+- fix(deps): update next.js to v16.4.5 [`#1796`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1796)
+- fix: stop idle drawers from trapping fixed menus [`#1789`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1789)
+- chore(deps): update @types/react and @types/react-dom to v19.3.0 [`#1795`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1795)
+- fix(deps): pin dependencies [`#1792`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1792)
+- chore(deps): update node.js [`#1793`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1793)
+- refactor(ai-jobs): use generated client for job listing and uploads [`#1778`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1778)
+- chore: remove unused dependencies [`#1782`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1782)
+- feat: show entity URIs in the DataBrowser and page headers [`#1783`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1783)
+- ci: exclude development dependencies from dependency scanning [`#1784`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1784)
+- ci: enable automatic dependency upgrades [`#1790`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1790)
+
+---
 ## [v0.192.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.192.1...v0.192.2) - 2026-10-22
 
 ### Changes
@@ -197,7 +220,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - ci: migrate to CI components [`#1678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1678)
 
 ---
-## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-19
+## [v0.182.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.182.0...v0.182.1) - 2026-05-21
 
 ### Changes
 
@@ -259,7 +282,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - feat: improve dataset/software content type view [`#1649`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/1649)
 
 ---
-## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-12
+## [v0.177.0](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/v0.176.1...v0.177.0) - 2026-03-14
 
 ### Changes
 
